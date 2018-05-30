@@ -18,12 +18,18 @@ public:
     template<typename T, enable_if_t<is_base_of_v<ComponentBase, T>, int> = 0>
     T* SetComponent()
     {
-        T* c = GetComponent<T>();
-        if (!c)
+        T* c = nullptr;
+        const auto search = m_umapComponents.find(type_index(typeid(T)));
+        if (search == m_umapComponents.end())
         {
             c = new T(*this);
             m_umapComponents.emplace(type_index(typeid(T)), c);
         }
+        else
+        {
+            c = static_cast<T*>(search->second);
+        }
+
         return c;
     }
 
