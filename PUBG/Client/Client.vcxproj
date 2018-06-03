@@ -76,7 +76,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(ProjectDir)sources\7. Study;$(ProjectDir)sources\6. Base;$(ProjectDir)sources\5. Manager;$(ProjectDir)sources\4. UI;$(ProjectDir)sources\3. Useful;$(ProjectDir)sources\2. Object\Map;$(ProjectDir)sources\2. Object\Item;$(ProjectDir)sources\2. Object\Effect;$(ProjectDir)sources\2. Object\Character;$(ProjectDir)sources\2. Object\Camera;$(ProjectDir)sources\2. Object;$(ProjectDir)sources\1. Scene;$(ProjectDir)sources;$(ProjectDir);$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)boost_1_67_0\stage\lib;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -115,6 +120,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientMain.cpp" />
+    <ClCompile Include="sources\1. Scene\Source.cpp" />
+    <ClCompile Include="sources\2. Object\Camera\Source.cpp" />
+    <ClCompile Include="sources\2. Object\Character\Source.cpp" />
+    <ClCompile Include="sources\2. Object\Effect\Source.cpp" />
+    <ClCompile Include="sources\2. Object\Item\Source.cpp" />
+    <ClCompile Include="sources\2. Object\Map\Source.cpp" />
+    <ClCompile Include="sources\3. Useful\Source.cpp" />
+    <ClCompile Include="sources\4. UI\Source.cpp" />
+    <ClCompile Include="sources\5. Manager\Source.cpp" />
+    <ClCompile Include="sources\6. Base\Source.cpp" />
+    <ClCompile Include="sources\7. Study\Source.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fmod.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
