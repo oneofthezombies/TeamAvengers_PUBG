@@ -3,17 +3,7 @@
   <ItemGroup>
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="sources\1. Scene\Source.cpp" />
-    <ClCompile Include="sources\2. Object\Camera\Source.cpp" />
-    <ClCompile Include="sources\2. Object\Character\Source.cpp" />
-    <ClCompile Include="sources\2. Object\Effect\Source.cpp" />
-    <ClCompile Include="sources\2. Object\Item\Source.cpp" />
-    <ClCompile Include="sources\2. Object\Map\Source.cpp" />
-    <ClCompile Include="sources\3. Useful\Source.cpp" />
-    <ClCompile Include="sources\4. UI\Source.cpp" />
-    <ClCompile Include="sources\5. Manager\Source.cpp" />
-    <ClCompile Include="sources\6. Base\Source.cpp" />
-    <ClCompile Include="sources\7. Study\Source.cpp" />
+    <ClCompile Include="sources\Communication\Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -21,5 +11,6 @@
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="sources\Communication\Client.h" />
   </ItemGroup>
 </Project>
