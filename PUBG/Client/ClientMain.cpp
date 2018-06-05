@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Client.h"
+#include "Protocol.h"
 
 //#define MAX_LOADSTRING 100
 //
@@ -131,24 +132,33 @@ int main(int argc, char* argv[])
 {
     try 
     {
-        if (argc != 3)
+        if (argc != 4)
         {
-            std::cerr << "Usage: Client <host> <port>\n";
+            std::cerr << "Usage: Client <host> <port> <nickname>\n";
             return 1;
         }
 
         boost::asio::io_context ioContext;
         tcp::resolver resolver(ioContext);
         auto endpoints = resolver.resolve(argv[1], argv[2]);
-        Client c(ioContext, endpoints);
+        Client c(&ioContext, endpoints);
         std::thread t([&ioContext]() { ioContext.run(); });
 
-        while (1)
-        {
-            Message msg;
+        Message msg;
+        stringstream ss;
+        ss << setw(2) << setfill(' ') << static_cast<int>(REQUEST::MyID);
+        ss << string(argv[3]);
 
-            // write
-        }
+        const string str(ss.str());
+        msg.SetBodyLength(str.size());
+        memcpy_s(msg.GetBodyData(), Message::MAX_BODY_LENGTH, str.data(), str.size());
+        msg.EncodeHeader();
+
+        cout << "My nickname is " << argv[3] << '\n';
+        c.Write(msg);
+
+        cout << "Wait...\n";
+        while (1) {}
 
         c.Close();
         t.join();

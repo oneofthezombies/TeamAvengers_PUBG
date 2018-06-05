@@ -1,97 +1,72 @@
 #include "stdafx.h"
 #include "Message.h"
 
-size_t Message::GetSize() const
+Message::Message()
+    : m_bodyLength(0u)
 {
-    return REQUEST_SIZE + DESCRIPTION_SIZE_INFO_SIZE + m_descriptionSize;
 }
 
 char* Message::GetData()
 {
-    return m_data.data();
+    return m_data;
 }
 
 const char* Message::GetData() const
 {
-    return m_data.data();
+    return m_data;
 }
 
-char* Message::GetRequestData()
+size_t Message::GetLength() const
 {
-    return m_data.data();
+    return HEADER_LENGTH + m_bodyLength;
 }
 
-const char* Message::GetRequestData() const
+char* Message::GetBodyData()
 {
-    return m_data.data();
+    return m_data + HEADER_LENGTH;
 }
 
-char* Message::GetDescriptionSizeInfoData()
+const char* Message::GetBodyData() const
 {
-    return GetRequestData() + REQUEST_SIZE;
+    return m_data + HEADER_LENGTH;
 }
 
-const char* Message::GetDescriptionSizeInfoData() const
+void Message::SetBodyLength(size_t length)
 {
-    return GetRequestData() + REQUEST_SIZE;
+    m_bodyLength = length;
+    if (m_bodyLength > MAX_BODY_LENGTH)
+        m_bodyLength = MAX_BODY_LENGTH;
 }
 
-char* Message::GetDescriptionData()
+size_t Message::GetBodyLength() const
 {
-    return GetDescriptionSizeInfoData() + DESCRIPTION_SIZE_INFO_SIZE;
+    return m_bodyLength;
 }
 
-const char* Message::GetDescriptionData() const
+bool Message::DecodeHeader()
 {
-    return GetDescriptionSizeInfoData() + DESCRIPTION_SIZE_INFO_SIZE;
-}
-
-bool Message::IsValidDescriptionSize()
-{
-    const string descSizeInfo(GetDescriptionSizeInfoData(), Message::DESCRIPTION_SIZE_INFO_SIZE);
-    m_descriptionSize = std::stoi(descSizeInfo);
-    if (m_descriptionSize > MAX_DESCRIPTION_SIZE)
+    char header[HEADER_LENGTH + 1] = "";
+    memcpy_s(header, HEADER_LENGTH + 1, m_data, HEADER_LENGTH);
+    m_bodyLength = std::atoi(header);
+    if (m_bodyLength > MAX_BODY_LENGTH)
     {
-        m_descriptionSize = 0u;
+        m_bodyLength = 0u;
         return false;
     }
 
     return true;
 }
 
-void Message::SetDescriptionSize(const size_t size)
+void Message::EncodeHeader()
 {
-    m_descriptionSize = size;
-    if (m_descriptionSize > MAX_DESCRIPTION_SIZE)
-        m_descriptionSize = MAX_DESCRIPTION_SIZE;
+    stringstream ss;
+    ss << setw(4) << setfill(' ') << static_cast<int>(m_bodyLength);
+    const string str(ss.str());
+    memcpy_s(m_data, HEADER_LENGTH, str.data(), str.size());
 }
 
-size_t Message::GetDescriptionSize() const
+ostream& operator<<(ostream& os, const Message& msg)
 {
-    return m_descriptionSize;
-}
-
-REQUEST Message::GetRequest() const
-{
-    if (m_data.size() < REQUEST_SIZE)
-        return REQUEST::TestConnection;
-
-    auto begin = m_data.begin();
-    auto end = begin + REQUEST_SIZE;
-    return static_cast<REQUEST>(std::stoi(string(begin, end)));
-}
-
-string Message::GetDescription() const
-{
-    if (m_data.size() < REQUEST_SIZE + DESCRIPTION_SIZE_INFO_SIZE)
-        return string();
-
-    auto begin = m_data.begin() + REQUEST_SIZE + DESCRIPTION_SIZE_INFO_SIZE;
-    auto end = m_data.end();
-    return string(begin, end);
-}
-
-void Message::SetMessage(const string& val)
-{
-    memcpy_s(m_data.data(), GetSize(), val.c_str(), val.size());
+    os << string(msg.GetData(), msg.GetLength());
+    return os;
 }

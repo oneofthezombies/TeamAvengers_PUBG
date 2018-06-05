@@ -3,12 +3,14 @@
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="sources\Communication\Message.h" />
     <ClInclude Include="sources\Communication\Protocol.h" />
     <ClInclude Include="sources\Useful\CommonPreCompiled.h" />
+    <ClInclude Include="sources\Communication\Message.h" />
+    <ClInclude Include="sources\Communication\MessageParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="sources\Communication\Message.cpp" />
+    <ClCompile Include="sources\Communication\MessageParser.cpp" />
   </ItemGroup>
 </Project>

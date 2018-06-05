@@ -2,20 +2,33 @@
 
 #include "Message.h"
 
-class Participant
+class Room;
+
+class Participant : public enable_shared_from_this<Participant>
 {
+private:
+    tcp::socket m_socket;
+    Room* m_pRoom;
+    Message m_readMsg;
+    Message m_writeMsg;
+
+    void ReadHeader();
+    void ReadBody();
+    void Write();
+
 public:
-    Participant() = default;
-    virtual ~Participant() = default;
+    Participant(tcp::socket socket, Room* pRoom);
+    ~Participant() = default;
+
+    void Start();
 };
 
 class Room
 {
 private:
     unordered_set<shared_ptr<Participant>> m_participants;
-    unordered_map<string, int>             m_nicknameIDs;
-    int                                    m_participantID;
-    unordered_map<int, string>             m_positions;
+    int m_participantID;
+    unordered_map<string, int> m_nicknameIDs;
 
 public:
     Room();
@@ -23,43 +36,17 @@ public:
 
     void Join(shared_ptr<Participant> participant);
     void Leave(shared_ptr<Participant> participant);
-    
     int GetID(const string& nickname);
-};
-
-class Session
-    : public Participant
-    , public enable_shared_from_this<Session>
-{
-private:
-    tcp::socket m_socket;
-    Room* m_room;
-    Message m_readMsg;
-    Message m_writeMsg;
-
-    void ReadRequest();
-    void ReadDescriptionSizeInfo();
-    void ReadDescription();
-    void Write();
-
-    void Parse();
-
-public:
-    Session(tcp::socket socket, Room* room);
-    virtual ~Session() = default;
-
-    void Start();
 };
 
 class Server
 {
 private:
     tcp::acceptor m_acceptor;
-    Room          m_room;
-
-public:
-    Server(boost::asio::io_context& ioContext, const tcp::endpoint& endpoint);
-    ~Server() = default;
+    Room m_room;
 
     void Accept();
+
+public:
+    Server(boost::asio::io_context* ioContext, const tcp::endpoint& endpoint);
 };

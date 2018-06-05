@@ -1,26 +1,25 @@
 #include "stdafx.h"
 #include "Client.h"
+#include "MessageParser.h"
 
 void Client::Connect(const tcp::resolver::results_type& endpoints)
 {
-    boost::asio::async_connect(m_socket, 
-                               endpoints, 
-                               [this](boost::system::error_code ec, tcp::endpoint) 
-    {
-        if (!ec)
-            ReadRequest();
-    });
-}
-
-void Client::ReadRequest()
-{
-    boost::asio::async_read(m_socket, 
-                            boost::asio::buffer(m_readMsg.GetRequestData(), Message::REQUEST_SIZE), 
-                            [this](boost::system::error_code ec, size_t) 
+    boost::asio::async_connect(m_socket, endpoints, [this](auto ec, auto) 
     {
         if (!ec)
         {
-            ReadDescriptionSizeInfo();
+            ReadHeader();
+        }
+    });
+}
+
+void Client::ReadHeader()
+{
+    boost::asio::async_read(m_socket, boost::asio::buffer(m_readMsg.GetData(), Message::HEADER_LENGTH), [this](auto ec, auto) 
+    {
+        if (!ec && m_readMsg.DecodeHeader())
+        {
+            ReadBody();
         }
         else
         {
@@ -29,17 +28,26 @@ void Client::ReadRequest()
     });
 }
 
-void Client::ReadDescriptionSizeInfo()
+void Client::ReadBody()
 {
-    boost::asio::async_read(m_socket, 
-                            boost::asio::buffer(m_readMsg.GetDescriptionSizeInfoData(), Message::DESCRIPTION_SIZE_INFO_SIZE), 
-                            [this](boost::system::error_code ec, size_t) 
+    boost::asio::async_read(m_socket, boost::asio::buffer(m_readMsg.GetBodyData(), m_readMsg.GetBodyLength()), [this](auto ec, auto) 
     {
         if (!ec)
         {
-            // parse
+            MessageParser parser(m_readMsg);
+            REQUEST request(parser.GetRequest());
+            switch (request)
+            {
+            case REQUEST::MyID:
+                {
+                    const string idStr(parser.GetDescription());
+                    const int id(std::stoi(idStr));
+                    cout << "Received ID : " << id << '\n';
+                }
+                break;
+            }
 
-            ReadRequest();
+            ReadHeader();
         }
         else
         {
@@ -48,13 +56,38 @@ void Client::ReadDescriptionSizeInfo()
     });
 }
 
-Client::Client(boost::asio::io_context& ioContext, const tcp::resolver::results_type& endpoints)
-    : m_ioContext(ioContext)
-    , m_socket(ioContext)
+void Client::Write()
 {
+    boost::asio::async_write(m_socket, boost::asio::buffer(m_writeMsg.GetData(), m_writeMsg.GetLength()), [this](auto ec, auto) 
+    {
+        if (!ec)
+        {
+            // do nothing
+        }
+        else
+        {
+            m_socket.close();
+        }
+    });
+}
+
+Client::Client(boost::asio::io_context* ioContext, const tcp::resolver::results_type& endpoints)
+    : m_pIoContext(ioContext)
+    , m_socket(*ioContext)
+{
+    Connect(endpoints);
+}
+
+void Client::Write(const Message& msg)
+{
+    boost::asio::post(*m_pIoContext, [this, msg]()
+    {
+        m_writeMsg = msg;
+        Write();
+    });
 }
 
 void Client::Close()
 {
-    boost::asio::post(m_ioContext, [this]() { m_socket.close(); });
+    boost::asio::post(*m_pIoContext, [this]() { m_socket.close(); });
 }

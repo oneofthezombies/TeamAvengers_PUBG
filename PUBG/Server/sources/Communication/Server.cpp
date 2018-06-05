@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Server.h"
-#include "Protocol.h"
+#include "MessageParser.h"
 
 Room::Room()
     : m_participantID(0)
@@ -28,136 +28,95 @@ int Room::GetID(const string& nickname)
     return m_nicknameIDs[nickname];
 }
 
-void Session::ReadRequest()
+Participant::Participant(tcp::socket socket, Room* pRoom)
+    : m_socket(std::move(socket))
+    , m_pRoom(pRoom)
 {
-    boost::asio::async_read(m_socket, 
-                            boost::asio::buffer(m_readMsg.GetRequestData(), Message::REQUEST_SIZE), 
-                            [this](boost::system::error_code ec, size_t) 
+}
+
+void Participant::Start()
+{
+    m_pRoom->Join(shared_from_this());
+    ReadHeader();
+}
+
+void Participant::ReadHeader()
+{
+    boost::asio::async_read(m_socket, boost::asio::buffer(m_readMsg.GetData(), Message::HEADER_LENGTH), [this](auto ec, auto) 
     {
-        if (ec)
+        if (!ec && m_readMsg.DecodeHeader())
         {
-            m_room->Leave(shared_from_this());
+            ReadBody();
         }
         else
         {
-            ReadDescriptionSizeInfo();
+            m_pRoom->Leave(shared_from_this());
         }
     });
 }
 
-void Session::ReadDescriptionSizeInfo()
+void Participant::ReadBody()
 {
-    boost::asio::async_read(m_socket, 
-                            boost::asio::buffer(m_readMsg.GetDescriptionSizeInfoData(), Message::DESCRIPTION_SIZE_INFO_SIZE), 
-                            [this](boost::system::error_code ec, size_t) 
+    boost::asio::async_read(m_socket, boost::asio::buffer(m_readMsg.GetBodyData(), m_readMsg.GetBodyLength()), [this](auto ec, auto) 
     {
-        if (ec || !m_readMsg.IsValidDescriptionSize())
+        if (!ec)
         {
-            m_room->Leave(shared_from_this());
+            MessageParser parser(m_readMsg);
+            REQUEST request(parser.GetRequest());
+            switch (request)
+            {
+            case REQUEST::MyID:
+                {
+                    const string nickname(parser.GetDescription());
+                    const int id(m_pRoom->GetID(nickname));
+
+                    parser.SetMessage(&m_writeMsg, REQUEST::MyID, to_string(id));
+
+                    Write();
+                }
+                break;
+            }
+
+            ReadHeader();
         }
         else
         {
-            ReadDescription();
+            m_pRoom->Leave(shared_from_this());
         }
     });
 }
 
-void Session::ReadDescription()
+void Participant::Write()
 {
-    boost::asio::async_read(m_socket,
-                            boost::asio::buffer(m_readMsg.GetDescriptionData(), m_readMsg.GetDescriptionSize()), 
-                            [this](boost::system::error_code ec, size_t) 
+    boost::asio::async_write(m_socket, boost::asio::buffer(m_writeMsg.GetData(), m_writeMsg.GetLength()), [this](auto ec, auto) 
     {
-        if (ec)
+        if (!ec)
         {
-            m_room->Leave(shared_from_this());
+            // do nothing
         }
         else
         {
-            Parse();
-            ReadRequest();
+            m_pRoom->Leave(shared_from_this());
         }
     });
 }
 
-void Session::Write()
+Server::Server(boost::asio::io_context* ioContext, const tcp::endpoint& endpoint)
+    : m_acceptor(*ioContext, endpoint)
 {
-    boost::asio::async_write(m_socket, 
-                             boost::asio::buffer(m_writeMsg.GetData(), m_writeMsg.GetSize()), 
-                             [this](boost::system::error_code ec, size_t) 
-    {
-        if (ec)
-            m_room->Leave(shared_from_this());
-    });
-}
+    cout << "Server is Running...\n";
 
-void Session::Parse()
-{
-    const auto request = m_readMsg.GetRequest();
-    switch (request)
-    {
-    case REQUEST::TestConnection:
-        {
-
-        }
-        break;
-    case REQUEST::MyID:
-        {
-            const auto description = m_readMsg.GetDescription();
-            if (description.size() == 0) return;
-
-            const int id = m_room->GetID(description);
-            const string idStr = to_string(id);
-
-            // set writeMsg
-            stringstream ss;
-            ss << setw(2) << setfill('0') << static_cast<int>(request);
-            ss << setw(4) << setfill('0') << idStr.size();
-            ss << idStr;
-
-            m_writeMsg.SetDescriptionSize(idStr.size());
-            m_writeMsg.SetMessage(ss.str());
-
-            Write();
-        }
-        break;
-    case REQUEST::OthersPosition:
-        {
-
-        }
-        break;
-    default:
-        {
-            // something error
-        }
-        break;
-    }
-}
-
-Session::Session(tcp::socket socket, Room* room)
-    : m_socket(move(socket))
-    , m_room(room)
-{
-}
-
-void Session::Start()
-{
-    m_room->Join(shared_from_this());
-    ReadRequest();
-}
-
-Server::Server(boost::asio::io_context& ioContext, const tcp::endpoint& endpoint)
-    : m_acceptor(ioContext, endpoint)
-{
     Accept();
 }
 
 void Server::Accept()
 {
-    m_acceptor.async_accept([this](boost::system::error_code ec, tcp::socket socket)
+    m_acceptor.async_accept([this](auto ec, auto socket) 
     {
         if (!ec)
-            make_shared<Session>(move(socket), &m_room)->Start();
+        {
+            make_shared<Participant>(move(socket), &m_room)->Start();
+        }
 
         Accept();
     });

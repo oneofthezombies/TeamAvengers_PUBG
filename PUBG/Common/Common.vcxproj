@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="sources\Communication\Message.h" />
+    <ClInclude Include="sources\Communication\MessageParser.h" />
     <ClInclude Include="sources\Communication\Protocol.h" />
     <ClInclude Include="sources\Useful\CommonPreCompiled.h" />
     <ClInclude Include="stdafx.h" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\Communication\Message.cpp" />
+    <ClCompile Include="sources\Communication\MessageParser.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

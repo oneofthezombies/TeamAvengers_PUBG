@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 
         boost::asio::io_context ioContext;
         tcp::endpoint endpoint(tcp::v4(), std::atoi(argv[1]));
-        Server s(ioContext, endpoint);
+        Server s(&ioContext, endpoint);
         ioContext.run();
     }
     catch (std::exception& e)

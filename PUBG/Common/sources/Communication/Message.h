@@ -1,43 +1,32 @@
 #pragma once
 
-#include "Protocol.h"
-
 class Message
 {
 public:
-    static const int REQUEST_SIZE = 2;
-    static const int DESCRIPTION_SIZE_INFO_SIZE = 4;
-    static const int MAX_DESCRIPTION_SIZE = 256;
+    static const int HEADER_LENGTH = 4;
+    static const int MAX_BODY_LENGTH = 512;
 
 private:
-    array<char, REQUEST_SIZE + DESCRIPTION_SIZE_INFO_SIZE + MAX_DESCRIPTION_SIZE> m_data;
-    size_t m_descriptionSize;
+    char   m_data[HEADER_LENGTH + MAX_BODY_LENGTH];
+    size_t m_bodyLength;
 
 public:
-    Message() = default;
+    Message();
     ~Message() = default;
 
     char*       GetData();
     const char* GetData() const;
 
-    char*       GetRequestData();
-    const char* GetRequestData() const;
+    size_t GetLength() const;
 
-    char*       GetDescriptionSizeInfoData();
-    const char* GetDescriptionSizeInfoData() const;
+    char*       GetBodyData();
+    const char* GetBodyData() const;
 
-    char*       GetDescriptionData();
-    const char* GetDescriptionData() const;
+    void   SetBodyLength(size_t length);
+    size_t GetBodyLength() const;
 
-    size_t GetSize() const;
-
-    bool IsValidDescriptionSize();
-
-    void   SetDescriptionSize(const size_t size);
-    size_t GetDescriptionSize() const;
-
-    REQUEST GetRequest() const;
-    string GetDescription() const;
-
-    void SetMessage(const string& val);
+    bool DecodeHeader();
+    void EncodeHeader();
 };
+
+ostream& operator<<(ostream& os, const Message& msg);

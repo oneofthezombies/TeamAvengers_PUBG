@@ -10,15 +10,15 @@
 
 #pragma comment(lib, "Common.lib")
 
-// global variables
-extern HWND g_hWnd;
-// end global variables
-
-// debug
-#ifdef UNICODE
-#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
-#else
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") 
-#endif
-#define D3DX_DEBUG
-// end debug
+//// global variables
+//extern HWND g_hWnd;
+//// end global variables
+//
+//// debug
+//#ifdef UNICODE
+//#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
+//#else
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") 
+//#endif
+//#define D3DX_DEBUG
+//// end debug
