@@ -3,11 +3,9 @@
   <ItemGroup>
     <ClCompile Include="ServerMain.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="sources\Communication\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="sources\Communication\Server.h" />
   </ItemGroup>
 </Project>

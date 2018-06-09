@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="sources\Communication\Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -11,6 +10,5 @@
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="sources\Communication\Client.h" />
   </ItemGroup>
 </Project>

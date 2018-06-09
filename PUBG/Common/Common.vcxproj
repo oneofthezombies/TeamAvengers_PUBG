@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)sources\Communication;$(ProjectDir)sources\Useful;$(ProjectDir)sources;$(ProjectDir);$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)sources;$(ProjectDir);$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,16 +151,66 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="sources\Communication\Message.h" />
-    <ClInclude Include="sources\Communication\MessageParser.h" />
-    <ClInclude Include="sources\Communication\Protocol.h" />
-    <ClInclude Include="sources\Useful\CommonPreCompiled.h" />
+    <ClInclude Include="sources\Application.h" />
+    <ClInclude Include="sources\Camera.h" />
+    <ClInclude Include="sources\CameraManager.h" />
+    <ClInclude Include="sources\Client.h" />
+    <ClInclude Include="sources\Collider.h" />
+    <ClInclude Include="sources\ComponentTransform.h" />
+    <ClInclude Include="sources\DeviceManager.h" />
+    <ClInclude Include="sources\IDisplayObject.h" />
+    <ClInclude Include="sources\IMap.h" />
+    <ClInclude Include="sources\KeyManager.h" />
+    <ClInclude Include="sources\Object.h" />
+    <ClInclude Include="sources\ObjectTag.h" />
+    <ClInclude Include="sources\Scene.h" />
+    <ClInclude Include="sources\SceneManager.h" />
+    <ClInclude Include="sources\Server.h" />
+    <ClInclude Include="sources\Singleton.h" />
+    <ClInclude Include="sources\Message.h" />
+    <ClInclude Include="sources\MessageParser.h" />
+    <ClInclude Include="sources\Protocol.h" />
+    <ClInclude Include="sources\CollisionManager.h" />
+    <ClInclude Include="sources\ObjectManager.h" />
+    <ClInclude Include="sources\CollisionTag.h" />
+    <ClInclude Include="sources\CommonPreCompiled.h" />
+    <ClInclude Include="sources\SoundManager.h" />
+    <ClInclude Include="sources\SoundTag.h" />
+    <ClInclude Include="sources\UIButton.h" />
+    <ClInclude Include="sources\UIImage.h" />
+    <ClInclude Include="sources\UIManager.h" />
+    <ClInclude Include="sources\UIObject.h" />
+    <ClInclude Include="sources\UIText.h" />
+    <ClInclude Include="sources\Useful.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sources\Communication\Message.cpp" />
-    <ClCompile Include="sources\Communication\MessageParser.cpp" />
+    <ClCompile Include="sources\Application.cpp" />
+    <ClCompile Include="sources\Camera.cpp" />
+    <ClCompile Include="sources\CameraManager.cpp" />
+    <ClCompile Include="sources\Client.cpp" />
+    <ClCompile Include="sources\Collider.cpp" />
+    <ClCompile Include="sources\ComponentTransform.cpp" />
+    <ClCompile Include="sources\DeviceManager.cpp" />
+    <ClCompile Include="sources\IDisplayObject.cpp" />
+    <ClCompile Include="sources\IMap.cpp" />
+    <ClCompile Include="sources\KeyManager.cpp" />
+    <ClCompile Include="sources\Object.cpp" />
+    <ClCompile Include="sources\Message.cpp" />
+    <ClCompile Include="sources\MessageParser.cpp" />
+    <ClCompile Include="sources\CollisionManager.cpp" />
+    <ClCompile Include="sources\ObjectManager.cpp" />
+    <ClCompile Include="sources\Scene.cpp" />
+    <ClCompile Include="sources\SceneManager.cpp" />
+    <ClCompile Include="sources\Server.cpp" />
+    <ClCompile Include="sources\SoundManager.cpp" />
+    <ClCompile Include="sources\UIButton.cpp" />
+    <ClCompile Include="sources\UIImage.cpp" />
+    <ClCompile Include="sources\UIManager.cpp" />
+    <ClCompile Include="sources\UIObject.cpp" />
+    <ClCompile Include="sources\UIText.cpp" />
+    <ClCompile Include="sources\Useful.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

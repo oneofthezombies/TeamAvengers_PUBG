@@ -113,3 +113,11 @@ using boost::asio::ip::tcp;
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 // end directx9
+
+// math and useful functions
+#include "Useful.h"
+// math and useful functions
+
+// managers and interfaces for global access
+#include "CollisionManager.h" // for g_pCollisionManager
+// end managers and interfaces
