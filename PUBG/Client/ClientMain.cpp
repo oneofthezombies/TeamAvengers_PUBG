@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Client.h"
-#include "Protocol.h"
+#include "TagRequest.h"
 
 #define MAX_LOADSTRING 100
 
@@ -108,10 +108,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	g_pApp->WndProc(hWnd, message, wParam, lParam);
+    //Alt키 막기용
+    if (wParam == SC_KEYMENU && (lParam >> 16) <= 0) return 0;
 
-	//Alt키 막기용
-	if (wParam == SC_KEYMENU && (lParam >> 16) <= 0) return 0;
+	g_pApp->WndProc(hWnd, message, wParam, lParam);
 
 	switch (message)
 	{

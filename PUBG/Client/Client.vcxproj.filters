@@ -3,6 +3,29 @@
   <ItemGroup>
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\Client.cpp" />
+    <ClCompile Include="Source\ColliderRenderer.cpp" />
+    <ClCompile Include="Source\Debugger.cpp" />
+    <ClCompile Include="Source\Direct3D.cpp" />
+    <ClCompile Include="Source\FontManager.cpp" />
+    <ClCompile Include="Source\FVFStructures.cpp" />
+    <ClCompile Include="Source\Input.cpp" />
+    <ClCompile Include="Source\IScene.cpp" />
+    <ClCompile Include="Source\SceneManager.cpp" />
+    <ClCompile Include="Source\SoundManager.cpp" />
+    <ClCompile Include="Source\TextureManager.cpp" />
+    <ClCompile Include="Source\UIButton.cpp" />
+    <ClCompile Include="Source\UIImage.cpp" />
+    <ClCompile Include="Source\UIManager.cpp" />
+    <ClCompile Include="Source\UIObject.cpp" />
+    <ClCompile Include="Source\UIText.cpp" />
+    <ClCompile Include="Source\UITextInputField.cpp" />
+    <ClCompile Include="Source\Impl\Cube.cpp" />
+    <ClCompile Include="Source\Impl\SceneLogin.cpp" />
+    <ClCompile Include="Source\Impl\ScenePlay.cpp" />
+    <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\CameraManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -10,5 +33,31 @@
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\Client.h" />
+    <ClInclude Include="Source\ColliderRenderer.h" />
+    <ClInclude Include="Source\Debugger.h" />
+    <ClInclude Include="Source\Direct3D.h" />
+    <ClInclude Include="Source\FontManager.h" />
+    <ClInclude Include="Source\FVFStructures.h" />
+    <ClInclude Include="Source\Input.h" />
+    <ClInclude Include="Source\IScene.h" />
+    <ClInclude Include="Source\SceneManager.h" />
+    <ClInclude Include="Source\SoundManager.h" />
+    <ClInclude Include="Source\TagFont.h" />
+    <ClInclude Include="Source\TagScene.h" />
+    <ClInclude Include="Source\TagSound.h" />
+    <ClInclude Include="Source\TextureManager.h" />
+    <ClInclude Include="Source\UIButton.h" />
+    <ClInclude Include="Source\UIImage.h" />
+    <ClInclude Include="Source\UIManager.h" />
+    <ClInclude Include="Source\UIObject.h" />
+    <ClInclude Include="Source\UIText.h" />
+    <ClInclude Include="Source\UITextInputField.h" />
+    <ClInclude Include="Source\Impl\Cube.h" />
+    <ClInclude Include="Source\Impl\SceneLogin.h" />
+    <ClInclude Include="Source\Impl\ScenePlay.h" />
+    <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\CameraManager.h" />
   </ItemGroup>
 </Project>

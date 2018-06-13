@@ -1,6 +1,7 @@
 #pragma once
 
-#include "CommonPreCompiled.h"
+#include "Common.h"
+#pragma comment(lib, "Common.lib")
 
 // FMOD
 #include <fmod.hpp>
@@ -8,16 +9,23 @@
 #pragma comment(lib, "fmod_vc.lib")
 // end FMOD
 
-#pragma comment(lib, "Common.lib")
+// math and usefuls
+#include "FVFStructures.h"
+// end math and usefuls
 
 // managers and interfaces for global access
-#include "Application.h"   // for g_pApp
-#include "DeviceManager.h" // for g_pDeviceManager, g_pDevice
-#include "KeyManager.h"    // for g_pKeyManager
-#include "UIManager.h"     // for g_pUIManager, g_pSprite
-#include "SoundManager.h"  // for g_pSoundManager
-#include "SceneManager.h"  // for g_pSceneManager,  g_pCurrentScene
-#include "CameraManager.h" // for g_pCameraManager, g_pCuurentCamera
+#include "Application.h"    // for g_pApp
+#include "Direct3D.h"       // for g_pD3D, g_pD3DDevice
+#include "Debugger.h"       // for g_pDebugger, Debug
+#include "UIManager.h"      // for g_pUIManager, g_pSprite
+#include "TextureManager.h" // for g_pTextureManager
+#include "FontManager.h"    // for g_pFontManager
+#include "Input.h"          // for g_pInput
+#include "SoundManager.h"   // for g_pSoundManager
+#include "SceneManager.h"   // for g_pSceneManager,  g_pCurrentScene
+#include "IScene.h"         // for IScene methods
+#include "CameraManager.h"  // for g_pCameraManager, g_pCurrentCamera
+#include "Camera.h"         // for Camera methods
 // end managers and interfaces
 
 // global variables

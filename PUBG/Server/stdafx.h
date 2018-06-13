@@ -1,5 +1,5 @@
 #pragma once
 
-#include "CommonPreCompiled.h"
-
+#include "Common.h"
 #pragma comment(lib, "Common.lib")
+
