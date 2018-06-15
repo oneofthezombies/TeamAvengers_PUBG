@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Source\Collider.h" />
+    <ClInclude Include="Source\CollisionManager.h" />
+    <ClInclude Include="Source\Common.h" />
+    <ClInclude Include="Source\ComponentTransform.h" />
+    <ClInclude Include="Source\IMap.h" />
+    <ClInclude Include="Source\IObject.h" />
+    <ClInclude Include="Source\Message.h" />
+    <ClInclude Include="Source\ObjectManager.h" />
+    <ClInclude Include="Source\Singleton.h" />
+    <ClInclude Include="Source\TagCollision.h" />
+    <ClInclude Include="Source\TagObject.h" />
+    <ClInclude Include="Source\TagRequest.h" />
+    <ClInclude Include="Source\Useful.h" />
+    <ClInclude Include="Source\TimeManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Source\Collider.cpp" />
+    <ClCompile Include="Source\CollisionManager.cpp" />
+    <ClCompile Include="Source\ComponentTransform.cpp" />
+    <ClCompile Include="Source\IMap.cpp" />
+    <ClCompile Include="Source\IObject.cpp" />
+    <ClCompile Include="Source\Message.cpp" />
+    <ClCompile Include="Source\ObjectManager.cpp" />
+    <ClCompile Include="Source\Useful.cpp" />
+    <ClCompile Include="Source\TimeManager.cpp" />
+  </ItemGroup>
+</Project>
