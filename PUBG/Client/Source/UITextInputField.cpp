@@ -4,47 +4,40 @@
 
 enum CHILD
 {
-    BUTTON,
-    TEXT
+    UIBUTTON,
+    UITEXT
 };
 
-UIButton* UITextInputField::GetButton() const
+UIButton* UITextInputField::GetUIButton() const
 {
-    return static_cast<UIButton*>(m_children[CHILD::BUTTON]);
+    return static_cast<UIButton*>(m_children[CHILD::UIBUTTON]);
 }
 
-UIText* UITextInputField::GetText() const
+UIText* UITextInputField::GetUIText() const
 {
-    return static_cast<UIText*>(m_children[CHILD::TEXT]);
+    return static_cast<UIText*>(m_children[CHILD::UITEXT]);
 }
 
 UITextInputField::UITextInputField(
     const D3DXVECTOR3& pos, 
-    const string& textureDir, 
-    const string& idleTexture, const string& mouseOverTexture, const string& selectTexture, 
-    const TAG_FONT font)
-    : UIObject()
+    const string& textureDir, const string& idleTex, const string& mouseOverTex, const string& selectTex, 
+    const TAG_FONT font, const D3DCOLOR textColor,
+    UIObject* pParent)
+    : UIObject(pParent)
     , m_listener()
     , m_text()
     , m_isSelected(false)
 {
     SetPosition(pos);
 
-    UIButton* pButton = new UIButton;
-    pButton->SetTexture(textureDir + idleTexture, textureDir + mouseOverTexture, textureDir + selectTexture);
+    UIButton* pButton = new UIButton(D3DXVECTOR3(0.0f, 0.0f, 0.0f), textureDir, idleTex, mouseOverTex, selectTex, &m_listener, this, nullptr, "", D3DCOLOR_XRGB(0, 0, 0));
+
     SetSize(pButton->GetSize());
-    AddChild(pButton);
 
     m_listener.SetHandle(this);
-    m_listener.SetUIButton(pButton);
 
-    UIText* pText = new UIText;
-    pText->SetFont(g_pFontManager->GetFont(font));
-    pText->SetSize(pButton->GetSize());
-    pText->SetText(&m_text);
-    pText->SetColor(D3DCOLOR_XRGB(0, 0, 0));
+    UIText* pText = new UIText(g_pFontManager->GetFont(font), GetSize(), &m_text, textColor, this);
     pText->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
-    AddChild(pText);
 }
 
 UITextInputField::~UITextInputField()
@@ -89,6 +82,11 @@ void UITextInputField::SetIsSelected(const bool val)
 bool UITextInputField::IsSelected() const
 {
     return false;
+}
+
+string UITextInputField::GetText() const
+{
+    return m_text;
 }
 
 UITextInputFieldListener::UITextInputFieldListener()

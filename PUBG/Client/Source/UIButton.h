@@ -30,7 +30,10 @@ private:
     void UpdateOnMouseDownUpDrag();
 
 public:
-	UIButton();
+	UIButton(const D3DXVECTOR3& pos, 
+        const string& textureDir, const string& idleTex, const string& mouseOverTex, const string& selectTex, 
+        IUIButtonOnMouseListener* pListener, UIObject* pParent, 
+        const LPD3DXFONT font, const string& text, const D3DCOLOR textColor);
 	virtual ~UIButton();
 
 	virtual void Update(const D3DXVECTOR3& parentViewportPos, const D3DXMATRIX& transform) override;
@@ -39,7 +42,7 @@ public:
     void UpdateOnMouse();
 
 	void SetTexture(const string& idle, const string& mouseOver, const string& select);
-	void SetText(const LPD3DXFONT font, const string& text);
+	void SetText(const LPD3DXFONT font, const string& text, const D3DCOLOR textColor);
     void SetKeyToRespond(const int key);
     void SetListener(IUIButtonOnMouseListener* p);
 };

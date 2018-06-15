@@ -24,11 +24,14 @@ private:
     string m_text;
     bool m_isSelected;
 
-    UIButton* GetButton() const;
-    UIText*   GetText() const;
+    UIButton* GetUIButton() const;
+    UIText*   GetUIText() const;
 
 public:
-    UITextInputField(const D3DXVECTOR3& pos, const string& textureDir, const string& idleTexture, const string& mouseOverTexture, const string& selectTexture, const TAG_FONT font);
+    UITextInputField(const D3DXVECTOR3& pos, 
+        const string& textureDir, const string& idleTex, const string& mouseOverTex, const string& selectTex, 
+        const TAG_FONT font, const D3DCOLOR textColor, 
+        UIObject* pParent);
     virtual ~UITextInputField();
 
     virtual void Update(const D3DXVECTOR3& parentViewportPos, const D3DXMATRIX& transform) override;
@@ -36,5 +39,6 @@ public:
 
     void SetIsSelected(const bool val);
     bool IsSelected() const;
+    string GetText() const;
 };
 

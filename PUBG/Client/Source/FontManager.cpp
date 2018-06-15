@@ -32,6 +32,10 @@ LPD3DXFONT FontManager::GetFont(const TAG_FONT tag)
             break;
         }
     }
+    else
+    {
+        hr = 0;
+    }
     assert(!FAILED(hr) && "FontManager::GetFont() failed.");
     return m_fonts[tag];
 

@@ -25,7 +25,7 @@ protected:
     void SetViewportPosRect(const D3DXVECTOR3& parentViewportPos, const D3DXVECTOR3& pos, const D3DXVECTOR2& size, const D3DXMATRIX& transform);
 
 public:
-	UIObject();
+	UIObject(UIObject* pParent);
 	virtual ~UIObject();
 
     virtual void Update(const D3DXVECTOR3& parentViewportPos, const D3DXMATRIX& transform);
@@ -34,11 +34,14 @@ public:
     void AddChild(UIObject* pChild);
     void ClearChildren();
     void UpdateChildren(const D3DXVECTOR3& viewportPos, const D3DXMATRIX& transform);
+    UIObject* GetChild(const int key);
 
     void SetInstanceID(const int val);
     int  GetInstanceID() const;
 
-    void SetPosition(const D3DXVECTOR3& val);
+    void               SetPosition(const D3DXVECTOR3& val);
+    const D3DXVECTOR3& GetPosition() const;
+
     void SetCenter(const D3DXVECTOR3& val);
 
     void               SetSize(const D3DXVECTOR2& val);

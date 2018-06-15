@@ -32,6 +32,29 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
 
 	g_pApp->Init();
 
+    //g_pCommunicator->Connect("192.168.0.109", "8253", "a");
+
+    //boost::asio::io_context ioContext;
+    //tcp::resolver resolver(ioContext);
+    //auto endpoints = resolver.resolve("192.168.0.109", "8253");
+    //Client c(&ioContext, endpoints, nullptr);
+    //std::thread t([&ioContext]() { ioContext.run(); });
+
+    //Message msg1;
+    //stringstream ss;
+    //ss << setw(2) << setfill(' ') << static_cast<int>(TAG_REQUEST::MY_ID);
+    //ss << string("ootz");
+
+    //const string str(ss.str());
+    //msg1.SetBodyLength(str.size());
+    //memcpy_s(msg1.GetBodyData(), Message::MAX_BODY_LENGTH, str.data(), str.size());
+    //msg1.EncodeHeader();
+
+    //cout << "My nickname is " << "ootz" << '\n';
+    //c.Write(msg1);
+
+    //cout << "Wait...\n";
+
 	MSG msg;
 
 	while (true)
@@ -53,6 +76,9 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
 	}
 
 	g_pApp->Destroy();
+
+    //c.Close();
+    //t.join();
 
 	return (int)msg.wParam;
 }
@@ -151,12 +177,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //        boost::asio::io_context ioContext;
 //        tcp::resolver resolver(ioContext);
 //        auto endpoints = resolver.resolve(argv[1], argv[2]);
-//        Client c(&ioContext, endpoints);
+//        Client c(&ioContext, endpoints, nullptr);
 //        std::thread t([&ioContext]() { ioContext.run(); });
 //
 //        Message msg;
 //        stringstream ss;
-//        ss << setw(2) << setfill(' ') << static_cast<int>(REQUEST::MyID);
+//        ss << setw(2) << setfill(' ') << static_cast<int>(TAG_REQUEST::MY_ID);
 //        ss << string(argv[3]);
 //
 //        const string str(ss.str());

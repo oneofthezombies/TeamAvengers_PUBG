@@ -26,6 +26,7 @@
 #include "IScene.h"         // for IScene methods
 #include "CameraManager.h"  // for g_pCameraManager, g_pCurrentCamera
 #include "Camera.h"         // for Camera methods
+#include "Client.h"         // for g_pCommunicator
 // end managers and interfaces
 
 // global variables

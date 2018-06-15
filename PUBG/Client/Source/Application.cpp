@@ -23,6 +23,7 @@ void Application::Init()
 
 void Application::Destroy()
 {
+    g_pCommunicator->Destroy();
     g_pCameraManager->Destroy();
 	g_pSceneManager->Destroy();
     g_pUIManager->Destroy();
@@ -48,6 +49,7 @@ void Application::Update()
     g_pUIManager->Update();
 
 	Debug << "FPS : " << g_pTime->GetFPS() << '\n';
+    g_pCommunicator->Logging();
 }
 
 void Application::Render()

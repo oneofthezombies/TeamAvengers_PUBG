@@ -3,8 +3,12 @@
 #include "UIManager.h"
 #include "UIText.h"
 
-UIButton::UIButton()
-    : UIObject()
+UIButton::UIButton(const D3DXVECTOR3& pos, 
+    const string& textureDir, const string& idleTex, const string& mouseOverTex, const string& selectTex, 
+    IUIButtonOnMouseListener* pListener, 
+    UIObject* pParent, 
+    const LPD3DXFONT font, const string& text, const D3DCOLOR textColor)
+    : UIObject(pParent)
     , m_state(STATE::IDLE)
     , m_keyToRespond(VK_LBUTTON)
     , m_pListener(nullptr)
@@ -14,6 +18,15 @@ UIButton::UIButton()
 {
     for (auto& t : m_textures)
         t = nullptr;
+
+    SetPosition(pos);
+    SetTexture(textureDir + idleTex, textureDir + mouseOverTex, textureDir + selectTex);
+
+    if (pListener)
+        pListener->SetUIButton(this);
+
+    if (font)
+        SetText(font, text, textColor);
 }
 
 UIButton::~UIButton()
@@ -59,13 +72,9 @@ void UIButton::SetTexture(const string& idle, const string& mouseOver, const str
 	m_size.y = static_cast<float>(info.Height);
 }
 
-void UIButton::SetText(const LPD3DXFONT font, const string& text)
+void UIButton::SetText(const LPD3DXFONT font, const string& text, const D3DCOLOR textColor)
 {
-	UIText* pText = new UIText;
-	AddChild(pText);
-    pText->SetFont(font);
-    pText->SetText(text);
-    pText->SetSize(m_size);
+    UIText* pText = new UIText(font, m_size, text, textColor, this);
 }
 
 void UIButton::SetKeyToRespond(const int key)

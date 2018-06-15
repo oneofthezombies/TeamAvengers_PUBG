@@ -2,13 +2,31 @@
 #include "UIText.h"
 #include "UIManager.h"
 
-UIText::UIText()
-    : UIObject()
+UIText::UIText(const LPD3DXFONT font, const D3DXVECTOR2& size, const D3DCOLOR color, UIObject* pParent)
+    : UIObject(pParent)
     , m_pFont(nullptr)
     , m_drawTextFormat(DT_CENTER | DT_VCENTER)
     , m_text("")
     , m_pText(nullptr)
 {
+    if (font)
+        SetFont(font);
+
+    SetSize(size);
+    SetColor(color);
+}
+
+UIText::UIText(const LPD3DXFONT font, const D3DXVECTOR2& size, string* pText, const D3DCOLOR color, UIObject* pParent)
+    : UIText(font, size, color, pParent)
+{
+    if (pText)
+        SetText(pText);
+}
+
+UIText::UIText(const LPD3DXFONT font, const D3DXVECTOR2& size, const string& text, const D3DCOLOR color, UIObject* pParent)
+    : UIText(font, size, color, pParent)
+{
+    SetText(text);
 }
 
 UIText::~UIText()

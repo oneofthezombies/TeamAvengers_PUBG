@@ -2,7 +2,7 @@
 #include "UIObject.h"
 #include "UIManager.h"
 
-UIObject::UIObject()
+UIObject::UIObject(UIObject* pParent)
     : m_instanceID(-1)
     , m_color(D3DCOLOR_XRGB(255, 255, 255))
     , m_position()
@@ -11,6 +11,14 @@ UIObject::UIObject()
     , m_size()
     , m_pAttachedObject(nullptr)
 {
+    if (pParent)
+    {
+        pParent->AddChild(this);
+    }
+    else
+    {
+        g_pUIManager->RegisterUIObject(this);
+    }
 }
 
 UIObject::~UIObject()
@@ -84,6 +92,13 @@ void UIObject::UpdateChildren(const D3DXVECTOR3& viewportPos, const D3DXMATRIX& 
         if (c) c->Update(viewportPos, transform);
 }
 
+UIObject* UIObject::GetChild(const int key)
+{
+    if (static_cast<size_t>(key) >= m_children.size()) return nullptr;
+
+    return m_children[key];
+}
+
 void UIObject::RenderChildren()
 {
     for (auto c : m_children)
@@ -116,6 +131,11 @@ void UIObject::AddChild(UIObject* pChild)
 void UIObject::SetPosition(const D3DXVECTOR3& val)
 {
     m_position = val;
+}
+
+const D3DXVECTOR3& UIObject::GetPosition() const
+{
+    return m_position;
 }
 
 void UIObject::SetCenter(const D3DXVECTOR3& val)

@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "IScene.h"
 #include "Impl/SceneLogin.h"
+#include "Impl/ScenePlay.h"
 
 SceneManager::SceneManager()
 	: Singleton<SceneManager>()
@@ -16,6 +17,8 @@ SceneManager::~SceneManager()
 void SceneManager::Init()
 {
     m_scenes.emplace(TAG_SCENE::LOGIN, new SceneLogin);
+    m_scenes.emplace(TAG_SCENE::PLAY, new ScenePlay);
+
     SetCurrentScene(TAG_SCENE::LOGIN);
 }
 

@@ -2,8 +2,8 @@
 #include "UIImage.h"
 #include "UIManager.h"
 
-UIImage::UIImage()
-    : UIObject()
+UIImage::UIImage(UIObject* pParent)
+    : UIObject(pParent)
     , m_pTex(nullptr)
 {
 }

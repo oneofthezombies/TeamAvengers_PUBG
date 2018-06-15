@@ -10,8 +10,11 @@ private:
     string*    m_pText;
     DWORD	   m_drawTextFormat;
 
+    UIText(const LPD3DXFONT font, const D3DXVECTOR2& size, const D3DCOLOR color, UIObject* pParent);
+
 public:
-	UIText();
+	UIText(const LPD3DXFONT font, const D3DXVECTOR2& size, string* pText, const D3DCOLOR color, UIObject* pParent);
+    UIText(const LPD3DXFONT font, const D3DXVECTOR2& size, const string& text, const D3DCOLOR color, UIObject* pParent);
 	virtual ~UIText();
 
 	virtual void Render() override;

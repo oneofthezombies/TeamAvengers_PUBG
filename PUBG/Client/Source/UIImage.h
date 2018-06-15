@@ -7,7 +7,7 @@ private:
     LPDIRECT3DTEXTURE9 m_pTex;
 
 public:
-	UIImage();
+	UIImage(UIObject* pParent);
 	virtual ~UIImage();
 
 	virtual void Render() override;
