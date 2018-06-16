@@ -231,7 +231,7 @@ LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& fullPath)
     }
     return m_textures[fullPath];
 }
-                                                                               
+
 LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& path, const string& textureFilename)
 {
     return GetTexture(path + textureFilename);
@@ -243,10 +243,7 @@ EffectMesh* ResourceManager::GetEffectMesh(const string& path, const string& xFi
     const auto search = m_effectMeshs.find(str);
     if (search == m_effectMeshs.end())
     {
-        EffectMesh* pEM = ParseX(path, xFilename);
-        pEM->pMesh->DrawSubset(0);
-        
-        m_effectMeshs[str] = pEM;
+        m_effectMeshs[str] = ParseX(path, xFilename);
     }
     return m_effectMeshs[str];
 }
