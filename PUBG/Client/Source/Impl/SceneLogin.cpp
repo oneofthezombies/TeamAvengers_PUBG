@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneLogin.h"
 #include "UITextInputField.h"
+#include "Bandage.h"
 
 enum CHILD
 {
@@ -20,18 +21,20 @@ SceneLogin::~SceneLogin()
 
 void SceneLogin::OnInit()
 {
-    UIObject* root = new UIObject(nullptr);
-    m_buttonListener.SetHandle(root);
+    //UIObject* root = new UIObject(nullptr);
+    //m_buttonListener.SetHandle(root);
 
-    UITextInputField* inputField = new UITextInputField(D3DXVECTOR3(100.0f, 100.0f, 0.0f), 
-        "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
-        TAG_FONT::DEFAULT, D3DCOLOR_XRGB(0, 0, 0), root);
+    //UITextInputField* inputField = new UITextInputField(D3DXVECTOR3(100.0f, 100.0f, 0.0f), 
+    //    "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
+    //    TAG_FONT::DEFAULT, D3DCOLOR_XRGB(0, 0, 0), root);
 
-    UIButton* button = new UIButton(D3DXVECTOR3(100.0f, 200.0f, 0.0f), 
-        "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
-        &m_buttonListener, 
-        root, 
-        g_pFontManager->GetFont(TAG_FONT::DEFAULT), "Connect", D3DCOLOR_XRGB(0, 0, 0));
+    //UIButton* button = new UIButton(D3DXVECTOR3(100.0f, 200.0f, 0.0f), 
+    //    "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
+    //    &m_buttonListener, 
+    //    root, 
+    //    g_pFontManager->GetFont(TAG_FONT::DEFAULT), "Connect", D3DCOLOR_XRGB(0, 0, 0));
+
+    IObject* p = new Bandage; AddObject(p);
 }
 
 void SceneLogin::OnUpdate()

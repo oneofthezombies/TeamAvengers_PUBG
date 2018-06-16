@@ -18,6 +18,8 @@ public:
     void Destroy() {}
     void Update() {}
 
+    Camera* GetCurrentCamera();
+
     friend Singleton<CameraManager>;
 };
 

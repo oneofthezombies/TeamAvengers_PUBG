@@ -128,3 +128,8 @@
 //{ 
 //    return m_pCurrentCamera->GetEyePos(); 
 //}
+
+Camera* CameraManager::GetCurrentCamera()
+{
+    return &m_camera;
+}

@@ -2,9 +2,16 @@
 
 class Camera
 {
+private:
+    D3DXMATRIX m_ViewMatrix;
+    D3DXMATRIX m_ProjectionMatrix;
+
 public:
     Camera();
     virtual ~Camera();
+
+    const D3DXMATRIX& GetViewMatrix();
+    const D3DXMATRIX& GetProjectionMatrix();
 };
 
 //#include "BaseObject.h"

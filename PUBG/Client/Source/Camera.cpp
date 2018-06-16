@@ -83,17 +83,25 @@
 
 Camera::Camera()
 {
-    D3DXMATRIX view;
-    D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0.0f, 0.0f, -1.0f), &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
-    g_pDevice->SetTransform(D3DTS_VIEW, &view);
+    D3DXMatrixLookAtLH(&m_ViewMatrix, &D3DXVECTOR3(0.0f, 0.0f, -1.0f), &D3DXVECTOR3(0.0f, 0.0f, 0.0f), &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+    g_pDevice->SetTransform(D3DTS_VIEW, &m_ViewMatrix);
 
     RECT rc;
     GetClientRect(g_hWnd, &rc);
-    D3DXMATRIX proj;
-    D3DXMatrixPerspectiveFovLH(&proj, D3DX_PI * 0.25f, static_cast<float>(rc.right) / static_cast<float>(rc.bottom), 1.0f, 1000.0f);
-    g_pDevice->SetTransform(D3DTS_PROJECTION, &proj);
+    D3DXMatrixPerspectiveFovLH(&m_ProjectionMatrix, D3DX_PI * 0.25f, static_cast<float>(rc.right) / static_cast<float>(rc.bottom), 1.0f, 1000.0f);
+    g_pDevice->SetTransform(D3DTS_PROJECTION, &m_ProjectionMatrix);
 }
 
 Camera::~Camera()
 {
+}
+
+const D3DXMATRIX& Camera::GetViewMatrix()
+{
+    return m_ViewMatrix;
+}
+
+const D3DXMATRIX& Camera::GetProjectionMatrix()
+{
+    return m_ProjectionMatrix;
 }

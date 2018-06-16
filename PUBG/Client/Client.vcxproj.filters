@@ -26,6 +26,8 @@
     <ClCompile Include="Source\Impl\ScenePlay.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\CameraManager.cpp" />
+    <ClCompile Include="Source\Loader.cpp" />
+    <ClCompile Include="Source\Impl\Bandage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -59,5 +61,7 @@
     <ClInclude Include="Source\Impl\ScenePlay.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\CameraManager.h" />
+    <ClInclude Include="Source\Loader.h" />
+    <ClInclude Include="Source\Impl\Bandage.h" />
   </ItemGroup>
 </Project>
