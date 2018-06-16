@@ -18,6 +18,7 @@ void Renderer::Render()
         const auto& ep = m_pEffectMesh->effectParams[i];
         ep.pEffect->ApplyParameterBlock(ep.hParam);
 
+        // TODO :
         D3DXMATRIX s, t, world;
         D3DXMatrixScaling(&s, 1.0f, 1.0f, 1.0f);
         D3DXMatrixTranslation(&t, 0.0f, 0.0f, 10.0f);
