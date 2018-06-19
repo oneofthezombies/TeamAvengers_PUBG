@@ -1,12 +1,12 @@
 #pragma once
 #include "IObject.h"
 
-class Renderer;
+class EffectMeshRenderer;
 
 class Bandage : public IObject
 {
 private:
-    Renderer* m_pRenderer;
+    EffectMeshRenderer* pEMR;
 
 public:
     Bandage();

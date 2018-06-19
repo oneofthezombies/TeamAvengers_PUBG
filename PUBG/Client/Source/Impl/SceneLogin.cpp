@@ -2,6 +2,7 @@
 #include "SceneLogin.h"
 #include "UITextInputField.h"
 #include "Bandage.h"
+#include "Kar98k.h"
 
 enum CHILD
 {
@@ -34,7 +35,11 @@ void SceneLogin::OnInit()
     //    root, 
     //    g_pFontManager->GetFont(TAG_FONT::DEFAULT), "Connect", D3DCOLOR_XRGB(0, 0, 0));
 
-    IObject* p = new Bandage; AddObject(p);
+    IObject* p = nullptr;
+    p = new Kar98k; AddObject(p);
+    p = new Bandage; AddObject(p);
+    //Sleep(500);
+    //p = new Kar98k; AddObject(p);
 }
 
 void SceneLogin::OnUpdate()

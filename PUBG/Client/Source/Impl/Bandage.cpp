@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "Bandage.h"
-#include "Loader.h"
+#include "Renderer.h"
 
 Bandage::Bandage()
     : IObject()
-    , m_pRenderer(nullptr)
+    , pEMR(nullptr)
 {
-    m_pRenderer = AddComponent<Renderer>();
-    m_pRenderer->SetEffectMesh(
+    pEMR = AddComponent<EffectMeshRenderer>();
+    pEMR->SetEffectMesh(
         g_pResourceManager->GetEffectMesh("./Resource/Bandage/", "Bandage.X"));
 }
 
@@ -21,5 +21,5 @@ void Bandage::OnUpdate()
 
 void Bandage::OnRender()
 {
-    m_pRenderer->Render();
+    pEMR->Render();
 }

@@ -9,7 +9,6 @@
     <ClCompile Include="Source\Debugger.cpp" />
     <ClCompile Include="Source\Direct3D.cpp" />
     <ClCompile Include="Source\FontManager.cpp" />
-    <ClCompile Include="Source\FVFStructures.cpp" />
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\IScene.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
@@ -26,8 +25,13 @@
     <ClCompile Include="Source\Impl\ScenePlay.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\CameraManager.cpp" />
-    <ClCompile Include="Source\Loader.cpp" />
     <ClCompile Include="Source\Impl\Bandage.cpp" />
+    <ClCompile Include="Source\Renderer.cpp" />
+    <ClCompile Include="Source\ResourceManager.cpp" />
+    <ClCompile Include="Source\Impl\Kar98k.cpp" />
+    <ClCompile Include="Source\Animator.cpp" />
+    <ClCompile Include="Source\ResourceStructure.cpp" />
+    <ClCompile Include="Source\FVFStructure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -41,7 +45,6 @@
     <ClInclude Include="Source\Debugger.h" />
     <ClInclude Include="Source\Direct3D.h" />
     <ClInclude Include="Source\FontManager.h" />
-    <ClInclude Include="Source\FVFStructures.h" />
     <ClInclude Include="Source\Input.h" />
     <ClInclude Include="Source\IScene.h" />
     <ClInclude Include="Source\SceneManager.h" />
@@ -61,7 +64,12 @@
     <ClInclude Include="Source\Impl\ScenePlay.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\CameraManager.h" />
-    <ClInclude Include="Source\Loader.h" />
     <ClInclude Include="Source\Impl\Bandage.h" />
+    <ClInclude Include="Source\Renderer.h" />
+    <ClInclude Include="Source\ResourceManager.h" />
+    <ClInclude Include="Source\Impl\Kar98k.h" />
+    <ClInclude Include="Source\Animator.h" />
+    <ClInclude Include="Source\ResourceStructure.h" />
+    <ClInclude Include="Source\FVFStructure.h" />
   </ItemGroup>
 </Project>
