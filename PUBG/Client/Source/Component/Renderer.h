@@ -1,15 +1,9 @@
 #pragma once
 #include "ComponentTransform.h"
+#include "TagRenderer.h"
 
 class IObject;
 class Animator;
-
-enum class TAG_RENDERER
-{
-    DEFAULT,
-    EFFECT_MESH,
-    SKINNED_MESH
-};
 
 class Renderer : public Component
 {
@@ -53,5 +47,33 @@ public:
     SkinnedMeshRenderer(IObject* pOwner);
     virtual ~SkinnedMeshRenderer();
 
+    virtual void Render() override;
+};
+
+class ColliderRenderer : public Renderer
+{
+protected:
+    D3DCOLOR m_color;
+
+    ColliderRenderer(IObject* pOwner, const TAG_RENDERER tag);
+
+public:
+    virtual ~ColliderRenderer();
+
+    virtual void Render() override;
+
+    void SetColor(const D3DCOLOR color);
+};
+
+class BoxColliderRenderer : public ColliderRenderer
+{
+private:
+    vector<VERTEX_PC> m_vertices;
+
+public:
+    BoxColliderRenderer(IObject* pOwner);
+    virtual ~BoxColliderRenderer();
+
+    void Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max);
     virtual void Render() override;
 };

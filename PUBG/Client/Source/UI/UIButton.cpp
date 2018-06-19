@@ -59,7 +59,7 @@ void UIButton::UpdateOnMouse()
 
 void UIButton::SetTexture(const string& idle, const string& mouseOver, const string& select)
 {
-    const auto texMgr = g_pTextureManager;
+    const auto texMgr = g_pResourceManager;
     if (!texMgr) return;
 
 	D3DXIMAGE_INFO info;

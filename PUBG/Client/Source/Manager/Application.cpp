@@ -31,7 +31,7 @@ void Application::Destroy()
 	//g_pObjectManager->Destroy();
     g_pInput->Destroy();
     //g_pSoundManager->Destroy();
-	g_pTextureManager->Destroy();
+    g_pResourceManager->Destroy();
 	g_pFontManager->Destroy();
 	g_pDebugger->Destroy();
 	g_pD3D->Destroy();

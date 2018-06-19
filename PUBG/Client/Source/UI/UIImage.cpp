@@ -27,7 +27,7 @@ void UIImage::Render()
 void UIImage::SetTexture(const string& fullPath)
 {
 	D3DXIMAGE_INFO info;
-	m_pTex = g_pTextureManager->GetTexture(fullPath);
+    m_pTex = g_pResourceManager->GetTexture(fullPath);
 	D3DXGetImageInfoFromFileA(fullPath.c_str(), &info);
 	m_size.x = static_cast<float>(info.Width);
 	m_size.y = static_cast<float>(info.Height);

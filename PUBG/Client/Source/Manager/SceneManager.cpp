@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "SceneManager.h"
 #include "IScene.h"
-#include "Impl/SceneLogin.h"
-#include "Impl/ScenePlay.h"
+#include "SceneLogin.h"
+#include "ScenePlay.h"
 
 SceneManager::SceneManager()
 	: Singleton<SceneManager>()

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Bandage.h"
 #include "Renderer.h"
-
+ 
 Bandage::Bandage()
     : IObject()
     , pEMR(nullptr)
