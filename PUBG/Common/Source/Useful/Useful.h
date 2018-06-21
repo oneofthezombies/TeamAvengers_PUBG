@@ -11,3 +11,6 @@ type_index GetTypeIndex()
 }
 
 ostream& operator<<(ostream& os, const D3DXVECTOR3& val);
+ostream& operator<<(ostream& os, const D3DXMATRIX& val);
+
+D3DXVECTOR3 GetTranslation(const D3DXMATRIX& val);

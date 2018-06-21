@@ -3,12 +3,16 @@
 class Camera
 {
 private:
-    D3DXMATRIX m_ViewMatrix;
-    D3DXMATRIX m_ProjectionMatrix;
+    D3DXVECTOR3 m_Position;
+    D3DXVECTOR3 m_Direction;
+    D3DXMATRIX  m_ViewMatrix;
+    D3DXMATRIX  m_ProjectionMatrix;
 
 public:
     Camera();
     virtual ~Camera();
+
+    void Update();
 
     const D3DXMATRIX& GetViewMatrix();
     const D3DXMATRIX& GetProjectionMatrix();

@@ -13,7 +13,7 @@ public:
         kBox,
 
         // Not yet used
-        kSphere
+        kSphere,
     };
 
 private:
@@ -30,9 +30,11 @@ public:
     virtual ~Collider();
 
     Type        GetType() const;
+
+    void        SetCenter(const D3DXVECTOR3& center);
     D3DXVECTOR3 GetCenter() const;
     
-    void                SetListener(ICollisionListener& Listener);
+    void                SetListener(ICollisionListener* pListener);
     ICollisionListener* GetListener() const;
 
     void          SetTag(const TAG_COLLISION tag);
@@ -70,6 +72,7 @@ public:
     void Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max);
     void Update(const D3DXMATRIX& transform);
 
+    void              SetExtent(const D3DXVECTOR3& extent);
     D3DXVECTOR3       GetExtent() const;
     const D3DXMATRIX& GetTransform() const;
 };

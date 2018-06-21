@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ResourceManager.h"
+#include "ResourceStructure.h"
 
 ResourceManager::ResourceManager()
     : Singleton<ResourceManager>()
@@ -148,8 +149,8 @@ void ResourceManager::Destroy()
     for (auto em : m_EffectMeshs)
         SAFE_DELETE(em.second);
 
-    for (auto af : m_SkinnedMeshs)
-        SAFE_DELETE(af.second);
+    for (auto sm : m_SkinnedMeshs)
+        SAFE_DELETE(sm);
 }
 
 LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& fullPath)
@@ -188,22 +189,24 @@ EffectMesh* ResourceManager::GetEffectMesh(const string& path,
 SkinnedMesh* ResourceManager::GetSkinnedMesh(const string& path,
     const string& xFilename)
 {
-    const auto str(path + xFilename);
-    const auto search = m_SkinnedMeshs.find(str);
-    if (search == m_SkinnedMeshs.end())
-    {
-        SkinnedMesh* pSkinnedMesh = new SkinnedMesh;
-        AllocateHierarchy ah(path, xFilename);
+    SkinnedMesh* pSkinnedMesh = new SkinnedMesh;
+    AllocateHierarchy ah(path, xFilename);
 
-        const auto hr = D3DXLoadMeshHierarchyFromXA(str.c_str(), 
-            D3DXMESH_MANAGED, g_pDevice, &ah, nullptr,
-            &pSkinnedMesh->pRootFrame, &pSkinnedMesh->pAnimController);
+    const auto hr = D3DXLoadMeshHierarchyFromXA((path + xFilename).c_str(),
+        D3DXMESH_MANAGED, g_pDevice, &ah, nullptr,
+        &pSkinnedMesh->pRootFrame, &pSkinnedMesh->pAnimController);
 
-        assert(!FAILED(hr) && "ResourceManager::GetSkinnedMesh() failed.");
+    assert(!FAILED(hr) && "ResourceManager::GetSkinnedMesh() failed.");
 
-        pSkinnedMesh->SetupBoneMatrixPointers(pSkinnedMesh->pRootFrame);
+    pSkinnedMesh->SetupBoneMatrixPointers(pSkinnedMesh->pRootFrame);
 
-        m_SkinnedMeshs[str] = pSkinnedMesh;
-    }
-    return m_SkinnedMeshs[str];
+    m_SkinnedMeshs.emplace(pSkinnedMesh);
+
+    return pSkinnedMesh;
+}
+
+void ResourceManager::RemoveSkinnedMesh(SkinnedMesh* p)
+{
+    m_SkinnedMeshs.erase(p);
+    SAFE_DELETE(p);
 }

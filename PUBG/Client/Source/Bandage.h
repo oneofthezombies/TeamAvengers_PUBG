@@ -2,11 +2,15 @@
 #include "IObject.h"
 
 class EffectMeshRenderer;
+class BoxCollider;
+class BoxColliderRenderer;
 
 class Bandage : public IObject
 {
 private:
-    EffectMeshRenderer* pEMR;
+    EffectMeshRenderer* pEffectMeshRenderer;
+    BoxCollider* pBoxCollider;
+    BoxColliderRenderer* pBoxColliderRenderer;
 
 public:
     Bandage();

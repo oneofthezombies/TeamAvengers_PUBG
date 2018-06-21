@@ -2,7 +2,8 @@
 #include "ResourceStructure.h"
 
 EffectParam::EffectParam()
-    : pEffect(nullptr)
+    : Name("")
+    , pEffect(nullptr)
     , hParam(nullptr)
 {
 }
@@ -48,6 +49,9 @@ SkinnedMesh::SkinnedMesh()
 
 SkinnedMesh::~SkinnedMesh()
 {
+    AllocateHierarchy ah;
+    D3DXFrameDestroy(pRootFrame, &ah);
+    SAFE_RELEASE(pAnimController);
 }
 
 void SkinnedMesh::SetupBoneMatrixPointers(LPD3DXFRAME pFrame)
@@ -156,14 +160,19 @@ STDMETHODIMP AllocateHierarchy::CreateMeshContainer(THIS_ LPCSTR Name,
     pMesh->CloneMesh(pMesh->GetOptions(), decl, g_pDevice, 
         &pMeshContainer->pWorkMesh);
 
-    pEffectMesh->EffectParams.resize(NumMaterials);
     auto& pEI = pEffectInstances;
 
     for (DWORD i = 0u; i < NumMaterials; ++i)
     {
+        if (!pEI[i].pEffectFilename) continue;
+
+        EffectParam EP;
+        EP.Name = string(pEI[i].pEffectFilename);
+
         LPD3DXEFFECT pEffect = g_pResourceManager->GetEffect(m_path,
             pEI[i].pEffectFilename);
-        pEffectMesh->EffectParams[i].pEffect = pEffect;
+
+        EP.pEffect = pEffect;
 
         D3DXHANDLE hTech;
         pEffect->FindNextValidTechnique(nullptr, &hTech);
@@ -197,7 +206,8 @@ STDMETHODIMP AllocateHierarchy::CreateMeshContainer(THIS_ LPCSTR Name,
                 }
             }
         }
-        pEffectMesh->EffectParams[i].hParam = pEffect->EndParameterBlock();
+        EP.hParam = pEffect->EndParameterBlock();
+        pEffectMesh->EffectParams.emplace_back(EP);
     }
 
     pMeshContainer->pEffectMesh = pEffectMesh;

@@ -3,7 +3,8 @@
 #include "TagRenderer.h"
 
 class IObject;
-class Animator;
+class MeshFilter;
+class BoxCollider;
 
 class Renderer : public Component
 {
@@ -33,15 +34,17 @@ public:
     virtual void Render() override;
 
     void SetEffectMesh(EffectMesh* p);
+    void SetEffectMesh(const string& path, const string& xFilename);
 };
 
 class SkinnedMeshRenderer : public Renderer
 {
 private:
-    Animator* pAnimator;
+    MeshFilter* pMeshFilter;
 
     void DrawFrame(LPD3DXFRAME pFrame);
     void DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainer);
+    void PrintBoneNameAndPosition(LPD3DXFRAME pFrame);
 
 public:
     SkinnedMeshRenderer(IObject* pOwner);
@@ -68,6 +71,7 @@ public:
 class BoxColliderRenderer : public ColliderRenderer
 {
 private:
+    BoxCollider* pBoxCollider;
     vector<VERTEX_PC> m_vertices;
 
 public:

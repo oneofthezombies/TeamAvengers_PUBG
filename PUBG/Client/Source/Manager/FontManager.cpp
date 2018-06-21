@@ -22,7 +22,7 @@ LPD3DXFONT FontManager::GetFont(const TAG_FONT tag)
             {
                 hr = D3DXCreateFont(g_pDevice, 24, 12, FW_NORMAL, 1, false, 
                     DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, 
-                    FF_DONTCARE, TEXT("±Ã¼­Ã¼"), &m_fonts[tag]);
+                    FF_DONTCARE, TEXT("¸¼Àº °íµñ"), &m_fonts[tag]);
             }
             break;
         default:

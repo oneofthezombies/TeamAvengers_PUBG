@@ -1,14 +1,22 @@
 #include "stdafx.h"
 #include "Bandage.h"
 #include "Renderer.h"
- 
+#include "Collider.h"
+
 Bandage::Bandage()
     : IObject()
-    , pEMR(nullptr)
+    , pEffectMeshRenderer(nullptr)
+    , pBoxCollider(nullptr)
+    , pBoxColliderRenderer(nullptr)
 {
-    pEMR = AddComponent<EffectMeshRenderer>();
-    pEMR->SetEffectMesh(
-        g_pResourceManager->GetEffectMesh("./Resource/Bandage/", "Bandage.X"));
+    pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
+    pEffectMeshRenderer->SetEffectMesh("./Resource/Bandage/", "Bandage.X");
+
+    pBoxCollider = AddComponent<BoxCollider>();
+    pBoxCollider->SetTag(TAG_COLLISION::DAMAGE_OF_PLAYER_2);
+    pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+
+    pBoxColliderRenderer = AddComponent<BoxColliderRenderer>();
 }
 
 Bandage::~Bandage()
@@ -21,5 +29,6 @@ void Bandage::OnUpdate()
 
 void Bandage::OnRender()
 {
-    pEMR->Render();
+    pEffectMeshRenderer->Render();
+    pBoxColliderRenderer->Render();
 }

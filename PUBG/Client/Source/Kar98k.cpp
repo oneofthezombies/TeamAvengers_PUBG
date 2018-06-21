@@ -1,20 +1,26 @@
 #include "stdafx.h"
 #include "Kar98k.h"
 #include "Renderer.h"
-#include "Animator.h"
+#include "MeshFilterAndAnimator.h"
 
 Kar98k::Kar98k()
     : IObject()
-    , pRd(nullptr)
-    , pAt(nullptr)
+    , pMeshFilter(nullptr)
+    , pAnimator(nullptr)
+    , pSkinnedMeshRenderer(nullptr)
 {
-    pAt = AddComponent<Animator>();
-    pAt->SetSkinnedMesh(
-        g_pResourceManager->GetSkinnedMesh("./Resource/Kar98k/", "Kar98k.x"));
+    pMeshFilter = AddComponent<MeshFilter>();
+    pMeshFilter->SetSkinnedMesh("./Resource/Kar98k/", "Kar98k.x");
 
-    pRd = AddComponent<SkinnedMeshRenderer>();
+    pAnimator = AddComponent<Animator>();
+    pAnimator->SetAnimationIndex(0, false);
 
-    pAt->SetAnimationIndex(0, false);
+    pSkinnedMeshRenderer = AddComponent<SkinnedMeshRenderer>();
+
+    //auto tr = GetTransform();
+    //D3DXMATRIX m;
+    //D3DXMatrixScaling(&m, 0.1f, 0.1f, 0.1f);
+    //tr->SetTransformationMatrix(m);
 }
 
 Kar98k::~Kar98k()
@@ -23,10 +29,11 @@ Kar98k::~Kar98k()
 
 void Kar98k::OnUpdate()
 {
-    pAt->Update();
+    pAnimator->Update();
+    pMeshFilter->Update();
 }
 
 void Kar98k::OnRender()
 {
-    pRd->Render();
+    pSkinnedMeshRenderer->Render();
 }

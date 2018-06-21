@@ -16,7 +16,7 @@ private:
 public:
     void Init() {}
     void Destroy() {}
-    void Update() {}
+    void Update();
 
     Camera* GetCurrentCamera();
 

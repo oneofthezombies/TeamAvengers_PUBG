@@ -152,8 +152,11 @@ Communicator::~Communicator()
 
 void Communicator::Destroy()
 {
-    m_pClient->Close();
-    m_pThread->join();
+    if (m_pClient)
+        m_pClient->Close();
+
+    if (m_pThread)
+        m_pThread->join();
 
     SAFE_DELETE(m_pClient);
     SAFE_DELETE(m_pThread);

@@ -45,13 +45,15 @@ public:
 class Transform : public Component
 {
 private:
-	D3DXVECTOR3    m_position;
-	D3DXQUATERNION m_rotation;
-	D3DXVECTOR3    m_scale;
+	D3DXVECTOR3    m_Position;
+	D3DXQUATERNION m_Rotation;
+	D3DXVECTOR3    m_Scale;
+    D3DXMATRIX     m_Transformation;
 
 public:
 	Transform(IObject* pOwner);
 	virtual ~Transform();
 
-
+    void SetTransformationMatrix(const D3DXMATRIX& transform);
+    const D3DXMATRIX& GetTransformationMatrix() const;
 };

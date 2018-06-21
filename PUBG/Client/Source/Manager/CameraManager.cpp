@@ -129,6 +129,11 @@
 //    return m_pCurrentCamera->GetEyePos(); 
 //}
 
+void CameraManager::Update()
+{
+    m_camera.Update();
+}
+
 Camera* CameraManager::GetCurrentCamera()
 {
     return &m_camera;

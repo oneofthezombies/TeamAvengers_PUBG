@@ -12,7 +12,7 @@ IObject::IObject()
 
 IObject::~IObject()
 {
-	for (auto& c : m_children)
+	for (auto c : m_children)
 		SAFE_DELETE(c);
 
 	for (auto& c : m_components)

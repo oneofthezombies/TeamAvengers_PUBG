@@ -17,6 +17,7 @@
     <ClInclude Include="Source\Useful\Useful.h" />
     <ClInclude Include="Source\Base\Singleton.h" />
     <ClInclude Include="Source\Useful\Message.h" />
+    <ClInclude Include="Source\Tag\TagColliderCharacterPart.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

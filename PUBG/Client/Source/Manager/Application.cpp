@@ -17,7 +17,7 @@ void Application::Init()
     g_pInput->Init();
     //g_pSoundManager->Init();
     g_pCameraManager->Init();
-    //g_pCollisionManager->Init();
+    g_pCollisionManager->Init();
     g_pSceneManager->Init();
 }
 
@@ -27,8 +27,8 @@ void Application::Destroy()
     g_pCameraManager->Destroy();
 	g_pSceneManager->Destroy();
     g_pUIManager->Destroy();
-    //g_pCollisionManager->Destroy();
-	//g_pObjectManager->Destroy();
+    g_pCollisionManager->Destroy();
+	g_pObjectManager->Destroy();
     g_pInput->Destroy();
     //g_pSoundManager->Destroy();
     g_pResourceManager->Destroy();
@@ -45,7 +45,7 @@ void Application::Update()
     g_pSceneManager->Update();
     //g_pSoundManager->Update();
     g_pCameraManager->Update();
-    //g_pCollisionManager->Update();
+    g_pCollisionManager->Update();
     g_pUIManager->Update();
 
 	Debug << "FPS : " << g_pTime->GetFPS() << '\n';
@@ -60,11 +60,6 @@ void Application::Render()
 	g_pDevice->BeginScene();
 
 	g_pSceneManager->Render();
-
-    //g_pDevice->SetRenderState(D3DRS_LIGHTING, false);
-    //g_pCollisionManager->Render();
-    //g_pDevice->SetRenderState(D3DRS_LIGHTING, true);
-
     g_pUIManager->Render();
 	g_pDebugger->Print();
 

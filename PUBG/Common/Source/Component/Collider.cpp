@@ -22,14 +22,21 @@ Collider::Type Collider::GetType() const
     return m_type;
 }
 
+void Collider::SetCenter(const D3DXVECTOR3& center)
+{
+    m_vCenter = center;
+}
+
 D3DXVECTOR3 Collider::GetCenter() const
 {
     return m_vCenter;
 }
 
-void Collider::SetListener(ICollisionListener& Listener)
+void Collider::SetListener(ICollisionListener* pListener)
 {
-    m_pListener = &Listener;
+    if (!pListener) return;
+
+    m_pListener = pListener;
 }
 
 ICollisionListener* Collider::GetListener() const
@@ -63,11 +70,8 @@ void SphereCollider::Update(const D3DXMATRIX& transform)
 BoxCollider::BoxCollider(IObject* pOwner)
     : Collider(pOwner, Collider::Type::kBox)
     , m_vExtent(0.0f, 0.0f, 0.0f)
-    , m_mTransform(0.0f, 0.0f, 0.0f, 0.0f,
-                   0.0f, 0.0f, 0.0f, 0.0f,
-                   0.0f, 0.0f, 0.0f, 0.0f,
-                   0.0f, 0.0f, 0.0f, 0.0f)
 {
+    D3DXMatrixIdentity(&m_mTransform);
 }
 
 BoxCollider::~BoxCollider()
@@ -76,9 +80,8 @@ BoxCollider::~BoxCollider()
 
 void BoxCollider::Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max)
 {
-    m_vCenter = (min + max) / 2.0f;
+    m_vCenter = (min + max) * 0.5f;
     m_vExtent = max - m_vCenter;
-    D3DXMatrixIdentity(&m_mTransform);
 }
 
 void BoxCollider::Update(const D3DXMATRIX& transform)
@@ -86,8 +89,14 @@ void BoxCollider::Update(const D3DXMATRIX& transform)
     D3DXMATRIX InverseMatrixOfCurrent, TM;
     D3DXMatrixInverse(&InverseMatrixOfCurrent, nullptr, &m_mTransform);
     TM = InverseMatrixOfCurrent * transform;
-    m_mTransform = transform;
     D3DXVec3TransformCoord(&m_vCenter, &m_vCenter, &TM);
+
+    m_mTransform = transform;
+}
+
+void BoxCollider::SetExtent(const D3DXVECTOR3& extent)
+{
+    m_vExtent = extent;
 }
 
 D3DXVECTOR3 BoxCollider::GetExtent() const

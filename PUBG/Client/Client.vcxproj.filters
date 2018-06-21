@@ -8,7 +8,6 @@
     <ClCompile Include="Source\SceneLogin.cpp" />
     <ClCompile Include="Source\ScenePlay.cpp" />
     <ClCompile Include="Source\Bandage.cpp" />
-    <ClCompile Include="Source\Component\Animator.cpp" />
     <ClCompile Include="Source\Manager\Application.cpp" />
     <ClCompile Include="Source\Manager\CameraManager.cpp" />
     <ClCompile Include="Source\Manager\Client.cpp" />
@@ -23,13 +22,16 @@
     <ClCompile Include="Source\Manager\SceneManager.cpp" />
     <ClCompile Include="Source\UI\UIButton.cpp" />
     <ClCompile Include="Source\UI\UIImage.cpp" />
-    <ClCompile Include="Source\UI\UIManager.cpp" />
     <ClCompile Include="Source\UI\UIObject.cpp" />
     <ClCompile Include="Source\UI\UIText.cpp" />
     <ClCompile Include="Source\UI\UITextInputField.cpp" />
     <ClCompile Include="Source\Manager\SoundManager.cpp" />
     <ClCompile Include="Source\Base\Camera.cpp" />
     <ClCompile Include="Source\Base\IScene.cpp" />
+    <ClCompile Include="Source\Manager\UIManager.cpp" />
+    <ClCompile Include="Source\Component\MeshFilterAndAnimator.cpp" />
+    <ClCompile Include="Source\CharacterPart.cpp" />
+    <ClCompile Include="Source\Character.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -42,7 +44,6 @@
     <ClInclude Include="Source\SceneLogin.h" />
     <ClInclude Include="Source\ScenePlay.h" />
     <ClInclude Include="Source\Bandage.h" />
-    <ClInclude Include="Source\Component\Animator.h" />
     <ClInclude Include="Source\Manager\Application.h" />
     <ClInclude Include="Source\Manager\CameraManager.h" />
     <ClInclude Include="Source\Manager\Client.h" />
@@ -61,12 +62,15 @@
     <ClInclude Include="Source\Tag\TagSound.h" />
     <ClInclude Include="Source\UI\UIButton.h" />
     <ClInclude Include="Source\UI\UIImage.h" />
-    <ClInclude Include="Source\UI\UIManager.h" />
     <ClInclude Include="Source\UI\UIObject.h" />
     <ClInclude Include="Source\UI\UIText.h" />
     <ClInclude Include="Source\UI\UITextInputField.h" />
     <ClInclude Include="Source\Manager\SoundManager.h" />
     <ClInclude Include="Source\Base\Camera.h" />
     <ClInclude Include="Source\Base\IScene.h" />
+    <ClInclude Include="Source\Manager\UIManager.h" />
+    <ClInclude Include="Source\Component\MeshFilterAndAnimator.h" />
+    <ClInclude Include="Source\CharacterPart.h" />
+    <ClInclude Include="Source\Character.h" />
   </ItemGroup>
 </Project>

@@ -3,12 +3,14 @@
 
 class SkinnedMeshRenderer;
 class Animator;
+class MeshFilter;
 
 class Kar98k : public IObject
 {
 private:
-    SkinnedMeshRenderer* pRd;
-    Animator*            pAt;
+    SkinnedMeshRenderer* pSkinnedMeshRenderer;
+    Animator*            pAnimator;
+    MeshFilter*          pMeshFilter;
 
 public:
     Kar98k();

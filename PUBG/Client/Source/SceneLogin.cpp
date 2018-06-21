@@ -3,6 +3,7 @@
 #include "UITextInputField.h"
 #include "Bandage.h"
 #include "Kar98k.h"
+#include "Character.h"
 
 enum CHILD
 {
@@ -38,8 +39,9 @@ void SceneLogin::OnInit()
     IObject* p = nullptr;
     p = new Kar98k; AddObject(p);
     p = new Bandage; AddObject(p);
-    //Sleep(500);
-    //p = new Kar98k; AddObject(p);
+    p = new Character; AddObject(p);
+
+    g_pCollisionManager->SubscribeCollisionEvent(TAG_COLLISION::DAMAGE_OF_PLAYER_2, TAG_COLLISION::BODY_OF_PLAYER_1);
 }
 
 void SceneLogin::OnUpdate()

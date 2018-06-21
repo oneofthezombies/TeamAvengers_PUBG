@@ -1,7 +1,12 @@
 #pragma once
 
+#ifdef OOTZ_DEBUG
+class UIText;
+#endif
+
 struct EffectParam
 {
+    string       Name;
     LPD3DXEFFECT pEffect;
     D3DXHANDLE   hParam;
 
@@ -21,6 +26,11 @@ struct EffectMesh
 struct Frame : public D3DXFRAME
 {
     D3DXMATRIX CombinedTM;
+
+//#ifdef OOTZ_DEBUG
+//    string NameAndPosition;
+//    UIText* pUINameAndPosition;
+//#endif
 
     Frame();
     virtual ~Frame();

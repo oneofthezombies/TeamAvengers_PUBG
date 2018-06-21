@@ -13,7 +13,7 @@ private:
     LPD3DXEFFECTPOOL                          m_pEffectPool;
 
     unordered_map<string, EffectMesh*>        m_EffectMeshs;
-    unordered_map<string, SkinnedMesh*>       m_SkinnedMeshs;
+    unordered_set<SkinnedMesh*>               m_SkinnedMeshs;
 
     ResourceManager();
     virtual ~ResourceManager();
@@ -31,7 +31,9 @@ public:
     LPD3DXEFFECT GetEffect(const string& path, const string& effectFilename);
     
     EffectMesh* GetEffectMesh(const string& path, const string& xFilename);
+
     SkinnedMesh* GetSkinnedMesh(const string& path, const string& xFilename);
+    void RemoveSkinnedMesh(SkinnedMesh* p);
 
     friend Singleton<ResourceManager>;
 };

@@ -155,6 +155,7 @@
     <ClInclude Include="Source\Component\ComponentTransform.h" />
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
+    <ClInclude Include="Source\Tag\TagColliderCharacterPart.h" />
     <ClInclude Include="Source\Tag\TagObject.h" />
     <ClInclude Include="Source\Base\Singleton.h" />
     <ClInclude Include="Source\Useful\Message.h" />
