@@ -33,6 +33,9 @@ private:
     float m_BlendTime;
     float m_PassedBlendTime;
 
+    float m_TotalTime;
+    float m_PassedTime;
+
 private:
     void UpdateAnim(const float dt, LPD3DXANIMATIONCONTROLLER pAnimController);
 

@@ -63,42 +63,14 @@ EffectMesh* ResourceManager::ParseEffectMeshX(const string& path,
 
     assert(!FAILED(hr) && "ResourceManager::ParseX() failed. D3DXLoadMeshFromXA() failed.");
  
-    //D3DVERTEXELEMENT9 decl[MAX_FVF_DECL_SIZE] = { 0 };
-    //pEM->pMesh->GetDeclaration(decl);
-    //DWORD declLength = D3DXGetDeclLength(decl);
-
-    //bool hasNormals = false;
-    //for (DWORD i = 0u; i < declLength; ++i)
-    //{
-    //    if (decl[i].Usage == D3DDECLUSAGE_NORMAL)
-    //    {
-    //        hasNormals = true;
-    //        break;
-    //    }
-    //}
-
-    //LPD3DXMESH pCloneMesh;
-    //hr = pEM->pMesh->CloneMesh(pEM->pMesh->GetOptions(), decl,
-    //    g_pDevice, &pCloneMesh);
-    //assert(!FAILED(hr) && "ResourceManager::ParseX() failed. CloneMesh() failed.");
-
-    //pEM->pMesh->Release();
-    //pEM->pMesh = pCloneMesh;
-
-    //if (!hasNormals)
-    //    D3DXComputeNormals(pEM->pMesh, (LPDWORD)pAdjacency->GetBufferPointer());
-
-    pEM->EffectParams.resize(numMaterials);
-
-    //D3DXMATERIAL* pXMats = (D3DXMATERIAL*)pMaterials->GetBufferPointer();
-
     D3DXEFFECTINSTANCE* pEI = 
         (D3DXEFFECTINSTANCE*)pEffectInstance->GetBufferPointer();
     
     for (UINT i = 0; i < numMaterials; ++i)
     {
+        EffectParam ep;
         LPD3DXEFFECT pEffect = GetEffect(path, pEI[i].pEffectFilename);
-        pEM->EffectParams[i].pEffect = pEffect;
+        ep.pEffect = pEffect;
 
         D3DXHANDLE hTech;
         pEffect->FindNextValidTechnique(nullptr, &hTech);
@@ -131,7 +103,8 @@ EffectMesh* ResourceManager::ParseEffectMeshX(const string& path,
                 }
             }
         }
-        pEM->EffectParams[i].hParam = pEffect->EndParameterBlock();
+        ep.hParam = pEffect->EndParameterBlock();
+        pEM->EffectParams.emplace_back(ep);
     }
     return pEM;
 }

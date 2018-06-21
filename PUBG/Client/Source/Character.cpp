@@ -16,10 +16,10 @@ Character::Character()
     , m_TranslationX(0.0f)
 {
     pMeshFilter = AddComponent<MeshFilter>();
-    pMeshFilter->SetSkinnedMesh("./Resource/Lobby_Anim/", "Lobby_Anim.X");
+    pMeshFilter->SetSkinnedMesh("./Resource/Hoon_Sample_Anim/", "Hoon_Sample_Anim.X");
 
     pAnimator = AddComponent<Animator>();
-    pAnimator->SetAnimationIndex(3, false);
+    pAnimator->SetAnimationIndex(1, false);
 
     pSkinnedMeshRenderer = AddComponent<SkinnedMeshRenderer>();
 

@@ -37,9 +37,9 @@ void SceneLogin::OnInit()
     //    g_pFontManager->GetFont(TAG_FONT::DEFAULT), "Connect", D3DCOLOR_XRGB(0, 0, 0));
 
     IObject* p = nullptr;
-    p = new Kar98k; AddObject(p);
+    //p = new Kar98k; AddObject(p);
     p = new Bandage; AddObject(p);
-    p = new Character; AddObject(p);
+    //p = new Character; AddObject(p);
 
     g_pCollisionManager->SubscribeCollisionEvent(TAG_COLLISION::DAMAGE_OF_PLAYER_2, TAG_COLLISION::BODY_OF_PLAYER_1);
 }

@@ -31,6 +31,8 @@ Animator::Animator(IObject* pOwner)
     , m_Index(0)
     , m_BlendTime(0.3f)
     , m_PassedBlendTime(0.0f)
+    , m_TotalTime(0.0f)
+    , m_PassedTime(0.0f)
 {
 }
 
