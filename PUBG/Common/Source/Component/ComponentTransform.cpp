@@ -34,12 +34,25 @@ Transform::~Transform()
 {
 }
 
-void Transform::SetTransformationMatrix(const D3DXMATRIX& transform)
+void Transform::SetTM(const D3DXMATRIX& transform)
 {
     m_Transformation = transform;
 }
 
-const D3DXMATRIX& Transform::GetTransformationMatrix() const
+const D3DXMATRIX& Transform::GetTM()
 {
+    D3DXMATRIX t;
+    D3DXMatrixTranslation(&t, m_Position.x, m_Position.y, m_Position.z);
+    m_Transformation = t;
     return m_Transformation;
+}
+
+void Transform::SetPosition(const D3DXVECTOR3& pos)
+{
+    m_Position = pos;
+}
+
+const D3DXVECTOR3 & Transform::GetPosition() const
+{
+    return m_Position;
 }

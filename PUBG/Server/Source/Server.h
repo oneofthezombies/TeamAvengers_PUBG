@@ -1,48 +1,46 @@
 #pragma once
 
-#include "Message.h"
+#include "Protocol.h"
 
 class Room;
 
 class Participant : public enable_shared_from_this<Participant>
 {
+public:
+    GameInfo::MyInfo m_MyInfo;
+
 private:
-    tcp::socket m_socket;
-    Room* m_pRoom;
-    Message m_readMsg;
-    Message m_writeMsg;
+    tcp::socket m_Socket;
+    Message     m_ReadMsg;
+    Message     m_WriteMsg;
+    Room*       m_pRoom;
 
     void ReadHeader();
     void ReadBody();
     void Write();
+
+    void ReceiveMessage(const TAG_REQUEST tag, const string& description);
 
 public:
     Participant(tcp::socket socket, Room* pRoom);
     ~Participant() = default;
 
     void Start();
-    void Echo(const Message& msg);
+    void Write(const Message& msg);
 };
 
 class Room
 {
+public:
+    GameInfo::RoomInfo m_RoomInfo;
+
 private:
-    struct Info
-    {
-        array<int, 2>         ID;
-        array<string, 2>      nickname;
-        array<D3DXVECTOR3, 2> position;
+    unordered_set<shared_ptr<Participant>> m_Participants;
+    int m_ParticipantID;
 
-        Info();
-    };
-
-    unordered_set<shared_ptr<Participant>> m_participants;
-    int m_participantID;
-    unordered_map<string, int> m_nicknameIDs;
+    unordered_map<string, int> m_NicknameIDs;
 
 public:
-    Info info;
-
     Room();
     ~Room() = default;
 
@@ -50,14 +48,14 @@ public:
     void Leave(shared_ptr<Participant> participant);
     int GetID(const string& nickname);
     vector<int> GetOthersID(const int myID);
-    void Echo(const Message& msg);
+    void Echo(const int id, const Message& msg);
 };
 
 class Server
 {
 private:
-    tcp::acceptor m_acceptor;
-    Room m_room;
+    tcp::acceptor m_Acceptor;
+    Room m_Room;
 
     void Accept();
 

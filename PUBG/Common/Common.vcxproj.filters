@@ -16,8 +16,8 @@
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Useful\Useful.h" />
     <ClInclude Include="Source\Base\Singleton.h" />
-    <ClInclude Include="Source\Useful\Message.h" />
     <ClInclude Include="Source\Tag\TagColliderCharacterPart.h" />
+    <ClInclude Include="Source\Useful\Protocol.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -29,6 +29,6 @@
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
     <ClCompile Include="Source\Useful\Useful.cpp" />
-    <ClCompile Include="Source\Useful\Message.cpp" />
+    <ClCompile Include="Source\Useful\Protocol.cpp" />
   </ItemGroup>
 </Project>

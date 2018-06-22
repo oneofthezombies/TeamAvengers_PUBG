@@ -2,35 +2,35 @@
 #include "Server.h"
 
 Room::Room()
-    : m_participantID(0)
+    : m_ParticipantID(0)
 {
 }
 
 void Room::Join(shared_ptr<Participant> participant)
 {
-    m_participants.emplace(participant);
+    m_Participants.emplace(participant);
 }
 
 void Room::Leave(shared_ptr<Participant> participant)
 {
-    m_participants.erase(participant);
+    m_Participants.erase(participant);
 }
 
 int Room::GetID(const string& nickname)
 {
-    const auto search = m_nicknameIDs.find(nickname);
-    if (search == m_nicknameIDs.end())
+    const auto search = m_NicknameIDs.find(nickname);
+    if (search == m_NicknameIDs.end())
     {
-        m_nicknameIDs.emplace(nickname, m_participantID);
-        ++m_participantID;
+        m_NicknameIDs.emplace(nickname, m_ParticipantID);
+        ++m_ParticipantID;
     }
-    return m_nicknameIDs[nickname];
+    return m_NicknameIDs[nickname];
 }
 
 vector<int> Room::GetOthersID(const int myID)
 {
     vector<int> ids;
-    for (auto& ni : m_nicknameIDs)
+    for (auto& ni : m_NicknameIDs)
     {
         if (ni.second == myID) continue;
 
@@ -39,117 +39,80 @@ vector<int> Room::GetOthersID(const int myID)
     return ids;
 }
 
-void Room::Echo(const Message& msg)
+void Room::Echo(const int id, const Message& msg)
 {
-    for (auto& p : m_participants)
-        p->Echo(msg);
+    for (auto& p : m_Participants)
+    {
+        if (id == p->m_MyInfo.m_ID) continue;
+
+        p->Write(msg);
+    }
 }
 
 Participant::Participant(tcp::socket socket, Room* pRoom)
-    : m_socket(std::move(socket))
+    : m_Socket(std::move(socket))
     , m_pRoom(pRoom)
+    , m_MyInfo()
 {
 }
 
 void Participant::Start()
 {
-    cout << "Joined.\n";
+    cout << "Particiapnt::Start()\n";
+
     m_pRoom->Join(shared_from_this());
     ReadHeader();
 }
 
-void Participant::Echo(const Message& msg)
+void Participant::Write(const Message& msg)
 {
-    m_writeMsg = msg;
+    m_WriteMsg = msg;
     Write();
 }
 
 void Participant::ReadHeader()
 {
-    boost::asio::async_read(m_socket, boost::asio::buffer(m_readMsg.GetData(), Message::HEADER_LENGTH), [this](auto ec, auto) 
+    boost::asio::async_read(m_Socket, 
+        boost::asio::buffer(m_ReadMsg.GetData(), Message::HEADER_LENGTH), 
+        [this](auto ec, auto) 
     {
-        if (!ec && m_readMsg.DecodeHeader())
+        if (!ec && m_ReadMsg.DecodeHeader())
         {
             ReadBody();
         }
         else
         {
             m_pRoom->Leave(shared_from_this());
+            cout << "Participant::ReadHeader() failed.\n";
         }
     });
 }
 
 void Participant::ReadBody()
 {
-    boost::asio::async_read(m_socket, boost::asio::buffer(m_readMsg.GetBodyData(), m_readMsg.GetBodyLength()), [this](auto ec, auto) 
+    boost::asio::async_read(m_Socket, boost::asio::buffer(
+        m_ReadMsg.GetBodyData(), m_ReadMsg.GetBodyLength()), 
+        [this](auto ec, auto) 
     {
         if (!ec)
         {
-            TAG_REQUEST request(m_readMsg.GetRequest());
-            switch (request)
-            {
-            case TAG_REQUEST::MY_ID:
-                {
-                    const string nickname(m_readMsg.GetDescription());
-                    const int id(m_pRoom->GetID(nickname));
-                    Message::Create(&m_writeMsg, TAG_REQUEST::MY_ID, to_string(id));
-
-                    cout << "nickname : " << nickname << " -> id : " << id << '\n';
-                    m_pRoom->info.ID[id] = id;
-                    m_pRoom->info.nickname[id] = nickname;
-
-                    Write();
-                }
-                break;
-            case TAG_REQUEST::ID:
-                {
-                    const string desc = m_readMsg.GetDescription();
-                    const int id(std::stoi(desc));
-                    m_pRoom->info.ID[id] = id;
-
-                    Message::Create(&m_writeMsg, TAG_REQUEST::ID, desc);
-                    m_pRoom->Echo(m_writeMsg);
-                }
-                break;
-            case TAG_REQUEST::NICKNAME:
-                {
-                    const string desc = m_readMsg.GetDescription();
-                    const int id(std::stoi(string(desc.begin(), desc.begin() + 1)));
-                    const string nickname(string(desc.begin() + 1, desc.end()));
-                    m_pRoom->info.ID[id] = id;
-                    m_pRoom->info.nickname[id] = nickname;
-
-                    Message::Create(&m_writeMsg, TAG_REQUEST::NICKNAME, desc);
-                    m_pRoom->Echo(m_writeMsg);
-                }
-                break;
-            case TAG_REQUEST::POSITION:
-                {
-                    const string desc = m_readMsg.GetDescription();
-                    const int id(std::stoi(string(desc.begin(), desc.begin() + 1)));
-                    stringstream ss(string(desc.begin() + 1, desc.end()));
-                    D3DXVECTOR3 pos;
-                    ss >> pos.x >> pos.y >> pos.z;
-                    m_pRoom->info.position[id] = pos;
-
-                    Message::Create(&m_writeMsg, TAG_REQUEST::POSITION, desc);
-                    m_pRoom->Echo(m_writeMsg);
-                }
-                break;
-            }
+            ReceiveMessage(m_ReadMsg.GetRequest(), m_ReadMsg.GetDescription());
 
             ReadHeader();
         }
         else
         {
             m_pRoom->Leave(shared_from_this());
+            cout << "particiapnt::ReadBody() failed.\n";
         }
     });
 }
 
 void Participant::Write()
 {
-    boost::asio::async_write(m_socket, boost::asio::buffer(m_writeMsg.GetData(), m_writeMsg.GetLength()), [this](auto ec, auto) 
+    boost::asio::async_write(m_Socket, boost::asio::buffer(
+        m_WriteMsg.GetData(), m_WriteMsg.GetLength()), 
+        [this](auto ec, auto) 
     {
         if (!ec)
         {
@@ -158,12 +121,73 @@ void Participant::Write()
         else
         {
             m_pRoom->Leave(shared_from_this());
+            cout << "Participant::Write() failed.\n";
         }
     });
 }
 
-Server::Server(boost::asio::io_context* ioContext, const tcp::endpoint& endpoint)
-    : m_acceptor(*ioContext, endpoint)
+void Participant::ReceiveMessage(const TAG_REQUEST tag, 
+    const string& description)
+{
+    switch (tag)
+    {
+    case TAG_REQUEST::RECEIVE_MY_ID:
+        {
+            const string nickname(m_ReadMsg.GetDescription());
+            const int id(m_pRoom->GetID(nickname));
+
+            m_MyInfo.m_Nickname = nickname;
+            m_MyInfo.m_ID = id;
+
+            Write(Message::Create(TAG_REQUEST::RECEIVE_MY_ID, to_string(id)));
+
+            cout << "nickname : " << nickname << " -> id : " << id << '\n';
+        }
+        break;
+    case TAG_REQUEST::SEND_ID:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+
+            m_pRoom->m_RoomInfo.m_PlayerInfos[id].m_ID = id;
+
+            m_pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_ID, 
+                description));
+        }
+        break;
+    case TAG_REQUEST::SEND_NICKNAME:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& nickname = parsedDesc.second;
+
+            m_pRoom->m_RoomInfo.m_PlayerInfos[id].m_Nickname = nickname;
+
+            m_pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_NICKNAME, 
+                description));
+        }
+        break;
+    case TAG_REQUEST::SEND_POSITION:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& positionStr = parsedDesc.second;
+
+            stringstream ss(positionStr);
+            D3DXVECTOR3 pos;
+            ss >> pos.x >> pos.y >> pos.z;
+            m_pRoom->m_RoomInfo.m_PlayerInfos[id].m_Position = pos;
+
+            m_pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_POSITION, 
+                description));
+        }
+        break;
+    }
+}
+
+Server::Server(boost::asio::io_context* ioContext, 
+    const tcp::endpoint& endpoint)
+    : m_Acceptor(*ioContext, endpoint)
 {
     cout << "Server is Running...\n";
 
@@ -177,22 +201,14 @@ Server::~Server()
 
 void Server::Accept()
 {
-    m_acceptor.async_accept([this](boost::system::error_code ec, tcp::socket socket) 
+    m_Acceptor.async_accept(
+        [this](boost::system::error_code ec, tcp::socket socket) 
     {
         if (!ec)
         {
-            make_shared<Participant>(move(socket), &m_room)->Start();
+            make_shared<Participant>(move(socket), &m_Room)->Start();
         }
 
         Accept();
     });
-}
-
-Room::Info::Info()
-{
-    for (auto& i : ID)
-        i = -1;
-
-    for (auto& n : nickname)
-        n = "Unknown";
 }

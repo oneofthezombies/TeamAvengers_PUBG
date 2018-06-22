@@ -1,12 +1,12 @@
 #pragma once
 #include "IScene.h"
 
-class Cube;
+class Character;
 
 class ScenePlay : public IScene
 {
 private:
-    array<Cube*, 2> m_cubes;
+    array<Character*, 4> m_Characters;
 
 public:
     ScenePlay();
@@ -14,5 +14,4 @@ public:
 
     virtual void OnInit() override;
     virtual void OnUpdate() override;
-    virtual void OnRender() override;
 };

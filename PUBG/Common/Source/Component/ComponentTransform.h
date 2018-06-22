@@ -54,6 +54,9 @@ public:
 	Transform(IObject* pOwner);
 	virtual ~Transform();
 
-    void SetTransformationMatrix(const D3DXMATRIX& transform);
-    const D3DXMATRIX& GetTransformationMatrix() const;
+    void SetTM(const D3DXMATRIX& transform);
+    const D3DXMATRIX& GetTM();
+
+    void SetPosition(const D3DXVECTOR3& pos);
+    const D3DXVECTOR3& GetPosition() const;
 };

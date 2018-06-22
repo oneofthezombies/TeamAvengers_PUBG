@@ -31,8 +31,6 @@ void IScene::Render()
 {
 	for (auto& o : m_objects)
 		if (o) o->Render();
-
-	OnRender();
 }
 
 void IScene::AddObject(IObject* p)

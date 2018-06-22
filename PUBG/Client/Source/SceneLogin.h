@@ -29,5 +29,4 @@ public:
 
     virtual void OnInit() override;
     virtual void OnUpdate() override;
-    virtual void OnRender() override;
 };

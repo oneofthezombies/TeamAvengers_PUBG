@@ -17,10 +17,10 @@ private:
     float m_RotationX;
     CharacterCollisionListener* pCollisionListener;
     Frame* pRoot;
-    float m_TranslationX;
+    const int m_index;
 
 public:
-    Character();
+    Character(const int index);
     virtual ~Character();
 
     virtual void OnUpdate() override;

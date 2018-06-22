@@ -22,7 +22,7 @@ Bandage::Bandage()
     auto tr = GetTransform();
     D3DXMATRIX m;
     D3DXMatrixScaling(&m, 0.1f, 0.1f, 0.1f);
-    tr->SetTransformationMatrix(m);
+    tr->SetTM(m);
 }
 
 Bandage::~Bandage()

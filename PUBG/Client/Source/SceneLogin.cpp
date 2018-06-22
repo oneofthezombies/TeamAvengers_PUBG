@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "SceneLogin.h"
 #include "UITextInputField.h"
-#include "Bandage.h"
-#include "Kar98k.h"
-#include "Character.h"
 
 enum CHILD
 {
@@ -23,33 +20,26 @@ SceneLogin::~SceneLogin()
 
 void SceneLogin::OnInit()
 {
-    //UIObject* root = new UIObject(nullptr);
-    //m_buttonListener.SetHandle(root);
+    UIObject* root = new UIObject(nullptr);
+    m_buttonListener.SetHandle(root);
 
-    //UITextInputField* inputField = new UITextInputField(D3DXVECTOR3(100.0f, 100.0f, 0.0f), 
-    //    "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
-    //    TAG_FONT::DEFAULT, D3DCOLOR_XRGB(0, 0, 0), root);
+    UITextInputField* inputField = new UITextInputField(
+        D3DXVECTOR3(100.0f, 100.0f, 0.0f), 
+        "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
+        TAG_FONT::DEFAULT, D3DCOLOR_XRGB(0, 0, 0), root);
 
-    //UIButton* button = new UIButton(D3DXVECTOR3(100.0f, 200.0f, 0.0f), 
-    //    "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
-    //    &m_buttonListener, 
-    //    root, 
-    //    g_pFontManager->GetFont(TAG_FONT::DEFAULT), "Connect", D3DCOLOR_XRGB(0, 0, 0));
+    UIButton* button = new UIButton(D3DXVECTOR3(100.0f, 200.0f, 0.0f), 
+        "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
+        &m_buttonListener, 
+        root, 
+        g_pFontManager->GetFont(TAG_FONT::DEFAULT), "Connect", 
+        D3DCOLOR_XRGB(0, 0, 0));
 
-    IObject* p = nullptr;
-    //p = new Kar98k; AddObject(p);
-    p = new Bandage; AddObject(p);
-    //p = new Character; AddObject(p);
-
-    g_pCollisionManager->SubscribeCollisionEvent(TAG_COLLISION::DAMAGE_OF_PLAYER_2, TAG_COLLISION::BODY_OF_PLAYER_1);
+    g_pCollisionManager->SubscribeCollisionEvent(
+        TAG_COLLISION::DAMAGE_OF_PLAYER_2, TAG_COLLISION::BODY_OF_PLAYER_1);
 }
 
 void SceneLogin::OnUpdate()
-{
-
-}
-
-void SceneLogin::OnRender()
 {
 }
 
@@ -77,30 +67,20 @@ void LoginButtonListener::OnMouseUp(const int key)
 {
     cout << "Pushed\n";
 
-    const auto ti = static_cast<UITextInputField*>(GetHandle()->GetChild(CHILD::UITEXT_INPUT_FIELD));
+    const auto ti = static_cast<UITextInputField*>(
+        GetHandle()->GetChild(CHILD::UITEXT_INPUT_FIELD));
     const auto text = ti->GetText();
 
     stringstream ss(text);
 
-    char host[32];
-    char port[32];
-    char nickname[32];
+    string host, port, nickname;
     ss >> host >> port >> nickname;
 
-    cout << "host : " << host << ", port : " << port << ", nickname : " << nickname << endl;
+    const auto c = g_pCommunicator;
+    c->Connect(host, port, nickname);
 
-    const auto com = g_pCommunicator;
-    const auto r = com->Connect(host, port, nickname);
-    if (r)
-    {
-        com->info.myNickname = nickname;
-        g_pUIManager->Destroy(GetHandle());
-        g_pSceneManager->SetCurrentScene(TAG_SCENE::PLAY);
-    }
-    else
-    {
-        cout << "connection failed.\n";
-    }
+    g_pUIManager->Destroy(GetHandle());
+    g_pSceneManager->SetCurrentScene(TAG_SCENE::PLAY);
 }
 
 void LoginButtonListener::OnMouseDrag(const int key)

@@ -158,7 +158,7 @@
     <ClInclude Include="Source\Tag\TagColliderCharacterPart.h" />
     <ClInclude Include="Source\Tag\TagObject.h" />
     <ClInclude Include="Source\Base\Singleton.h" />
-    <ClInclude Include="Source\Useful\Message.h" />
+    <ClInclude Include="Source\Useful\Protocol.h" />
     <ClInclude Include="Source\Tag\TagRequest.h" />
     <ClInclude Include="Source\Manager\CollisionManager.h" />
     <ClInclude Include="Source\Manager\ObjectManager.h" />
@@ -174,7 +174,7 @@
     <ClCompile Include="Source\Component\ComponentTransform.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
-    <ClCompile Include="Source\Useful\Message.cpp" />
+    <ClCompile Include="Source\Useful\Protocol.cpp" />
     <ClCompile Include="Source\Manager\CollisionManager.cpp" />
     <ClCompile Include="Source\Manager\ObjectManager.cpp" />
     <ClCompile Include="Source\Manager\TimeManager.cpp" />

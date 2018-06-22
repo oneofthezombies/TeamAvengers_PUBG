@@ -45,7 +45,7 @@ void Animator::Update()
     if (!m_pMeshFilter)
         m_pMeshFilter = GetComponent<MeshFilter>();
 
-    if (!m_pMeshFilter) return;
+    assert(m_pMeshFilter && "Animator::Update() failed. MeshFilter is null.");
 
     UpdateAnim(g_pTime->GetDeltaTime(), 
         m_pMeshFilter->GetAnimationController());

@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Source\Cube.cpp" />
     <ClCompile Include="Source\Kar98k.cpp" />
     <ClCompile Include="Source\SceneLogin.cpp" />
     <ClCompile Include="Source\ScenePlay.cpp" />
@@ -39,7 +38,6 @@
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Source\Cube.h" />
     <ClInclude Include="Source\Kar98k.h" />
     <ClInclude Include="Source\SceneLogin.h" />
     <ClInclude Include="Source\ScenePlay.h" />

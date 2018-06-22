@@ -86,7 +86,7 @@ void SkinnedMeshRenderer::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainer)
 
         if (auto tr = GetOwnerTransform())
         {
-            ep.pEffect->SetMatrix("World", &tr->GetTransformationMatrix());
+            ep.pEffect->SetMatrix("World", &tr->GetTM());
         }
         else
         {
@@ -204,7 +204,7 @@ void EffectMeshRenderer::Render()
         D3DXMATRIX world;
         if (auto tr = GetOwnerTransform())
         {
-            world = tr->GetTransformationMatrix();
+            world = tr->GetTM();
         }
         else
         {
@@ -216,7 +216,8 @@ void EffectMeshRenderer::Render()
         ep.pEffect->SetMatrix("View", &g_pCurrentCamera->GetViewMatrix());
 
         D3DXMATRIX proj;
-        ep.pEffect->SetMatrix("Projection", &g_pCurrentCamera->GetProjectionMatrix());
+        ep.pEffect->SetMatrix("Projection", 
+            &g_pCurrentCamera->GetProjectionMatrix());
 
         //D3DXVECTOR3 lightDirection(1.0f, -1.0f, 1.0f);
         //D3DXVec3Normalize(&lightDirection, &lightDirection);
