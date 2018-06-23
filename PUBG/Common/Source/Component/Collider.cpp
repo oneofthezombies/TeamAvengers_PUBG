@@ -2,13 +2,16 @@
 #include "Collider.h"
 #include "CollisionManager.h"
 
-Collider::Collider(IObject* pOwner, const Type type)
+Collider::Collider(IObject* pOwner, const TYPE type)
     : Component(pOwner)
-    , m_vCenter(0.0f, 0.0f, 0.0f)
-    , m_type(type)
-    , m_pListener(nullptr)
-    , m_tag(TAG_COLLISION::IDLE)
+    , m_Center(0.0f, 0.0f, 0.0f)
+    , m_Type(type)
+    , m_Tag(TAG_COLLISION::IDLE)
+
+    , pListener(nullptr)
 {
+    assert(pOwner && "Collider::Constructor() failed. owner is null.");
+
     g_pCollisionManager->AddCollider(this);
 }
 
@@ -17,46 +20,47 @@ Collider::~Collider()
     g_pCollisionManager->RemoveCollider(this);
 }
 
-Collider::Type Collider::GetType() const
+Collider::TYPE Collider::GetType() const
 {
-    return m_type;
+    return m_Type;
 }
 
 void Collider::SetCenter(const D3DXVECTOR3& center)
 {
-    m_vCenter = center;
+    m_Center = center;
 }
 
-D3DXVECTOR3 Collider::GetCenter() const
+const D3DXVECTOR3& Collider::GetCenter() const
 {
-    return m_vCenter;
+    return m_Center;
 }
 
 void Collider::SetListener(ICollisionListener* pListener)
 {
-    if (!pListener) return;
+    assert(pListener && "Collider::SetListener() failed. listener is null.");
 
-    m_pListener = pListener;
+    this->pListener = pListener;
 }
 
 ICollisionListener* Collider::GetListener() const
 {
-    return m_pListener;
+    return pListener;
 }
 
 void Collider::SetTag(const TAG_COLLISION tag)
 {
-    m_tag = tag;
+    m_Tag = tag;
 }
 
 TAG_COLLISION Collider::GetTag() const
 {
-    return m_tag;
+    return m_Tag;
 }
 
 SphereCollider::SphereCollider(IObject* pOwner)
-    : Collider(pOwner, Collider::Type::kSphere)
+    : Collider(pOwner, Collider::TYPE::SPHERE)
 {
+    assert(false && "No impl.");
 }
 
 void SphereCollider::Init(const float radius)
@@ -68,10 +72,10 @@ void SphereCollider::Update(const D3DXMATRIX& transform)
 }
 
 BoxCollider::BoxCollider(IObject* pOwner)
-    : Collider(pOwner, Collider::Type::kBox)
-    , m_vExtent(0.0f, 0.0f, 0.0f)
+    : Collider(pOwner, Collider::TYPE::BOX)
+    , m_Extent(0.0f, 0.0f, 0.0f)
 {
-    D3DXMatrixIdentity(&m_mTransform);
+    D3DXMatrixIdentity(&m_Transform);
 }
 
 BoxCollider::~BoxCollider()
@@ -80,38 +84,40 @@ BoxCollider::~BoxCollider()
 
 void BoxCollider::Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max)
 {
-    m_vCenter = (min + max) * 0.5f;
-    m_vExtent = max - m_vCenter;
+    m_Center = (min + max) * 0.5f;
+    m_Extent = max - m_Center;
 }
 
 void BoxCollider::Update(const D3DXMATRIX& transform)
 {
     D3DXMATRIX InverseMatrixOfCurrent, TM;
-    D3DXMatrixInverse(&InverseMatrixOfCurrent, nullptr, &m_mTransform);
+    D3DXMatrixInverse(&InverseMatrixOfCurrent, nullptr, &m_Transform);
     TM = InverseMatrixOfCurrent * transform;
-    D3DXVec3TransformCoord(&m_vCenter, &m_vCenter, &TM);
+    D3DXVec3TransformCoord(&m_Center, &m_Center, &TM);
 
-    m_mTransform = transform;
+    m_Transform = transform;
 }
 
 void BoxCollider::SetExtent(const D3DXVECTOR3& extent)
 {
-    m_vExtent = extent;
+    m_Extent = extent;
 }
 
-D3DXVECTOR3 BoxCollider::GetExtent() const
+const D3DXVECTOR3& BoxCollider::GetExtent() const
 {
-    return m_vExtent;
+    return m_Extent;
 }
 
 const D3DXMATRIX& BoxCollider::GetTransform() const
 {
-    return m_mTransform;
+    return m_Transform;
 }
 
 ICollisionListener::ICollisionListener(IObject* pOwner)
     : Component(pOwner)
 {
+    assert(pOwner && 
+        "ICollisionListener::Constructor() failed. owner is null.");
 }
 
 ICollisionListener::~ICollisionListener()

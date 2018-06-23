@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "MeshFilterAndAnimator.h"
 
-void Animator::UpdateAnim(const float dt, LPD3DXANIMATIONCONTROLLER pAnimController)
+void Animator::updateAnim()
 {
-    auto& pAC = pAnimController;
+    const auto dt = g_pTime->GetDeltaTime();
 
-    pAC->AdvanceTime(dt, nullptr);
+    pAnimController->AdvanceTime(dt, nullptr);
 
     if (m_PassedBlendTime > m_BlendTime) return;
 
@@ -13,26 +13,40 @@ void Animator::UpdateAnim(const float dt, LPD3DXANIMATIONCONTROLLER pAnimControl
 
     if (m_PassedBlendTime >= m_BlendTime)
     {
-        pAC->SetTrackWeight(0u, 1.0f);
-        pAC->SetTrackWeight(1u, 0.0f);
-        pAC->SetTrackEnable(1u, false);
+        pAnimController->SetTrackWeight(0u, 1.0f);
+        pAnimController->SetTrackWeight(1u, 0.0f);
+        pAnimController->SetTrackEnable(1u, false);
     }
     else
     {
         const float weight = m_PassedBlendTime / m_BlendTime;
-        pAC->SetTrackWeight(0u, weight);
-        pAC->SetTrackWeight(1u, 1.0f - weight);
+        pAnimController->SetTrackWeight(0u, weight);
+        pAnimController->SetTrackWeight(1u, 1.0f - weight);
     }
+}
+
+void Animator::setMeshFilterPtr()
+{
+    if (pMeshFilter) return;
+
+    pMeshFilter = GetComponent<MeshFilter>();
+    pAnimController = pMeshFilter->GetAnimationController();
+
+    assert((pMeshFilter || pAnimController) &&
+        "Animator::GetMeshFilter() failed. MeshFilter is null.");
 }
 
 Animator::Animator(IObject* pOwner)
     : Component(pOwner)
-    , m_pMeshFilter(nullptr)
+
     , m_Index(0)
     , m_BlendTime(0.3f)
     , m_PassedBlendTime(0.0f)
     , m_TotalTime(0.0f)
     , m_PassedTime(0.0f)
+
+    , pMeshFilter(nullptr)
+    , pAnimController(nullptr)
 {
 }
 
@@ -42,50 +56,57 @@ Animator::~Animator()
 
 void Animator::Update()
 {
-    if (!m_pMeshFilter)
-        m_pMeshFilter = GetComponent<MeshFilter>();
+    setMeshFilterPtr();
 
-    assert(m_pMeshFilter && "Animator::Update() failed. MeshFilter is null.");
-
-    UpdateAnim(g_pTime->GetDeltaTime(), 
-        m_pMeshFilter->GetAnimationController());
+    updateAnim();
 }
 
 void Animator::SetAnimationIndex(const unsigned int index, const bool isBlend)
 {
-    if (!m_pMeshFilter)
-        m_pMeshFilter = GetComponent<MeshFilter>();
-
-    if (!m_pMeshFilter) return;
-
-    auto pAC = m_pMeshFilter->GetAnimationController();
+    setMeshFilterPtr();
 
     LPD3DXANIMATIONSET pNext = nullptr;
-    auto hr = pAC->GetAnimationSet(index, &pNext);
+    auto hr = pAnimController->GetAnimationSet(index, &pNext);
     assert(!FAILED(hr) && "Animator::SetAnimationIndex() failed.");
+
+    m_Index = index;
 
     if (isBlend)
     {
         LPD3DXANIMATIONSET pPrev = nullptr;
-        pAC->GetTrackAnimationSet(0u, &pPrev);
-        pAC->SetTrackAnimationSet(1u, pPrev);
+        pAnimController->GetTrackAnimationSet(0u, &pPrev);
+        pAnimController->SetTrackAnimationSet(1u, pPrev);
 
         D3DXTRACK_DESC desc;
-        pAC->GetTrackDesc(0u, &desc);
-        pAC->SetTrackDesc(1u, &desc);
+        pAnimController->GetTrackDesc(0u, &desc);
+        pAnimController->SetTrackDesc(1u, &desc);
 
-        pAC->SetTrackWeight(0u, 0.0f);
-        pAC->SetTrackWeight(1u, 1.0f);
+        pAnimController->SetTrackWeight(0u, 0.0f);
+        pAnimController->SetTrackWeight(1u, 1.0f);
 
         SAFE_RELEASE(pPrev);
 
         m_PassedBlendTime = 0.0f;
     }
 
-    pAC->SetTrackAnimationSet(0u, pNext);
-    pAC->ResetTime();
+    pAnimController->SetTrackAnimationSet(0u, pNext);
+    pAnimController->ResetTime();
 
     SAFE_RELEASE(pNext);
+}
+
+int Animator::GetCurrentAnimationIndex()
+{
+    setMeshFilterPtr();
+
+    return m_Index;
+}
+
+int Animator::GetNumAnimation()
+{
+    setMeshFilterPtr();
+
+    return static_cast<int>(pAnimController->GetMaxNumAnimationSets());
 }
 
 MeshFilter::MeshFilter(IObject* pOwner)

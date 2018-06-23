@@ -3,8 +3,9 @@
 #include "IObject.h"
 
 Component::Component(IObject* pOwner)
-    : m_pOwner(pOwner)
+    : pOwner(pOwner)
 {
+    assert(pOwner && "Component::Constructor() failed. owner is null.");
 }
 
 Component::~Component()
@@ -13,12 +14,14 @@ Component::~Component()
 
 IObject* Component::GetOwner() const
 {
-    return m_pOwner;
+    return pOwner;
 }
 
 Transform* Component::GetOwnerTransform() const
 {
-	return m_pOwner->GetTransform();
+    assert(pOwner && "Component::GetTransform() is failed. owner is null.");
+
+	return pOwner->GetTransform();
 }
 
 Transform::Transform(IObject* pOwner)
@@ -27,24 +30,23 @@ Transform::Transform(IObject* pOwner)
 	, m_Rotation(0.0f, 0.0f, 0.0f, 0.0f)
 	, m_Scale(1.0f, 1.0f, 1.0f)
 {
-    D3DXMatrixIdentity(&m_Transformation);
 }
 
 Transform::~Transform()
 {
 }
 
-void Transform::SetTM(const D3DXMATRIX& transform)
+const D3DXMATRIX& Transform::GetTransformationMatrix()
 {
-    m_Transformation = transform;
-}
+    D3DXMATRIX s, r, t;
+    D3DXMatrixScaling(&s, m_Scale.x, m_Scale.y, m_Scale.z);
 
-const D3DXMATRIX& Transform::GetTM()
-{
-    D3DXMATRIX t;
+    D3DXMatrixRotationQuaternion(&r, &m_Rotation);
+
     D3DXMatrixTranslation(&t, m_Position.x, m_Position.y, m_Position.z);
-    m_Transformation = t;
-    return m_Transformation;
+
+    m_Transform = s * r * t;
+    return m_Transform;
 }
 
 void Transform::SetPosition(const D3DXVECTOR3& pos)
@@ -52,7 +54,27 @@ void Transform::SetPosition(const D3DXVECTOR3& pos)
     m_Position = pos;
 }
 
-const D3DXVECTOR3 & Transform::GetPosition() const
+const D3DXVECTOR3& Transform::GetPosition() const
 {
     return m_Position;
+}
+
+void Transform::SetRotation(const D3DXQUATERNION& rot)
+{
+    m_Rotation = rot;
+}
+
+const D3DXQUATERNION& Transform::GetRotation() const
+{
+    return m_Rotation;
+}
+
+void Transform::SetScale(const D3DXVECTOR3& s)
+{
+    m_Scale = s;
+}
+
+const D3DXVECTOR3& Transform::GetScale() const
+{
+    return m_Scale;
 }

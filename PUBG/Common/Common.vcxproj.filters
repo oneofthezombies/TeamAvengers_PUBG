@@ -18,6 +18,7 @@
     <ClInclude Include="Source\Base\Singleton.h" />
     <ClInclude Include="Source\Tag\TagColliderCharacterPart.h" />
     <ClInclude Include="Source\Useful\Protocol.h" />
+    <ClInclude Include="Source\Useful\BoxCollision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -30,5 +31,6 @@
     <ClCompile Include="Source\Base\IObject.cpp" />
     <ClCompile Include="Source\Useful\Useful.cpp" />
     <ClCompile Include="Source\Useful\Protocol.cpp" />
+    <ClCompile Include="Source\Useful\BoxCollision.cpp" />
   </ItemGroup>
 </Project>

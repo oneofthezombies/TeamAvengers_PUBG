@@ -4,29 +4,43 @@
 #include "Renderer.h"
 #include "MeshFilterAndAnimator.h"
 #include "UIText.h"
+#include "Character.h"
+#include "CharacterCollisionListener.h"
 
 CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
-    MeshFilter* pMeshFilter, ICollisionListener* pCollisionListener)
+    Character* pCharacter)
     : IObject()
-    , m_tag(tag)
+
+    , m_Tag(tag)
+    
+    , pCharacter(pCharacter)
     , pBoxCollider(nullptr)
     , pBoxColliderRenderer(nullptr)
 {
+    assert(pCharacter && 
+        "CharacterPart::Constructor() failed. character is null.");
+
+    auto pCollisionListener = 
+        pCharacter->GetComponent<CharacterCollisionListener>();
+    
+    auto pMeshFilter = pCharacter->GetComponent<MeshFilter>();
+
     pBoxCollider = AddComponent<BoxCollider>();
     pBoxCollider->SetTag(TAG_COLLISION::BODY_OF_PLAYER_1);
     pBoxCollider->SetListener(pCollisionListener);
+
     pBoxColliderRenderer = AddComponent<BoxColliderRenderer>();
 
     switch (tag)
     {
     case TAG_COLLIDER_CHARACTER_PART::HEAD:
         {
-            AddFrame("hair_f_01", pMeshFilter);
-            AddFrame("hair_b_01", pMeshFilter);
-            AddFrame("head", pMeshFilter);
+            addFrame("hair_f_01", pMeshFilter);
+            addFrame("hair_b_01", pMeshFilter);
+            addFrame("head", pMeshFilter);
 
             AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::NECK, 
-                pMeshFilter, pCollisionListener));
+                pCharacter));
 
             auto pF = pMeshFilter->FindFrame("F_Face_03");
             auto pMeshContainer = static_cast<MeshContainer*>(pF->pMeshContainer);
@@ -45,16 +59,15 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::NECK:
         {
-            AddFrame("head", pMeshFilter);
-            AddFrame("neck_01", pMeshFilter);
+            addFrame("head", pMeshFilter);
+            addFrame("neck_01", pMeshFilter);
 
             AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::BREAST,
-                pMeshFilter, pCollisionListener));
+                pCharacter));
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::CLAVICLE_LEFT, pMeshFilter, 
-                pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::CLAVICLE_LEFT, pCharacter));
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::CLAVICLE_RIGHT, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::CLAVICLE_RIGHT, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
@@ -62,11 +75,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::BREAST:
         {
-            AddFrame("neck_01", pMeshFilter);
-            AddFrame("spine_03", pMeshFilter);
+            addFrame("neck_01", pMeshFilter);
+            addFrame("spine_03", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::STOMACH_UPPER, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::STOMACH_UPPER, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
                 D3DXVECTOR3(10.0f, 10.0f, 10.0f));
@@ -74,11 +87,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::STOMACH_UPPER:
         {
-            AddFrame("spine_03", pMeshFilter);
-            AddFrame("spine_02", pMeshFilter);
+            addFrame("spine_03", pMeshFilter);
+            addFrame("spine_02", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::STOMACH_LOWER, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::STOMACH_LOWER, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
                 D3DXVECTOR3(10.0f, 10.0f, 10.0f));
@@ -86,11 +99,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::STOMACH_LOWER:
         {
-            AddFrame("spine_02", pMeshFilter);
-            AddFrame("spine_01", pMeshFilter);
+            addFrame("spine_02", pMeshFilter);
+            addFrame("spine_01", pMeshFilter);
 
-            AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::WAIST, 
-                pMeshFilter, pCollisionListener));
+            AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::WAIST,
+                pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
                 D3DXVECTOR3(10.0f, 10.0f, 10.0f));
@@ -98,13 +111,13 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::WAIST:
         {
-            AddFrame("pelvis", pMeshFilter);
-            AddFrame("spine_01", pMeshFilter);
+            addFrame("pelvis", pMeshFilter);
+            addFrame("spine_01", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::LEG_LEFT_UPPER, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::LEG_LEFT_UPPER, pCharacter));
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::LEG_RIGHT_UPPER, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::LEG_RIGHT_UPPER, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
                 D3DXVECTOR3(10.0f, 10.0f, 10.0f));
@@ -112,11 +125,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::CLAVICLE_LEFT:
         {
-            AddFrame("clavicle_l", pMeshFilter);
-            AddFrame("upperarm_l", pMeshFilter);
+            addFrame("clavicle_l", pMeshFilter);
+            addFrame("upperarm_l", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::ARM_LEFT_UPPER, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::ARM_LEFT_UPPER, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-6.0f, -7.0f, -5.0f), 
                 D3DXVECTOR3(6.0f, 7.0f, 5.0f));
@@ -124,11 +137,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::CLAVICLE_RIGHT:
         {
-            AddFrame("clavicle_r", pMeshFilter);
-            AddFrame("upperarm_r", pMeshFilter);
+            addFrame("clavicle_r", pMeshFilter);
+            addFrame("upperarm_r", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::ARM_RIGHT_UPPER, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::ARM_RIGHT_UPPER, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-6.0f, -7.0f, -5.0f),
                 D3DXVECTOR3(6.0f, 7.0f, 5.0f));
@@ -136,11 +149,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::ARM_LEFT_UPPER:
         {
-            AddFrame("upperarm_l", pMeshFilter);
-            AddFrame("lowerarm_l", pMeshFilter);
+            addFrame("upperarm_l", pMeshFilter);
+            addFrame("lowerarm_l", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::ARM_LEFT_LOWER, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::ARM_LEFT_LOWER, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(10.0f, 5.0f, 5.0f));
@@ -148,11 +161,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::ARM_LEFT_LOWER:
         {
-            AddFrame("lowerarm_l", pMeshFilter);
-            AddFrame("hand_l", pMeshFilter);
+            addFrame("lowerarm_l", pMeshFilter);
+            addFrame("hand_l", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::HAND_LEFT, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::HAND_LEFT, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-12.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(12.0f, 5.0f, 5.0f));
@@ -160,11 +173,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::ARM_RIGHT_UPPER:
         {
-            AddFrame("upperarm_r", pMeshFilter);
-            AddFrame("lowerarm_r", pMeshFilter);
+            addFrame("upperarm_r", pMeshFilter);
+            addFrame("lowerarm_r", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::ARM_RIGHT_LOWER, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::ARM_RIGHT_LOWER, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(10.0f, 5.0f, 5.0f));
@@ -172,11 +185,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::ARM_RIGHT_LOWER:
         {
-            AddFrame("lowerarm_r", pMeshFilter);
-            AddFrame("hand_r", pMeshFilter);
+            addFrame("lowerarm_r", pMeshFilter);
+            addFrame("hand_r", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::HAND_RIGHT, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::HAND_RIGHT, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-12.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(12.0f, 5.0f, 5.0f));
@@ -184,8 +197,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::HAND_LEFT:
         {
-            AddFrame("hand_l", pMeshFilter);
-            AddFrame("middle_01_l", pMeshFilter);
+            addFrame("hand_l", pMeshFilter);
+            addFrame("middle_01_l", pMeshFilter);
 
             pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
@@ -193,8 +206,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::HAND_RIGHT:
         {
-            AddFrame("hand_r", pMeshFilter);
-            AddFrame("middle_01_r", pMeshFilter);
+            addFrame("hand_r", pMeshFilter);
+            addFrame("middle_01_r", pMeshFilter);
 
             pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
@@ -202,11 +215,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::LEG_LEFT_UPPER:
         {
-            AddFrame("thigh_l", pMeshFilter);
-            AddFrame("calf_l", pMeshFilter);
+            addFrame("thigh_l", pMeshFilter);
+            addFrame("calf_l", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::LEG_LEFT_LOWER, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::LEG_LEFT_LOWER, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-23.0f, -7.0f, -7.0f), 
                 D3DXVECTOR3(23.0f, 7.0f, 7.0f));
@@ -214,11 +227,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::LEG_LEFT_LOWER:
         {
-            AddFrame("calf_l", pMeshFilter);
-            AddFrame("foot_l", pMeshFilter);
+            addFrame("calf_l", pMeshFilter);
+            addFrame("foot_l", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::FOOT_LEFT, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::FOOT_LEFT, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-23.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(23.0f, 5.0f, 5.0f));
@@ -226,11 +239,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::LEG_RIGHT_UPPER:
         {
-            AddFrame("thigh_r", pMeshFilter);
-            AddFrame("calf_r", pMeshFilter);
+            addFrame("thigh_r", pMeshFilter);
+            addFrame("calf_r", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::LEG_RIGHT_LOWER, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::LEG_RIGHT_LOWER, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-23.0f, -7.0f, -7.0f), 
                 D3DXVECTOR3(23.0f, 7.0f, 7.0f));
@@ -238,11 +251,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::LEG_RIGHT_LOWER:
         {
-            AddFrame("calf_r", pMeshFilter);
-            AddFrame("foot_r", pMeshFilter);
+            addFrame("calf_r", pMeshFilter);
+            addFrame("foot_r", pMeshFilter);
 
             AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::FOOT_RIGHT, pMeshFilter, pCollisionListener));
+                TAG_COLLIDER_CHARACTER_PART::FOOT_RIGHT, pCharacter));
 
             pBoxCollider->Init(D3DXVECTOR3(-23.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(23.0f, 5.0f, 5.0f));
@@ -250,8 +263,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::FOOT_LEFT:
         {
-            AddFrame("foot_l", pMeshFilter);
-            AddFrame("ball_l", pMeshFilter);
+            addFrame("foot_l", pMeshFilter);
+            addFrame("ball_l", pMeshFilter);
 
             pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
@@ -259,8 +272,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::FOOT_RIGHT:
         {
-            AddFrame("foot_r", pMeshFilter);
-            AddFrame("ball_r", pMeshFilter);
+            addFrame("foot_r", pMeshFilter);
+            addFrame("ball_r", pMeshFilter);
 
             pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
@@ -273,12 +286,14 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     }
 
-    assert(m_Frames.front() && "CharacterPart::Constructor() failed. frame is null.");
-    D3DXVECTOR3 v(GetTranslation(m_Frames.front()->TransformationMatrix));
+    assert(m_Frames.front() && 
+        "CharacterPart::Constructor() failed. frame is null.");
+    D3DXVECTOR3 v(
+        Matrix::GetTranslation(m_Frames.front()->TransformationMatrix));
     for (auto& f : m_Frames)
     {
         assert(f && "CharacterPart::Constructor() failed. frame is null.");
-        v = (v + GetTranslation(f->TransformationMatrix)) * 0.5f;
+        v = (v + Matrix::GetTranslation(f->TransformationMatrix)) * 0.5f;
     }
 }
 
@@ -288,39 +303,31 @@ CharacterPart::~CharacterPart()
 
 void CharacterPart::OnUpdate()
 {
-    if (m_tag == TAG_COLLIDER_CHARACTER_PART::HEAD)
+    D3DXMATRIX world;
+    memset(&world, 0, sizeof world);
+
+    if (m_Tag == TAG_COLLIDER_CHARACTER_PART::HEAD)
     {
-        auto topFront = GetTranslation(m_Frames[0]->CombinedTM);
-        auto topBack = GetTranslation(m_Frames[1]->CombinedTM);
+        auto topFront = Matrix::GetTranslation(m_Frames[0]->CombinedTM);
+        auto topBack = Matrix::GetTranslation(m_Frames[1]->CombinedTM);
         auto top = (topFront + topBack) * 0.5f;
-        auto bottom = GetTranslation(m_Frames[2]->CombinedTM);
+        auto bottom = Matrix::GetTranslation(m_Frames[2]->CombinedTM);
         auto center = (top + bottom) * 0.5f;
-        D3DXMATRIX m = m_Frames[2]->CombinedTM;
-        m._41 = center.x;
-        m._42 = center.y;
-        m._43 = center.z;
-        pBoxCollider->Update(m);
+        world = m_Frames[2]->CombinedTM;
+        world._41 = center.x;
+        world._42 = center.y;
+        world._43 = center.z;
+
     }
     else
     {
-        D3DXMATRIX result;
-        memset(&result, 0, sizeof D3DXMATRIX);
         for (auto& f : m_Frames)
-            result += f->CombinedTM / static_cast<float>(m_Frames.size());
-        pBoxCollider->Update(result);
+            world += f->CombinedTM / static_cast<float>(m_Frames.size());
     }
+    pBoxCollider->Update(world * 
+        pCharacter->GetTransform()->GetTransformationMatrix());
 
-    D3DVIEWPORT9 vp;
-    g_pDevice->GetViewport(&vp);
-    D3DXMATRIX view, proj;
-    g_pDevice->GetTransform(D3DTS_VIEW, &view);
-    g_pDevice->GetTransform(D3DTS_PROJECTION, &proj);
-    D3DXVECTOR3 v;
-    for (unsigned int i = 0u; i < m_UITexts.size(); ++i)
-    {
-        D3DXVec3Project(&v, &GetTranslation(m_Frames[i]->CombinedTM), &vp, &proj, &view, NULL);
-        m_UITexts[i]->SetPosition(v);
-    }
+    updateUI();
 }
 
 void CharacterPart::OnRender()
@@ -328,7 +335,12 @@ void CharacterPart::OnRender()
     pBoxColliderRenderer->Render();
 }
 
-void CharacterPart::AddFrame(const string& name, MeshFilter* pMeshFilter)
+TAG_COLLIDER_CHARACTER_PART CharacterPart::GetTagColliderCharacterPart() const
+{
+    return m_Tag;
+}
+
+void CharacterPart::addFrame(const string& name, MeshFilter* pMeshFilter)
 {
     auto pFrame = pMeshFilter->FindFrame(name);
     if (!pFrame)
@@ -344,4 +356,22 @@ void CharacterPart::AddFrame(const string& name, MeshFilter* pMeshFilter)
         D3DCOLOR_XRGB(0, 255, 255), nullptr);
     pUIText->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
     m_UITexts.emplace_back(pUIText);
+}
+
+void CharacterPart::updateUI()
+{
+    D3DVIEWPORT9 vp;
+    g_pDevice->GetViewport(&vp);
+    D3DXMATRIX view, proj;
+    g_pDevice->GetTransform(D3DTS_VIEW, &view);
+    g_pDevice->GetTransform(D3DTS_PROJECTION, &proj);
+    D3DXVECTOR3 v;
+
+    for (unsigned int i = 0u; i < m_UITexts.size(); ++i)
+    {
+        D3DXVec3Project(&v, &(Matrix::GetTranslation(m_Frames[i]->CombinedTM)),
+            &vp, &proj, &view, 
+            &pCharacter->GetTransform()->GetTransformationMatrix());
+        m_UITexts[i]->SetPosition(v);
+    }
 }

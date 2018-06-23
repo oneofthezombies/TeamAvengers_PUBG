@@ -182,6 +182,19 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
                 description));
         }
         break;
+    case TAG_REQUEST::SEND_ANIMATION_INDEX:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& animationIndexStr = parsedDesc.second;
+
+            m_pRoom->m_RoomInfo.m_PlayerInfos[id].m_AnimationIndex = 
+                std::stoi(animationIndexStr);
+
+            m_pRoom->Echo(id, Message::Create(
+                TAG_REQUEST::SEND_ANIMATION_INDEX, description));
+        }
+        break;
     }
 }
 

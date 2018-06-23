@@ -6,7 +6,7 @@
 
 Renderer::Renderer(IObject* pOwner, const TAG_RENDERER tag)
     : Component(pOwner)
-    , m_tag(tag)
+    , m_Tag(tag)
 {
 }
 
@@ -16,33 +16,34 @@ Renderer::~Renderer()
 
 TAG_RENDERER Renderer::GetTag() const
 {
-    return m_tag;
+    return m_Tag;
 }
 
-void SkinnedMeshRenderer::DrawFrame(LPD3DXFRAME pFrame)
+void SkinnedMeshRenderer::drawFrame(LPD3DXFRAME pFrameBase)
 {
-    if (!pFrame) return;
+    if (!pFrameBase) return;
 
 #ifdef OOTZ_DEBUG
     //PrintBoneNameAndPosition(pFrame);
 #endif
 
-    auto pMeshContainer = pFrame->pMeshContainer;
+    auto pMeshContainer = pFrameBase->pMeshContainer;
     while (pMeshContainer)
     {
-        DrawMeshContainer(pMeshContainer);
+        drawMeshContainer(pMeshContainer);
 
         pMeshContainer = pMeshContainer->pNextMeshContainer;
     }
 
-    DrawFrame(pFrame->pFrameSibling);
-    DrawFrame(pFrame->pFrameFirstChild);
+    drawFrame(pFrameBase->pFrameSibling);
+    drawFrame(pFrameBase->pFrameFirstChild);
 }
 
-void SkinnedMeshRenderer::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainer)
+void SkinnedMeshRenderer::drawMeshContainer(
+    LPD3DXMESHCONTAINER pMeshContainerBase)
 {
-    if (!pMeshContainer) return;
-    if (!pMeshContainer->pSkinInfo) return;
+    if (!pMeshContainerBase) return;
+    if (!pMeshContainerBase->pSkinInfo) return;
 
 #ifdef OOTZ_DEBUG
     //cout << "Mesh container name : ";
@@ -53,30 +54,33 @@ void SkinnedMeshRenderer::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainer)
     //    cout << "NULL\n";
 #endif
 
-    auto pMC = static_cast<MeshContainer*>(pMeshContainer);
-    auto numBones = pMeshContainer->pSkinInfo->GetNumBones();
+    auto pMeshContainer = static_cast<MeshContainer*>(pMeshContainerBase);
+    auto numBones = pMeshContainerBase->pSkinInfo->GetNumBones();
     for (auto i = 0u; i < numBones; ++i)
     {
-        pMC->pFinalBoneMatrices[i] = pMC->pBoneOffsetMatrices[i] * 
-            *pMC->ppBoneMatrixPtrs[i];
+        pMeshContainer->pFinalBoneMatrices[i] 
+            = pMeshContainer->pBoneOffsetMatrices[i] 
+            * *pMeshContainer->ppBoneMatrixPtrs[i];
     }
 
     PBYTE pVerticesSrc = nullptr;
-    pMC->pEffectMesh->pMesh->LockVertexBuffer(D3DLOCK_READONLY, 
+    pMeshContainer->pEffectMesh->pMesh->LockVertexBuffer(D3DLOCK_READONLY,
         (LPVOID*)&pVerticesSrc);
     
     PBYTE pVerticesDest = nullptr;
-    pMC->pWorkMesh->LockVertexBuffer(0, (LPVOID*)&pVerticesDest);
+    pMeshContainer->pWorkMesh->LockVertexBuffer(0, (LPVOID*)&pVerticesDest);
 
-    pMC->pSkinInfo->UpdateSkinnedMesh(pMC->pFinalBoneMatrices, nullptr,
-        pVerticesSrc, pVerticesDest);
+    pMeshContainer->pSkinInfo->UpdateSkinnedMesh(
+        pMeshContainer->pFinalBoneMatrices, nullptr, pVerticesSrc, 
+        pVerticesDest);
 
-    pMC->pEffectMesh->pMesh->UnlockVertexBuffer();
-    pMC->pWorkMesh->UnlockVertexBuffer();
+    pMeshContainer->pEffectMesh->pMesh->UnlockVertexBuffer();
+    pMeshContainer->pWorkMesh->UnlockVertexBuffer();
 
-    for (size_t i = 0u; i < pMC->pEffectMesh->EffectParams.size(); ++i)
+    const auto size = pMeshContainer->pEffectMesh->EffectParams.size();
+    for (size_t i = 0u; i < size; ++i)
     {
-        const auto& ep = pMC->pEffectMesh->EffectParams[i];
+        const auto& ep = pMeshContainer->pEffectMesh->EffectParams[i];
 
 #ifdef OOTZ_DEBUG
         //cout << "Effect name : " << ep.Name << '\n';
@@ -84,16 +88,8 @@ void SkinnedMeshRenderer::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainer)
         
         ep.pEffect->ApplyParameterBlock(ep.hParam);
 
-        if (auto tr = GetOwnerTransform())
-        {
-            ep.pEffect->SetMatrix("World", &tr->GetTM());
-        }
-        else
-        {
-            D3DXMATRIX world;
-            D3DXMatrixIdentity(&world);
-            ep.pEffect->SetMatrix("World", &world);
-        }
+        ep.pEffect->SetMatrix(
+            "World", &GetOwnerTransform()->GetTransformationMatrix());
 
         D3DXMATRIX view;
         ep.pEffect->SetMatrix("View", &g_pCurrentCamera->GetViewMatrix());
@@ -111,14 +107,14 @@ void SkinnedMeshRenderer::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainer)
         for (UINT p = 0u; p < numPasses; ++p)
         {
             ep.pEffect->BeginPass(p);
-            pMC->pWorkMesh->DrawSubset(i);
+            pMeshContainer->pWorkMesh->DrawSubset(i);
             ep.pEffect->EndPass();
         }
         ep.pEffect->End();
     }
 }
 
-void SkinnedMeshRenderer::PrintBoneNameAndPosition(LPD3DXFRAME pFrame)
+void SkinnedMeshRenderer::printBoneNameAndPosition(LPD3DXFRAME pFrame)
 {
     cout << "Frame name : ";
 
@@ -179,14 +175,15 @@ void SkinnedMeshRenderer::Render()
     if (!pMeshFilter)
         pMeshFilter = GetComponent<MeshFilter>();
 
-    if (!pMeshFilter) return;
+    assert(pMeshFilter && 
+        "SkinnedMeshRenderer::Render() failed. mesh filter is null.");
 
-    DrawFrame(pMeshFilter->GetRootFrame());
+    drawFrame(pMeshFilter->GetRootFrame());
 }
 
 EffectMeshRenderer::EffectMeshRenderer(IObject* pOwner)
     : Renderer(pOwner, TAG_RENDERER::EFFECT_MESH)
-    , m_pEffectMesh(nullptr)
+    , pEffectMesh(nullptr)
 {
 }
 
@@ -196,21 +193,13 @@ EffectMeshRenderer::~EffectMeshRenderer()
 
 void EffectMeshRenderer::Render()
 {
-    for (size_t i = 0u; i < m_pEffectMesh->EffectParams.size(); ++i)
+    for (size_t i = 0u; i < pEffectMesh->EffectParams.size(); ++i)
     {
-        const auto& ep = m_pEffectMesh->EffectParams[i];
+        const auto& ep = pEffectMesh->EffectParams[i];
         ep.pEffect->ApplyParameterBlock(ep.hParam);
 
-        D3DXMATRIX world;
-        if (auto tr = GetOwnerTransform())
-        {
-            world = tr->GetTM();
-        }
-        else
-        {
-            D3DXMatrixIdentity(&world);
-        }
-        ep.pEffect->SetMatrix("World", &world);
+        ep.pEffect->SetMatrix(
+            "World", &GetOwnerTransform()->GetTransformationMatrix());
 
         D3DXMATRIX view;
         ep.pEffect->SetMatrix("View", &g_pCurrentCamera->GetViewMatrix());
@@ -228,7 +217,7 @@ void EffectMeshRenderer::Render()
         for (UINT p = 0u; p < numPasses; ++p)
         {
             ep.pEffect->BeginPass(p);
-            m_pEffectMesh->pMesh->DrawSubset(i);
+            pEffectMesh->pMesh->DrawSubset(i);
             ep.pEffect->EndPass();
         }
         ep.pEffect->End();
@@ -237,19 +226,21 @@ void EffectMeshRenderer::Render()
 
 void EffectMeshRenderer::SetEffectMesh(EffectMesh* p)
 {
-    if (!p) return;
+    assert(p && 
+        "EffectMeshRenderer::SetEffectMesh() failed. effect mesh is null.");
 
-    m_pEffectMesh = p;
+    pEffectMesh = p;
 }
 
-void EffectMeshRenderer::SetEffectMesh(const string& path, const string& xFilename)
+void EffectMeshRenderer::SetEffectMesh(
+    const string& path, const string& xFilename)
 {
     SetEffectMesh(g_pResourceManager->GetEffectMesh(path, xFilename));
 }
 
 ColliderRenderer::ColliderRenderer(IObject* pOwner, const TAG_RENDERER tag)
     : Renderer(pOwner, tag)
-    , m_color(D3DCOLOR_XRGB(0, 255, 0))
+    , m_Color(D3DCOLOR_XRGB(0, 255, 0))
 {
 }
 
@@ -263,7 +254,7 @@ void ColliderRenderer::Render()
 
 void ColliderRenderer::SetColor(const D3DCOLOR color)
 {
-    m_color = color;
+    m_Color = color;
 }
 
 BoxColliderRenderer::BoxColliderRenderer(IObject* pOwner)
@@ -281,14 +272,13 @@ void BoxColliderRenderer::Render()
     if (!pBoxCollider)
     {
         pBoxCollider = GetComponent<BoxCollider>();
-        if (pBoxCollider) 
-        {
-            auto extent = pBoxCollider->GetExtent();
-            Init(-extent, extent);
-        }
-    }
 
-    if (!pBoxCollider) return;
+        assert(pBoxCollider &&
+            "BoxColliderRenderer::Render() failed. pBoxCollider is null.");
+
+        auto extent = pBoxCollider->GetExtent();
+        Init(-extent, extent);
+    }
 
     vector<WORD> indices =
     {
@@ -297,25 +287,24 @@ void BoxColliderRenderer::Render()
         0, 4, 1, 5, 2, 6, 3, 7,
     };
 
-    const auto dv = g_pDevice;
-    dv->SetRenderState(D3DRS_LIGHTING, false);
-    dv->SetTransform(D3DTS_WORLD, &pBoxCollider->GetTransform());
-    dv->SetTexture(0, nullptr);
-    dv->DrawIndexedPrimitiveUP(D3DPT_LINELIST, 0, m_vertices.size(), 
-        indices.size() / 2, indices.data(), D3DFMT_INDEX16, m_vertices.data(), 
+    const auto pDevice = g_pDevice;
+    pDevice->SetRenderState(D3DRS_LIGHTING, false);
+    pDevice->SetTransform(D3DTS_WORLD, &pBoxCollider->GetTransform());
+    pDevice->SetTexture(0, nullptr);
+    pDevice->DrawIndexedPrimitiveUP(D3DPT_LINELIST, 0, m_Vertices.size(),
+        indices.size() / 2, indices.data(), D3DFMT_INDEX16, m_Vertices.data(), 
         sizeof VERTEX_PC);
-    dv->SetRenderState(D3DRS_LIGHTING, true);
 }
 
 void BoxColliderRenderer::Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max)
 {
-    m_vertices.resize(8);
-    m_vertices[0] = VERTEX_PC(D3DXVECTOR3(min.x, min.y, min.z), m_color);
-    m_vertices[1] = VERTEX_PC(D3DXVECTOR3(min.x, max.y, min.z), m_color);
-    m_vertices[2] = VERTEX_PC(D3DXVECTOR3(max.x, max.y, min.z), m_color);
-    m_vertices[3] = VERTEX_PC(D3DXVECTOR3(max.x, min.y, min.z), m_color);
-    m_vertices[4] = VERTEX_PC(D3DXVECTOR3(min.x, min.y, max.z), m_color);
-    m_vertices[5] = VERTEX_PC(D3DXVECTOR3(min.x, max.y, max.z), m_color);
-    m_vertices[6] = VERTEX_PC(D3DXVECTOR3(max.x, max.y, max.z), m_color);
-    m_vertices[7] = VERTEX_PC(D3DXVECTOR3(max.x, min.y, max.z), m_color);
+    m_Vertices.resize(8);
+    m_Vertices[0] = VERTEX_PC(D3DXVECTOR3(min.x, min.y, min.z), m_Color);
+    m_Vertices[1] = VERTEX_PC(D3DXVECTOR3(min.x, max.y, min.z), m_Color);
+    m_Vertices[2] = VERTEX_PC(D3DXVECTOR3(max.x, max.y, min.z), m_Color);
+    m_Vertices[3] = VERTEX_PC(D3DXVECTOR3(max.x, min.y, min.z), m_Color);
+    m_Vertices[4] = VERTEX_PC(D3DXVECTOR3(min.x, min.y, max.z), m_Color);
+    m_Vertices[5] = VERTEX_PC(D3DXVECTOR3(min.x, max.y, max.z), m_Color);
+    m_Vertices[6] = VERTEX_PC(D3DXVECTOR3(max.x, max.y, max.z), m_Color);
+    m_Vertices[7] = VERTEX_PC(D3DXVECTOR3(max.x, min.y, max.z), m_Color);
 }

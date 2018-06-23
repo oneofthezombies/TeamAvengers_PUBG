@@ -28,7 +28,9 @@ public:
 class Animator : public Component
 {
 private:
-    MeshFilter* m_pMeshFilter;
+    MeshFilter*               pMeshFilter;
+    LPD3DXANIMATIONCONTROLLER pAnimController;
+
     int   m_Index;
     float m_BlendTime;
     float m_PassedBlendTime;
@@ -37,7 +39,8 @@ private:
     float m_PassedTime;
 
 private:
-    void UpdateAnim(const float dt, LPD3DXANIMATIONCONTROLLER pAnimController);
+    void updateAnim();
+    void setMeshFilterPtr();
 
 public:
     Animator(IObject* pOwner);
@@ -46,4 +49,6 @@ public:
     void Update();
 
     void SetAnimationIndex(const unsigned int index, const bool isBlend);
+    int GetNumAnimation();
+    int GetCurrentAnimationIndex();
 };

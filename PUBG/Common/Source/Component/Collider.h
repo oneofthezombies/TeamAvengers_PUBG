@@ -8,31 +8,30 @@ class ICollisionListener;
 class Collider : public Component
 {
 public:
-    enum Type
+    enum class TYPE
     {
-        kBox,
-
-        // Not yet used
-        kSphere,
+        BOX,
+        SPHERE,
     };
 
 private:
-    ICollisionListener* m_pListener;
-    Type                m_type;
-    TAG_COLLISION       m_tag;
+    TYPE                m_Type;
+    TAG_COLLISION       m_Tag;
+
+    ICollisionListener* pListener;
 
 protected:
-    D3DXVECTOR3 m_vCenter;
+    D3DXVECTOR3 m_Center;
 
-    Collider(IObject* pOwner, const Type type);
+    Collider(IObject* pOwner, const TYPE type);
 
 public:
     virtual ~Collider();
 
-    Type        GetType() const;
+    TYPE        GetType() const;
 
-    void        SetCenter(const D3DXVECTOR3& center);
-    D3DXVECTOR3 GetCenter() const;
+    void               SetCenter(const D3DXVECTOR3& center);
+    const D3DXVECTOR3& GetCenter() const;
     
     void                SetListener(ICollisionListener* pListener);
     ICollisionListener* GetListener() const;
@@ -44,7 +43,7 @@ public:
 class SphereCollider : public Collider
 {
 private:
-    float m_radius;
+    float m_Radius;
 
 public:
     SphereCollider(IObject* pOwner);
@@ -57,13 +56,13 @@ public:
 class BoxCollider : public Collider
 {
 private:
-    D3DXVECTOR3 m_vExtent;
+    D3DXVECTOR3 m_Extent;
 
     // row 0 : x, y and z of axis 0
     // row 1 : x, y and z of axis 1
     // row 2 : x, y and z of axis 2
     // row 3 : x, y and z of translation
-    D3DXMATRIX m_mTransform;
+    D3DXMATRIX m_Transform;
 
 public:
     BoxCollider(IObject* pOwner);
@@ -72,9 +71,9 @@ public:
     void Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max);
     void Update(const D3DXMATRIX& transform);
 
-    void              SetExtent(const D3DXVECTOR3& extent);
-    D3DXVECTOR3       GetExtent() const;
-    const D3DXMATRIX& GetTransform() const;
+    void               SetExtent(const D3DXVECTOR3& extent);
+    const D3DXVECTOR3& GetExtent() const;
+    const D3DXMATRIX&  GetTransform() const;
 };
 
 class ICollisionListener : public Component
@@ -85,7 +84,10 @@ protected:
 public:
     virtual ~ICollisionListener();
 
-    virtual void OnCollisionEnter(const Collider& other) = 0;
-    virtual void OnCollisionExit(const Collider& other) = 0;
-    virtual void OnCollisionStay(const Collider& other) = 0;
+    virtual void OnCollisionEnter(
+        Collider* pPerpetrator, Collider* pVictim) = 0;
+    virtual void OnCollisionExit(
+        Collider* pPerpetrator, Collider* pVictim) = 0;
+    virtual void OnCollisionStay(
+        Collider* pPerpetrator, Collider* pVictim) = 0;
 };

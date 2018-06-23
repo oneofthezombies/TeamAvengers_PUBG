@@ -102,41 +102,41 @@ Camera::~Camera()
 void Camera::Update()
 {
     bool isUpdated = false;
-    if (g_pInput->IsStayKeyDown('W'))
-    {
-        m_Position.y += 1.0f;
-        isUpdated = true;
-    }
+    //if (g_pInput->IsStayKeyDown('W'))
+    //{
+    //    m_Position.y += 1.0f;
+    //    isUpdated = true;
+    //}
 
-    if (g_pInput->IsStayKeyDown('S'))
-    {
-        m_Position.y -= 1.0f;
-        isUpdated = true;
-    }
+    //if (g_pInput->IsStayKeyDown('S'))
+    //{
+    //    m_Position.y -= 1.0f;
+    //    isUpdated = true;
+    //}
 
-    if (g_pInput->IsStayKeyDown('A'))
-    {
-        m_Position.x -= 1.0f;
-        isUpdated = true;
-    }
+    //if (g_pInput->IsStayKeyDown('A'))
+    //{
+    //    m_Position.x -= 1.0f;
+    //    isUpdated = true;
+    //}
 
-    if (g_pInput->IsStayKeyDown('D'))
-    {
-        m_Position.x += 1.0f;
-        isUpdated = true;
-    }
+    //if (g_pInput->IsStayKeyDown('D'))
+    //{
+    //    m_Position.x += 1.0f;
+    //    isUpdated = true;
+    //}
 
-    if (g_pInput->IsStayKeyDown('Q'))
-    {
-        m_Position.z += 0.5f;
-        isUpdated = true;
-    }
+    //if (g_pInput->IsStayKeyDown('Q'))
+    //{
+    //    m_Position.z += 0.5f;
+    //    isUpdated = true;
+    //}
 
-    if (g_pInput->IsStayKeyDown('E'))
-    {
-        m_Position.z -= 0.5f;
-        isUpdated = true;
-    }
+    //if (g_pInput->IsStayKeyDown('E'))
+    //{
+    //    m_Position.z -= 0.5f;
+    //    isUpdated = true;
+    //}
 
     if (isUpdated)
     {

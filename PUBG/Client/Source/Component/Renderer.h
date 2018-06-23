@@ -9,7 +9,7 @@ class BoxCollider;
 class Renderer : public Component
 {
 private:
-    const TAG_RENDERER m_tag;
+    const TAG_RENDERER m_Tag;
 
 protected:
     Renderer(IObject* pOwner, const TAG_RENDERER tag);
@@ -25,7 +25,7 @@ public:
 class EffectMeshRenderer : public Renderer
 {
 private:
-    EffectMesh* m_pEffectMesh;
+    EffectMesh* pEffectMesh;
 
 public:
     EffectMeshRenderer(IObject* pOwner);
@@ -42,9 +42,9 @@ class SkinnedMeshRenderer : public Renderer
 private:
     MeshFilter* pMeshFilter;
 
-    void DrawFrame(LPD3DXFRAME pFrame);
-    void DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainer);
-    void PrintBoneNameAndPosition(LPD3DXFRAME pFrame);
+    void drawFrame(LPD3DXFRAME pFrameBase);
+    void drawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase);
+    void printBoneNameAndPosition(LPD3DXFRAME pFrameBase);
 
 public:
     SkinnedMeshRenderer(IObject* pOwner);
@@ -56,7 +56,7 @@ public:
 class ColliderRenderer : public Renderer
 {
 protected:
-    D3DCOLOR m_color;
+    D3DCOLOR m_Color;
 
     ColliderRenderer(IObject* pOwner, const TAG_RENDERER tag);
 
@@ -72,7 +72,7 @@ class BoxColliderRenderer : public ColliderRenderer
 {
 private:
     BoxCollider* pBoxCollider;
-    vector<VERTEX_PC> m_vertices;
+    vector<VERTEX_PC> m_Vertices;
 
 public:
     BoxColliderRenderer(IObject* pOwner);

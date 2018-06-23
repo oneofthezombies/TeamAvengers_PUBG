@@ -3,144 +3,243 @@
 #include "MeshFilterAndAnimator.h"
 #include "Renderer.h"
 #include "CharacterPart.h"
+#include "CharacterCollisionListener.h"
 
 Character::Character(const int index)
     : IObject()
+
+    , m_Index(index)
+    , m_RootTransform(1.0f)
+    , m_WaistRotation(D3DX_PI * 0.5f, 0.1f)
+    , m_pSphereMesh(nullptr)
+    , m_AnimState(TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still)
+
     , pMeshFilter(nullptr)
     , pAnimator(nullptr)
     , pSkinnedMeshRenderer(nullptr)
-    , pWaist(nullptr)
-    , m_RotationX(0.0f)
     , pCollisionListener(nullptr)
+
+    , pWaist(nullptr)
     , pRoot(nullptr)
-    , m_index(index)
 {
     pMeshFilter = AddComponent<MeshFilter>();
-    pMeshFilter->SetSkinnedMesh("./Resource/Hoon_Sample_Anim/", 
-        "Hoon_Sample_Anim.X");
+    pMeshFilter->SetSkinnedMesh(
+        "./Resource/Test_Anim/", "Test_Anim.x");
 
     pAnimator = AddComponent<Animator>();
-    pAnimator->SetAnimationIndex(1, false);
+    pAnimator->SetAnimationIndex(
+        static_cast<int>(
+            TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still), false);
 
     pSkinnedMeshRenderer = AddComponent<SkinnedMeshRenderer>();
 
-    //pCollisionListener = AddComponent<CharacterCollisionListener>();
+    pCollisionListener = AddComponent<CharacterCollisionListener>();
 
-    //AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::HEAD,
-    //    pMeshFilter, pCollisionListener));
+    AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::HEAD, this));
 
     pWaist = static_cast<Frame*>(
         D3DXFrameFind(pMeshFilter->GetRootFrame(), "spine_01"));
 
     pRoot = static_cast<Frame*>(
         D3DXFrameFind(pMeshFilter->GetRootFrame(), "root"));
+
+    D3DXCreateSphere(g_pDevice, 1.0f, 10, 10, &m_pSphereMesh, NULL);
 }
 
 Character::~Character()
+{
+    SAFE_RELEASE(m_pSphereMesh);
+}
+
+Character::WaistRotation::WaistRotation(const float limit, const float factor)
+    : LIMIT_OF_ANGLE(limit)
+    , QUANTITY_FACTOR(factor)
+    , m_Angle(0.0f)
+{
+}
+
+Character::RootTransform::RootTransform(const float moveSpeed)
+    : MOVE_SPEED(moveSpeed)
+    , m_Direction(0.0f, 0.0f, -1.0f)
 {
 }
 
 void Character::OnUpdate()
 {
-    auto com = g_pCommunicator;
+    auto pInput = g_pInput;
+    auto pCom = g_pCommunicator;
     auto tr = GetTransform();
     auto pos = tr->GetPosition();
+    auto isUpdated = false;
 
-    bool isUpdated = false;
-    if (m_index == com->m_MyInfo.m_ID)
+    if (IsMine())
     {
-        //if (g_pInput->IsOnceKeyDown('0'))
+        //auto animIndex = pAnimator->GetCurrentAnimationIndex();
+
+        //if (pInput->IsOnceKeyDown('1'))
         //{
-        //    pAnimator->SetAnimationIndex(0, true);
+        //    animIndex--;
+        //    if (animIndex < 0)
+        //        animIndex = 0;
+
+        //    pAnimator->SetAnimationIndex(animIndex, true);
         //}
-        //if (g_pInput->IsOnceKeyDown('1'))
+        //if (pInput->IsOnceKeyDown('2'))
         //{
-        //    pAnimator->SetAnimationIndex(1, true);
-        //}
-        //if (g_pInput->IsOnceKeyDown('2'))
-        //{
-        //    pAnimator->SetAnimationIndex(2, true);
-        //}
-        //if (g_pInput->IsOnceKeyDown('3'))
-        //{
-        //    pAnimator->SetAnimationIndex(3, true);
+        //    const auto numAnim = pAnimator->GetNumAnimation();
+
+        //    animIndex++;
+        //    if (animIndex >= numAnim)
+        //        animIndex = numAnim - 1;
+
+        //    pAnimator->SetAnimationIndex(animIndex, true);
         //}
 
-        //if (g_pInput->IsStayKeyDown('4'))
+        //Debug << "Anim index : " << animIndex << '\n';
+
+        //if (pInput->IsStayKeyDown('3'))
         //{
-        //    m_RotationX += 0.1f;
-        //    if (m_RotationX > D3DX_PI * 2.0f)
-        //        m_RotationX -= D3DX_PI * 2.0f;
+        //    RotateWaist(-m_WaistRotation.QUANTITY_FACTOR);
         //}
-        //if (g_pInput->IsStayKeyDown('5'))
+        //if (pInput->IsStayKeyDown('4'))
         //{
-        //    m_RotationX -= 0.1f;
-        //    if (m_RotationX < D3DX_PI * 2.0f)
-        //        m_RotationX += D3DX_PI * 2.0f;
+        //    RotateWaist(m_WaistRotation.QUANTITY_FACTOR);
         //}
 
-        if (g_pInput->IsStayKeyDown('6'))
+        bool isTransit = false;
+        auto nextState = m_AnimState;
+
+        switch (m_AnimState)
         {
-            pos.x += 1.0f;
+        case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still:
+            {
+                if (pInput->IsOnceKeyDown('W'))
+                {
+                    nextState = TAG_ANIM_CHARACTER::Melee_Combat_Stand_Walk_F;
+                    isTransit = true;
+                }
+            }
+            break;
+        case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Walk_F:
+            {
+                pos += m_RootTransform.m_Direction * 
+                    m_RootTransform.MOVE_SPEED;
+                isUpdated = true;
+                
+                if (!pInput->IsStayKeyDown('W'))
+                {
+                    nextState = 
+                        TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still;
+                    isTransit = true;
+                }
+            }
+            break;
+        }
+        if (isTransit)
+        {
+            m_AnimState = nextState;
+            const auto ai = static_cast<unsigned int>(m_AnimState);
+            pAnimator->SetAnimationIndex(ai, true);
+            pCom->SendAnimationIndex(ai);
+        }
+
+        if (pInput->IsStayKeyDown('A'))
+        {
+            D3DXVECTOR3 right;
+            D3DXMATRIX r;
+            D3DXMatrixRotationY(&r, D3DX_PI * 0.5f);
+            D3DXVec3TransformNormal(&right, &m_RootTransform.m_Direction, &r);
+            D3DXVec3Normalize(&right, &right);
+            pos += right * -m_RootTransform.MOVE_SPEED;
             isUpdated = true;
         }
-        if (g_pInput->IsStayKeyDown('7'))
+        if (pInput->IsStayKeyDown('D'))
         {
-            pos.x -= 1.0f;
+            D3DXVECTOR3 right;
+            D3DXMATRIX r;
+            D3DXMatrixRotationY(&r, D3DX_PI * 0.5f);
+            D3DXVec3TransformNormal(&right, &m_RootTransform.m_Direction, &r);
+            D3DXVec3Normalize(&right, &right);
+            pos += right * m_RootTransform.MOVE_SPEED;
             isUpdated = true;
         }
     }
     else
     {
-        auto& playerInfo = com->m_RoomInfo.m_PlayerInfos[m_index];
-        pos = playerInfo.m_Position;
+        auto& pi = pCom->m_RoomInfo.m_PlayerInfos[m_Index];
+        pos = pi.m_Position;
 
-        auto pAC = pMeshFilter->GetAnimationController();
-        pAC->ResetTime();
-        pAC->AdvanceTime(playerInfo.m_AnimationTime, nullptr);
+        const auto uAnimState = static_cast<unsigned int>(m_AnimState);
+        if (uAnimState != pi.m_AnimationIndex)
+        {
+            m_AnimState = static_cast<TAG_ANIM_CHARACTER>(pi.m_AnimationIndex);
+            pAnimator->SetAnimationIndex(pi.m_AnimationIndex, true);
+        }
     }
 
     tr->SetPosition(pos);
+    Debug << "Position : " << pos << '\n';
+
+    Debug << "Position2 : " << Matrix::GetTranslation(tr->GetTransformationMatrix()) << '\n';
 
     if (isUpdated)
-        com->SendPosition(pos);
+        pCom->SendPosition(pos);
 
-    pAnimator->Update();
-
-    D3DXMATRIX m;
-    D3DXMatrixRotationX(&m, m_RotationX);
-    pWaist->TransformationMatrix *= m;
-
-    pRoot->TransformationMatrix *= tr->GetTM();
-
-    pMeshFilter->Update();
+    UpdateTransform();
 }
 
 void Character::OnRender()
 {
     pSkinnedMeshRenderer->Render();
+
+    auto pDevice = g_pDevice;
+    pDevice->SetRenderState(D3DRS_LIGHTING, true);
+     
+    pDevice->SetTexture(0, NULL);
+    pDevice->SetMaterial(&MaterialTemplate::GetWhite());
+
+    auto world = GetTransform()->GetTransformationMatrix();
+    pDevice->SetTransform(D3DTS_WORLD, &world);
+    m_pSphereMesh->DrawSubset(0);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        D3DXMATRIX t;
+        D3DXMatrixTranslation(&t, static_cast<float>(i * 10), 0.0f, 0.0f);
+        pDevice->SetTransform(D3DTS_WORLD, &t);
+        m_pSphereMesh->DrawSubset(0);
+    }
 }
 
-CharacterCollisionListener::CharacterCollisionListener(IObject* pOwner)
-    : ICollisionListener(pOwner)
+bool Character::IsMine() const
 {
+    return m_Index == g_pCommunicator->m_MyInfo.m_ID;
 }
 
-CharacterCollisionListener::~CharacterCollisionListener()
+void Character::UpdateTransform()
 {
+    pAnimator->Update();
+
+    D3DXMATRIX m;
+    D3DXMatrixRotationX(&m, m_WaistRotation.m_Angle);
+    pWaist->TransformationMatrix *= m;
+
+    pRoot->TransformationMatrix = Matrix::IDENTITY;
+    auto rootPos = Matrix::GetTranslation(pRoot->TransformationMatrix);
+    Debug << "Root Positon : " << rootPos << '\n';
+
+    pMeshFilter->Update();
 }
 
-void CharacterCollisionListener::OnCollisionEnter(const Collider& other)
+void Character::RotateWaist(const float quantity)
 {
-    cout << "Enter\n";
+    auto& wr = m_WaistRotation;
+
+    wr.m_Angle += quantity;
+    
+    if (wr.m_Angle < -wr.LIMIT_OF_ANGLE)
+        wr.m_Angle = -wr.LIMIT_OF_ANGLE;
+    else if (wr.m_Angle > wr.LIMIT_OF_ANGLE)
+        wr.m_Angle = wr.LIMIT_OF_ANGLE;
 }
 
-void CharacterCollisionListener::OnCollisionExit(const Collider& other)
-{
-    cout << "Exit\n";
-}
-
-void CharacterCollisionListener::OnCollisionStay(const Collider& other)
-{
-    Debug << "Stay\n";
-}

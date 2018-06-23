@@ -17,7 +17,6 @@ void Application::Init()
     g_pInput->Init();
     //g_pSoundManager->Init();
     g_pCameraManager->Init();
-    g_pCollisionManager->Init();
     g_pSceneManager->Init();
 }
 
@@ -27,7 +26,6 @@ void Application::Destroy()
     g_pCameraManager->Destroy();
 	g_pSceneManager->Destroy();
     g_pUIManager->Destroy();
-    g_pCollisionManager->Destroy();
 	g_pObjectManager->Destroy();
     g_pInput->Destroy();
     //g_pSoundManager->Destroy();

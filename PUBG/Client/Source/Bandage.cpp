@@ -19,10 +19,7 @@ Bandage::Bandage()
 
     pBoxColliderRenderer = AddComponent<BoxColliderRenderer>();
 
-    auto tr = GetTransform();
-    D3DXMATRIX m;
-    D3DXMatrixScaling(&m, 0.1f, 0.1f, 0.1f);
-    tr->SetTM(m);
+    GetTransform()->SetScale(D3DXVECTOR3(0.1f, 0.1f, 0.1f));
 }
 
 Bandage::~Bandage()

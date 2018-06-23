@@ -31,6 +31,7 @@
     <ClCompile Include="Source\Component\MeshFilterAndAnimator.cpp" />
     <ClCompile Include="Source\CharacterPart.cpp" />
     <ClCompile Include="Source\Character.cpp" />
+    <ClCompile Include="Source\CharacterCollisionListener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -70,5 +71,6 @@
     <ClInclude Include="Source\Component\MeshFilterAndAnimator.h" />
     <ClInclude Include="Source\CharacterPart.h" />
     <ClInclude Include="Source\Character.h" />
+    <ClInclude Include="Source\CharacterCollisionListener.h" />
   </ItemGroup>
 </Project>
