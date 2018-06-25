@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ICamera.h"
 #include "ComponentTransform.h"
+#include "Character.h"
 
 ICamera::ICamera(const TAG_CAMERA tag)
     : MemoryAllocator()
@@ -35,16 +36,13 @@ void ICamera::UpdateViewProjMatrix()
     }
     else
     {
-        D3DXMATRIX r;
-        D3DXMatrixRotationQuaternion(&r, &pTarget->GetRotation());
-
-        auto direction = Vector3::FORWARD;
-        D3DXVec3TransformNormal(&direction, &direction, &r);
-        D3DXVec3Normalize(&direction, &direction);
-
-        eye = pTarget->GetPosition() + direction * -100.0f;
-        eye.y += 100.0f;
-        look = pTarget->GetPosition();
+        auto tr = pTarget->GetTransform();
+        auto offset = m_offsetFromTarget;
+        auto rot = tr->GetRotation() * Character::OFFSET_ROTATION;
+        offset = Vector3::Rotate(offset, rot);
+        eye = tr->GetPosition() + offset;
+        auto dir = Vector3::Rotate(Vector3::FORWARD, rot);
+        look = dir * 1000.0f; // zero point distance
     }
 
     D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &look, &Vector3::UP);

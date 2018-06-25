@@ -33,7 +33,11 @@ ostream& operator<<(ostream& os, const D3DXMATRIX& val)
     return os;
 }
 
-
+ostream& operator<<(ostream& os, const D3DXQUATERNION& val)
+{
+    os << val.x << ", " << val.y << ", " << val.z << ", " << val.w;
+    return os;
+}
 
 D3DXVECTOR3 Matrix::GetTranslation(const D3DXMATRIX& val)
 {
@@ -49,4 +53,12 @@ D3DMATERIAL9 MaterialTemplate::GetWhite()
     m.Emissive = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
     m.Power = 20.0f;
     return m;
+}
+
+D3DXVECTOR3 Vector3::Rotate(const D3DXVECTOR3& v, const D3DXQUATERNION& q)
+{
+    D3DXQUATERNION conjugate, result;
+    D3DXQuaternionConjugate(&conjugate, &q);
+    result = q * D3DXQUATERNION(v.x, v.y, v.z, 1.0f) * conjugate;
+    return D3DXVECTOR3(result.x, result.y, result.z);
 }

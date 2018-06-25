@@ -4,6 +4,9 @@
 #include "Bullet.h"
 #include "SkinnedMeshController.h"
 
+const D3DXQUATERNION Character::OFFSET_ROTATION = 
+    D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
+
 Character::Character(const int index)
     : IObject()
 
@@ -16,9 +19,8 @@ Character::Character(const int index)
 
     , pSkinnedMeshController(nullptr)
 {
-    D3DXQUATERNION r;
-    D3DXQuaternionRotationAxis(&r, &Vector3::UP, D3DX_PI);
-    GetTransform()->SetRotation(r);
+    D3DXQuaternionRotationAxis(&m_rotationOffset, &Vector3::UP, D3DX_PI);
+    GetTransform()->SetRotation(m_rotationOffset);
 
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
     pSkinnedMeshController->LoadSkinnedMesh(
@@ -33,10 +35,10 @@ Character::Character(const int index)
 
     subscribeCollisionEvent();
 
-    //if (isMine())
-    //{
-    //    Camera()()->SetTarget(GetTransform());
-    //}
+    if (isMine())
+    {
+        Camera()()->SetTarget(GetTransform());
+    }
 }
 
 Character::~Character()
@@ -85,50 +87,51 @@ void Character::OnUpdate()
         //    RotateWaist(m_WaistRotation.QUANTITY_FACTOR);
         //}
 
-        //bool isTransit = false;
-        //auto nextState = m_animState;
-        //switch (m_animState)
-        //{
-        //case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still:
-        //    {
-        //        if (pInput->IsOnceKeyDown('W'))
-        //        {
-        //            nextState = TAG_ANIM_CHARACTER::Melee_Combat_Stand_Walk_F;
-        //            isTransit = true;
-        //        }
-        //    }
-        //    break;
-        //case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Walk_F:
-        //    {
-        //        pos += m_RootTransform.m_Direction * 
-        //            m_RootTransform.MOVE_SPEED;
-        //        isUpdated = true;
-        //        
-        //        if (!pInput->IsStayKeyDown('W'))
-        //        {
-        //            nextState = 
-        //                TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still;
-        //            isTransit = true;
-        //        }
-        //    }
-        //    break;
-        //}
-        //if (isTransit)
-        //{
-        //    m_AnimState = nextState;
-        //    const auto ai = static_cast<unsigned int>(m_AnimState);
-        //    m_ComponentPtr.pAnimator->SetAnimationIndex(ai, true);
-        //    pCom->SendAnimationIndex(ai);
-        //}
+        Debug << "direction q : " << tr->GetRotation() << '\n';
+
+        bool isTransit = false;
+        auto nextState = m_animState;
+        switch (m_animState)
+        {
+        case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still:
+            {
+                if (pInput->IsOnceKeyDown('W'))
+                {
+                    nextState = TAG_ANIM_CHARACTER::Melee_Combat_Stand_Walk_F;
+                    isTransit = true;
+                }
+            }
+            break;
+        case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Walk_F:
+            {
+                pos += getForward() * m_rootTransform.MOVE_SPEED;
+                isUpdated = true;
+                
+                if (!pInput->IsStayKeyDown('W'))
+                {
+                    nextState = 
+                        TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still;
+                    isTransit = true;
+                }
+            }
+            break;
+        }
+        if (isTransit)
+        {
+            m_animState = nextState;
+            const auto ai = static_cast<unsigned int>(m_animState);
+            pSkinnedMeshController->SetAnimationIndex(ai, true);
+            pCom->SendAnimationIndex(ai);
+        }
 
         if (pInput->IsStayKeyDown('A'))
         {
-            pos += Vector3::RIGHT * -m_rootTransform.MOVE_SPEED;
+            pos += getRight() * -m_rootTransform.MOVE_SPEED;
             isUpdated = true;
         }
         if (pInput->IsStayKeyDown('D'))
         {
-            pos += Vector3::RIGHT * m_rootTransform.MOVE_SPEED;
+            pos += getRight() * m_rootTransform.MOVE_SPEED;
             isUpdated = true;
         }
 

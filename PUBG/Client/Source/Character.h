@@ -35,6 +35,7 @@ private:
 
 public:
     static const int NUM_PLAYER = 4;
+    static const D3DXQUATERNION OFFSET_ROTATION;
 
 private:
     int                m_index;
@@ -49,6 +50,8 @@ private:
 
     SkinnedMeshController* pSkinnedMeshController;
 
+    D3DXQUATERNION m_rotationOffset;
+
 private:
     void setFramePtr();
     void subscribeCollisionEvent();
@@ -57,6 +60,9 @@ private:
     void rotateWaist(const float quantity);
 
     bool isMine() const;
+
+    D3DXVECTOR3 getForward();
+    D3DXVECTOR3 getRight();
 
 public:
              Character(const int index);

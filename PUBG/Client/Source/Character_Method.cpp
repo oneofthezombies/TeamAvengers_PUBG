@@ -48,6 +48,22 @@ bool Character::isMine() const
     return m_index == Communication()()->m_MyInfo.m_ID;
 }
 
+D3DXVECTOR3 Character::getForward()
+{
+    auto rot = GetTransform()->GetRotation() * m_rotationOffset;
+    auto dir = Vector3::Rotate(Vector3::FORWARD, rot);
+    D3DXVec3Normalize(&dir, &dir);
+    return dir;
+}
+
+D3DXVECTOR3 Character::getRight()
+{
+    auto rot = GetTransform()->GetRotation() * m_rotationOffset;
+    auto dir = Vector3::Rotate(Vector3::RIGHT, rot);
+    D3DXVec3Normalize(&dir, &dir);
+    return dir;
+}
+
 void Character::updateTransform()
 {
     pSkinnedMeshController->Update([this]() 
