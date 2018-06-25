@@ -3,6 +3,7 @@
 #include "IScene.h"
 #include "SceneLogin.h"
 #include "ScenePlay.h"
+#include "SceneLoading.h"
 
 SceneManager::SceneManager()
 	: Singleton<SceneManager>()
@@ -16,10 +17,11 @@ SceneManager::~SceneManager()
 
 void SceneManager::Init()
 {
+    m_scenes.emplace(TAG_SCENE::LOADING, new SceneLoading);
     m_scenes.emplace(TAG_SCENE::LOGIN, new SceneLogin);
     m_scenes.emplace(TAG_SCENE::PLAY, new ScenePlay);
 
-    SetCurrentScene(TAG_SCENE::LOGIN);
+    SetCurrentScene(TAG_SCENE::LOADING);
 }
 
 void SceneManager::Destroy()

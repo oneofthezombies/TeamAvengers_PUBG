@@ -1,0 +1,26 @@
+/// Unarmed_Locomotion_FPP.X (무기없이 움직이는 애니메이션 FPP용)
+0. (0     ~ 34)[35] - Unarmed_Combat_Crouch_Sprint_F_FPP
+1. (35  ~ 103)[69] - Unarmed_Combat_Crouch_Sprint_FL_FPP
+2. (104 ~ 172)[69] - Unarmed_Combat_Crouch_Sprint_FR_FPP
+
+3. (173   ~ 293)[121] - Unarmed_Combat_Prone_Run_B_FPP
+4. (294   ~ 414)[121] - Unarmed_Combat_Prone_Run_BL_FPP
+5. (415   ~ 535)[121] - Unarmed_Combat_Prone_Run_BR_FPP
+6. (536   ~ 676)[141] - Unarmed_Combat_Prone_Run_F_FPP
+7. (677   ~ 817)[141] - Unarmed_Combat_Prone_Run_FL_FPP
+8. (818   ~ 938)[121] - Unarmed_Combat_Prone_Run_FR_FPP
+9. (939 ~ 1047)[109] - Unarmed_Combat_Prone_Run_L_FPP
+10. (1048 ~ 1136)[89] - Unarmed_Combat_Prone_Run_R_FPP
+
+11. (1137 ~ 1401)[265] - Unarmed_Combat_Prone_Walk_B_FPP
+12. (1402 ~ 1562)[161] - Unarmed_Combat_Prone_Walk_BL_FPP
+13. (1563 ~ 1705)[143] - Unarmed_Combat_Prone_Walk_BR_FPP
+14. (1706 ~ 1942)[237] - Unarmed_Combat_Prone_Walk_F_FPP
+15. (1943 ~ 2155)[213] - Unarmed_Combat_Prone_Walk_FL_FPP
+16. (2156 ~ 2320)[165] - Unarmed_Combat_Prone_Walk_FR_FPP
+17. (2321 ~ 2501)[181] - Unarmed_Combat_Prone_Walk_L_FPP
+18. (2502 ~ 2658)[157] - Unarmed_Combat_Prone_Walk_R_FPP
+
+19. (2659 ~ 2715)[57] - Unarmed_Combat_Stand_Sprint_F_FPP
+20. (2716 ~ 2772)[57] - Unarmed_Combat_Stand_Sprint_FL_FPP
+21. (2773 ~ 2829)[57] - Unarmed_Combat_Stand_Sprint_FR_FPP

@@ -19,6 +19,9 @@
 // end c runtime headers
 
 // STLs
+#include <thread>
+#include <future>
+
 #include <fstream>
 using std::fstream;
 

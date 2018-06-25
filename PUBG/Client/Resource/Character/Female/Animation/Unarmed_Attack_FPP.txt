@@ -1,0 +1,7 @@
+/// Unarmed_Attack_FPP.X (무기없을 때 주먹을 휘두르는 애니메이션 FPP버전)
+0. (0     ~ 58)[59] - Unarmed_Combat_Crouch_Attack_1_FPP
+1. (59  ~ 119)[61] - Unarmed_Combat_Crouch_Attack_2_FPP
+2. (120 ~ 164)[45] - Unarmed_Combat_Crouch_Attack_3_FPP
+3. (165 ~ 281)[117] - Unarmed_Combat_Upperbody_Attack_1_FPP
+4. (282 ~ 402)[121] - Unarmed_Combat_Upperbody_Attack_2_FPP
+5. (403 ~ 491)[89] - Unarmed_Combat_Upperbody_Attack_3_FPP

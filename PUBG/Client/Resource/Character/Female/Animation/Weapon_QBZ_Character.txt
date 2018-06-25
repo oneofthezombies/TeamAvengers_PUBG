@@ -1,0 +1,9 @@
+/// Weapon_QBZ_Character.X
+3. (0       ~ 3)[4] - Weapon_QBZ_Grip_Regular
+4. (4       ~ 7)[4] - Weapon_QBZ_Grip_VFG : 수직손잡이(Vertical ForeGrip)
+5. (8    ~ 188)[181] - Weapon_QBZ_Reload_Base
+6. (189 ~ 409)[221] - Weapon_QBZ_Reload_Charge_Base
+7. (410 ~ 630)[221] - Weapon_QBZ_Reload_Charge_Prone
+8. (631 ~ 811)[181] - Weapon_QBZ_Reload_Prone
+
+

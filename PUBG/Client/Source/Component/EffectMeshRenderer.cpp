@@ -19,6 +19,14 @@ void EffectMeshRenderer::Render()
         GetTransform()->GetTransformationMatrix(), pEffectMesh->pMesh);
 }
 
+void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)
+{
+    assert(pEffectMesh && 
+        "EffectMeshRenderer::SetEffectMesh(), effect mesh is null.");
+
+    this->pEffectMesh = pEffectMesh;
+}
+
 void EffectMeshRenderer::SetEffectMesh(const string& path, const string& xFilename)
 {
     pEffectMesh = Resource()()->GetEffectMesh(path, xFilename);

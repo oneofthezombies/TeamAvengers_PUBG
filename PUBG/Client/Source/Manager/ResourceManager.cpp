@@ -68,6 +68,99 @@ void ResourceManager::Destroy()
     //RemoveFontResource(TEXT("resources/fonts/SeoulNamsanM.ttf"));
 }
 
+void ResourceManager::LoadAll()
+{
+    //std::future<int> a;
+    
+    /*
+
+    - 캐릭터 로드
+    
+    애니메이션0.x 로드
+    클론 3개
+    -- 스킨드메쉬 4개
+
+    애니메이션.x 로드
+    4개의 스킨드메쉬에 애니메이션 추가
+
+    - 모델 로드
+    */
+
+    //const string churchPath = "./Resource/Church/";
+    //const string churchFilename = "Church.x";
+
+    ////ResourceContainer* result = OnLoadEffectMeshAsync(
+    ////    churchPath, churchFilename);
+    ////if (result == nullptr)
+    ////{
+    ////    cout << "no...\n";
+    ////}
+    ////else
+    ////{
+    ////    cout << "yes\n";
+    ////}
+    //auto start = std::chrono::steady_clock::now();
+    //std::future<ResourceContainer*> future = std::async(std::launch::async, 
+    //    &OnLoadEffectMeshAsync, churchPath, churchFilename);
+
+    //std::future_status futureStatus;
+    //do
+    //{
+    //    futureStatus = future.wait_for(std::chrono::milliseconds(1000));
+    //    if (futureStatus == std::future_status::deferred)
+    //    {
+    //        cout << "deferred\n";
+    //    }
+    //    else if (futureStatus == std::future_status::timeout)
+    //    {
+    //        cout << "timeout\n";
+    //    }
+    //    else if (futureStatus == std::future_status::ready)
+    //    {
+    //        cout << "ready\n";
+    //    }
+    //} while (futureStatus != std::future_status::ready);
+
+    //std::vector<std::future<ResourceContainer*>> futures;
+
+    //for (int i = 0; i < 16; ++i)
+    //{
+    //    futures.emplace_back(std::async(
+    //        std::launch::async, &OnLoadEffectMeshAsync,
+    //        churchPath, churchFilename));
+    //}
+
+    //for (auto& e : futures)
+    //{
+    //    e.get();
+    //}
+
+    //std::future<ResourceContainer*> church = std::async(
+    //    std::launch::async, &OnLoadEffectMeshAsync, 
+    //    churchPath, churchFilename);
+    //if (church.valid())
+    //{
+    //    cout << "yes\n";
+    //    ResourceContainer* pResourceContainer = church.get();
+    //    if (pResourceContainer == nullptr)
+    //    {
+    //        cout << "try again\n";
+    //    }
+    //    else
+    //    {
+    //        cout << "keep going\n";
+    //    }
+    //}
+    //else
+    //{
+    //    cout << "no\n";
+    //}
+
+    //auto finish = std::chrono::steady_clock::now();
+    //std::chrono::duration<float> elapsed = finish - start;
+    //cout << elapsed.count() << '\n';
+}
+
 LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& fullPath)
 {
     const auto search = m_textures.find(fullPath);
@@ -293,4 +386,294 @@ EffectMesh* ResourceManager::AddEffectMesh(
 
     m_effectMeshs[path + name] = pEffectMesh;
     return pEffectMesh;
+}
+
+void ResourceManager::AddResource(ResourceContainer* pResourceContainer)
+{
+    assert(pResourceContainer && 
+        "ResourceManager::SetResource(), resource container is null.");
+
+    for (auto& kv : pResourceContainer->m_effectMeshs)
+    {
+        const string& key = kv.first;
+        EffectMesh*& pEffectMesh = kv.second;
+
+        const auto search = m_effectMeshs.find(key);
+        if (search == m_effectMeshs.end())
+        {
+            m_effectMeshs[key] = pEffectMesh;
+            pEffectMesh = nullptr;
+        }
+    }
+
+    for (auto& kv : pResourceContainer->m_effects)
+    {
+        const string& key = kv.first;
+        LPD3DXEFFECT& pEffect = kv.second;
+
+        const auto search = m_effects.find(key);
+        if (search == m_effects.end())
+        {
+            m_effects[key] = pEffect;
+            pEffect = nullptr;
+        }
+    }
+
+    for (auto& kv : pResourceContainer->m_textures)
+    {
+        const string& key = kv.first;
+        LPDIRECT3DTEXTURE9& pTexture = kv.second;
+
+        const auto search = m_textures.find(key);
+        if (search == m_textures.end())
+        {
+            m_textures[key] = pTexture;
+            pTexture = nullptr;
+        }
+    }
+
+    SAFE_DELETE(pResourceContainer);
+}
+
+ResourceContainer::ResourceContainer()
+    : m_pSkinnedMesh(nullptr)
+{
+}
+
+ResourceContainer::~ResourceContainer()
+{
+    for (auto& kv : m_effectMeshs)
+    {
+        auto& em = kv.second;
+        SAFE_DELETE(em);
+    }
+
+    for (auto& kv : m_effects)
+    {
+        auto& ef = kv.second;
+        SAFE_RELEASE(ef);
+    }
+
+    for (auto& kv : m_textures)
+    {
+        auto& tx = kv.second;
+        SAFE_RELEASE(tx);
+    }
+
+    SAFE_DELETE(m_pSkinnedMesh);
+}
+
+ResourceContainer* OnLoadEffectMeshAsync(
+    const string path, const string xFilename)
+{
+    LPD3DXBUFFER pEffectInstancesBuffer = nullptr;
+    LPD3DXMESH   pMesh = nullptr;
+    DWORD        numMaterials = 0u;
+
+    HRESULT hr = D3DXLoadMeshFromXA((path + xFilename).c_str(), 
+        D3DXMESH_MANAGED, Device()(), nullptr, nullptr, 
+        &pEffectInstancesBuffer, &numMaterials, &pMesh);
+
+    if (FAILED(hr))
+    {
+        return nullptr;
+    }
+
+    D3DXEFFECTINSTANCE* pEffectInstances =
+        static_cast<D3DXEFFECTINSTANCE*>(
+            pEffectInstancesBuffer->GetBufferPointer());
+
+    ResourceContainer* pResourceContainer = new ResourceContainer;
+
+    hr = CreateEffectMesh(path, xFilename, pMesh, pEffectInstances, 
+        numMaterials, pResourceContainer);
+
+    if (FAILED(hr))
+    {
+        SAFE_DELETE(pResourceContainer);
+        return nullptr;
+    }
+
+    return pResourceContainer;
+}
+
+ResourceContainer* OnLoadSkinnedMeshAsync(
+    const string path, const string xFilename)
+{
+    return nullptr;
+}
+
+HRESULT CreateEffectMesh(const string& path, const string& name,
+    LPD3DXMESH pMesh, const D3DXEFFECTINSTANCE* pEffectInstances, 
+    const DWORD numEffectInstances, ResourceContainer* OutResourceContainer)
+{
+    if (pMesh == nullptr || 
+        pEffectInstances == nullptr || 
+        OutResourceContainer == nullptr)
+    {
+        return E_FAIL;
+    }
+
+    const string key = path + name;
+    const auto searchResult = OutResourceContainer->m_effectMeshs.find(key);
+    if (searchResult != OutResourceContainer->m_effectMeshs.end())
+    {
+        return S_OK;
+    }
+
+    EffectMesh* pEffectMesh = new EffectMesh;
+    OutResourceContainer->m_effectMeshs[path + name] = pEffectMesh;
+
+    pEffectMesh->pMesh = pMesh;
+
+    for (DWORD i = 0u; i < numEffectInstances; ++i)
+    {
+        const D3DXEFFECTINSTANCE& EI = pEffectInstances[i];
+
+        if (EI.pEffectFilename == false) continue;
+
+        EffectParam effectParam;
+        effectParam.Name = string(EI.pEffectFilename);
+        
+        HRESULT hr = CreateEffect(
+            path, EI.pEffectFilename, OutResourceContainer);
+
+        if (FAILED(hr))
+        {
+            return E_FAIL;
+        }
+
+        effectParam.pEffect = 
+            OutResourceContainer->m_effects[path + string(EI.pEffectFilename)];
+
+        D3DXHANDLE hTech = nullptr;
+        LPD3DXEFFECT& pEffect = effectParam.pEffect;
+        
+        pEffect->FindNextValidTechnique(nullptr, &hTech);
+        pEffect->SetTechnique(hTech);
+
+        pEffect->BeginParameterBlock();
+        for (DWORD di = 0u; di < EI.NumDefaults; ++di)
+        {
+            _D3DXEFFECTDEFAULT& effectDefault = EI.pDefaults[di];
+
+            D3DXHANDLE handle = pEffect->GetParameterByName(
+                nullptr, effectDefault.pParamName);
+
+            if (handle == nullptr) continue;
+
+            D3DXPARAMETER_DESC desc;
+            pEffect->GetParameterDesc(handle, &desc);
+
+            switch (desc.Type)
+            {
+            case D3DXPT_BOOL:
+            case D3DXPT_INT:
+            case D3DXPT_FLOAT:
+            case D3DXPT_STRING:
+                {
+                    pEffect->SetValue(effectDefault.pParamName, 
+                        effectDefault.pValue, effectDefault.NumBytes);
+                }
+                break;
+            case D3DXPT_TEXTURE:
+                {
+                    const string textureFilename(
+                        static_cast<char*>(effectDefault.pValue));
+                    
+                    hr = CreateTexture(path, textureFilename, 
+                        OutResourceContainer);
+
+                    if (FAILED(hr))
+                    {
+                        return E_FAIL;
+                    }
+
+                    auto& textures = OutResourceContainer->m_textures;
+
+                    pEffect->SetTexture(
+                        effectDefault.pParamName, 
+                        textures[path + textureFilename]);
+                }
+                break;
+            default:
+                {
+                }
+                break;
+            }
+        }
+        effectParam.hParam = pEffect->EndParameterBlock();
+        pEffectMesh->EffectParams.emplace_back(effectParam);
+    }
+
+    return S_OK;
+}
+
+HRESULT CreateEffect(const string& path, const string& filename, 
+    ResourceContainer* OutResourceContainer)
+{
+    if (OutResourceContainer == nullptr)
+    {
+        return E_FAIL;
+    }
+
+    const string key = path + filename;
+    const auto searchResult = OutResourceContainer->m_effects.find(key);
+    if (searchResult != OutResourceContainer->m_effects.end())
+    {
+        return S_OK;
+    }
+
+    LPD3DXEFFECT pEffect = nullptr;
+    LPD3DXBUFFER pError = nullptr;
+    DWORD flags = D3DXSHADER_DEBUG | D3DXFX_NOT_CLONEABLE;
+    HRESULT hr = D3DXCreateEffectFromFileA(Device()(), key.c_str(), nullptr, 
+        nullptr, flags, nullptr, &pEffect, &pError);
+
+    if (FAILED(hr))
+    {
+        if (pError)
+        {
+            string errorMessage(
+                static_cast<char*>(pError->GetBufferPointer()), 
+                pError->GetBufferSize());
+
+            MessageBoxA(nullptr, errorMessage.c_str(), nullptr, MB_OK);
+        }
+
+        return E_FAIL;
+    }
+
+    OutResourceContainer->m_effects[key] = pEffect;
+    return S_OK;
+}
+
+HRESULT CreateTexture(const string& path, const string& filename, 
+    ResourceContainer* OutResourceContainer)
+{
+    if (OutResourceContainer == nullptr)
+    {
+        return E_FAIL;
+    }
+
+    const string key(path + filename);
+    const auto searchResult = OutResourceContainer->m_textures.find(key);
+    if (searchResult != OutResourceContainer->m_textures.end())
+    {
+        return S_OK;
+    }
+
+    LPDIRECT3DTEXTURE9 pTexture = nullptr;
+    const HRESULT hr = D3DXCreateTextureFromFileExA(Device()(), key.c_str(), 
+        D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT, 0, 
+        D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_DEFAULT, D3DX_DEFAULT, 0, 
+        nullptr, nullptr, &pTexture);
+
+    if (FAILED(hr))
+    {
+        return E_FAIL;
+    }
+
+    OutResourceContainer->m_textures[key] = pTexture;
+    return S_OK;
 }

@@ -14,5 +14,6 @@ public:
 
     void Render();
 
+    void SetEffectMesh(EffectMesh* pEffectMesh);
     void SetEffectMesh(const string& path, const string& xFilename);
 };

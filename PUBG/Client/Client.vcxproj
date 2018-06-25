@@ -128,6 +128,7 @@
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
+    <ClCompile Include="Source\Church.cpp" />
     <ClCompile Include="Source\Component\Collider.cpp" />
     <ClCompile Include="Source\Component\ComponentTransform.cpp" />
     <ClCompile Include="Source\Component\EffectMeshRenderer.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="Source\SceneLoading.cpp" />
     <ClCompile Include="Source\UI\UIObject.cpp" />
     <ClCompile Include="Source\Useful\CollisionCore.cpp" />
+    <ClCompile Include="Source\Useful\ResourcePathFilename.cpp" />
     <ClCompile Include="Source\Useful\Structure.cpp" />
     <ClCompile Include="Source\SceneLogin.cpp" />
     <ClCompile Include="Source\Manager\SceneManager.cpp" />
@@ -174,6 +176,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
+    <ClInclude Include="Source\Church.h" />
     <ClInclude Include="Source\Component\Collider.h" />
     <ClInclude Include="Source\Component\ComponentTransform.h" />
     <ClInclude Include="Source\Component\EffectMeshRenderer.h" />
@@ -192,6 +195,7 @@
     <ClInclude Include="Source\Manager\TimeManager.h" />
     <ClInclude Include="Source\SceneLoading.h" />
     <ClInclude Include="Source\Useful\CollisionCore.h" />
+    <ClInclude Include="Source\Useful\ResourcePathFilename.h" />
     <ClInclude Include="Source\Useful\TagClientOnly.h" />
     <ClInclude Include="Source\Manager\InputManager.h" />
     <ClInclude Include="Source\Base\IScene.h" />
