@@ -8,10 +8,10 @@ class Bandage : public IObject
 {
 private:
     EffectMeshRenderer* pEffectMeshRenderer;
-    BoxCollider* pBoxCollider;
+    BoxCollider*        pBoxCollider;
 
 public:
-    Bandage();
+    Bandage(const D3DXVECTOR3& pos, const D3DXVECTOR3& scale);
     virtual ~Bandage();
 
     virtual void OnUpdate() override;

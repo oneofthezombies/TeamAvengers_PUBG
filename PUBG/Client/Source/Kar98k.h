@@ -7,6 +7,7 @@ class Kar98k : public IObject
 {
 private:
     SkinnedMeshController* pSkinnedMeshController;
+    LPD3DXMESH m_pSphereMesh;
 
 public:
     Kar98k();

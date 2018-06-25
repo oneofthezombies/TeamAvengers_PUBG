@@ -8,7 +8,7 @@
 CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
     Character* pCharacter)
     : IObject()
-    , m_Tag(tag)
+    , m_tagColliderCharacterPart(tag)
 
     , pCharacter(pCharacter)
     , pBoxCollider(nullptr)
@@ -21,6 +21,7 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
     pBoxCollider = AddComponent<BoxCollider>();
     pBoxCollider->SetTag(
         pCharacter->GetTagCollisionBody(pCharacter->GetIndex()));
+
     pBoxCollider->AddOnCollisionEnterCallback(
         bind(&Character::OnCollisionEnter, pCharacter, _1, _2));
     pBoxCollider->AddOnCollisionStayCallback(
@@ -40,7 +41,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
                 pCharacter));
 
             auto pF = pSkiCon->FindFrame("F_Face_03");
-            auto pMeshContainer = static_cast<MeshContainer*>(pF->pMeshContainer);
+            auto pMeshContainer = 
+                static_cast<MeshContainer*>(pF->pMeshContainer);
             void* pData = nullptr;
             auto pMesh = pMeshContainer->pEffectMesh->pMesh;
             pMesh->LockVertexBuffer(D3DLOCK_READONLY, &pData);
@@ -48,7 +50,7 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             D3DXComputeBoundingBox((D3DXVECTOR3*)pData, 
                 pMesh->GetNumVertices(), pMesh->GetNumBytesPerVertex(), 
                 &min, &max);
-            pMeshContainer->pEffectMesh->pMesh->UnlockVertexBuffer();
+            pMesh->UnlockVertexBuffer();
             min.y *= 0.5f;
             max.y *= 0.5f;
             pBoxCollider->Init(min, max);
@@ -283,11 +285,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     }
 
-    assert(m_Frames.front() && 
+    assert(m_frames.front() && 
         "CharacterPart::Constructor() failed. frame is null.");
     D3DXVECTOR3 v(
-        Matrix::GetTranslation(m_Frames.front()->TransformationMatrix));
-    for (auto& f : m_Frames)
+        Matrix::GetTranslation(m_frames.front()->TransformationMatrix));
+    for (auto& f : m_frames)
     {
         assert(f && "CharacterPart::Constructor() failed. frame is null.");
         v = (v + Matrix::GetTranslation(f->TransformationMatrix)) * 0.5f;
@@ -303,28 +305,28 @@ void CharacterPart::OnUpdate()
     D3DXMATRIX world;
     memset(&world, 0, sizeof world);
 
-    if (m_Tag == TAG_COLLIDER_CHARACTER_PART::HEAD)
+    if (m_tagColliderCharacterPart == TAG_COLLIDER_CHARACTER_PART::HEAD)
     {
         auto topFront = Matrix::GetTranslation(
-            m_Frames[0]->CombinedTransformationMatrix);
+            m_frames[0]->CombinedTransformationMatrix);
         auto topBack = Matrix::GetTranslation(
-            m_Frames[1]->CombinedTransformationMatrix);
+            m_frames[1]->CombinedTransformationMatrix);
         auto top = (topFront + topBack) * 0.5f;
         auto bottom = Matrix::GetTranslation(
-            m_Frames[2]->CombinedTransformationMatrix);
+            m_frames[2]->CombinedTransformationMatrix);
         auto center = (top + bottom) * 0.5f;
-        world = m_Frames[2]->CombinedTransformationMatrix;
+        world = m_frames[2]->CombinedTransformationMatrix;
         world._41 = center.x;
         world._42 = center.y;
         world._43 = center.z;
-
     }
     else
     {
-        for (auto& f : m_Frames)
+        for (auto& f : m_frames)
             world += f->CombinedTransformationMatrix
-                   / static_cast<float>(m_Frames.size());
+                   / static_cast<float>(m_frames.size());
     }
+
     pBoxCollider->Update(world * 
         pCharacter->GetTransform()->GetTransformationMatrix());
 
@@ -338,7 +340,7 @@ void CharacterPart::OnRender()
 
 TAG_COLLIDER_CHARACTER_PART CharacterPart::GetTagColliderCharacterPart() const
 {
-    return m_Tag;
+    return m_tagColliderCharacterPart;
 }
 
 void CharacterPart::addFrame(
@@ -350,10 +352,10 @@ void CharacterPart::addFrame(
         string str(name + "is null.");
         cout << str << '\n';
     }
-    assert(pFrame && "CharacterPart::AddFrame() failed.");
-    m_Frames.emplace_back(pFrame);
+    assert(pFrame && "CharacterPart::AddFrame(), frame is null.");
+    m_frames.emplace_back(pFrame);
 
-    //auto pUIText = new UIText(g_pFontManager->GetFont(TAG_FONT::DEFAULT),
+    //auto pUIText = new UIText(Resource()()->GetFont(TAG_FONT::DEFAULT),
     //    D3DXVECTOR2(100.0f, 25.0f), string(pFrame->Name),
     //    D3DCOLOR_XRGB(0, 255, 255), nullptr);
     //pUIText->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
@@ -369,11 +371,10 @@ void CharacterPart::updateUI()
     pD->GetTransform(D3DTS_VIEW, &view);
     pD->GetTransform(D3DTS_PROJECTION, &proj);
     D3DXVECTOR3 v;
-
-    for (unsigned int i = 0u; i < m_UITexts.size(); ++i)
+    for (size_t i = 0u; i < m_UITexts.size(); ++i)
     {
         D3DXVec3Project(&v, &(Matrix::GetTranslation(
-            m_Frames[i]->CombinedTransformationMatrix)),
+            m_frames[i]->CombinedTransformationMatrix)),
             &vp, &proj, &view, 
             &pCharacter->GetTransform()->GetTransformationMatrix());
         m_UITexts[i]->SetPosition(v);

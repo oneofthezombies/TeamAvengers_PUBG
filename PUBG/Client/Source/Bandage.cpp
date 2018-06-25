@@ -3,7 +3,7 @@
 #include "Collider.h"
 #include "EffectMeshRenderer.h"
 
-Bandage::Bandage()
+Bandage::Bandage(const D3DXVECTOR3& pos, const D3DXVECTOR3& scale)
     : IObject()
 
     , pEffectMeshRenderer(nullptr)
@@ -17,8 +17,8 @@ Bandage::Bandage()
     pBoxCollider->SetTag(TAG_COLLISION::DAMAGE_OF_PLAYER_2);
     pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f));
 
-    GetTransform()->SetScale(D3DXVECTOR3(0.1f, 0.1f, 0.1f));
-    GetTransform()->SetPosition(D3DXVECTOR3(-200.0f, 0.0f, 0.0f));
+    GetTransform()->SetPosition(pos);
+    GetTransform()->SetScale(scale);
 }
 
 Bandage::~Bandage()

@@ -67,6 +67,7 @@ void EffectMesh::Render(const D3DXMATRIX& world, LPD3DXMESH pMesh)
         ep.pEffect->SetMatrix("View", &CurrentCamera()()->GetViewMatrix());
         ep.pEffect->SetMatrix(
             "Projection", &CurrentCamera()()->GetProjectionMatrix());
+        ep.pEffect->CommitChanges();
 
         UINT numPasses = 0u;
         ep.pEffect->Begin(&numPasses, 0);
@@ -236,27 +237,29 @@ STDMETHODIMP AllocateHierarchy::CreateMeshContainer(THIS_ LPCSTR Name,
         pMeshContainer->Name = nullptr;
     }
 
-    pMeshContainer->pEffectMesh = new EffectMesh;
-    auto& pEffectMesh = pMeshContainer->pEffectMesh;
+    assert(pMeshContainer->Name && 
+        "AllocateHierarchy::CreateMeshContainer(), \
+         mesh container name is null.");
+
+    auto pEffectMesh = Resource()()->FindEffectMesh(
+        m_path, pMeshContainer->Name);
 
     if (!pEffectMesh)
     {
-        delete[] pMeshContainer->Name;
-        delete pMeshContainer;
-        return E_OUTOFMEMORY;
+        pEffectMesh = Resource()()->AddEffectMesh(
+            m_path, pMeshContainer->Name, pMeshData->pMesh, pEffectInstances, 
+            NumMaterials);
+
+        pEffectMesh->pMesh->AddRef();
     }
 
-    pEffectMesh->pMesh = pMeshData->pMesh;
-    auto& pMesh = pEffectMesh->pMesh;
-    pMesh->AddRef();
+    pMeshContainer->pEffectMesh = pEffectMesh;
+    auto& pMesh = pMeshContainer->pEffectMesh->pMesh;
 
     D3DVERTEXELEMENT9 decl[MAX_FVF_DECL_SIZE] = { 0 };
     pMesh->GetDeclaration(decl);
     pMesh->CloneMesh(pMesh->GetOptions(), decl, Device()(),
         &pMeshContainer->pWorkMesh);
-
-    Resource()()->ParseEffectInstances(m_path, pEffectInstances, NumMaterials,
-        pEffectMesh);
 
     if (pSkinInfo)
     {
@@ -271,10 +274,7 @@ STDMETHODIMP AllocateHierarchy::CreateMeshContainer(THIS_ LPCSTR Name,
 
         auto& pBOMs = pMeshContainer->pBoneOffsetMatrices;
         for (auto bi = 0u; bi < numBones; ++bi)
-        {
-            auto& BOM = pBOMs[bi];
-            BOM = *pSkinInfo->GetBoneOffsetMatrix(bi);
-        }
+            pBOMs[bi] = *pSkinInfo->GetBoneOffsetMatrix(bi);
     }
 
     *ppNewMeshContainer = pMeshContainer;
@@ -287,7 +287,6 @@ STDMETHODIMP AllocateHierarchy::DestroyFrame(THIS_ LPD3DXFRAME pFrameToFree)
 {
     SAFE_DELETE_ARRAY(pFrameToFree->Name);
     SAFE_DELETE(pFrameToFree);
-
     return S_OK;
 }
 
@@ -302,8 +301,6 @@ STDMETHODIMP AllocateHierarchy::DestroyMeshContainer(
 
     SAFE_RELEASE(pMeshContainer->pWorkMesh);
     SAFE_RELEASE(pMeshContainer->pSkinInfo);
-
-    SAFE_DELETE(pMeshContainer->pEffectMesh);
 
     SAFE_DELETE_ARRAY(pMeshContainer->Name);
     SAFE_DELETE_ARRAY(pMeshContainer->pBoneOffsetMatrices);

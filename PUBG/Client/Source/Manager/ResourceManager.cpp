@@ -49,69 +49,6 @@ LPD3DXEFFECT ResourceManager::GetEffect(const string& path,
     return GetEffect(path + effectFilename);
 }
 
-EffectMesh* ResourceManager::ParseEffectMeshX(const string& path,
-    const string& xFilename)
-{
-    LPD3DXBUFFER pAdjacency = nullptr;
-    LPD3DXBUFFER pMaterials = nullptr;
-    LPD3DXBUFFER pEffectInstance = nullptr;
-    DWORD numMaterials = 0u;
-
-    EffectMesh* pEM = new EffectMesh;
-
-    auto hr = D3DXLoadMeshFromXA((path + xFilename).c_str(), 
-        D3DXMESH_MANAGED, Device()(),  &pAdjacency, 
-        &pMaterials, &pEffectInstance, &numMaterials, &pEM->pMesh);
-
-    assert(!FAILED(hr) && 
-        "ResourceManager::ParseX() failed. D3DXLoadMeshFromXA() failed.");
- 
-    D3DXEFFECTINSTANCE* pEI = 
-        (D3DXEFFECTINSTANCE*)pEffectInstance->GetBufferPointer();
-    
-    for (UINT i = 0; i < numMaterials; ++i)
-    {
-        EffectParam ep;
-        LPD3DXEFFECT pEffect = GetEffect(path, pEI[i].pEffectFilename);
-        ep.pEffect = pEffect;
-
-        D3DXHANDLE hTech;
-        pEffect->FindNextValidTechnique(nullptr, &hTech);
-        pEffect->SetTechnique(hTech);
-
-        pEffect->BeginParameterBlock();
-        for (UINT p = 0u; p < pEI[i].NumDefaults; ++p)
-        {
-            const auto pDefault = pEI[i].pDefaults[p];
-            D3DXHANDLE hHandle = pEffect->GetParameterByName(nullptr, 
-                pDefault.pParamName);
-
-            D3DXPARAMETER_DESC desc;
-            if (hHandle)
-            {
-                pEffect->GetParameterDesc(hHandle, &desc);
-                
-                if (desc.Type == D3DXPT_BOOL ||
-                    desc.Type == D3DXPT_INT ||
-                    desc.Type == D3DXPT_FLOAT ||
-                    desc.Type == D3DXPT_STRING)
-                {
-                    pEffect->SetValue(pDefault.pParamName, pDefault.pValue,
-                        pDefault.NumBytes);
-                }
-                else if (desc.Type == D3DXPT_TEXTURE)
-                {
-                    pEffect->SetTexture(pDefault.pParamName, 
-                        GetTexture(path, string((char*)pDefault.pValue)));
-                }
-            }
-        }
-        ep.hParam = pEffect->EndParameterBlock();
-        pEM->EffectParams.emplace_back(ep);
-    }
-    return pEM;
-}
-
 void ResourceManager::Destroy()
 {
     SAFE_RELEASE(m_pEffectPool);
@@ -155,13 +92,28 @@ LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& path,
 EffectMesh* ResourceManager::GetEffectMesh(const string& path,
     const string& xFilename)
 {
-    const auto str(path + xFilename);
-    const auto search = m_effectMeshs.find(str);
-    if (search == m_effectMeshs.end())
+    auto pEffectMesh = FindEffectMesh(path, xFilename);
+    if (!pEffectMesh)
     {
-        m_effectMeshs[str] = ParseEffectMeshX(path, xFilename);
+        LPD3DXBUFFER pEffectInstances = nullptr;
+        LPD3DXMESH pMesh = nullptr;
+        DWORD numMaterials = 0u;
+
+        auto hr = D3DXLoadMeshFromXA((path + xFilename).c_str(), 
+            D3DXMESH_MANAGED, Device()(), nullptr, nullptr, &pEffectInstances, 
+            &numMaterials, &pMesh);
+
+        assert(!FAILED(hr) &&
+            "ResourceManager::GetEffectMesh(), D3DXLoadMeshFromXA() failed.");
+
+        D3DXEFFECTINSTANCE* pEIs =
+            static_cast<D3DXEFFECTINSTANCE*>(
+                pEffectInstances->GetBufferPointer());
+
+        pEffectMesh = AddEffectMesh(
+            path, xFilename, pMesh, pEIs, numMaterials);
     }
-    return m_effectMeshs[str];
+    return pEffectMesh;
 }
 
 LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
@@ -261,17 +213,32 @@ LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
     //return m_umapFont[val];
 }
 
-void ResourceManager::ParseEffectInstances(const string& path,
-    const D3DXEFFECTINSTANCE* pEffectInstances, DWORD NumMaterials, 
-    EffectMesh* OutEffectMesh)
+EffectMesh* ResourceManager::FindEffectMesh(
+    const string& path, const string& name)
 {
-    assert(pEffectInstances && OutEffectMesh && 
-        "ResourceManager::ParseEffectInstance(), \
-         effect instance or effect mesh is null.");
+    const auto key(path + name);
+    const auto search = m_effectMeshs.find(key);
+    EffectMesh* p = nullptr;
+
+    if (search != m_effectMeshs.end())
+        p = search->second;
+    
+    return p;
+}
+
+EffectMesh* ResourceManager::AddEffectMesh(
+    const string& path, const string& name, LPD3DXMESH pMesh, 
+    const D3DXEFFECTINSTANCE* pEffectInstances, DWORD numMaterials)
+{
+    assert(pMesh && pEffectInstances && 
+        "ResourceManager::AddEffectMesh(), \
+         mesh or effect instances is nullptr");
+
+    auto pEffectMesh = new EffectMesh;
+    pEffectMesh->pMesh = pMesh;
 
     auto& pEIs = pEffectInstances;
-
-    for (DWORD ei = 0u; ei < NumMaterials; ++ei)
+    for (DWORD ei = 0u; ei < numMaterials; ++ei)
     {
         const D3DXEFFECTINSTANCE& EI = pEIs[ei];
 
@@ -302,18 +269,28 @@ void ResourceManager::ParseEffectInstances(const string& path,
             case D3DXPT_TEXTURE:
                 {
                     pEffect->SetTexture(
-                        d.pParamName, 
+                        d.pParamName,
                         GetTexture(path, static_cast<char*>(d.pValue)));
+                }
+                break;
+            case D3DXPT_BOOL:
+            case D3DXPT_INT:
+            case D3DXPT_FLOAT:
+            case D3DXPT_STRING:
+                {
+                    pEffect->SetValue(d.pParamName, d.pValue, d.NumBytes);
                 }
                 break;
             default:
                 {
-                    pEffect->SetValue(d.pParamName, d.pValue, d.NumBytes);
                 }
                 break;
             }
         }
         EP.hParam = pEffect->EndParameterBlock();
-        OutEffectMesh->EffectParams.emplace_back(EP);
+        pEffectMesh->EffectParams.emplace_back(EP);
     }
+
+    m_effectMeshs[path + name] = pEffectMesh;
+    return pEffectMesh;
 }

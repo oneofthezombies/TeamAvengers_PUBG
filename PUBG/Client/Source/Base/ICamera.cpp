@@ -38,14 +38,13 @@ void ICamera::UpdateViewProjMatrix()
         D3DXMATRIX r;
         D3DXMatrixRotationQuaternion(&r, &pTarget->GetRotation());
 
-        D3DXVec3TransformCoord(&eye, &eye, &r);
-        eye += pTarget->GetPosition();
-
         auto direction = Vector3::FORWARD;
         D3DXVec3TransformNormal(&direction, &direction, &r);
         D3DXVec3Normalize(&direction, &direction);
-        look = direction * m_zeroPointDistance;
-        look += pTarget->GetPosition();
+
+        eye = pTarget->GetPosition() + direction * -100.0f;
+        eye.y += 100.0f;
+        look = pTarget->GetPosition();
     }
 
     D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &look, &Vector3::UP);
@@ -74,7 +73,7 @@ const D3DXMATRIX& ICamera::GetProjectionMatrix()
 CameraFree::CameraFree()
     : ICamera(TAG_CAMERA::FREE)
 {
-    m_offsetFromTarget = D3DXVECTOR3(0.0f, 88.0f, -208.0f);
+    m_offsetFromTarget = D3DXVECTOR3(0.0f, 160.0f, -258.0f);
 }
 
 CameraFree::~CameraFree()
@@ -87,6 +86,24 @@ void CameraFree::Reset()
 
 void CameraFree::Update()
 {
+    //auto pInput = Input()();
+    //if (pInput->IsStayKeyDown('W'))
+    //{
+    //    m_offsetFromTarget.y += 1.0f;
+    //}
+    //if (pInput->IsStayKeyDown('S'))
+    //{
+    //    m_offsetFromTarget.y -= 1.0f;
+    //}
+    //if (pInput->IsStayKeyDown('A'))
+    //{
+    //    m_offsetFromTarget.x -= 1.0f;
+    //}
+    //if (pInput->IsStayKeyDown('D'))
+    //{
+    //    m_offsetFromTarget.x += 1.0f;
+    //}
+
     m_isUpdated = true;
 }
 

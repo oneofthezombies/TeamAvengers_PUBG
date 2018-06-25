@@ -11,7 +11,7 @@ public:
     {
         const float LIMIT_OF_ANGLE;
         const float QUANTITY_FACTOR;
-        float       m_Angle;
+        float       m_angle;
 
         WaistRotation(const float limit, const float factor);
     };
@@ -19,7 +19,6 @@ public:
     struct RootTransform
     {
         const float MOVE_SPEED;
-        D3DXVECTOR3 m_Direction;
 
         RootTransform(const float moveSpeed);
     };

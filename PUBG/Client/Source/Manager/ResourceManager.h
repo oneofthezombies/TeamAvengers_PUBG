@@ -17,25 +17,25 @@ private:
              ResourceManager();
     virtual ~ResourceManager();
 
-    EffectMesh* ParseEffectMeshX(const string& path, const string& xFilename);
-    
 public:
     void Destroy();
-    
+
+    EffectMesh* FindEffectMesh(const string& path, const string& name);
+    EffectMesh* AddEffectMesh(const string& path, const string& name,
+        LPD3DXMESH pMesh, const D3DXEFFECTINSTANCE* pEffectInstances,
+        DWORD numMaterials);
+
+public:
     LPDIRECT3DTEXTURE9 GetTexture(const string& fullPath);
-    LPDIRECT3DTEXTURE9 GetTexture(const string& path, 
+    LPDIRECT3DTEXTURE9 GetTexture(const string& path,
         const string& textureFilename);
-    
+
     LPD3DXEFFECT GetEffect(const string& fullPath);
     LPD3DXEFFECT GetEffect(const string& path, const string& effectFilename);
-    
+
     EffectMesh* GetEffectMesh(const string& path, const string& xFilename);
 
     LPD3DXFONT GetFont(const TAG_FONT tag);
-
-    void ParseEffectInstances(const string& path, 
-        const D3DXEFFECTINSTANCE* pEffectInstances, DWORD NumMaterials, 
-        EffectMesh* OutEffectMesh);
 
     friend Singleton<ResourceManager>;
 };

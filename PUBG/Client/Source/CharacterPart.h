@@ -11,8 +11,8 @@ struct Frame;
 class CharacterPart : public IObject
 {
 private:
-    const TAG_COLLIDER_CHARACTER_PART m_Tag;
-    vector<Frame*> m_Frames;
+    const TAG_COLLIDER_CHARACTER_PART m_tagColliderCharacterPart;
+    vector<Frame*> m_frames;
     vector<UIText*> m_UITexts;
 
     Character*   pCharacter;

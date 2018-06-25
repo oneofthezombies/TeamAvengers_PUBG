@@ -16,6 +16,10 @@ Character::Character(const int index)
 
     , pSkinnedMeshController(nullptr)
 {
+    D3DXQUATERNION r;
+    D3DXQuaternionRotationAxis(&r, &Vector3::UP, D3DX_PI);
+    GetTransform()->SetRotation(r);
+
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
     pSkinnedMeshController->LoadSkinnedMesh(
         "./Resource/Lobby_Anim/", "Lobby_Anim.x");
@@ -25,9 +29,14 @@ Character::Character(const int index)
     AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::HEAD, this));
 
     // set sphere mesh for root position
-    D3DXCreateSphere(Device()(), 1.0f, 10, 10, &m_pSphereMesh, NULL);
+    D3DXCreateSphere(Device()(), 1.0f, 10, 10, &m_pSphereMesh, nullptr);
 
     subscribeCollisionEvent();
+
+    //if (isMine())
+    //{
+    //    Camera()()->SetTarget(GetTransform());
+    //}
 }
 
 Character::~Character()
@@ -59,14 +68,13 @@ void Character::OnUpdate()
         }
         if (pInput->IsOnceKeyDown('2'))
         {
-            animIndex++;
-            if (animIndex >= numAnim)
-                animIndex = numAnim - 1;
+            if (animIndex < numAnim - 1)
+                animIndex++;
 
             pSkiCon->SetAnimationIndex(animIndex, true);
         }
 
-        Debug << "num Anim : " << numAnim << "Anim index : " << animIndex << '\n';
+        Debug << "num Anim : " << numAnim << ", anim index : " << animIndex << '\n';
 
         //if (pInput->IsStayKeyDown('3'))
         //{
@@ -78,9 +86,8 @@ void Character::OnUpdate()
         //}
 
         //bool isTransit = false;
-        //auto nextState = m_AnimState;
-
-        //switch (m_AnimState)
+        //auto nextState = m_animState;
+        //switch (m_animState)
         //{
         //case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still:
         //    {
@@ -116,22 +123,12 @@ void Character::OnUpdate()
 
         if (pInput->IsStayKeyDown('A'))
         {
-            D3DXVECTOR3 right;
-            D3DXMATRIX r;
-            D3DXMatrixRotationY(&r, D3DX_PI * 0.5f);
-            D3DXVec3TransformNormal(&right, &m_rootTransform.m_Direction, &r);
-            D3DXVec3Normalize(&right, &right);
-            pos += right * -m_rootTransform.MOVE_SPEED;
+            pos += Vector3::RIGHT * -m_rootTransform.MOVE_SPEED;
             isUpdated = true;
         }
         if (pInput->IsStayKeyDown('D'))
         {
-            D3DXVECTOR3 right;
-            D3DXMATRIX r;
-            D3DXMatrixRotationY(&r, D3DX_PI * 0.5f);
-            D3DXVec3TransformNormal(&right, &m_rootTransform.m_Direction, &r);
-            D3DXVec3Normalize(&right, &right);
-            pos += right * m_rootTransform.MOVE_SPEED;
+            pos += Vector3::RIGHT * m_rootTransform.MOVE_SPEED;
             isUpdated = true;
         }
 

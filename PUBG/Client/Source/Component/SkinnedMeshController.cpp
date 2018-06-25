@@ -23,7 +23,7 @@ void SkinnedMeshController::drawFrame(LPD3DXFRAME pFrameBase)
 {
     if (!pFrameBase) return;
 
-    auto& pMeshContainer = pFrameBase->pMeshContainer;
+    auto pMeshContainer = pFrameBase->pMeshContainer;
     while (pMeshContainer)
     {
         drawMeshContainer(pMeshContainer);
@@ -53,8 +53,17 @@ void SkinnedMeshController::drawMeshContainer(
     pMeshContainer->pEffectMesh->pMesh->LockVertexBuffer(
         D3DLOCK_READONLY, (LPVOID*)&pVerticesSrc);
 
+    assert(pVerticesSrc && 
+        "SkinnedMeshController::drawMeshContainer(), \
+         source vertices is null.");
+
     PBYTE pVerticesDest = nullptr;
     pMeshContainer->pWorkMesh->LockVertexBuffer(0, (LPVOID*)&pVerticesDest);
+
+    assert(pVerticesDest &&         
+        "SkinnedMeshController::drawMeshContainer(), \
+         destination vertices is null.");
+
     pMeshContainer->pSkinInfo->UpdateSkinnedMesh(
         pMeshContainer->pFinalBoneMatrices, nullptr, 
         pVerticesSrc, pVerticesDest);
@@ -107,18 +116,21 @@ void SkinnedMeshController::Update(const function<void()>& function)
     auto& pAniCon = m_pSkinnedMesh->m_pAnimController;
     pAniCon->AdvanceTime(dt, nullptr);
 
-    m_passedBlendTime += dt;
-    const auto weight = m_passedBlendTime / m_totalBlendTime;
-    if (weight >= 1.0f)
+    if (m_passedBlendTime < m_totalBlendTime)
     {
-        pAniCon->SetTrackWeight(0u, 1.0f);
-        pAniCon->SetTrackWeight(1u, 0.0f);
-        pAniCon->SetTrackEnable(1u, false);
-    }
-    else
-    {
-        pAniCon->SetTrackWeight(0u, weight);
-        pAniCon->SetTrackWeight(1u, 1.0f - weight);
+        m_passedBlendTime += dt;
+        const auto weight = m_passedBlendTime / m_totalBlendTime;
+        if (weight >= 1.0f)
+        {
+            pAniCon->SetTrackWeight(0u, 1.0f);
+            pAniCon->SetTrackWeight(1u, 0.0f);
+            pAniCon->SetTrackEnable(1u, false);
+        }
+        else
+        {
+            pAniCon->SetTrackWeight(0u, weight);
+            pAniCon->SetTrackWeight(1u, 1.0f - weight);
+        }
     }
 
     if (function) function();

@@ -22,7 +22,8 @@ struct VERTEX_RHWC
 
     VERTEX_RHWC();
     VERTEX_RHWC(const D3DXVECTOR4& p, const D3DCOLOR c);
-    VERTEX_RHWC(const float x, const float y, const float z, const float w, const D3DCOLOR c);
+    VERTEX_RHWC(const float x, const float y, const float z, 
+        const float w, const D3DCOLOR c);
 
     enum { FVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE };
 };

@@ -5,13 +5,12 @@
 Character::WaistRotation::WaistRotation(const float limit, const float factor)
     : LIMIT_OF_ANGLE(limit)
     , QUANTITY_FACTOR(factor)
-    , m_Angle(0.0f)
+    , m_angle(0.0f)
 {
 }
 
 Character::RootTransform::RootTransform(const float moveSpeed)
     : MOVE_SPEED(moveSpeed)
-    , m_Direction(0.0f, 0.0f, -1.0f)
 {
 }
 
@@ -55,7 +54,7 @@ void Character::updateTransform()
     {
         // modify local bones
         D3DXMATRIX rx;
-        D3DXMatrixRotationX(&rx, m_waistRotation.m_Angle);
+        D3DXMatrixRotationX(&rx, m_waistRotation.m_angle);
         m_framePtr.pWaist->TransformationMatrix *= rx;
 
         // for root motion animation
@@ -67,12 +66,12 @@ void Character::rotateWaist(const float quantity)
 {
     auto& wr = m_waistRotation;
 
-    wr.m_Angle += quantity;
+    wr.m_angle += quantity;
 
-    if (wr.m_Angle < -wr.LIMIT_OF_ANGLE)
-        wr.m_Angle = -wr.LIMIT_OF_ANGLE;
-    else if (wr.m_Angle > wr.LIMIT_OF_ANGLE)
-        wr.m_Angle = wr.LIMIT_OF_ANGLE;
+    if (wr.m_angle < -wr.LIMIT_OF_ANGLE)
+        wr.m_angle = -wr.LIMIT_OF_ANGLE;
+    else if (wr.m_angle > wr.LIMIT_OF_ANGLE)
+        wr.m_angle = wr.LIMIT_OF_ANGLE;
 }
 
 int Character::GetIndex() const
