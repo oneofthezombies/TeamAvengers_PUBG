@@ -45,7 +45,7 @@ void UIButton::Render()
 	if (m_textures[m_state])
 	{
         RECT rect { 0, 0, static_cast<int>(m_size.x), static_cast<int>(m_size.y) };
-        g_pSprite->Draw(m_textures[m_state], &rect, &m_center, &m_viewportPosition, m_color);
+        Sprite()()->Draw(m_textures[m_state], &rect, &m_center, &m_viewportPosition, m_color);
 	}
 
 	UIObject::Render();
@@ -59,7 +59,7 @@ void UIButton::UpdateOnMouse()
 
 void UIButton::SetTexture(const string& idle, const string& mouseOver, const string& select)
 {
-    const auto texMgr = g_pResourceManager;
+    const auto texMgr = Resource()();
     if (!texMgr) return;
 
 	D3DXIMAGE_INFO info;
@@ -93,7 +93,7 @@ void UIButton::UpdateOnMouseEnterExit()
 {
     if (!m_pListener) return;
 
-    const auto input = g_pInput;
+    const auto input = Input()();
     if (!input) return;
 
     m_prevIsMouseOn = m_isMouseOn;
@@ -113,7 +113,7 @@ TODO : add m_prevState
 */
 void UIButton::UpdateOnMouseDownUpDrag()
 {
-    const auto input = g_pInput;
+    const auto input = Input()();
     if (!input) return;
 
     switch (m_state)

@@ -3,14 +3,12 @@
 
 class EffectMeshRenderer;
 class BoxCollider;
-class BoxColliderRenderer;
 
 class Bandage : public IObject
 {
 private:
     EffectMeshRenderer* pEffectMeshRenderer;
     BoxCollider* pBoxCollider;
-    BoxColliderRenderer* pBoxColliderRenderer;
 
 public:
     Bandage();

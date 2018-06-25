@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include "Client.h"
-#include "TagRequest.h"
 
 #define MAX_LOADSTRING 100
 
@@ -30,30 +28,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
-	g_pApp->Init();
-
-    //g_pCommunicator->Connect("192.168.0.109", "8253", "a");
-
-    //boost::asio::io_context ioContext;
-    //tcp::resolver resolver(ioContext);
-    //auto endpoints = resolver.resolve("192.168.0.109", "8253");
-    //Client c(&ioContext, endpoints, nullptr);
-    //std::thread t([&ioContext]() { ioContext.run(); });
-
-    //Message msg1;
-    //stringstream ss;
-    //ss << setw(2) << setfill(' ') << static_cast<int>(TAG_REQUEST::MY_ID);
-    //ss << string("ootz");
-
-    //const string str(ss.str());
-    //msg1.SetBodyLength(str.size());
-    //memcpy_s(msg1.GetBodyData(), Message::MAX_BODY_LENGTH, str.data(), str.size());
-    //msg1.EncodeHeader();
-
-    //cout << "My nickname is " << "ootz" << '\n';
-    //c.Write(msg1);
-
-    //cout << "Wait...\n";
+	App()()->Init();
 
 	MSG msg;
 
@@ -70,15 +45,12 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
 		}
 		else
 		{
-			g_pApp->Update();
-			g_pApp->Render();
+			App()()->Update();
+			App()()->Render();
 		}
 	}
 
-	g_pApp->Destroy();
-
-    //c.Close();
-    //t.join();
+	App()()->Destroy();
 
 	return (int)msg.wParam;
 }
@@ -137,7 +109,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     //Alt키 막기용
     if (wParam == SC_KEYMENU && (lParam >> 16) <= 0) return 0;
 
-	g_pApp->WndProc(hWnd, message, wParam, lParam);
+	App()()->WndProc(hWnd, message, wParam, lParam);
 
 	switch (message)
 	{
@@ -163,46 +135,3 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return 0;
 }
-
-//int main(int argc, char* argv[])
-//{
-//    try 
-//    {
-//        if (argc != 4)
-//        {
-//            std::cerr << "Usage: Client <host> <port> <nickname>\n";
-//            return 1;
-//        }
-//
-//        boost::asio::io_context ioContext;
-//        tcp::resolver resolver(ioContext);
-//        auto endpoints = resolver.resolve(argv[1], argv[2]);
-//        Client c(&ioContext, endpoints, nullptr);
-//        std::thread t([&ioContext]() { ioContext.run(); });
-//
-//        Message msg;
-//        stringstream ss;
-//        ss << setw(2) << setfill(' ') << static_cast<int>(TAG_REQUEST::MY_ID);
-//        ss << string(argv[3]);
-//
-//        const string str(ss.str());
-//        msg.SetBodyLength(str.size());
-//        memcpy_s(msg.GetBodyData(), Message::MAX_BODY_LENGTH, str.data(), str.size());
-//        msg.EncodeHeader();
-//
-//        cout << "My nickname is " << argv[3] << '\n';
-//        c.Write(msg);
-//
-//        cout << "Wait...\n";
-//        while (1) {}
-//
-//        c.Close();
-//        t.join();
-//    }
-//    catch (std::exception& e)
-//    {
-//        std::cerr << "Exception: " << e.what() << '\n';
-//    }
-//
-//    return 0;
-//}

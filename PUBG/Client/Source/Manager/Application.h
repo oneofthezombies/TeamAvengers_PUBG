@@ -1,12 +1,10 @@
 #pragma once
 #include "Singleton.h"
 
-#define g_pApp Application::GetInstance()
-
 class Application : public Singleton<Application>
 {
 private:
-	Application();
+             Application();
 	virtual ~Application();
 
 public:
@@ -19,3 +17,10 @@ public:
 	friend Singleton<Application>;
 };
 
+struct App
+{
+    Application* operator()()
+    {
+        return Application::GetInstance();
+    }
+};

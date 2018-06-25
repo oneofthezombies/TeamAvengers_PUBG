@@ -3,13 +3,14 @@
 #include "IObject.h"
 
 IScene::IScene()
+    : MemoryAllocator()
 {
 }
 
 IScene::~IScene()
 {
 	for (auto o : m_objects)
-		SAFE_DELETE(o);
+        SAFE_DELETE(o);
 }
 
 void IScene::Init()
@@ -24,7 +25,7 @@ void IScene::Update()
 
 	OnUpdate();
 
-	UpdateToDeleteObjects();
+	updateToDeleteObjects();
 }
 
 void IScene::Render()
@@ -35,14 +36,14 @@ void IScene::Render()
 
 void IScene::AddObject(IObject* p)
 {
-	if (!p) return;
+    assert(p && "IScene::AddObject(), object is null.");
 
 	m_objects.emplace(p);
 }
 
 void IScene::RemoveObject(IObject* p)
 {
-	if (!p) return;
+    assert(p && "IScene::RemoveObject(), object is null.");
 
 	m_objects.erase(p);
 }
@@ -57,9 +58,9 @@ void IScene::Destroy(IObject* p, const float t)
 	m_toDeleteObjects.emplace(p, t);
 }
 
-void IScene::UpdateToDeleteObjects()
+void IScene::updateToDeleteObjects()
 {
-	const float dt = g_pTime->GetDeltaTime();
+	const float dt = Time()()->GetDeltaTime();
 
 	const auto begin = m_toDeleteObjects.begin();
 	const auto end = m_toDeleteObjects.end();
@@ -76,7 +77,7 @@ void IScene::UpdateToDeleteObjects()
 		else
 		{
 			RemoveObject(p);
-			SAFE_DELETE(p);
+            SAFE_DELETE(p);
 			it = m_toDeleteObjects.erase(it);
 		}
 	}

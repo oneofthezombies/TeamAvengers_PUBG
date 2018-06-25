@@ -1,0 +1,35 @@
+#pragma once
+
+// TagCommon.h 
+// including tag list
+//
+// TAG_REQUEST
+
+// TagClientOnly.h
+// including tag list
+// 
+// TAG_OBJECT
+// TAG_COLLISION
+// TAG_COLLIDER_CHARACTER_PART
+// TAG_ANIM_CHARACTER
+// TAG_RENDERER
+// TAG_SCENE
+// TAG_FONT
+// TAG_SOUND
+
+enum class TAG_REQUEST
+{
+    TEST_CONNECTION,
+    RECEIVE_MY_ID,
+
+    SEND_ID,
+    SEND_NICKNAME,
+    SEND_POSITION,
+    SEND_ROTATION,
+    SEND_ANIMATION_INDEX,
+    SEND_ANIMATION_TIME,
+
+    SEND_EVENT_FIRE_BULLET
+};
+
+

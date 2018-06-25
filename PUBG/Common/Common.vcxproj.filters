@@ -4,33 +4,16 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Source\Common.h" />
-    <ClInclude Include="Source\Tag\TagCollision.h" />
-    <ClInclude Include="Source\Tag\TagObject.h" />
-    <ClInclude Include="Source\Tag\TagRequest.h" />
-    <ClInclude Include="Source\Component\Collider.h" />
-    <ClInclude Include="Source\Component\ComponentTransform.h" />
-    <ClInclude Include="Source\Manager\CollisionManager.h" />
-    <ClInclude Include="Source\Manager\ObjectManager.h" />
-    <ClInclude Include="Source\Manager\TimeManager.h" />
-    <ClInclude Include="Source\Base\IMap.h" />
-    <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Useful\Useful.h" />
     <ClInclude Include="Source\Base\Singleton.h" />
-    <ClInclude Include="Source\Tag\TagColliderCharacterPart.h" />
     <ClInclude Include="Source\Useful\Protocol.h" />
-    <ClInclude Include="Source\Useful\BoxCollision.h" />
+    <ClInclude Include="Source\Useful\TagCommon.h" />
+    <ClInclude Include="Source\Base\MemoryAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Source\Component\Collider.cpp" />
-    <ClCompile Include="Source\Component\ComponentTransform.cpp" />
-    <ClCompile Include="Source\Manager\CollisionManager.cpp" />
-    <ClCompile Include="Source\Manager\ObjectManager.cpp" />
-    <ClCompile Include="Source\Manager\TimeManager.cpp" />
-    <ClCompile Include="Source\Base\IMap.cpp" />
-    <ClCompile Include="Source\Base\IObject.cpp" />
     <ClCompile Include="Source\Useful\Useful.cpp" />
     <ClCompile Include="Source\Useful\Protocol.cpp" />
-    <ClCompile Include="Source\Useful\BoxCollision.cpp" />
+    <ClCompile Include="Source\Base\MemoryAllocator.cpp" />
   </ItemGroup>
 </Project>

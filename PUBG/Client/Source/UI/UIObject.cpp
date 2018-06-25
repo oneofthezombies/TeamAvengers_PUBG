@@ -3,7 +3,8 @@
 #include "UIManager.h"
 
 UIObject::UIObject(UIObject* pParent)
-    : m_instanceID(-1)
+    : MemoryAllocator()
+    , m_instanceID(-1)
     , m_color(D3DCOLOR_XRGB(255, 255, 255))
     , m_position()
     , m_center()
@@ -17,7 +18,7 @@ UIObject::UIObject(UIObject* pParent)
     }
     else
     {
-        g_pUIManager->RegisterUIObject(this);
+        UI()()->RegisterUIObject(this);
     }
 }
 
@@ -29,7 +30,7 @@ UIObject::~UIObject()
 
 void UIObject::DrawBorder()
 {
-    if (!g_pUIManager->IsDrawBorder()) return;
+    if (!UI()()->IsDrawBorder()) return;
 
     D3DCOLOR c = D3DCOLOR_XRGB(255, 255, 255);
     vector<VERTEX_RHWC> vertices = 
@@ -41,9 +42,9 @@ void UIObject::DrawBorder()
         VERTEX_RHWC(static_cast<float>(m_rect.left),  static_cast<float>(m_rect.top),    0.0f, 1.0f, c),
     };
     
-    const auto dv = g_pDevice;
-    dv->SetFVF(VERTEX_RHWC::FVF);
-    dv->DrawPrimitiveUP(D3DPT_LINESTRIP, vertices.size() - 1, vertices.data(), sizeof VERTEX_RHWC);
+    const auto d = Device()();
+    d->SetFVF(VERTEX_RHWC::FVF);
+    d->DrawPrimitiveUP(D3DPT_LINESTRIP, vertices.size() - 1, vertices.data(), sizeof VERTEX_RHWC);
 }
 
 void UIObject::SetViewportPosition(const D3DXVECTOR3& parentViewportPos, const D3DXVECTOR3& pos)

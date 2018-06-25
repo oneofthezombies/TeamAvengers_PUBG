@@ -1,26 +1,48 @@
 #pragma once
 #include "Singleton.h"
-#include "Camera.h"
+#include "ICamera.h"
 
-#define g_pCameraManager CameraManager::GetInstance()
-#define g_pCurrentCamera CameraManager::GetInstance()->GetCurrentCamera()
+class Transform;
 
 class CameraManager : public Singleton<CameraManager>
 {
 private:
-    Camera m_camera;
+    unordered_map<TAG_CAMERA, ICamera*> m_cameras;
 
-    CameraManager() : Singleton<CameraManager>() {}
-    virtual ~CameraManager() {}
+    ICamera*   pCurrentCamera;
+    Transform* pTarget;
+
+             CameraManager();
+    virtual ~CameraManager();
 
 public:
-    void Init() {}
-    void Destroy() {}
+    void Init();
+    void Destroy();
     void Update();
 
-    Camera* GetCurrentCamera();
+    void       SetTarget(Transform* pTarget);
+    Transform* GetTarget();
+
+    void     SetCurrentCamera(const TAG_CAMERA tag);
+    ICamera* GetCurrentCamera();
 
     friend Singleton<CameraManager>;
+};
+
+struct Camera
+{
+    CameraManager* operator()()
+    {
+        return CameraManager::GetInstance();
+    }
+};
+
+struct CurrentCamera
+{
+    ICamera* operator()()
+    {
+        return CameraManager::GetInstance()->GetCurrentCamera();
+    }
 };
 
 ////#define CameraChangeSpeed 6.0f

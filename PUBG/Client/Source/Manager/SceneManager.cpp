@@ -6,7 +6,7 @@
 
 SceneManager::SceneManager()
 	: Singleton<SceneManager>()
-	, m_pCurrentScene(nullptr)
+	, pCurrentScene(nullptr)
 {
 }
 
@@ -25,17 +25,19 @@ void SceneManager::Init()
 void SceneManager::Destroy()
 {
 	for (auto& s : m_scenes)
-		SAFE_DELETE(s.second);
+        SAFE_DELETE(s.second);
 }
 
 void SceneManager::Update()
 {
-	if (m_pCurrentScene) m_pCurrentScene->Update();
+	if (pCurrentScene) 
+        pCurrentScene->Update();
 }
 
 void SceneManager::Render()
 {
-	if (m_pCurrentScene) m_pCurrentScene->Render();
+	if (pCurrentScene) 
+        pCurrentScene->Render();
 }
 
 void SceneManager::SetCurrentScene(const TAG_SCENE tag)
@@ -46,13 +48,13 @@ void SceneManager::SetCurrentScene(const TAG_SCENE tag)
 		auto s = search->second;
 		if (s)
 		{
-			m_pCurrentScene = s;
-			m_pCurrentScene->Init();
+			pCurrentScene = s;
+			pCurrentScene->Init();
 		}
 	}
 }
 
 IScene* SceneManager::GetCurrentScene() const
 {
-	return m_pCurrentScene;
+	return pCurrentScene;
 }

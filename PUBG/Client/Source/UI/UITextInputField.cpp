@@ -36,8 +36,10 @@ UITextInputField::UITextInputField(
 
     m_listener.SetHandle(this);
 
-    UIText* pText = new UIText(g_pFontManager->GetFont(font), GetSize(), &m_text, textColor, this);
+    UIText* pText = new UIText(Resource()()->GetFont(font), GetSize(), &m_text, textColor, this);
     pText->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
+
+    m_text = string("127.0.0.1 8253 ");
 }
 
 UITextInputField::~UITextInputField()
@@ -50,7 +52,7 @@ void UITextInputField::Update(const D3DXVECTOR3& parentViewportPos, const D3DXMA
 
     if (m_isSelected)
     {
-        const auto c = g_pInput->GetChar();
+        const auto c = Input()()->GetChar();
         if (c == '\b')
         {
             if (!m_text.empty())

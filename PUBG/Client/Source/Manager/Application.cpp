@@ -12,60 +12,64 @@ Application::~Application()
 
 void Application::Init()
 {
-	g_pD3D->Init();
-    g_pUIManager->Init();
-    g_pInput->Init();
-    //g_pSoundManager->Init();
-    g_pCameraManager->Init();
-    g_pSceneManager->Init();
+	DeviceMgr()()->Init();
+    UI       ()()->Init();
+    Input    ()()->Init();
+    Sound    ()()->Init();
+    Camera   ()()->Init();
+    Scene    ()()->Init();
 }
 
 void Application::Destroy()
 {
-    g_pCommunicator->Destroy();
-    g_pCameraManager->Destroy();
-	g_pSceneManager->Destroy();
-    g_pUIManager->Destroy();
-	g_pObjectManager->Destroy();
-    g_pInput->Destroy();
-    //g_pSoundManager->Destroy();
-    g_pResourceManager->Destroy();
-	g_pFontManager->Destroy();
-	g_pDebugger->Destroy();
-	g_pD3D->Destroy();
+    Communication()()->Destroy();
+    Camera       ()()->Destroy();
+	Scene        ()()->Destroy();
+    UI           ()()->Destroy();
+    BulletPool   ()()->Destroy();
+    Input        ()()->Destroy();
+    Sound        ()()->Destroy();
+    Resource     ()()->Destroy();
+    DebugMgr     ()()->Destroy();
+    DeviceMgr    ()()->Destroy();
+
+    MemoryAllocator::CheckMemoryAllocators();
 }
 
 void Application::Update()
 {
-	g_pDebugger->Clear();
-	g_pTime->Update();
-    g_pInput->Update();
-    g_pSceneManager->Update();
-    //g_pSoundManager->Update();
-    g_pCameraManager->Update();
-    g_pCollisionManager->Update();
-    g_pUIManager->Update();
+	DebugMgr()()->Clear();
+    Debug << "FPS : " << Time()()->GetFps() << '\n';
+    Communication()()->Print();
+    BulletPool()()->PrintNumBullet();
 
-	Debug << "FPS : " << g_pTime->GetFPS() << '\n';
-    g_pCommunicator->Logging();
+	Time     ()()->Update();
+    Input    ()()->Update();
+    Scene    ()()->Update();
+    Sound    ()()->Update();
+    Camera   ()()->Update();
+    Collision()()->Update();
+    UI       ()()->Update();
 }
 
 void Application::Render()
 {
-	g_pDevice->Clear(NULL, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+    auto d = Device()();
+    d->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
 		D3DCOLOR_XRGB(50, 50, 50), 1.0f, 0);
 
-	g_pDevice->BeginScene();
+    d->BeginScene();
 
-	g_pSceneManager->Render();
-    g_pUIManager->Render();
-	g_pDebugger->Print();
+	Scene   ()()->Render();
+    UI      ()()->Render();
+	DebugMgr()()->Print();
 
-	g_pDevice->EndScene();
-	g_pDevice->Present(NULL, NULL, NULL, NULL);
+    d->EndScene();
+    d->Present(nullptr, nullptr, nullptr, nullptr);
 }
 
-void Application::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void Application::WndProc(HWND hWnd, UINT message, WPARAM wParam,
+    LPARAM lParam)
 {
-    g_pInput->WndProc(hWnd, message, wParam, lParam);
+    Input()()->WndProc(hWnd, message, wParam, lParam);
 }

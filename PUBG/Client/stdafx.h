@@ -20,24 +20,31 @@
 // end debug
 
 // math and usefuls
-#include "FVFStructure.h"
-#include "ResourceStructure.h"
+#include "Structure.h"
+#include "CollisionCore.h"
 // end math and usefuls
 
 // managers and interfaces for global access
-#include "Application.h"     // for g_pApp
-#include "Direct3D.h"        // for g_pD3D, g_pD3DDevice
-#include "Debugger.h"        // for g_pDebugger, Debug
-#include "UIManager.h"       // for g_pUIManager, g_pSprite
-#include "FontManager.h"     // for g_pFontManager
-#include "Input.h"           // for g_pInput
-#include "SoundManager.h"    // for g_pSoundManager
-#include "SceneManager.h"    // for g_pSceneManager,  g_pCurrentScene
-#include "IScene.h"          // for IScene methods
-#include "CameraManager.h"   // for g_pCameraManager, g_pCurrentCamera
-#include "Camera.h"          // for Camera methods
-#include "Client.h"          // for g_pCommunicator
-#include "ResourceManager.h" // for g_pResourceManager
+// accessable method "ManagerName"::GetInstance() or ... below access instance.
+#include "Application.h"      // has App          ()()
+#include "DeviceManager.h"    // has Device       ()()
+#include "ResourceManager.h"  // has Resource     ()()
+#include "UIManager.h"        // has UI           ()()
+#include "SoundManager.h"     // has Sound        ()()
+#include "TimeManager.h"      // has Time         ()()
+#include "CollisionManager.h" // has Collision    ()()
+#include "InputManager.h"     // has Input        ()()       
+#include "SceneManager.h"     // has Scene        ()()
+                              //     CurrentScene ()()
+#include "CameraManager.h"    // has Camera       ()() 
+                              //     CurrentCamera()()
+#include "Client.h"           // has Communication()()
+#include "Bullet.h"           // has BulletPool   ()()
+#include "DebugManager.h"     // has DebugMgr     ()()
+                              //     macro Debug
+
+#include "IScene.h"
+#include "ICamera.h"           
 // end managers and interfaces
 
 // global variables

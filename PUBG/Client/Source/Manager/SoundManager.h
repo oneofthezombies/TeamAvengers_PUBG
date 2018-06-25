@@ -1,8 +1,6 @@
 #pragma once
 #include "Singleton.h"
-#include "TagSound.h"
-
-#define g_pSoundManager SoundManager::GetInstance()
+#include "TagClientOnly.h"
 
 class SoundManager : public Singleton<SoundManager>
 {
@@ -39,4 +37,12 @@ public:
     float GetVolume() const;
 
 	friend Singleton<SoundManager>;
+};
+
+struct Sound
+{
+    SoundManager* operator()()
+    {
+        return SoundManager::GetInstance();
+    }
 };

@@ -1,6 +1,6 @@
 #pragma once
 #include "UIButton.h"
-#include "TagFont.h"
+#include "TagClientOnly.h"
 
 class UIText;
 

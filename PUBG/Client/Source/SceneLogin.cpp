@@ -32,11 +32,8 @@ void SceneLogin::OnInit()
         "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
         &m_buttonListener, 
         root, 
-        g_pFontManager->GetFont(TAG_FONT::DEFAULT), "Connect", 
+        Resource()()->GetFont(TAG_FONT::DEFAULT), "Connect", 
         D3DCOLOR_XRGB(0, 0, 0));
-
-    g_pCollisionManager->SubscribeCollisionEvent(
-        TAG_COLLISION::DAMAGE_OF_PLAYER_2, TAG_COLLISION::BODY_OF_PLAYER_1);
 }
 
 void SceneLogin::OnUpdate()
@@ -76,11 +73,11 @@ void LoginButtonListener::OnMouseUp(const int key)
     string host, port, nickname;
     ss >> host >> port >> nickname;
 
-    const auto c = g_pCommunicator;
+    const auto c = Communication()();
     c->Connect(host, port, nickname);
 
-    g_pUIManager->Destroy(GetHandle());
-    g_pSceneManager->SetCurrentScene(TAG_SCENE::PLAY);
+    UI()()->Destroy(GetHandle());
+    Scene()()->SetCurrentScene(TAG_SCENE::PLAY);
 }
 
 void LoginButtonListener::OnMouseDrag(const int key)

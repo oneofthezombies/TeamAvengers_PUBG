@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ScenePlay.h"
-#include "Character.h"
+#include "Bandage.h"
 
 ScenePlay::ScenePlay()
     : IScene()
@@ -14,8 +14,12 @@ ScenePlay::~ScenePlay()
 
 void ScenePlay::OnInit()
 {
-    for (int i = 0; i < m_Characters.size(); ++i)
-        AddObject(new Character(i));
+    //for (int i = 0; i < static_cast<int>(m_Characters.size()); ++i)
+        AddObject(new Character(0));
+        //AddObject(new Character(1));
+
+
+    AddObject(new Bandage);
 }
 
 void ScenePlay::OnUpdate()

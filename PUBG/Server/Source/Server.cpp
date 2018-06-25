@@ -51,16 +51,18 @@ void Room::Echo(const int id, const Message& msg)
 
 Participant::Participant(tcp::socket socket, Room* pRoom)
     : m_Socket(std::move(socket))
-    , m_pRoom(pRoom)
     , m_MyInfo()
+
+    , pRoom(pRoom)
 {
+    assert(pRoom && "Participant::Constructor() failed. room is null.");
 }
 
 void Participant::Start()
 {
     cout << "Particiapnt::Start()\n";
 
-    m_pRoom->Join(shared_from_this());
+    pRoom->Join(shared_from_this());
     ReadHeader();
 }
 
@@ -82,7 +84,7 @@ void Participant::ReadHeader()
         }
         else
         {
-            m_pRoom->Leave(shared_from_this());
+            pRoom->Leave(shared_from_this());
             cout << "Participant::ReadHeader() failed.\n";
         }
     });
@@ -102,7 +104,7 @@ void Participant::ReadBody()
         }
         else
         {
-            m_pRoom->Leave(shared_from_this());
+            pRoom->Leave(shared_from_this());
             cout << "particiapnt::ReadBody() failed.\n";
         }
     });
@@ -120,7 +122,7 @@ void Participant::Write()
         }
         else
         {
-            m_pRoom->Leave(shared_from_this());
+            pRoom->Leave(shared_from_this());
             cout << "Participant::Write() failed.\n";
         }
     });
@@ -134,7 +136,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
     case TAG_REQUEST::RECEIVE_MY_ID:
         {
             const string nickname(m_ReadMsg.GetDescription());
-            const int id(m_pRoom->GetID(nickname));
+            const int id(pRoom->GetID(nickname));
 
             m_MyInfo.m_Nickname = nickname;
             m_MyInfo.m_ID = id;
@@ -149,9 +151,9 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto parsedDesc = Message::ParseDescription(description);
             auto& id = parsedDesc.first;
 
-            m_pRoom->m_RoomInfo.m_PlayerInfos[id].m_ID = id;
+            pRoom->m_RoomInfo.m_PlayerInfos[id].m_ID = id;
 
-            m_pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_ID, 
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_ID, 
                 description));
         }
         break;
@@ -161,9 +163,9 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto& id = parsedDesc.first;
             auto& nickname = parsedDesc.second;
 
-            m_pRoom->m_RoomInfo.m_PlayerInfos[id].m_Nickname = nickname;
+            pRoom->m_RoomInfo.m_PlayerInfos[id].m_Nickname = nickname;
 
-            m_pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_NICKNAME, 
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_NICKNAME, 
                 description));
         }
         break;
@@ -176,9 +178,9 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             stringstream ss(positionStr);
             D3DXVECTOR3 pos;
             ss >> pos.x >> pos.y >> pos.z;
-            m_pRoom->m_RoomInfo.m_PlayerInfos[id].m_Position = pos;
+            pRoom->m_RoomInfo.m_PlayerInfos[id].m_Position = pos;
 
-            m_pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_POSITION, 
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_POSITION, 
                 description));
         }
         break;
@@ -188,20 +190,31 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto& id = parsedDesc.first;
             auto& animationIndexStr = parsedDesc.second;
 
-            m_pRoom->m_RoomInfo.m_PlayerInfos[id].m_AnimationIndex = 
+            pRoom->m_RoomInfo.m_PlayerInfos[id].m_AnimationIndex = 
                 std::stoi(animationIndexStr);
 
-            m_pRoom->Echo(id, Message::Create(
+            pRoom->Echo(id, Message::Create(
                 TAG_REQUEST::SEND_ANIMATION_INDEX, description));
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_FIRE_BULLET:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& eventFireBulletStr = parsedDesc.second;
+
+            pRoom->Echo(id, Message::Create(
+                TAG_REQUEST::SEND_EVENT_FIRE_BULLET, description));
         }
         break;
     }
 }
 
-Server::Server(boost::asio::io_context* ioContext, 
+Server::Server(boost::asio::io_context* pIOContext, 
     const tcp::endpoint& endpoint)
-    : m_Acceptor(*ioContext, endpoint)
+    : m_Acceptor(*pIOContext, endpoint)
 {
+    assert(pIOContext && "Server::Constructor() failed. io context is null.");
     cout << "Server is Running...\n";
 
     Accept();

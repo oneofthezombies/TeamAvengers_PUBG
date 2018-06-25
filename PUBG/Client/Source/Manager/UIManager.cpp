@@ -3,6 +3,7 @@
 
 UIManager::UIManager()
     : Singleton<UIManager>()
+
     , m_pSprite(nullptr)
     , m_UIObjectInstanceID(0)
     , m_isDrawBorder(true)
@@ -15,14 +16,14 @@ UIManager::~UIManager()
 
 void UIManager::Init()
 {
-    InitSprite();
+    initSprite();
 
     m_isDrawBorder = false;
 }
 
-void UIManager::InitSprite()
+void UIManager::initSprite()
 {
-    D3DXCreateSprite(g_pDevice, &m_pSprite);
+    D3DXCreateSprite(Device()(), &m_pSprite);
 }
 
 void UIManager::Destroy()
@@ -50,14 +51,14 @@ void UIManager::Update()
     for (auto& u : m_UIObjects)
         if (u) u->Update(zero, identity);
 
-    UpdateToDeleteUIObjects();
+    updateToDeleteUIObjects();
 }
 
 void UIManager::Render()
 {
     if (!m_pSprite) return;
 
-    const auto dv = g_pDevice;
+    const auto dv = Device()();
     dv->SetRenderState(D3DRS_LIGHTING, false);
     dv->SetTexture(0, nullptr);
     m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
@@ -69,9 +70,9 @@ void UIManager::Render()
     dv->SetRenderState(D3DRS_LIGHTING, true);
 }
 
-void UIManager::UpdateToDeleteUIObjects()
+void UIManager::updateToDeleteUIObjects()
 {
-    const float dt = g_pTime->GetDeltaTime();
+    const float dt = Time()()->GetDeltaTime();
 
     const auto begin = m_toDeleteUIObjects.begin();
     const auto end = m_toDeleteUIObjects.end();

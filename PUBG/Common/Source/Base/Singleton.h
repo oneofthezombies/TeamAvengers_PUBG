@@ -7,11 +7,11 @@ protected:
     Singleton() = default;
 
 public:
-    ~Singleton() = default;
+    virtual ~Singleton() = default;
 
     static T* GetInstance()
     {
-        static T instance;
-        return &instance;
+        static T s_instance;
+        return &s_instance;
     }
 };

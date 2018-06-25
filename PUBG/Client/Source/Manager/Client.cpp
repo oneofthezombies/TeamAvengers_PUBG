@@ -42,8 +42,8 @@ void Client::ReadBody()
     {
         if (!ec)
         {
-            if (m_pCommunicator)
-                m_pCommunicator->ReceiveMessage(m_ReadMsg.GetRequest(), 
+            if (pCommunicationManager)
+                pCommunicationManager->ReceiveMessage(m_ReadMsg.GetRequest(),
                     m_ReadMsg.GetDescription());
             
             ReadHeader();
@@ -75,17 +75,18 @@ void Client::Write()
 }
 
 Client::Client(boost::asio::io_context* ioContext, 
-    const tcp::resolver::results_type& endpoints, Communicator* pCommunicator)
-    : m_pIOContext(ioContext)
-    , m_Socket(*ioContext)
-    , m_pCommunicator(pCommunicator)
+    const tcp::resolver::results_type& endpoints, 
+    CommunicationManager* pCommunicationManager)
+    : m_Socket(*ioContext)
+    , pIOContext(ioContext)
+    , pCommunicationManager(pCommunicationManager)
 {
     Connect(endpoints);
 }
 
 void Client::Write(const Message& msg)
 {
-    boost::asio::post(*m_pIOContext, [this, msg]()
+    boost::asio::post(*pIOContext, [this, msg]()
     {
         m_WriteMsg = msg;
         Write();
@@ -94,11 +95,11 @@ void Client::Write(const Message& msg)
 
 void Client::Close()
 {
-    boost::asio::post(*m_pIOContext, [this]() { m_Socket.close(); });
+    boost::asio::post(*pIOContext, [this]() { m_Socket.close(); });
 }
 
-Communicator::Communicator()
-    : Singleton<Communicator>()
+CommunicationManager::CommunicationManager()
+    : Singleton<CommunicationManager>()
     , m_pClient(nullptr)
     , m_pThread(nullptr)
     , m_IOContext()
@@ -106,11 +107,11 @@ Communicator::Communicator()
 {
 }
 
-Communicator::~Communicator()
+CommunicationManager::~CommunicationManager()
 {
 }
 
-void Communicator::CheckConnection()
+void CommunicationManager::CheckConnection()
 {
     assert(m_pClient && m_pThread && "client or thread is null.");
     assert((m_MyInfo.m_ID > -1) && 
@@ -118,7 +119,7 @@ void Communicator::CheckConnection()
         "my id is wrong.");
 }
 
-void Communicator::Destroy()
+void CommunicationManager::Destroy()
 {
     if (m_pClient)
         m_pClient->Close();
@@ -130,20 +131,11 @@ void Communicator::Destroy()
     SAFE_DELETE(m_pThread);
 }
 
-void Communicator::Logging()
+void CommunicationManager::Print()
 {
-    //Debug << "My ID : " << m_
-    //Debug << "myID : " << info.myID << '\n';
-    //Debug << "myNickname : " << info.myNickname << '\n';
-    //for (auto& i : info.ID)
-    //    Debug << "ID : " << i << ", ";
-    //Debug << '\n';
-    //for (auto& n : info.nickname)
-    //    Debug << "nickname : " << n << ", ";
-    //Debug << '\n';
 }
 
-void Communicator::Connect(const string& host, const string& port, 
+void CommunicationManager::Connect(const string& host, const string& port,
     const string& nickname)
 {
     auto endpoints = m_Resolver.resolve(host, port);
@@ -158,7 +150,7 @@ void Communicator::Connect(const string& host, const string& port,
     m_pClient->Write(Message::Create(TAG_REQUEST::RECEIVE_MY_ID, nickname));
 }
 
-void Communicator::ReceiveMessage(const TAG_REQUEST tag, const string& description)
+void CommunicationManager::ReceiveMessage(const TAG_REQUEST tag, const string& description)
 {
     switch (tag)
     {
@@ -224,23 +216,42 @@ void Communicator::ReceiveMessage(const TAG_REQUEST tag, const string& descripti
             m_RoomInfo.m_PlayerInfos[id].m_AnimationTime = time;
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_FIRE_BULLET:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& eventFireBulletStr = parsedDesc.second;
+
+            stringstream ss(eventFireBulletStr);
+            D3DXVECTOR3 pos;
+            D3DXQUATERNION rot;
+            float speed;
+            float damage;
+            int tag;
+            ss >> pos.x >> pos.y >> pos.z 
+               >> rot.x >> rot.y >> rot.z >> rot.w
+               >> speed >> damage >> tag;
+            BulletPool()()->Fire(pos, rot, speed, damage, 
+                static_cast<TAG_COLLISION>(tag));
+        }
+        break;
     }
 }
 
-void Communicator::ReceiveID(const int id)
+void CommunicationManager::ReceiveID(const int id)
 {
     m_MyInfo.m_ID = id;
     cout << "Received ID : " << id << '\n';
 }
 
-void Communicator::SendID(const int id)
+void CommunicationManager::SendID(const int id)
 {
     m_RoomInfo.m_PlayerInfos[id].m_ID = id;
 
     m_pClient->Write(Message::Create(TAG_REQUEST::SEND_ID, to_string(id)));
 }
 
-void Communicator::SendNickname(const string& nickname)
+void CommunicationManager::SendNickname(const string& nickname)
 {
     m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_Nickname = nickname;
 
@@ -249,7 +260,7 @@ void Communicator::SendNickname(const string& nickname)
     m_pClient->Write(Message::Create(TAG_REQUEST::SEND_NICKNAME, ss.str()));
 }
 
-void Communicator::SendPosition(const D3DXVECTOR3& pos)
+void CommunicationManager::SendPosition(const D3DXVECTOR3& pos)
 {
     m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_Position = pos;
 
@@ -258,7 +269,7 @@ void Communicator::SendPosition(const D3DXVECTOR3& pos)
     m_pClient->Write(Message::Create(TAG_REQUEST::SEND_POSITION, ss.str()));
 }
 
-void Communicator::SendAnimationIndex(const int index)
+void CommunicationManager::SendAnimationIndex(const int index)
 {
     m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_AnimationIndex = index;
 
@@ -268,7 +279,7 @@ void Communicator::SendAnimationIndex(const int index)
         ss.str()));
 }
 
-void Communicator::SendAnimationTime(const float time)
+void CommunicationManager::SendAnimationTime(const float time)
 {
     m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_AnimationTime = time;
 
@@ -276,4 +287,23 @@ void Communicator::SendAnimationTime(const float time)
     ss << m_MyInfo.m_ID << time;
     m_pClient->Write(Message::Create(TAG_REQUEST::SEND_ANIMATION_TIME,
         ss.str()));
+}
+
+void CommunicationManager::SendEventFireBullet(Bullet* pBullet)
+{
+    assert(pBullet && 
+        "Communicator::SendEventFireBullet() failed. bullet is null.");
+
+    auto tr = pBullet->GetTransform();
+    auto pos = tr->GetPosition();
+    auto rot = tr->GetRotation();
+
+    stringstream ss;
+    ss << m_MyInfo.m_ID << pos.x << ' ' << pos.y << ' ' << pos.z << ' '
+       << rot.x << ' ' << rot.y << ' ' << rot.z << ' ' << rot.w << ' '
+       << pBullet->GetSpeed() << ' ' << pBullet->GetDamage() << ' ' 
+       << static_cast<int>(pBullet->GetTagCollision());
+
+    m_pClient->Write(
+        Message::Create(TAG_REQUEST::SEND_EVENT_FIRE_BULLET, ss.str()));
 }

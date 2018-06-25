@@ -1,6 +1,70 @@
 #include "stdafx.h"
 #include "CameraManager.h"
 
+CameraManager::CameraManager()
+    : Singleton<CameraManager>()
+    , pCurrentCamera(nullptr)
+    , pTarget(nullptr)
+{
+}
+
+CameraManager::~CameraManager()
+{
+}
+
+void CameraManager::Init()
+{
+    m_cameras.emplace(TAG_CAMERA::FREE, new CameraFree);
+
+    SetCurrentCamera(TAG_CAMERA::FREE);
+}
+
+void CameraManager::Destroy()
+{
+    for (auto c : m_cameras)
+        SAFE_DELETE(c.second);
+}
+
+void CameraManager::Update()
+{
+    if (pCurrentCamera)
+    {
+        pCurrentCamera->ResetIsUpdated();
+        pCurrentCamera->Update();
+        pCurrentCamera->UpdateViewProjMatrix();
+    }
+}
+
+void CameraManager::SetTarget(Transform* pTarget)
+{
+    assert(pTarget && "CameraManager::SetTarget(), target is null.");
+
+    this->pTarget = pTarget;
+}
+
+Transform* CameraManager::GetTarget()
+{
+    return pTarget;
+}
+
+void CameraManager::SetCurrentCamera(const TAG_CAMERA tag)
+{
+    const auto search = m_cameras.find(tag);
+    assert(search != m_cameras.end() && 
+        "CameraManager::SetCurrentCamera(), not found camera.");
+
+    pCurrentCamera = search->second;
+    pCurrentCamera->Reset();
+}
+
+ICamera* CameraManager::GetCurrentCamera()
+{
+    assert(pCurrentCamera && 
+        "CameraManager::GetCurrentCamera(), current camera is null.");
+
+    return pCurrentCamera;
+}
+
 //#include "ICamera.h"
 //#include "FirstPersonCamera.h"
 //#include "ThirdPersonCamera.h"
@@ -128,13 +192,3 @@
 //{ 
 //    return m_pCurrentCamera->GetEyePos(); 
 //}
-
-void CameraManager::Update()
-{
-    m_camera.Update();
-}
-
-Camera* CameraManager::GetCurrentCamera()
-{
-    return &m_camera;
-}

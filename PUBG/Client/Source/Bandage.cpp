@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "Bandage.h"
-#include "Renderer.h"
 #include "Collider.h"
+#include "EffectMeshRenderer.h"
 
 Bandage::Bandage()
     : IObject()
+
     , pEffectMeshRenderer(nullptr)
     , pBoxCollider(nullptr)
-    , pBoxColliderRenderer(nullptr)
 {
     pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
     //pEffectMeshRenderer->SetEffectMesh("./Resource/Bandage/", "Bandage.X");
@@ -17,9 +17,8 @@ Bandage::Bandage()
     pBoxCollider->SetTag(TAG_COLLISION::DAMAGE_OF_PLAYER_2);
     pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f));
 
-    pBoxColliderRenderer = AddComponent<BoxColliderRenderer>();
-
     GetTransform()->SetScale(D3DXVECTOR3(0.1f, 0.1f, 0.1f));
+    GetTransform()->SetPosition(D3DXVECTOR3(-200.0f, 0.0f, 0.0f));
 }
 
 Bandage::~Bandage()
@@ -28,10 +27,11 @@ Bandage::~Bandage()
 
 void Bandage::OnUpdate()
 {
+    pBoxCollider->Update(GetTransform()->GetTransformationMatrix());
 }
 
 void Bandage::OnRender()
 {
     pEffectMeshRenderer->Render();
-    pBoxColliderRenderer->Render();
+    pBoxCollider->Render();
 }

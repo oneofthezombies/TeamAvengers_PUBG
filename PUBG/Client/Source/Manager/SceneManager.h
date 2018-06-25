@@ -1,9 +1,6 @@
 #pragma once
 #include "Singleton.h"
-#include "TagScene.h"
-
-#define g_pSceneManager SceneManager::GetInstance()
-#define g_pCurrentScene SceneManager::GetInstance()->GetCurrentScene()
+#include "TagClientOnly.h"
 
 class IScene;
 
@@ -11,9 +8,9 @@ class SceneManager : public Singleton<SceneManager>
 {
 private:
 	unordered_map<TAG_SCENE, IScene*> m_scenes;
-	IScene* m_pCurrentScene;
+	IScene*                           pCurrentScene;
 
-	SceneManager();
+             SceneManager();
 	virtual ~SceneManager();
 
 public:
@@ -28,3 +25,18 @@ public:
 	friend Singleton<SceneManager>;
 };
 
+struct Scene
+{
+    SceneManager* operator()()
+    {
+        return SceneManager::GetInstance();
+    }
+};
+
+struct CurrentScene
+{
+    IScene* operator()()
+    {
+        return SceneManager::GetInstance()->GetCurrentScene();
+    }
+};

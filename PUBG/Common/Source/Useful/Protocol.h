@@ -1,5 +1,5 @@
 #pragma once
-#include "TagRequest.h"
+#include "TagCommon.h"
 
 class Message
 {
@@ -51,10 +51,6 @@ struct GameInfo
         float          m_AnimationTime;
 
         PlayerInfo();
-    };
-
-    struct Event
-    {
     };
 
     struct MyInfo

@@ -2,18 +2,18 @@
 #include "Singleton.h"
 #include "Protocol.h"
 
-#define g_pCommunicator Communicator::GetInstance()
-
-class Communicator;
+class CommunicationManager;
+class Bullet;
 
 class Client
 {
 private:
-    boost::asio::io_context* m_pIOContext;
     tcp::socket m_Socket;
     Message m_ReadMsg;
     Message m_WriteMsg;
-    Communicator* m_pCommunicator;
+
+    boost::asio::io_context* pIOContext;
+    CommunicationManager*    pCommunicationManager;
 
     void Connect(const tcp::resolver::results_type& endpoints);
     void ReadHeader();
@@ -23,13 +23,13 @@ private:
 public:
     Client(boost::asio::io_context* ioContext, 
         const tcp::resolver::results_type& endpoints, 
-        Communicator* pCommunicator);
+        CommunicationManager* pCommunicationManager);
 
     void Write(const Message& msg);
     void Close();
 };
 
-class Communicator : public Singleton<Communicator>
+class CommunicationManager : public Singleton<CommunicationManager>
 {
 public:
     GameInfo::RoomInfo m_RoomInfo;
@@ -41,14 +41,14 @@ private:
     Client*                 m_pClient;
     std::thread*            m_pThread;
 
-    Communicator();
-    virtual ~Communicator();
+    CommunicationManager();
+    virtual ~CommunicationManager();
 
     void CheckConnection();
 
 public:
     void Destroy();
-    void Logging();
+    void Print();
 
     void Connect(const string& host, const string& port, 
         const string& nickname);
@@ -61,6 +61,15 @@ public:
     void SendPosition(const D3DXVECTOR3& pos);
     void SendAnimationIndex(const int index);
     void SendAnimationTime(const float time);
+    void SendEventFireBullet(Bullet* pBullet);
 
-    friend Singleton<Communicator>;
+    friend Singleton<CommunicationManager>;
+};
+
+struct Communication
+{
+    CommunicationManager* operator()()
+    {
+        return CommunicationManager::GetInstance();
+    }
 };

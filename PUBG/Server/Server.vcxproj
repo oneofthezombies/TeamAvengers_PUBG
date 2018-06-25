@@ -89,7 +89,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir);$(SolutionDir)Common\Source\Useful;$(SolutionDir)Common\Source\Tag;$(SolutionDir)Common\Source\Manager;$(SolutionDir)Common\Source\Component;$(SolutionDir)Common\Source\Base;$(SolutionDir)Common\Source;$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir);$(SolutionDir)Common\Source\Useful;$(SolutionDir)Common\Source\Base;$(SolutionDir)Common\Source;$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>

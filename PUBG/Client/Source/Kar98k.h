@@ -1,16 +1,12 @@
 #pragma once
 #include "IObject.h"
 
-class SkinnedMeshRenderer;
-class Animator;
-class MeshFilter;
+class SkinnedMeshController;
 
 class Kar98k : public IObject
 {
 private:
-    SkinnedMeshRenderer* pSkinnedMeshRenderer;
-    Animator*            pAnimator;
-    MeshFilter*          pMeshFilter;
+    SkinnedMeshController* pSkinnedMeshController;
 
 public:
     Kar98k();

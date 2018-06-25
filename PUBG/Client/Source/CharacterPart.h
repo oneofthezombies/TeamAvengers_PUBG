@@ -1,12 +1,11 @@
 #pragma once
 #include "IObject.h"
-#include "TagColliderCharacterPart.h"
+#include "TagClientOnly.h"
 
 class Character;
 class BoxCollider;
-class BoxColliderRenderer;
-class MeshFilter;
 class UIText;
+class SkinnedMeshController;
 struct Frame;
 
 class CharacterPart : public IObject
@@ -16,11 +15,10 @@ private:
     vector<Frame*> m_Frames;
     vector<UIText*> m_UITexts;
 
-    Character*           pCharacter;
-    BoxCollider*         pBoxCollider;
-    BoxColliderRenderer* pBoxColliderRenderer;
+    Character*   pCharacter;
+    BoxCollider* pBoxCollider;
 
-    void addFrame(const string& name, MeshFilter* pMeshFilter);
+    void addFrame(const string& name, SkinnedMeshController* pSkiCon);
     void updateUI();
 
 public:

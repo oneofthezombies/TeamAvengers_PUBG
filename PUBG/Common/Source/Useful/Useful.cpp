@@ -1,6 +1,15 @@
 #include "stdafx.h"
 #include "Useful.h"
 
+const D3DXVECTOR3& Vector3::ZERO    = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+const D3DXVECTOR3& Vector3::ONE     = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+const D3DXVECTOR3& Vector3::RIGHT   = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+const D3DXVECTOR3& Vector3::UP      = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+const D3DXVECTOR3& Vector3::FORWARD = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+
+const D3DXQUATERNION& Quaternion::ZERO = 
+    D3DXQUATERNION(0.0f, 0.0f, 0.0f, 0.0f);
+
 const D3DXMATRIX& Matrix::IDENTITY = D3DXMATRIX(1.0f, 0.0f, 0.0f, 0.0f,
                                                 0.0f, 1.0f, 0.0f, 0.0f,
                                                 0.0f, 0.0f, 1.0f, 0.0f,
@@ -23,6 +32,8 @@ ostream& operator<<(ostream& os, const D3DXMATRIX& val)
        << val._41 << ", " << val._42 << ", " << val._43 << ", " << val._44;
     return os;
 }
+
+
 
 D3DXVECTOR3 Matrix::GetTranslation(const D3DXMATRIX& val)
 {

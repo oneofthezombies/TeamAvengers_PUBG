@@ -2,7 +2,7 @@
 
 class IObject;
 
-class IScene
+class IScene : public MemoryAllocator
 {
 private:
     unordered_set<IObject*>        m_objects;
@@ -11,7 +11,7 @@ private:
 protected:
     IScene();
 
-	void UpdateToDeleteObjects();
+	void updateToDeleteObjects();
 
 public:
     virtual ~IScene();

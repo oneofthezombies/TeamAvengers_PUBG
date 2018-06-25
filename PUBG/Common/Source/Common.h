@@ -45,11 +45,15 @@ using std::pair;
 
 #include <type_traits>
 using std::is_base_of_v;
+using std::is_pointer_v;
 using std::enable_if_t;
 using std::move;
 
 #include <functional>
+using namespace std::placeholders;
+using std::function;
 using std::hash;
+using std::bind;
 
 #include <typeindex>
 using std::type_index;
@@ -115,12 +119,7 @@ using boost::asio::ip::tcp;
 #pragma comment(lib, "d3dx9.lib")
 // end directx9
 
-// math and useful functions
+// math and usefuls
+#include "MemoryAllocator.h"
 #include "Useful.h"
-// math and useful functions
-
-// managers and interfaces for global access
-#include "TimeManager.h"      // for g_pTime
-#include "ObjectManager.h"    // for g_pObjectManager
-#include "CollisionManager.h" // for g_pCollisionManager
-// end managers and interfaces
+// math and usefuls

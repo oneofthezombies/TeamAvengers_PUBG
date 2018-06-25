@@ -3,12 +3,8 @@
 #include "UIObject.h"
 #include "UIButton.h"
 
-#define g_pUIManager UIManager::GetInstance()
-#define g_pSprite    UIManager::GetInstance()->GetSprite()
-
 class UIText;
 class UIImage;
-class SampleUIListener;
 
 class UIManager : public Singleton<UIManager>
 {
@@ -20,11 +16,11 @@ private:
     int                             m_UIObjectInstanceID;
     bool                            m_isDrawBorder;
 
-    UIManager();
+             UIManager();
     virtual ~UIManager();
 
-    void InitSprite();
-    void UpdateToDeleteUIObjects();
+    void initSprite();
+    void updateToDeleteUIObjects();
 
 public:
     void Init();
@@ -41,4 +37,20 @@ public:
     bool IsDrawBorder() const;
 
     friend Singleton<UIManager>;
+};
+
+struct UI
+{
+    UIManager* operator()()
+    {
+        return UIManager::GetInstance();
+    }
+};
+
+struct Sprite
+{
+    LPD3DXSPRITE operator()()
+    {
+        return UIManager::GetInstance()->GetSprite();
+    }
 };

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Protocol.h"
 
 class Room;
@@ -13,7 +12,8 @@ private:
     tcp::socket m_Socket;
     Message     m_ReadMsg;
     Message     m_WriteMsg;
-    Room*       m_pRoom;
+    
+    Room*       pRoom;
 
     void ReadHeader();
     void ReadBody();
@@ -60,6 +60,6 @@ private:
     void Accept();
 
 public:
-    Server(boost::asio::io_context* ioContext, const tcp::endpoint& endpoint);
+    Server(boost::asio::io_context* pIOContext, const tcp::endpoint& endpoint);
     ~Server();
 };

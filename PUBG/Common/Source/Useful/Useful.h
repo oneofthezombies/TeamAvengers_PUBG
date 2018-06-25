@@ -13,6 +13,20 @@ type_index GetTypeIndex()
 ostream& operator<<(ostream& os, const D3DXVECTOR3& val);
 ostream& operator<<(ostream& os, const D3DXMATRIX& val);
 
+struct Vector3
+{
+    static const D3DXVECTOR3& ZERO;
+    static const D3DXVECTOR3& ONE;
+    static const D3DXVECTOR3& RIGHT;
+    static const D3DXVECTOR3& UP;
+    static const D3DXVECTOR3& FORWARD;
+};
+
+struct Quaternion
+{
+    static const D3DXQUATERNION& ZERO;
+};
+
 struct Matrix
 {
     static const D3DXMATRIX& IDENTITY;

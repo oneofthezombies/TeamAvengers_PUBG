@@ -2,7 +2,7 @@
 
 class IObject;
 
-class UIObject
+class UIObject : public MemoryAllocator
 {
 private:
     int         m_instanceID;
