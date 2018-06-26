@@ -24,10 +24,8 @@ Character::Character(const int index)
 
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
 
-    assert(pSkinnedMesh && "Character::Constructor(), skinned mesh is null.");
-    pSkinnedMeshController->SetSkinnedMesh(pSkinnedMesh);
-    //pSkinnedMeshController->LoadSkinnedMesh(
-    //    "./Resource/Lobby_Anim/", "Lobby_Anim.x");
+    pSkinnedMeshController->LoadSkinnedMesh(
+        "./Resource/Lobby_Anim/", "Lobby_Anim.x");
 
     setFramePtr();
 

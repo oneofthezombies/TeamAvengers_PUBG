@@ -385,8 +385,8 @@ STDMETHODIMP AllocateHierarchyAsync::CreateMeshContainer(
 
     const string meshContainerName = pName ? string(pName) : string("");
 
-    HRESULT hr = CreateEffectMesh(m_path, meshContainerName, pMeshData->pMesh, 
-        pEffectInstances, NumMaterials, pResourceContainer);
+    HRESULT hr = ResourceAsync::CreateEffectMesh(m_path, meshContainerName, 
+        pMeshData->pMesh, pEffectInstances, NumMaterials, pResourceContainer);
 
     if (FAILED(hr))
     {
