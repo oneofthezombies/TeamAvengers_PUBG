@@ -95,25 +95,25 @@ SkinnedMesh* SkinnedMeshController::loadSkinnedMesh(
 
 SkinnedMeshController::SkinnedMeshController(IObject* pOwner)
     : Component(pOwner)
-    , m_pSkinnedMesh(nullptr)
     , m_currentIndex(0)
     , m_totalBlendTime(0.3f)
     , m_passedBlendTime(0.0f)
+
+    , pSkinnedMesh(nullptr)
 {
 }
 
 SkinnedMeshController::~SkinnedMeshController()
 {
-    SAFE_DELETE(m_pSkinnedMesh);
 }
 
 void SkinnedMeshController::Update(const function<void()>& function)
 {
-    assert(m_pSkinnedMesh && 
+    assert(pSkinnedMesh && 
         "SkinnedMeshController::Update(), skinned mesh is null.");
 
     const auto dt = Time()()->GetDeltaTime();
-    auto& pAniCon = m_pSkinnedMesh->m_pAnimController;
+    auto& pAniCon = pSkinnedMesh->m_pAnimController;
     pAniCon->AdvanceTime(dt, nullptr);
 
     if (m_passedBlendTime < m_totalBlendTime)
@@ -135,15 +135,15 @@ void SkinnedMeshController::Update(const function<void()>& function)
 
     if (function) function();
 
-    updateFrameToWorld(m_pSkinnedMesh->m_pRootFrame, nullptr);
+    updateFrameToWorld(pSkinnedMesh->m_pRootFrame, nullptr);
 }
 
 void SkinnedMeshController::Render()
 {
-    assert(m_pSkinnedMesh && 
+    assert(pSkinnedMesh && 
         "SkinnedMeshController::Render(), skinned mesh is null.");
 
-    drawFrame(m_pSkinnedMesh->m_pRootFrame);
+    drawFrame(pSkinnedMesh->m_pRootFrame);
 }
 
 void SkinnedMeshController::SetSkinnedMesh(SkinnedMesh* pSkinnedMesh)
@@ -151,24 +151,25 @@ void SkinnedMeshController::SetSkinnedMesh(SkinnedMesh* pSkinnedMesh)
     assert(pSkinnedMesh && 
         "SkinnedMeshController::SetSkinnedMesh(), skinned mesh is null.");
 
-    m_pSkinnedMesh = pSkinnedMesh;
+    this->pSkinnedMesh = pSkinnedMesh;
+    this->pSkinnedMesh->Setup();
 }
 
 void SkinnedMeshController::LoadSkinnedMesh(
     const string& path, const string& xFilename)
 {
-    m_pSkinnedMesh = loadSkinnedMesh(path, xFilename);
-    m_pSkinnedMesh->Setup();
+    pSkinnedMesh = loadSkinnedMesh(path, xFilename);
+    pSkinnedMesh->Setup();
 }
 
 void SkinnedMeshController::LoadAdditionalAnimation(
     const string& path, const string& xFilename)
 {
-    SkinnedMesh* pSkinnedMesh = loadSkinnedMesh(path, xFilename);
+    SkinnedMesh* pAddSkinnedMesh = loadSkinnedMesh(path, xFilename);
 
     LPD3DXANIMATIONCONTROLLER pNew = nullptr;
-    auto& pOld = m_pSkinnedMesh->m_pAnimController;
-    auto& pAdd = pSkinnedMesh->m_pAnimController;
+    auto& pOld = pSkinnedMesh->m_pAnimController;
+    auto& pAdd = pAddSkinnedMesh->m_pAnimController;
 
     pOld->CloneAnimationController(
         pOld->GetMaxNumAnimationOutputs(),
@@ -189,7 +190,7 @@ void SkinnedMeshController::LoadAdditionalAnimation(
     pOld->Release();
     pOld = pNew;
 
-    SAFE_DELETE(pSkinnedMesh);
+    SAFE_DELETE(pAddSkinnedMesh);
 }
 
 void SkinnedMeshController::SetAnimationIndex(
@@ -197,7 +198,7 @@ void SkinnedMeshController::SetAnimationIndex(
     const float currentWeight, const float nextWeight, const float blendTime)
 {
     LPD3DXANIMATIONSET pNext = nullptr;
-    auto& pAniCon = m_pSkinnedMesh->m_pAnimController;
+    auto& pAniCon = pSkinnedMesh->m_pAnimController;
 
     auto hr = pAniCon->GetAnimationSet(index, &pNext);
     assert(!FAILED(hr) && 
@@ -239,18 +240,18 @@ size_t SkinnedMeshController::GetCurrentAnimationIndex() const
 
 size_t SkinnedMeshController::GetNumAnimation() const
 {
-    assert(m_pSkinnedMesh && m_pSkinnedMesh->m_pAnimController && 
+    assert(pSkinnedMesh && pSkinnedMesh->m_pAnimController && 
         "SkinnedMeshController::GetNumAnimation(), pointer is null.");
     
-    return m_pSkinnedMesh->m_pAnimController->GetMaxNumAnimationSets();
+    return pSkinnedMesh->m_pAnimController->GetMaxNumAnimationSets();
 }
 
 Frame* SkinnedMeshController::FindFrame(const string& name)
 {
-    assert(m_pSkinnedMesh &&
+    assert(pSkinnedMesh &&
         "SkinnedMeshController::FindFrame(), skinned mesh is null.");
 
-    auto pFrame = D3DXFrameFind(m_pSkinnedMesh->m_pRootFrame, name.c_str());
+    auto pFrame = D3DXFrameFind(pSkinnedMesh->m_pRootFrame, name.c_str());
 
     assert(pFrame && 
         "SkinnedMeshController::FindFrame(), D3DXFrameFind() failed.");

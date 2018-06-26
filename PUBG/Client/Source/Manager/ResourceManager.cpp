@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ResourceManager.h"
 #include "Structure.h"
+#include "Character.h"
 
 ResourceManager::ResourceManager()
     : Singleton<ResourceManager>()
@@ -65,100 +66,10 @@ void ResourceManager::Destroy()
     for (auto em : m_effectMeshs)
         SAFE_DELETE(em.second);
 
+    for (auto c : m_characters)
+        SAFE_DELETE(c);
+
     //RemoveFontResource(TEXT("resources/fonts/SeoulNamsanM.ttf"));
-}
-
-void ResourceManager::LoadAll()
-{
-    //std::future<int> a;
-    
-    /*
-
-    - 캐릭터 로드
-    
-    애니메이션0.x 로드
-    클론 3개
-    -- 스킨드메쉬 4개
-
-    애니메이션.x 로드
-    4개의 스킨드메쉬에 애니메이션 추가
-
-    - 모델 로드
-    */
-
-    //const string churchPath = "./Resource/Church/";
-    //const string churchFilename = "Church.x";
-
-    ////ResourceContainer* result = OnLoadEffectMeshAsync(
-    ////    churchPath, churchFilename);
-    ////if (result == nullptr)
-    ////{
-    ////    cout << "no...\n";
-    ////}
-    ////else
-    ////{
-    ////    cout << "yes\n";
-    ////}
-    //auto start = std::chrono::steady_clock::now();
-    //std::future<ResourceContainer*> future = std::async(std::launch::async, 
-    //    &OnLoadEffectMeshAsync, churchPath, churchFilename);
-
-    //std::future_status futureStatus;
-    //do
-    //{
-    //    futureStatus = future.wait_for(std::chrono::milliseconds(1000));
-    //    if (futureStatus == std::future_status::deferred)
-    //    {
-    //        cout << "deferred\n";
-    //    }
-    //    else if (futureStatus == std::future_status::timeout)
-    //    {
-    //        cout << "timeout\n";
-    //    }
-    //    else if (futureStatus == std::future_status::ready)
-    //    {
-    //        cout << "ready\n";
-    //    }
-    //} while (futureStatus != std::future_status::ready);
-
-    //std::vector<std::future<ResourceContainer*>> futures;
-
-    //for (int i = 0; i < 16; ++i)
-    //{
-    //    futures.emplace_back(std::async(
-    //        std::launch::async, &OnLoadEffectMeshAsync,
-    //        churchPath, churchFilename));
-    //}
-
-    //for (auto& e : futures)
-    //{
-    //    e.get();
-    //}
-
-    //std::future<ResourceContainer*> church = std::async(
-    //    std::launch::async, &OnLoadEffectMeshAsync, 
-    //    churchPath, churchFilename);
-    //if (church.valid())
-    //{
-    //    cout << "yes\n";
-    //    ResourceContainer* pResourceContainer = church.get();
-    //    if (pResourceContainer == nullptr)
-    //    {
-    //        cout << "try again\n";
-    //    }
-    //    else
-    //    {
-    //        cout << "keep going\n";
-    //    }
-    //}
-    //else
-    //{
-    //    cout << "no\n";
-    //}
-
-    //auto finish = std::chrono::steady_clock::now();
-    //std::chrono::duration<float> elapsed = finish - start;
-    //cout << elapsed.count() << '\n';
 }
 
 LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& fullPath)
@@ -304,6 +215,14 @@ LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
     //       }
     //}
     //return m_umapFont[val];
+}
+
+SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh(const int index)
+{
+    assert(index < Character::NUM_PLAYER  && index > -1 && 
+        "ResourceManager::GetCharacterSkinnedMesh(), wrong index.");
+
+    return m_characters[index];
 }
 
 void ResourceManager::AddCharacters(
@@ -452,6 +371,7 @@ void ResourceManager::AddResource(ResourceContainer* pResourceContainer)
 
 ResourceContainer::ResourceContainer()
     : m_pSkinnedMesh(nullptr)
+    , m_filename("")
 {
 }
 
@@ -509,6 +429,7 @@ ResourceContainer* ResourceAsync::OnLoadEffectMeshAsync(
         return nullptr;
     }
 
+    pResourceContainer->m_filename = xFilename;
     return pResourceContainer;
 }
 
@@ -541,6 +462,7 @@ ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
     }
 
     pSkinnedMesh->Setup();
+    pResourceContainer->m_filename = xFilename;
     return pResourceContainer;
 }
 

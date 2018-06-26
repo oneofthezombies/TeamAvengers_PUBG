@@ -4,10 +4,13 @@
 
 struct ResourceContainer
 {
-    unordered_map<string, LPDIRECT3DTEXTURE9> m_textures;
-    unordered_map<string, LPD3DXEFFECT>       m_effects;
-    unordered_map<string, EffectMesh*>        m_effectMeshs;
-    SkinnedMesh*                              m_pSkinnedMesh;
+    std::string m_filename;
+
+    std::unordered_map<std::string, LPDIRECT3DTEXTURE9> m_textures;
+    std::unordered_map<std::string, LPD3DXEFFECT>       m_effects;
+    std::unordered_map<std::string, EffectMesh*>        m_effectMeshs;
+
+    SkinnedMesh* m_pSkinnedMesh;
 
     ResourceContainer();
     ~ResourceContainer();
@@ -32,31 +35,40 @@ private:
 
 public:
     void Destroy();
-    void LoadAll();
 
-    EffectMesh* FindEffectMesh(const string& path, const string& name);
-    EffectMesh* AddEffectMesh(const string& path, const string& name,
-        LPD3DXMESH pMesh, const D3DXEFFECTINSTANCE* pEffectInstances,
-        DWORD numMaterials);
     void AddResource(ResourceContainer* pResourceContainer);
     void AddCharacters(
         std::vector<ResourceContainer*>* OutCharacters);
 
-public:
+    LPD3DXFONT GetFont(const TAG_FONT tag);
+
+    SkinnedMesh* GetCharacterSkinnedMesh(const int index);
+
+    friend Singleton<ResourceManager>;
+
+    /* do NOT use! this will be deleted soon.*/
+    EffectMesh* FindEffectMesh(const string& path, const string& name);
+
+    /* do NOT use! this will be deleted soon.*/
+    EffectMesh* AddEffectMesh(const string& path, const string& name,
+        LPD3DXMESH pMesh, const D3DXEFFECTINSTANCE* pEffectInstances,
+        DWORD numMaterials);
+
+    /* do NOT use! this will be deleted soon.*/
     LPDIRECT3DTEXTURE9 GetTexture(const string& fullPath);
+
+    /* do NOT use! this will be deleted soon.*/
     LPDIRECT3DTEXTURE9 GetTexture(const string& path,
         const string& textureFilename);
 
+    /* do NOT use! this will be deleted soon.*/
     LPD3DXEFFECT GetEffect(const string& fullPath);
+
+    /* do NOT use! this will be deleted soon.*/
     LPD3DXEFFECT GetEffect(const string& path, const string& effectFilename);
 
+    /* do NOT use! this will be deleted soon.*/
     EffectMesh* GetEffectMesh(const string& path, const string& xFilename);
-
-    LPD3DXFONT GetFont(const TAG_FONT tag);
-
-public:
-
-    friend Singleton<ResourceManager>;
 };
 
 struct Resource

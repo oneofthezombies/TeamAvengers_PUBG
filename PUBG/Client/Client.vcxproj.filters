@@ -40,9 +40,9 @@
     <ClCompile Include="Source\Component\SkinnedMeshController.cpp" />
     <ClCompile Include="Source\Component\EffectMeshRenderer.cpp" />
     <ClCompile Include="Source\Character_OnCollision.cpp" />
-    <ClCompile Include="Source\Useful\ResourcePathFilename.cpp" />
     <ClCompile Include="Source\Church.cpp" />
     <ClCompile Include="Source\CollidableStaticObject.cpp" />
+    <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -86,8 +86,9 @@
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Component\SkinnedMeshController.h" />
     <ClInclude Include="Source\Component\EffectMeshRenderer.h" />
-    <ClInclude Include="Source\Useful\ResourcePathFilename.h" />
     <ClInclude Include="Source\Church.h" />
     <ClInclude Include="Source\CollidableStaticObject.h" />
+    <ClInclude Include="Source\Useful\ResPathFileName.h" />
+    <ClInclude Include="Source\Useful\TagResource.h" />
   </ItemGroup>
 </Project>

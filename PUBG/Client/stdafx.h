@@ -21,7 +21,6 @@
 
 // math and usefuls
 #include "Structure.h"
-#include "CollisionCore.h"
 // end math and usefuls
 
 // managers and interfaces for global access

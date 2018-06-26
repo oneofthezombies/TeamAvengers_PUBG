@@ -1,13 +1,17 @@
 #include "stdafx.h"
 #include "SceneLoading.h"
-#include "Church.h"
+#include "ResPathFileName.h"
 #include "Character.h"
-
+#include "UIText.h"
 
 SceneLoading::SceneLoading()
     : IScene()
     , m_isFinished(false)
     , m_numAddedAnim(0)
+    , m_numFinishedTasks(0)
+    , m_numTotalTasks(0)
+    , m_percentage("")
+    , m_lastFinishedTaskName("")
 {
 }
 
@@ -22,13 +26,19 @@ void SceneLoading::OnInit()
     loadEffectMesh();
     loadSkinnedMesh();
     loadAnimation();
+
+    m_pPercentageImage = new UIText(Resource()()->GetFont(TAG_FONT::DEFAULT), 
+        D3DXVECTOR2(1000.0f, 50.0f), &m_percentage, D3DCOLOR_XRGB(0, 255, 0), 
+        nullptr);
+    m_pPercentageImage->SetPosition(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
+    m_pPercentageImage->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
 }
 
 void SceneLoading::OnUpdate()
 {
     if (m_isFinished)
     {
-
+        Debug << "elapsed time : " << m_elapsed.count() << '\n';
     }
     else
     {
@@ -48,7 +58,9 @@ void SceneLoading::OnUpdate()
         if (!m_isDoneEffectMeshs)
         {
             if (verifyTasks(&m_effectMeshTasks, &m_effectMeshResources))
+            {
                 addEffectMeshs();
+            }
         }
 
         if (m_isDoneEffectMeshs &&
@@ -57,13 +69,27 @@ void SceneLoading::OnUpdate()
             m_isFinished = true;
             m_finish = std::chrono::system_clock::now();
             m_elapsed = m_finish - m_start;
+
+            AddObject(new Character(0));
         }
     }
+
+    Debug << "number of finished tasks : " << m_numFinishedTasks
+          << " / number of total tasks : " << m_numTotalTasks << '\n';
+
+    const float percentage = static_cast<float>(m_numFinishedTasks) 
+                           / static_cast<float>(m_numTotalTasks)
+                           * 100.0f;
+
+    m_percentage = "Finished file : " + m_lastFinishedTaskName + "\n";
+    for (int i = 0; i < static_cast<int>(percentage * 0.1f); ++i)
+        m_percentage += "@";
+    m_percentage += ", percentage : " + std::to_string(percentage);
 }
 
 void SceneLoading::loadEffectMesh()
 {
-    addTask(TAG_RESOURCE_STATIC::IDLE, &m_effectMeshTasks);
+    addTask(TAG_RES_STATIC::Church, &m_effectMeshTasks);
 
     // ...
 }
@@ -74,22 +100,21 @@ void SceneLoading::loadSkinnedMesh()
     // 이 엑스파일이 애니메이션을 갖고 있는 애들 중 제일 작다
 
     for (int i = 0; i < Character::NUM_PLAYER; ++i)
-        addTask(TAG_RESOURCE_ANIM::IDLE, &m_characterSkinnedMeshTasks);
+        addTask(TAG_RES_ANIM::Lobby_Anim, &m_characterSkinnedMeshTasks);
 }
 
 void SceneLoading::loadAnimation()
 {
-    addTask(TAG_RESOURCE_ANIM::IDLE, &m_characterAnimationTasks);
+    addTask(TAG_RES_ANIM::Lobby_Anim, &m_characterAnimationTasks);
 
     // ...
 }
 
 void SceneLoading::addAnimationsToCharacter0()
 {
-    ResourceContainer* pCharacter0 = m_characterAnimationResources.front();
+    ResourceContainer* pC0 = m_characterSkinnedMeshResources.front();
 
-    LPD3DXANIMATIONCONTROLLER& pOld = 
-        pCharacter0->m_pSkinnedMesh->m_pAnimController;
+    LPD3DXANIMATIONCONTROLLER& pOld = pC0->m_pSkinnedMesh->m_pAnimController;
 
     LPD3DXANIMATIONCONTROLLER pAdd    = nullptr;
     LPD3DXANIMATIONCONTROLLER pNew    = nullptr;
@@ -129,17 +154,17 @@ void SceneLoading::addAnimationsToCharacter0()
 
 void SceneLoading::copyAnimationsToOtherCharacters()
 {
-    ResourceContainer* pCharacter0 = m_characterAnimationResources.front();
+    ResourceContainer* pC0 = m_characterSkinnedMeshResources.front();
 
     LPD3DXANIMATIONCONTROLLER pC0AniCon = 
-        pCharacter0->m_pSkinnedMesh->m_pAnimController;
+        pC0->m_pSkinnedMesh->m_pAnimController;
 
     LPD3DXANIMATIONCONTROLLER pNew    = nullptr;
     LPD3DXANIMATIONSET        pAddSet = nullptr;
 
-    auto begin = std::next(m_characterAnimationResources.begin());
-    auto end   = m_characterAnimationResources.end();
-    for (auto i = begin; i != end; ++i)
+    for (auto i = std::next(m_characterAnimationResources.begin()); 
+              i != m_characterAnimationResources.end(); 
+            ++i)
     {
         LPD3DXANIMATIONCONTROLLER& pOld =
             (*i)->m_pSkinnedMesh->m_pAnimController;
@@ -189,9 +214,7 @@ bool SceneLoading::verifyTasks(
     if (OutTasks->empty()) return true;
 
     std::future_status futureStatus;
-    const auto& begin = OutTasks->begin();
-    const auto& end = OutTasks->end();
-    for (auto i = begin; i != end;)
+    for (auto i = OutTasks->begin(); i != OutTasks->end();)
     {
         futureStatus = i->wait_for(std::chrono::nanoseconds(1));
         switch (futureStatus)
@@ -205,8 +228,12 @@ bool SceneLoading::verifyTasks(
             break;
         case std::future_status::ready:
             {
-                OutResources->emplace_back(i->get());
+                ResourceContainer* pResourceContainer = i->get();
+                OutResources->emplace_back(pResourceContainer);
                 i = OutTasks->erase(i);
+
+                m_lastFinishedTaskName = pResourceContainer->m_filename;
+                ++m_numFinishedTasks;
             }
             break;
         }
@@ -218,12 +245,12 @@ bool SceneLoading::verifyTasks(
 }
 
 void SceneLoading::addTask(
-    const TAG_RESOURCE_STATIC tag, 
+    const TAG_RES_STATIC tag, 
     std::deque<std::future<ResourceContainer*>>* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 
-    auto keys = tempfunc(tag);
+    auto keys = ResPathFileName::Get(tag);
     OutTasks->emplace_back(
         std::async(
             std::launch::async, &ResourceAsync::OnLoadEffectMeshAsync, 
@@ -233,26 +260,16 @@ void SceneLoading::addTask(
 }
 
 void SceneLoading::addTask(
-    const TAG_RESOURCE_ANIM tag, 
+    const TAG_RES_ANIM tag, 
     std::deque<std::future<ResourceContainer*>>* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 
-    auto keys = tempfunc(tag);
+    auto keys = ResPathFileName::Get(tag);
     OutTasks->emplace_back(
         std::async(
             std::launch::async, &ResourceAsync::OnLoadSkinnedMeshAsync, 
             keys.first, keys.second));
 
     ++m_numTotalTasks;
-}
-
-pair<string, string> SceneLoading::tempfunc(TAG_RESOURCE_STATIC tag)
-{
-    return pair<string, string>();
-}
-
-pair<string, string> SceneLoading::tempfunc(TAG_RESOURCE_ANIM tag)
-{
-    return pair<string, string>();
 }

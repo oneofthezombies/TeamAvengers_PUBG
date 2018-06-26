@@ -1,15 +1,7 @@
 #pragma once
+#include "TagResource.h"
 
-// temp enums, must be deleted.
-enum class TAG_RESOURCE_STATIC
-{
-    IDLE,
-};
-
-enum class TAG_RESOURCE_ANIM
-{
-    IDLE,
-};
+class UIText;
 
 class SceneLoading : public IScene
 {
@@ -30,7 +22,12 @@ private:
     std::chrono::system_clock::time_point m_finish;
     std::chrono::duration<float>          m_elapsed;
 
-    size_t m_numTotalTasks;
+    std::size_t m_numTotalTasks;
+    std::size_t m_numFinishedTasks;
+    std::string m_lastFinishedTaskName;
+    std::string m_percentage;
+    UIText*     m_pPercentageImage;
+
     UINT   m_numAddedAnim;
     bool   m_isDoneCharacters;
     bool   m_isDoneEffectMeshs;
@@ -49,14 +46,11 @@ private:
         std::vector<ResourceContainer*>* OutResources);
 
     void addTask(
-        const TAG_RESOURCE_STATIC tag,
+        const TAG_RES_STATIC tag,
         std::deque<std::future<ResourceContainer*>>* OutTasks);
     void addTask(
-        const TAG_RESOURCE_ANIM tag,
+        const TAG_RES_ANIM tag,
         std::deque<std::future<ResourceContainer*>>* OutTasks);
-
-    pair<string, string> tempfunc(TAG_RESOURCE_STATIC tag);
-    pair<string, string> tempfunc(TAG_RESOURCE_ANIM tag);
 
 public:
              SceneLoading();

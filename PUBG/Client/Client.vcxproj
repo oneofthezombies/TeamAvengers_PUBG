@@ -155,7 +155,7 @@
     <ClCompile Include="Source\SceneLoading.cpp" />
     <ClCompile Include="Source\UI\UIObject.cpp" />
     <ClCompile Include="Source\Useful\CollisionCore.cpp" />
-    <ClCompile Include="Source\Useful\ResourcePathFilename.cpp" />
+    <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
     <ClCompile Include="Source\Useful\Structure.cpp" />
     <ClCompile Include="Source\SceneLogin.cpp" />
     <ClCompile Include="Source\Manager\SceneManager.cpp" />
@@ -197,7 +197,7 @@
     <ClInclude Include="Source\Manager\TimeManager.h" />
     <ClInclude Include="Source\SceneLoading.h" />
     <ClInclude Include="Source\Useful\CollisionCore.h" />
-    <ClInclude Include="Source\Useful\ResourcePathFilename.h" />
+    <ClInclude Include="Source\Useful\ResPathFileName.h" />
     <ClInclude Include="Source\Useful\TagClientOnly.h" />
     <ClInclude Include="Source\Manager\InputManager.h" />
     <ClInclude Include="Source\Base\IScene.h" />
@@ -214,6 +214,7 @@
     <ClInclude Include="Source\UI\UIObject.h" />
     <ClInclude Include="Source\UI\UIText.h" />
     <ClInclude Include="Source\UI\UITextInputField.h" />
+    <ClInclude Include="Source\Useful\TagResource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
