@@ -1,6 +1,7 @@
 #pragma once
 #include "ComponentTransform.h"
 #include "Singleton.h"
+#include "TagResource.h"
 
 struct ResourceContainer
 {
@@ -43,6 +44,7 @@ public:
     LPD3DXFONT GetFont(const TAG_FONT tag);
 
     SkinnedMesh* GetCharacterSkinnedMesh(const int index);
+    EffectMesh*  GetEffectMesh(const TAG_RES_STATIC tag);
 
     friend Singleton<ResourceManager>;
 

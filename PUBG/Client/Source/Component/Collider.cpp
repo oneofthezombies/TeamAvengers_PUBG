@@ -130,6 +130,64 @@ void BoxCollider::Init(
     m_vertices[7] = VERTEX_PC(D3DXVECTOR3(max.x, min.y, max.z), m_color);
 }
 
+void BoxCollider::Init(
+    const D3DXVECTOR3& center, 
+    const D3DXVECTOR3& extent, 
+    const D3DXMATRIX& transform, 
+    const float isRenderable)
+{
+    m_center = center;
+    m_extent = extent;
+
+    if (isRenderable)
+    {
+        m_isRender = true;
+        m_vertices.resize(8);
+        m_vertices[0] = VERTEX_PC(D3DXVECTOR3(
+            center.x - extent.x, 
+            center.y - extent.y, 
+            center.z - extent.z), 
+            m_color);
+        m_vertices[1] = VERTEX_PC(D3DXVECTOR3(
+            center.x - extent.x,
+            center.y + extent.y,
+            center.z - extent.z),
+            m_color);
+        m_vertices[2] = VERTEX_PC(D3DXVECTOR3(
+            center.x + extent.x,
+            center.y + extent.y,
+            center.z - extent.z),
+            m_color);
+        m_vertices[3] = VERTEX_PC(D3DXVECTOR3(
+            center.x + extent.x,
+            center.y - extent.y,
+            center.z - extent.z),
+            m_color);
+        m_vertices[4] = VERTEX_PC(D3DXVECTOR3(
+            center.x - extent.x,
+            center.y - extent.y,
+            center.z + extent.z),
+            m_color);
+        m_vertices[5] = VERTEX_PC(D3DXVECTOR3(
+            center.x - extent.x,
+            center.y + extent.y,
+            center.z + extent.z),
+            m_color);
+        m_vertices[6] = VERTEX_PC(D3DXVECTOR3(
+            center.x + extent.x,
+            center.y + extent.y,
+            center.z + extent.z),
+            m_color);
+        m_vertices[7] = VERTEX_PC(D3DXVECTOR3(
+            center.x + extent.x,
+            center.y - extent.y,
+            center.z + extent.z),
+            m_color);
+    }
+
+    Update(transform);
+}
+
 void BoxCollider::Update(const D3DXMATRIX& transform)
 {
     D3DXMATRIX InverseMatrixOfCurrent, TM;

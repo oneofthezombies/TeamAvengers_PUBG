@@ -63,6 +63,13 @@ void Transform::SetRotation(const D3DXQUATERNION& rot)
     m_rotation = rot;
 }
 
+void Transform::SetRotation(const D3DXVECTOR3& r)
+{
+    D3DXMATRIX m;
+    D3DXMatrixRotationYawPitchRoll(&m, r.y, r.x, r.z);
+    D3DXQuaternionRotationMatrix(&m_rotation, &m);
+}
+
 const D3DXQUATERNION& Transform::GetRotation() const
 {
     return m_rotation;

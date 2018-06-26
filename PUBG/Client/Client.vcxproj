@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\Useful;$(ProjectDir)Source\UI;$(ProjectDir)Source\Manager;$(ProjectDir)Source\Component;$(ProjectDir)Source\Base;$(ProjectDir)Source;$(ProjectDir);$(SolutionDir)Common\Source\Useful;$(SolutionDir)Common\Source\Base;$(SolutionDir)Common\Source;$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\Object;$(ProjectDir)Source\Scene;$(ProjectDir)Source\Useful;$(ProjectDir)Source\UI;$(ProjectDir)Source\Manager;$(ProjectDir)Source\Component;$(ProjectDir)Source\Base;$(ProjectDir)Source;$(ProjectDir);$(SolutionDir)Common\Source\Useful;$(SolutionDir)Common\Source\Base;$(SolutionDir)Common\Source;$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDIr)Debug;$(SolutionDir)boost_1_67_0\stage\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -128,19 +128,19 @@
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
-    <ClCompile Include="Source\Church.cpp" />
-    <ClCompile Include="Source\CollidableStaticObject.cpp" />
+    <ClCompile Include="Source\Object\Church.cpp" />
+    <ClCompile Include="Source\Object\CollidableStaticObject.cpp" />
     <ClCompile Include="Source\Component\Collider.cpp" />
     <ClCompile Include="Source\Component\ComponentTransform.cpp" />
     <ClCompile Include="Source\Component\EffectMeshRenderer.cpp" />
     <ClCompile Include="Source\Component\SkinnedMeshController.cpp" />
     <ClCompile Include="Source\Manager\Bullet.cpp" />
-    <ClCompile Include="Source\Character_Main.cpp" />
-    <ClCompile Include="Source\Character_OnCollision.cpp" />
-    <ClCompile Include="Source\CharacterPart.cpp" />
-    <ClCompile Include="Source\Character_Method.cpp" />
+    <ClCompile Include="Source\Object\Character_Main.cpp" />
+    <ClCompile Include="Source\Object\Character_OnCollision.cpp" />
+    <ClCompile Include="Source\Object\CharacterPart.cpp" />
+    <ClCompile Include="Source\Object\Character_Method.cpp" />
     <ClCompile Include="Source\Manager\Application.cpp" />
-    <ClCompile Include="Source\Bandage.cpp" />
+    <ClCompile Include="Source\Object\Bandage.cpp" />
     <ClCompile Include="Source\Base\ICamera.cpp" />
     <ClCompile Include="Source\Manager\CameraManager.cpp" />
     <ClCompile Include="Source\Manager\Client.cpp" />
@@ -149,17 +149,17 @@
     <ClCompile Include="Source\Manager\DeviceManager.cpp" />
     <ClCompile Include="Source\Manager\InputManager.cpp" />
     <ClCompile Include="Source\Base\IScene.cpp" />
-    <ClCompile Include="Source\Kar98k.cpp" />
+    <ClCompile Include="Source\Object\Kar98k.cpp" />
     <ClCompile Include="Source\Manager\ResourceManager.cpp" />
     <ClCompile Include="Source\Manager\TimeManager.cpp" />
-    <ClCompile Include="Source\SceneLoading.cpp" />
+    <ClCompile Include="Source\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\UI\UIObject.cpp" />
     <ClCompile Include="Source\Useful\CollisionCore.cpp" />
     <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
     <ClCompile Include="Source\Useful\Structure.cpp" />
-    <ClCompile Include="Source\SceneLogin.cpp" />
+    <ClCompile Include="Source\Scene\SceneLogin.cpp" />
     <ClCompile Include="Source\Manager\SceneManager.cpp" />
-    <ClCompile Include="Source\ScenePlay.cpp" />
+    <ClCompile Include="Source\Scene\ScenePlay.cpp" />
     <ClCompile Include="Source\Manager\SoundManager.cpp" />
     <ClCompile Include="Source\UI\UIButton.cpp" />
     <ClCompile Include="Source\UI\UIImage.cpp" />
@@ -177,17 +177,17 @@
   <ItemGroup>
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
-    <ClInclude Include="Source\Church.h" />
-    <ClInclude Include="Source\CollidableStaticObject.h" />
+    <ClInclude Include="Source\Object\Church.h" />
+    <ClInclude Include="Source\Object\CollidableStaticObject.h" />
     <ClInclude Include="Source\Component\Collider.h" />
     <ClInclude Include="Source\Component\ComponentTransform.h" />
     <ClInclude Include="Source\Component\EffectMeshRenderer.h" />
     <ClInclude Include="Source\Component\SkinnedMeshController.h" />
     <ClInclude Include="Source\Manager\Bullet.h" />
-    <ClInclude Include="Source\Character.h" />
-    <ClInclude Include="Source\CharacterPart.h" />
+    <ClInclude Include="Source\Object\Character.h" />
+    <ClInclude Include="Source\Object\CharacterPart.h" />
     <ClInclude Include="Source\Manager\Application.h" />
-    <ClInclude Include="Source\Bandage.h" />
+    <ClInclude Include="Source\Object\Bandage.h" />
     <ClInclude Include="Source\Base\ICamera.h" />
     <ClInclude Include="Source\Manager\CameraManager.h" />
     <ClInclude Include="Source\Manager\Client.h" />
@@ -195,18 +195,18 @@
     <ClInclude Include="Source\Manager\DebugManager.h" />
     <ClInclude Include="Source\Manager\DeviceManager.h" />
     <ClInclude Include="Source\Manager\TimeManager.h" />
-    <ClInclude Include="Source\SceneLoading.h" />
+    <ClInclude Include="Source\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Useful\CollisionCore.h" />
     <ClInclude Include="Source\Useful\ResPathFileName.h" />
     <ClInclude Include="Source\Useful\TagClientOnly.h" />
     <ClInclude Include="Source\Manager\InputManager.h" />
     <ClInclude Include="Source\Base\IScene.h" />
-    <ClInclude Include="Source\Kar98k.h" />
+    <ClInclude Include="Source\Object\Kar98k.h" />
     <ClInclude Include="Source\Manager\ResourceManager.h" />
     <ClInclude Include="Source\Useful\Structure.h" />
-    <ClInclude Include="Source\SceneLogin.h" />
+    <ClInclude Include="Source\Scene\SceneLogin.h" />
     <ClInclude Include="Source\Manager\SceneManager.h" />
-    <ClInclude Include="Source\ScenePlay.h" />
+    <ClInclude Include="Source\Scene\ScenePlay.h" />
     <ClInclude Include="Source\Manager\SoundManager.h" />
     <ClInclude Include="Source\UI\UIButton.h" />
     <ClInclude Include="Source\UI\UIImage.h" />

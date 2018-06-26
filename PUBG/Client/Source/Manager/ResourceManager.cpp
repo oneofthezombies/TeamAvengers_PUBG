@@ -2,6 +2,7 @@
 #include "ResourceManager.h"
 #include "Structure.h"
 #include "Character.h"
+#include "ResPathFileName.h"
 
 ResourceManager::ResourceManager()
     : Singleton<ResourceManager>()
@@ -223,6 +224,20 @@ SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh(const int index)
         "ResourceManager::GetCharacterSkinnedMesh(), wrong index.");
 
     return m_characters[index];
+}
+
+EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
+{
+    const auto keys = ResPathFileName::Get(tag);
+    const auto search = m_effectMeshs.find(keys.first + keys.second);
+
+    if (search == m_effectMeshs.end())
+    {
+        std::string str(keys.second + "is not found.");
+        MessageBoxA(nullptr, str.c_str(), nullptr, MB_OK);
+    }
+
+    return search->second;
 }
 
 void ResourceManager::AddCharacters(

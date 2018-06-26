@@ -15,5 +15,8 @@ public:
     void Render();
 
     void SetEffectMesh(EffectMesh* pEffectMesh);
+    void SetEffectMesh(const TAG_RES_STATIC tag);
+
+    /* do NOT use! this will be deleted soon.*/
     void SetEffectMesh(const string& path, const string& xFilename);
 };

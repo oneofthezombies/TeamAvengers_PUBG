@@ -216,7 +216,8 @@ bool SceneLoading::verifyTasks(
     std::future_status futureStatus;
     for (auto i = OutTasks->begin(); i != OutTasks->end();)
     {
-        futureStatus = i->wait_for(std::chrono::nanoseconds(1));
+        //futureStatus = i->wait_for(std::chrono::nanoseconds(1));
+        futureStatus = i->wait_until(std::chrono::system_clock::now());
         switch (futureStatus)
         {
         case std::future_status::deferred:

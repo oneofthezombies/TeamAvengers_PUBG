@@ -69,6 +69,7 @@ public:
     const D3DXVECTOR3& GetPosition() const;
 
     void                  SetRotation(const D3DXQUATERNION& r);
+    void                  SetRotation(const D3DXVECTOR3& r);
     const D3DXQUATERNION& GetRotation() const;
 
     void               SetScale(const D3DXVECTOR3& s);

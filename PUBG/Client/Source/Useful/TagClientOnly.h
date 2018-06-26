@@ -1,23 +1,5 @@
 #pragma once
 
-// TagCommon.h 
-// including tag list
-//
-// TAG_REQUEST
-
-// TagClientOnly.h
-// including tag list
-// 
-// TAG_OBJECT
-// TAG_COLLISION
-// TAG_COLLIDER_CHARACTER_PART
-// TAG_ANIM_CHARACTER
-// TAG_RENDERER
-// TAG_SCENE
-// TAG_FONT
-// TAG_SOUND
-// TAG_CAMERA
-
 enum class TAG_OBJECT
 {
     IDLE,
@@ -74,16 +56,6 @@ enum class TAG_ANIM_CHARACTER
 {
     Melee_Combat_Stand_Idle_Still = 11,
     Melee_Combat_Stand_Walk_F = 10,
-};
-
-enum class TAG_RENDERER
-{
-    DEFAULT,
-    EFFECT_MESH,
-    SKINNED_MESH,
-    COLLIDER,
-    BOX_COLLIDER,
-    SPHERE_COLLIDER,
 };
 
 enum class TAG_SCENE

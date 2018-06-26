@@ -27,6 +27,11 @@ void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)
     this->pEffectMesh = pEffectMesh;
 }
 
+void EffectMeshRenderer::SetEffectMesh(const TAG_RES_STATIC tag)
+{
+    SetEffectMesh(Resource()()->GetEffectMesh(tag));
+}
+
 void EffectMeshRenderer::SetEffectMesh(const string& path, const string& xFilename)
 {
     pEffectMesh = Resource()()->GetEffectMesh(path, xFilename);
