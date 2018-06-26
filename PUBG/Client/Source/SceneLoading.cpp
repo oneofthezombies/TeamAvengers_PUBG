@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "SceneLoading.h"
 #include "Church.h"
-#include "Character.h"
-
+#include "ResPathFileName.h"
 
 SceneLoading::SceneLoading()
     : IScene()
@@ -17,6 +16,26 @@ SceneLoading::~SceneLoading()
 
 void SceneLoading::OnInit()
 {
+    //Resource()()->LoadAll();
+
+    pair<string, string> p = ResPathFileName::Get(TAG_RES_STATIC::Church);
+    cout << p.first << ", " << p.second << endl;
+    //const string churchPath = "./Resource_Temp/Church/";
+    //const string churchFilename = "Church.x";
+    const string churchPath = p.first;
+    const string churchFilename = p.second;
+
+    //ResourceContainer* result = OnLoadEffectMeshAsync(
+    //    churchPath, churchFilename);
+    //if (result == nullptr)
+    //{
+    //    cout << "no...\n";
+    //}
+    //else
+    //{
+    //    cout << "yes\n";
+    //}
+
     m_start = std::chrono::system_clock::now();
 
     loadEffectMesh();
@@ -71,7 +90,7 @@ void SceneLoading::loadEffectMesh()
 void SceneLoading::loadSkinnedMesh()
 {
     // Unarmed_Landing.X
-    // ÀÌ ¿¢½ºÆÄÀÏÀÌ ¾Ö´Ï¸ÞÀÌ¼ÇÀ» °®°í ÀÖ´Â ¾Öµé Áß Á¦ÀÏ ÀÛ´Ù
+    // ì´ ì—‘ìŠ¤íŒŒì¼ì´ ì• ë‹ˆë©”ì´ì…˜ì„ ê°–ê³  ìžˆëŠ” ì• ë“¤ ì¤‘ ì œì¼ ìž‘ë‹¤
 
     for (int i = 0; i < Character::NUM_PLAYER; ++i)
         addTask(TAG_RESOURCE_ANIM::IDLE, &m_characterSkinnedMeshTasks);

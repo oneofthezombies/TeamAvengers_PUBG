@@ -165,6 +165,7 @@
     <ClCompile Include="Source\Manager\UIManager.cpp" />
     <ClCompile Include="Source\UI\UIText.cpp" />
     <ClCompile Include="Source\UI\UITextInputField.cpp" />
+    <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -195,6 +196,7 @@
     <ClInclude Include="Source\Manager\TimeManager.h" />
     <ClInclude Include="Source\SceneLoading.h" />
     <ClInclude Include="Source\Useful\CollisionCore.h" />
+    <ClInclude Include="Source\Useful\ResPathFileName.h" />
     <ClInclude Include="Source\Useful\ResourcePathFilename.h" />
     <ClInclude Include="Source\Useful\TagClientOnly.h" />
     <ClInclude Include="Source\Manager\InputManager.h" />
@@ -213,6 +215,7 @@
     <ClInclude Include="Source\UI\UIText.h" />
     <ClInclude Include="Source\UI\UITextInputField.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TagResource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
