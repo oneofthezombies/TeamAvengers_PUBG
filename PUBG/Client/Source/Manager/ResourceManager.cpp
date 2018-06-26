@@ -306,6 +306,21 @@ LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
     //return m_umapFont[val];
 }
 
+void ResourceManager::AddCharacters(
+    std::vector<ResourceContainer*>* OutCharacters)
+{
+    for (int i = 0; i < OutCharacters->size(); ++i)
+    {
+        m_characters[i] = OutCharacters->at(i)->m_pSkinnedMesh;
+        OutCharacters->at(i)->m_pSkinnedMesh = nullptr;
+    }
+
+    AddResource(OutCharacters->at(0));
+
+    for (int i = 1; i < OutCharacters->size(); ++i)
+        SAFE_DELETE(OutCharacters->at(i));
+}
+
 EffectMesh* ResourceManager::FindEffectMesh(
     const string& path, const string& name)
 {
@@ -463,7 +478,7 @@ ResourceContainer::~ResourceContainer()
     SAFE_DELETE(m_pSkinnedMesh);
 }
 
-ResourceContainer* OnLoadEffectMeshAsync(
+ResourceContainer* ResourceAsync::OnLoadEffectMeshAsync(
     const string path, const string xFilename)
 {
     LPD3DXBUFFER pEffectInstancesBuffer = nullptr;
@@ -497,13 +512,39 @@ ResourceContainer* OnLoadEffectMeshAsync(
     return pResourceContainer;
 }
 
-ResourceContainer* OnLoadSkinnedMeshAsync(
+ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
     const string path, const string xFilename)
 {
-    return nullptr;
+    ResourceContainer* pResourceContainer = new ResourceContainer;
+    if (!pResourceContainer)
+    {
+        return nullptr;
+    }
+
+    pResourceContainer->m_pSkinnedMesh = new SkinnedMesh;
+    SkinnedMesh* pSkinnedMesh = pResourceContainer->m_pSkinnedMesh;
+    if (!pSkinnedMesh)
+    {
+        return nullptr;
+    }
+
+    AllocateHierarchyAsync allocAsync(path, xFilename, pResourceContainer);
+
+    HRESULT hr = D3DXLoadMeshHierarchyFromXA((path + xFilename).c_str(),
+        D3DXMESH_MANAGED, Device()(), &allocAsync, nullptr, 
+        &pSkinnedMesh->m_pRootFrame,
+        &pSkinnedMesh->m_pAnimController);
+
+    if (FAILED(hr))
+    {
+        return nullptr;
+    }
+
+    pSkinnedMesh->Setup();
+    return pResourceContainer;
 }
 
-HRESULT CreateEffectMesh(const string& path, const string& name,
+HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
     LPD3DXMESH pMesh, const D3DXEFFECTINSTANCE* pEffectInstances, 
     const DWORD numEffectInstances, ResourceContainer* OutResourceContainer)
 {
@@ -609,7 +650,7 @@ HRESULT CreateEffectMesh(const string& path, const string& name,
     return S_OK;
 }
 
-HRESULT CreateEffect(const string& path, const string& filename, 
+HRESULT ResourceAsync::CreateEffect(const string& path, const string& filename,
     ResourceContainer* OutResourceContainer)
 {
     if (OutResourceContainer == nullptr)
@@ -648,7 +689,8 @@ HRESULT CreateEffect(const string& path, const string& filename,
     return S_OK;
 }
 
-HRESULT CreateTexture(const string& path, const string& filename, 
+HRESULT ResourceAsync::CreateTexture(
+    const string& path, const string& filename, 
     ResourceContainer* OutResourceContainer)
 {
     if (OutResourceContainer == nullptr)

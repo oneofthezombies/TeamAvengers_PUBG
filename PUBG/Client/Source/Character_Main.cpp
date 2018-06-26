@@ -23,6 +23,7 @@ Character::Character(const int index)
     GetTransform()->SetRotation(m_rotationOffset);
 
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
+
     pSkinnedMeshController->LoadSkinnedMesh(
         "./Resource_Temp/Lobby_Anim/", "Lobby_Anim.x");
 

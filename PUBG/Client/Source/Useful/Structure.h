@@ -4,6 +4,8 @@
 class UIText;
 #endif
 
+struct ResourceContainer;
+
 struct VERTEX_PC
 {
     D3DXVECTOR3 p;
@@ -112,6 +114,37 @@ public:
         LPD3DXMESHCONTAINER *ppNewMeshContainer) override;
 
     STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree) override;
+
+    STDMETHOD(DestroyMeshContainer)(
+        THIS_ LPD3DXMESHCONTAINER pMeshContainerBase) override;
+};
+
+class AllocateHierarchyAsync : public ID3DXAllocateHierarchy
+{
+private:
+    std::string        m_path;
+    std::string        m_xFilename;
+    ResourceContainer* pResourceContainer;
+
+public:
+    AllocateHierarchyAsync(const string& path, const string& xFilename, 
+        ResourceContainer* pResourceContainer);
+    ~AllocateHierarchyAsync();
+
+    STDMETHOD(CreateFrame)(THIS_ LPCSTR Name,
+        LPD3DXFRAME *ppNewFrame) override;
+
+    STDMETHOD(CreateMeshContainer)(THIS_
+        LPCSTR Name,
+        CONST D3DXMESHDATA *pMeshData,
+        CONST D3DXMATERIAL *pMaterials,
+        CONST D3DXEFFECTINSTANCE *pEffectInstances,
+        DWORD NumMaterials,
+        CONST DWORD *pAdjacency,
+        LPD3DXSKININFO pSkinInfo,
+        LPD3DXMESHCONTAINER *ppNewMeshContainer) override;
+
+    STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameBase) override;
 
     STDMETHOD(DestroyMeshContainer)(
         THIS_ LPD3DXMESHCONTAINER pMeshContainerBase) override;
