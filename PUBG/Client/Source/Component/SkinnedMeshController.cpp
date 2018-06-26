@@ -146,6 +146,14 @@ void SkinnedMeshController::Render()
     drawFrame(m_pSkinnedMesh->m_pRootFrame);
 }
 
+void SkinnedMeshController::SetSkinnedMesh(SkinnedMesh* pSkinnedMesh)
+{
+    assert(pSkinnedMesh && 
+        "SkinnedMeshController::SetSkinnedMesh(), skinned mesh is null.");
+
+    m_pSkinnedMesh = pSkinnedMesh;
+}
+
 void SkinnedMeshController::LoadSkinnedMesh(
     const string& path, const string& xFilename)
 {

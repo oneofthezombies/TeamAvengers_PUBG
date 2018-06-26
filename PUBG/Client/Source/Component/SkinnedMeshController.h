@@ -24,6 +24,7 @@ public:
     void Update(const function<void()>& function);
     void Render();
 
+    void SetSkinnedMesh(SkinnedMesh* pSkinnedMesh);
     void LoadSkinnedMesh(const string& path, const string& xFilename);
     void LoadAdditionalAnimation(const string& path, const string& xFilename);
 

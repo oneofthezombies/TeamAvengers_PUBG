@@ -310,3 +310,183 @@ STDMETHODIMP AllocateHierarchy::DestroyMeshContainer(
     SAFE_DELETE(pMeshContainer);
     return S_OK;
 }
+
+AllocateHierarchyAsync::AllocateHierarchyAsync(
+    const string & path, const string & xFilename, 
+    ResourceContainer* pResourceContainer)
+    : ID3DXAllocateHierarchy()
+    , m_path(path)
+    , m_xFilename(xFilename)
+    , pResourceContainer(pResourceContainer)
+{
+}
+
+AllocateHierarchyAsync::~AllocateHierarchyAsync()
+{
+}
+
+STDMETHODIMP AllocateHierarchyAsync::CreateFrame(
+    THIS_ LPCSTR Name, LPD3DXFRAME* ppNewFrame)
+{
+    *ppNewFrame = nullptr;
+
+    LPSTR pName = nullptr;
+    if (Name)
+    {
+        const size_t size = strlen(Name) + 1;
+        pName = new char[size];
+        if (!pName)
+        {
+            return E_OUTOFMEMORY;
+        }
+
+        memcpy_s(pName, size, Name, size);
+    }
+
+    Frame* pFrame = new Frame;
+    if (!pFrame)
+    {
+        SAFE_DELETE_ARRAY(pName);
+        return E_OUTOFMEMORY;
+    }
+
+    pFrame->Name = pName;
+    D3DXMatrixIdentity(&pFrame->TransformationMatrix);
+    D3DXMatrixIdentity(&pFrame->CombinedTransformationMatrix);
+
+    *ppNewFrame = pFrame;
+    pFrame = nullptr;
+    return S_OK;
+}
+
+STDMETHODIMP AllocateHierarchyAsync::CreateMeshContainer(
+    THIS_ LPCSTR Name, const D3DXMESHDATA* pMeshData, 
+    const D3DXMATERIAL* pMaterials, const D3DXEFFECTINSTANCE* pEffectInstances, 
+    DWORD NumMaterials, const DWORD* pAdjacency, LPD3DXSKININFO pSkinInfo,
+    LPD3DXMESHCONTAINER* ppNewMeshContainer)
+{
+    if (pMeshData->Type != D3DXMESHTYPE_MESH)
+    {
+        return E_FAIL;
+    }
+
+    LPSTR pName = nullptr;
+    if (Name)
+    {
+        const size_t size = strlen(Name) + 1;
+        pName = new char[size];
+        if (!pName)
+        {
+            return E_OUTOFMEMORY;
+        }
+
+        memcpy_s(pName, size, Name, size);
+    }
+
+    const string meshContainerName = pName ? string(pName) : string("");
+
+    HRESULT hr = CreateEffectMesh(m_path, meshContainerName, pMeshData->pMesh, 
+        pEffectInstances, NumMaterials, pResourceContainer);
+
+    if (FAILED(hr))
+    {
+        SAFE_DELETE_ARRAY(pName);
+        return E_FAIL;
+    }
+
+    EffectMesh* pEffectMesh = 
+        pResourceContainer->m_effectMeshs[m_path + meshContainerName];
+    LPD3DXMESH pMesh = pEffectMesh->pMesh;
+    pMesh->AddRef();
+
+    LPD3DXMESH pWorkMesh = nullptr;
+    D3DVERTEXELEMENT9 decl[MAX_FVF_DECL_SIZE] = { 0 };
+    pMesh->GetDeclaration(decl);
+    pMesh->CloneMesh(pMesh->GetOptions(), decl, Device()(), &pWorkMesh);
+
+    D3DXMATRIX*  pBoneOffsetMatrices = nullptr;
+    D3DXMATRIX** ppBoneMatrixPtrs    = nullptr;
+    D3DXMATRIX*  pFinalBoneMatrices  = nullptr;
+    if (pSkinInfo)
+    {
+        pSkinInfo->AddRef();
+
+        const DWORD numBones = pSkinInfo->GetNumBones();
+        pBoneOffsetMatrices = new D3DXMATRIX [numBones];
+        ppBoneMatrixPtrs    = new D3DXMATRIX*[numBones];
+        pFinalBoneMatrices  = new D3DXMATRIX [numBones];
+
+        if (!pBoneOffsetMatrices || 
+            !ppBoneMatrixPtrs    || 
+            !pFinalBoneMatrices)
+        {
+            SAFE_DELETE_ARRAY(pName);
+            SAFE_DELETE_ARRAY(pBoneOffsetMatrices);
+            SAFE_DELETE_ARRAY(ppBoneMatrixPtrs);
+            SAFE_DELETE_ARRAY(pFinalBoneMatrices);
+            return E_OUTOFMEMORY;
+        }
+
+        for (DWORD i = 0; i < numBones; ++i)
+            pBoneOffsetMatrices[i] = *pSkinInfo->GetBoneOffsetMatrix(i);
+    }
+
+    MeshContainer* pMeshContainer = new MeshContainer;
+    if (!pMeshContainer)
+    {
+        SAFE_DELETE_ARRAY(pName);
+        SAFE_DELETE_ARRAY(pBoneOffsetMatrices);
+        SAFE_DELETE_ARRAY(ppBoneMatrixPtrs);
+        SAFE_DELETE_ARRAY(pFinalBoneMatrices);
+        return E_OUTOFMEMORY;
+    }
+
+    pMeshContainer->pEffectMesh = pEffectMesh;
+    pMeshContainer->pWorkMesh   = pWorkMesh;
+    pMeshContainer->pSkinInfo   = pSkinInfo;
+
+    pMeshContainer->Name                = pName;
+    pMeshContainer->pBoneOffsetMatrices = pBoneOffsetMatrices;
+    pMeshContainer->ppBoneMatrixPtrs    = ppBoneMatrixPtrs;
+    pMeshContainer->pFinalBoneMatrices  = pFinalBoneMatrices;
+
+    *ppNewMeshContainer = pMeshContainer;
+    pMeshContainer = nullptr;
+    return S_OK;
+}
+
+STDMETHODIMP AllocateHierarchyAsync::DestroyFrame(
+    THIS_ LPD3DXFRAME pFrameBase)
+{
+    if (!pFrameBase)
+    {
+        return E_FAIL;
+    }
+
+    SAFE_DELETE_ARRAY(pFrameBase->Name);
+    SAFE_DELETE(pFrameBase);
+    return S_OK;
+}
+
+STDMETHODIMP AllocateHierarchyAsync::DestroyMeshContainer(
+    THIS_ LPD3DXMESHCONTAINER pMeshContainerBase)
+{
+    MeshContainer* pMeshContainer =
+        static_cast<MeshContainer*>(pMeshContainerBase);
+
+    if (!pMeshContainer)
+    {
+        return E_FAIL;
+    }
+
+    SAFE_RELEASE(pMeshContainer->pWorkMesh);
+    SAFE_RELEASE(pMeshContainer->pSkinInfo);
+
+    SAFE_DELETE_ARRAY(pMeshContainer->Name);
+    SAFE_DELETE_ARRAY(pMeshContainer->pBoneOffsetMatrices);
+    SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
+    SAFE_DELETE_ARRAY(pMeshContainer->pFinalBoneMatrices);
+
+    SAFE_DELETE(pMeshContainer);
+    return S_OK;
+}
