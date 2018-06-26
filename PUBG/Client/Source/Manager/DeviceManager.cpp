@@ -43,7 +43,7 @@ HRESULT DeviceManager::Init()
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 	if (FAILED(m_pD3D->CreateDevice(
 		D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
-		g_hWnd, vp, &d3dpp, &m_pD3DDevice)))
+		g_hWnd, vp | D3DCREATE_MULTITHREADED, &d3dpp, &m_pD3DDevice)))
 	{
 		return E_FAIL;
 	}
