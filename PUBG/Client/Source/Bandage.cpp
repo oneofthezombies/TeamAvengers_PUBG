@@ -10,8 +10,7 @@ Bandage::Bandage(const D3DXVECTOR3& pos, const D3DXVECTOR3& scale)
     , pBoxCollider(nullptr)
 {
     pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
-    //pEffectMeshRenderer->SetEffectMesh("./Resource/Bandage/", "Bandage.X");
-    pEffectMeshRenderer->SetEffectMesh("./Resource/Church/", "Church.X");
+    pEffectMeshRenderer->SetEffectMesh("./Resource_Temp/Bandage/", "Bandage.X");
 
     pBoxCollider = AddComponent<BoxCollider>();
     pBoxCollider->SetTag(TAG_COLLISION::DAMAGE_OF_PLAYER_2);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneLoading.h"
 #include "Church.h"
+#include "ResPathFileName.h"
 
 SceneLoading::SceneLoading()
     : IScene()
@@ -15,8 +16,12 @@ void SceneLoading::OnInit()
 {
     //Resource()()->LoadAll();
 
-    const string churchPath = "./Resource/Church/";
-    const string churchFilename = "Church.x";
+    pair<string, string> p = ResPathFileName::Get(TAG_RES_STATIC::Church);
+    cout << p.first << ", " << p.second << endl;
+    //const string churchPath = "./Resource_Temp/Church/";
+    //const string churchFilename = "Church.x";
+    const string churchPath = p.first;
+    const string churchFilename = p.second;
 
     //ResourceContainer* result = OnLoadEffectMeshAsync(
     //    churchPath, churchFilename);

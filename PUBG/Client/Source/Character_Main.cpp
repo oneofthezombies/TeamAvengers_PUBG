@@ -24,7 +24,7 @@ Character::Character(const int index)
 
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
     pSkinnedMeshController->LoadSkinnedMesh(
-        "./Resource/Lobby_Anim/", "Lobby_Anim.x");
+        "./Resource_Temp/Lobby_Anim/", "Lobby_Anim.x");
 
     setFramePtr();
 

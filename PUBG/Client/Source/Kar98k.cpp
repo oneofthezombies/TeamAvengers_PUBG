@@ -7,7 +7,7 @@ Kar98k::Kar98k()
     , pSkinnedMeshController(nullptr)
 {
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
-    pSkinnedMeshController->LoadSkinnedMesh("./Resource/Kar98k/", "Kar98k.x");
+    pSkinnedMeshController->LoadSkinnedMesh("./Resource_Temp/Kar98k/", "Kar98k.x");
 
     GetTransform()->SetScale(Vector3::ONE * 2.0f);
 
