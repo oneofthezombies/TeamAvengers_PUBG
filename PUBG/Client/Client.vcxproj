@@ -76,7 +76,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(ProjectDir)sources\7. Study;$(ProjectDir)sources\6. Base;$(ProjectDir)sources\5. Manager;$(ProjectDir)sources\4. UI;$(ProjectDir)sources\3. Useful;$(ProjectDir)sources\2. Object\Map;$(ProjectDir)sources\2. Object\Item;$(ProjectDir)sources\2. Object\Effect;$(ProjectDir)sources\2. Object\Character;$(ProjectDir)sources\2. Object\Camera;$(ProjectDir)sources\2. Object;$(ProjectDir)sources\1. Scene;$(ProjectDir)sources;$(ProjectDir);$(SolutionDir)PUBG\sources\3. Useful;$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)boost_1_67_0\stage\lib;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -84,7 +89,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\Useful;$(ProjectDir)Source\UI;$(ProjectDir)Source\Manager;$(ProjectDir)Source\Component;$(ProjectDir)Source\Base;$(ProjectDir)Source;$(ProjectDir);$(SolutionDir)Common\Source\Useful;$(SolutionDir)Common\Source\Base;$(SolutionDir)Common\Source;$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDIr)Debug;$(SolutionDir)boost_1_67_0\stage\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -115,6 +125,98 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientMain.cpp" />
+    <ClCompile Include="Source\Base\IMap.cpp" />
+    <ClCompile Include="Source\Base\IObject.cpp" />
+    <ClCompile Include="Source\Church.cpp" />
+    <ClCompile Include="Source\Component\Collider.cpp" />
+    <ClCompile Include="Source\Component\ComponentTransform.cpp" />
+    <ClCompile Include="Source\Component\EffectMeshRenderer.cpp" />
+    <ClCompile Include="Source\Component\SkinnedMeshController.cpp" />
+    <ClCompile Include="Source\Manager\Bullet.cpp" />
+    <ClCompile Include="Source\Character_Main.cpp" />
+    <ClCompile Include="Source\Character_OnCollision.cpp" />
+    <ClCompile Include="Source\CharacterPart.cpp" />
+    <ClCompile Include="Source\Character_Method.cpp" />
+    <ClCompile Include="Source\Manager\Application.cpp" />
+    <ClCompile Include="Source\Bandage.cpp" />
+    <ClCompile Include="Source\Base\ICamera.cpp" />
+    <ClCompile Include="Source\Manager\CameraManager.cpp" />
+    <ClCompile Include="Source\Manager\Client.cpp" />
+    <ClCompile Include="Source\Manager\CollisionManager.cpp" />
+    <ClCompile Include="Source\Manager\DebugManager.cpp" />
+    <ClCompile Include="Source\Manager\DeviceManager.cpp" />
+    <ClCompile Include="Source\Manager\InputManager.cpp" />
+    <ClCompile Include="Source\Base\IScene.cpp" />
+    <ClCompile Include="Source\Kar98k.cpp" />
+    <ClCompile Include="Source\Manager\ResourceManager.cpp" />
+    <ClCompile Include="Source\Manager\TimeManager.cpp" />
+    <ClCompile Include="Source\SceneLoading.cpp" />
+    <ClCompile Include="Source\UI\UIObject.cpp" />
+    <ClCompile Include="Source\Useful\CollisionCore.cpp" />
+    <ClCompile Include="Source\Useful\ResourcePathFilename.cpp" />
+    <ClCompile Include="Source\Useful\Structure.cpp" />
+    <ClCompile Include="Source\SceneLogin.cpp" />
+    <ClCompile Include="Source\Manager\SceneManager.cpp" />
+    <ClCompile Include="Source\ScenePlay.cpp" />
+    <ClCompile Include="Source\Manager\SoundManager.cpp" />
+    <ClCompile Include="Source\UI\UIButton.cpp" />
+    <ClCompile Include="Source\UI\UIImage.cpp" />
+    <ClCompile Include="Source\Manager\UIManager.cpp" />
+    <ClCompile Include="Source\UI\UIText.cpp" />
+    <ClCompile Include="Source\UI\UITextInputField.cpp" />
+    <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fmod.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Base\IMap.h" />
+    <ClInclude Include="Source\Base\IObject.h" />
+    <ClInclude Include="Source\Church.h" />
+    <ClInclude Include="Source\Component\Collider.h" />
+    <ClInclude Include="Source\Component\ComponentTransform.h" />
+    <ClInclude Include="Source\Component\EffectMeshRenderer.h" />
+    <ClInclude Include="Source\Component\SkinnedMeshController.h" />
+    <ClInclude Include="Source\Manager\Bullet.h" />
+    <ClInclude Include="Source\Character.h" />
+    <ClInclude Include="Source\CharacterPart.h" />
+    <ClInclude Include="Source\Manager\Application.h" />
+    <ClInclude Include="Source\Bandage.h" />
+    <ClInclude Include="Source\Base\ICamera.h" />
+    <ClInclude Include="Source\Manager\CameraManager.h" />
+    <ClInclude Include="Source\Manager\Client.h" />
+    <ClInclude Include="Source\Manager\CollisionManager.h" />
+    <ClInclude Include="Source\Manager\DebugManager.h" />
+    <ClInclude Include="Source\Manager\DeviceManager.h" />
+    <ClInclude Include="Source\Manager\TimeManager.h" />
+    <ClInclude Include="Source\SceneLoading.h" />
+    <ClInclude Include="Source\Useful\CollisionCore.h" />
+    <ClInclude Include="Source\Useful\ResPathFileName.h" />
+    <ClInclude Include="Source\Useful\ResourcePathFilename.h" />
+    <ClInclude Include="Source\Useful\TagClientOnly.h" />
+    <ClInclude Include="Source\Manager\InputManager.h" />
+    <ClInclude Include="Source\Base\IScene.h" />
+    <ClInclude Include="Source\Kar98k.h" />
+    <ClInclude Include="Source\Manager\ResourceManager.h" />
+    <ClInclude Include="Source\Useful\Structure.h" />
+    <ClInclude Include="Source\SceneLogin.h" />
+    <ClInclude Include="Source\Manager\SceneManager.h" />
+    <ClInclude Include="Source\ScenePlay.h" />
+    <ClInclude Include="Source\Manager\SoundManager.h" />
+    <ClInclude Include="Source\UI\UIButton.h" />
+    <ClInclude Include="Source\UI\UIImage.h" />
+    <ClInclude Include="Source\Manager\UIManager.h" />
+    <ClInclude Include="Source\UI\UIObject.h" />
+    <ClInclude Include="Source\UI\UIText.h" />
+    <ClInclude Include="Source\UI\UITextInputField.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TagResource.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

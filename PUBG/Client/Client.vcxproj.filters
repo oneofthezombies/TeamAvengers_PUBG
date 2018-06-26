@@ -1,2 +1,94 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="ClientMain.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Source\Kar98k.cpp" />
+    <ClCompile Include="Source\SceneLogin.cpp" />
+    <ClCompile Include="Source\ScenePlay.cpp" />
+    <ClCompile Include="Source\Bandage.cpp" />
+    <ClCompile Include="Source\Manager\Application.cpp" />
+    <ClCompile Include="Source\Manager\CameraManager.cpp" />
+    <ClCompile Include="Source\Manager\Client.cpp" />
+    <ClCompile Include="Source\Manager\SceneManager.cpp" />
+    <ClCompile Include="Source\UI\UIButton.cpp" />
+    <ClCompile Include="Source\UI\UIImage.cpp" />
+    <ClCompile Include="Source\UI\UIText.cpp" />
+    <ClCompile Include="Source\UI\UITextInputField.cpp" />
+    <ClCompile Include="Source\Manager\SoundManager.cpp" />
+    <ClCompile Include="Source\Base\IScene.cpp" />
+    <ClCompile Include="Source\Manager\UIManager.cpp" />
+    <ClCompile Include="Source\CharacterPart.cpp" />
+    <ClCompile Include="Source\Character_Method.cpp" />
+    <ClCompile Include="Source\Character_Main.cpp" />
+    <ClCompile Include="Source\Manager\Bullet.cpp" />
+    <ClCompile Include="Source\Useful\Structure.cpp" />
+    <ClCompile Include="Source\Component\Collider.cpp" />
+    <ClCompile Include="Source\Manager\TimeManager.cpp" />
+    <ClCompile Include="Source\Component\ComponentTransform.cpp" />
+    <ClCompile Include="Source\Base\IMap.cpp" />
+    <ClCompile Include="Source\Useful\CollisionCore.cpp" />
+    <ClCompile Include="Source\Manager\ResourceManager.cpp" />
+    <ClCompile Include="Source\Manager\InputManager.cpp" />
+    <ClCompile Include="Source\Manager\DeviceManager.cpp" />
+    <ClCompile Include="Source\Manager\DebugManager.cpp" />
+    <ClCompile Include="Source\Manager\CollisionManager.cpp" />
+    <ClCompile Include="Source\Base\ICamera.cpp" />
+    <ClCompile Include="Source\SceneLoading.cpp" />
+    <ClCompile Include="Source\UI\UIObject.cpp" />
+    <ClCompile Include="Source\Base\IObject.cpp" />
+    <ClCompile Include="Source\Component\SkinnedMeshController.cpp" />
+    <ClCompile Include="Source\Component\EffectMeshRenderer.cpp" />
+    <ClCompile Include="Source\Character_OnCollision.cpp" />
+    <ClCompile Include="Source\Useful\ResourcePathFilename.cpp" />
+    <ClCompile Include="Source\Church.cpp" />
+    <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fmod.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Source\Kar98k.h" />
+    <ClInclude Include="Source\SceneLogin.h" />
+    <ClInclude Include="Source\ScenePlay.h" />
+    <ClInclude Include="Source\Bandage.h" />
+    <ClInclude Include="Source\Manager\Application.h" />
+    <ClInclude Include="Source\Manager\CameraManager.h" />
+    <ClInclude Include="Source\Manager\Client.h" />
+    <ClInclude Include="Source\Manager\SceneManager.h" />
+    <ClInclude Include="Source\UI\UIButton.h" />
+    <ClInclude Include="Source\UI\UIImage.h" />
+    <ClInclude Include="Source\UI\UIObject.h" />
+    <ClInclude Include="Source\UI\UIText.h" />
+    <ClInclude Include="Source\UI\UITextInputField.h" />
+    <ClInclude Include="Source\Manager\SoundManager.h" />
+    <ClInclude Include="Source\Base\IScene.h" />
+    <ClInclude Include="Source\Manager\UIManager.h" />
+    <ClInclude Include="Source\CharacterPart.h" />
+    <ClInclude Include="Source\Character.h" />
+    <ClInclude Include="Source\Manager\Bullet.h" />
+    <ClInclude Include="Source\Useful\Structure.h" />
+    <ClInclude Include="Source\Useful\TagClientOnly.h" />
+    <ClInclude Include="Source\Component\Collider.h" />
+    <ClInclude Include="Source\Manager\TimeManager.h" />
+    <ClInclude Include="Source\Component\ComponentTransform.h" />
+    <ClInclude Include="Source\Base\IMap.h" />
+    <ClInclude Include="Source\Useful\CollisionCore.h" />
+    <ClInclude Include="Source\Manager\ResourceManager.h" />
+    <ClInclude Include="Source\Manager\InputManager.h" />
+    <ClInclude Include="Source\Manager\DeviceManager.h" />
+    <ClInclude Include="Source\Manager\DebugManager.h" />
+    <ClInclude Include="Source\Manager\CollisionManager.h" />
+    <ClInclude Include="Source\Base\ICamera.h" />
+    <ClInclude Include="Source\SceneLoading.h" />
+    <ClInclude Include="Source\Base\IObject.h" />
+    <ClInclude Include="Source\Component\SkinnedMeshController.h" />
+    <ClInclude Include="Source\Component\EffectMeshRenderer.h" />
+    <ClInclude Include="Source\Useful\ResourcePathFilename.h" />
+    <ClInclude Include="Source\Church.h" />
+    <ClInclude Include="TagResource.h" />
+    <ClInclude Include="Source\Useful\ResPathFileName.h" />
+  </ItemGroup>
+</Project>

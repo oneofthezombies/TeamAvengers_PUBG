@@ -1,0 +1,13 @@
+/// Test_Anim.X - 훈회의 테스트용 애니메이션
+0.  (0 ~ 2312)[2313]    - Melee_Combat_Stand_Idle_Still
+1.  (2313 ~ 2437)[125] - Melee_Combat_Stand_Walk_F
+2.  (2438 ~ 2525)[88]   - Melee_Combat_Stand_Run_F
+3.  (2526 ~ 2686)[161] - Melee_Combat_Stand_Pickup_Low
+4.  (2687 ~ 2695)[9]    - Weapon_Kar98k_Grip_Carry
+5.  (2696 ~ 2698)[3]    - Weapon_Kar98k_Grip_Ready
+6.  (2699 ~ 2701)[3]    - Weapon_Kar98k_Grip_Short
+7.  (2702 ~ 2804)[103] - Weapon_Kar98k_BoltAction_1_Base
+8.  (2805 ~ 3066)[262] - Weapon_Kar98k_Reload_StartLoopEnd_Base
+9.  (3067 ~ 3307)[241] - Weapon_Kar98k_ReloadFast_Base
+10. (3308~ 3358)[51]   - Rifle_Combat_Stand_PrimarySlot_Static (unequip)
+11. (3359 ~ 3409)[51]  - Rifle_Combat_Stand_PrimarySlot_Static_Reverse (equip)
