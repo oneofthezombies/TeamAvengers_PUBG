@@ -129,6 +129,7 @@
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
     <ClCompile Include="Source\Church.cpp" />
+    <ClCompile Include="Source\CollidableStaticObject.cpp" />
     <ClCompile Include="Source\Component\Collider.cpp" />
     <ClCompile Include="Source\Component\ComponentTransform.cpp" />
     <ClCompile Include="Source\Component\EffectMeshRenderer.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Church.h" />
+    <ClInclude Include="Source\CollidableStaticObject.h" />
     <ClInclude Include="Source\Component\Collider.h" />
     <ClInclude Include="Source\Component\ComponentTransform.h" />
     <ClInclude Include="Source\Component\EffectMeshRenderer.h" />
