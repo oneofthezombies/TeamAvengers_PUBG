@@ -41,7 +41,7 @@ void SceneLoading::OnUpdate()
     {
         Debug << "elapsed time : " << m_elapsed.count() << '\n';
 
-        UI()()->Destroy(m_pPercentageImage);
+        //UI()()->Destroy(m_pPercentageImage);
     }
     else
     {
@@ -109,12 +109,19 @@ void SceneLoading::loadSkinnedMesh()
     // 이 엑스파일이 애니메이션을 갖고 있는 애들 중 제일 작다
 
     for (int i = 0; i < Character::NUM_PLAYER; ++i)
-        addTask(TAG_RES_ANIM::Lobby_Anim, &m_characterSkinnedMeshTasks);
+        addTask(TAG_RES_ANIM::Unarmed_Landing, &m_characterSkinnedMeshTasks);
+
+    //pair<string, string> p;
+    //for (int i = 0; i < static_cast<int>(TAG_RES_ANIM::COUNT); ++i)
+    //{
+    //    p = ResPathFileName::Get(static_cast<TAG_RES_ANIM>(i));
+    //    cout << p.first << p.second << endl;
+    //}
 }
 
 void SceneLoading::loadAnimation()
 {
-    addTask(TAG_RES_ANIM::Lobby_Anim, &m_characterAnimationTasks);
+    addTask(TAG_RES_ANIM::Lobby, &m_characterAnimationTasks);
 
     // ...
 }
