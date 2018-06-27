@@ -117,7 +117,7 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
         }
 
         TerrainFeature* pObj = new TerrainFeature(
-            TAG_RES_STATIC::Church, 
+            o.m_tagResStatic, 
             o.m_position, 
             o.m_rotation, 
             o.m_scale);
@@ -176,7 +176,11 @@ HRESULT IScene::parseObjectInFile(std::ifstream& fin, ObjectInFile* Out)
         >> Out->m_scale.   x >> Out->m_scale.   y >> Out->m_scale.   z;
 
     fin >> buf;
-    if (buf != "[")
+    if (buf == "}")
+    {
+        return S_OK;
+    }
+    else if (buf != "[")
     {
         return E_FAIL;
     }

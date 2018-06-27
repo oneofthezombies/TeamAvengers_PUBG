@@ -79,6 +79,7 @@ CameraFree::CameraFree()
     : ICamera(TAG_CAMERA::Default)
 {
     m_position = D3DXVECTOR3(0.0f, 160.0f, -258.0f);
+    m_position = D3DXVECTOR3(0.0f, 0.0f, -100.0f);
 }
 
 CameraFree::~CameraFree()

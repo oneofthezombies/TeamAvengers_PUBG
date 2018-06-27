@@ -73,6 +73,7 @@ void SceneLoading::OnUpdate()
             m_finish = std::chrono::system_clock::now();
             m_elapsed = m_finish - m_start;
 
+            Communication()()->m_MyInfo.m_ID = 0;
             AddObject(new Character(0));
 
             LoadObjectsFromFile("./Resource/save.txt");

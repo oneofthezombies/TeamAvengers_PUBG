@@ -37,7 +37,7 @@ Character::Character(const int index)
 
     if (isMine())
     {
-        Camera()()->SetTarget(GetTransform());
+        //Camera()()->SetTarget(GetTransform());
     }
 }
 

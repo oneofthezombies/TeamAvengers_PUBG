@@ -201,7 +201,7 @@ void SkinnedMeshController::SetAnimationIndex(
     LPD3DXANIMATIONSET pNext = nullptr;
     auto& pAniCon = pSkinnedMesh->m_pAnimController;
 
-    auto hr = pAniCon->GetAnimationSet(index, &pNext);
+    HRESULT hr = pAniCon->GetAnimationSet(index, &pNext);
     assert(!FAILED(hr) && 
         "SkinnedMeshController::SetAnimationIndex(), \
          ID3DXAnimationController::GetAnimationSet() failed.");
