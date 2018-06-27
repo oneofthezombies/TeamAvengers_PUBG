@@ -74,6 +74,8 @@ void SceneLoading::OnUpdate()
             m_elapsed = m_finish - m_start;
 
             AddObject(new Character(0));
+
+            LoadObjectsFromFile("./Resource/save.txt");
         }
     }
 
@@ -99,6 +101,7 @@ void SceneLoading::OnUpdate()
 void SceneLoading::loadEffectMesh()
 {
     addTask(TAG_RES_STATIC::Church, &m_effectMeshTasks);
+    addTask(TAG_RES_STATIC::Bandage, &m_effectMeshTasks);
 
     // ...
 }

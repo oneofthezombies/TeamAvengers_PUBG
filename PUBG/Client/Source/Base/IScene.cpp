@@ -11,8 +11,8 @@ BoxColliderInFile::BoxColliderInFile()
 }
 
 ObjectInFile::ObjectInFile()
-    : m_ID(-1)
-    , m_tagResStatic(TAG_RES_STATIC::Rock_1)
+    : m_tagResStatic(TAG_RES_STATIC::Rock_1)
+    , m_name("")
     , m_position(Vector3::ZERO)
     , m_rotation(Vector3::ZERO)
     , m_scale(Vector3::ONE)
@@ -85,19 +85,21 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
     string filename;
     fin >> filename;
 
+    string buf;
+    fin >> buf >> buf >> buf;   // Num of Object
     int numObjects;
     fin >> numObjects;
 
     HRESULT hr;
     std::vector<ObjectInFile> objs;
-    string buf;
     for (int oi = 0; oi < numObjects; ++oi)
     {
         ObjectInFile obj;
         hr = parseObjectInFile(fin, &obj);
         if (FAILED(hr))
         {
-
+            assert(false && 
+                "IScene::LoadObjectsFromFile(), parsing failed.");
         }
 
         objs.emplace_back(obj);
@@ -105,9 +107,22 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
 
     for (auto o : objs)
     {
+        //cout << static_cast<int>(o.m_tagResStatic) << '\n';
+        //cout << o.m_name << '\n';
+        //cout << o.m_position << '\n';
+        //cout << o.m_rotation << '\n';
+        //cout << o.m_scale << '\n';
+
+        //for (auto b : o.m_boxColliders)
+        //{
+        //    cout << b.m_center << '\n';
+        //    cout << b.m_extent << '\n';
+        //    cout << b.m_transform << '\n';
+        //}
+
         CollidableStaticObject* pObj = 
             new CollidableStaticObject(
-                o.m_tagResStatic, 
+                TAG_RES_STATIC::Bandage, 
                 o.m_position, 
                 o.m_rotation, 
                 o.m_scale);
@@ -155,17 +170,24 @@ HRESULT IScene::parseObjectInFile(std::ifstream& fin, ObjectInFile* Out)
         return E_FAIL;
     }
 
-    fin >> Out->m_ID;
-
     fin >> buf;
     Out->m_tagResStatic = static_cast<TAG_RES_STATIC>(std::stoi(buf));
 
+    std::getline(fin >> std::ws, buf);
+    Out->m_name = buf;
+
     fin >> Out->m_position.x >> Out->m_position.y >> Out->m_position.z
         >> Out->m_rotation.x >> Out->m_rotation.y >> Out->m_rotation.z
-        >> Out->m_scale   .x >> Out->m_scale   .y >> Out->m_scale   .z;
+        >> Out->m_scale.   x >> Out->m_scale.   y >> Out->m_scale.   z;
+
+    fin >> buf;
+    if (buf != "[")
+    {
+        return E_FAIL;
+    }
 
     HRESULT hr;
-    fin >> buf;
+    fin >> buf; 
     for (int ci = 0; ci < std::stoi(buf); ++ci)
     {
         BoxColliderInFile box;
@@ -176,6 +198,12 @@ HRESULT IScene::parseObjectInFile(std::ifstream& fin, ObjectInFile* Out)
         }
 
         Out->m_boxColliders.emplace_back(box);
+    }
+
+    fin >> buf;
+    if (buf != "]")
+    {
+        return E_FAIL;
     }
 
     fin >> buf;
@@ -194,10 +222,12 @@ HRESULT IScene::parseBoxColliderInFile(
 
     string buf;
     fin >> buf;
-    if (buf != "[")
+    if (buf != "<")
     {
         return E_FAIL;
     }
+
+    std::getline(fin >> std::ws, buf);
 
     fin >> Out->m_center.x >> Out->m_center.y >> Out->m_center.z
         >> Out->m_extent.x >> Out->m_extent.y >> Out->m_extent.z
@@ -211,7 +241,7 @@ HRESULT IScene::parseBoxColliderInFile(
         >> Out->m_transform._43 >> Out->m_transform._44;
 
     fin >> buf;
-    if (buf != "]")
+    if (buf != ">")
     {
         return E_FAIL;
     }

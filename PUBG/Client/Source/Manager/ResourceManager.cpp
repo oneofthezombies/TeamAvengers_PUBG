@@ -233,7 +233,7 @@ EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
 
     if (search == m_effectMeshs.end())
     {
-        std::string str(keys.second + "is not found.");
+        std::string str(keys.second + " is not found.");
         MessageBoxA(nullptr, str.c_str(), nullptr, MB_OK);
     }
 

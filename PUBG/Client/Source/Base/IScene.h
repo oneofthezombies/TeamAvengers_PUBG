@@ -13,8 +13,8 @@ struct BoxColliderInFile
 
 struct ObjectInFile
 {
-    int            m_ID;
     TAG_RES_STATIC m_tagResStatic;
+    std::string    m_name;
     D3DXVECTOR3    m_position;
     D3DXVECTOR3    m_rotation;
     D3DXVECTOR3    m_scale;
