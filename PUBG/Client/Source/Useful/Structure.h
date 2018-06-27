@@ -32,7 +32,7 @@ struct VERTEX_RHWC
 
 struct EffectParam
 {
-    string       Name;
+    std::string  name;
     LPD3DXEFFECT pEffect;
     D3DXHANDLE   hParam;
 
@@ -42,8 +42,8 @@ struct EffectParam
 
 struct EffectMesh
 {
-    LPD3DXMESH          pMesh;
-    vector<EffectParam> EffectParams;
+    LPD3DXMESH               m_pMesh;
+    std::vector<EffectParam> m_effectParams;
 
     EffectMesh();
     ~EffectMesh();
@@ -55,21 +55,16 @@ struct Frame : public D3DXFRAME
 {
     D3DXMATRIX CombinedTransformationMatrix;
 
-//#ifdef OOTZ_DEBUG
-//    string NameAndPosition;
-//    UIText* pUINameAndPosition;
-//#endif
-
     Frame();
 };
 
 struct MeshContainer : public D3DXMESHCONTAINER
 {
     EffectMesh*  pEffectMesh;
-    LPD3DXMESH   pWorkMesh;
-    D3DXMATRIX** ppBoneMatrixPtrs;
-    D3DXMATRIX*  pBoneOffsetMatrices;
-    D3DXMATRIX*  pFinalBoneMatrices;
+    LPD3DXMESH   m_pWorkMesh;
+    D3DXMATRIX** m_ppBoneMatrixPtrs;
+    D3DXMATRIX*  m_pBoneOffsetMatrices;
+    D3DXMATRIX*  m_pFinalBoneMatrices;
 
     MeshContainer();
 };
@@ -82,13 +77,15 @@ struct SkinnedMesh
     SkinnedMesh();
     ~SkinnedMesh();
 
-    void Setup();
-
 private:
     void setupBoneMatrixPointers(LPD3DXFRAME pFrame);
     void setupBoneMatrixPointersOnMesh(LPD3DXMESHCONTAINER pMeshContainerBase);
+
+public:
+    void Setup();
 };
 
+/* do NOT use! this will be deleted soon.*/
 class AllocateHierarchy : public ID3DXAllocateHierarchy
 {
 private:

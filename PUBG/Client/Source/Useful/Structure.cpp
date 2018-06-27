@@ -33,7 +33,7 @@ VERTEX_RHWC::VERTEX_RHWC(const float x, const float y, const float z,
 }
 
 EffectParam::EffectParam()
-    : Name("")
+    : name("")
     , pEffect(nullptr)
     , hParam(nullptr)
 {
@@ -44,23 +44,23 @@ EffectParam::~EffectParam()
 }
 
 EffectMesh::EffectMesh()
-    : pMesh(nullptr)
+    : m_pMesh(nullptr)
 {
 }
 
 EffectMesh::~EffectMesh()
 {
-    SAFE_RELEASE(pMesh);
-    EffectParams.resize(0);
+    SAFE_RELEASE(m_pMesh);
+    m_effectParams.resize(0);
 }
 
 void EffectMesh::Render(const D3DXMATRIX& world, LPD3DXMESH pMesh)
 {
     assert(pMesh && "EffectMesh::Render(), mesh is null.");
 
-    for (auto ei = 0u; ei < EffectParams.size(); ++ei)
+    for (auto ei = 0u; ei < m_effectParams.size(); ++ei)
     {
-        const auto& ep = EffectParams[ei];
+        const auto& ep = m_effectParams[ei];
         ep.pEffect->ApplyParameterBlock(ep.hParam);
 
         ep.pEffect->SetMatrix("World", &world);
@@ -138,7 +138,7 @@ void SkinnedMesh::setupBoneMatrixPointersOnMesh(
             auto pSearch = static_cast<Frame*>(D3DXFrameFind(
                 m_pRootFrame, pMeshContainer->pSkinInfo->GetBoneName(i)));
 
-            pMeshContainer->ppBoneMatrixPtrs[i] = 
+            pMeshContainer->m_ppBoneMatrixPtrs[i] = 
                 &pSearch->CombinedTransformationMatrix;
         }
     }
@@ -250,16 +250,16 @@ STDMETHODIMP AllocateHierarchy::CreateMeshContainer(THIS_ LPCSTR Name,
             m_path, pMeshContainer->Name, pMeshData->pMesh, pEffectInstances, 
             NumMaterials);
 
-        pEffectMesh->pMesh->AddRef();
+        pEffectMesh->m_pMesh->AddRef();
     }
 
     pMeshContainer->pEffectMesh = pEffectMesh;
-    auto& pMesh = pMeshContainer->pEffectMesh->pMesh;
+    auto& pMesh = pMeshContainer->pEffectMesh->m_pMesh;
 
     D3DVERTEXELEMENT9 decl[MAX_FVF_DECL_SIZE] = { 0 };
     pMesh->GetDeclaration(decl);
     pMesh->CloneMesh(pMesh->GetOptions(), decl, Device()(),
-        &pMeshContainer->pWorkMesh);
+        &pMeshContainer->m_pWorkMesh);
 
     if (pSkinInfo)
     {
@@ -268,11 +268,11 @@ STDMETHODIMP AllocateHierarchy::CreateMeshContainer(THIS_ LPCSTR Name,
 
         const auto numBones = pSkinInfo->GetNumBones();
 
-        pMeshContainer->pBoneOffsetMatrices = new D3DXMATRIX[numBones];
-        pMeshContainer->ppBoneMatrixPtrs = new D3DXMATRIX*[numBones];
-        pMeshContainer->pFinalBoneMatrices = new D3DXMATRIX[numBones];
+        pMeshContainer->m_pBoneOffsetMatrices = new D3DXMATRIX[numBones];
+        pMeshContainer->m_ppBoneMatrixPtrs = new D3DXMATRIX*[numBones];
+        pMeshContainer->m_pFinalBoneMatrices = new D3DXMATRIX[numBones];
 
-        auto& pBOMs = pMeshContainer->pBoneOffsetMatrices;
+        auto& pBOMs = pMeshContainer->m_pBoneOffsetMatrices;
         for (auto bi = 0u; bi < numBones; ++bi)
             pBOMs[bi] = *pSkinInfo->GetBoneOffsetMatrix(bi);
     }
@@ -299,13 +299,13 @@ STDMETHODIMP AllocateHierarchy::DestroyMeshContainer(
     if (!pMeshContainer) 
         return E_FAIL;
 
-    SAFE_RELEASE(pMeshContainer->pWorkMesh);
+    SAFE_RELEASE(pMeshContainer->m_pWorkMesh);
     SAFE_RELEASE(pMeshContainer->pSkinInfo);
 
     SAFE_DELETE_ARRAY(pMeshContainer->Name);
-    SAFE_DELETE_ARRAY(pMeshContainer->pBoneOffsetMatrices);
-    SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
-    SAFE_DELETE_ARRAY(pMeshContainer->pFinalBoneMatrices);
+    SAFE_DELETE_ARRAY(pMeshContainer->m_pBoneOffsetMatrices);
+    SAFE_DELETE_ARRAY(pMeshContainer->m_ppBoneMatrixPtrs);
+    SAFE_DELETE_ARRAY(pMeshContainer->m_pFinalBoneMatrices);
 
     SAFE_DELETE(pMeshContainer);
     return S_OK;
@@ -396,7 +396,7 @@ STDMETHODIMP AllocateHierarchyAsync::CreateMeshContainer(
 
     EffectMesh* pEffectMesh = 
         pResourceContainer->m_effectMeshs[m_path + meshContainerName];
-    LPD3DXMESH pMesh = pEffectMesh->pMesh;
+    LPD3DXMESH pMesh = pEffectMesh->m_pMesh;
     pMesh->AddRef();
 
     LPD3DXMESH pWorkMesh = nullptr;
@@ -442,13 +442,13 @@ STDMETHODIMP AllocateHierarchyAsync::CreateMeshContainer(
     }
 
     pMeshContainer->pEffectMesh = pEffectMesh;
-    pMeshContainer->pWorkMesh   = pWorkMesh;
+    pMeshContainer->m_pWorkMesh = pWorkMesh;
     pMeshContainer->pSkinInfo   = pSkinInfo;
 
-    pMeshContainer->Name                = pName;
-    pMeshContainer->pBoneOffsetMatrices = pBoneOffsetMatrices;
-    pMeshContainer->ppBoneMatrixPtrs    = ppBoneMatrixPtrs;
-    pMeshContainer->pFinalBoneMatrices  = pFinalBoneMatrices;
+    pMeshContainer->Name                  = pName;
+    pMeshContainer->m_pBoneOffsetMatrices = pBoneOffsetMatrices;
+    pMeshContainer->m_ppBoneMatrixPtrs    = ppBoneMatrixPtrs;
+    pMeshContainer->m_pFinalBoneMatrices  = pFinalBoneMatrices;
 
     *ppNewMeshContainer = pMeshContainer;
     pMeshContainer = nullptr;
@@ -479,13 +479,13 @@ STDMETHODIMP AllocateHierarchyAsync::DestroyMeshContainer(
         return E_FAIL;
     }
 
-    SAFE_RELEASE(pMeshContainer->pWorkMesh);
+    SAFE_RELEASE(pMeshContainer->m_pWorkMesh);
     SAFE_RELEASE(pMeshContainer->pSkinInfo);
 
     SAFE_DELETE_ARRAY(pMeshContainer->Name);
-    SAFE_DELETE_ARRAY(pMeshContainer->pBoneOffsetMatrices);
-    SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
-    SAFE_DELETE_ARRAY(pMeshContainer->pFinalBoneMatrices);
+    SAFE_DELETE_ARRAY(pMeshContainer->m_pBoneOffsetMatrices);
+    SAFE_DELETE_ARRAY(pMeshContainer->m_ppBoneMatrixPtrs);
+    SAFE_DELETE_ARRAY(pMeshContainer->m_pFinalBoneMatrices);
 
     SAFE_DELETE(pMeshContainer);
     return S_OK;

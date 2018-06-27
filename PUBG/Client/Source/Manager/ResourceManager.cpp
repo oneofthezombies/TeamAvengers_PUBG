@@ -243,7 +243,7 @@ EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
 void ResourceManager::AddCharacters(
     std::vector<ResourceContainer*>* OutCharacters)
 {
-    for (int i = 0; i < OutCharacters->size(); ++i)
+    for (std::size_t i = 0; i < OutCharacters->size(); ++i)
     {
         m_characters[i] = OutCharacters->at(i)->m_pSkinnedMesh;
         OutCharacters->at(i)->m_pSkinnedMesh = nullptr;
@@ -251,7 +251,7 @@ void ResourceManager::AddCharacters(
 
     AddResource(OutCharacters->at(0));
 
-    for (int i = 1; i < OutCharacters->size(); ++i)
+    for (std::size_t i = 1; i < OutCharacters->size(); ++i)
         SAFE_DELETE(OutCharacters->at(i));
 }
 
@@ -277,7 +277,7 @@ EffectMesh* ResourceManager::AddEffectMesh(
          mesh or effect instances is nullptr");
 
     auto pEffectMesh = new EffectMesh;
-    pEffectMesh->pMesh = pMesh;
+    pEffectMesh->m_pMesh = pMesh;
 
     auto& pEIs = pEffectInstances;
     for (DWORD ei = 0u; ei < numMaterials; ++ei)
@@ -287,7 +287,7 @@ EffectMesh* ResourceManager::AddEffectMesh(
         if (!EI.pEffectFilename) continue;
 
         EffectParam EP;
-        EP.Name = string(EI.pEffectFilename);
+        EP.name = string(EI.pEffectFilename);
         EP.pEffect = GetEffect(path, EI.pEffectFilename);
         LPD3DXEFFECT& pEffect = EP.pEffect;
 
@@ -330,7 +330,7 @@ EffectMesh* ResourceManager::AddEffectMesh(
             }
         }
         EP.hParam = pEffect->EndParameterBlock();
-        pEffectMesh->EffectParams.emplace_back(EP);
+        pEffectMesh->m_effectParams.emplace_back(EP);
     }
 
     m_effectMeshs[path + name] = pEffectMesh;
@@ -502,7 +502,7 @@ HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
     EffectMesh* pEffectMesh = new EffectMesh;
     OutResourceContainer->m_effectMeshs[path + name] = pEffectMesh;
 
-    pEffectMesh->pMesh = pMesh;
+    pEffectMesh->m_pMesh = pMesh;
 
     for (DWORD i = 0u; i < numEffectInstances; ++i)
     {
@@ -511,7 +511,7 @@ HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
         if (EI.pEffectFilename == false) continue;
 
         EffectParam effectParam;
-        effectParam.Name = string(EI.pEffectFilename);
+        effectParam.name = string(EI.pEffectFilename);
         
         HRESULT hr = CreateEffect(
             path, EI.pEffectFilename, OutResourceContainer);
@@ -581,7 +581,7 @@ HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
             }
         }
         effectParam.hParam = pEffect->EndParameterBlock();
-        pEffectMesh->EffectParams.emplace_back(effectParam);
+        pEffectMesh->m_effectParams.emplace_back(effectParam);
     }
 
     return S_OK;

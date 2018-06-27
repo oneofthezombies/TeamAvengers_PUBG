@@ -29,7 +29,6 @@ void CameraManager::Update()
 {
     if (pCurrentCamera)
     {
-        pCurrentCamera->ResetIsUpdated();
         pCurrentCamera->Update();
         pCurrentCamera->UpdateViewProjMatrix();
     }

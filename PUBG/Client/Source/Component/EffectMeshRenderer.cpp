@@ -16,7 +16,7 @@ void EffectMeshRenderer::Render()
         "EffectMeshController::Render(), effect mesh is null.");
 
     pEffectMesh->Render(
-        GetTransform()->GetTransformationMatrix(), pEffectMesh->pMesh);
+        GetTransform()->GetTransformationMatrix(), pEffectMesh->m_pMesh);
 }
 
 void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)

@@ -44,13 +44,13 @@ void SkinnedMeshController::drawMeshContainer(
     auto numBones = pMeshContainer->pSkinInfo->GetNumBones();
     for (auto i = 0u; i < numBones; ++i)
     {
-        pMeshContainer->pFinalBoneMatrices[i] 
-            = pMeshContainer->pBoneOffsetMatrices[i] 
-            * *pMeshContainer->ppBoneMatrixPtrs[i];
+        pMeshContainer->m_pFinalBoneMatrices[i] 
+            = pMeshContainer->m_pBoneOffsetMatrices[i] 
+            * *pMeshContainer->m_ppBoneMatrixPtrs[i];
     }
 
     PBYTE pVerticesSrc = nullptr;
-    pMeshContainer->pEffectMesh->pMesh->LockVertexBuffer(
+    pMeshContainer->pEffectMesh->m_pMesh->LockVertexBuffer(
         D3DLOCK_READONLY, (LPVOID*)&pVerticesSrc);
 
     assert(pVerticesSrc && 
@@ -58,21 +58,22 @@ void SkinnedMeshController::drawMeshContainer(
          source vertices is null.");
 
     PBYTE pVerticesDest = nullptr;
-    pMeshContainer->pWorkMesh->LockVertexBuffer(0, (LPVOID*)&pVerticesDest);
+    pMeshContainer->m_pWorkMesh->LockVertexBuffer(0, (LPVOID*)&pVerticesDest);
 
     assert(pVerticesDest &&         
         "SkinnedMeshController::drawMeshContainer(), \
          destination vertices is null.");
 
     pMeshContainer->pSkinInfo->UpdateSkinnedMesh(
-        pMeshContainer->pFinalBoneMatrices, nullptr, 
+        pMeshContainer->m_pFinalBoneMatrices, nullptr, 
         pVerticesSrc, pVerticesDest);
 
-    pMeshContainer->pEffectMesh->pMesh->UnlockVertexBuffer();
-    pMeshContainer->pWorkMesh->UnlockVertexBuffer();
+    pMeshContainer->pEffectMesh->m_pMesh->UnlockVertexBuffer();
+    pMeshContainer->m_pWorkMesh->UnlockVertexBuffer();
 
     pMeshContainer->pEffectMesh->Render(
-        GetTransform()->GetTransformationMatrix(), pMeshContainer->pWorkMesh);
+        GetTransform()->GetTransformationMatrix(), 
+        pMeshContainer->m_pWorkMesh);
 }
 
 SkinnedMesh* SkinnedMeshController::loadSkinnedMesh(

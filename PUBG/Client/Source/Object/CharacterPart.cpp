@@ -44,7 +44,7 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             auto pMeshContainer = 
                 static_cast<MeshContainer*>(pF->pMeshContainer);
             void* pData = nullptr;
-            auto pMesh = pMeshContainer->pEffectMesh->pMesh;
+            auto pMesh = pMeshContainer->pEffectMesh->m_pMesh;
             pMesh->LockVertexBuffer(D3DLOCK_READONLY, &pData);
             D3DXVECTOR3 min, max;
             D3DXComputeBoundingBox((D3DXVECTOR3*)pData, 

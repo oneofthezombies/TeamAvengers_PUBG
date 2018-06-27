@@ -12,6 +12,7 @@ SceneLoading::SceneLoading()
     , m_numTotalTasks(0)
     , m_percentage("")
     , m_lastFinishedTaskName("")
+    , m_dotDotDot(0)
 {
 }
 
@@ -81,10 +82,16 @@ void SceneLoading::OnUpdate()
                            / static_cast<float>(m_numTotalTasks)
                            * 100.0f;
 
+    ++m_dotDotDot;
+    if (m_dotDotDot > 100)
+        m_dotDotDot = 0;
+
     m_percentage = "Finished file : " + m_lastFinishedTaskName + "\n";
     for (int i = 0; i < static_cast<int>(percentage * 0.1f); ++i)
         m_percentage += "@";
-    m_percentage += ", percentage : " + std::to_string(percentage);
+    m_percentage += " percentage : " + std::to_string(percentage);
+    for (std::size_t i = 0; i < m_dotDotDot; ++i)
+        m_percentage += '.';
 }
 
 void SceneLoading::loadEffectMesh()

@@ -3,13 +3,17 @@
 #include "ComponentTransform.h"
 #include "Character.h"
 
+Transform* ICamera::getTarget()
+{
+    return Camera()()->GetTarget();
+}
+
 ICamera::ICamera(const TAG_CAMERA tag)
     : MemoryAllocator()
     , m_tagCamera(tag)
-    , m_offsetFromTarget(Vector3::ZERO)
+    , m_position(Vector3::ZERO)
     , m_fovY(D3DX_PI * 0.5f)
-    , m_zeroPointDistance(10.0f)
-    , m_isUpdated(false)
+    , m_rotation(Quaternion::ZERO)
 {
 }
 
@@ -17,33 +21,31 @@ ICamera::~ICamera()
 {
 }
 
-void ICamera::ResetIsUpdated()
-{
-    m_isUpdated = false;
-}
-
 void ICamera::UpdateViewProjMatrix()
 {
-    if (!m_isUpdated) return;
-
-    D3DXVECTOR3 eye = m_offsetFromTarget;
-    D3DXVECTOR3 look;
+    D3DXVECTOR3 eye = m_position;
+    D3DXVECTOR3 look = eye + Vector3::FORWARD;
     
-    auto pTarget = Camera()()->GetTarget();
+    D3DXMATRIX rotCam, rotTar, posTar, world;
+    D3DXMatrixRotationQuaternion(&rotCam, &m_rotation);
+
+    auto pTarget = getTarget();
     if (!pTarget)
     {
-        look = eye + Vector3::FORWARD;
+        D3DXMatrixIdentity(&rotTar);
+        D3DXMatrixIdentity(&posTar);
     }
     else
     {
-        auto tr = pTarget->GetTransform();
-        auto offset = m_offsetFromTarget;
-        auto rot = tr->GetRotation() * Character::OFFSET_ROTATION;
-        offset = Vector3::Rotate(offset, rot);
-        eye = tr->GetPosition() + offset;
-        auto dir = Vector3::Rotate(Vector3::FORWARD, rot);
-        look = dir * 1000.0f; // zero point distance
+        Transform* tr = pTarget->GetTransform();
+        D3DXMatrixRotationQuaternion(&rotTar, &tr->GetRotation());
+        D3DXVECTOR3 p = tr->GetPosition();
+        D3DXMatrixTranslation(&posTar, p.x, p.y, p.z);
     }
+
+    world = rotCam * rotTar * posTar;
+    D3DXVec3TransformCoord(&eye, &eye, &world);
+    D3DXVec3TransformCoord(&look, &look, &world);
 
     D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &look, &Vector3::UP);
 
@@ -58,20 +60,25 @@ void ICamera::UpdateViewProjMatrix()
     pD->SetTransform(D3DTS_PROJECTION, &m_projectionMatrix);
 }
 
-const D3DXMATRIX& ICamera::GetViewMatrix()
+const D3DXMATRIX& ICamera::GetViewMatrix() const
 {
     return m_viewMatrix;
 }
 
-const D3DXMATRIX& ICamera::GetProjectionMatrix()
+const D3DXMATRIX& ICamera::GetProjectionMatrix() const
 {
     return m_projectionMatrix;
+}
+
+TAG_CAMERA ICamera::GetTagCamera() const
+{
+    return m_tagCamera;
 }
 
 CameraFree::CameraFree()
     : ICamera(TAG_CAMERA::FREE)
 {
-    m_offsetFromTarget = D3DXVECTOR3(0.0f, 160.0f, -258.0f);
+    m_position = D3DXVECTOR3(0.0f, 160.0f, -258.0f);
 }
 
 CameraFree::~CameraFree()
@@ -101,42 +108,8 @@ void CameraFree::Update()
     //{
     //    m_offsetFromTarget.x += 1.0f;
     //}
-
-    m_isUpdated = true;
 }
 
-//ICamera::ICamera()
-//    : m_rotX(0.0f)
-//    , m_rotY(0.0f)
-//    , m_isALTbuttonStay(false)
-//    , m_pTargetPos(nullptr)
-//    , m_pTargetRot(nullptr)
-//{
-//    RECT rc;
-//    GetClientRect(g_hWnd, &rc);
-//    m_aspect = rc.right / (float)rc.bottom;
-//    m_up = D3DXVECTOR3(0, 1, 0);
-//}
-//
-//void ICamera::Init()
-//{
-//    m_eye = D3DXVECTOR3(m_basePosX, m_basePosY, -m_distance);
-//    m_lookAt = D3DXVECTOR3(m_eye.x, m_eye.y, m_eye.z+1);
-//
-//    //캐릭터로부터 pos와 rot 받아옴
-//    m_pTargetPos = g_pCameraManager->GetTargetPos();
-//    m_pTargetRot = g_pCameraManager->GetTargetRot();
-//    //if (!m_pTargetPos || !m_pTargetRot)
-//    //    Debug->ShowMessageBox();
-//
-//    //m_ptPrevMouse;
-//    D3DXMatrixLookAtLH(&m_matView, &m_eye, &m_lookAt, &m_up);
-//    g_pDevice->SetTransform(D3DTS_VIEW, &m_matView);
-//
-//    D3DXMatrixPerspectiveFovLH(&m_matProj, m_fovY, m_aspect, 1, 1000);
-//    g_pDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
-//}
-//
 //void ICamera::Update()
 //{
 //    D3DXMATRIX matWorld,matR, matT;
@@ -179,9 +152,3 @@ void CameraFree::Update()
 //    g_pDevice->SetTransform(D3DTS_VIEW, &m_matView);
 //
 //}
-//
-//CameraState::CameraState ICamera::GetState() const
-//{
-//    return m_cameraState;
-//}
-
