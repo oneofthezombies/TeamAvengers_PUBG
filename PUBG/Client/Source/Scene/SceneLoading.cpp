@@ -105,24 +105,29 @@ void SceneLoading::loadEffectMesh()
 
 void SceneLoading::loadSkinnedMesh()
 {
-    // Unarmed_Landing.X
-    // 이 엑스파일이 애니메이션을 갖고 있는 애들 중 제일 작다
+    // Rifle_Prone_PrimarySlot_OnHand.X
+    // 이 엑스파일이 애니메이션을 갖고 있는 애들 중 제일 작다 (애니메이션 1개)
 
     for (int i = 0; i < Character::NUM_PLAYER; ++i)
-        addTask(TAG_RES_ANIM::Unarmed_Landing, &m_characterSkinnedMeshTasks);
-
-    //pair<string, string> p;
-    //for (int i = 0; i < static_cast<int>(TAG_RES_ANIM::COUNT); ++i)
-    //{
-    //    p = ResPathFileName::Get(static_cast<TAG_RES_ANIM>(i));
-    //    cout << p.first << p.second << endl;
-    //}
+    {
+        addTask(TAG_RES_ANIM_CHARACTER::Rifle_Prone_PrimarySlot_OnHand, &m_characterSkinnedMeshTasks);
+    }
 }
 
 void SceneLoading::loadAnimation()
 {
-    addTask(TAG_RES_ANIM::Lobby, &m_characterAnimationTasks);
-
+    addTask(TAG_RES_ANIM_CHARACTER::Lobby, &m_characterAnimationTasks);
+    addTask(TAG_RES_ANIM_CHARACTER::Healing, &m_characterAnimationTasks);
+    /*
+    //아직 두개 이상 들어가는게 안되네여????
+    pair<string, string> p;
+    for (int i = 0; i < static_cast<int>(TAG_RES_ANIM_CHARACTER::COUNT); ++i)
+    {
+        p = ResPathFileName::Get(static_cast<TAG_RES_ANIM_CHARACTER>(i));
+        cout << p.second << endl;
+        addTask(static_cast<TAG_RES_ANIM_CHARACTER>(i), &m_characterAnimationTasks); //enum 순서대로 x파일이 들어감
+    }
+    */
     // ...
 }
 
@@ -277,7 +282,7 @@ void SceneLoading::addTask(
 }
 
 void SceneLoading::addTask(
-    const TAG_RES_ANIM tag, 
+    const TAG_RES_ANIM_CHARACTER tag, 
     std::deque<std::future<ResourceContainer*>>* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");

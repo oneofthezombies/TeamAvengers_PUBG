@@ -1,7 +1,7 @@
 #pragma once
 /* 리소스 관련 enum들 */
 
-//////////////////////////////정적인 리소스
+//정적인 리소스 -------------------------------------
 //TODO: 아직 UI랑 이팩트는 안했음
 enum class TAG_RES_STATIC
 {
@@ -138,16 +138,17 @@ enum class TAG_RES_STATIC
     COUNT
 };
 
-//////////////////////////////애니메이션이 있는 리소스
-//총이랑 캐릭터가 애니메이션이 있음
-enum class TAG_RES_ANIM
+
+//애니메이션이 있는 리소스 -------------------------------------
+enum class TAG_RES_ANIM_WEAPON
 {
 //Weapon - 총 자체의 애니메이션
-    //OBZ
     QBZ_Anim,
-    //Kar98k
-    Kar98k_Anim,
+    Kar98k_Anim
+};
 
+enum class TAG_RES_ANIM_CHARACTER
+{
 //Character
 //0. 로비씬 애니메이션
     Lobby,
@@ -212,8 +213,10 @@ enum class TAG_RES_ANIM
     COUNT
 };
 
+
+//TODO: 사용할지 안 할지 모르겠음
 //////////////////////////////애니메이션 리스트
-enum class TAG_ANI_SET_WEAPON
+enum class TAG_ANIM_SET_WEAPON
 {
     //총 - 총 자체의 애니메이션
     //OBZ(5)
@@ -234,7 +237,7 @@ enum class TAG_ANI_SET_WEAPON
     COUNT
 };
 
-enum class TAG_ANI_SET_CHARACTER
+enum class TAG_ANIM_SET_CHARACTER
 {
 //캐릭터
 //0. 로비씬 애니메이션

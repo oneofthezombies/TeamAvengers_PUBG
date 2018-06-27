@@ -51,7 +51,7 @@ private:
         const TAG_RES_STATIC tag,
         std::deque<std::future<ResourceContainer*>>* OutTasks);
     void addTask(
-        const TAG_RES_ANIM tag,
+        const TAG_RES_ANIM_CHARACTER tag,
         std::deque<std::future<ResourceContainer*>>* OutTasks);
 
 public:

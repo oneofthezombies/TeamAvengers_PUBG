@@ -8,5 +8,6 @@ struct ResPathFileName
         Output: pair<filePath, fileName>
     */
     static pair<string, string> Get(const TAG_RES_STATIC tag);
-    static pair<string, string> Get(const TAG_RES_ANIM tag);
+    static pair<string, string> Get(const TAG_RES_ANIM_WEAPON tag);
+    static pair<string, string> Get(const TAG_RES_ANIM_CHARACTER tag);
 };
