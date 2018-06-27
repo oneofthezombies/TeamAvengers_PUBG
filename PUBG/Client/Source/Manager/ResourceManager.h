@@ -3,6 +3,8 @@
 #include "Singleton.h"
 #include "TagResource.h"
 
+#define g_pResource Resource()()
+
 struct ResourceContainer
 {
     std::string m_filename;

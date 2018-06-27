@@ -2,6 +2,8 @@
 #include "Singleton.h"
 #include "Protocol.h"
 
+#define g_pCommunication Communication()()
+
 class CommunicationManager;
 class Bullet;
 

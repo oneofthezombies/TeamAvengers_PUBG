@@ -2,6 +2,9 @@
 #include "Singleton.h"
 #include "TagClientOnly.h"
 
+#define g_pScene        Scene       ()()
+#define g_pCurrentScene CurrentScene()()
+
 class IScene;
 
 class SceneManager : public Singleton<SceneManager>

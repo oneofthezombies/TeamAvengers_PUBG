@@ -2,6 +2,8 @@
 #include "Singleton.h"
 #include "TagClientOnly.h"
 
+#define g_pCollision Collision()()
+
 class Collider;
 class BoxCollider;
 class SphereCollider;

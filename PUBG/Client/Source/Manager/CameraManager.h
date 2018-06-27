@@ -2,6 +2,9 @@
 #include "Singleton.h"
 #include "ICamera.h"
 
+#define g_pCamera        Camera       ()()
+#define g_pCurrentCamera CurrentCamera()()
+
 class Transform;
 
 class CameraManager : public Singleton<CameraManager>

@@ -2,6 +2,28 @@
 
 class IObject;
 
+struct BoxColliderInFile
+{
+    D3DXVECTOR3 m_center;
+    D3DXVECTOR3 m_extent;
+    D3DXMATRIX  m_transform;
+
+    BoxColliderInFile();
+};
+
+struct ObjectInFile
+{
+    int            m_ID;
+    TAG_RES_STATIC m_tagResStatic;
+    D3DXVECTOR3    m_position;
+    D3DXVECTOR3    m_rotation;
+    D3DXVECTOR3    m_scale;
+
+    std::vector<BoxColliderInFile> m_boxColliders;
+
+    ObjectInFile();
+};
+
 class IScene : public MemoryAllocator
 {
 private:
@@ -12,6 +34,9 @@ protected:
     IScene();
 
 	void updateToDeleteObjects();
+    HRESULT parseObjectInFile(std::ifstream& fin, ObjectInFile* Out);
+    HRESULT parseBoxColliderInFile(
+        std::ifstream& fin, BoxColliderInFile* Out);
 
 public:
     virtual ~IScene();
@@ -22,8 +47,9 @@ public:
 
     void AddObject(IObject* p);
     void RemoveObject(IObject* p);
-
 	void Destroy(IObject* p, const float t = 0.0f);
+
+    void LoadObjectsFromFile(const string& fullPath);
 
     virtual void OnInit() = 0;
 	virtual void OnUpdate() = 0;

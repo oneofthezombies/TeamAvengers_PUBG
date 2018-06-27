@@ -2,6 +2,8 @@
 #include "Singleton.h"
 #include "TagClientOnly.h"
 
+#define g_pSound Sound()()
+
 class SoundManager : public Singleton<SoundManager>
 {
 private:

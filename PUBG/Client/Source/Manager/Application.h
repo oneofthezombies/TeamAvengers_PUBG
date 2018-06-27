@@ -1,6 +1,8 @@
 #pragma once
 #include "Singleton.h"
 
+#define g_pApp App()()
+
 class Application : public Singleton<Application>
 {
 private:

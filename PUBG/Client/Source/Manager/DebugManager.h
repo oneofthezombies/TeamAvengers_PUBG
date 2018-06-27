@@ -1,7 +1,8 @@
 #pragma once
 #include "Singleton.h"
 
-#define Debug DebugManager::GetInstance()->GetStringStream()
+#define g_pDebugMgr DebugMgr()()
+#define Debug       DebugMgr()()->GetStringStream()
 
 class DebugManager : public Singleton<DebugManager>
 {
