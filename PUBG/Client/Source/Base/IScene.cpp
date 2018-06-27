@@ -107,28 +107,30 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
 
     for (auto o : objs)
     {
-        //cout << static_cast<int>(o.m_tagResStatic) << '\n';
-        //cout << o.m_name << '\n';
-        //cout << o.m_position << '\n';
-        //cout << o.m_rotation << '\n';
-        //cout << o.m_scale << '\n';
+        cout << static_cast<int>(o.m_tagResStatic) << '\n';
+        cout << o.m_name << '\n';
+        cout << o.m_position << '\n';
+        cout << o.m_rotation << '\n';
+        cout << o.m_scale << '\n';
 
-        //for (auto b : o.m_boxColliders)
-        //{
-        //    cout << b.m_center << '\n';
-        //    cout << b.m_extent << '\n';
-        //    cout << b.m_transform << '\n';
-        //}
+        for (auto b : o.m_boxColliders)
+        {
+            cout << b.m_center << '\n';
+            cout << b.m_extent << '\n';
+            cout << b.m_transform << '\n';
+        }
 
         CollidableStaticObject* pObj = 
             new CollidableStaticObject(
-                TAG_RES_STATIC::Bandage, 
+                TAG_RES_STATIC::Church, 
                 o.m_position, 
                 o.m_rotation, 
                 o.m_scale);
 
         for (auto b : o.m_boxColliders)
             pObj->AddBoxCollider(b.m_center, b.m_extent, b.m_transform);
+            //pObj->AddBoxCollider(Vector3::ZERO, Vector3::ONE * 10.0f, Matrix::IDENTITY);
+
 
         AddObject(pObj);
     }
