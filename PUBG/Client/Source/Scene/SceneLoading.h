@@ -24,10 +24,11 @@ private:
 
     std::size_t m_numTotalTasks;
     std::size_t m_numFinishedTasks;
+    std::size_t m_dotDotDot;
+
     std::string m_lastFinishedTaskName;
     std::string m_percentage;
     UIText*     m_pPercentageImage;
-    std::size_t m_dotDotDot;
 
     UINT   m_numAddedAnim;
     bool   m_isDoneCharacters;
