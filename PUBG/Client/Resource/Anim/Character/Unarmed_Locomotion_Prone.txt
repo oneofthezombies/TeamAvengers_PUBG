@@ -1,0 +1,18 @@
+/// Unarmed_Locomotion_Prone.X (무기없이 엎드려서 움직이는 애니메이션)
+0. (0    ~ 120)[121] - Unarmed_Combat_Prone_Run_B
+1. (121 ~ 241)[121] - Unarmed_Combat_Prone_Run_BL
+2. (242 ~ 362)[121] - Unarmed_Combat_Prone_Run_BR
+3. (363 ~ 503)[141] - Unarmed_Combat_Prone_Run_F
+4. (504 ~ 644)[141] - Unarmed_Combat_Prone_Run_FL
+5. (645 ~ 765)[121] - Unarmed_Combat_Prone_Run_FR
+6. (766 ~ 874)[109] - Unarmed_Combat_Prone_Run_L
+7. (875 ~ 963)[89] - Unarmed_Combat_Prone_Run_R
+
+8. (964    ~ 1228)[265] - Unarmed_Combat_Prone_Walk_B
+9. (1229   ~ 1389)[161] - Unarmed_Combat_Prone_Walk_BL
+10. (1390 ~ 1532)[143] - Unarmed_Combat_Prone_Walk_BR
+11. (1533 ~ 1769)[237] - Unarmed_Combat_Prone_Walk_F
+12. (1770 ~ 1982)[213] - Unarmed_Combat_Prone_Walk_FL
+13 (1983  ~ 2147)[165] - Unarmed_Combat_Prone_Walk_FR
+14. (2148 ~ 2328)[181] - Unarmed_Combat_Prone_Walk_L
+15. (2329 ~ 2485)[157] - Unarmed_Combat_Prone_Walk_R

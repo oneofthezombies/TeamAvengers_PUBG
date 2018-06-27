@@ -1,0 +1,13 @@
+/// Rifle_Locomotion_FPP.X 
+0. (0 ~ 40)[41] - Rifle_Combat_Crouch_Sprint_F_FPP
+1. (41 ~ 81)[41] - Rifle_Combat_Crouch_Sprint_FL_FPP
+2. (82 ~ 122)[41] - Rifle_Combat_Crouch_Sprint_FR_FPP
+
+3. (123 ~ 153)[31] - Rifle_Combat_Stand_Sprint_F_WeaponDown_FPP
+4. (154 ~ 184)[31] - Rifle_Combat_Stand_Sprint_F_WeaponInView_FPP
+
+5. (185 ~ 215)[31] - Rifle_Combat_Stand_Sprint_FL_BigGun_FPP
+6. (216 ~	246)[31] - Rifle_Combat_Stand_Sprint_FL_WeaponDown_FPP
+
+7. (247 ~ 277)[31] - Rifle_Combat_Stand_Sprint_FR_BigGun_FPP
+8. (278 ~ 308)[31] - Rifle_Combat_Stand_Sprint_FR_WeaponDonw_FPP
