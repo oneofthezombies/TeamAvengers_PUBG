@@ -1,6 +1,7 @@
 #pragma once
 #include "IObject.h"
 #include "TagClientOnly.h"
+#include "TagAnimation.h"
 
 class SkinnedMeshController;
 

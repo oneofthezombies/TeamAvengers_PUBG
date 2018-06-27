@@ -43,6 +43,7 @@
     <ClCompile Include="Source\Object\Church.cpp" />
     <ClCompile Include="Source\Object\Kar98k.cpp" />
     <ClCompile Include="Source\Object\TerrainFeature.cpp" />
+    <ClCompile Include="Source\Useful\TagAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -89,7 +90,7 @@
     <ClInclude Include="Source\Object\CharacterPart.h" />
     <ClInclude Include="Source\Object\Church.h" />
     <ClInclude Include="Source\Object\Kar98k.h" />
-    <ClInclude Include="Source\Useful\AnimSet.h" />
     <ClInclude Include="Source\Object\TerrainFeature.h" />
+    <ClInclude Include="Source\Useful\TagAnimation.h" />
   </ItemGroup>
 </Project>
