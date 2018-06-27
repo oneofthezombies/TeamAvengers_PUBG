@@ -49,7 +49,7 @@ public:
     void RemoveObject(IObject* p);
 	void Destroy(IObject* p, const float t = 0.0f);
 
-    void LoadObjectsFromFile(const string& fullPath);
+    void LoadObjectsFromFile(const std::string& fullPath);
 
     virtual void OnInit() = 0;
 	virtual void OnUpdate() = 0;

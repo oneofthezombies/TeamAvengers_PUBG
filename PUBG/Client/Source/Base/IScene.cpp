@@ -75,7 +75,7 @@ void IScene::Destroy(IObject* p, const float t)
 	m_toDeleteObjects.emplace(p, t);
 }
 
-void IScene::LoadObjectsFromFile(const string& fullPath)
+void IScene::LoadObjectsFromFile(const std::string& fullPath)
 {
     std::ifstream fin(fullPath);
 
@@ -89,7 +89,7 @@ void IScene::LoadObjectsFromFile(const string& fullPath)
     fin >> numObjects;
 
     HRESULT hr;
-    vector<ObjectInFile> objs;
+    std::vector<ObjectInFile> objs;
     string buf;
     for (int oi = 0; oi < numObjects; ++oi)
     {
