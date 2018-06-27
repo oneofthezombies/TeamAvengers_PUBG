@@ -41,8 +41,8 @@
     <ClCompile Include="Source\Object\Character_OnCollision.cpp" />
     <ClCompile Include="Source\Object\CharacterPart.cpp" />
     <ClCompile Include="Source\Object\Church.cpp" />
-    <ClCompile Include="Source\Object\CollidableStaticObject.cpp" />
     <ClCompile Include="Source\Object\Kar98k.cpp" />
+    <ClCompile Include="Source\Object\TerrainFeature.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -88,8 +88,8 @@
     <ClInclude Include="Source\Object\Character.h" />
     <ClInclude Include="Source\Object\CharacterPart.h" />
     <ClInclude Include="Source\Object\Church.h" />
-    <ClInclude Include="Source\Object\CollidableStaticObject.h" />
     <ClInclude Include="Source\Object\Kar98k.h" />
     <ClInclude Include="Source\Useful\AnimSet.h" />
+    <ClInclude Include="Source\Object\TerrainFeature.h" />
   </ItemGroup>
 </Project>

@@ -4,8 +4,6 @@ class IObject;
 
 struct BoxColliderInFile
 {
-    D3DXVECTOR3 m_center;
-    D3DXVECTOR3 m_extent;
     D3DXMATRIX  m_transform;
 
     BoxColliderInFile();

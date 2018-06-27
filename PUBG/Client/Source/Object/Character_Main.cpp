@@ -11,7 +11,7 @@ Character::Character(const int index)
     : IObject()
 
     , m_index(index)
-    , m_animState(TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still)
+    , m_animState(TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot)
     , m_rootTransform(1.0f)
     , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
     , m_framePtr()
@@ -28,7 +28,7 @@ Character::Character(const int index)
 
     setFramePtr();
 
-    AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::HEAD, this));
+    AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::Head, this));
 
     // set sphere mesh for root position
     D3DXCreateSphere(Device()(), 1.0f, 10, 10, &m_pSphereMesh, nullptr);
@@ -93,28 +93,28 @@ void Character::OnUpdate()
         auto nextState = m_animState;
         switch (m_animState)
         {
-        case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still:
-            {
-                if (pInput->IsOnceKeyDown('W'))
-                {
-                    nextState = TAG_ANIM_CHARACTER::Melee_Combat_Stand_Walk_F;
-                    isTransit = true;
-                }
-            }
-            break;
-        case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Walk_F:
-            {
-                pos += getForward() * m_rootTransform.MOVE_SPEED;
-                isUpdated = true;
-                
-                if (!pInput->IsStayKeyDown('W'))
-                {
-                    nextState = 
-                        TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still;
-                    isTransit = true;
-                }
-            }
-            break;
+        //case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still:
+        //    {
+        //        if (pInput->IsOnceKeyDown('W'))
+        //        {
+        //            nextState = TAG_ANIM_CHARACTER::Melee_Combat_Stand_Walk_F;
+        //            isTransit = true;
+        //        }
+        //    }
+        //    break;
+        //case TAG_ANIM_CHARACTER::Melee_Combat_Stand_Walk_F:
+        //    {
+        //        pos += getForward() * m_rootTransform.MOVE_SPEED;
+        //        isUpdated = true;
+        //        
+        //        if (!pInput->IsStayKeyDown('W'))
+        //        {
+        //            nextState = 
+        //                TAG_ANIM_CHARACTER::Melee_Combat_Stand_Idle_Still;
+        //            isTransit = true;
+        //        }
+        //    }
+        //    break;
         }
         if (isTransit)
         {

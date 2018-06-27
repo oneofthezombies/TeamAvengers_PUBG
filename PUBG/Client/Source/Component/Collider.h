@@ -82,16 +82,10 @@ public:
     BoxCollider(IObject* pOwner);
     virtual ~BoxCollider();
 
-    void Init(
-        const D3DXVECTOR3& min, 
-        const D3DXVECTOR3& max, 
+    void Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max, 
         const float isRenderable = true);
     
-    void Init(
-        const D3DXVECTOR3& center,
-        const D3DXVECTOR3& extent,
-        const D3DXMATRIX& transform,
-        const float isRenderable = true);
+    void Init(const D3DXMATRIX& transform, const float isRenderable = true);
 
     void Update(const D3DXMATRIX& transform);
 

@@ -15,7 +15,7 @@ Bullet::Bullet()
 
     pBoxCollider = AddComponent<BoxCollider>();
     pBoxCollider->Init(-Vector3::ONE, Vector3::ONE);
-    pBoxCollider->SetTag(TAG_COLLISION::IDLE);
+    pBoxCollider->SetTag(TAG_COLLISION::Idle);
 
     pCylinder = BulletPool()()->GetCylinder();
 }
@@ -58,7 +58,7 @@ void Bullet::OnRender()
 void Bullet::Reset()
 {
     GetTransform()->SetPosition(Vector3::ZERO);
-    pBoxCollider->SetTag(TAG_COLLISION::IDLE);
+    pBoxCollider->SetTag(TAG_COLLISION::Idle);
     m_IsActive = false;
 
     CurrentScene()()->RemoveObject(this);

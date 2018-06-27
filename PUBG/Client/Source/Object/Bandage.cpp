@@ -14,7 +14,7 @@ Bandage::Bandage(const D3DXVECTOR3& pos, const D3DXVECTOR3& scale)
     pEffectMeshRenderer->SetEffectMesh("./Resource/Church/", "Church.X");
 
     pBoxCollider = AddComponent<BoxCollider>();
-    pBoxCollider->SetTag(TAG_COLLISION::DAMAGE_OF_PLAYER_2);
+    pBoxCollider->SetTag(TAG_COLLISION::Player_1_Damage);
     pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), D3DXVECTOR3(10.0f, 10.0f, 10.0f));
 
     GetTransform()->SetPosition(pos);

@@ -5,26 +5,24 @@
 class BoxCollider;
 class EffectMeshRenderer;
 
-class CollidableStaticObject : public IObject
+// e.g. ) tree, rock, church
+class TerrainFeature : public IObject
 {
 private:
     vector<BoxCollider*> m_colliders;
     EffectMeshRenderer*  pEffectMeshRenderer;
 
 public:
-             CollidableStaticObject(
+             TerrainFeature(
                  const TAG_RES_STATIC tag, 
                  const D3DXVECTOR3&   position,
                  const D3DXVECTOR3&   rotation,
                  const D3DXVECTOR3&   scale);
 
-    virtual ~CollidableStaticObject();
+    virtual ~TerrainFeature();
 
     virtual void OnUpdate() override;
     virtual void OnRender() override;
 
-    void AddBoxCollider(
-        const D3DXVECTOR3& center, 
-        const D3DXVECTOR3& extent, 
-        const D3DXMATRIX&  transform);
+    void AddBoxCollider(const D3DXMATRIX&  transform);
 };

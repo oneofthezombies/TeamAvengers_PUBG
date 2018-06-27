@@ -11,102 +11,102 @@ void Character::OnCollisionEnter(Collider* pPerpetrator, Collider* pVictim)
     auto tag = pCharacterPart->GetTagColliderCharacterPart();
     switch (tag)
     {
-    case TAG_COLLIDER_CHARACTER_PART::HEAD:
+    case TAG_COLLIDER_CHARACTER_PART::Head:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::NECK:
+    case TAG_COLLIDER_CHARACTER_PART::Neck:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::BREAST:
+    case TAG_COLLIDER_CHARACTER_PART::Breast:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::STOMACH_UPPER:
+    case TAG_COLLIDER_CHARACTER_PART::Stomach_Upper:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::STOMACH_LOWER:
+    case TAG_COLLIDER_CHARACTER_PART::Stomach_Lower:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::WAIST:
+    case TAG_COLLIDER_CHARACTER_PART::Waist:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::CLAVICLE_LEFT:
+    case TAG_COLLIDER_CHARACTER_PART::Clavicle_Left:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::CLAVICLE_RIGHT:
+    case TAG_COLLIDER_CHARACTER_PART::Clavicle_Right:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::ARM_LEFT_UPPER:
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Left_Upper:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::ARM_RIGHT_UPPER:
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Right_Upper:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::ARM_LEFT_LOWER:
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Left_Lower:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::ARM_RIGHT_LOWER:
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Right_Lower:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::HAND_LEFT:
+    case TAG_COLLIDER_CHARACTER_PART::Hand_Left:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::HAND_RIGHT:
+    case TAG_COLLIDER_CHARACTER_PART::Hand_Right:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::LEG_LEFT_UPPER:
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Left_Upper:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::LEG_RIGHT_UPPER:
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Right_Upper:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::LEG_LEFT_LOWER:
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Left_Lower:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::LEG_RIGHT_LOWER:
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Right_Lower:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::FOOT_LEFT:
+    case TAG_COLLIDER_CHARACTER_PART::Foot_Left:
         {
 
         }
         break;
-    case TAG_COLLIDER_CHARACTER_PART::FOOT_RIGHT:
+    case TAG_COLLIDER_CHARACTER_PART::Foot_Right:
         {
 
         }

@@ -76,7 +76,7 @@ TAG_CAMERA ICamera::GetTagCamera() const
 }
 
 CameraFree::CameraFree()
-    : ICamera(TAG_CAMERA::FREE)
+    : ICamera(TAG_CAMERA::Default)
 {
     m_position = D3DXVECTOR3(0.0f, 160.0f, -258.0f);
 }

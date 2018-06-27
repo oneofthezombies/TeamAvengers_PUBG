@@ -17,11 +17,11 @@ SceneManager::~SceneManager()
 
 void SceneManager::Init()
 {
-    m_scenes.emplace(TAG_SCENE::LOADING, new SceneLoading);
-    m_scenes.emplace(TAG_SCENE::LOGIN, new SceneLogin);
-    m_scenes.emplace(TAG_SCENE::PLAY, new ScenePlay);
+    m_scenes.emplace(TAG_SCENE::Loading, new SceneLoading);
+    m_scenes.emplace(TAG_SCENE::Login,   new SceneLogin);
+    m_scenes.emplace(TAG_SCENE::Play,    new ScenePlay);
 
-    SetCurrentScene(TAG_SCENE::LOADING);
+    SetCurrentScene(TAG_SCENE::Loading);
 }
 
 void SceneManager::Destroy()

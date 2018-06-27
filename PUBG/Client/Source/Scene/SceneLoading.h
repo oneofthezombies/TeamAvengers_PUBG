@@ -1,22 +1,30 @@
 #pragma once
 #include "TagResource.h"
 
+using tasks_t = std::deque<
+    std::pair<
+        std::size_t, 
+        std::future<ResourceContainer*>
+    >
+>;
+using resources_t = std::map<std::size_t, ResourceContainer*>;
+
 class UIText;
 
 class SceneLoading : public IScene
 {
 private:
-    std::deque<std::future<ResourceContainer*>> m_effectMeshTasks;
-    std::vector<ResourceContainer*>             m_effectMeshResources;
+    tasks_t     m_effectMeshTasks;
+    resources_t m_effectMeshResources;
 
-    std::deque<std::future<ResourceContainer*>> m_characterSkinnedMeshTasks;
-    std::vector<ResourceContainer*> m_characterSkinnedMeshResources;
+    tasks_t     m_characterSkinnedMeshTasks;
+    resources_t m_characterSkinnedMeshResources;
 
-    std::deque<std::future<ResourceContainer*>> m_characterAnimationTasks;
-    std::vector<ResourceContainer*>             m_characterAnimationResources;
+    tasks_t     m_characterAnimationTasks;
+    resources_t m_characterAnimationResources;
 
-    std::deque<std::future<ResourceContainer*>> m_skinnedMeshTasks;
-    std::vector<ResourceContainer*>             m_skinnedMeshResources;
+    tasks_t     m_skinnedMeshTasks;
+    resources_t m_skinnedMeshResources;
 
     std::chrono::system_clock::time_point m_start;
     std::chrono::system_clock::time_point m_finish;
@@ -43,16 +51,10 @@ private:
     void copyAnimationsToOtherCharacters();
     void addEffectMeshs();
 
-    bool verifyTasks(
-        std::deque<std::future<ResourceContainer*>>* OutTasks, 
-        std::vector<ResourceContainer*>* OutResources);
+    bool verifyTasks(tasks_t* OutTasks, resources_t* OutResources);
 
-    void addTask(
-        const TAG_RES_STATIC tag,
-        std::deque<std::future<ResourceContainer*>>* OutTasks);
-    void addTask(
-        const TAG_RES_ANIM_CHARACTER tag,
-        std::deque<std::future<ResourceContainer*>>* OutTasks);
+    void addTask(const TAG_RES_STATIC tag, tasks_t* OutTasks);
+    void addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks);
 
 public:
              SceneLoading();

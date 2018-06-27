@@ -26,13 +26,13 @@ void SceneLogin::OnInit()
     UITextInputField* inputField = new UITextInputField(
         D3DXVECTOR3(100.0f, 100.0f, 0.0f), 
         "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
-        TAG_FONT::DEFAULT, D3DCOLOR_XRGB(0, 0, 0), root);
+        TAG_FONT::Default, D3DCOLOR_XRGB(0, 0, 0), root);
 
     UIButton* button = new UIButton(D3DXVECTOR3(100.0f, 200.0f, 0.0f), 
         "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
         &m_buttonListener, 
         root, 
-        Resource()()->GetFont(TAG_FONT::DEFAULT), "Connect", 
+        Resource()()->GetFont(TAG_FONT::Default), "Connect", 
         D3DCOLOR_XRGB(0, 0, 0));
 }
 
@@ -77,7 +77,7 @@ void LoginButtonListener::OnMouseUp(const int key)
     c->Connect(host, port, nickname);
 
     UI()()->Destroy(GetHandle());
-    Scene()()->SetCurrentScene(TAG_SCENE::PLAY);
+    Scene()()->SetCurrentScene(TAG_SCENE::Play);
 }
 
 void LoginButtonListener::OnMouseDrag(const int key)

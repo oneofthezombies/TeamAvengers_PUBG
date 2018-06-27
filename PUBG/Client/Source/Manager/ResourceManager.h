@@ -40,8 +40,7 @@ public:
     void Destroy();
 
     void AddResource(ResourceContainer* pResourceContainer);
-    void AddCharacters(
-        std::vector<ResourceContainer*>* OutCharacters);
+    void AddCharacters(std::vector<ResourceContainer*> characters);
 
     LPD3DXFONT GetFont(const TAG_FONT tag);
 

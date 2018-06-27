@@ -129,7 +129,7 @@ LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
     {
         switch (tag)
         {
-        case TAG_FONT::DEFAULT:
+        case TAG_FONT::Default:
             {
                 hr = D3DXCreateFont(Device()(), 24, 12, FW_NORMAL, 1, false,
                     DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY,
@@ -240,19 +240,18 @@ EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
     return search->second;
 }
 
-void ResourceManager::AddCharacters(
-    std::vector<ResourceContainer*>* OutCharacters)
+void ResourceManager::AddCharacters(std::vector<ResourceContainer*> characters)
 {
-    for (std::size_t i = 0; i < OutCharacters->size(); ++i)
+    for (std::size_t i = 0; i < characters.size(); ++i)
     {
-        m_characters[i] = OutCharacters->at(i)->m_pSkinnedMesh;
-        OutCharacters->at(i)->m_pSkinnedMesh = nullptr;
+        m_characters[i] = characters.at(i)->m_pSkinnedMesh;
+        characters.at(i)->m_pSkinnedMesh = nullptr;
     }
 
-    AddResource(OutCharacters->at(0));
+    AddResource(characters.at(0));
 
-    for (std::size_t i = 1; i < OutCharacters->size(); ++i)
-        SAFE_DELETE(OutCharacters->at(i));
+    for (std::size_t i = 1; i < characters.size(); ++i)
+        SAFE_DELETE(characters.at(i));
 }
 
 EffectMesh* ResourceManager::FindEffectMesh(

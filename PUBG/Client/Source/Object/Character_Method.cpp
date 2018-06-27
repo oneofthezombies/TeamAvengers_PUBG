@@ -99,19 +99,15 @@ TAG_COLLISION Character::GetTagCollisionBody(const int index)
 {
     switch (index)
     {
-    case 0:
-        return TAG_COLLISION::BODY_OF_PLAYER_1;
-    case 1:
-        return TAG_COLLISION::BODY_OF_PLAYER_2;
-    case 2:
-        return TAG_COLLISION::BODY_OF_PLAYER_3;
-    case 3:
-        return TAG_COLLISION::BODY_OF_PLAYER_4;
+    case 0: return TAG_COLLISION::Player_0_Body;
+    case 1: return TAG_COLLISION::Player_1_Body;
+    case 2: return TAG_COLLISION::Player_2_Body;
+    case 3: return TAG_COLLISION::Player_3_Body;
     default:
         {
             assert(false &&
                 "Character::GetTagCollisionBody() failed. index is wrong.");
-            return TAG_COLLISION::IDLE;
+            return TAG_COLLISION::Idle;
         }
     }
 }
@@ -120,19 +116,15 @@ TAG_COLLISION Character::GetTagCollisionDamage(const int index)
 {
     switch (index)
     {
-    case 0:
-        return TAG_COLLISION::DAMAGE_OF_PLAYER_1;
-    case 1:
-        return TAG_COLLISION::DAMAGE_OF_PLAYER_2;
-    case 2:
-        return TAG_COLLISION::DAMAGE_OF_PLAYER_3;
-    case 3:
-        return TAG_COLLISION::DAMAGE_OF_PLAYER_4;
+    case 0: return TAG_COLLISION::Player_0_Damage;
+    case 1: return TAG_COLLISION::Player_1_Damage;
+    case 2: return TAG_COLLISION::Player_2_Damage;
+    case 3: return TAG_COLLISION::Player_3_Damage;
     default:
         {
             assert(false &&
                 "Character::GetTagCollisionDamage() failed. index is wrong.");
-            return TAG_COLLISION::IDLE;
+            return TAG_COLLISION::Idle;
         }
     }
 }

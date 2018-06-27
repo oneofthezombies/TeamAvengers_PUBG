@@ -28,7 +28,7 @@ void SceneLoading::OnInit()
     loadSkinnedMesh();
     loadAnimation();
 
-    m_pPercentageImage = new UIText(Resource()()->GetFont(TAG_FONT::DEFAULT), 
+    m_pPercentageImage = new UIText(Resource()()->GetFont(TAG_FONT::Default), 
         D3DXVECTOR2(1000.0f, 50.0f), &m_percentage, D3DCOLOR_XRGB(0, 255, 0), 
         nullptr);
     m_pPercentageImage->SetPosition(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
@@ -121,6 +121,7 @@ void SceneLoading::loadAnimation()
 {
     addTask(TAG_RES_ANIM_CHARACTER::Lobby, &m_characterAnimationTasks);
     addTask(TAG_RES_ANIM_CHARACTER::Healing, &m_characterAnimationTasks);
+
     /*
     //아직 두개 이상 들어가는게 안되네여????
     pair<string, string> p;
@@ -136,7 +137,7 @@ void SceneLoading::loadAnimation()
 
 void SceneLoading::addAnimationsToCharacter0()
 {
-    ResourceContainer* pC0 = m_characterSkinnedMeshResources.front();
+    ResourceContainer* pC0 = m_characterSkinnedMeshResources.begin()->second;
 
     LPD3DXANIMATIONCONTROLLER& pOld = pC0->m_pSkinnedMesh->m_pAnimController;
 
@@ -148,7 +149,7 @@ void SceneLoading::addAnimationsToCharacter0()
 
     for (auto pR : m_characterAnimationResources)
     {
-        pAdd = pR->m_pSkinnedMesh->m_pAnimController;
+        pAdd = pR.second->m_pSkinnedMesh->m_pAnimController;
 
         pOld->CloneAnimationController(
             pOld->GetMaxNumAnimationOutputs(),
@@ -158,7 +159,7 @@ void SceneLoading::addAnimationsToCharacter0()
             &pNew);
         
         numAddSet = pAdd->GetNumAnimationSets();
-        for (UINT i = 0; i < numAddSet; ++i)
+        for (int i = static_cast<int>(numAddSet) - 1; i >= 0; --i)
         {
             pAdd->GetAnimationSet(i, &pAddSet);
             pNew->RegisterAnimationSet(pAddSet);
@@ -170,7 +171,7 @@ void SceneLoading::addAnimationsToCharacter0()
         pOld->Release();
         pOld = pNew;
 
-        SAFE_DELETE(pR);
+        SAFE_DELETE(pR.second);
     }
     
     copyAnimationsToOtherCharacters();
@@ -178,7 +179,7 @@ void SceneLoading::addAnimationsToCharacter0()
 
 void SceneLoading::copyAnimationsToOtherCharacters()
 {
-    ResourceContainer* pC0 = m_characterSkinnedMeshResources.front();
+    ResourceContainer* pC0 = m_characterSkinnedMeshResources.begin()->second;
 
     LPD3DXANIMATIONCONTROLLER pC0AniCon = 
         pC0->m_pSkinnedMesh->m_pAnimController;
@@ -186,12 +187,12 @@ void SceneLoading::copyAnimationsToOtherCharacters()
     LPD3DXANIMATIONCONTROLLER pNew    = nullptr;
     LPD3DXANIMATIONSET        pAddSet = nullptr;
 
-    for (auto i = std::next(m_characterAnimationResources.begin()); 
-              i != m_characterAnimationResources.end(); 
+    for (auto i = std::next(m_characterSkinnedMeshResources.begin()); 
+              i != m_characterSkinnedMeshResources.end();
             ++i)
     {
         LPD3DXANIMATIONCONTROLLER& pOld =
-            (*i)->m_pSkinnedMesh->m_pAnimController;
+            i->second->m_pSkinnedMesh->m_pAnimController;
 
         UINT numDefaultAnim = pOld->GetMaxNumAnimationSets();
 
@@ -213,7 +214,11 @@ void SceneLoading::copyAnimationsToOtherCharacters()
         pOld = pNew;
     }
 
-    Resource()()->AddCharacters(&m_characterSkinnedMeshResources);
+    std::vector<ResourceContainer*> characters(Character::NUM_PLAYER);
+    for (auto c : m_characterSkinnedMeshResources)
+        characters[c.first] = c.second;
+
+    Resource()()->AddCharacters(characters);
 
     m_isDoneCharacters = true;
 }
@@ -223,14 +228,12 @@ void SceneLoading::addEffectMeshs()
     ResourceManager* pRM = Resource()();
 
     for (auto pR : m_effectMeshResources)
-        pRM->AddResource(pR);
+        pRM->AddResource(pR.second);
 
     m_isDoneEffectMeshs = true;
 }
 
-bool SceneLoading::verifyTasks(
-    std::deque<std::future<ResourceContainer*>>* OutTasks, 
-    std::vector<ResourceContainer*>* OutResources)
+bool SceneLoading::verifyTasks(tasks_t* OutTasks, resources_t* OutResources)
 {
     assert(OutTasks && OutResources && 
         "SceneLoading::verifyTasks(), tasks or resources is null.");
@@ -241,7 +244,7 @@ bool SceneLoading::verifyTasks(
     for (auto i = OutTasks->begin(); i != OutTasks->end();)
     {
         //futureStatus = i->wait_for(std::chrono::nanoseconds(1));
-        futureStatus = i->wait_until(std::chrono::system_clock::now());
+        futureStatus = i->second.wait_until(std::chrono::system_clock::now());
         switch (futureStatus)
         {
         case std::future_status::deferred:
@@ -253,8 +256,8 @@ bool SceneLoading::verifyTasks(
             break;
         case std::future_status::ready:
             {
-                ResourceContainer* pResourceContainer = i->get();
-                OutResources->emplace_back(pResourceContainer);
+                ResourceContainer* pResourceContainer = i->second.get();
+                OutResources->emplace(i->first, pResourceContainer);
                 i = OutTasks->erase(i);
 
                 m_lastFinishedTaskName = pResourceContainer->m_filename;
@@ -269,32 +272,36 @@ bool SceneLoading::verifyTasks(
     return false;
 }
 
-void SceneLoading::addTask(
-    const TAG_RES_STATIC tag, 
-    std::deque<std::future<ResourceContainer*>>* OutTasks)
+void SceneLoading::addTask(const TAG_RES_STATIC tag, tasks_t* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 
     auto keys = ResPathFileName::Get(tag);
     OutTasks->emplace_back(
-        std::async(
-            std::launch::async, &ResourceAsync::OnLoadEffectMeshAsync, 
-            keys.first, keys.second));
+        std::make_pair(
+            OutTasks->size(),
+            std::async(
+                std::launch::async, 
+                &ResourceAsync::OnLoadEffectMeshAsync, 
+                keys.first, 
+                keys.second)));
 
     ++m_numTotalTasks;
 }
 
-void SceneLoading::addTask(
-    const TAG_RES_ANIM_CHARACTER tag, 
-    std::deque<std::future<ResourceContainer*>>* OutTasks)
+void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 
     auto keys = ResPathFileName::Get(tag);
     OutTasks->emplace_back(
-        std::async(
-            std::launch::async, &ResourceAsync::OnLoadSkinnedMeshAsync, 
-            keys.first, keys.second));
+        std::make_pair(
+            OutTasks->size(),
+            std::async(
+                std::launch::async, 
+                &ResourceAsync::OnLoadSkinnedMeshAsync, 
+                keys.first, 
+                keys.second)));
 
     ++m_numTotalTasks;
 }

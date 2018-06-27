@@ -14,7 +14,7 @@ Collider::Collider(IObject* pOwner, const TYPE type)
 
     , m_center(Vector3::ZERO)
     , m_typeCollider(type)
-    , m_tagCollision(TAG_COLLISION::IDLE)
+    , m_tagCollision(TAG_COLLISION::Idle)
     , m_isRender(true)
     , m_color(D3DCOLOR_XRGB(0, 255, 0))
 {
@@ -130,58 +130,54 @@ void BoxCollider::Init(
     m_vertices[7] = VERTEX_PC(D3DXVECTOR3(max.x, min.y, max.z), m_color);
 }
 
-void BoxCollider::Init(
-    const D3DXVECTOR3& center, 
-    const D3DXVECTOR3& extent, 
-    const D3DXMATRIX& transform, 
-    const float isRenderable)
+void BoxCollider::Init(const D3DXMATRIX& transform, const float isRenderable)
 {
-    m_center = center;
-    m_extent = extent;
+    m_center = Vector3::ZERO;
+    m_extent = Vector3::ONE * 0.5f;
 
     if (isRenderable)
     {
         m_isRender = true;
         m_vertices.resize(8);
         m_vertices[0] = VERTEX_PC(D3DXVECTOR3(
-            center.x - extent.x, 
-            center.y - extent.y, 
-            center.z - extent.z), 
+            m_center.x - m_extent.x, 
+            m_center.y - m_extent.y, 
+            m_center.z - m_extent.z), 
             m_color);
         m_vertices[1] = VERTEX_PC(D3DXVECTOR3(
-            center.x - extent.x,
-            center.y + extent.y,
-            center.z - extent.z),
+            m_center.x - m_extent.x,
+            m_center.y + m_extent.y,
+            m_center.z - m_extent.z),
             m_color);
         m_vertices[2] = VERTEX_PC(D3DXVECTOR3(
-            center.x + extent.x,
-            center.y + extent.y,
-            center.z - extent.z),
+            m_center.x + m_extent.x,
+            m_center.y + m_extent.y,
+            m_center.z - m_extent.z),
             m_color);
         m_vertices[3] = VERTEX_PC(D3DXVECTOR3(
-            center.x + extent.x,
-            center.y - extent.y,
-            center.z - extent.z),
+            m_center.x + m_extent.x,
+            m_center.y - m_extent.y,
+            m_center.z - m_extent.z),
             m_color);
         m_vertices[4] = VERTEX_PC(D3DXVECTOR3(
-            center.x - extent.x,
-            center.y - extent.y,
-            center.z + extent.z),
+            m_center.x - m_extent.x,
+            m_center.y - m_extent.y,
+            m_center.z + m_extent.z),
             m_color);
         m_vertices[5] = VERTEX_PC(D3DXVECTOR3(
-            center.x - extent.x,
-            center.y + extent.y,
-            center.z + extent.z),
+            m_center.x - m_extent.x,
+            m_center.y + m_extent.y,
+            m_center.z + m_extent.z),
             m_color);
         m_vertices[6] = VERTEX_PC(D3DXVECTOR3(
-            center.x + extent.x,
-            center.y + extent.y,
-            center.z + extent.z),
+            m_center.x + m_extent.x,
+            m_center.y + m_extent.y,
+            m_center.z + m_extent.z),
             m_color);
         m_vertices[7] = VERTEX_PC(D3DXVECTOR3(
-            center.x + extent.x,
-            center.y - extent.y,
-            center.z + extent.z),
+            m_center.x + m_extent.x,
+            m_center.y - m_extent.y,
+            m_center.z + m_extent.z),
             m_color);
     }
 

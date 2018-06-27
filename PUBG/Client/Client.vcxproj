@@ -129,7 +129,7 @@
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
     <ClCompile Include="Source\Object\Church.cpp" />
-    <ClCompile Include="Source\Object\CollidableStaticObject.cpp" />
+    <ClCompile Include="Source\Object\TerrainFeature.cpp" />
     <ClCompile Include="Source\Component\Collider.cpp" />
     <ClCompile Include="Source\Component\ComponentTransform.cpp" />
     <ClCompile Include="Source\Component\EffectMeshRenderer.cpp" />
@@ -178,7 +178,7 @@
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Object\Church.h" />
-    <ClInclude Include="Source\Object\CollidableStaticObject.h" />
+    <ClInclude Include="Source\Object\TerrainFeature.h" />
     <ClInclude Include="Source\Component\Collider.h" />
     <ClInclude Include="Source\Component\ComponentTransform.h" />
     <ClInclude Include="Source\Component\EffectMeshRenderer.h" />

@@ -14,9 +14,9 @@ CameraManager::~CameraManager()
 
 void CameraManager::Init()
 {
-    m_cameras.emplace(TAG_CAMERA::FREE, new CameraFree);
+    m_cameras.emplace(TAG_CAMERA::Default, new CameraFree);
 
-    SetCurrentCamera(TAG_CAMERA::FREE);
+    SetCurrentCamera(TAG_CAMERA::Default);
 }
 
 void CameraManager::Destroy()

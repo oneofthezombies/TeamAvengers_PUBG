@@ -213,10 +213,9 @@ enum class TAG_RES_ANIM_CHARACTER
     COUNT
 };
 
-
 //TODO: 사용할지 안 할지 모르겠음
 //////////////////////////////애니메이션 리스트
-enum class TAG_ANIM_SET_WEAPON
+enum class TAG_ANIM_WEAPON
 {
     //총 - 총 자체의 애니메이션
     //OBZ(5)
@@ -237,7 +236,7 @@ enum class TAG_ANIM_SET_WEAPON
     COUNT
 };
 
-enum class TAG_ANIM_SET_CHARACTER
+enum class TAG_ANIM_CHARACTER
 {
 //캐릭터
 //0. 로비씬 애니메이션

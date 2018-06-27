@@ -1,17 +1,15 @@
 #include "stdafx.h"
 #include "IScene.h"
 #include "IObject.h"
-#include "CollidableStaticObject.h"
+#include "TerrainFeature.h"
 
 BoxColliderInFile::BoxColliderInFile()
-    : m_center(Vector3::ZERO)
-    , m_extent(Vector3::ONE)
 {
     D3DXMatrixIdentity(&m_transform);
 }
 
 ObjectInFile::ObjectInFile()
-    : m_tagResStatic(TAG_RES_STATIC::Rock_1)
+    : m_tagResStatic(TAG_RES_STATIC::Bandage)
     , m_name("")
     , m_position(Vector3::ZERO)
     , m_rotation(Vector3::ZERO)
@@ -115,22 +113,17 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
 
         for (auto b : o.m_boxColliders)
         {
-            cout << b.m_center << '\n';
-            cout << b.m_extent << '\n';
             cout << b.m_transform << '\n';
         }
 
-        CollidableStaticObject* pObj = 
-            new CollidableStaticObject(
-                TAG_RES_STATIC::Church, 
-                o.m_position, 
-                o.m_rotation, 
-                o.m_scale);
+        TerrainFeature* pObj = new TerrainFeature(
+            TAG_RES_STATIC::Church, 
+            o.m_position, 
+            o.m_rotation, 
+            o.m_scale);
 
         for (auto b : o.m_boxColliders)
-            pObj->AddBoxCollider(b.m_center, b.m_extent, b.m_transform);
-            //pObj->AddBoxCollider(Vector3::ZERO, Vector3::ONE * 10.0f, Matrix::IDENTITY);
-
+            pObj->AddBoxCollider(b.m_transform);
 
         AddObject(pObj);
     }
@@ -231,9 +224,7 @@ HRESULT IScene::parseBoxColliderInFile(
 
     std::getline(fin >> std::ws, buf);
 
-    fin >> Out->m_center.x >> Out->m_center.y >> Out->m_center.z
-        >> Out->m_extent.x >> Out->m_extent.y >> Out->m_extent.z
-        >> Out->m_transform._11 >> Out->m_transform._12
+    fin >> Out->m_transform._11 >> Out->m_transform._12
         >> Out->m_transform._13 >> Out->m_transform._14
         >> Out->m_transform._21 >> Out->m_transform._22
         >> Out->m_transform._23 >> Out->m_transform._24
