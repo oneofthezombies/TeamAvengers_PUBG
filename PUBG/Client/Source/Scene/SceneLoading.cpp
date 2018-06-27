@@ -41,7 +41,7 @@ void SceneLoading::OnUpdate()
     {
         Debug << "elapsed time : " << m_elapsed.count() << '\n';
 
-        UI()()->Destroy(m_pPercentageImage);
+        //UI()()->Destroy(m_pPercentageImage);
     }
     else
     {
