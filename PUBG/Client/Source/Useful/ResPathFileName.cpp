@@ -455,6 +455,11 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_STATIC tag)
                 filePath = "Weapon/AR/";
                 fileName = "QBZ";
                 break;
+
+            case TAG_RES_STATIC::QBZ_Mag:
+                filePath = "Weapon/AR/";
+                fileName = "QBZ_Mag";
+                break;
             }
 
             //-SR
@@ -465,10 +470,11 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_STATIC tag)
                 break;
             }
         }
+
         default:
         {
             assert(false &&
-                "ResPathFilename::Get(), default case.");
+                "ResPathFilename::Get(TAG_RES_STATIC), default case.");
         }
         break;
     }//switch
@@ -476,7 +482,213 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_STATIC tag)
     return make_pair("./Resource/Static/" + filePath + fileName + "/", fileName + ".X");
 }
 
-pair<string, string> ResPathFileName::Get(TAG_RES_ANIM tag)
+pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_WEAPON tag)
 {
-    return make_pair("./Resource/Anim/Lobby_Anim/", "Lobby_Anim.x");
+    string filePath, fileName;
+    switch(tag)
+    {
+        //Weapon ------------------------------------
+        {
+        //AR
+        case TAG_RES_ANIM_WEAPON::QBZ_Anim:
+        filePath = "AR/QBZ_Anim/";
+        fileName = "QBZ_Anim";
+        break;
+
+        //SR
+        case TAG_RES_ANIM_WEAPON::Kar98k_Anim:
+        filePath = "SR/Kar98k_Anim/";
+        fileName = "Kar98k_Anim";
+        break;
+        }
+
+        default:
+        {
+            assert(false &&
+                "ResPathFilename::Get(TAG_RES_ANIM_WEAPON), default case.");
+        }
+        break;
+    }
+
+    return make_pair("./Resource/Anim/Weapon/" + filePath, fileName + ".X");
+}
+pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_CHARACTER tag)
+{
+    string fileName;
+    switch (tag)
+    {
+        //Character ------------------------------------
+        {
+            //0. 로비
+            {
+            case TAG_RES_ANIM_CHARACTER::Lobby:
+                fileName = "Lobby";
+                break;
+            }
+
+            //1. 해당 무기를 들고있을 때 캐릭터의 애니메이션
+            {
+            case TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character:
+                fileName = "Weapon_QBZ_Character";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character_FPP:
+                fileName = "Weapon_QBZ_Character_FPP";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character:
+                fileName = "Weapon_Kar98k_Character";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character_FPP:
+                fileName = "Weapon_Kar98k_Character_FPP";
+                break;
+            }
+
+            //2. 무기를 들고있지 않을 때 캐릭터 애니메이션
+            {
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Transition:
+                fileName = "Unarmed_Transition";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Stand:
+                fileName = "Unarmed_Locomotion_Stand";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone:
+                fileName = "Unarmed_Locomotion_Prone";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch:
+                fileName = "Unarmed_Locomotion_Crouch";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_FPP:
+                fileName = "Unarmed_Locomotion_FPP";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Landing:
+                fileName = "Unarmed_Landing";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Jump:
+                fileName = "Unarmed_Jump";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Jump_FPP:
+                fileName = "Unarmed_Jump_FPP";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Idling:
+                fileName = "Unarmed_Idling";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_DoorOpen_And_Pickup:
+                fileName = "Unarmed_DoorOpen_And_Pickup";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Pickup_FPP:
+                fileName = "Unarmed_Pickup_FPP";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Attack:
+                fileName = "Unarmed_Attack";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Attack_FPP:
+                fileName = "Unarmed_Attack_FPP";
+                break;
+            }
+
+            //3. 무기를 들고있을 때 애니메이션
+            {
+            case TAG_RES_ANIM_CHARACTER::Rifle_Transition:
+                fileName = "Rifle_Transition";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand:
+                fileName = "Rifle_Stand_SecondarySlot_OnHand";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand:
+                fileName = "Rifle_Stand_PrimarySlot_OnHand";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Prone_SecondarySlot_OnHand:
+                fileName = "Rifle_Prone_SecondarySlot_OnHand";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Prone_PrimarySlot_OnHand:
+                fileName = "Rifle_Prone_PrimarySlot_OnHand";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_OnBody:
+                fileName = "Rifle_OnBody";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand:
+                fileName = "Rifle_Locomotion_Stand";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone:
+                fileName = "Rifle_Locomotion_Prone";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch:
+                fileName = "Rifle_Locomotion_Crouch";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_FPP:
+                fileName = "Rifle_Locomotion_FPP";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Landing:
+                fileName = "Rifle_Landing";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Jump:
+                fileName = "Rifle_Jump";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Idling:
+                fileName = "Rifle_Idling";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_DoorOpen_And_Pickup:
+                fileName = "Rifle_DoorOpen_And_Pickup";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Pickup_FPP:
+                fileName = "Rifle_Pickup_FPP";
+                break;
+            }
+
+            //4. 힐템을 사용할 때 애니메이션
+            {
+            case TAG_RES_ANIM_CHARACTER::Healing:
+                fileName = "Healing";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Healing_FPP:
+                fileName = "Healing_FPP";
+                break;
+            }
+
+            //5. 기절과 관련한 애니메이션
+            {
+            case TAG_RES_ANIM_CHARACTER::DBNO:
+                fileName = "DBNO";
+                break;
+            }
+        }
+
+        default:
+        {
+            assert(false &&
+                "ResPathFilename::Get(TAG_RES_ANIM_CHARACTER), default case.");
+        }
+        break;
+    }
+
+    return make_pair("./Resource/Anim/Character/", fileName + ".X");
 }

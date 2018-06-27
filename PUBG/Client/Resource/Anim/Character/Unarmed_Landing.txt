@@ -1,0 +1,4 @@
+/// Unarmed_Landing.X (무기없이 바닥에 착지했을 때 애니메이션)
+0. (0     ~ 39)[40] - Unarmed_Combat_Fall_Landing_Additive : 가벼운 착지
+1. (40    ~ 99)[60] - Unarmed_Combat_Fall_Landing_Extreme : 착지하다 못해 넘어짐
+2. (100 ~ 223)[124] - Unarmed_Combat_Fall_Landing_Hard   :  쾅 착지

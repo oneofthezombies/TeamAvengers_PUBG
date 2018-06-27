@@ -215,6 +215,7 @@
     <ClInclude Include="Source\UI\UIText.h" />
     <ClInclude Include="Source\UI\UITextInputField.h" />
     <ClInclude Include="Source\Useful\TagResource.h" />
+    <ClInclude Include="Source\Useful\AnimSet.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

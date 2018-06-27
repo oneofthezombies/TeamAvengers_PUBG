@@ -1,0 +1,20 @@
+/// Weapon_Kar98k_Character.X (Kar98k를 들고있을 때 캐릭터 애니메이션)
+# BoltAction 1, 2, 3은 손모양이 조금씩 다름
+0. (0 ~ 102)[103] - Weapon_Kar98k_BoltAction_1_Base
+1. (103 ~ 205)[103] - Weapon_Kar98k_BoltAction_1_Prone
+
+2. (206 ~ 308)[103] - Weapon_Kar98k_BoltAction_2_Base
+3. (309 ~ 411)[103] - Weapon_Kar98k_BoltAction_2_Prone
+
+4. (412 ~ 514)[103] - Weapon_Kar98k_BoltAction_3_Base
+5. (515 ~ 617)[103] - Weapon_Kar98k_BoltAction_3_Prone
+
+6. (618 ~ 626)[9] - Weapon_Kar98k_Grip_Carry
+7. (627 ~ 629)[3] - Weapon_Kar98k_Grip_Ready
+8. (630 ~ 632)[3] - Weapon_Kar98k_Grip_Short
+
+9. (633 ~ 894)[262] - Weapon_Kar98k_Reload_StartLoopEnd_Base
+10. (895 ~ 1156)[262] - Weapon_Kar98k_Reload_StartLoopEnd_Prone
+
+11. (1157 ~ 1397)[241] - Weapon_Kar98k_ReloadFast_Base
+12. (1398 ~ 1638)[241] - Weapon_Kar98k_ReloadFast_Prone

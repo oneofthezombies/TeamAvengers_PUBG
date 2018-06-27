@@ -90,5 +90,6 @@
     <ClInclude Include="Source\Object\Church.h" />
     <ClInclude Include="Source\Object\CollidableStaticObject.h" />
     <ClInclude Include="Source\Object\Kar98k.h" />
+    <ClInclude Include="Source\Useful\AnimSet.h" />
   </ItemGroup>
 </Project>
