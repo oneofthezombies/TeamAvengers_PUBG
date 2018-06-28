@@ -18,7 +18,7 @@ void CameraManager::Init()
     m_cameras.emplace(TAG_CAMERA::Third_Person, new CameraThirdPerson);
     
     //SetCurrentCamera(TAG_CAMERA::Default);
-    SetCurrentCamera(TAG_CAMERA::Third_Person);
+    SetCurrentCamera(TAG_CAMERA::Default);
 }
 
 void CameraManager::Destroy()

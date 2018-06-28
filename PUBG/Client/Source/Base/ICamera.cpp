@@ -178,7 +178,7 @@ void CameraThirdPerson::Reset()
     
     bAltKeyPressed = false;
     
-    D3DXQuaternionRotationYawPitchRoll(&m_quarernion, m_rotation.y, m_rotation.x, m_rotation.z);
+    //D3DXQuaternionRotationYawPitchRoll(&m_quarernion, m_rotation.y, m_rotation.x, m_rotation.z);
 }
 
 void CameraThirdPerson::Update()
