@@ -73,4 +73,7 @@ enum class TAG_SOUND
 enum class TAG_CAMERA
 {
     Default,
+    First_Person,
+    Third_Person,
+    KyunChak
 };

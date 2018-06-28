@@ -4,6 +4,7 @@
 DirectionalLight::DirectionalLight(const D3DXVECTOR3& direction)
     : m_direction(direction)
 {
+    m_direction = D3DXVECTOR3(1.0f, -1.0f, -1.0f);
 }
 
 DirectionalLight::~DirectionalLight()

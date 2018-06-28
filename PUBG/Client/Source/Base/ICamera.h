@@ -1,6 +1,18 @@
 #pragma once
 #include "TagClientOnly.h"
 
+#define FP_DISTANCE 30.0f
+#define FP_BASEPOSX 0.0f
+#define FP_BASEPOSY 155.0f
+
+#define TP_DISTANCE 100.0f
+#define TP_BASEPOSX -40.0f
+#define TP_BASEPOSY 120.0f
+
+//extern TargetTransform;
+
+class TargetTransform;
+
 class ICamera : public MemoryAllocator
 {
 private:
@@ -10,11 +22,12 @@ private:
 
 protected:
     D3DXVECTOR3    m_position;
-    D3DXQUATERNION m_rotation;
+    D3DXVECTOR3    m_rotation;
+    D3DXQUATERNION m_quarernion;
     float          m_fovY;
 
 protected:
-    Transform* getTarget();
+    TargetTransform* GetTarget();
 
 public:
              ICamera(const TAG_CAMERA tag);
@@ -39,6 +52,62 @@ public:
     virtual void Reset() override;
     virtual void Update() override;
 };
+
+class CameraFirstPerson : public ICamera
+{
+public:
+             CameraFirstPerson();
+    virtual ~CameraFirstPerson();
+
+    // Inherited via ICamera
+    virtual void Reset() override;
+    virtual void Update() override;
+
+};
+
+class CameraThirdPerson : public ICamera
+{
+protected:
+    bool bAltKeyPressed;
+public:
+             CameraThirdPerson(const TAG_CAMERA tag = TAG_CAMERA::Third_Person);
+    virtual ~CameraThirdPerson();
+    // Inherited via ICamera
+    virtual void Reset() override;
+    virtual void Update() override;
+};
+
+//class CameraTransform : public CameraThirdPerson
+//{
+//private:
+//    float m_vel;
+//
+//public:
+//             CameraTransform();
+//    virtual ~CameraTransform();
+//
+//    virtual void Reset() override;
+//    virtual void Update() override;
+//
+//};
+
+class CameraKyunChak : public CameraThirdPerson
+{
+private:
+    float           m_vel;
+
+public:
+    CameraKyunChak();
+    virtual ~CameraKyunChak();
+
+
+    virtual void Reset() override;
+    virtual void Update() override;
+};
+
+
+
+
 
 //#include "BaseObject.h"
 //

@@ -54,6 +54,8 @@ private:
     CharacterPart*         m_pRootCharacterPart;
 
     D3DXMATRIX m_prevRootModel;
+    D3DXVECTOR3 m_rotForCameraTP;
+    TargetTransform* pTargetTransform;
 
 private:
     void setFramePtr();

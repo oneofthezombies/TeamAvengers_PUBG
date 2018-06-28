@@ -20,6 +20,7 @@ Character::Character(const int index)
     , m_pRootCharacterPart(nullptr)
 
     , pSkinnedMeshController(nullptr)
+    , pTargetTransform(nullptr)
 {
     Transform* tr = GetTransform();
     tr->SetRotation(OFFSET_ROTATION);
@@ -43,8 +44,11 @@ Character::Character(const int index)
 
     if (isMine())
     {
-        Camera()()->SetTarget(GetTransform());
+        Camera()()->SetTarget(GetTransform(), &m_rotForCameraTP);
+        pTargetTransform = Camera()()->GetTargetTransformPtr();
     }
+
+    m_rotForCameraTP = Vector3::ZERO;
 }
 
 Character::~Character()
@@ -115,11 +119,12 @@ void Character::updateMine()
     //{
     //    RotateWaist(m_WaistRotation.QUANTITY_FACTOR);
     //}
-
+    ICamera*       pCurrentCamera = CurrentCamera()();
     InputManager*  pInput = Input()();
     Transform*     pTr = GetTransform();
     D3DXVECTOR3    p = pTr->GetPosition();
     D3DXQUATERNION r = pTr->GetRotation();
+    const bool isPressing_LAlt   = pInput->IsStayKeyDown(VK_LMENU);
     const bool isPressing_LCtrl  = pInput->IsStayKeyDown(VK_LCONTROL);
     const bool isPressing_LShift = pInput->IsStayKeyDown(VK_LSHIFT);
     const bool isPressing_W      = pInput->IsStayKeyDown('W');
@@ -129,6 +134,48 @@ void Character::updateMine()
 
     const bool isPressed_Space = pInput->IsOnceKeyDown(VK_SPACE);
     const float dt = Time()()->GetDeltaTime();
+
+    // get mouse pos
+    POINT mouse;
+    GetCursorPos(&mouse);
+    ScreenToClient(g_hWnd, &mouse);
+
+    POINT diff;
+    diff.x = mouse.x - 1280 / 2;
+    diff.y = mouse.y - 720 / 2;
+    const float yaw = diff.x * 0.2f * dt;
+    const float pitch = diff.y * 0.2f * dt;
+    if (isPressing_LAlt)
+    {
+        if (pCurrentCamera)
+        {
+            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person)
+            {
+
+                m_rotForCameraTP.x += -pitch;
+                m_rotForCameraTP.y += yaw;
+            }
+        }
+    }
+    else // isPressing_LAlt == false
+    {
+        // update rotation of transform
+        D3DXQUATERNION q;
+        D3DXQuaternionRotationYawPitchRoll(&q, yaw, 0.0f, 0.0f);
+        r *= q;
+
+        // reset rotFotCameraTP
+        m_rotForCameraTP = Vector3::ZERO;
+    }
+
+    POINT center;
+    center.x = 1280 / 2;
+    center.y = 720 / 2;
+    ClientToScreen(g_hWnd, &center);
+    SetCursorPos(center.x, center.y);
+
+    Debug << "rot for TP : " << m_rotForCameraTP << '\n';
+
 
     switch (m_animState)
     {
