@@ -26,7 +26,6 @@ void SceneLoading::OnInit()
 
     loadEffectMesh();
     loadSkinnedMesh();
-    loadAnimation();
 
     m_pPercentageImage = new UIText(Resource()()->GetFont(TAG_FONT::Default), 
         D3DXVECTOR2(1000.0f, 50.0f), &m_percentage, D3DCOLOR_XRGB(0, 255, 0), 
@@ -41,7 +40,8 @@ void SceneLoading::OnUpdate()
     {
         Debug << "elapsed time : " << m_elapsed.count() << '\n';
 
-        //UI()()->Destroy(m_pPercentageImage);
+        UI()()->Destroy(m_pPercentageImage);
+        Scene()()->SetCurrentScene(TAG_SCENE::Play);
     }
     else
     {
@@ -54,7 +54,7 @@ void SceneLoading::OnUpdate()
                     &m_characterAnimationTasks,
                     &m_characterAnimationResources))
             {
-                addAnimationsToCharacter0();
+                addAnimationsToCharacter();
             }
         }
 
@@ -72,11 +72,6 @@ void SceneLoading::OnUpdate()
             m_isFinished = true;
             m_finish = std::chrono::system_clock::now();
             m_elapsed = m_finish - m_start;
-
-            Communication()()->m_MyInfo.m_ID = 0;
-            AddObject(new Character(0));
-
-            LoadObjectsFromFile("./Resource/save.txt");
         }
     }
 
@@ -101,8 +96,9 @@ void SceneLoading::OnUpdate()
 
 void SceneLoading::loadEffectMesh()
 {
-    addTask(TAG_RES_STATIC::Church, &m_effectMeshTasks);
-    addTask(TAG_RES_STATIC::Bandage, &m_effectMeshTasks);
+    addTask(TAG_RES_STATIC::Bandage);
+    addTask(TAG_RES_STATIC::Church);
+
 
     // ...
 }
@@ -111,17 +107,35 @@ void SceneLoading::loadSkinnedMesh()
 {
     // Rifle_Prone_PrimarySlot_OnHand.X
     // 이 엑스파일이 애니메이션을 갖고 있는 애들 중 제일 작다 (애니메이션 1개)
+    /* now, all characters use the same skinned mesh, 
+       so we do not need to have duplicates.
+    */
 
-    for (int i = 0; i < Character::NUM_PLAYER; ++i)
-    {
-        addTask(TAG_RES_ANIM_CHARACTER::Rifle_Prone_PrimarySlot_OnHand, &m_characterSkinnedMeshTasks);
-    }
+    /* do NOT remove &m_characterSkinnedMeshTasks, 
+       single argument function is for animaiton. */
+    addTask(TAG_RES_ANIM_CHARACTER::Lobby, &m_characterSkinnedMeshTasks);
+
+    loadCharacterAnimation();
 }
 
-void SceneLoading::loadAnimation()
+void SceneLoading::loadCharacterAnimation()
 {
-    addTask(TAG_RES_ANIM_CHARACTER::Lobby, &m_characterAnimationTasks);
-    addTask(TAG_RES_ANIM_CHARACTER::Healing, &m_characterAnimationTasks);
+    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Idling);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack_FPP);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_DoorOpen_And_Pickup);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Pickup_FPP);
+    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump_FPP);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Landing);
+    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Stand);
+
+    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
+    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
+    ////addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand); // has bug
+    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
+    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
+
 
     /*
     //아직 두개 이상 들어가는게 안되네여????
@@ -136,11 +150,13 @@ void SceneLoading::loadAnimation()
     // ...
 }
 
-void SceneLoading::addAnimationsToCharacter0()
+void SceneLoading::addAnimationsToCharacter()
 {
-    ResourceContainer* pC0 = m_characterSkinnedMeshResources.begin()->second;
+    Resource()()->AddCharacter(
+        m_characterSkinnedMeshResources.begin()->second);
+    SkinnedMesh* pCharacter = Resource()()->GetCharacterSkinnedMesh();
 
-    LPD3DXANIMATIONCONTROLLER& pOld = pC0->m_pSkinnedMesh->m_pAnimController;
+    LPD3DXANIMATIONCONTROLLER& pOld = pCharacter->m_pAnimController;
 
     LPD3DXANIMATIONCONTROLLER pAdd    = nullptr;
     LPD3DXANIMATIONCONTROLLER pNew    = nullptr;
@@ -150,7 +166,7 @@ void SceneLoading::addAnimationsToCharacter0()
 
     for (auto pR : m_characterAnimationResources)
     {
-        pAdd = pR.second->m_pSkinnedMesh->m_pAnimController;
+        pAdd = pR.second->m_pSkinnedMesh.second->m_pAnimController;
 
         pOld->CloneAnimationController(
             pOld->GetMaxNumAnimationOutputs(),
@@ -174,55 +190,56 @@ void SceneLoading::addAnimationsToCharacter0()
 
         SAFE_DELETE(pR.second);
     }
-    
-    copyAnimationsToOtherCharacters();
-}
-
-void SceneLoading::copyAnimationsToOtherCharacters()
-{
-    ResourceContainer* pC0 = m_characterSkinnedMeshResources.begin()->second;
-
-    LPD3DXANIMATIONCONTROLLER pC0AniCon = 
-        pC0->m_pSkinnedMesh->m_pAnimController;
-
-    LPD3DXANIMATIONCONTROLLER pNew    = nullptr;
-    LPD3DXANIMATIONSET        pAddSet = nullptr;
-
-    for (auto i = std::next(m_characterSkinnedMeshResources.begin()); 
-              i != m_characterSkinnedMeshResources.end();
-            ++i)
-    {
-        LPD3DXANIMATIONCONTROLLER& pOld =
-            i->second->m_pSkinnedMesh->m_pAnimController;
-
-        UINT numDefaultAnim = pOld->GetMaxNumAnimationSets();
-
-        pOld->CloneAnimationController(
-            pOld->GetMaxNumAnimationOutputs(),
-            pOld->GetMaxNumAnimationSets() + m_numAddedAnim,
-            pOld->GetMaxNumTracks(),
-            pOld->GetMaxNumEvents(),
-            &pNew);
-
-        for (UINT i = numDefaultAnim; i < numDefaultAnim + m_numAddedAnim; ++i)
-        {
-            pC0AniCon->GetAnimationSet(i, &pAddSet);
-            pNew->RegisterAnimationSet(pAddSet);
-            pAddSet->Release();
-        }
-
-        pOld->Release();
-        pOld = pNew;
-    }
-
-    std::vector<ResourceContainer*> characters(Character::NUM_PLAYER);
-    for (auto c : m_characterSkinnedMeshResources)
-        characters[c.first] = c.second;
-
-    Resource()()->AddCharacters(characters);
 
     m_isDoneCharacters = true;
 }
+
+//void SceneLoading::copyAnimationsToOtherCharacters()
+//{
+//    ResourceContainer* pC0 = m_characterSkinnedMeshResources.begin()->second;
+//
+//    LPD3DXANIMATIONCONTROLLER pC0AniCon = 
+//        pC0->m_pSkinnedMesh->m_pAnimController;
+//
+//    LPD3DXANIMATIONCONTROLLER pNew    = nullptr;
+//    LPD3DXANIMATIONSET        pAddSet = nullptr;
+//
+//    for (auto i = std::next(m_characterSkinnedMeshResources.begin()); 
+//              i != m_characterSkinnedMeshResources.end();
+//            ++i)
+//    {
+//        LPD3DXANIMATIONCONTROLLER& pOld =
+//            i->second->m_pSkinnedMesh->m_pAnimController;
+//
+//        UINT numDefaultAnim = pOld->GetMaxNumAnimationSets();
+//
+//        pOld->CloneAnimationController(
+//            pOld->GetMaxNumAnimationOutputs(),
+//            pOld->GetMaxNumAnimationSets() + m_numAddedAnim,
+//            pOld->GetMaxNumTracks(),
+//            pOld->GetMaxNumEvents(),
+//            &pNew);
+//
+//        for (UINT i = numDefaultAnim; i < numDefaultAnim + m_numAddedAnim; ++i)
+//        {
+//            pC0AniCon->GetAnimationSet(i, &pAddSet);
+//            pNew->RegisterAnimationSet(pAddSet);
+//            pAddSet->Release();
+//        }
+//
+//        pOld->Release();
+//        pOld = pNew;
+//    }
+//
+//    std::vector<ResourceContainer*> characters(Character::NUM_PLAYER);
+//    for (auto c : m_characterSkinnedMeshResources)
+//    {
+//        characters[c.first] = c.second;
+//    }
+//    Resource()()->AddCharacters(characters);
+//
+//    m_isDoneCharacters = true;
+//}
 
 void SceneLoading::addEffectMeshs()
 {
@@ -244,8 +261,8 @@ bool SceneLoading::verifyTasks(tasks_t* OutTasks, resources_t* OutResources)
     std::future_status futureStatus;
     for (auto i = OutTasks->begin(); i != OutTasks->end();)
     {
-        //futureStatus = i->wait_for(std::chrono::nanoseconds(1));
         futureStatus = i->second.wait_until(std::chrono::system_clock::now());
+        //futureStatus = i->second.wait_for(std::chrono::nanoseconds(1));
         switch (futureStatus)
         {
         case std::future_status::deferred:
@@ -290,6 +307,11 @@ void SceneLoading::addTask(const TAG_RES_STATIC tag, tasks_t* OutTasks)
     ++m_numTotalTasks;
 }
 
+void SceneLoading::addTask(const TAG_RES_STATIC tag)
+{
+    addTask(tag, &m_effectMeshTasks);
+}
+
 void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
@@ -305,4 +327,9 @@ void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks)
                 keys.second)));
 
     ++m_numTotalTasks;
+}
+
+void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag)
+{
+    addTask(tag, &m_characterAnimationTasks);
 }

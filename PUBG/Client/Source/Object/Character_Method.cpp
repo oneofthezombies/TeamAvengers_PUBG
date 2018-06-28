@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Character.h"
 #include "SkinnedMeshController.h"
+#include "CharacterPart.h"
 
 Character::WaistRotation::WaistRotation(const float limit, const float factor)
     : LIMIT_OF_ANGLE(limit)
@@ -48,9 +49,26 @@ bool Character::isMine() const
     return m_index == Communication()()->m_MyInfo.m_ID;
 }
 
+void Character::setAnimation(
+    const TAG_ANIM_CHARACTER tag, const bool isBlend, 
+    const float currentWeight, const float nextWeight, const float blendTime)
+{
+    assert(pSkinnedMeshController && 
+        "Character::setAnimation(), skinned mesh controller is null.");
+
+    pSkinnedMeshController->SetAnimation(
+        TagAnimToString::Get(tag), 
+        isBlend, 
+        currentWeight, 
+        nextWeight, 
+        blendTime);
+
+    m_animState = tag;
+}
+
 D3DXVECTOR3 Character::getForward()
 {
-    auto rot = GetTransform()->GetRotation() * m_rotationOffset;
+    auto rot = GetTransform()->GetRotation() * OFFSET_ROTATION;
     auto dir = Vector3::Rotate(Vector3::FORWARD, rot);
     D3DXVec3Normalize(&dir, &dir);
     return dir;
@@ -58,24 +76,52 @@ D3DXVECTOR3 Character::getForward()
 
 D3DXVECTOR3 Character::getRight()
 {
-    auto rot = GetTransform()->GetRotation() * m_rotationOffset;
+    auto rot = GetTransform()->GetRotation() * OFFSET_ROTATION;
     auto dir = Vector3::Rotate(Vector3::RIGHT, rot);
     D3DXVec3Normalize(&dir, &dir);
     return dir;
 }
 
-void Character::updateTransform()
+void Character::updateBone()
 {
-    pSkinnedMeshController->Update([this]() 
-    {
-        // modify local bones
-        D3DXMATRIX rx;
-        D3DXMatrixRotationX(&rx, m_waistRotation.m_angle);
-        m_framePtr.pWaist->TransformationMatrix *= rx;
+    // modify local bones
+    D3DXMATRIX rx;
+    D3DXMatrixRotationX(&rx, m_waistRotation.m_angle);
+    m_framePtr.pWaist->TransformationMatrix *= rx;
 
-        // for root motion animation
-        m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
-    });
+    // for root motion animation
+    m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
+}
+
+void Character::updateDependency()
+{
+    GetTransform()->Update();
+    pSkinnedMeshController->UpdateAnimation();
+    updateBone();
+    pSkinnedMeshController->UpdateModel();
+    if (m_pRootCharacterPart) m_pRootCharacterPart->Update();
+    pSkinnedMeshController->Render();
+    if (m_pRootCharacterPart) m_pRootCharacterPart->Render();
+}
+
+void Character::communicate()
+{
+    //if (isMine())
+    //{
+    //    if (isFired)
+    //    {
+    //        D3DXQUATERNION rot;
+    //        D3DXQuaternionRotationAxis(&rot, &Vector3::UP, D3DX_PI * 0.5f);
+    //        auto bullet = BulletPool()()->Fire(Matrix::GetTranslation(
+    //            m_framePtr.pHandGun->CombinedTransformationMatrix
+    //            * tr->GetTransformationMatrix()),
+    //            rot, 0.1f, 10.0f, GetTagCollisionDamage(m_index));
+    //        pCom->SendEventFireBullet(bullet);
+    //    }
+
+    //    if (isUpdated)
+    //        pCom->SendPosition(pos);
+    //}
 }
 
 void Character::rotateWaist(const float quantity)
@@ -97,14 +143,12 @@ int Character::GetIndex() const
 
 TAG_COLLISION Character::GetTagCollisionBody(const int index)
 {
-    switch (index)
-    {
+    switch (index) {
     case 0: return TAG_COLLISION::Player_0_Body;
     case 1: return TAG_COLLISION::Player_1_Body;
     case 2: return TAG_COLLISION::Player_2_Body;
     case 3: return TAG_COLLISION::Player_3_Body;
-    default:
-        {
+    default: {
             assert(false &&
                 "Character::GetTagCollisionBody() failed. index is wrong.");
             return TAG_COLLISION::Idle;
@@ -114,14 +158,12 @@ TAG_COLLISION Character::GetTagCollisionBody(const int index)
 
 TAG_COLLISION Character::GetTagCollisionDamage(const int index)
 {
-    switch (index)
-    {
+    switch (index) {
     case 0: return TAG_COLLISION::Player_0_Damage;
     case 1: return TAG_COLLISION::Player_1_Damage;
     case 2: return TAG_COLLISION::Player_2_Damage;
     case 3: return TAG_COLLISION::Player_3_Damage;
-    default:
-        {
+    default: {
             assert(false &&
                 "Character::GetTagCollisionDamage() failed. index is wrong.");
             return TAG_COLLISION::Idle;

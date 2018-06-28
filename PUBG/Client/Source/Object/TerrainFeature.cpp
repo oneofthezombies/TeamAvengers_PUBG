@@ -43,6 +43,7 @@ void TerrainFeature::AddBoxCollider(const D3DXMATRIX& transform)
 {
     BoxCollider* pBoxCollider = new BoxCollider(this);
     pBoxCollider->Init(transform);
+    pBoxCollider->SetTag(TAG_COLLISION::Impassable);
 
     m_colliders.emplace_back(pBoxCollider);
 }

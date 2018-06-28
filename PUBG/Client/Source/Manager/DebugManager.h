@@ -15,7 +15,7 @@ private:
 
 public:
 	void Destroy();
-	void Print();
+	void Render();
 	void Clear();
 	void ShowMessageBox();
 

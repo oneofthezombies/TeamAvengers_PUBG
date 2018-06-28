@@ -2,6 +2,7 @@
 #include "IScene.h"
 #include "IObject.h"
 #include "TerrainFeature.h"
+#include "DirectionalLight.h"
 
 BoxColliderInFile::BoxColliderInFile()
 {
@@ -19,6 +20,7 @@ ObjectInFile::ObjectInFile()
 
 IScene::IScene()
     : MemoryAllocator()
+    , m_pDirectionalLight(nullptr)
 {
 }
 
@@ -26,6 +28,8 @@ IScene::~IScene()
 {
 	for (auto o : m_objects)
         SAFE_DELETE(o);
+
+    SAFE_DELETE(m_pDirectionalLight);
 }
 
 void IScene::Init()
@@ -105,16 +109,16 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
 
     for (auto o : objs)
     {
-        cout << static_cast<int>(o.m_tagResStatic) << '\n';
-        cout << o.m_name << '\n';
-        cout << o.m_position << '\n';
-        cout << o.m_rotation << '\n';
-        cout << o.m_scale << '\n';
+        //cout << static_cast<int>(o.m_tagResStatic) << '\n';
+        //cout << o.m_name << '\n';
+        //cout << o.m_position << '\n';
+        //cout << o.m_rotation << '\n';
+        //cout << o.m_scale << '\n';
 
-        for (auto b : o.m_boxColliders)
-        {
-            cout << b.m_transform << '\n';
-        }
+        //for (auto b : o.m_boxColliders)
+        //{
+        //    cout << b.m_transform << '\n';
+        //}
 
         TerrainFeature* pObj = new TerrainFeature(
             o.m_tagResStatic, 
@@ -127,6 +131,17 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
 
         AddObject(pObj);
     }
+}
+
+IObject* IScene::FindWithTag(const TAG_OBJECT tag)
+{
+    for (auto o : m_objects)
+    {
+        if (o->GetTagObject() == tag)
+            return o;
+    }
+
+    return nullptr;
 }
 
 void IScene::updateToDeleteObjects()
@@ -244,4 +259,17 @@ HRESULT IScene::parseBoxColliderInFile(
     }
 
     return S_OK;
+}
+
+void IScene::SetDirectionalLight(DirectionalLight* p)
+{
+    assert(p && "IScene::SetDirectionalLight(), directional light is null.");
+
+    SAFE_DELETE(m_pDirectionalLight);
+    m_pDirectionalLight = p;
+}
+
+DirectionalLight* IScene::GetDirectionalLight()
+{
+    return m_pDirectionalLight;
 }

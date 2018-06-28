@@ -17,14 +17,14 @@ private:
     tasks_t     m_effectMeshTasks;
     resources_t m_effectMeshResources;
 
+    tasks_t     m_skinnedMeshTasks;
+    resources_t m_skinnedMeshResources;
+
     tasks_t     m_characterSkinnedMeshTasks;
     resources_t m_characterSkinnedMeshResources;
 
     tasks_t     m_characterAnimationTasks;
     resources_t m_characterAnimationResources;
-
-    tasks_t     m_skinnedMeshTasks;
-    resources_t m_skinnedMeshResources;
 
     std::chrono::system_clock::time_point m_start;
     std::chrono::system_clock::time_point m_finish;
@@ -46,15 +46,17 @@ private:
 private:
     void loadEffectMesh();
     void loadSkinnedMesh();
-    void loadAnimation();
-    void addAnimationsToCharacter0();
-    void copyAnimationsToOtherCharacters();
+    void loadCharacterAnimation();
+    void addAnimationsToCharacter();
+    //void copyAnimationsToOtherCharacters();
     void addEffectMeshs();
 
     bool verifyTasks(tasks_t* OutTasks, resources_t* OutResources);
 
     void addTask(const TAG_RES_STATIC tag, tasks_t* OutTasks);
+    void addTask(const TAG_RES_STATIC tag);
     void addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks);
+    void addTask(const TAG_RES_ANIM_CHARACTER tag);
 
 public:
              SceneLoading();

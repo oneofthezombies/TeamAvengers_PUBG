@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Structure.h"
+#include "DirectionalLight.h"
 
 VERTEX_PC::VERTEX_PC()
     : p(0.0f, 0.0f, 0.0f)
@@ -67,8 +68,17 @@ void EffectMesh::Render(const D3DXMATRIX& world, LPD3DXMESH pMesh)
         ep.pEffect->SetMatrix("View", &CurrentCamera()()->GetViewMatrix());
         ep.pEffect->SetMatrix(
             "Projection", &CurrentCamera()()->GetProjectionMatrix());
-        ep.pEffect->CommitChanges();
 
+        D3DXVECTOR3 lightDirection(1.0f, -1.0f, 1.0f);
+        DirectionalLight* pDirectionalLight = 
+            CurrentScene()()->GetDirectionalLight();
+        if (pDirectionalLight)
+            lightDirection = pDirectionalLight->GetDirection();
+
+        ep.pEffect->SetValue(
+            "lightDirection", &lightDirection, sizeof lightDirection);
+
+        ep.pEffect->CommitChanges();
         UINT numPasses = 0u;
         ep.pEffect->Begin(&numPasses, 0);
         for (auto pi = 0u; pi < numPasses; ++pi)
@@ -489,4 +499,15 @@ STDMETHODIMP AllocateHierarchyAsync::DestroyMeshContainer(
 
     SAFE_DELETE(pMeshContainer);
     return S_OK;
+}
+
+SkinnedMeshInstance::SkinnedMeshInstance()
+    : pSkinnedMesh(nullptr)
+    , m_pAnimController(nullptr)
+{
+}
+
+SkinnedMeshInstance::~SkinnedMeshInstance()
+{
+    SAFE_RELEASE(m_pAnimController);
 }

@@ -4,9 +4,6 @@
 
 class ScenePlay : public IScene
 {
-private:
-    array<Character*, Character::NUM_PLAYER> m_Characters;
-
 public:
     ScenePlay();
     virtual ~ScenePlay();

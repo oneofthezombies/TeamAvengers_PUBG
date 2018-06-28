@@ -13,8 +13,8 @@ ICamera::ICamera(const TAG_CAMERA tag)
     , m_tagCamera(tag)
     , m_position(Vector3::ZERO)
     , m_fovY(D3DX_PI * 0.5f)
-    , m_rotation(Quaternion::ZERO)
 {
+    D3DXQuaternionRotationYawPitchRoll(&m_rotation, 0.0f, 0.0f, 0.0f);
 }
 
 ICamera::~ICamera()
@@ -79,7 +79,7 @@ CameraFree::CameraFree()
     : ICamera(TAG_CAMERA::Default)
 {
     m_position = D3DXVECTOR3(0.0f, 160.0f, -258.0f);
-    m_position = D3DXVECTOR3(0.0f, 0.0f, -100.0f);
+    //m_position = D3DXVECTOR3(0.0f, 0.0f, -100.0f);
 }
 
 CameraFree::~CameraFree()

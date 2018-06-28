@@ -38,34 +38,24 @@ void Application::Destroy()
 
 void Application::Update()
 {
-	DebugMgr()()->Clear();
-    Debug << "FPS : " << Time()()->GetFps() << '\n';
+    DebugMgr     ()()->Clear();
+    Time         ()()->Update();
     Communication()()->Print();
-    BulletPool()()->PrintNumBullet();
-
-	Time     ()()->Update();
-    Input    ()()->Update();
-    Scene    ()()->Update();
-    Sound    ()()->Update();
-    Camera   ()()->Update();
-    Collision()()->Update();
-    UI       ()()->Update();
-}
-
-void Application::Render()
-{
-    auto d = Device()();
-    d->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-		D3DCOLOR_XRGB(50, 50, 50), 1.0f, 0);
-
-    d->BeginScene();
-
-	Scene   ()()->Render();
-    UI      ()()->Render();
-	DebugMgr()()->Print();
-
-    d->EndScene();
-    d->Present(nullptr, nullptr, nullptr, nullptr);
+    BulletPool   ()()->PrintNumBullet();
+    Input        ()()->Update();
+    Device       ()()->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+                             D3DCOLOR_XRGB(50, 50, 50), 1.0f, 0);
+    Device       ()()->BeginScene();
+    Scene        ()()->Update();
+    Sound        ()()->Update();
+    Camera       ()()->Update();
+    Collision    ()()->Update();
+    UI           ()()->Update();
+    Scene        ()()->Render();
+    UI           ()()->Render();
+    DebugMgr     ()()->Render();
+    Device       ()()->EndScene();
+    Device       ()()->Present(nullptr, nullptr, nullptr, nullptr);
 }
 
 void Application::WndProc(HWND hWnd, UINT message, WPARAM wParam,

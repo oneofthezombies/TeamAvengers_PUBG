@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "SkinnedMeshController.h"
+#include "TagAnimation.h"
 
-void SkinnedMeshController::updateFrameToWorld(LPD3DXFRAME pFrameBase, 
+void SkinnedMeshController::updateFrameToModelSpace(LPD3DXFRAME pFrameBase,
     LPD3DXFRAME pParent)
 {
     if (!pFrameBase) return;
@@ -15,8 +16,8 @@ void SkinnedMeshController::updateFrameToWorld(LPD3DXFRAME pFrameBase,
             static_cast<Frame*>(pParent)->CombinedTransformationMatrix;
     }
 
-    updateFrameToWorld(pFrame->pFrameSibling, pParent);
-    updateFrameToWorld(pFrame->pFrameFirstChild, pFrame);
+    updateFrameToModelSpace(pFrame->pFrameSibling, pParent);
+    updateFrameToModelSpace(pFrame->pFrameFirstChild, pFrame);
 }
 
 void SkinnedMeshController::drawFrame(LPD3DXFRAME pFrameBase)
@@ -76,45 +77,29 @@ void SkinnedMeshController::drawMeshContainer(
         pMeshContainer->m_pWorkMesh);
 }
 
-SkinnedMesh* SkinnedMeshController::loadSkinnedMesh(
-    const string& path, const string& xFilename)
-{
-    SkinnedMesh* pSkinnedMesh = new SkinnedMesh;
-    AllocateHierarchy allocator(path, xFilename);
-
-    const auto hr = D3DXLoadMeshHierarchyFromXA(
-        (path + xFilename).c_str(), D3DXMESH_MANAGED, Device()(), &allocator, 
-        nullptr, &pSkinnedMesh->m_pRootFrame, 
-        &pSkinnedMesh->m_pAnimController);
-
-    assert(!FAILED(hr) &&
-        "SkinnedMeshController::loadSkinnedMesh(), \
-         D3DXLoadMeshHierarchyFromXA() failed.");
-
-    return pSkinnedMesh;
-}
-
 SkinnedMeshController::SkinnedMeshController(IObject* pOwner)
     : Component(pOwner)
-    , m_currentIndex(0)
+    , m_currentAnimIndex(0)
+    , m_currentAnimName("")
     , m_totalBlendTime(0.3f)
     , m_passedBlendTime(0.0f)
-
-    , pSkinnedMesh(nullptr)
+    , m_pSkinnedMeshInstance(nullptr)
 {
 }
 
 SkinnedMeshController::~SkinnedMeshController()
 {
+    SAFE_DELETE(m_pSkinnedMeshInstance);
 }
 
-void SkinnedMeshController::Update(const function<void()>& function)
+void SkinnedMeshController::UpdateAnimation()
 {
-    assert(pSkinnedMesh && 
-        "SkinnedMeshController::Update(), skinned mesh is null.");
+    assert(m_pSkinnedMeshInstance &&
+        "SkinnedMeshController::UpdateAnimation(), \
+         skinned mesh instance is null.");
 
     const auto dt = Time()()->GetDeltaTime();
-    auto& pAniCon = pSkinnedMesh->m_pAnimController;
+    auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
     pAniCon->AdvanceTime(dt, nullptr);
 
     if (m_passedBlendTime < m_totalBlendTime)
@@ -133,18 +118,20 @@ void SkinnedMeshController::Update(const function<void()>& function)
             pAniCon->SetTrackWeight(1u, 1.0f - weight);
         }
     }
+}
 
-    if (function) function();
-
-    updateFrameToWorld(pSkinnedMesh->m_pRootFrame, nullptr);
+void SkinnedMeshController::UpdateModel()
+{
+    updateFrameToModelSpace(
+        m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame, nullptr);
 }
 
 void SkinnedMeshController::Render()
 {
-    assert(pSkinnedMesh && 
+    assert(m_pSkinnedMeshInstance &&
         "SkinnedMeshController::Render(), skinned mesh is null.");
 
-    drawFrame(pSkinnedMesh->m_pRootFrame);
+    drawFrame(m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame);
 }
 
 void SkinnedMeshController::SetSkinnedMesh(SkinnedMesh* pSkinnedMesh)
@@ -152,46 +139,22 @@ void SkinnedMeshController::SetSkinnedMesh(SkinnedMesh* pSkinnedMesh)
     assert(pSkinnedMesh && 
         "SkinnedMeshController::SetSkinnedMesh(), skinned mesh is null.");
 
-    this->pSkinnedMesh = pSkinnedMesh;
-    this->pSkinnedMesh->Setup();
-}
+    SAFE_DELETE(m_pSkinnedMeshInstance);
+    m_pSkinnedMeshInstance = new SkinnedMeshInstance;
 
-void SkinnedMeshController::LoadSkinnedMesh(
-    const string& path, const string& xFilename)
-{
-    pSkinnedMesh = loadSkinnedMesh(path, xFilename);
-    pSkinnedMesh->Setup();
-}
+    m_pSkinnedMeshInstance->pSkinnedMesh = pSkinnedMesh;
 
-void SkinnedMeshController::LoadAdditionalAnimation(
-    const string& path, const string& xFilename)
-{
-    SkinnedMesh* pAddSkinnedMesh = loadSkinnedMesh(path, xFilename);
+    LPD3DXANIMATIONCONTROLLER pSrc = pSkinnedMesh->m_pAnimController;
+    LPD3DXANIMATIONCONTROLLER pDest = nullptr;
 
-    LPD3DXANIMATIONCONTROLLER pNew = nullptr;
-    auto& pOld = pSkinnedMesh->m_pAnimController;
-    auto& pAdd = pAddSkinnedMesh->m_pAnimController;
+    pSrc->CloneAnimationController(
+        pSrc->GetMaxNumAnimationOutputs(),
+        pSrc->GetMaxNumAnimationSets(), 
+        pSrc->GetMaxNumTracks(), 
+        pSrc->GetMaxNumEvents(), 
+        &pDest);
 
-    pOld->CloneAnimationController(
-        pOld->GetMaxNumAnimationOutputs(),
-        pOld->GetMaxNumAnimationSets() + pAdd->GetMaxNumAnimationSets(), 
-        pOld->GetMaxNumTracks(),
-        pOld->GetMaxNumEvents(),
-        &pNew);
-
-    LPD3DXANIMATIONSET pAddSet = nullptr;
-    auto numAddSet = pAdd->GetNumAnimationSets();
-    for (auto i = 0u; i < numAddSet; ++i)
-    {
-        pAdd->GetAnimationSet(i, &pAddSet);
-        pNew->RegisterAnimationSet(pAddSet);
-        pAddSet->Release();
-    }
-
-    pOld->Release();
-    pOld = pNew;
-
-    SAFE_DELETE(pAddSkinnedMesh);
+    m_pSkinnedMeshInstance->m_pAnimController = pDest;
 }
 
 void SkinnedMeshController::SetAnimationIndex(
@@ -199,14 +162,55 @@ void SkinnedMeshController::SetAnimationIndex(
     const float currentWeight, const float nextWeight, const float blendTime)
 {
     LPD3DXANIMATIONSET pNext = nullptr;
-    auto& pAniCon = pSkinnedMesh->m_pAnimController;
+    auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
 
     HRESULT hr = pAniCon->GetAnimationSet(index, &pNext);
     assert(!FAILED(hr) && 
         "SkinnedMeshController::SetAnimationIndex(), \
          ID3DXAnimationController::GetAnimationSet() failed.");
 
-    m_currentIndex = index;
+    m_currentAnimIndex = index;
+
+    if (isBlend)
+    {
+        LPD3DXANIMATIONSET pCurrent = nullptr;
+        pAniCon->GetTrackAnimationSet(0u, &pCurrent);
+        pAniCon->SetTrackAnimationSet(1u, pCurrent);
+
+        D3DXTRACK_DESC desc;
+        pAniCon->GetTrackDesc(0u, &desc);
+        pAniCon->SetTrackDesc(1u, &desc);
+
+        pAniCon->SetTrackWeight(0u, nextWeight);
+        pAniCon->SetTrackWeight(1u, currentWeight);
+
+        SAFE_RELEASE(pCurrent);
+
+        m_passedBlendTime = 0.0f;
+        m_totalBlendTime = blendTime;
+    }
+
+    pAniCon->SetTrackAnimationSet(0u, pNext);
+    //pAniCon->ResetTime();
+    pAniCon->SetTrackPosition(0u, 0.0);
+
+    SAFE_RELEASE(pNext);
+}
+
+void SkinnedMeshController::SetAnimation(
+    const string& name, const bool isBlend, const float currentWeight, 
+    const float nextWeight, const float blendTime)
+{
+    LPD3DXANIMATIONSET pNext = nullptr;
+    auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
+
+    HRESULT hr = pAniCon->GetAnimationSetByName(name.c_str(), &pNext);
+
+    assert(!FAILED(hr) &&
+        "SkinnedMeshController::SetAnimationIndex(), \
+         ID3DXAnimationController::GetAnimationSet() failed.");
+
+    m_currentAnimName = name;
 
     if (isBlend)
     {
@@ -236,23 +240,31 @@ void SkinnedMeshController::SetAnimationIndex(
 
 size_t SkinnedMeshController::GetCurrentAnimationIndex() const
 {
-    return m_currentIndex;
+    return m_currentAnimIndex;
+}
+
+const string & SkinnedMeshController::GetCurrentAnimationName() const
+{
+    return m_currentAnimName;
 }
 
 size_t SkinnedMeshController::GetNumAnimation() const
 {
-    assert(pSkinnedMesh && pSkinnedMesh->m_pAnimController && 
+    assert(
+        m_pSkinnedMeshInstance && 
+        m_pSkinnedMeshInstance->m_pAnimController &&
         "SkinnedMeshController::GetNumAnimation(), pointer is null.");
     
-    return pSkinnedMesh->m_pAnimController->GetMaxNumAnimationSets();
+    return m_pSkinnedMeshInstance->m_pAnimController->GetMaxNumAnimationSets();
 }
 
 Frame* SkinnedMeshController::FindFrame(const string& name)
 {
-    assert(pSkinnedMesh &&
-        "SkinnedMeshController::FindFrame(), skinned mesh is null.");
+    assert(m_pSkinnedMeshInstance &&
+        "SkinnedMeshController::FindFrame(), skinned mesh instance is null.");
 
-    auto pFrame = D3DXFrameFind(pSkinnedMesh->m_pRootFrame, name.c_str());
+    auto pFrame = D3DXFrameFind(
+        m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame, name.c_str());
 
     assert(pFrame && 
         "SkinnedMeshController::FindFrame(), D3DXFrameFind() failed.");

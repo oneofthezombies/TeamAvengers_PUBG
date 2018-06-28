@@ -1,6 +1,7 @@
 #pragma once
 
 class IObject;
+class DirectionalLight;
 
 struct BoxColliderInFile
 {
@@ -28,6 +29,8 @@ private:
     unordered_set<IObject*>        m_objects;
     unordered_map<IObject*, float> m_toDeleteObjects;
 
+    DirectionalLight* m_pDirectionalLight;
+
 protected:
     IScene();
 
@@ -48,8 +51,26 @@ public:
 	void Destroy(IObject* p, const float t = 0.0f);
 
     void LoadObjectsFromFile(const std::string& fullPath);
+    IObject* FindWithTag(const TAG_OBJECT tag);
+
+    void              SetDirectionalLight(DirectionalLight* p);
+    DirectionalLight* GetDirectionalLight();
 
     virtual void OnInit() = 0;
 	virtual void OnUpdate() = 0;
+
+    template<
+        typename T, 
+        std::enable_if_t<std::is_base_of_v<IObject, T>, int> = 0>
+    T* FildWithTagAndCast(const TAG_OBJECT tag)
+    {
+        for (auto o : m_objects)
+        {
+            if (o->GetTagObject() == tag)
+                return static_cast<T*>(o);
+        }
+
+        return nullptr;
+    }
 };
 

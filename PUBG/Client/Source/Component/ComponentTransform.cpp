@@ -37,7 +37,7 @@ Transform::~Transform()
 {
 }
 
-const D3DXMATRIX& Transform::GetTransformationMatrix()
+void Transform::Update()
 {
     D3DXMATRIX s, r, t;
     D3DXMatrixScaling(&s, m_scale.x, m_scale.y, m_scale.z);
@@ -45,6 +45,10 @@ const D3DXMATRIX& Transform::GetTransformationMatrix()
     D3DXMatrixTranslation(&t, m_position.x, m_position.y, m_position.z);
 
     m_transformationMatrix = s * r * t;
+}
+
+const D3DXMATRIX& Transform::GetTransformationMatrix()
+{
     return m_transformationMatrix;
 }
 
@@ -83,4 +87,9 @@ void Transform::SetScale(const D3DXVECTOR3& s)
 const D3DXVECTOR3& Transform::GetScale() const
 {
     return m_scale;
+}
+
+void Transform::SetTransform(const D3DXMATRIX& m)
+{
+    m_transformationMatrix = m;
 }

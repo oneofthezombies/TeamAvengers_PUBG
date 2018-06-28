@@ -40,20 +40,26 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::Neck, 
                 pCharacter));
 
-            auto pF = pSkiCon->FindFrame("F_Face_03");
-            auto pMeshContainer = 
-                static_cast<MeshContainer*>(pF->pMeshContainer);
-            void* pData = nullptr;
-            auto pMesh = pMeshContainer->pEffectMesh->m_pMesh;
-            pMesh->LockVertexBuffer(D3DLOCK_READONLY, &pData);
-            D3DXVECTOR3 min, max;
-            D3DXComputeBoundingBox((D3DXVECTOR3*)pData, 
-                pMesh->GetNumVertices(), pMesh->GetNumBytesPerVertex(), 
-                &min, &max);
-            pMesh->UnlockVertexBuffer();
-            min.y *= 0.5f;
-            max.y *= 0.5f;
-            pBoxCollider->Init(min, max);
+            //auto pF = pSkiCon->FindFrame("F_Face_03");
+            //auto pMeshContainer = 
+            //    static_cast<MeshContainer*>(pF->pMeshContainer);
+            //void* pData = nullptr;
+            //auto pMesh = pMeshContainer->pEffectMesh->m_pMesh;
+            //pMesh->LockVertexBuffer(D3DLOCK_READONLY, &pData);
+            //D3DXVECTOR3 min, max;
+            //D3DXComputeBoundingBox((D3DXVECTOR3*)pData, 
+            //    pMesh->GetNumVertices(), pMesh->GetNumBytesPerVertex(), 
+            //    &min, &max);
+            //pMesh->UnlockVertexBuffer();
+            ////const float extentY = (max.y - min.y) * 0.25f;
+            ////min.y = -extentY;
+            ////max.y = extentY;
+            //min.y *= 0.5f;
+            //max.y *= 0.5f;
+
+            //pBoxCollider->Init(min, max);
+
+            pBoxCollider->Init(Vector3::ONE * -10.0, Vector3::ONE * 10.0f);
         }
         break;
     case TAG_COLLIDER_CHARACTER_PART::Neck:
@@ -302,8 +308,8 @@ CharacterPart::~CharacterPart()
 
 void CharacterPart::OnUpdate()
 {
-    D3DXMATRIX world;
-    memset(&world, 0, sizeof world);
+    D3DXMATRIX model;
+    memset(&model, 0, sizeof model);
 
     if (m_tagColliderCharacterPart == TAG_COLLIDER_CHARACTER_PART::Head)
     {
@@ -315,19 +321,19 @@ void CharacterPart::OnUpdate()
         auto bottom = Matrix::GetTranslation(
             m_frames[2]->CombinedTransformationMatrix);
         auto center = (top + bottom) * 0.5f;
-        world = m_frames[2]->CombinedTransformationMatrix;
-        world._41 = center.x;
-        world._42 = center.y;
-        world._43 = center.z;
+        model = m_frames[2]->CombinedTransformationMatrix;
+        model._41 = center.x - 9.0f;
+        model._42 = center.y;
+        model._43 = center.z;
     }
     else
     {
         for (auto& f : m_frames)
-            world += f->CombinedTransformationMatrix
+            model += f->CombinedTransformationMatrix
                    / static_cast<float>(m_frames.size());
     }
 
-    pBoxCollider->Update(world * 
+    pBoxCollider->Update(model *
         pCharacter->GetTransform()->GetTransformationMatrix());
 
     //updateUI();

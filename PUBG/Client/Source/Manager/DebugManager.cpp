@@ -16,7 +16,7 @@ void DebugManager::Destroy()
     SAFE_RELEASE(m_pFont);
 }
 
-void DebugManager::Print()
+void DebugManager::Render()
 {
     RECT rc;
     SetRect(&rc, 8, 8, 8, 8);

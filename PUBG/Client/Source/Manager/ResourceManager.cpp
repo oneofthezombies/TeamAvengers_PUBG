@@ -67,8 +67,10 @@ void ResourceManager::Destroy()
     for (auto em : m_effectMeshs)
         SAFE_DELETE(em.second);
 
-    for (auto c : m_characters)
-        SAFE_DELETE(c);
+    for (auto sm : m_skinnedMeshs)
+        SAFE_DELETE(sm.second);
+
+    SAFE_DELETE(m_pCharacter);
 
     //RemoveFontResource(TEXT("resources/fonts/SeoulNamsanM.ttf"));
 }
@@ -218,12 +220,9 @@ LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
     //return m_umapFont[val];
 }
 
-SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh(const int index)
+SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh()
 {
-    assert(index < Character::NUM_PLAYER  && index > -1 && 
-        "ResourceManager::GetCharacterSkinnedMesh(), wrong index.");
-
-    return m_characters[index];
+    return m_pCharacter;
 }
 
 EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
@@ -240,19 +239,15 @@ EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
     return search->second;
 }
 
-void ResourceManager::AddCharacters(std::vector<ResourceContainer*> characters)
-{
-    for (std::size_t i = 0; i < characters.size(); ++i)
-    {
-        m_characters[i] = characters.at(i)->m_pSkinnedMesh;
-        characters.at(i)->m_pSkinnedMesh = nullptr;
-    }
-
-    AddResource(characters.at(0));
-
-    for (std::size_t i = 1; i < characters.size(); ++i)
-        SAFE_DELETE(characters.at(i));
-}
+//void ResourceManager::AddCharacters(std::vector<ResourceContainer*> characters)
+//{
+//    for (std::size_t i = 0; i < characters.size(); ++i)
+//    {
+//        m_characters[i] = characters[i]->m_pSkinnedMesh;
+//        characters[i]->m_pSkinnedMesh = nullptr;
+//        AddResource(characters[i]);
+//    }
+//}
 
 EffectMesh* ResourceManager::FindEffectMesh(
     const string& path, const string& name)
@@ -380,12 +375,40 @@ void ResourceManager::AddResource(ResourceContainer* pResourceContainer)
         }
     }
 
+    if (pResourceContainer->m_pSkinnedMesh.second)
+    {
+        const string& key = pResourceContainer->m_pSkinnedMesh.first;
+        const auto search =
+            m_skinnedMeshs.find(key);
+        if (search == m_skinnedMeshs.end())
+        {
+            m_skinnedMeshs[key] = pResourceContainer->m_pSkinnedMesh.second;
+            pResourceContainer->m_pSkinnedMesh.second = nullptr;
+
+            m_skinnedMeshs[key]->Setup();
+        }
+    }
+
     SAFE_DELETE(pResourceContainer);
 }
 
+void ResourceManager::AddCharacter(ResourceContainer* pResourceContainer)
+{
+    assert(
+        pResourceContainer && 
+        pResourceContainer->m_pSkinnedMesh.second &&
+        "ResourceManager::AddCharacter(), resource container is null.");
+
+    m_pCharacter = pResourceContainer->m_pSkinnedMesh.second;
+    pResourceContainer->m_pSkinnedMesh.second = nullptr;
+
+    m_pCharacter->Setup();
+
+    AddResource(pResourceContainer);
+}
+
 ResourceContainer::ResourceContainer()
-    : m_pSkinnedMesh(nullptr)
-    , m_filename("")
+    : m_filename("")
 {
 }
 
@@ -409,7 +432,7 @@ ResourceContainer::~ResourceContainer()
         SAFE_RELEASE(tx);
     }
 
-    SAFE_DELETE(m_pSkinnedMesh);
+    SAFE_DELETE(m_pSkinnedMesh.second);
 }
 
 ResourceContainer* ResourceAsync::OnLoadEffectMeshAsync(
@@ -456,8 +479,9 @@ ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
         return nullptr;
     }
 
-    pResourceContainer->m_pSkinnedMesh = new SkinnedMesh;
-    SkinnedMesh* pSkinnedMesh = pResourceContainer->m_pSkinnedMesh;
+    pResourceContainer->m_pSkinnedMesh = 
+        make_pair(path + xFilename, new SkinnedMesh);
+    SkinnedMesh* pSkinnedMesh = pResourceContainer->m_pSkinnedMesh.second;
     if (!pSkinnedMesh)
     {
         return nullptr;
@@ -475,7 +499,11 @@ ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
         return nullptr;
     }
 
-    pSkinnedMesh->Setup();
+    assert(pResourceContainer->m_pSkinnedMesh.second && 
+        pResourceContainer->m_pSkinnedMesh.second->m_pRootFrame && 
+        pResourceContainer->m_pSkinnedMesh.second->m_pAnimController && 
+        "@@");
+
     pResourceContainer->m_filename = xFilename;
     return pResourceContainer;
 }

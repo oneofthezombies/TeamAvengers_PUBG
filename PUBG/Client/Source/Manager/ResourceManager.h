@@ -13,7 +13,7 @@ struct ResourceContainer
     std::unordered_map<std::string, LPD3DXEFFECT>       m_effects;
     std::unordered_map<std::string, EffectMesh*>        m_effectMeshs;
 
-    SkinnedMesh* m_pSkinnedMesh;
+    std::pair<std::string, SkinnedMesh*> m_pSkinnedMesh;
 
     ResourceContainer();
     ~ResourceContainer();
@@ -30,7 +30,11 @@ private:
 
     unordered_map<TAG_FONT, LPD3DXFONT> m_fonts;
 
-    array<SkinnedMesh*, 4> m_characters;
+    unordered_map<string, SkinnedMesh*> m_skinnedMeshs;
+
+    //array<SkinnedMesh*, 4> m_characters;
+    SkinnedMesh*                        m_pCharacter;
+    array<LPD3DXANIMATIONCONTROLLER, 4> m_characterAnimControllers;
 
 private:
              ResourceManager();
@@ -40,11 +44,12 @@ public:
     void Destroy();
 
     void AddResource(ResourceContainer* pResourceContainer);
-    void AddCharacters(std::vector<ResourceContainer*> characters);
+    void AddCharacter(ResourceContainer* pResourceContainer);
+    //void AddCharacters(std::vector<ResourceContainer*> characters);
 
     LPD3DXFONT GetFont(const TAG_FONT tag);
 
-    SkinnedMesh* GetCharacterSkinnedMesh(const int index);
+    SkinnedMesh* GetCharacterSkinnedMesh();
     EffectMesh*  GetEffectMesh(const TAG_RES_STATIC tag);
 
     friend Singleton<ResourceManager>;

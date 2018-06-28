@@ -26,6 +26,8 @@ void TimeManager::Update()
 {
 	CalcDeltaTime();
 	m_fps.Update(m_deltaTime);
+
+    Debug << "FPS : " << Time()()->GetFps() << '\n';
 }
 
 float TimeManager::GetDeltaTime()

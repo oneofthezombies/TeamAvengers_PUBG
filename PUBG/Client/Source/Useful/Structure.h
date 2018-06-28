@@ -85,6 +85,15 @@ public:
     void Setup();
 };
 
+struct SkinnedMeshInstance
+{
+    SkinnedMesh* pSkinnedMesh;
+    LPD3DXANIMATIONCONTROLLER m_pAnimController;
+
+    SkinnedMeshInstance();
+    ~SkinnedMeshInstance();
+};
+
 /* do NOT use! this will be deleted soon.*/
 class AllocateHierarchy : public ID3DXAllocateHierarchy
 {

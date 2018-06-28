@@ -4,6 +4,7 @@
 #include "TagAnimation.h"
 
 class SkinnedMeshController;
+class CharacterPart;
 
 class Character : public IObject
 {
@@ -35,7 +36,7 @@ private:
     };
 
 public:
-    static const int NUM_PLAYER = 4;
+    static const int            NUM_PLAYER = 4;
     static const D3DXQUATERNION OFFSET_ROTATION;
 
 private:
@@ -50,17 +51,28 @@ private:
     LPD3DXMESH m_pSphereMesh;
 
     SkinnedMeshController* pSkinnedMeshController;
+    CharacterPart*         m_pRootCharacterPart;
 
-    D3DXQUATERNION m_rotationOffset;
+    D3DXMATRIX m_prevRootModel;
 
 private:
     void setFramePtr();
     void subscribeCollisionEvent();
 
-    void updateTransform();
+    void updateMine();
+    void updateOther();
+    void updateBone();
+    void updateDependency();
+    void communicate();
+
     void rotateWaist(const float quantity);
 
     bool isMine() const;
+
+    void setAnimation(
+        const TAG_ANIM_CHARACTER tag, const bool isBlend, 
+        const float currentWeight = 1.0f, const float nextWeight = 0.0f,
+        const float blendTime = 0.3f);
 
     D3DXVECTOR3 getForward();
     D3DXVECTOR3 getRight();
