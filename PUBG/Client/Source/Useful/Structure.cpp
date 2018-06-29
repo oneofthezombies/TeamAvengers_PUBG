@@ -55,28 +55,72 @@ EffectMesh::~EffectMesh()
     m_effectParams.resize(0);
 }
 
-void EffectMesh::Render(const D3DXMATRIX& world, LPD3DXMESH pMesh)
+//void EffectMesh::Render(const D3DXMATRIX& world, LPD3DXMESH pMesh)
+//{
+//    assert(pMesh && "EffectMesh::Render(), mesh is null.");
+//
+//    for (auto ei = 0u; ei < m_effectParams.size(); ++ei)
+//    {
+//        const auto& ep = m_effectParams[ei];
+//        ep.pEffect->ApplyParameterBlock(ep.hParam);
+//
+//        ep.pEffect->SetMatrix("World", &world);
+//        ep.pEffect->SetMatrix("View", &CurrentCamera()()->GetViewMatrix());
+//        ep.pEffect->SetMatrix(
+//            "Projection", &CurrentCamera()()->GetProjectionMatrix());
+//
+//        D3DXVECTOR3 lightDirection(1.0f, -1.0f, 1.0f);
+//        DirectionalLight* pDirectionalLight = 
+//            CurrentScene()()->GetDirectionalLight();
+//        if (pDirectionalLight)
+//            lightDirection = pDirectionalLight->GetDirection();
+//
+//        ep.pEffect->SetValue(
+//            "lightDirection", &lightDirection, sizeof lightDirection);
+//
+//        ep.pEffect->CommitChanges();
+//        UINT numPasses = 0u;
+//        ep.pEffect->Begin(&numPasses, 0);
+//        for (auto pi = 0u; pi < numPasses; ++pi)
+//        {
+//            ep.pEffect->BeginPass(pi);
+//            pMesh->DrawSubset(ei);
+//            ep.pEffect->EndPass();
+//        }
+//        ep.pEffect->End();
+//    }
+//}
+
+void EffectMesh::Render(
+    LPD3DXMESH pMesh, 
+    const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup)
 {
     assert(pMesh && "EffectMesh::Render(), mesh is null.");
 
+    const GlobalVariableKey* pKey = Shader()()->GetGlobalVariableKey();
     for (auto ei = 0u; ei < m_effectParams.size(); ++ei)
     {
         const auto& ep = m_effectParams[ei];
         ep.pEffect->ApplyParameterBlock(ep.hParam);
 
-        ep.pEffect->SetMatrix("World", &world);
-        ep.pEffect->SetMatrix("View", &CurrentCamera()()->GetViewMatrix());
         ep.pEffect->SetMatrix(
-            "Projection", &CurrentCamera()()->GetProjectionMatrix());
+            pKey->m_pView, 
+            &CurrentCamera()()->GetViewMatrix());
 
-        D3DXVECTOR3 lightDirection(1.0f, -1.0f, 1.0f);
-        DirectionalLight* pDirectionalLight = 
-            CurrentScene()()->GetDirectionalLight();
-        if (pDirectionalLight)
-            lightDirection = pDirectionalLight->GetDirection();
+        ep.pEffect->SetMatrix(
+            pKey->m_pProjection, 
+            &CurrentCamera()()->GetProjectionMatrix());
 
-        ep.pEffect->SetValue(
-            "lightDirection", &lightDirection, sizeof lightDirection);
+        //D3DXVECTOR3 lightDirection(1.0f, -1.0f, 1.0f);
+        //DirectionalLight* pDirectionalLight =
+        //    CurrentScene()()->GetDirectionalLight();
+        //if (pDirectionalLight)
+        //    lightDirection = pDirectionalLight->GetDirection();
+
+        //ep.pEffect->SetValue(
+        //    "lightDirection", &lightDirection, sizeof lightDirection);
+
+        if (shaderGlobalSetup) shaderGlobalSetup(ep.pEffect);
 
         ep.pEffect->CommitChanges();
         UINT numPasses = 0u;

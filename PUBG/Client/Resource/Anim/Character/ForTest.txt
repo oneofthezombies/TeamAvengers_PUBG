@@ -1,0 +1,5 @@
+/// ForTest.X (하단의 네개의 X파일을 합친것)
+Lobby.X
+Unarmed_Idle.X
+Unarmed_Jump.X
+Unarmed_Locomotion_Stand.X

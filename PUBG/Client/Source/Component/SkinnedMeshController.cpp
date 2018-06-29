@@ -72,9 +72,20 @@ void SkinnedMeshController::drawMeshContainer(
     pMeshContainer->pEffectMesh->m_pMesh->UnlockVertexBuffer();
     pMeshContainer->m_pWorkMesh->UnlockVertexBuffer();
 
+    //pMeshContainer->pEffectMesh->Render(
+    //    GetTransform()->GetTransformationMatrix(), 
+    //    pMeshContainer->m_pWorkMesh);
+
     pMeshContainer->pEffectMesh->Render(
-        GetTransform()->GetTransformationMatrix(), 
-        pMeshContainer->m_pWorkMesh);
+        pMeshContainer->m_pWorkMesh, 
+        [this](LPD3DXEFFECT pEffect) 
+    {
+        const GlobalVariableKey* pkey = Shader()()->GetGlobalVariableKey();
+        pEffect->SetMatrix(
+            pkey->m_pWorld, 
+            &GetTransform()->GetTransformationMatrix());
+
+    });
 }
 
 SkinnedMeshController::SkinnedMeshController(IObject* pOwner)

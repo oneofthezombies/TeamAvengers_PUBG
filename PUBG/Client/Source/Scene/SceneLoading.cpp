@@ -40,8 +40,8 @@ void SceneLoading::OnUpdate()
     {
         Debug << "elapsed time : " << m_elapsed.count() << '\n';
 
-        UI()()->Destroy(m_pPercentageImage);
-        Scene()()->SetCurrentScene(TAG_SCENE::Play);
+        //UI()()->Destroy(m_pPercentageImage);
+        //Scene()()->SetCurrentScene(TAG_SCENE::Play);
     }
     else
     {
@@ -96,6 +96,7 @@ void SceneLoading::OnUpdate()
 
 void SceneLoading::loadEffectMesh()
 {
+    addTask(TAG_RES_STATIC::SkySphere);
     addTask(TAG_RES_STATIC::Bandage);
     addTask(TAG_RES_STATIC::Church);
 
@@ -113,22 +114,24 @@ void SceneLoading::loadSkinnedMesh()
 
     /* do NOT remove &m_characterSkinnedMeshTasks, 
        single argument function is for animaiton. */
-    addTask(TAG_RES_ANIM_CHARACTER::Lobby, &m_characterSkinnedMeshTasks);
+    //addTask(TAG_RES_ANIM_CHARACTER::Lobby, &m_characterSkinnedMeshTasks);
+
+    addTask(TAG_RES_ANIM_CHARACTER::ForTest, &m_characterSkinnedMeshTasks);
 
     loadCharacterAnimation();
 }
 
 void SceneLoading::loadCharacterAnimation()
 {
-    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Idling);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Idling);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack_FPP);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_DoorOpen_And_Pickup);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Pickup_FPP);
-    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump_FPP);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Landing);
-    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Stand);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Stand);
 
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);

@@ -18,6 +18,7 @@ TerrainFeature::TerrainFeature(
     tr->SetPosition(position);
     tr->SetRotation(rotation);
     tr->SetScale(scale);
+    tr->Update();
 }
 
 TerrainFeature::~TerrainFeature()

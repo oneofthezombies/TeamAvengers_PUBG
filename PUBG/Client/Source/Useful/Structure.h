@@ -48,7 +48,10 @@ struct EffectMesh
     EffectMesh();
     ~EffectMesh();
 
-    void Render(const D3DXMATRIX& world, LPD3DXMESH pMesh);
+    //void Render(const D3DXMATRIX& world, LPD3DXMESH pMesh);
+    void Render(
+        LPD3DXMESH pMesh, 
+        const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup);
 };
 
 struct Frame : public D3DXFRAME

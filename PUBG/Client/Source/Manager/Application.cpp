@@ -14,6 +14,7 @@ void Application::Init()
 {
 	DeviceMgr()()->Init();
     UI       ()()->Init();
+    Shader   ()()->Init();
     Input    ()()->Init();
     Sound    ()()->Init();
     Camera   ()()->Init();
@@ -30,6 +31,7 @@ void Application::Destroy()
     Input        ()()->Destroy();
     Sound        ()()->Destroy();
     Resource     ()()->Destroy();
+    Shader       ()()->Destroy();
     DebugMgr     ()()->Destroy();
     DeviceMgr    ()()->Destroy();
 

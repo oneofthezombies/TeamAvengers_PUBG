@@ -15,8 +15,18 @@ void EffectMeshRenderer::Render()
     assert(pEffectMesh && 
         "EffectMeshController::Render(), effect mesh is null.");
 
+    //pEffectMesh->Render(
+    //    GetTransform()->GetTransformationMatrix(), pEffectMesh->m_pMesh);
     pEffectMesh->Render(
-        GetTransform()->GetTransformationMatrix(), pEffectMesh->m_pMesh);
+        pEffectMesh->m_pMesh, 
+        [this](LPD3DXEFFECT pEffect) 
+    {
+        const GlobalVariableKey* pKey = Shader()()->GetGlobalVariableKey();
+
+        pEffect->SetMatrix(
+            pKey->m_pWorld, 
+            &GetTransform()->GetTransformationMatrix());
+    });
 }
 
 void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)

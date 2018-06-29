@@ -243,16 +243,14 @@ void Character::updateMine()
         break;
     }
 
-    //if (pInput->IsStayKeyDown('A'))
-    //{
-    //    pos += getRight() * -m_rootTransform.MOVE_SPEED;
-    //    isUpdated = true;
-    //}
-    //if (pInput->IsStayKeyDown('D'))
-    //{
-    //    pos += getRight() * m_rootTransform.MOVE_SPEED;
-    //    isUpdated = true;
-    //}
+    if (pInput->IsStayKeyDown('A'))
+    {
+        p += getRight() * -m_rootTransform.MOVE_SPEED;
+    }
+    if (pInput->IsStayKeyDown('D'))
+    {
+        p += getRight() * m_rootTransform.MOVE_SPEED;
+    }
 
     //if (pInput->IsOnceKeyDown(VK_RETURN))
     //    isFired = true;

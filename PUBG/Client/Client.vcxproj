@@ -130,6 +130,7 @@
     <ClCompile Include="Source\Base\IObject.cpp" />
     <ClCompile Include="Source\Object\Church.cpp" />
     <ClCompile Include="Source\Object\DirectionalLight.cpp" />
+    <ClCompile Include="Source\Object\SkySphere.cpp" />
     <ClCompile Include="Source\Object\TerrainFeature.cpp" />
     <ClCompile Include="Source\Component\Collider.cpp" />
     <ClCompile Include="Source\Component\ComponentTransform.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="Source\UI\UIObject.cpp" />
     <ClCompile Include="Source\Useful\CollisionCore.cpp" />
     <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
+    <ClCompile Include="Source\Manager\ShaderManager.cpp" />
     <ClCompile Include="Source\Useful\Structure.cpp" />
     <ClCompile Include="Source\Scene\SceneLogin.cpp" />
     <ClCompile Include="Source\Manager\SceneManager.cpp" />
@@ -181,6 +183,7 @@
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Object\Church.h" />
     <ClInclude Include="Source\Object\DirectionalLight.h" />
+    <ClInclude Include="Source\Object\SkySphere.h" />
     <ClInclude Include="Source\Object\TerrainFeature.h" />
     <ClInclude Include="Source\Component\Collider.h" />
     <ClInclude Include="Source\Component\ComponentTransform.h" />
@@ -201,6 +204,7 @@
     <ClInclude Include="Source\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Useful\CollisionCore.h" />
     <ClInclude Include="Source\Useful\ResPathFileName.h" />
+    <ClInclude Include="Source\Manager\ShaderManager.h" />
     <ClInclude Include="Source\Useful\TagClientOnly.h" />
     <ClInclude Include="Source\Manager\InputManager.h" />
     <ClInclude Include="Source\Base\IScene.h" />

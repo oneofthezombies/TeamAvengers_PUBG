@@ -367,7 +367,7 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_STATIC tag)
             //SkySphere
             {
             case TAG_RES_STATIC::SkySphere:
-                filePath = "Map/SkySphere/";
+                filePath = "Map/";
                 fileName = "SkySphere";
                 break;
             }
@@ -678,6 +678,13 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_CHARACTER tag)
             {
             case TAG_RES_ANIM_CHARACTER::DBNO:
                 fileName = "DBNO";
+                break;
+            }
+
+            //6. For test
+            {
+            case TAG_RES_ANIM_CHARACTER::ForTest:
+                fileName = "ForTest";
                 break;
             }
         }
