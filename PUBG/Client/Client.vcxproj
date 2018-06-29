@@ -129,6 +129,7 @@
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
     <ClCompile Include="Source\Grid.cpp" />
+    <ClCompile Include="Source\Object\Character.cpp" />
     <ClCompile Include="Source\Object\Church.cpp" />
     <ClCompile Include="Source\Object\DirectionalLight.cpp" />
     <ClCompile Include="Source\Object\TerrainFeature.cpp" />

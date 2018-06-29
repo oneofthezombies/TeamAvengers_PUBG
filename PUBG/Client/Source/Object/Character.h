@@ -25,12 +25,24 @@ public:
         RootTransform(const float moveSpeed);
     };
 
+    struct Info
+    {
+        Transform*   pTransform;
+        D3DXVECTOR3* pRotationForCamera;
+        Frame*       pFPP;
+        Frame*       pTPP;
+
+        Info();
+    };
+
 private:
     struct FramePtr
     {
         Frame* pWaist;
         Frame* pRoot;
         Frame* pHandGun;
+        Frame* pTPP;
+        Frame* pFPP;
 
         FramePtr();
     };
@@ -54,8 +66,9 @@ private:
     CharacterPart*         m_pRootCharacterPart;
 
     D3DXMATRIX m_prevRootModel;
-    D3DXVECTOR3 m_rotForCameraTP;
-    TargetTransform* pTargetTransform;
+    D3DXVECTOR3 m_rotationForCamera;
+
+    Info m_info;
 
 private:
     void setFramePtr();
@@ -75,6 +88,8 @@ private:
         const TAG_ANIM_CHARACTER tag, const bool isBlend, 
         const float currentWeight = 1.0f, const float nextWeight = 0.0f,
         const float blendTime = 0.3f);
+
+    void setInfo();
 
     D3DXVECTOR3 getRight();
     D3DXVECTOR3 getUp();

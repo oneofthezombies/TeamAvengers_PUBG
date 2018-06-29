@@ -44,11 +44,11 @@ Character::Character(const int index)
 
     if (isMine())
     {
-        Camera()()->SetTarget(GetTransform(), &m_rotForCameraTP);
-        pTargetTransform = Camera()()->GetTargetTransformPtr();
+        setInfo();
+        Camera()()->SetTarget(&m_info);
     }
 
-    m_rotForCameraTP = Vector3::ZERO;
+    m_rotationForCamera = Vector3::ZERO;
 }
 
 Character::~Character()
@@ -143,6 +143,8 @@ void Character::updateMine()
     POINT diff;
     diff.x = mouse.x - 1280 / 2;
     diff.y = mouse.y - 720 / 2;
+    if (diff.x < 2 && diff.x > -2) diff.x = 0;
+    if (diff.y < 2 && diff.y > -2) diff.y = 0;
     const float yaw = diff.x * 0.2f * dt;
     const float pitch = diff.y * 0.2f * dt;
     if (isPressing_LAlt)
@@ -184,7 +186,6 @@ void Character::updateMine()
     SetCursorPos(center.x, center.y);
 
     Debug << "rot for TP : " << m_rotForCameraTP << '\n';
-
 
     switch (m_animState)
     {

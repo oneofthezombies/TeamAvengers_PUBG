@@ -5,13 +5,14 @@
 #define g_pCamera        Camera       ()()
 #define g_pCurrentCamera CurrentCamera()()
 class Transform;
-struct TargetTransform
-{
-    Transform*   pTransform;
-    D3DXVECTOR3* pRotForCameraTP;
-
-    TargetTransform();
-};
+//struct TargetTransform
+//{
+//    Transform*   pTransform;
+//    D3DXVECTOR3* pRotForCameraTP;
+//
+//
+//    TargetTransform();
+//};
 class CameraManager : public Singleton<CameraManager>
 {
 private:
