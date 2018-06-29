@@ -160,13 +160,22 @@ void Character::updateMine()
     else // isPressing_LAlt == false
     {
         // update rotation of transform
+
         D3DXQUATERNION q;
         D3DXQuaternionRotationYawPitchRoll(&q, yaw, 0.0f, 0.0f);
+        cout << "pitch : " << pitch << " yaw : " << yaw << endl;
+
         r *= q;
 
         // reset rotFotCameraTP
         m_rotForCameraTP = Vector3::ZERO;
     }
+
+    /*
+    in : mouse
+    out : character r <= mouse only one axis
+    out : camera r <= mouse wto axis
+    */
 
     POINT center;
     center.x = 1280 / 2;
@@ -290,16 +299,16 @@ void Character::updateMine()
         break;
     }
 
-    //if (pInput->IsStayKeyDown('A'))
-    //{
-    //    pos += getRight() * -m_rootTransform.MOVE_SPEED;
-    //    isUpdated = true;
-    //}
-    //if (pInput->IsStayKeyDown('D'))
-    //{
-    //    pos += getRight() * m_rootTransform.MOVE_SPEED;
-    //    isUpdated = true;
-    //}
+    if (pInput->IsStayKeyDown('A'))
+    {
+        p += getRight() * -m_rootTransform.MOVE_SPEED;
+        //isUpdated = true;
+    }
+    if (pInput->IsStayKeyDown('D'))
+    {
+        p += getRight() * m_rootTransform.MOVE_SPEED;
+        //isUpdated = true;
+    }
 
     //if (pInput->IsOnceKeyDown(VK_RETURN))
     //    isFired = true;

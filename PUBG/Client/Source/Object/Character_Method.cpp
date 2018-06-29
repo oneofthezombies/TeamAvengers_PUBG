@@ -68,16 +68,27 @@ void Character::setAnimation(
 
 D3DXVECTOR3 Character::getForward()
 {
-    auto rot = GetTransform()->GetRotation() * OFFSET_ROTATION;
+    auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::FORWARD, rot);
+    dir.z *= -1.0f;
     D3DXVec3Normalize(&dir, &dir);
     return dir;
 }
 
 D3DXVECTOR3 Character::getRight()
 {
-    auto rot = GetTransform()->GetRotation() * OFFSET_ROTATION;
+    auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::RIGHT, rot);
+    dir.x *= -1.0f;
+    D3DXVec3Normalize(&dir, &dir);
+    return dir;
+}
+
+D3DXVECTOR3 Character::getUp()
+{
+    auto rot = GetTransform()->GetRotation();
+    auto dir = Vector3::Rotate(Vector3::UP, rot);
+    //dir.y *= -1.0f;
     D3DXVec3Normalize(&dir, &dir);
     return dir;
 }
