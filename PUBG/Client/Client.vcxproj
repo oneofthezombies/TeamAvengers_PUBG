@@ -129,6 +129,7 @@
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
     <ClCompile Include="Source\Grid.cpp" />
+    <ClCompile Include="Source\Object\Character_Inventory.cpp" />
     <ClCompile Include="Source\Object\Church.cpp" />
     <ClCompile Include="Source\Object\DirectionalLight.cpp" />
     <ClCompile Include="Source\Object\Item.cpp" />
@@ -158,8 +159,8 @@
     <ClCompile Include="Source\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\UI\UIObject.cpp" />
     <ClCompile Include="Source\Useful\CollisionCore.cpp" />
-    <ClCompile Include="Source\Useful\ItemHelper.cpp" />
-    <ClCompile Include="Source\Useful\ResourceHelper.cpp" />
+    <ClCompile Include="Source\Useful\ItemInfo.cpp" />
+    <ClCompile Include="Source\Useful\ResourceInfo.cpp" />
     <ClCompile Include="Source\Useful\Structure.cpp" />
     <ClCompile Include="Source\Scene\SceneLogin.cpp" />
     <ClCompile Include="Source\Manager\SceneManager.cpp" />
@@ -205,8 +206,8 @@
     <ClInclude Include="Source\Manager\TimeManager.h" />
     <ClInclude Include="Source\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Useful\CollisionCore.h" />
-    <ClInclude Include="Source\Useful\ItemHelper.h" />
-    <ClInclude Include="Source\Useful\ResourceHelper.h" />
+    <ClInclude Include="Source\Useful\ItemInfo.h" />
+    <ClInclude Include="Source\Useful\ResourceInfo.h" />
     <ClInclude Include="Source\Useful\StructItem.h" />
     <ClInclude Include="Source\Useful\TagClientOnly.h" />
     <ClInclude Include="Source\Manager\InputManager.h" />

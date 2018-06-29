@@ -2,7 +2,7 @@
 #include "ResourceManager.h"
 #include "Structure.h"
 #include "Character.h"
-#include "ResPathFileName.h"
+#include "ResourceInfo.h"
 
 ResourceManager::ResourceManager()
     : Singleton<ResourceManager>()
@@ -227,7 +227,7 @@ SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh()
 
 EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
 {
-    const auto keys = ResPathFileName::Get(tag);
+    const auto keys = ResourceInfo::GetPathFileName(tag);
     const auto search = m_effectMeshs.find(keys.first + keys.second);
 
     if (search == m_effectMeshs.end())

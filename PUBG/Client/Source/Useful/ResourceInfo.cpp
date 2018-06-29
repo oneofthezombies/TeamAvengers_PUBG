@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "ResourceHelper.h"
+#include "ResourceInfo.h"
 
-pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_STATIC tag)
+pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_STATIC tag)
 {
     string filePath, fileName;
     switch (tag)
@@ -15,14 +15,14 @@ pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_STATIC tag)
 
             //Ammunition
             {
-            case TAG_RES_STATIC::Ammu_5_56mm:
+            case TAG_RES_STATIC::Ammo_5_56mm:
             filePath = "Item/Ammunition/";
-            fileName = "Ammu_5_56mm";
+            fileName = "Ammo_5_56mm";
             break;
 
-            case TAG_RES_STATIC::Ammu_7_62mm:
+            case TAG_RES_STATIC::Ammo_7_62mm:
             filePath = "Item/Ammunition/";
-            fileName = "Ammu_7_62mm";
+            fileName = "Ammo_7_62mm";
             break;
             }
 
@@ -474,7 +474,7 @@ pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_STATIC tag)
         default:
         {
             assert(false &&
-                "ResPathFilename::Get(TAG_RES_STATIC), default case.");
+                "ResourceInfo::GetPathFileName(TAG_RES_STATIC), default case.");
         }
         break;
     }//switch
@@ -482,7 +482,7 @@ pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_STATIC tag)
     return make_pair("./Resource/Static/" + filePath + fileName + "/", fileName + ".X");
 }
 
-pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_ANIM_WEAPON tag)
+pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_WEAPON tag)
 {
     string filePath, fileName;
     switch(tag)
@@ -505,14 +505,14 @@ pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_ANIM_WEAPON t
         default:
         {
             assert(false &&
-                "ResPathFilename::Get(TAG_RES_ANIM_WEAPON), default case.");
+                "ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON), default case.");
         }
         break;
     }
 
     return make_pair("./Resource/Anim/Weapon/" + filePath, fileName + ".X");
 }
-pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_ANIM_CHARACTER tag)
+pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_CHARACTER tag)
 {
     string fileName;
     switch (tag)
@@ -685,7 +685,7 @@ pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_ANIM_CHARACTE
         default:
         {
             assert(false &&
-                "ResPathFilename::Get(TAG_RES_ANIM_CHARACTER), default case.");
+                "ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER), default case.");
         }
         break;
     }
@@ -693,13 +693,27 @@ pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_ANIM_CHARACTE
     return make_pair("./Resource/Anim/Character/", fileName + ".X");
 }
 
-bool ResourceHelper::IsItem(const TAG_RES_STATIC tag)
+bool ResourceInfo::IsItem(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
-    case TAG_RES_STATIC::Bandage: 
+    case TAG_RES_STATIC::Head_Lv1:
+    case TAG_RES_STATIC::Armor_Lv1:
+    case TAG_RES_STATIC::Back_Lv1:
+
+    case TAG_RES_STATIC::Bandage:
+    case TAG_RES_STATIC::FirstAidKit:
+    case TAG_RES_STATIC::MedKit:
+
+    case TAG_RES_STATIC::Ammo_5_56mm:
+    case TAG_RES_STATIC::Ammo_7_62mm:
+
+    case TAG_RES_STATIC::QBZ:
+    case TAG_RES_STATIC::Kar98k:
+
+    case TAG_RES_STATIC::RedDot:
+    case TAG_RES_STATIC::Aimpoint2X:
     case TAG_RES_STATIC::ACOG:
-        //..
         return true;
 
     default: return false;

@@ -1,6 +1,6 @@
 #pragma once
 
-struct ItemHelper
+struct ItemInfo
 {
     static TAG_ITEM_CATEGORY GetItemCategory(const TAG_RES_STATIC tag); //아이템의 대분류
     

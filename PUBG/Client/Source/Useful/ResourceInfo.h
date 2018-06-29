@@ -1,7 +1,7 @@
 #pragma once
 #include "TagResource.h"
 
-struct ResourceHelper
+struct ResourceInfo
 {
     /*
         Input: Resource Tag

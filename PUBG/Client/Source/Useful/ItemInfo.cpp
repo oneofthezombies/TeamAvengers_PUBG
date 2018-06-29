@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "ItemHelper.h"
+#include "ItemInfo.h"
 
-TAG_ITEM_CATEGORY ItemHelper::GetItemCategory(const TAG_RES_STATIC tag)
+TAG_ITEM_CATEGORY ItemInfo::GetItemCategory(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
@@ -32,7 +32,7 @@ TAG_ITEM_CATEGORY ItemHelper::GetItemCategory(const TAG_RES_STATIC tag)
     }
 }
 
-string ItemHelper::GetName(const TAG_RES_STATIC tag)
+string ItemInfo::GetName(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
@@ -63,7 +63,7 @@ string ItemHelper::GetName(const TAG_RES_STATIC tag)
     }
 }
 
-string ItemHelper::GetDescription(const TAG_RES_STATIC tag)
+string ItemInfo::GetDescription(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
@@ -94,7 +94,7 @@ string ItemHelper::GetDescription(const TAG_RES_STATIC tag)
     }
 }
 
-float ItemHelper::GetCapacity(const TAG_RES_STATIC tag)
+float ItemInfo::GetCapacity(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
@@ -125,7 +125,7 @@ float ItemHelper::GetCapacity(const TAG_RES_STATIC tag)
     }
 }
 
-float ItemHelper::GetFasterADS(const TAG_RES_STATIC tag)
+float ItemInfo::GetFasterADS(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
@@ -136,7 +136,7 @@ float ItemHelper::GetFasterADS(const TAG_RES_STATIC tag)
     }
 }
 
-float ItemHelper::GetMagnification(const TAG_RES_STATIC tag)
+float ItemInfo::GetMagnification(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
@@ -147,7 +147,7 @@ float ItemHelper::GetMagnification(const TAG_RES_STATIC tag)
     }
 }
 
-float ItemHelper::GetDamageReduction(const TAG_RES_STATIC tag)
+float ItemInfo::GetDamageReduction(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
@@ -158,7 +158,7 @@ float ItemHelper::GetDamageReduction(const TAG_RES_STATIC tag)
     }
 }
 
-float ItemHelper::GetDefaultDurability(const TAG_RES_STATIC tag)
+float ItemInfo::GetDefaultDurability(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
@@ -169,7 +169,7 @@ float ItemHelper::GetDefaultDurability(const TAG_RES_STATIC tag)
     }
 }
 
-float ItemHelper::GetCapacityExtension(const TAG_RES_STATIC tag)
+float ItemInfo::GetCapacityExtension(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
@@ -180,7 +180,7 @@ float ItemHelper::GetCapacityExtension(const TAG_RES_STATIC tag)
     }
 }
 
-float ItemHelper::GetCastTime(const TAG_RES_STATIC tag)
+float ItemInfo::GetCastTime(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
@@ -192,7 +192,7 @@ float ItemHelper::GetCastTime(const TAG_RES_STATIC tag)
     }
 }
 
-float ItemHelper::GetRecovery(const TAG_RES_STATIC tag)
+float ItemInfo::GetRecovery(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {

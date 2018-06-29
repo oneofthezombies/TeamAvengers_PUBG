@@ -3,7 +3,7 @@
 #include "IObject.h"
 #include "TerrainFeature.h"
 #include "DirectionalLight.h"
-#include "ResourceHelper.h"
+#include "ResourceInfo.h"
 #include "Item.h"
 
 BoxColliderInFile::BoxColliderInFile()
@@ -122,7 +122,7 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
         //    cout << b.m_transform << '\n';
         //}
 
-        if (ResourceHelper::IsItem(o.m_tagResStatic))
+        if (ResourceInfo::IsItem(o.m_tagResStatic))
         {
             AddObject(new Item(o.m_tagResStatic, o.m_position, o.m_rotation, o.m_scale));
         }

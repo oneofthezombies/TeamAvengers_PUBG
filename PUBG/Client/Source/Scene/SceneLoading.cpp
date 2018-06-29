@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SceneLoading.h"
-#include "ResPathFileName.h"
+#include "ResourceInfo.h"
 #include "Character.h"
 #include "UIText.h"
 
@@ -96,10 +96,25 @@ void SceneLoading::OnUpdate()
 
 void SceneLoading::loadEffectMesh()
 {
-    addTask(TAG_RES_STATIC::Bandage);
     addTask(TAG_RES_STATIC::Church);
 
+    addTask(TAG_RES_STATIC::Head_Lv1);
+    addTask(TAG_RES_STATIC::Armor_Lv1);
+    addTask(TAG_RES_STATIC::Back_Lv1);
 
+    addTask(TAG_RES_STATIC::Bandage);
+    addTask(TAG_RES_STATIC::FirstAidKit);
+    addTask(TAG_RES_STATIC::MedKit);
+
+    addTask(TAG_RES_STATIC::Ammo_5_56mm);
+    addTask(TAG_RES_STATIC::Ammo_7_62mm);
+
+    addTask(TAG_RES_STATIC::QBZ);
+    addTask(TAG_RES_STATIC::Kar98k);
+
+    addTask(TAG_RES_STATIC::RedDot);
+    addTask(TAG_RES_STATIC::Aimpoint2X);
+    addTask(TAG_RES_STATIC::ACOG);
     // ...
 }
 
@@ -142,7 +157,7 @@ void SceneLoading::loadCharacterAnimation()
     pair<string, string> p;
     for (int i = 0; i < static_cast<int>(TAG_RES_ANIM_CHARACTER::COUNT); ++i)
     {
-        p = ResPathFileName::Get(static_cast<TAG_RES_ANIM_CHARACTER>(i));
+        p = ResourceInfo::GetPathFileName(static_cast<TAG_RES_ANIM_CHARACTER>(i));
         cout << p.second << endl;
         addTask(static_cast<TAG_RES_ANIM_CHARACTER>(i), &m_characterAnimationTasks); //enum 순서대로 x파일이 들어감
     }
@@ -294,7 +309,7 @@ void SceneLoading::addTask(const TAG_RES_STATIC tag, tasks_t* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 
-    auto keys = ResPathFileName::Get(tag);
+    auto keys = ResourceInfo::GetPathFileName(tag);
     OutTasks->emplace_back(
         std::make_pair(
             OutTasks->size(),
@@ -316,7 +331,7 @@ void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 
-    auto keys = ResPathFileName::Get(tag);
+    auto keys = ResourceInfo::GetPathFileName(tag);
     OutTasks->emplace_back(
         std::make_pair(
             OutTasks->size(),

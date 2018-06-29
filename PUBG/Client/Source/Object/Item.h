@@ -29,4 +29,7 @@ public:
     virtual void OnRender() override;
 
     TAG_RES_STATIC GetTagResStatic() const;
+
+    void SetDurability(const float durability);
+    void SetNumBullet(const int numBullet);
 };

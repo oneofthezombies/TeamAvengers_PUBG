@@ -45,9 +45,10 @@
     <ClCompile Include="Source\Useful\TagAnimation.cpp" />
     <ClCompile Include="Source\Object\DirectionalLight.cpp" />
     <ClCompile Include="Source\Grid.cpp" />
-    <ClCompile Include="Source\Useful\ResourceHelper.cpp" />
     <ClCompile Include="Source\Object\Item.cpp" />
-    <ClCompile Include="Source\Useful\ItemHelper.cpp" />
+    <ClCompile Include="Source\Object\Character_Inventory.cpp" />
+    <ClCompile Include="Source\Useful\ItemInfo.cpp" />
+    <ClCompile Include="Source\Useful\ResourceInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -98,8 +99,8 @@
     <ClInclude Include="Source\Object\DirectionalLight.h" />
     <ClInclude Include="Source\Grid.h" />
     <ClInclude Include="Source\Useful\StructItem.h" />
-    <ClInclude Include="Source\Useful\ResourceHelper.h" />
     <ClInclude Include="Source\Object\Item.h" />
-    <ClInclude Include="Source\Useful\ItemHelper.h" />
+    <ClInclude Include="Source\Useful\ItemInfo.h" />
+    <ClInclude Include="Source\Useful\ResourceInfo.h" />
   </ItemGroup>
 </Project>

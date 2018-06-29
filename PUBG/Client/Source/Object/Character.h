@@ -5,6 +5,7 @@
 
 class SkinnedMeshController;
 class CharacterPart;
+class Item;
 
 class Character : public IObject
 {
@@ -57,6 +58,10 @@ private:
     D3DXVECTOR3 m_rotForCameraTP;
     TargetTransform* pTargetTransform;
 
+    //for inventory
+    map<TAG_ITEM_CATEGORY, vector<Item*>> m_mapInventory;
+    float m_capacity;
+
 private:
     void setFramePtr();
     void subscribeCollisionEvent();
@@ -93,4 +98,9 @@ public:
     int GetIndex() const;
     TAG_COLLISION GetTagCollisionBody(const int index);
     TAG_COLLISION GetTagCollisionDamage(const int index);
+
+    //for inventory
+    bool PutItemInInventory(Item* item);
+    void ShowInventory();
+    string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
 };
