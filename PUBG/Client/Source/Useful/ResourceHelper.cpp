@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "ResPathFileName.h"
+#include "ResourceHelper.h"
 
-pair<string, string> ResPathFileName::Get(const TAG_RES_STATIC tag)
+pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_STATIC tag)
 {
     string filePath, fileName;
     switch (tag)
@@ -482,7 +482,7 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_STATIC tag)
     return make_pair("./Resource/Static/" + filePath + fileName + "/", fileName + ".X");
 }
 
-pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_WEAPON tag)
+pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_ANIM_WEAPON tag)
 {
     string filePath, fileName;
     switch(tag)
@@ -512,7 +512,7 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_WEAPON tag)
 
     return make_pair("./Resource/Anim/Weapon/" + filePath, fileName + ".X");
 }
-pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_CHARACTER tag)
+pair<string, string> ResourceHelper::GetPathFileName(const TAG_RES_ANIM_CHARACTER tag)
 {
     string fileName;
     switch (tag)
@@ -691,4 +691,17 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_CHARACTER tag)
     }
 
     return make_pair("./Resource/Anim/Character/", fileName + ".X");
+}
+
+bool ResourceHelper::IsItem(const TAG_RES_STATIC tag)
+{
+    switch (tag)
+    {
+    case TAG_RES_STATIC::Bandage: 
+    case TAG_RES_STATIC::ACOG:
+        //..
+        return true;
+
+    default: return false;
+    }
 }

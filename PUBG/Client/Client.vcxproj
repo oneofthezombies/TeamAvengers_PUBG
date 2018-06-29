@@ -131,6 +131,7 @@
     <ClCompile Include="Source\Grid.cpp" />
     <ClCompile Include="Source\Object\Church.cpp" />
     <ClCompile Include="Source\Object\DirectionalLight.cpp" />
+    <ClCompile Include="Source\Object\Item.cpp" />
     <ClCompile Include="Source\Object\TerrainFeature.cpp" />
     <ClCompile Include="Source\Component\Collider.cpp" />
     <ClCompile Include="Source\Component\ComponentTransform.cpp" />
@@ -157,7 +158,8 @@
     <ClCompile Include="Source\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\UI\UIObject.cpp" />
     <ClCompile Include="Source\Useful\CollisionCore.cpp" />
-    <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
+    <ClCompile Include="Source\Useful\ItemHelper.cpp" />
+    <ClCompile Include="Source\Useful\ResourceHelper.cpp" />
     <ClCompile Include="Source\Useful\Structure.cpp" />
     <ClCompile Include="Source\Scene\SceneLogin.cpp" />
     <ClCompile Include="Source\Manager\SceneManager.cpp" />
@@ -183,6 +185,7 @@
     <ClInclude Include="Source\Grid.h" />
     <ClInclude Include="Source\Object\Church.h" />
     <ClInclude Include="Source\Object\DirectionalLight.h" />
+    <ClInclude Include="Source\Object\Item.h" />
     <ClInclude Include="Source\Object\TerrainFeature.h" />
     <ClInclude Include="Source\Component\Collider.h" />
     <ClInclude Include="Source\Component\ComponentTransform.h" />
@@ -202,7 +205,9 @@
     <ClInclude Include="Source\Manager\TimeManager.h" />
     <ClInclude Include="Source\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Useful\CollisionCore.h" />
-    <ClInclude Include="Source\Useful\ResPathFileName.h" />
+    <ClInclude Include="Source\Useful\ItemHelper.h" />
+    <ClInclude Include="Source\Useful\ResourceHelper.h" />
+    <ClInclude Include="Source\Useful\StructItem.h" />
     <ClInclude Include="Source\Useful\TagClientOnly.h" />
     <ClInclude Include="Source\Manager\InputManager.h" />
     <ClInclude Include="Source\Base\IScene.h" />
