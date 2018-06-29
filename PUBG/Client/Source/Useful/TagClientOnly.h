@@ -68,6 +68,16 @@ enum class TAG_FONT
 enum class TAG_SOUND
 {
     Idle,
+
+};
+
+enum class TAG_CHANNEL
+{
+    My_Ch,
+    Other_Ch1,      //다른 유저 하나당.
+    Other_Ch2,
+    Other_Ch3,
+    Environment_Ch
 };
 
 enum class TAG_CAMERA

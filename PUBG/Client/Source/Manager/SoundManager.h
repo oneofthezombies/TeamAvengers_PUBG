@@ -14,6 +14,12 @@ private:
     unordered_map<TAG_SOUND, FMOD::Sound*>  m_sounds;
     float                                   m_volume;
 
+
+    FMOD_VECTOR m_soundPos;
+    FMOD_VECTOR m_forwardDir;
+    FMOD_VECTOR m_upDir = { 0,1,0 };
+    FMOD_VECTOR m_listenerPos;
+
 private:
     SoundManager();
     virtual ~SoundManager();
@@ -25,7 +31,8 @@ public:
     void Destroy();
     void Update();
 
-    void AddSound(const TAG_SOUND tag, const string& path);
+    void AddSound(const TAG_SOUND tag, const string& path, FMOD_MODE mode);
+    //void AddSound2D(const TAG_SOUND)
 
     int Play(const TAG_SOUND tag);
     int Repeat(const TAG_SOUND tag, const int channelKey);
@@ -37,6 +44,8 @@ public:
 
     void SetVolume(const float volume);
     float GetVolume() const;
+
+    void Listen(D3DXVECTOR3 listenerPos, D3DXVECTOR3 listenerDir);
 
 	friend Singleton<SoundManager>;
 };

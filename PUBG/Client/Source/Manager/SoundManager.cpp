@@ -42,12 +42,12 @@ void SoundManager::Update()
     if (m_pSystem) m_pSystem->update();
 }
 
-void SoundManager::AddSound(const TAG_SOUND tag, const string& path)
+void SoundManager::AddSound(const TAG_SOUND tag, const string& path, FMOD_MODE mode)
 {
 	const auto search = m_sounds.find(tag);
 	if (search != m_sounds.end()) return;
 
-    CheckError(m_pSystem->createSound(path.c_str(), FMOD_DEFAULT, nullptr, &m_sounds[tag]));
+    CheckError(m_pSystem->createSound(path.c_str(), mode, nullptr, &m_sounds[tag]));
 }
 
 int SoundManager::Play(const TAG_SOUND tag)
@@ -133,4 +133,34 @@ void SoundManager::SetVolume(const float volume)
 float SoundManager::GetVolume() const
 {
     return m_volume;
+}
+
+void SoundManager::Listen(D3DXVECTOR3 listenerPos, D3DXVECTOR3 listenerDir)
+{
+    //FMOD_VECTOR vel;
+    //
+
+    m_forwardDir = { listenerDir.x, listenerDir.y, listenerDir.z };
+    m_listenerPos = { listenerPos.x, listenerPos.y, listenerPos.z };
+
+    //vel.x = (listenerPos.x - m_lastpos.x) * (1000 / 100);
+    //vel.y = (listenerPos.y - m_lastpos.y) * (1000 / 100);
+    //vel.z = (listenerPos.z - m_lastpos.z) * (1000 / 100);
+    //m_lastpos = { listenerDir.x, listenerDir.y, listenerDir.z };
+    //만약을 위한 코딩
+
+
+    //m_system->set3DListenerAttributes(0, &fVector, &vel, &m_forwardDir, &m_upDir);
+    m_pSystem->set3DListenerAttributes(0, &m_listenerPos, nullptr, &m_forwardDir, &m_upDir);
+
+
+    m_channels[static_cast<int>(TAG_CHANNEL::My_Ch)]->set3DAttributes(&m_soundPos, nullptr);
+    m_channels[static_cast<int>(TAG_CHANNEL::My_Ch)]->set3DAttributes(&m_soundPos, nullptr);
+    m_channels[static_cast<int>(TAG_CHANNEL::My_Ch)]->set3DAttributes(&m_soundPos, nullptr);
+    m_channels[static_cast<int>(TAG_CHANNEL::My_Ch)]->set3DAttributes(&m_soundPos, nullptr);
+    m_channels[static_cast<int>(TAG_CHANNEL::My_Ch)]->set3DAttributes(&m_soundPos, nullptr);
+
+    //Debug->AddText("Linsten");
+    //Debug->AddText(D3DXVECTOR3(m_forwardDir.x, m_forwardDir.y, m_forwardDir.z));
+    //Debug->EndLine();
 }
