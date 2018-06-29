@@ -124,7 +124,7 @@ void Character::updateMine()
     Transform*     pTr = GetTransform();
     D3DXVECTOR3    p = pTr->GetPosition();
     D3DXQUATERNION r = pTr->GetRotation();
-    const bool isPressing_LAlt   = pInput->IsStayKeyDown(VK_LMENU);
+    const bool isPressing_LAlt = pInput->IsStayKeyDown(VK_LMENU);
     const bool isPressing_LCtrl  = pInput->IsStayKeyDown(VK_LCONTROL);
     const bool isPressing_LShift = pInput->IsStayKeyDown(VK_LSHIFT);
     const bool isPressing_W      = pInput->IsStayKeyDown('W');
@@ -152,7 +152,7 @@ void Character::updateMine()
             if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person)
             {
 
-                m_rotForCameraTP.x += -pitch;
+                //m_rotForCameraTP.x += -pitch;
                 m_rotForCameraTP.y += yaw;
             }
         }

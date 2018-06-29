@@ -1,13 +1,13 @@
 #pragma once
 #include "TagClientOnly.h"
 
-#define FP_DISTANCE 30.0f
+#define FP_DISTANCE -30.0f
 #define FP_BASEPOSX 0.0f
 #define FP_BASEPOSY 155.0f
 
 #define TP_DISTANCE 100.0f
 #define TP_BASEPOSX -40.0f
-#define TP_BASEPOSY 120.0f
+#define TP_BASEPOSY 180.0f
 
 //extern TargetTransform;
 
@@ -22,7 +22,7 @@ private:
 
 protected:
     D3DXVECTOR3    m_position;
-    D3DXVECTOR3    m_rotation;
+    //D3DXVECTOR3    m_rotation;
     D3DXQUATERNION m_quarernion;
     float          m_fovY;
 
@@ -77,19 +77,6 @@ public:
     virtual void Update() override;
 };
 
-//class CameraTransform : public CameraThirdPerson
-//{
-//private:
-//    float m_vel;
-//
-//public:
-//             CameraTransform();
-//    virtual ~CameraTransform();
-//
-//    virtual void Reset() override;
-//    virtual void Update() override;
-//
-//};
 
 class CameraKyunChak : public CameraThirdPerson
 {

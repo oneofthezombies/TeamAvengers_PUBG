@@ -31,6 +31,7 @@ Transform::Transform(IObject* pOwner)
 	, m_rotation(Quaternion::ZERO)
 	, m_scale(Vector3::ONE)
 {
+    D3DXMatrixIdentity(&m_transformationMatrix);
 }
 
 Transform::~Transform()

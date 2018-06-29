@@ -16,9 +16,10 @@ void CameraManager::Init()
     m_cameras.emplace(TAG_CAMERA::Default, new CameraFree);
     m_cameras.emplace(TAG_CAMERA::First_Person, new CameraFirstPerson);
     m_cameras.emplace(TAG_CAMERA::Third_Person, new CameraThirdPerson);
+    m_cameras.emplace(TAG_CAMERA::KyunChak, new CameraKyunChak);
     
     //SetCurrentCamera(TAG_CAMERA::Default);
-    SetCurrentCamera(TAG_CAMERA::Default);
+    SetCurrentCamera(TAG_CAMERA::Third_Person);
 }
 
 void CameraManager::Destroy()
@@ -29,7 +30,9 @@ void CameraManager::Destroy()
 
 void CameraManager::Update()
 {
-    if (Input()()->IsOnceKeyUp('P'))
+    InputManager*  pInput = Input()();
+
+    if (pInput->IsOnceKeyUp('P'))
     {
         if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
         {
@@ -39,15 +42,18 @@ void CameraManager::Update()
         {
             SetCurrentCamera(TAG_CAMERA::Default);
         }
-
     }
-        
+
+
+
+
 
 
     if (pCurrentCamera)
     {
         pCurrentCamera->Update();
-        pCurrentCamera->UpdateViewProjMatrix();
+        if(pCurrentCamera->GetTagCamera()!=TAG_CAMERA::Default)
+          pCurrentCamera->UpdateViewProjMatrix();
     }
 }
 
