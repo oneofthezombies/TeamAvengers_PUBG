@@ -38,6 +38,14 @@ public:
 
     void UpdateViewProjMatrix();
 
+    void SetViewMatrix(D3DXMATRIX* viewMatrix)
+    {
+        m_viewMatrix = *viewMatrix;
+    }
+    void SetProjectionMatrix(D3DXMATRIX* projectionMatrix)
+    {
+        m_projectionMatrix = *projectionMatrix;
+    }
     const D3DXMATRIX& GetViewMatrix()       const;
     const D3DXMATRIX& GetProjectionMatrix() const;
           TAG_CAMERA  GetTagCamera()        const;
@@ -92,6 +100,23 @@ public:
     virtual void Update() override;
 };
 
+class Camera2xScope : public CameraFirstPerson
+{
+private:
+    float           m_fovY_2x;
+    float           m_deltaFovY;
+
+    float           m_currTime;
+    const float     m_totalTime;
+public:
+    Camera2xScope();
+    virtual ~Camera2xScope();
+
+    // Inherited via ThirdPersonCamera
+    virtual void Init() override;
+    virtual void Update() override;
+
+};
 
 
 

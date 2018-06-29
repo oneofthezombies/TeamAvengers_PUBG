@@ -13,7 +13,7 @@ ICamera::ICamera(const TAG_CAMERA tag)
     , m_tagCamera(tag)
     , m_position(Vector3::ZERO)
     /*, m_rotation(Vector3::ZERO)*/
-    , m_fovY(D3DX_PI * 0.5f)
+    
 {
     //D3DXQuaternionRotationYawPitchRoll(&m_quarernion, m_rotation.x, m_rotation.y, m_rotation.z);
 }
@@ -42,9 +42,8 @@ TAG_CAMERA ICamera::GetTagCamera() const
 CameraFree::CameraFree()
     : ICamera(TAG_CAMERA::Default)
 {
-    m_position = D3DXVECTOR3(0.0f, 160.0f, -258.0f);
     //m_position = D3DXVECTOR3(0.0f, 0.0f, -100.0f);
-    D3DXQuaternionRotationYawPitchRoll(&m_quarernion,0.0f,0.0f,0.0f);
+    //D3DXQuaternionRotationYawPitchRoll(&m_quarernion,0.0f,0.0f,0.0f);
 }
 
 CameraFree::~CameraFree()
@@ -53,11 +52,42 @@ CameraFree::~CameraFree()
 
 void CameraFree::Reset()
 {
+    m_fovY = D3DX_PI * 0.5f;
+    m_position = D3DXVECTOR3(0.0f, 160.0f, -350.0f);
 }
 
 void CameraFree::Update()
 {
+    D3DXVECTOR3 eye = Vector3::ZERO;
+    D3DXVECTOR3 look = eye + Vector3::FORWARD;
+    const float factor = 1.f;
 
+    InputManager* pInput= Input()();
+
+    if (pInput->IsStayKeyDown('K')) { m_position.y -= factor; }
+    if (pInput->IsStayKeyDown('I')) { m_position.y += factor; }
+    if (pInput->IsStayKeyDown('J')) { m_position.x -= factor; }
+    if (pInput->IsStayKeyDown('L')) { m_position.x += factor; }
+    if (pInput->IsStayKeyDown('U')) { m_position.z -= factor; }
+    if (pInput->IsStayKeyDown('O')) { m_position.z += factor; }
+    
+    D3DXMATRIX world, view, proj;
+    D3DXMatrixTranslation(&world, m_position.x, m_position.y, m_position.z);
+    D3DXVec3TransformCoord(&eye, &eye, &world);
+    D3DXVec3TransformCoord(&look, &look, &world);
+
+    D3DXMatrixLookAtLH(&view, &eye, &look, &Vector3::UP);
+    SetViewMatrix(&view);
+    auto pD = Device()();
+    pD->SetTransform(D3DTS_VIEW, &GetViewMatrix());
+
+    RECT rc;
+    GetClientRect(g_hWnd, &rc);
+    D3DXMatrixPerspectiveFovLH(&proj,
+        m_fovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom),
+        1.0f, 5000.0f);
+    SetProjectionMatrix(&proj);
+    pD->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
 }
 
 
