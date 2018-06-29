@@ -31,8 +31,8 @@ public:
     void Destroy();
     void Update();
 
-    void AddSound(const TAG_SOUND tag, const string& path, FMOD_MODE mode);
-    //void AddSound2D(const TAG_SOUND)
+    //parameter(사운드 태그, 파일 패스, 3d/2d 선택);
+    void AddSound(const TAG_SOUND tag, const string& path, const FMOD_MODE mode);
 
     int Play(const TAG_SOUND tag);
     int Repeat(const TAG_SOUND tag, const int channelKey);
@@ -45,7 +45,7 @@ public:
     void SetVolume(const float volume);
     float GetVolume() const;
 
-    void Listen(D3DXVECTOR3 listenerPos, D3DXVECTOR3 listenerDir);
+    void Listen(const D3DXVECTOR3 &listenerPos, const D3DXVECTOR3 &listenerDir);
 
 	friend Singleton<SoundManager>;
 };

@@ -42,7 +42,7 @@ void SoundManager::Update()
     if (m_pSystem) m_pSystem->update();
 }
 
-void SoundManager::AddSound(const TAG_SOUND tag, const string& path, FMOD_MODE mode)
+void SoundManager::AddSound(const TAG_SOUND tag, const string& path, const FMOD_MODE mode)
 {
 	const auto search = m_sounds.find(tag);
 	if (search != m_sounds.end()) return;
@@ -135,7 +135,7 @@ float SoundManager::GetVolume() const
     return m_volume;
 }
 
-void SoundManager::Listen(D3DXVECTOR3 listenerPos, D3DXVECTOR3 listenerDir)
+void SoundManager::Listen(const D3DXVECTOR3& listenerPos, const D3DXVECTOR3& listenerDir)
 {
     //FMOD_VECTOR vel;
     //
@@ -154,11 +154,6 @@ void SoundManager::Listen(D3DXVECTOR3 listenerPos, D3DXVECTOR3 listenerDir)
     m_pSystem->set3DListenerAttributes(0, &m_listenerPos, nullptr, &m_forwardDir, &m_upDir);
 
 
-    m_channels[static_cast<int>(TAG_CHANNEL::My_Ch)]->set3DAttributes(&m_soundPos, nullptr);
-    m_channels[static_cast<int>(TAG_CHANNEL::My_Ch)]->set3DAttributes(&m_soundPos, nullptr);
-    m_channels[static_cast<int>(TAG_CHANNEL::My_Ch)]->set3DAttributes(&m_soundPos, nullptr);
-    m_channels[static_cast<int>(TAG_CHANNEL::My_Ch)]->set3DAttributes(&m_soundPos, nullptr);
-    m_channels[static_cast<int>(TAG_CHANNEL::My_Ch)]->set3DAttributes(&m_soundPos, nullptr);
 
     //Debug->AddText("Linsten");
     //Debug->AddText(D3DXVECTOR3(m_forwardDir.x, m_forwardDir.y, m_forwardDir.z));
