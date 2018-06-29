@@ -47,4 +47,5 @@ TAG_RES_STATIC Item::GetTagResStatic() const
 void Item::setup(const TAG_RES_STATIC tag)
 {
     m_durability = ItemHelper::GetDefaultDurability(tag);
+
 }

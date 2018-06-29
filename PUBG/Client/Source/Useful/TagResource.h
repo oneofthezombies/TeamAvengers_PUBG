@@ -9,8 +9,8 @@ enum class TAG_RES_STATIC
     DeathDropBox,
 
     //Ammunition
-    Ammu_5_56mm,
-    Ammu_7_62mm,
+    Ammo_5_56mm,
+    Ammo_7_62mm,
 
     //Attachment
     ACOG,

@@ -8,8 +8,9 @@ class Item : public IObject
 private:
     const TAG_RES_STATIC m_tagResStatic;
     bool  m_isInField;
-    float m_durability;
-    int   m_numBullet;
+
+    float m_durability; //내구성
+    int   m_numBullet;  //총알의 개수
 
     EffectMeshRenderer* pEffectMeshRenderer;
 
