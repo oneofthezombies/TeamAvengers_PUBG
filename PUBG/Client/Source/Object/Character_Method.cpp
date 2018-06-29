@@ -100,8 +100,11 @@ void Character::updateDependency()
     updateBone();
     pSkinnedMeshController->UpdateModel();
     if (m_pRootCharacterPart) m_pRootCharacterPart->Update();
-    pSkinnedMeshController->Render();
-    if (m_pRootCharacterPart) m_pRootCharacterPart->Render();
+
+        pSkinnedMeshController->Render();
+        if (m_pRootCharacterPart) m_pRootCharacterPart->Render();
+
+
 }
 
 void Character::communicate()

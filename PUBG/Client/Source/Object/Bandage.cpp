@@ -28,10 +28,11 @@ Bandage::~Bandage()
 void Bandage::OnUpdate()
 {
     pBoxCollider->Update(GetTransform()->GetTransformationMatrix());
+    pEffectMeshRenderer->Render();
+    pBoxCollider->Render();
 }
 
 void Bandage::OnRender()
 {
-    pEffectMeshRenderer->Render();
-    pBoxCollider->Render();
+
 }

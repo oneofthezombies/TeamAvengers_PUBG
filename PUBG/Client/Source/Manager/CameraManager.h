@@ -29,12 +29,15 @@ public:
     void Update();
 
     void             SetTarget(Transform* pTarget, D3DXVECTOR3* pTargetRotForCameraTP);
-    TargetTransform* GetTarget();
+    TargetTransform* GetTarget()
+    {
+        return &m_targetTransform;
+    }
 
     void     SetCurrentCamera(const TAG_CAMERA tag);
-    ICamera* GetCurrentCamera();
+    ICamera* GetCurrentCamera() { assert(pCurrentCamera &&"CameraManager::GetCurrentCamera(), current camera is null."); return pCurrentCamera; }
 
-    TargetTransform* GetTargetTransformPtr();
+    TargetTransform* GetTargetTransformPtr() { return &m_targetTransform; }
 
     friend Singleton<CameraManager>;
 };
