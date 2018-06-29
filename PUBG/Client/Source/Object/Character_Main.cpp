@@ -163,7 +163,7 @@ void Character::updateMine()
 
         D3DXQUATERNION q;
         D3DXQuaternionRotationYawPitchRoll(&q, yaw, 0.0f, 0.0f);
-        cout << "pitch : " << pitch << " yaw : " << yaw << endl;
+        //cout << "pitch : " << pitch << " yaw : " << yaw << endl;
 
         r *= q;
 
