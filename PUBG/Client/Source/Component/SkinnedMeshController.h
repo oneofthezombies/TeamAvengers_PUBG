@@ -16,8 +16,12 @@ private:
 
 private:
     void updateFrameToModelSpace(LPD3DXFRAME pFrameBase, LPD3DXFRAME pParent);
-    void drawFrame(LPD3DXFRAME pFrameBase);
-    void drawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase);
+    void drawFrame(
+        LPD3DXFRAME pFrameBase, 
+        const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup);
+    void drawMeshContainer(
+        LPD3DXMESHCONTAINER pMeshContainerBase,
+        const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup);
 
 public:
              SkinnedMeshController(IObject* pOwner);
@@ -25,7 +29,7 @@ public:
 
     void UpdateAnimation();
     void UpdateModel();
-    void Render();
+    void Render(const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup);
 
     void SetSkinnedMesh(SkinnedMesh* pSkinnedMesh);
     void SetAnimationIndex(

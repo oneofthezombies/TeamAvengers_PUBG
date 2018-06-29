@@ -20,5 +20,5 @@ void Church::OnUpdate()
 
 void Church::OnRender()
 {
-    pEffectMeshRenderer->Render();
+    pEffectMeshRenderer->Render([](LPD3DXEFFECT) {});
 }

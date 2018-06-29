@@ -64,7 +64,7 @@ float4  PS( VS_OUTPUT vout ) : COLOR
 { 
    //TODO: Modify the folowing code: 
    float4 color = tex2D( C__Users_user_Desktop_EngineSky__T_Sky_Blue_tgaSampler, vout.TexCoord0 ); 
-   color.rgb = color.rgb; 
+   color.rgb = color.rgb * vout.LightStrength; 
    if(bEmissiveColor)
      color.rgb += EmissiveColor.rgb;
    return  color; 

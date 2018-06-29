@@ -26,7 +26,14 @@ void Kar98k::OnUpdate()
 
 void Kar98k::OnRender()
 {
-    pSkinnedMeshController->Render();
+    pSkinnedMeshController->Render(
+        [this](LPD3DXEFFECT pEffect)
+    {
+        const GlobalVariableKey* pKey = Shader()()->GetGlobalVariableKey();
+        pEffect->SetMatrix(
+            pKey->m_pWorld,
+            &GetTransform()->GetTransformationMatrix());
+    });
 
     auto pD = Device()();
     pD->SetRenderState(D3DRS_LIGHTING, true);

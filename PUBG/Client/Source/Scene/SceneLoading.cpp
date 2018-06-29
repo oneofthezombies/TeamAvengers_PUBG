@@ -40,8 +40,8 @@ void SceneLoading::OnUpdate()
     {
         Debug << "elapsed time : " << m_elapsed.count() << '\n';
 
-        //UI()()->Destroy(m_pPercentageImage);
-        //Scene()()->SetCurrentScene(TAG_SCENE::Play);
+        UI()()->Destroy(m_pPercentageImage);
+        Scene()()->SetCurrentScene(TAG_SCENE::Play);
     }
     else
     {

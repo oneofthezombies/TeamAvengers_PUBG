@@ -36,5 +36,12 @@ void SkySphere::OnUpdate()
 
 void SkySphere::OnRender()
 {
-    pEffectMeshRenderer->Render();
+    pEffectMeshRenderer->Render(
+        [this](LPD3DXEFFECT pEffect)
+    {
+        const GlobalVariableKey* pKey = Shader()()->GetGlobalVariableKey();
+        pEffect->SetMatrix(
+            pKey->m_pWorld,
+            &GetTransform()->GetTransformationMatrix());
+    });
 }

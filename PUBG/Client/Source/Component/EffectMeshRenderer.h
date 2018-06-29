@@ -12,7 +12,7 @@ public:
              EffectMeshRenderer(IObject* pOwner);
     virtual ~EffectMeshRenderer();
 
-    void Render();
+    void Render(const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup);
 
     void SetEffectMesh(EffectMesh* pEffectMesh);
     void SetEffectMesh(const TAG_RES_STATIC tag);

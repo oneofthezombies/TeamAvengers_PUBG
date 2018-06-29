@@ -32,6 +32,6 @@ void Bandage::OnUpdate()
 
 void Bandage::OnRender()
 {
-    pEffectMeshRenderer->Render();
+    pEffectMeshRenderer->Render([](LPD3DXEFFECT) {});
     pBoxCollider->Render();
 }

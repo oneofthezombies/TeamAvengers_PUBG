@@ -20,24 +20,27 @@ void SkinnedMeshController::updateFrameToModelSpace(LPD3DXFRAME pFrameBase,
     updateFrameToModelSpace(pFrame->pFrameFirstChild, pFrame);
 }
 
-void SkinnedMeshController::drawFrame(LPD3DXFRAME pFrameBase)
+void SkinnedMeshController::drawFrame(
+    LPD3DXFRAME pFrameBase, 
+    const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup)
 {
     if (!pFrameBase) return;
 
     auto pMeshContainer = pFrameBase->pMeshContainer;
     while (pMeshContainer)
     {
-        drawMeshContainer(pMeshContainer);
+        drawMeshContainer(pMeshContainer, shaderGlobalSetup);
 
         pMeshContainer = pMeshContainer->pNextMeshContainer;
     }
 
-    drawFrame(pFrameBase->pFrameSibling);
-    drawFrame(pFrameBase->pFrameFirstChild);
+    drawFrame(pFrameBase->pFrameSibling, shaderGlobalSetup);
+    drawFrame(pFrameBase->pFrameFirstChild, shaderGlobalSetup);
 }
 
 void SkinnedMeshController::drawMeshContainer(
-    LPD3DXMESHCONTAINER pMeshContainerBase)
+    LPD3DXMESHCONTAINER pMeshContainerBase,
+    const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup)
 {
     if (!pMeshContainerBase || !pMeshContainerBase->pSkinInfo) return;
 
@@ -72,20 +75,11 @@ void SkinnedMeshController::drawMeshContainer(
     pMeshContainer->pEffectMesh->m_pMesh->UnlockVertexBuffer();
     pMeshContainer->m_pWorkMesh->UnlockVertexBuffer();
 
-    //pMeshContainer->pEffectMesh->Render(
-    //    GetTransform()->GetTransformationMatrix(), 
-    //    pMeshContainer->m_pWorkMesh);
-
-    pMeshContainer->pEffectMesh->Render(
-        pMeshContainer->m_pWorkMesh, 
-        [this](LPD3DXEFFECT pEffect) 
+    if (shaderGlobalSetup)
     {
-        const GlobalVariableKey* pkey = Shader()()->GetGlobalVariableKey();
-        pEffect->SetMatrix(
-            pkey->m_pWorld, 
-            &GetTransform()->GetTransformationMatrix());
-
-    });
+        pMeshContainer->pEffectMesh->Render(
+            pMeshContainer->m_pWorkMesh, shaderGlobalSetup);
+    }
 }
 
 SkinnedMeshController::SkinnedMeshController(IObject* pOwner)
@@ -137,12 +131,13 @@ void SkinnedMeshController::UpdateModel()
         m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame, nullptr);
 }
 
-void SkinnedMeshController::Render()
+void SkinnedMeshController::Render(
+    const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup)
 {
     assert(m_pSkinnedMeshInstance &&
         "SkinnedMeshController::Render(), skinned mesh is null.");
 
-    drawFrame(m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame);
+    drawFrame(m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame, shaderGlobalSetup);
 }
 
 void SkinnedMeshController::SetSkinnedMesh(SkinnedMesh* pSkinnedMesh)

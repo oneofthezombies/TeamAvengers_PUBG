@@ -111,15 +111,6 @@ void EffectMesh::Render(
             pKey->m_pProjection, 
             &CurrentCamera()()->GetProjectionMatrix());
 
-        //D3DXVECTOR3 lightDirection(1.0f, -1.0f, 1.0f);
-        //DirectionalLight* pDirectionalLight =
-        //    CurrentScene()()->GetDirectionalLight();
-        //if (pDirectionalLight)
-        //    lightDirection = pDirectionalLight->GetDirection();
-
-        //ep.pEffect->SetValue(
-        //    "lightDirection", &lightDirection, sizeof lightDirection);
-
         if (shaderGlobalSetup) shaderGlobalSetup(ep.pEffect);
 
         ep.pEffect->CommitChanges();
