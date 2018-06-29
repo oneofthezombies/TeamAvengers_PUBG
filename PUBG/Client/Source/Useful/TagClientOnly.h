@@ -75,5 +75,6 @@ enum class TAG_CAMERA
     Default,
     First_Person,
     Third_Person,
-    KyunChak
+    KyunChak,
+    Scope2X
 };

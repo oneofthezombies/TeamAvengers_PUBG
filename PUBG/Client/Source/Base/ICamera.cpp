@@ -2,6 +2,48 @@
 #include "ICamera.h"
 #include "ComponentTransform.h"
 #include "Character.h"
+void ICamera::UpdateViewProjMatrix()
+{
+    D3DXVECTOR3 eye = Vector3::ZERO;
+    D3DXVECTOR3 look = eye + -Vector3::FORWARD;
+
+    D3DXMATRIX camT, tarR, tarWorld, world;
+
+    D3DXMatrixTranslation(&camT, m_position.x, m_position.y, m_position.z);
+
+    TargetTransform* pTar = GetTarget();
+    if (!pTar || !pTar->pRotForCameraTP)
+    {
+        D3DXMatrixIdentity(&tarR);
+        D3DXMatrixIdentity(&tarWorld);
+    }
+    else
+    {
+        const D3DXVECTOR3 rot = *pTar->pRotForCameraTP;
+        D3DXMatrixRotationYawPitchRoll(&tarR, rot.y, rot.x, rot.z);
+
+        tarWorld = pTar->pTransform->GetTransformationMatrix();
+    }
+
+    world = camT * tarR * tarWorld;
+    D3DXVec3TransformCoord(&eye, &eye, &world);
+    D3DXVec3TransformCoord(&look, &look, &world);
+
+    D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &look, &Vector3::UP);
+
+    auto pD = Device()();
+    pD->SetTransform(D3DTS_VIEW, &m_viewMatrix);
+
+    if (m_tagCamera != TAG_CAMERA::Scope2X)
+    {
+        RECT rc;
+        GetClientRect(g_hWnd, &rc);
+        D3DXMatrixPerspectiveFovLH(&m_projectionMatrix,
+            m_fovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom),
+            1.0f, 5000.0f);
+        pD->SetTransform(D3DTS_PROJECTION, &m_projectionMatrix);
+    }
+}
 
 TargetTransform* ICamera::GetTarget()
 {
@@ -177,8 +219,8 @@ void CameraKyunChak::Update()
         {
             //!!! 앞으로 이곳에서 캐릭터가 들고 있는 아이템에 따라(2배율,4배율 no 배율 등) 바꾸어 주는 코드를 만들어야 한다.
             Camera()()->SetCurrentCamera(TAG_CAMERA::First_Person);
-            //g_pCameraManager->SetCurrentCamera(CameraState::SCOPE2X);
-            //g_pCameraManager->SetCurrentCamera(CameraState::SCOPE4X);
+            //Camera()()->SetCurrentCamera(TAG_CAMERA::Scope2X);
+            //Camera()()->SetCurrentCamera(TAG_CAMERA::Scope4X);
         }
         else//아닌경우 계속 줄여주다가 끝에 다달게 되면 TP로 바꿈
         {
@@ -197,5 +239,77 @@ void CameraKyunChak::Update()
 
     }
 
+
+}
+
+
+//-----------------------------------------------------------------
+CameraFirstPerson::CameraFirstPerson(const TAG_CAMERA tag)
+    : ICamera(tag)
+{
+
+}
+
+CameraFirstPerson::~CameraFirstPerson()
+{
+}
+
+void CameraFirstPerson::Reset()
+{
+    m_position = D3DXVECTOR3(FP_BASEPOSX, FP_BASEPOSY, FP_DISTANCE);
+    //70 Degrees FP sight
+    m_fovY = D3DX_PI * (70.0f / 180.0f);
+
+    //D3DXQuaternionRotationYawPitchRoll(&m_quarernion, m_rotation.y, m_rotation.x, m_rotation.z);
+}
+
+void CameraFirstPerson::Update()
+{
+    //RBUTTON Up 하면 다시 TP 로 돌아가기
+    if (Input()()->IsOnceKeyUp(VK_RBUTTON))
+        Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
+}
+
+//---------------------------------------------------xx
+
+Camera2xScope::Camera2xScope()
+    : CameraFirstPerson(TAG_CAMERA::Scope2X)
+    , m_currTime(0.0f)
+    , m_totalTime(0.5f)
+{
+    //44.44 Degrees FP sight //선형보간할 것이다.
+    m_fovY_2x = D3DX_PI * (44.44f / 180.0f);
+}
+
+Camera2xScope::~Camera2xScope()
+{
+}
+
+void Camera2xScope::Reset()
+{
+    CameraFirstPerson::Reset();
+    m_currTime = 0.0f;
+    m_deltaFovY = 0.0f;
+
+}
+
+void Camera2xScope::Update()
+{
+    CameraFirstPerson::Update();
+    const auto dt = Time()()->GetDeltaTime();
+    D3DXMATRIX proj;
+    if (m_currTime <= m_totalTime)
+    {
+
+        m_currTime += dt;
+        float timeFactor = m_currTime / m_totalTime;
+        m_deltaFovY = m_fovY * (1.0f - timeFactor) + m_fovY_2x * timeFactor;
+
+        RECT rc;
+        GetClientRect(g_hWnd, &rc);
+        D3DXMatrixPerspectiveFovLH(&proj, m_deltaFovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom), 1, 1000);
+        SetProjectionMatrix(&proj);
+        g_pDevice->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
+    }
 
 }

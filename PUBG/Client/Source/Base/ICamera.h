@@ -30,7 +30,7 @@ protected:
     TargetTransform* GetTarget();
 
 public:
-             ICamera(const TAG_CAMERA tag);
+    ICamera(const TAG_CAMERA tag);
     virtual ~ICamera();
 
     virtual void Reset() = 0;
@@ -54,7 +54,7 @@ public:
 class CameraFree : public ICamera
 {
 public:
-             CameraFree();
+    CameraFree();
     virtual ~CameraFree();
 
     virtual void Reset() override;
@@ -64,7 +64,7 @@ public:
 class CameraFirstPerson : public ICamera
 {
 public:
-             CameraFirstPerson();
+    CameraFirstPerson(const TAG_CAMERA tag = TAG_CAMERA::First_Person);
     virtual ~CameraFirstPerson();
 
     // Inherited via ICamera
@@ -78,7 +78,7 @@ class CameraThirdPerson : public ICamera
 protected:
     bool bAltKeyPressed;
 public:
-             CameraThirdPerson(const TAG_CAMERA tag = TAG_CAMERA::Third_Person);
+    CameraThirdPerson(const TAG_CAMERA tag = TAG_CAMERA::Third_Person);
     virtual ~CameraThirdPerson();
     // Inherited via ICamera
     virtual void Reset() override;
@@ -113,7 +113,7 @@ public:
     virtual ~Camera2xScope();
 
     // Inherited via ThirdPersonCamera
-    virtual void Init() override;
+    virtual void Reset() override;
     virtual void Update() override;
 
 };
