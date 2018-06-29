@@ -11,13 +11,15 @@ EffectMeshRenderer::~EffectMeshRenderer()
 }
 
 void EffectMeshRenderer::Render(
-    const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup)
+    const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
-    assert(pEffectMesh && 
-        "EffectMeshController::Render(), effect mesh is null.");
+    assert(pEffectMesh && setGlobalVariable &&
+        "EffectMeshController::Render(), argument is null.");
 
-    if (shaderGlobalSetup)
-        pEffectMesh->Render(pEffectMesh->m_pMesh, shaderGlobalSetup);
+    Shader::Draw(
+        pEffectMesh->m_effectParams, 
+        pEffectMesh->m_pMesh, 
+        setGlobalVariable);
 }
 
 void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)
@@ -31,9 +33,4 @@ void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)
 void EffectMeshRenderer::SetEffectMesh(const TAG_RES_STATIC tag)
 {
     SetEffectMesh(Resource()()->GetEffectMesh(tag));
-}
-
-void EffectMeshRenderer::SetEffectMesh(const string& path, const string& xFilename)
-{
-    pEffectMesh = Resource()()->GetEffectMesh(path, xFilename);
 }

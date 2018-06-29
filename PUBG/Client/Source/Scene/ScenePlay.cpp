@@ -3,6 +3,7 @@
 #include "DirectionalLight.h"
 #include "TerrainFeature.h"
 #include "SkySphere.h"
+#include "Grid.h"
 
 ScenePlay::ScenePlay()
     : IScene()
@@ -18,7 +19,8 @@ void ScenePlay::OnInit()
     SetDirectionalLight(new DirectionalLight);
     //AddObject(new TerrainFeature(TAG_RES_STATIC::SkySphere, Vector3::ZERO, Vector3::ZERO, Vector3::ONE* 0.18f));
 
-    AddObject(new SkySphere);
+    //AddObject(new SkySphere);
+    AddObject(new Grid);
 
     Communication()()->m_MyInfo.m_ID = 0;
     //for (int i = 0; i < Character::NUM_PLAYER; ++i)

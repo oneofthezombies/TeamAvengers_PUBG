@@ -1,5 +1,0 @@
-/// Rifle_Jump.X (무기든 채 점프애니메이션)
-0. (0 ~ 55)[56] - Rifle_Combat_Jump_F
-1. (56 ~ 129)[74] - Rifle_Combat_Jump_B
-2. (130 ~ 205)[76] - Rifle_Combat_Jump_Stationary_Full_001
-3. (206 ~ 234)[29] - Rifle_Combat_Jump_F_Start_Aimed

@@ -22,25 +22,25 @@ void SkinnedMeshController::updateFrameToModelSpace(LPD3DXFRAME pFrameBase,
 
 void SkinnedMeshController::drawFrame(
     LPD3DXFRAME pFrameBase, 
-    const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup)
+    const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
     if (!pFrameBase) return;
 
     auto pMeshContainer = pFrameBase->pMeshContainer;
     while (pMeshContainer)
     {
-        drawMeshContainer(pMeshContainer, shaderGlobalSetup);
+        drawMeshContainer(pMeshContainer, setGlobalVariable);
 
         pMeshContainer = pMeshContainer->pNextMeshContainer;
     }
 
-    drawFrame(pFrameBase->pFrameSibling, shaderGlobalSetup);
-    drawFrame(pFrameBase->pFrameFirstChild, shaderGlobalSetup);
+    drawFrame(pFrameBase->pFrameSibling, setGlobalVariable);
+    drawFrame(pFrameBase->pFrameFirstChild, setGlobalVariable);
 }
 
 void SkinnedMeshController::drawMeshContainer(
     LPD3DXMESHCONTAINER pMeshContainerBase,
-    const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup)
+    const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
     if (!pMeshContainerBase || !pMeshContainerBase->pSkinInfo) return;
 
@@ -75,11 +75,10 @@ void SkinnedMeshController::drawMeshContainer(
     pMeshContainer->pEffectMesh->m_pMesh->UnlockVertexBuffer();
     pMeshContainer->m_pWorkMesh->UnlockVertexBuffer();
 
-    if (shaderGlobalSetup)
-    {
-        pMeshContainer->pEffectMesh->Render(
-            pMeshContainer->m_pWorkMesh, shaderGlobalSetup);
-    }
+    Shader::Draw(
+        pMeshContainer->pEffectMesh->m_effectParams, 
+        pMeshContainer->m_pWorkMesh, 
+        setGlobalVariable);
 }
 
 SkinnedMeshController::SkinnedMeshController(IObject* pOwner)

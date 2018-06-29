@@ -128,8 +128,8 @@
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
-    <ClCompile Include="Source\Object\Church.cpp" />
     <ClCompile Include="Source\Object\DirectionalLight.cpp" />
+    <ClCompile Include="Source\Object\Grid.cpp" />
     <ClCompile Include="Source\Object\SkySphere.cpp" />
     <ClCompile Include="Source\Object\TerrainFeature.cpp" />
     <ClCompile Include="Source\Component\Collider.cpp" />
@@ -142,7 +142,6 @@
     <ClCompile Include="Source\Object\CharacterPart.cpp" />
     <ClCompile Include="Source\Object\Character_Method.cpp" />
     <ClCompile Include="Source\Manager\Application.cpp" />
-    <ClCompile Include="Source\Object\Bandage.cpp" />
     <ClCompile Include="Source\Base\ICamera.cpp" />
     <ClCompile Include="Source\Manager\CameraManager.cpp" />
     <ClCompile Include="Source\Manager\Client.cpp" />
@@ -151,14 +150,13 @@
     <ClCompile Include="Source\Manager\DeviceManager.cpp" />
     <ClCompile Include="Source\Manager\InputManager.cpp" />
     <ClCompile Include="Source\Base\IScene.cpp" />
-    <ClCompile Include="Source\Object\Kar98k.cpp" />
     <ClCompile Include="Source\Manager\ResourceManager.cpp" />
     <ClCompile Include="Source\Manager\TimeManager.cpp" />
     <ClCompile Include="Source\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\UI\UIObject.cpp" />
     <ClCompile Include="Source\Useful\CollisionCore.cpp" />
     <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
-    <ClCompile Include="Source\Manager\ShaderManager.cpp" />
+    <ClCompile Include="Source\Useful\Shader.cpp" />
     <ClCompile Include="Source\Useful\Structure.cpp" />
     <ClCompile Include="Source\Scene\SceneLogin.cpp" />
     <ClCompile Include="Source\Manager\SceneManager.cpp" />
@@ -181,8 +179,8 @@
   <ItemGroup>
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
-    <ClInclude Include="Source\Object\Church.h" />
     <ClInclude Include="Source\Object\DirectionalLight.h" />
+    <ClInclude Include="Source\Object\Grid.h" />
     <ClInclude Include="Source\Object\SkySphere.h" />
     <ClInclude Include="Source\Object\TerrainFeature.h" />
     <ClInclude Include="Source\Component\Collider.h" />
@@ -193,7 +191,6 @@
     <ClInclude Include="Source\Object\Character.h" />
     <ClInclude Include="Source\Object\CharacterPart.h" />
     <ClInclude Include="Source\Manager\Application.h" />
-    <ClInclude Include="Source\Object\Bandage.h" />
     <ClInclude Include="Source\Base\ICamera.h" />
     <ClInclude Include="Source\Manager\CameraManager.h" />
     <ClInclude Include="Source\Manager\Client.h" />
@@ -204,11 +201,10 @@
     <ClInclude Include="Source\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Useful\CollisionCore.h" />
     <ClInclude Include="Source\Useful\ResPathFileName.h" />
-    <ClInclude Include="Source\Manager\ShaderManager.h" />
+    <ClInclude Include="Source\Useful\Shader.h" />
     <ClInclude Include="Source\Useful\TagClientOnly.h" />
     <ClInclude Include="Source\Manager\InputManager.h" />
     <ClInclude Include="Source\Base\IScene.h" />
-    <ClInclude Include="Source\Object\Kar98k.h" />
     <ClInclude Include="Source\Manager\ResourceManager.h" />
     <ClInclude Include="Source\Useful\Structure.h" />
     <ClInclude Include="Source\Scene\SceneLogin.h" />

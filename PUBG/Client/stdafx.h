@@ -21,6 +21,7 @@
 
 // math and usefuls
 #include "Structure.h"
+#include "Shader.h"
 // end math and usefuls
 
 // managers and interfaces for global access
@@ -39,7 +40,6 @@
                               //     CurrentCamera()()
 #include "Client.h"           // has Communication()()
 #include "Bullet.h"           // has BulletPool   ()()
-#include "ShaderManager.h"    // has Shader       ()()
 #include "DebugManager.h"     // has DebugMgr     ()()
                               //     macro Debug
 

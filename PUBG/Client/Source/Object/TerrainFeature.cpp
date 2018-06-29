@@ -36,16 +36,15 @@ void TerrainFeature::OnUpdate()
 void TerrainFeature::OnRender()
 {
     pEffectMeshRenderer->Render(
-        [this](LPD3DXEFFECT pEffect)
+        [this](LPD3DXEFFECT pEffect) 
     {
-        const GlobalVariableKey* pKey = Shader()()->GetGlobalVariableKey();
         pEffect->SetMatrix(
-            pKey->m_pWorld,
+            Shader::World,
             &GetTransform()->GetTransformationMatrix());
 
         DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
         D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(pKey->m_plightDirection, &lightDir, sizeof lightDir);
+        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
     });
 
     for (auto c : m_colliders)

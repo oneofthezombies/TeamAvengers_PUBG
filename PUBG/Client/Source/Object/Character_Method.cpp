@@ -103,17 +103,17 @@ void Character::updateDependency()
     if (m_pRootCharacterPart) m_pRootCharacterPart->Update();
 
     pSkinnedMeshController->Render(
-        [this](LPD3DXEFFECT pEffect)
+        [this](LPD3DXEFFECT pEffect) 
     {
-        const GlobalVariableKey* pKey = Shader()()->GetGlobalVariableKey();
         pEffect->SetMatrix(
-            pKey->m_pWorld,
+            Shader::World,
             &GetTransform()->GetTransformationMatrix());
 
         DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
         D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(pKey->m_plightDirection, lightDir, sizeof lightDir);
+        pEffect->SetValue(Shader::lightDirection, lightDir, sizeof lightDir);
     });
+
     if (m_pRootCharacterPart) m_pRootCharacterPart->Render();
 }
 

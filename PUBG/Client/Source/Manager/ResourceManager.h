@@ -32,7 +32,6 @@ private:
 
     unordered_map<string, SkinnedMesh*> m_skinnedMeshs;
 
-    //array<SkinnedMesh*, 4> m_characters;
     SkinnedMesh*                        m_pCharacter;
     array<LPD3DXANIMATIONCONTROLLER, 4> m_characterAnimControllers;
 
@@ -41,42 +40,46 @@ private:
     virtual ~ResourceManager();
 
 public:
+    void Init();
     void Destroy();
 
     void AddResource(ResourceContainer* pResourceContainer);
     void AddCharacter(ResourceContainer* pResourceContainer);
-    //void AddCharacters(std::vector<ResourceContainer*> characters);
 
     LPD3DXFONT GetFont(const TAG_FONT tag);
 
     SkinnedMesh* GetCharacterSkinnedMesh();
     EffectMesh*  GetEffectMesh(const TAG_RES_STATIC tag);
+    LPDIRECT3DTEXTURE9 GetTexture(const string& path, const string& filename);
+    LPDIRECT3DTEXTURE9 GetTexture(const string& fullPath);
+    LPD3DXEFFECT GetEffect(const string& path, const string& filename);
+    LPD3DXEFFECT GetEffect(const string& fullPath);
 
     friend Singleton<ResourceManager>;
 
-    /* do NOT use! this will be deleted soon.*/
-    EffectMesh* FindEffectMesh(const string& path, const string& name);
+    ///* do NOT use! this will be deleted soon.*/
+    //EffectMesh* FindEffectMesh(const string& path, const string& name);
 
-    /* do NOT use! this will be deleted soon.*/
-    EffectMesh* AddEffectMesh(const string& path, const string& name,
-        LPD3DXMESH pMesh, const D3DXEFFECTINSTANCE* pEffectInstances,
-        DWORD numMaterials);
+    ///* do NOT use! this will be deleted soon.*/
+    //EffectMesh* AddEffectMesh(const string& path, const string& name,
+    //    LPD3DXMESH pMesh, const D3DXEFFECTINSTANCE* pEffectInstances,
+    //    DWORD numMaterials);
 
-    /* do NOT use! this will be deleted soon.*/
-    LPDIRECT3DTEXTURE9 GetTexture(const string& fullPath);
+    ///* do NOT use! this will be deleted soon.*/
+    //LPDIRECT3DTEXTURE9 GetTexture(const string& fullPath);
 
-    /* do NOT use! this will be deleted soon.*/
-    LPDIRECT3DTEXTURE9 GetTexture(const string& path,
-        const string& textureFilename);
+    ///* do NOT use! this will be deleted soon.*/
+    //LPDIRECT3DTEXTURE9 GetTexture(const string& path,
+    //    const string& textureFilename);
 
-    /* do NOT use! this will be deleted soon.*/
-    LPD3DXEFFECT GetEffect(const string& fullPath);
+    ///* do NOT use! this will be deleted soon.*/
+    //LPD3DXEFFECT GetEffect(const string& fullPath);
 
-    /* do NOT use! this will be deleted soon.*/
-    LPD3DXEFFECT GetEffect(const string& path, const string& effectFilename);
+    ///* do NOT use! this will be deleted soon.*/
+    //LPD3DXEFFECT GetEffect(const string& path, const string& effectFilename);
 
-    /* do NOT use! this will be deleted soon.*/
-    EffectMesh* GetEffectMesh(const string& path, const string& xFilename);
+    ///* do NOT use! this will be deleted soon.*/
+    //EffectMesh* GetEffectMesh(const string& path, const string& xFilename);
 };
 
 struct Resource

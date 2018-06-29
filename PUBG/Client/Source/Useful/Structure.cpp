@@ -2,18 +2,6 @@
 #include "Structure.h"
 #include "DirectionalLight.h"
 
-VERTEX_PC::VERTEX_PC()
-    : p(0.0f, 0.0f, 0.0f)
-    , c(D3DCOLOR_XRGB(0, 0, 0))
-{
-}
-
-VERTEX_PC::VERTEX_PC(const D3DXVECTOR3& p, const D3DCOLOR c)
-    : p(p)
-    , c(c)
-{
-}
-
 VERTEX_RHWC::VERTEX_RHWC()
     : p(0.0f, 0.0f, 0.0f, 0.0f)
     , c(D3DCOLOR_XRGB(0, 0, 0))
@@ -91,41 +79,6 @@ EffectMesh::~EffectMesh()
 //    }
 //}
 
-void EffectMesh::Render(
-    LPD3DXMESH pMesh, 
-    const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup)
-{
-    assert(pMesh && "EffectMesh::Render(), mesh is null.");
-
-    const GlobalVariableKey* pKey = Shader()()->GetGlobalVariableKey();
-    for (auto ei = 0u; ei < m_effectParams.size(); ++ei)
-    {
-        const auto& ep = m_effectParams[ei];
-        ep.pEffect->ApplyParameterBlock(ep.hParam);
-
-        ep.pEffect->SetMatrix(
-            pKey->m_pView, 
-            &CurrentCamera()()->GetViewMatrix());
-
-        ep.pEffect->SetMatrix(
-            pKey->m_pProjection, 
-            &CurrentCamera()()->GetProjectionMatrix());
-
-        if (shaderGlobalSetup) shaderGlobalSetup(ep.pEffect);
-
-        ep.pEffect->CommitChanges();
-        UINT numPasses = 0u;
-        ep.pEffect->Begin(&numPasses, 0);
-        for (auto pi = 0u; pi < numPasses; ++pi)
-        {
-            ep.pEffect->BeginPass(pi);
-            pMesh->DrawSubset(ei);
-            ep.pEffect->EndPass();
-        }
-        ep.pEffect->End();
-    }
-}
-
 Frame::Frame()
 {
     memset(this, 0, sizeof Frame);
@@ -146,7 +99,7 @@ SkinnedMesh::~SkinnedMesh()
 {
     if (m_pRootFrame)
     {
-        AllocateHierarchy ah;
+        AllocateHierarchyAsync ah;
         D3DXFrameDestroy(m_pRootFrame, &ah);
     }
 
@@ -189,171 +142,179 @@ void SkinnedMesh::setupBoneMatrixPointersOnMesh(
     }
 }
 
-AllocateHierarchy::AllocateHierarchy()
+//AllocateHierarchy::AllocateHierarchy()
+//    : ID3DXAllocateHierarchy()
+//    , m_path("")
+//    , m_xFilename("")
+//{
+//}
+//
+//AllocateHierarchy::AllocateHierarchy(const string& path,
+//    const string& xFilename)
+//    : ID3DXAllocateHierarchy()
+//    , m_path(path)
+//    , m_xFilename(xFilename)
+//{
+//}
+//
+//AllocateHierarchy::~AllocateHierarchy()
+//{
+//}
+//
+//STDMETHODIMP AllocateHierarchy::CreateFrame(THIS_ LPCSTR Name,
+//    LPD3DXFRAME* ppNewFrame)
+//{
+//    *ppNewFrame = nullptr;
+//
+//    Frame* pFrame = new Frame;
+//    
+//    if (!pFrame)
+//        return E_OUTOFMEMORY;
+//
+//    if (Name)
+//    {
+//        const auto size = strlen(Name) + 1;
+//        pFrame->Name = new char[size];
+//        
+//        if (!pFrame->Name)
+//        {
+//            delete pFrame;
+//            return E_OUTOFMEMORY;
+//        }
+//
+//        memcpy_s(pFrame->Name, size, Name, size);
+//    }
+//    else
+//    {
+//        pFrame->Name = nullptr;
+//    }
+//
+//    D3DXMatrixIdentity(&pFrame->TransformationMatrix);
+//    D3DXMatrixIdentity(&pFrame->CombinedTransformationMatrix);
+//
+//    pFrame->pMeshContainer = nullptr;
+//    pFrame->pFrameSibling = nullptr;
+//    pFrame->pFrameFirstChild = nullptr;
+//
+//    *ppNewFrame = pFrame;
+//    pFrame = nullptr;
+//
+//    return S_OK;
+//}
+//
+//STDMETHODIMP AllocateHierarchy::CreateMeshContainer(THIS_ LPCSTR Name,
+//    const D3DXMESHDATA* pMeshData, const D3DXMATERIAL* pMaterials,
+//    const D3DXEFFECTINSTANCE* pEffectInstances, DWORD NumMaterials,
+//    const DWORD* pAdjacency, LPD3DXSKININFO pSkinInfo,
+//    LPD3DXMESHCONTAINER* ppNewMeshContainer)
+//{
+//    assert(pMeshData->Type == D3DXMESHTYPE_MESH && 
+//        "AllocateHierarchy::CreateMeshContainer(), \
+//         Only MESHTYPE_MESH is possible.");
+//
+//    MeshContainer* pMeshContainer = new MeshContainer;
+//
+//    if (!pMeshContainer)
+//        return E_OUTOFMEMORY;
+//
+//    if (Name)
+//    {
+//        const auto size = strlen(Name) + 1;
+//        pMeshContainer->Name = new char[size];
+//
+//        if (!pMeshContainer->Name)
+//        {
+//            delete pMeshContainer;
+//            return E_OUTOFMEMORY;
+//        }
+//        
+//        memcpy_s(pMeshContainer->Name, size, Name, size);
+//    }
+//    else
+//    {
+//        pMeshContainer->Name = nullptr;
+//    }
+//
+//    assert(pMeshContainer->Name && 
+//        "AllocateHierarchy::CreateMeshContainer(), \
+//         mesh container name is null.");
+//
+//    auto pEffectMesh = Resource()()->FindEffectMesh(
+//        m_path, pMeshContainer->Name);
+//
+//    if (!pEffectMesh)
+//    {
+//        pEffectMesh = Resource()()->AddEffectMesh(
+//            m_path, pMeshContainer->Name, pMeshData->pMesh, pEffectInstances, 
+//            NumMaterials);
+//
+//        pEffectMesh->m_pMesh->AddRef();
+//    }
+//
+//    pMeshContainer->pEffectMesh = pEffectMesh;
+//    auto& pMesh = pMeshContainer->pEffectMesh->m_pMesh;
+//
+//    D3DVERTEXELEMENT9 decl[MAX_FVF_DECL_SIZE] = { 0 };
+//    pMesh->GetDeclaration(decl);
+//    pMesh->CloneMesh(pMesh->GetOptions(), decl, Device()(),
+//        &pMeshContainer->m_pWorkMesh);
+//
+//    if (pSkinInfo)
+//    {
+//        pMeshContainer->pSkinInfo = pSkinInfo;
+//        pSkinInfo->AddRef();
+//
+//        const auto numBones = pSkinInfo->GetNumBones();
+//
+//        pMeshContainer->m_pBoneOffsetMatrices = new D3DXMATRIX[numBones];
+//        pMeshContainer->m_ppBoneMatrixPtrs = new D3DXMATRIX*[numBones];
+//        pMeshContainer->m_pFinalBoneMatrices = new D3DXMATRIX[numBones];
+//
+//        auto& pBOMs = pMeshContainer->m_pBoneOffsetMatrices;
+//        for (auto bi = 0u; bi < numBones; ++bi)
+//            pBOMs[bi] = *pSkinInfo->GetBoneOffsetMatrix(bi);
+//    }
+//
+//    *ppNewMeshContainer = pMeshContainer;
+//    pMeshContainer = nullptr;
+//
+//    return S_OK;
+//}
+//
+//STDMETHODIMP AllocateHierarchy::DestroyFrame(THIS_ LPD3DXFRAME pFrameToFree)
+//{
+//    SAFE_DELETE_ARRAY(pFrameToFree->Name);
+//    SAFE_DELETE(pFrameToFree);
+//    return S_OK;
+//}
+//
+//STDMETHODIMP AllocateHierarchy::DestroyMeshContainer(
+//    THIS_ LPD3DXMESHCONTAINER meshContainerBase)
+//{
+//    MeshContainer* pMeshContainer =
+//        static_cast<MeshContainer*>(meshContainerBase);
+//
+//    if (!pMeshContainer) 
+//        return E_FAIL;
+//
+//    SAFE_RELEASE(pMeshContainer->m_pWorkMesh);
+//    SAFE_RELEASE(pMeshContainer->pSkinInfo);
+//
+//    SAFE_DELETE_ARRAY(pMeshContainer->Name);
+//    SAFE_DELETE_ARRAY(pMeshContainer->m_pBoneOffsetMatrices);
+//    SAFE_DELETE_ARRAY(pMeshContainer->m_ppBoneMatrixPtrs);
+//    SAFE_DELETE_ARRAY(pMeshContainer->m_pFinalBoneMatrices);
+//
+//    SAFE_DELETE(pMeshContainer);
+//    return S_OK;
+//}
+
+AllocateHierarchyAsync::AllocateHierarchyAsync()
     : ID3DXAllocateHierarchy()
     , m_path("")
     , m_xFilename("")
+    , pResourceContainer(nullptr)
 {
-}
-
-AllocateHierarchy::AllocateHierarchy(const string& path,
-    const string& xFilename)
-    : ID3DXAllocateHierarchy()
-    , m_path(path)
-    , m_xFilename(xFilename)
-{
-}
-
-AllocateHierarchy::~AllocateHierarchy()
-{
-}
-
-STDMETHODIMP AllocateHierarchy::CreateFrame(THIS_ LPCSTR Name,
-    LPD3DXFRAME* ppNewFrame)
-{
-    *ppNewFrame = nullptr;
-
-    Frame* pFrame = new Frame;
-    
-    if (!pFrame)
-        return E_OUTOFMEMORY;
-
-    if (Name)
-    {
-        const auto size = strlen(Name) + 1;
-        pFrame->Name = new char[size];
-        
-        if (!pFrame->Name)
-        {
-            delete pFrame;
-            return E_OUTOFMEMORY;
-        }
-
-        memcpy_s(pFrame->Name, size, Name, size);
-    }
-    else
-    {
-        pFrame->Name = nullptr;
-    }
-
-    D3DXMatrixIdentity(&pFrame->TransformationMatrix);
-    D3DXMatrixIdentity(&pFrame->CombinedTransformationMatrix);
-
-    pFrame->pMeshContainer = nullptr;
-    pFrame->pFrameSibling = nullptr;
-    pFrame->pFrameFirstChild = nullptr;
-
-    *ppNewFrame = pFrame;
-    pFrame = nullptr;
-
-    return S_OK;
-}
-
-STDMETHODIMP AllocateHierarchy::CreateMeshContainer(THIS_ LPCSTR Name,
-    const D3DXMESHDATA* pMeshData, const D3DXMATERIAL* pMaterials,
-    const D3DXEFFECTINSTANCE* pEffectInstances, DWORD NumMaterials,
-    const DWORD* pAdjacency, LPD3DXSKININFO pSkinInfo,
-    LPD3DXMESHCONTAINER* ppNewMeshContainer)
-{
-    assert(pMeshData->Type == D3DXMESHTYPE_MESH && 
-        "AllocateHierarchy::CreateMeshContainer(), \
-         Only MESHTYPE_MESH is possible.");
-
-    MeshContainer* pMeshContainer = new MeshContainer;
-
-    if (!pMeshContainer)
-        return E_OUTOFMEMORY;
-
-    if (Name)
-    {
-        const auto size = strlen(Name) + 1;
-        pMeshContainer->Name = new char[size];
-
-        if (!pMeshContainer->Name)
-        {
-            delete pMeshContainer;
-            return E_OUTOFMEMORY;
-        }
-        
-        memcpy_s(pMeshContainer->Name, size, Name, size);
-    }
-    else
-    {
-        pMeshContainer->Name = nullptr;
-    }
-
-    assert(pMeshContainer->Name && 
-        "AllocateHierarchy::CreateMeshContainer(), \
-         mesh container name is null.");
-
-    auto pEffectMesh = Resource()()->FindEffectMesh(
-        m_path, pMeshContainer->Name);
-
-    if (!pEffectMesh)
-    {
-        pEffectMesh = Resource()()->AddEffectMesh(
-            m_path, pMeshContainer->Name, pMeshData->pMesh, pEffectInstances, 
-            NumMaterials);
-
-        pEffectMesh->m_pMesh->AddRef();
-    }
-
-    pMeshContainer->pEffectMesh = pEffectMesh;
-    auto& pMesh = pMeshContainer->pEffectMesh->m_pMesh;
-
-    D3DVERTEXELEMENT9 decl[MAX_FVF_DECL_SIZE] = { 0 };
-    pMesh->GetDeclaration(decl);
-    pMesh->CloneMesh(pMesh->GetOptions(), decl, Device()(),
-        &pMeshContainer->m_pWorkMesh);
-
-    if (pSkinInfo)
-    {
-        pMeshContainer->pSkinInfo = pSkinInfo;
-        pSkinInfo->AddRef();
-
-        const auto numBones = pSkinInfo->GetNumBones();
-
-        pMeshContainer->m_pBoneOffsetMatrices = new D3DXMATRIX[numBones];
-        pMeshContainer->m_ppBoneMatrixPtrs = new D3DXMATRIX*[numBones];
-        pMeshContainer->m_pFinalBoneMatrices = new D3DXMATRIX[numBones];
-
-        auto& pBOMs = pMeshContainer->m_pBoneOffsetMatrices;
-        for (auto bi = 0u; bi < numBones; ++bi)
-            pBOMs[bi] = *pSkinInfo->GetBoneOffsetMatrix(bi);
-    }
-
-    *ppNewMeshContainer = pMeshContainer;
-    pMeshContainer = nullptr;
-
-    return S_OK;
-}
-
-STDMETHODIMP AllocateHierarchy::DestroyFrame(THIS_ LPD3DXFRAME pFrameToFree)
-{
-    SAFE_DELETE_ARRAY(pFrameToFree->Name);
-    SAFE_DELETE(pFrameToFree);
-    return S_OK;
-}
-
-STDMETHODIMP AllocateHierarchy::DestroyMeshContainer(
-    THIS_ LPD3DXMESHCONTAINER meshContainerBase)
-{
-    MeshContainer* pMeshContainer =
-        static_cast<MeshContainer*>(meshContainerBase);
-
-    if (!pMeshContainer) 
-        return E_FAIL;
-
-    SAFE_RELEASE(pMeshContainer->m_pWorkMesh);
-    SAFE_RELEASE(pMeshContainer->pSkinInfo);
-
-    SAFE_DELETE_ARRAY(pMeshContainer->Name);
-    SAFE_DELETE_ARRAY(pMeshContainer->m_pBoneOffsetMatrices);
-    SAFE_DELETE_ARRAY(pMeshContainer->m_ppBoneMatrixPtrs);
-    SAFE_DELETE_ARRAY(pMeshContainer->m_pFinalBoneMatrices);
-
-    SAFE_DELETE(pMeshContainer);
-    return S_OK;
 }
 
 AllocateHierarchyAsync::AllocateHierarchyAsync(
