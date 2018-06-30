@@ -30,8 +30,6 @@ protected:
     //D3DXVECTOR3 temp = Vector3::ZERO;
 protected:
     Character::Info* GetTargetInfo();
-    // to show camera position temporary
-    LPD3DXMESH m_pSphereMesh;
 
 public:
     ICamera(const TAG_CAMERA tag);

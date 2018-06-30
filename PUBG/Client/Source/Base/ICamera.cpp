@@ -13,10 +13,7 @@ ICamera::ICamera(const TAG_CAMERA tag)
     : MemoryAllocator()
     , m_tagCamera(tag)
     , m_position(Vector3::ZERO)
-    ,m_pSphereMesh(nullptr)
 {
-
-
     for (int i = 0; i < 8; i++)
     {
         m_vecWorld[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -30,17 +27,10 @@ ICamera::ICamera(const TAG_CAMERA tag)
     m_vecProj[5]=(D3DXVECTOR3(1, -1, 1));	//우하후
     m_vecProj[6]=(D3DXVECTOR3(-1, -1, 0));	//좌하전
     m_vecProj[7]=(D3DXVECTOR3(1, -1, 0));	//우하전
-    
-    // to show camera position temporary
-    D3DXCreateSphere(Device()(), 5.0f, 5, 5, &m_pSphereMesh, nullptr);
 }
 
 ICamera::~ICamera()
 {
-    
-     SAFE_RELEASE(m_pSphereMesh);
-    
-    
 }
 
 void ICamera::CameraRender()
@@ -60,16 +50,6 @@ void ICamera::CameraRender()
         testT *=pTarInfo->pTransform->GetTransformationMatrix();
         //              (model space)                      (rotation get from character) 
         matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
-
-        auto pD = Device()();
-        pD->SetRenderState(D3DRS_LIGHTING, true);
-        pD->SetTexture(0, NULL);
-        pD->SetMaterial(&MaterialTemplate::GetWhite());
-
-        pD->SetTransform(D3DTS_WORLD, &matWorld);
-        m_pSphereMesh->DrawSubset(0);
-
-
     }
     Debug << endl;
     Debug << "  우로R(8)  좌로R(9)   " << endl;
