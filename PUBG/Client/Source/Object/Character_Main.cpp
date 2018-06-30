@@ -153,19 +153,13 @@ void Character::updateMine()
     //animation Switch ¹®
 
 
+    D3DXVECTOR3 vr = Vector3::BACKWARD + Vector3::RIGHT;
+
+    D3DXVec3Normalize(&vr,&vr);
+    Debug << " vr : " << vr << endl;
 
 
 
-    //if (m_currentInput._A)
-    //{
-    //    p += getRight() * -m_rootTransform.MOVE_SPEED;
-    //    //isUpdated = true;
-    //}
-    //if (m_currentInput._D)
-    //{
-    //    p += getRight() * m_rootTransform.MOVE_SPEED;
-    //    //isUpdated = true;
-    //}
 
     //if (pInput->IsOnceKeyDown(VK_RETURN))
     //    isFired = true;

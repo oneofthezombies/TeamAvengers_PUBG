@@ -157,10 +157,54 @@ void Character::AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* 
 {
     TAG_ANIM_CHARACTER ret;
 
+    Attacking attacking;
     Direction direction ;
     Moving    moving ;
     Stance    stance;
-    Attacking attacking ;
+
+
+    //Attacking 3개 -----------------------------------------------------
+    if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
+    {
+        attacking = Attacking::Rifle;
+    }
+    else if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
+    {
+        attacking = Attacking::Melee;
+    }
+    else
+    {
+        attacking = Attacking::Unarmed;
+    }
+
+    //Stance 3개 -----------------------------------------------------
+    if (m_currentInput._C)
+    {
+        stance = Stance::Crouch;
+    }
+    else if (m_currentInput._Z)
+    {
+        stance = Stance::Prone;
+    }
+    else
+    {
+        stance = Stance::Stand;
+    }
+
+    //Moving 3개 -----------------------------------------------------
+    if (m_currentInput._LShift)
+    {
+        moving = Moving::Sprint;
+    }
+    else if (m_currentInput._LCtrl)
+    {
+        moving = Moving::Walk;
+    }
+    else
+    {
+        moving = Moving::Run;
+    }
+
 
     //Direction 8개 -----------------------------------------------------
     if (m_currentInput._W&&m_currentInput._D)
@@ -182,70 +226,38 @@ void Character::AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* 
     else if (m_currentInput._W)
     {
         direction = Direction::Front;
+        *pOut += getForward();
+
     }
     else if (m_currentInput._D)
     {
         direction = Direction::Right;
+        *pOut += getRight() * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._S)
     {
         direction = Direction::Back;
+        *pOut += getForward() * -1.0f;
     }
     else if (m_currentInput._A)
     {
         direction = Direction::Left;
+        *pOut += getRight() * -m_rootTransform.MOVE_SPEED;
     }
     else
     {
         direction = Direction::StandStill;
     }
 
-    //Moving 3개 -----------------------------------------------------
-    if (m_currentInput._LShift)
-    {
-        moving = Moving::Sprint;
-    }
-    else if (m_currentInput._LCtrl)
-    {
-        moving = Moving::Walk;
-    }
-    else
-    {
-        moving = Moving::Run;
-    }
 
-    //Stance 3개 -----------------------------------------------------
-    if (m_currentInput._C)
-    {
-        stance = Stance::Crouch;
-    }
-    else if (m_currentInput._Z)
-    {
-        stance = Stance::Prone;
-    }
-    else
-    {
-        stance = Stance::Stand;
-    }
 
-    //Attacking 3개 -----------------------------------------------------
-    if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
-    {
-        attacking = Attacking::Rifle;
-    }
-    else if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
-    {
-        attacking = Attacking::Melee;
-    }
-    else
-    {
-        attacking = Attacking::Unarmed;
-    }
+
+
 
     *tagOut = AnimationState::Get(attacking, stance, moving, direction);
 
 
-    /*switch (m_animState)
+    switch (m_animState)
     {
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1:
     {
@@ -357,7 +369,7 @@ void Character::AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* 
         }
     }
     break;
-    }*/
+    }
 }
 bool Character::isMine() const
 {

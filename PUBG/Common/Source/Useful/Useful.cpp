@@ -1,11 +1,19 @@
 #include "stdafx.h"
 #include "Useful.h"
 
-const D3DXVECTOR3& Vector3::ZERO    = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-const D3DXVECTOR3& Vector3::ONE     = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-const D3DXVECTOR3& Vector3::RIGHT   = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-const D3DXVECTOR3& Vector3::UP      = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-const D3DXVECTOR3& Vector3::FORWARD = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+const D3DXVECTOR3& Vector3::ZERO            = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+const D3DXVECTOR3& Vector3::ONE             = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+const D3DXVECTOR3& Vector3::UP              = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+const D3DXVECTOR3& Vector3::DOWN            = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+const D3DXVECTOR3& Vector3::RIGHT           = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+const D3DXVECTOR3& Vector3::LEFT            = D3DXVECTOR3(-1.0f, 0.0f, 0.0f);
+const D3DXVECTOR3& Vector3::FORWARD         = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+const D3DXVECTOR3& Vector3::BACKWARD        = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+
+const D3DXVECTOR3& Vector3::FORWARD_RIGNT   = D3DXVECTOR3(0.707107f, 0.0f, 0.707107f);
+const D3DXVECTOR3& Vector3::FORWARD_LEFT    = D3DXVECTOR3(-0.707107f, 0.0f, 0.707107f);
+const D3DXVECTOR3& Vector3::BACKWARD_RIGHT  = D3DXVECTOR3(0.707107f, 0.0f, -0.707107f);
+const D3DXVECTOR3& Vector3::BACKWARD_LEFT   = D3DXVECTOR3(-0.707107f, 0.0f,-0.707107f);
 
 const D3DXQUATERNION& Quaternion::ZERO = 
     D3DXQUATERNION(0.0f, 0.0f, 0.0f, 0.0f);
