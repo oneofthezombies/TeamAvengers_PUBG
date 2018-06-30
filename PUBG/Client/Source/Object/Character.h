@@ -59,7 +59,11 @@ private:
     TargetTransform* pTargetTransform;
 
     //for inventory
-    map<TAG_ITEM_CATEGORY, vector<Item*>> m_mapInventory;
+    //map<TAG_ITEM_CATEGORY, vector<Item*>> m_mapInventory;
+    //¿©±âºÎÅÍÇØ¾ßÇÔ
+    map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //Åº¾à, ¼Ò¸ðÇ°, ÃÑ±âºÎÂø¹°¿ë
+    map<TAG_RES_STATIC, vector<Item*>> m_mapEquip;     //Çï¸ä, °¡¹æ, ¹æÅºÁ¶³¢¿ë
+    map<TAG_RES_STATIC, vector<Item*>> m_mapWeapon;    //¹«±â¿ë
     float m_capacity;
 
 private:
@@ -100,7 +104,7 @@ public:
     TAG_COLLISION GetTagCollisionDamage(const int index);
 
     //for inventory
-    bool PutItemInInventory(Item* item);
+    void PutItemInInventory(Item* item);
     void ShowInventory();
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
 };

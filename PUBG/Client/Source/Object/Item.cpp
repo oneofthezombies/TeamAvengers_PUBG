@@ -41,6 +41,23 @@ void Item::OnRender()
     pEffectMeshRenderer->Render();
 }
 
+void Item::setup(const TAG_RES_STATIC tag)
+{
+    //내구성 셋팅
+    m_durability = ItemInfo::GetDefaultDurability(tag);
+
+    switch (tag)
+    {
+    case TAG_RES_STATIC::Ammo_5_56mm:
+    case TAG_RES_STATIC::Ammo_7_62mm:
+        m_numBullet = Item::DEFAULT_NUM_BULLET;
+        break;
+    default: 
+        m_numBullet = 0; 
+        break;
+    }
+}
+
 TAG_RES_STATIC Item::GetTagResStatic() const
 {
     return m_tagResStatic;
@@ -51,13 +68,17 @@ void Item::SetDurability(const float durability)
     m_durability = durability;
 }
 
+float Item::GetDurability() const
+{
+    return m_durability;
+}
+
 void Item::SetNumBullet(const int numBullet)
 {
     m_numBullet = numBullet;
 }
 
-void Item::setup(const TAG_RES_STATIC tag)
+int Item::GetNumBullet() const
 {
-    m_durability = ItemInfo::GetDefaultDurability(tag);
-
+    return m_numBullet;
 }
