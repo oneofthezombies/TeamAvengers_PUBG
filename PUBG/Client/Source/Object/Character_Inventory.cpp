@@ -142,6 +142,30 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
         // TODO : send "delete item on field" to server
     }
 }
+
+void Character::updateTotalInventory()
+{
+
+}
+
+void Character::renderTotalInventory()
+{
+    Item* pArmor = m_totalInventory.m_equipArmor;
+    if (pArmor) pArmor->Render();
+
+    Item* pBack = m_totalInventory.m_equipBack;
+    if (pBack) pBack->Render();
+
+    Item* pHead = m_totalInventory.m_equipHead;
+    if (pHead) pHead->Render();
+
+    Weapon* pWeaponPrimary = m_totalInventory.m_weaponPrimary;
+    if (pWeaponPrimary) pWeaponPrimary->Render();
+
+    Weapon* pWeaponSecondary = m_totalInventory.m_weaponSecondary;
+    if (pWeaponSecondary) pWeaponSecondary->Render();
+}
+
 void Character::ShowTotalInventory()
 {
     TAG_RES_STATIC tag;

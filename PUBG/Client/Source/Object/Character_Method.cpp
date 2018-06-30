@@ -99,8 +99,11 @@ void Character::updateDependency()
     pSkinnedMeshController->UpdateAnimation();
     updateBone();
     pSkinnedMeshController->UpdateModel();
+    updateTotalInventory();
     if (m_pRootCharacterPart) m_pRootCharacterPart->Update();
+    
     pSkinnedMeshController->Render();
+    renderTotalInventory();
     if (m_pRootCharacterPart) m_pRootCharacterPart->Render();
 }
 

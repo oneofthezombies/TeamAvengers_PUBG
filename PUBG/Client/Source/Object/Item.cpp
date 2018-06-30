@@ -120,9 +120,10 @@ Weapon::~Weapon()
 
 void Weapon::OnRender()
 {
-    Item::OnRender();
-
-    if (m_isRenderSkinnedMesh)
+    if (m_isRenderEffectMesh && !m_isRenderSkinnedMesh)
+        pEffectMeshRenderer->Render();
+    
+    if (!m_isRenderEffectMesh && m_isRenderSkinnedMesh)
         pSkinnedMeshController->Render();
 }
 

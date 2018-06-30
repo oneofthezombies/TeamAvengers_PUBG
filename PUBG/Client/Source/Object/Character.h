@@ -113,6 +113,8 @@ private:
     void createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);
     //이미 아이템이 있는 경우, 그 아이템을 바닥에 떨구고 새아이템을 착용한다
     void checkOriginItem(Item** originItem, Item* newItem);
+    void updateTotalInventory();
+    void renderTotalInventory();
 
 public:
              Character(const int index);
