@@ -38,6 +38,10 @@ void SceneManager::Update()
 
 void SceneManager::Render()
 {
+    //잠시 카메라 render
+    if(CurrentCamera()()->GetTagCamera()==TAG_CAMERA::Default)
+        CurrentCamera()()->CameraRender();
+
 	if (pCurrentScene) 
         pCurrentScene->Render();
 }

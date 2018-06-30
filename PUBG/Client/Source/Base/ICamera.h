@@ -1,22 +1,20 @@
 #pragma once
 #include "TagClientOnly.h"
+#include "Character.h" //ÈÆÈ¸Çü! struct °¡ ¾È¸ÔÇô¼­ ÀÌ·¸°Ô ³Ö¾ú´Âµ¥ ±¦Âú³ª¿ä?
 
 #define FP_DISTANCE -30.0f
 #define FP_BASEPOSX 0.0f
 #define FP_BASEPOSY 155.0f
 
-#define TP_DISTANCE 100.0f
-#define TP_BASEPOSX -40.0f
-#define TP_BASEPOSY 180.0f
-
-//extern TargetTransform;
-
-class TargetTransform;
+#define TP_DISTANCE -30.0f
+#define TP_BASEPOSX -50.0f
+#define TP_BASEPOSY 45.0f
 
 class ICamera : public MemoryAllocator
 {
 private:
     const TAG_CAMERA  m_tagCamera;
+          D3DXMATRIX  m_worldMatrix;
           D3DXMATRIX  m_viewMatrix;
           D3DXMATRIX  m_projectionMatrix;
 
@@ -27,12 +25,11 @@ private:    //fustum Culling
 
 protected:
     D3DXVECTOR3    m_position;
-    //D3DXVECTOR3    m_rotation;
     D3DXQUATERNION m_quarernion;
     float          m_fovY;
-
+    //D3DXVECTOR3 temp = Vector3::ZERO;
 protected:
-    TargetTransform* GetTarget();
+    Character::Info* GetTargetInfo();
 
 public:
     ICamera(const TAG_CAMERA tag);
@@ -40,6 +37,7 @@ public:
 
     virtual void Reset() = 0;
     virtual void Update() = 0;
+    void CameraRender();
 
     void UpdateViewProjMatrix();
     void UpdateFrustumCulling();
@@ -55,6 +53,8 @@ public:
 
 class CameraFree : public ICamera
 {
+private:
+    D3DXVECTOR3    m_rotation;
 public:
     CameraFree();
     virtual ~CameraFree();

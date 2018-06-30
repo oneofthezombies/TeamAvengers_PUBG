@@ -31,9 +31,9 @@ void IObject::Update()
 void IObject::Render()
 {
 
-        OnRender();
-        for (auto& c : m_children)
-            if (c) c->Render();
+    OnRender();
+    for (auto& c : m_children)
+        if (c) c->Render();
 
 }
 

@@ -1,3 +1,0 @@
-/// Unarmed_Jump.X (무기없이 점프할 때 애니메이션)
-0. (0    ~ 74)[75] - Unarmed_Combat_Jump_F
-1. (75 ~ 183)[109] - Unarmed_Combat_Jump_Stationary

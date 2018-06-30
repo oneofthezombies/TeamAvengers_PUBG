@@ -24,12 +24,12 @@ Character::Character(const int index)
     , m_rootTransform(1.0f)
     , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
     , m_framePtr()
+    , m_info()
     , m_pSphereMesh(nullptr)
     , m_pRootCharacterPart(nullptr)
     , m_totalInventory()
 
     , pSkinnedMeshController(nullptr)
-    , pTargetTransform(nullptr)
 {
     Transform* tr = GetTransform();
     tr->SetRotation(OFFSET_ROTATION);
@@ -53,6 +53,7 @@ Character::Character(const int index)
 
     if (isMine())
     {
+        //TODO
         setInfo();
         Camera()()->SetTarget(&m_info);
     }
@@ -76,22 +77,24 @@ void Character::OnUpdate()
 
 void Character::OnRender()
 {
-    auto pD = Device()();
-    pD->SetRenderState(D3DRS_LIGHTING, true);
-     
-    pD->SetTexture(0, NULL);
-    pD->SetMaterial(&MaterialTemplate::GetWhite());
-    pD->SetTransform(
-        D3DTS_WORLD, &GetTransform()->GetTransformationMatrix());
-    m_pSphereMesh->DrawSubset(0);
-
-    // for distance measurement
+    //// for distance measurement
     for (int i = 0; i < 10; ++i)
     {
         D3DXMATRIX t;
         D3DXMatrixTranslation(&t, static_cast<float>(i * 10), 0.0f, 0.0f);
-        pD->SetTransform(D3DTS_WORLD, &t);
-        m_pSphereMesh->DrawSubset(0);
+
+        Shader::Draw(
+            Resource()()->GetEffect("./Resource/", "Color.fx"),
+            nullptr,
+            m_pSphereMesh,
+            0,
+            [this, &t](LPD3DXEFFECT pEffect)
+        {
+            pEffect->SetMatrix(Shader::World, &t);
+
+            D3DXCOLOR white(1.0f, 1.0f, 1.0f, 1.0f);
+            pEffect->SetValue("Color", &white, sizeof white);
+        });
     }
 }
 
@@ -128,6 +131,7 @@ void Character::updateMine()
     //{
     //    RotateWaist(m_WaistRotation.QUANTITY_FACTOR);
     //}
+
     ICamera*       pCurrentCamera = CurrentCamera()();
     InputManager*  pInput = Input()();
     Transform*     pTr = GetTransform();
@@ -156,15 +160,17 @@ void Character::updateMine()
     if (diff.y < 2 && diff.y > -2) diff.y = 0;
     const float yaw = diff.x * 0.2f * dt;
     const float pitch = diff.y * 0.2f * dt;
+
+    static bool tempBool = false;
     if (isPressing_LAlt)
     {
         if (pCurrentCamera)
         {
-            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person)
+            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person|| pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
             {
-
-                //m_rotForCameraTP.x += -pitch;
-                m_rotForCameraTP.y += yaw;
+                m_rotationForCamera.x += -pitch;
+                m_rotationForCamera.y += yaw;
+                tempBool = true;
             }
         }
     }
@@ -177,9 +183,14 @@ void Character::updateMine()
         //cout << "pitch : " << pitch << " yaw : " << yaw << endl;
 
         r *= q;
-
+        m_rotationForCamera.x += -pitch;
         // reset rotFotCameraTP
-        m_rotForCameraTP = Vector3::ZERO;
+        if (tempBool)
+        {
+            m_rotationForCamera = Vector3::ZERO;
+            tempBool = false;
+        }
+        
     }
 
     /*
@@ -194,7 +205,7 @@ void Character::updateMine()
     ClientToScreen(g_hWnd, &center);
     SetCursorPos(center.x, center.y);
 
-    Debug << "rot for TP : " << m_rotForCameraTP << '\n';
+    //Debug << "rot for TP : " << m_rotForCameraTP << '\n';
 
     switch (m_animState)
     {
@@ -202,14 +213,14 @@ void Character::updateMine()
         {
             if (isPressed_Space)
             {
-                //if (isPressing_W)
-                //{
-                //    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
-                //}
-                //else
-                //{
-                //    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
-                //}
+                if (isPressing_W)
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
+                }
+                else
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
+                }
             }
             else
             {
@@ -309,12 +320,12 @@ void Character::updateMine()
         break;
     }
 
-    if (pInput->IsStayKeyDown('A'))
+    if (isPressing_A)
     {
         p += getRight() * -m_rootTransform.MOVE_SPEED;
         //isUpdated = true;
     }
-    if (pInput->IsStayKeyDown('D'))
+    if (isPressing_D)
     {
         p += getRight() * m_rootTransform.MOVE_SPEED;
         //isUpdated = true;

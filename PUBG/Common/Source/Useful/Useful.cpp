@@ -55,6 +55,7 @@ D3DMATERIAL9 MaterialTemplate::GetWhite()
     return m;
 }
 
+
 D3DXVECTOR3 Vector3::Rotate(const D3DXVECTOR3& v, const D3DXQUATERNION& q)
 {
     D3DXQUATERNION conjugate, result;

@@ -6,17 +6,6 @@ class UIText;
 
 struct ResourceContainer;
 
-struct VERTEX_PC
-{
-    D3DXVECTOR3 p;
-    D3DCOLOR    c;
-
-    VERTEX_PC();
-    VERTEX_PC(const D3DXVECTOR3& p, const D3DCOLOR c);
-
-    enum { FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE };
-};
-
 struct VERTEX_RHWC
 {
     D3DXVECTOR4 p;
@@ -50,8 +39,6 @@ public:
 
     EffectMesh();
     ~EffectMesh();
-
-    void Render(const D3DXMATRIX& world, LPD3DXMESH pMesh);
 };
 
 struct Frame : public D3DXFRAME
@@ -97,36 +84,36 @@ struct SkinnedMeshInstance
     ~SkinnedMeshInstance();
 };
 
-/* do NOT use! this will be deleted soon.*/
-class AllocateHierarchy : public ID3DXAllocateHierarchy
-{
-private:
-    string m_path;
-    string m_xFilename;
-
-public:
-    AllocateHierarchy();
-    AllocateHierarchy(const string& path, const string& xFilename);
-    ~AllocateHierarchy();
-
-    STDMETHOD(CreateFrame)(THIS_ LPCSTR Name,
-        LPD3DXFRAME *ppNewFrame) override;
-
-    STDMETHOD(CreateMeshContainer)(THIS_
-        LPCSTR Name,
-        CONST D3DXMESHDATA *pMeshData,
-        CONST D3DXMATERIAL *pMaterials,
-        CONST D3DXEFFECTINSTANCE *pEffectInstances,
-        DWORD NumMaterials,
-        CONST DWORD *pAdjacency,
-        LPD3DXSKININFO pSkinInfo,
-        LPD3DXMESHCONTAINER *ppNewMeshContainer) override;
-
-    STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree) override;
-
-    STDMETHOD(DestroyMeshContainer)(
-        THIS_ LPD3DXMESHCONTAINER pMeshContainerBase) override;
-};
+///* do NOT use! this will be deleted soon.*/
+//class AllocateHierarchy : public ID3DXAllocateHierarchy
+//{
+//private:
+//    string m_path;
+//    string m_xFilename;
+//
+//public:
+//    AllocateHierarchy();
+//    AllocateHierarchy(const string& path, const string& xFilename);
+//    ~AllocateHierarchy();
+//
+//    STDMETHOD(CreateFrame)(THIS_ LPCSTR Name,
+//        LPD3DXFRAME *ppNewFrame) override;
+//
+//    STDMETHOD(CreateMeshContainer)(THIS_
+//        LPCSTR Name,
+//        CONST D3DXMESHDATA *pMeshData,
+//        CONST D3DXMATERIAL *pMaterials,
+//        CONST D3DXEFFECTINSTANCE *pEffectInstances,
+//        DWORD NumMaterials,
+//        CONST DWORD *pAdjacency,
+//        LPD3DXSKININFO pSkinInfo,
+//        LPD3DXMESHCONTAINER *ppNewMeshContainer) override;
+//
+//    STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree) override;
+//
+//    STDMETHOD(DestroyMeshContainer)(
+//        THIS_ LPD3DXMESHCONTAINER pMeshContainerBase) override;
+//};
 
 class AllocateHierarchyAsync : public ID3DXAllocateHierarchy
 {
@@ -136,6 +123,7 @@ private:
     ResourceContainer* pResourceContainer;
 
 public:
+    AllocateHierarchyAsync();
     AllocateHierarchyAsync(const string& path, const string& xFilename, 
         ResourceContainer* pResourceContainer);
     ~AllocateHierarchyAsync();
