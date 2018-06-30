@@ -16,11 +16,11 @@ Character::Character(const int index)
     , m_rootTransform(1.0f)
     , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
     , m_framePtr()
+    , m_info()
     , m_pSphereMesh(nullptr)
     , m_pRootCharacterPart(nullptr)
 
     , pSkinnedMeshController(nullptr)
-    , pTargetTransform(nullptr)
 {
     Transform* tr = GetTransform();
     tr->SetRotation(OFFSET_ROTATION);
@@ -44,6 +44,7 @@ Character::Character(const int index)
 
     if (isMine())
     {
+        //TODO
         setInfo();
         Camera()()->SetTarget(&m_info);
     }
@@ -119,6 +120,7 @@ void Character::updateMine()
     //{
     //    RotateWaist(m_WaistRotation.QUANTITY_FACTOR);
     //}
+
     ICamera*       pCurrentCamera = CurrentCamera()();
     InputManager*  pInput = Input()();
     Transform*     pTr = GetTransform();
@@ -147,15 +149,17 @@ void Character::updateMine()
     if (diff.y < 2 && diff.y > -2) diff.y = 0;
     const float yaw = diff.x * 0.2f * dt;
     const float pitch = diff.y * 0.2f * dt;
+
+    static bool tempBool = false;
     if (isPressing_LAlt)
     {
         if (pCurrentCamera)
         {
-            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person)
+            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person|| pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
             {
-
-                //m_rotForCameraTP.x += -pitch;
-                m_rotForCameraTP.y += yaw;
+                m_rotationForCamera.x += -pitch;
+                m_rotationForCamera.y += yaw;
+                tempBool = true;
             }
         }
     }
@@ -168,9 +172,14 @@ void Character::updateMine()
         //cout << "pitch : " << pitch << " yaw : " << yaw << endl;
 
         r *= q;
-
+        m_rotationForCamera.x += -pitch;
         // reset rotFotCameraTP
-        m_rotForCameraTP = Vector3::ZERO;
+        if (tempBool)
+        {
+            m_rotationForCamera = Vector3::ZERO;
+            tempBool = false;
+        }
+        
     }
 
     /*
@@ -185,7 +194,7 @@ void Character::updateMine()
     ClientToScreen(g_hWnd, &center);
     SetCursorPos(center.x, center.y);
 
-    Debug << "rot for TP : " << m_rotForCameraTP << '\n';
+    //Debug << "rot for TP : " << m_rotForCameraTP << '\n';
 
     switch (m_animState)
     {
@@ -193,14 +202,14 @@ void Character::updateMine()
         {
             if (isPressed_Space)
             {
-                //if (isPressing_W)
-                //{
-                //    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
-                //}
-                //else
-                //{
-                //    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
-                //}
+                if (isPressing_W)
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
+                }
+                else
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
+                }
             }
             else
             {
@@ -300,12 +309,12 @@ void Character::updateMine()
         break;
     }
 
-    if (pInput->IsStayKeyDown('A'))
+    if (isPressing_A)
     {
         p += getRight() * -m_rootTransform.MOVE_SPEED;
         //isUpdated = true;
     }
-    if (pInput->IsStayKeyDown('D'))
+    if (isPressing_D)
     {
         p += getRight() * m_rootTransform.MOVE_SPEED;
         //isUpdated = true;

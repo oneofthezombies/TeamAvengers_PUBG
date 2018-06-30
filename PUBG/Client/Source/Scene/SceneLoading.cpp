@@ -98,7 +98,7 @@ void SceneLoading::loadEffectMesh()
 {
     addTask(TAG_RES_STATIC::SkySphere);
     addTask(TAG_RES_STATIC::Bandage);
-    addTask(TAG_RES_STATIC::Church);
+    //addTask(TAG_RES_STATIC::Church);
 
 
     // ...

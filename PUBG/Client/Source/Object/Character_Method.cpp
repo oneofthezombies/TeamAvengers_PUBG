@@ -14,6 +14,13 @@ Character::RootTransform::RootTransform(const float moveSpeed)
     : MOVE_SPEED(moveSpeed)
 {
 }
+Character::Info::Info()
+    : pTransform(nullptr)
+    , pRotationForCamera(nullptr)
+    , pFPP(nullptr)
+    , pTPP(nullptr)
+{
+}
 
 Character::FramePtr::FramePtr()
     : pRoot(nullptr)
