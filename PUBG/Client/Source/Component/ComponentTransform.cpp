@@ -90,7 +90,9 @@ const D3DXVECTOR3& Transform::GetScale() const
     return m_scale;
 }
 
-void Transform::SetTransform(const D3DXMATRIX& m)
+void Transform::SetTransformationMatrix(const D3DXMATRIX& m)
 {
     m_transformationMatrix = m;
+    m_position = Matrix::GetTranslation(m);
+    Matrix::GetScaleAndRotation(m, &m_scale, &m_rotation);
 }

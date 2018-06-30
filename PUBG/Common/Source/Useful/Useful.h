@@ -35,6 +35,7 @@ struct Matrix
     static const D3DXMATRIX& IDENTITY;
 
     static D3DXVECTOR3 GetTranslation(const D3DXMATRIX& val);
+    static void GetScaleAndRotation(const D3DXMATRIX& val, D3DXVECTOR3* OutScale, D3DXQUATERNION* OutRotation);
 };
 
 struct MaterialTemplate

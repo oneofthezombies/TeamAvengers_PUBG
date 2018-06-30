@@ -29,6 +29,10 @@ Character::FramePtr::FramePtr()
     , pHandGun(nullptr)
     , pTPP(nullptr)
     , pFPP(nullptr)
+    , pSlotPrimary(nullptr)
+    , pSlotSecondary(nullptr)
+    , pSlotMelee(nullptr)
+    , pSlotThrowable(nullptr)
 {
 }
 
@@ -39,6 +43,10 @@ void Character::setFramePtr()
     m_framePtr.pHandGun = pSkinnedMeshController->FindFrame("ik_hand_gun");
     m_framePtr.pTPP = pSkinnedMeshController->FindFrame("camera_tpp");
     m_framePtr.pFPP = pSkinnedMeshController->FindFrame("camera_fpp");
+    m_framePtr.pSlotPrimary = pSkinnedMeshController->FindFrame("slot_primary");
+    m_framePtr.pSlotSecondary = pSkinnedMeshController->FindFrame("slot_secondary");
+    m_framePtr.pSlotMelee = pSkinnedMeshController->FindFrame("slot_melee");
+    m_framePtr.pSlotThrowable = pSkinnedMeshController->FindFrame("slot_throwable");
 }
 
 void Character::subscribeCollisionEvent()
@@ -126,6 +134,7 @@ void Character::updateBone()
 
 void Character::updateDependency()
 {
+    // update
     GetTransform()->Update();
     pSkinnedMeshController->UpdateAnimation();
     updateBone();
@@ -133,6 +142,7 @@ void Character::updateDependency()
     updateTotalInventory();
     if (m_pRootCharacterPart) m_pRootCharacterPart->Update();
 
+    // render
     pSkinnedMeshController->Render(
         [this](LPD3DXEFFECT pEffect) 
     {
@@ -144,7 +154,7 @@ void Character::updateDependency()
         D3DXVECTOR3 lightDir = light->GetDirection();
         pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
     });
-
+    renderTotalInventory();
     if (m_pRootCharacterPart) m_pRootCharacterPart->Render();
 }
 

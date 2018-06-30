@@ -6,7 +6,6 @@
 class SkinnedMeshController;
 class CharacterPart;
 class Item;
-class Weapon;
 
 class Character : public IObject
 {
@@ -39,8 +38,8 @@ public:
         Item* m_equipHead;
 
         //무기용
-        Weapon* m_weaponPrimary;
-        Weapon* m_weaponSecondary;
+        Item* m_weaponPrimary;
+        Item* m_weaponSecondary;
         //Weapon* m_weaponPistol;
         //Weapon* m_weaponMelee;
         //Weapon* m_weaponThrowable;
@@ -68,6 +67,10 @@ private:
         Frame* pHandGun;
         Frame* pTPP;
         Frame* pFPP;
+        Frame* pSlotPrimary;
+        Frame* pSlotSecondary;
+        Frame* pSlotMelee;
+        Frame* pSlotThrowable;
 
         FramePtr();
     };
@@ -128,6 +131,10 @@ private:
     void createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);
     //이미 아이템이 있는 경우, 그 아이템을 바닥에 떨구고 새아이템을 착용한다
     void checkOriginItem(Item** originItem, Item* newItem);
+
+    // TODO : impl
+    void equipItem() {}
+    
     void updateTotalInventory();
     void renderTotalInventory();
 

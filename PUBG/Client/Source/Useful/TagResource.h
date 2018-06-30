@@ -216,3 +216,7 @@ enum class TAG_RES_ANIM_CHARACTER
     COUNT
 };
 
+enum class TAG_RES_EQUIPMENT
+{
+    Head_Lv1_Anim,
+};

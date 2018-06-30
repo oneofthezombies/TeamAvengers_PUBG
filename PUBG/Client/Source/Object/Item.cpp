@@ -4,28 +4,33 @@
 #include "EffectMeshRenderer.h"
 #include "SkinnedMeshController.h"
 #include "DirectionalLight.h"
+#include "UIImage.h"
+#include "ResourceInfo.h"
 
 Item::Item(
     const TAG_RES_STATIC tag, 
-    const D3DXVECTOR3& position, 
-    const D3DXVECTOR3& rotation, 
-    const D3DXVECTOR3& scale)
+    const D3DXVECTOR3&   position, 
+    const D3DXVECTOR3&   rotation, 
+    const D3DXVECTOR3&   scale)
     : IObject()
+
     , m_tagResStatic(tag)
-    , m_isRenderEffectMesh(true)
     , m_durability(0.0f)
     , m_count(0)
 
     , pEffectMeshRenderer(nullptr)
+    , m_isRenderEffectMesh(false)
+
+    , pSkinnedMeshController(nullptr)
+    , m_isRenderSkinnedMesh(false)
+
+    , pUIImage(nullptr)
 {
     Transform* pTr = GetTransform();
     pTr->SetPosition(position);
     pTr->SetRotation(rotation);
     pTr->SetScale(scale);
     pTr->Update();
-
-    pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
-    pEffectMeshRenderer->SetEffectMesh(tag);
 
     setup(tag);
 }
@@ -41,8 +46,20 @@ void Item::OnUpdate()
 void Item::OnRender()
 {
     if (m_isRenderEffectMesh)
-        pEffectMeshRenderer->Render
-        (
+        pEffectMeshRenderer->Render(
+            [this](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(
+            Shader::World,
+            &GetTransform()->GetTransformationMatrix());
+
+        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
+        D3DXVECTOR3 lightDir = light->GetDirection();
+        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
+    });
+
+    if (m_isRenderSkinnedMesh)
+        pSkinnedMeshController->Render(
             [this](LPD3DXEFFECT pEffect)
     {
         pEffect->SetMatrix(
@@ -73,6 +90,42 @@ void Item::setup(const TAG_RES_STATIC tag)
 
     default: 
         m_count = 1; 
+        break;
+    }
+
+    pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
+    m_isRenderEffectMesh = true;
+    pEffectMeshRenderer->SetEffectMesh(tag);
+
+    switch (ItemInfo::GetItemCategory(tag))
+    {
+    case TAG_ITEM_CATEGORY::Ammo:
+    case TAG_ITEM_CATEGORY::Attach:
+    case TAG_ITEM_CATEGORY::Consumable:
+    {
+        const auto pathName = ResourceInfo::GetUIPathFileName(tag);
+        pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
+    }
+        break;
+
+    case TAG_ITEM_CATEGORY::Armor:
+    case TAG_ITEM_CATEGORY::Back:
+    case TAG_ITEM_CATEGORY::Head:
+    {
+        pSkinnedMeshController = AddComponent<SkinnedMeshController>();
+        const auto pathName = ResourceInfo::GetUIPathFileName(tag);
+        pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
+    }
+        break;
+    
+    case TAG_ITEM_CATEGORY::Rifle:
+        pSkinnedMeshController = AddComponent<SkinnedMeshController>();
+        break;
+    
+    //case TAG_ITEM_CATEGORY::Melee:
+    //case TAG_ITEM_CATEGORY::Throwable:
+    default:
+        assert(false && "Item::setup(), item category default case.");
         break;
     }
 }
@@ -112,60 +165,39 @@ bool Item::IsRenderEffectMesh() const
     return m_isRenderEffectMesh;
 }
 
-
-////////////////////////////////Weapon
-Weapon::Weapon(
-    const TAG_RES_STATIC tag,
-    const D3DXVECTOR3& position,
-    const D3DXVECTOR3& rotation,
-    const D3DXVECTOR3& scale)
-    : Item(tag, position, rotation, scale)
-    , m_isRenderSkinnedMesh(false)
-{
-    pSkinnedMeshController = AddComponent<SkinnedMeshController>();
-}
-
-Weapon::~Weapon()
-{
-
-}
-
-void Weapon::OnRender()
-{
-    if (m_isRenderEffectMesh && !m_isRenderSkinnedMesh)
-        pEffectMeshRenderer->Render(
-            [this](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(
-            Shader::World,
-            &GetTransform()->GetTransformationMatrix());
-
-        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-        D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
-    });
-    
-    if (!m_isRenderEffectMesh && m_isRenderSkinnedMesh)
-        pSkinnedMeshController->Render(
-            [this](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(
-            Shader::World,
-            &GetTransform()->GetTransformationMatrix());
-
-        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-        D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
-    });
-}
-
-void Weapon::SetIsRenderSkinnedMesh(const bool isRenderSkinnedMesh)
+void Item::SetIsRenderSkinnedMesh(const bool isRenderSkinnedMesh)
 {
     m_isRenderSkinnedMesh = isRenderSkinnedMesh;
 }
 
-bool Weapon::IsRenderSkinnedMesh() const
+bool Item::IsRenderSkinnedMesh() const
 {
     return m_isRenderSkinnedMesh;
+}
+
+void Item::SetInRenderUIImage(const bool isRenderUIImage)
+{
+    assert(pUIImage && "Item::SetInRenderUIImage(), ui image is null.");
+
+    pUIImage->SetIsRender(isRenderUIImage);
+}
+
+bool Item::IsRenderUIImage() const
+{
+    assert(pUIImage && "Item::IsRenderUIImage(), ui image is null.");
+
+    return pUIImage->IsRender();
+}
+
+void Item::SetPosition(const D3DXVECTOR3& position)
+{
+    GetTransform()->SetPosition(position);
+}
+
+void Item::SetUIPosition(const D3DXVECTOR2& position)
+{
+    assert(pUIImage && "Item::SetUIPosition(), ui image is null.");
+
+    pUIImage->SetPosition(D3DXVECTOR3(position.x, position.y, 0.0f));
 }
 

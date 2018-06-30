@@ -26,6 +26,9 @@ private:
     tasks_t     m_characterAnimationTasks;
     resources_t m_characterAnimationResources;
 
+    tasks_t     m_equipmentSkinnedMeshTasks;
+    resources_t m_equipmentSkinnedMeshResources;
+
     std::chrono::system_clock::time_point m_start;
     std::chrono::system_clock::time_point m_finish;
     std::chrono::duration<float>          m_elapsed;
@@ -57,6 +60,7 @@ private:
     void addTask(const TAG_RES_STATIC tag);
     void addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks);
     void addTask(const TAG_RES_ANIM_CHARACTER tag);
+    void addTask(const TAG_RES_EQUIPMENT tag, tasks_t* OutTasks);
 
 public:
              SceneLoading();
