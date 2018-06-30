@@ -6,6 +6,7 @@
 class SkinnedMeshController;
 class CharacterPart;
 class Item;
+class Weapon;
 
 class Character : public IObject
 {
@@ -25,6 +26,30 @@ public:
 
         RootTransform(const float moveSpeed);
     };
+
+    struct TotalInventory
+    {
+        static const float DEFAULT_CAPACITY;
+
+        map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
+
+        //헬멧, 가방, 방탄조끼용
+        Item* m_equipArmor;
+        Item* m_equipBack;
+        Item* m_equipHead;
+
+        //무기용
+        Weapon* m_weaponPrimary;
+        Weapon* m_weaponSecondary;
+        //Weapon* m_weaponPistol;
+        //Weapon* m_weaponMelee;
+        //Weapon* m_weaponThrowable;
+        float m_capacity;
+
+         TotalInventory();
+        ~TotalInventory();
+    };
+
 
 private:
     struct FramePtr
@@ -57,14 +82,9 @@ private:
     D3DXMATRIX m_prevRootModel;
     D3DXVECTOR3 m_rotForCameraTP;
     TargetTransform* pTargetTransform;
-
+    
     //for inventory
-    //map<TAG_ITEM_CATEGORY, vector<Item*>> m_mapInventory;
-    //여기부터해야함
-    map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
-    map<TAG_RES_STATIC, vector<Item*>> m_mapEquip;     //헬멧, 가방, 방탄조끼용
-    map<TAG_RES_STATIC, vector<Item*>> m_mapWeapon;    //무기용
-    float m_capacity;
+    TotalInventory m_totalInventory;
 
 private:
     void setFramePtr();
@@ -88,8 +108,11 @@ private:
     D3DXVECTOR3 getForward();
     D3DXVECTOR3 getRight();
 
+    //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
-    void CreateOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);
+    void createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);
+    //이미 아이템이 있는 경우, 그 아이템을 바닥에 떨구고 새아이템을 착용한다
+    void checkOriginItem(Item** originItem, Item* newItem);
 
 public:
              Character(const int index);

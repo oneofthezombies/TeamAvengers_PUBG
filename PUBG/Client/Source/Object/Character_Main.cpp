@@ -18,6 +18,7 @@ Character::Character(const int index)
     , m_framePtr()
     , m_pSphereMesh(nullptr)
     , m_pRootCharacterPart(nullptr)
+    , m_totalInventory()
 
     , pSkinnedMeshController(nullptr)
     , pTargetTransform(nullptr)

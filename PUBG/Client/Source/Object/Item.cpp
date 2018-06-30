@@ -2,6 +2,7 @@
 #include "Item.h"
 #include "ItemInfo.h"
 #include "EffectMeshRenderer.h"
+#include "SkinnedMeshController.h"
 
 Item::Item(
     const TAG_RES_STATIC tag, 
@@ -10,7 +11,7 @@ Item::Item(
     const D3DXVECTOR3& scale)
     : IObject()
     , m_tagResStatic(tag)
-    , m_isInField(true)
+    , m_isRenderEffectMesh(true)
     , m_durability(0.0f)
     , m_count(0)
 
@@ -38,7 +39,8 @@ void Item::OnUpdate()
 
 void Item::OnRender()
 {
-    pEffectMeshRenderer->Render();
+    if (m_isRenderEffectMesh)
+        pEffectMeshRenderer->Render();
 }
 
 void Item::setup(const TAG_RES_STATIC tag)
@@ -88,12 +90,49 @@ int Item::GetCount() const
     return m_count;
 }
 
-void Item::SetIsInField(const bool isInField)
+void Item::SetIsRenderEffectMesh(const bool isRenderEffectMesh)
 {
-    m_isInField = isInField;
+    m_isRenderEffectMesh = isRenderEffectMesh;
 }
 
-bool Item::IsInField() const
+bool Item::IsRenderEffectMesh() const
 {
-    return m_isInField;
+    return m_isRenderEffectMesh;
 }
+
+
+////////////////////////////////Weapon
+Weapon::Weapon(
+    const TAG_RES_STATIC tag,
+    const D3DXVECTOR3& position,
+    const D3DXVECTOR3& rotation,
+    const D3DXVECTOR3& scale)
+    : Item(tag, position, rotation, scale)
+    , m_isRenderSkinnedMesh(false)
+{
+    pSkinnedMeshController = AddComponent<SkinnedMeshController>();
+}
+
+Weapon::~Weapon()
+{
+
+}
+
+void Weapon::OnRender()
+{
+    Item::OnRender();
+
+    if (m_isRenderSkinnedMesh)
+        pSkinnedMeshController->Render();
+}
+
+void Weapon::SetIsRenderSkinnedMesh(const bool isRenderSkinnedMesh)
+{
+    m_isRenderSkinnedMesh = isRenderSkinnedMesh;
+}
+
+bool Weapon::IsRenderSkinnedMesh() const
+{
+    return m_isRenderSkinnedMesh;
+}
+

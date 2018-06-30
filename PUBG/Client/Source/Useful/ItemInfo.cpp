@@ -20,15 +20,17 @@ TAG_ITEM_CATEGORY ItemInfo::GetItemCategory(const TAG_RES_STATIC tag)
     case TAG_RES_STATIC::MedKit: return TAG_ITEM_CATEGORY::Consumable;
 
         //Equipment
-    case TAG_RES_STATIC::Armor_Lv1: return TAG_ITEM_CATEGORY::Equipment;
-    case TAG_RES_STATIC::Back_Lv1: return TAG_ITEM_CATEGORY::Equipment;
-    case TAG_RES_STATIC::Head_Lv1: return TAG_ITEM_CATEGORY::Equipment;
+    case TAG_RES_STATIC::Armor_Lv1: return TAG_ITEM_CATEGORY::Armor;
+    case TAG_RES_STATIC::Back_Lv1: return TAG_ITEM_CATEGORY::Back;
+    case TAG_RES_STATIC::Head_Lv1: return TAG_ITEM_CATEGORY::Head;
 
         //Weapon
-    case TAG_RES_STATIC::QBZ: return TAG_ITEM_CATEGORY::Weapon;
-    case TAG_RES_STATIC::Kar98k: return TAG_ITEM_CATEGORY::Weapon;
+    case TAG_RES_STATIC::QBZ: return TAG_ITEM_CATEGORY::Rifle;
+    case TAG_RES_STATIC::Kar98k: return TAG_ITEM_CATEGORY::Rifle;
 
-    default: return TAG_ITEM_CATEGORY::Idle;
+    default: 
+        assert(false && "ItemInfo::GetItemCategory(), default case.");
+        return TAG_ITEM_CATEGORY::Idle;
     }
 }
 
