@@ -53,35 +53,32 @@ void ICamera::CameraRender()
     if (pTarInfo)
     {
         
-        Debug << "Rot : " << *pTarInfo->pRotationForCamera << endl;
-        /*Debug << "Rot.x : " << pTarInfo->pRotationForCamera.x << "\n";
-        Debug << "Rot.y : " << pTarInfo->pRotationForCamera.y << "\n";
-        Debug << "Rot.z : " << pTarInfo->pRotationForCamera.z << "\n";*/
-        D3DXMATRIX tarR, tarWorld, finalWorld;
+//        Debug << "Rot : " << *pTarInfo->pRotationForCamera << endl;
+
+        D3DXMATRIX tarR, matWorld;
         D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
         D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
-        D3DXMATRIX test;
-        D3DXMatrixTranslation(&test, 0, 200.0f, 0);
-        test*= pTarInfo->pTransform->GetTransformationMatrix();
-        tarWorld = pTarInfo->pTPP->CombinedTransformationMatrix *test; /** pTarInfo->pTransform->GetTransformationMatrix();*/
-        finalWorld =  tarWorld * tarR;
+        
+        D3DXMATRIX testT;
+        D3DXMatrixTranslation(&testT, 0.0f, 100.0f, 0.0f);
+        testT *=pTarInfo->pTransform->GetTransformationMatrix();
+        //              (model space)                      (rotation get from character) 
+        matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
 
-
-        //matWorld = pTarInfo->pTPP->CombinedTransformationMatrix * pTarInfo->pTransform->GetTransformationMatrix();
         auto pD = Device()();
         pD->SetRenderState(D3DRS_LIGHTING, true);
         pD->SetTexture(0, NULL);
         pD->SetMaterial(&MaterialTemplate::GetWhite());
 
-        pD->SetTransform(D3DTS_WORLD, &(pTarInfo->pTPP->CombinedTransformationMatrix* pTarInfo->pTransform->GetTransformationMatrix()));
-        m_pSphereMesh[0]->DrawSubset(0);
+        //pD->SetTransform(D3DTS_WORLD, &(pTarInfo->pTPP->CombinedTransformationMatrix* pTarInfo->pTransform->GetTransformationMatrix()));
+        //m_pSphereMesh[0]->DrawSubset(0);
 
 
-        pD->SetTransform(D3DTS_WORLD, &(pTarInfo->pFPP->CombinedTransformationMatrix* pTarInfo->pTransform->GetTransformationMatrix()));
-        m_pSphereMesh[1]->DrawSubset(0);
+        //pD->SetTransform(D3DTS_WORLD, &(pTarInfo->pFPP->CombinedTransformationMatrix* pTarInfo->pTransform->GetTransformationMatrix()));
+        //m_pSphereMesh[1]->DrawSubset(0);
 
 
-        pD->SetTransform(D3DTS_WORLD, &(pTarInfo->pTPP->CombinedTransformationMatrix * tarR * pTarInfo->pTransform->GetTransformationMatrix()));
+        pD->SetTransform(D3DTS_WORLD, &matWorld);
         m_pSphereMesh[2]->DrawSubset(0);
 
 
@@ -92,26 +89,41 @@ void ICamera::CameraRender()
 void ICamera::UpdateViewProjMatrix()
 {
     D3DXVECTOR3 eye = Vector3::ZERO;
-    D3DXVECTOR3 look = eye + -Vector3::FORWARD;
+    D3DXVECTOR3 look = eye + -(D3DXVECTOR3(0,-1,0));
    
-    
-    D3DXMATRIX tarR,tarWorld,finalWorld;
+    //const float factor = 2.f;
+    //InputManager* pInput = Input()();
+    //if (pInput->IsStayKeyDown('K')) { temp.y -= factor; }
+    //if (pInput->IsStayKeyDown('I')) { temp.y += factor; }
+    //if (pInput->IsStayKeyDown('J')) { temp.x -= factor; }
+    //if (pInput->IsStayKeyDown('L')) { temp.x += factor; }
+    //if (pInput->IsStayKeyDown('U')) { temp.z -= factor; }
+    //if (pInput->IsStayKeyDown('O')) { temp.z += factor; }
+    //Debug << "temp : " << temp << endl;
+
+
     Character::Info* pTarInfo = GetTargetInfo();
     if (!pTarInfo)
     {
-        D3DXMatrixIdentity(&finalWorld);
+        D3DXMatrixIdentity(&m_worldMatrix);
     }
     else
     {
+        D3DXMATRIX tarR,baseT;
         D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
         D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
-        tarWorld = pTarInfo->pTPP->CombinedTransformationMatrix * pTarInfo->pTransform->GetTransformationMatrix();
-        finalWorld =  tarWorld* tarR ;
-    }
-    
+        
+        D3DXMatrixTranslation(&baseT, m_position.x, m_position.y, m_position.z);
+        baseT *= pTarInfo->pTransform->GetTransformationMatrix();
 
-    D3DXVec3TransformCoord(&eye, &eye, &finalWorld);
-    D3DXVec3TransformCoord(&look, &look, &finalWorld);
+
+        //*Important!  (model space)                      (rotation get from character)    (char transformation + height up till head)
+        m_worldMatrix = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      baseT;
+
+    }
+
+    D3DXVec3TransformCoord(&eye, &eye, &m_worldMatrix);
+    D3DXVec3TransformCoord(&look, &look, &m_worldMatrix);
 
     D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &look, &Vector3::UP);
     
@@ -296,7 +308,7 @@ CameraThirdPerson::~CameraThirdPerson()
 
 void CameraThirdPerson::Reset()
 {
-    m_position = D3DXVECTOR3(TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
+    m_position = D3DXVECTOR3(-TP_BASEPOSX, TP_BASEPOSY, -TP_DISTANCE);
 
     //80 Degrees TP sight
     m_fovY = D3DX_PI * (80.0f / 180.0f);
