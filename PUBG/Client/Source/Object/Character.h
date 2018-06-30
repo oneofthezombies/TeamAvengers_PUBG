@@ -115,7 +115,7 @@ private:
 
     IsPressing HandleInput(IsPressing& m_isPressing);
     void CameraCharacterRotation(OUT D3DXQUATERNION* rOut);
-    void AnimationControl(OUT D3DXVECTOR3* pOut);
+    void AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut);
 
     void updateMine();
     void updateOther();

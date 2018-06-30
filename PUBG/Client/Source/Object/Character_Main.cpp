@@ -5,6 +5,7 @@
 #include "SkinnedMeshController.h"
 #include "DirectionalLight.h"
 
+
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -139,27 +140,32 @@ void Character::updateMine()
     if (m_savedInput != m_currentInput)
     {
         //set animation
+        AnimationControl(&p, &m_animState);
+
+        setAnimation(m_animState, true);
+
         m_savedInput = m_currentInput;
     }
+
 
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     CameraCharacterRotation(&r);
     //animation Switch 문
-    AnimationControl(&p);
 
 
 
 
-    if (m_currentInput._A)
-    {
-        p += getRight() * -m_rootTransform.MOVE_SPEED;
-        //isUpdated = true;
-    }
-    if (m_currentInput._D)
-    {
-        p += getRight() * m_rootTransform.MOVE_SPEED;
-        //isUpdated = true;
-    }
+
+    //if (m_currentInput._A)
+    //{
+    //    p += getRight() * -m_rootTransform.MOVE_SPEED;
+    //    //isUpdated = true;
+    //}
+    //if (m_currentInput._D)
+    //{
+    //    p += getRight() * m_rootTransform.MOVE_SPEED;
+    //    //isUpdated = true;
+    //}
 
     //if (pInput->IsOnceKeyDown(VK_RETURN))
     //    isFired = true;

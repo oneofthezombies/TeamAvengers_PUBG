@@ -3,6 +3,7 @@
 #include "SkinnedMeshController.h"
 #include "CharacterPart.h"
 #include "DirectionalLight.h"
+#include "AnimationState.h"
 
 Character::WaistRotation::WaistRotation(const float limit, const float factor)
     : LIMIT_OF_ANGLE(limit)
@@ -152,11 +153,99 @@ void Character::CameraCharacterRotation(OUT D3DXQUATERNION* rOut)
     SetCursorPos(center.x, center.y);
 }
 
-void Character::AnimationControl(OUT D3DXVECTOR3* pOut)
+void Character::AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut)
 {
+    TAG_ANIM_CHARACTER ret;
+
+    Direction direction ;
+    Moving    moving ;
+    Stance    stance;
+    Attacking attacking ;
+
+    //Direction 8개 -----------------------------------------------------
+    if (m_currentInput._W&&m_currentInput._D)
+    {
+        direction = Direction::FrontRight;
+    }
+    else if (m_currentInput._D&&m_currentInput._S)
+    {
+        direction = Direction::BackRight;
+    }
+    else if (m_currentInput._S&&m_currentInput._A)
+    {
+        direction = Direction::BackLeft;
+    }
+    else if (m_currentInput._A&&m_currentInput._W)
+    {
+        direction = Direction::FrontLeft;
+    }
+    else if (m_currentInput._W)
+    {
+        direction = Direction::Front;
+    }
+    else if (m_currentInput._D)
+    {
+        direction = Direction::Right;
+    }
+    else if (m_currentInput._S)
+    {
+        direction = Direction::Back;
+    }
+    else if (m_currentInput._A)
+    {
+        direction = Direction::Left;
+    }
+    else
+    {
+        direction = Direction::StandStill;
+    }
+
+    //Moving 3개 -----------------------------------------------------
+    if (m_currentInput._LShift)
+    {
+        moving = Moving::Sprint;
+    }
+    else if (m_currentInput._LCtrl)
+    {
+        moving = Moving::Walk;
+    }
+    else
+    {
+        moving = Moving::Run;
+    }
+
+    //Stance 3개 -----------------------------------------------------
+    if (m_currentInput._C)
+    {
+        stance = Stance::Crouch;
+    }
+    else if (m_currentInput._Z)
+    {
+        stance = Stance::Prone;
+    }
+    else
+    {
+        stance = Stance::Stand;
+    }
+
+    //Attacking 3개 -----------------------------------------------------
+    if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
+    {
+        attacking = Attacking::Rifle;
+    }
+    else if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
+    {
+        attacking = Attacking::Melee;
+    }
+    else
+    {
+        attacking = Attacking::Unarmed;
+    }
+
+    *tagOut = AnimationState::Get(attacking, stance, moving, direction);
 
 
-    switch (m_animState)
+    /*switch (m_animState)
     {
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1:
     {
@@ -268,10 +357,7 @@ void Character::AnimationControl(OUT D3DXVECTOR3* pOut)
         }
     }
     break;
-    }
-
-
-
+    }*/
 }
 bool Character::isMine() const
 {

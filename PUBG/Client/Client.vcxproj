@@ -154,6 +154,7 @@
     <ClCompile Include="Source\Manager\TimeManager.cpp" />
     <ClCompile Include="Source\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\UI\UIObject.cpp" />
+    <ClCompile Include="Source\Useful\AnimationState.cpp" />
     <ClCompile Include="Source\Useful\CollisionCore.cpp" />
     <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
     <ClCompile Include="Source\Useful\Shader.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="Source\Manager\DeviceManager.h" />
     <ClInclude Include="Source\Manager\TimeManager.h" />
     <ClInclude Include="Source\Scene\SceneLoading.h" />
+    <ClInclude Include="Source\Useful\AnimationState.h" />
     <ClInclude Include="Source\Useful\CollisionCore.h" />
     <ClInclude Include="Source\Useful\ResPathFileName.h" />
     <ClInclude Include="Source\Useful\Shader.h" />
