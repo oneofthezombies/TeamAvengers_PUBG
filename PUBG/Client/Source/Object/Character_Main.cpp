@@ -8,6 +8,14 @@
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
 
+Character::Info::Info()
+    : pTransform(nullptr)
+    , pRotationForCamera(nullptr)
+    , pFPP(nullptr)
+    , pTPP(nullptr)
+{
+}
+
 Character::Character(const int index)
     : IObject()
 
