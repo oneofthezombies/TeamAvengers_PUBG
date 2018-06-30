@@ -13,11 +13,9 @@ ICamera::ICamera(const TAG_CAMERA tag)
     : MemoryAllocator()
     , m_tagCamera(tag)
     , m_position(Vector3::ZERO)
+    ,m_pSphereMesh(nullptr)
 {
-    for (int i = 0; i < 3; i++)
-    {
-        m_pSphereMesh[i] = nullptr;
-    }
+
 
     for (int i = 0; i < 8; i++)
     {
@@ -34,17 +32,14 @@ ICamera::ICamera(const TAG_CAMERA tag)
     m_vecProj[7]=(D3DXVECTOR3(1, -1, 0));	//우하전
     
     // to show camera position temporary
-    D3DXCreateSphere(Device()(), 5.0f, 5, 5, &m_pSphereMesh[0], nullptr);
-    D3DXCreateSphere(Device()(), 10.0f, 5, 5, &m_pSphereMesh[1], nullptr);
-    D3DXCreateSphere(Device()(), 15.0f, 5, 5, &m_pSphereMesh[2], nullptr);
+    D3DXCreateSphere(Device()(), 5.0f, 5, 5, &m_pSphereMesh, nullptr);
 }
 
 ICamera::~ICamera()
 {
-    for (int i = 0; i < 3; i++)
-    {
-        SAFE_RELEASE(m_pSphereMesh[i]);
-    }
+    
+     SAFE_RELEASE(m_pSphereMesh);
+    
     
 }
 
@@ -61,7 +56,7 @@ void ICamera::CameraRender()
         D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
         
         D3DXMATRIX testT;
-        D3DXMatrixTranslation(&testT, 0.0f, 100.0f, 0.0f);
+        D3DXMatrixTranslation(&testT, TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
         testT *=pTarInfo->pTransform->GetTransformationMatrix();
         //              (model space)                      (rotation get from character) 
         matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
@@ -71,20 +66,15 @@ void ICamera::CameraRender()
         pD->SetTexture(0, NULL);
         pD->SetMaterial(&MaterialTemplate::GetWhite());
 
-        //pD->SetTransform(D3DTS_WORLD, &(pTarInfo->pTPP->CombinedTransformationMatrix* pTarInfo->pTransform->GetTransformationMatrix()));
-        //m_pSphereMesh[0]->DrawSubset(0);
-
-
-        //pD->SetTransform(D3DTS_WORLD, &(pTarInfo->pFPP->CombinedTransformationMatrix* pTarInfo->pTransform->GetTransformationMatrix()));
-        //m_pSphereMesh[1]->DrawSubset(0);
-
-
         pD->SetTransform(D3DTS_WORLD, &matWorld);
-        m_pSphereMesh[2]->DrawSubset(0);
+        m_pSphereMesh->DrawSubset(0);
 
 
     }
-
+    Debug << endl;
+    Debug << "  우로R(8)  좌로R(9)   " << endl;
+    Debug << "     앞(U)상(I)뒤(O)    " << endl;
+    Debug << " 좌(J)    하(K)    우(L)" << endl;
     Shader::Draw(
         Resource()()->GetEffect("./Resource/", "Color.fx"), 
         nullptr, 
@@ -102,7 +92,7 @@ void ICamera::CameraRender()
             D3DPT_LINELIST,
             0,
             sizeof m_vecWorld / sizeof m_vecWorld[0],
-            BoxCollider::s_indices.size() / 2,
+            BoxCollider::f_indices.size() / 2,
             BoxCollider::s_indices.data(),
             D3DFMT_INDEX16,
             &m_vecWorld[0],
@@ -332,7 +322,7 @@ CameraThirdPerson::~CameraThirdPerson()
 
 void CameraThirdPerson::Reset()
 {
-    m_position = D3DXVECTOR3(-TP_BASEPOSX, TP_BASEPOSY, -TP_DISTANCE);
+    m_position = D3DXVECTOR3(TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
 
     //80 Degrees TP sight
     m_fovY = D3DX_PI * (80.0f / 180.0f);

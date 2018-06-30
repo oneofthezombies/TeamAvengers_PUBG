@@ -6,8 +6,8 @@
 #define FP_BASEPOSX 0.0f
 #define FP_BASEPOSY 155.0f
 
-#define TP_DISTANCE 30.0f
-#define TP_BASEPOSX 50.0f
+#define TP_DISTANCE -30.0f
+#define TP_BASEPOSX -50.0f
 #define TP_BASEPOSY 45.0f
 
 class ICamera : public MemoryAllocator
@@ -31,7 +31,7 @@ protected:
 protected:
     Character::Info* GetTargetInfo();
     // to show camera position temporary
-    LPD3DXMESH m_pSphereMesh[3];
+    LPD3DXMESH m_pSphereMesh;
 
 public:
     ICamera(const TAG_CAMERA tag);

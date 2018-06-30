@@ -78,6 +78,7 @@ private:
 
 public:
     static vector<WORD> s_indices;
+    static vector<WORD> f_indices;
 
 public:
     BoxCollider(IObject* pOwner);

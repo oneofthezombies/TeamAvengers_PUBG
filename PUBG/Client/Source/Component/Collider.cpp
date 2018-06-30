@@ -8,6 +8,13 @@ vector<WORD> BoxCollider::s_indices =
     4, 5, 5, 6, 6, 7, 7, 4,
     0, 4, 1, 5, 2, 6, 3, 7,
 };
+vector<WORD> BoxCollider::f_indices = {
+    6,2,2,3,3,7,7,6,
+    2,0,0,1,1,3,
+    1,5,5,7,
+    0,4,4,6,
+    5,4
+};
 
 Collider::Collider(IObject* pOwner, const TYPE type)
     : Component(pOwner)
