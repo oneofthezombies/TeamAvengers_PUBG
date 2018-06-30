@@ -16,11 +16,11 @@ Character::Character(const int index)
     , m_rootTransform(1.0f)
     , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
     , m_framePtr()
+    , m_info()
     , m_pSphereMesh(nullptr)
     , m_pRootCharacterPart(nullptr)
 
     , pSkinnedMeshController(nullptr)
-    , pTargetTransform(nullptr)
 {
     Transform* tr = GetTransform();
     tr->SetRotation(OFFSET_ROTATION);
@@ -44,6 +44,7 @@ Character::Character(const int index)
 
     if (isMine())
     {
+        //TODO
         setInfo();
         Camera()()->SetTarget(&m_info);
     }
@@ -155,7 +156,7 @@ void Character::updateMine()
             {
 
                 //m_rotForCameraTP.x += -pitch;
-                m_rotForCameraTP.y += yaw;
+                //m_rotForCameraTP.y += yaw;
             }
         }
     }
@@ -170,7 +171,7 @@ void Character::updateMine()
         r *= q;
 
         // reset rotFotCameraTP
-        m_rotForCameraTP = Vector3::ZERO;
+        m_rotationForCamera = Vector3::ZERO;
     }
 
     /*
@@ -185,7 +186,7 @@ void Character::updateMine()
     ClientToScreen(g_hWnd, &center);
     SetCursorPos(center.x, center.y);
 
-    Debug << "rot for TP : " << m_rotForCameraTP << '\n';
+    //Debug << "rot for TP : " << m_rotForCameraTP << '\n';
 
     switch (m_animState)
     {

@@ -1,5 +1,6 @@
 #pragma once
 #include "TagClientOnly.h"
+#include "Character.h" //ÈÆÈ¸Çü! struct °¡ ¾È¸ÔÇô¼­ ÀÌ·¸°Ô ³Ö¾ú´Âµ¥ ±¦Âú³ª¿ä?
 
 #define FP_DISTANCE -30.0f
 #define FP_BASEPOSX 0.0f
@@ -8,10 +9,6 @@
 #define TP_DISTANCE 100.0f
 #define TP_BASEPOSX -40.0f
 #define TP_BASEPOSY 180.0f
-
-//extern TargetTransform;
-
-class TargetTransform;
 
 class ICamera : public MemoryAllocator
 {
@@ -27,12 +24,11 @@ private:    //fustum Culling
 
 protected:
     D3DXVECTOR3    m_position;
-    //D3DXVECTOR3    m_rotation;
     D3DXQUATERNION m_quarernion;
     float          m_fovY;
 
 protected:
-    TargetTransform* GetTarget();
+    Character::Info* GetTargetInfo();
 
 public:
     ICamera(const TAG_CAMERA tag);

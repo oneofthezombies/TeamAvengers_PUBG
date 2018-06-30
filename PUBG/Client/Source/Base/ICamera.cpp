@@ -3,9 +3,9 @@
 #include "ComponentTransform.h"
 #include "Character.h"
 
-TargetTransform* ICamera::GetTarget()
+Character::Info* ICamera::GetTargetInfo()//(전)TargetTransform* GetTarget()
 {
-    return Camera()()->GetTargetTransformPtr();
+    return Camera()()->GetTargetInfo();
 }
 
 ICamera::ICamera(const TAG_CAMERA tag)
@@ -13,8 +13,6 @@ ICamera::ICamera(const TAG_CAMERA tag)
     , m_tagCamera(tag)
     , m_position(Vector3::ZERO)
 {
-
-
 
     for (int i = 0; i < 8; i++)
     {
@@ -44,19 +42,18 @@ void ICamera::UpdateViewProjMatrix()
 
     D3DXMatrixTranslation(&camT, m_position.x, m_position.y, m_position.z);
 
-    TargetTransform* pTar = GetTarget();
-    if (!pTar || !pTar->pRotForCameraTP)
-    {
+    Character::Info* pTar = GetTargetInfo();
+    //if (!pTar || !pTar->pRotForCameraTP)
+    //{
         D3DXMatrixIdentity(&tarR);
         D3DXMatrixIdentity(&tarWorld);
-    }
-    else
-    {
-        const D3DXVECTOR3 rot = *pTar->pRotForCameraTP;
-        D3DXMatrixRotationYawPitchRoll(&tarR, rot.y, rot.x, rot.z);
-
-        tarWorld = pTar->pTransform->GetTransformationMatrix();
-    }
+    //}
+    //else
+    //{
+    //    const D3DXVECTOR3 rot = *pTar->pRotForCameraTP;
+    //    D3DXMatrixRotationYawPitchRoll(&tarR, rot.y, rot.x, rot.z);
+    //    tarWorld = pTar->pTransform->GetTransformationMatrix();
+    //}
 
     world = camT * tarR * tarWorld;
     D3DXVec3TransformCoord(&eye, &eye, &world);
@@ -212,14 +209,14 @@ void CameraThirdPerson::Reset()
 
 void CameraThirdPerson::Update()
 {
-    TargetTransform* pTarget = GetTarget();
-    if (pTarget && pTarget->pRotForCameraTP)
-    {
-        const D3DXVECTOR3 rotForTP = *(pTarget->pRotForCameraTP);
+    //TargetTransform* pTarget = GetTarget();
+    //if (pTarget && pTarget->pRotForCameraTP)
+    //{
+    //    const D3DXVECTOR3 rotForTP = *(pTarget->pRotForCameraTP);
 
-        D3DXQuaternionRotationYawPitchRoll(&m_quarernion, rotForTP.y, rotForTP.x, rotForTP.z);
-        m_quarernion *= pTarget->pTransform->GetRotation();
-    }
+    //    D3DXQuaternionRotationYawPitchRoll(&m_quarernion, rotForTP.y, rotForTP.x, rotForTP.z);
+    //    m_quarernion *= pTarget->pTransform->GetRotation();
+    //}
     //견착하는 부분은 3인칭에서만 있기에
     if (Input()()->IsOnceKeyDown(VK_RBUTTON))
         Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
