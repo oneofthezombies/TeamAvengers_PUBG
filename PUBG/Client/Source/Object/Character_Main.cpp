@@ -120,6 +120,7 @@ void Character::updateMine()
     //{
     //    RotateWaist(m_WaistRotation.QUANTITY_FACTOR);
     //}
+
     ICamera*       pCurrentCamera = CurrentCamera()();
     InputManager*  pInput = Input()();
     Transform*     pTr = GetTransform();
@@ -201,14 +202,14 @@ void Character::updateMine()
         {
             if (isPressed_Space)
             {
-                //if (isPressing_W)
-                //{
-                //    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
-                //}
-                //else
-                //{
-                //    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
-                //}
+                if (isPressing_W)
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
+                }
+                else
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
+                }
             }
             else
             {
@@ -308,12 +309,12 @@ void Character::updateMine()
         break;
     }
 
-    if (pInput->IsStayKeyDown('A'))
+    if (isPressing_A)
     {
         p += getRight() * -m_rootTransform.MOVE_SPEED;
         //isUpdated = true;
     }
-    if (pInput->IsStayKeyDown('D'))
+    if (isPressing_D)
     {
         p += getRight() * m_rootTransform.MOVE_SPEED;
         //isUpdated = true;

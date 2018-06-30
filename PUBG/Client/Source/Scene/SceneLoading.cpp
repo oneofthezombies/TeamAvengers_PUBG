@@ -97,7 +97,7 @@ void SceneLoading::OnUpdate()
 void SceneLoading::loadEffectMesh()
 {
     addTask(TAG_RES_STATIC::Bandage);
-    addTask(TAG_RES_STATIC::Church);
+    //addTask(TAG_RES_STATIC::Church);
 
 
     // ...
