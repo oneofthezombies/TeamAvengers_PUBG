@@ -812,6 +812,15 @@ bool ResourceInfo::IsItem(const TAG_RES_STATIC tag)
     }
 }
 
+TAG_RES_ANIM_WEAPON ResourceInfo::GetTagResAnimWeapon(const TAG_RES_STATIC tag)
+{
+    switch (tag)
+    {
+    case TAG_RES_STATIC::QBZ: return TAG_RES_ANIM_WEAPON::QBZ_Anim;
+    default:                  return TAG_RES_ANIM_WEAPON::QBZ_Anim;
+    }
+}
+
 string ResourceInfo::getPath(const TAG_RES_EQUIPMENT tag)
 {
     string base("./Resource/Anim/Item/Equipment/");

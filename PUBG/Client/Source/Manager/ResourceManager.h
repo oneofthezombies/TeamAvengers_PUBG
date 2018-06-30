@@ -50,6 +50,7 @@ public:
 
     LPD3DXFONT GetFont(const TAG_FONT tag);
 
+    SkinnedMesh* GetSkinnedMesh(const string& path, const string& filename);
     SkinnedMesh* GetCharacterSkinnedMesh();
     EffectMesh*  GetEffectMesh(const TAG_RES_STATIC tag);
     LPDIRECT3DTEXTURE9 GetTexture(const string& path, const string& filename);

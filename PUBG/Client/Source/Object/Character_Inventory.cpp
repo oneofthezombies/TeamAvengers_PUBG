@@ -181,6 +181,8 @@ void Character::updateTotalInventory()
         Debug << "primary weapon matrix : \n" << weaponWorld << '\n';
 
         pWeaponPrimaryTr->Update();
+        pWeaponPrimary->SetIsRenderEffectMesh(false);
+        pWeaponPrimary->SetIsRenderSkinnedMesh(true);
     }
 
     Item* pWeaponSecondary = m_totalInventory.m_weaponSecondary;

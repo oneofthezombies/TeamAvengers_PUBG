@@ -46,30 +46,10 @@ void Item::OnUpdate()
 void Item::OnRender()
 {
     if (m_isRenderEffectMesh)
-        pEffectMeshRenderer->Render(
-            [this](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(
-            Shader::World,
-            &GetTransform()->GetTransformationMatrix());
-
-        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-        D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
-    });
+        pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
 
     if (m_isRenderSkinnedMesh)
-        pSkinnedMeshController->Render(
-            [this](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(
-            Shader::World,
-            &GetTransform()->GetTransformationMatrix());
-
-        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-        D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
-    });
+        pSkinnedMeshController->Render(bind(&Item::setGlobalVariable, this, _1));
 }
 
 void Item::setup(const TAG_RES_STATIC tag)
@@ -119,7 +99,12 @@ void Item::setup(const TAG_RES_STATIC tag)
         break;
     
     case TAG_ITEM_CATEGORY::Rifle:
+    {
+        // TODO : putin or equip으로 옮겨야 함
         pSkinnedMeshController = AddComponent<SkinnedMeshController>();
+        const auto pathName = ResourceInfo::GetPathFileName(ResourceInfo::GetTagResAnimWeapon(tag));
+        pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathName.first, pathName.second));
+    }
         break;
     
     //case TAG_ITEM_CATEGORY::Melee:
@@ -128,6 +113,17 @@ void Item::setup(const TAG_RES_STATIC tag)
         assert(false && "Item::setup(), item category default case.");
         break;
     }
+}
+
+void Item::setGlobalVariable(LPD3DXEFFECT pEffect)
+{
+    pEffect->SetMatrix(
+        Shader::World,
+        &GetTransform()->GetTransformationMatrix());
+
+    DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
+    D3DXVECTOR3 lightDir = light->GetDirection();
+    pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
 }
 
 TAG_RES_STATIC Item::GetTagResStatic() const

@@ -58,6 +58,16 @@ void SceneLoading::OnUpdate()
             }
         }
 
+        if (!m_isDoneSkinnedMeshs)
+        {
+            if (verifyTasks(
+                &m_skinnedMeshTasks,
+                &m_skinnedMeshResources))
+            {
+                addSkinnedMeshs();
+            }
+        }
+
         if (!m_isDoneEffectMeshs)
         {
             if (verifyTasks(&m_effectMeshTasks, &m_effectMeshResources))
@@ -67,7 +77,8 @@ void SceneLoading::OnUpdate()
         }
 
         if (m_isDoneEffectMeshs &&
-            m_isDoneCharacters)
+            m_isDoneCharacters &&
+            m_isDoneSkinnedMeshs)
         {
             m_isFinished = true;
             m_finish = std::chrono::system_clock::now();
@@ -138,6 +149,9 @@ void SceneLoading::loadSkinnedMesh()
     //addTask(TAG_RES_EQUIPMENT::Head_Lv1_Anim, &m_equipmentSkinnedMeshTasks);
 
     loadCharacterAnimation();
+
+    // weapon
+    addTask(TAG_RES_ANIM_WEAPON::QBZ_Anim, &m_skinnedMeshTasks);
 }
 
 void SceneLoading::loadCharacterAnimation()
@@ -213,6 +227,16 @@ void SceneLoading::addEffectMeshs()
         pRM->AddResource(pR.second);
 
     m_isDoneEffectMeshs = true;
+}
+
+void SceneLoading::addSkinnedMeshs()
+{
+    ResourceManager* pRM = Resource()();
+
+    for (auto pR : m_skinnedMeshResources)
+        pRM->AddResource(pR.second);
+
+    m_isDoneSkinnedMeshs = true;
 }
 
 bool SceneLoading::verifyTasks(tasks_t* OutTasks, resources_t* OutResources)
@@ -299,6 +323,23 @@ void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag)
 }
 
 void SceneLoading::addTask(const TAG_RES_EQUIPMENT tag, tasks_t* OutTasks)
+{
+    assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
+
+    auto keys = ResourceInfo::GetPathFileName(tag);
+    OutTasks->emplace_back(
+        std::make_pair(
+            OutTasks->size(),
+            std::async(
+                std::launch::async,
+                &ResourceAsync::OnLoadSkinnedMeshAsync,
+                keys.first,
+                keys.second)));
+
+    ++m_numTotalTasks;
+}
+
+void SceneLoading::addTask(const TAG_RES_ANIM_WEAPON tag, tasks_t* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 

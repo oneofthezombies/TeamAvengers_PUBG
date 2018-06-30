@@ -11,7 +11,7 @@ public:
     static const int DEFAULT_NUM_BULLET  = 30;
     static const int DEFAULT_NUM_BANDAGE = 5;
 
-protected:
+private:
     const TAG_RES_STATIC m_tagResStatic;
     
     float m_durability; //³»±¸¼º
@@ -25,8 +25,9 @@ protected:
 
     UIImage* pUIImage;
 
-protected:
+private:
     void setup(const TAG_RES_STATIC tag);
+    void setGlobalVariable(LPD3DXEFFECT pEffect);
 
 public:
              Item(

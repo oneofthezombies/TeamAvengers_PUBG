@@ -15,6 +15,8 @@ struct ResourceInfo
 
     static bool IsItem(const TAG_RES_STATIC tag);
 
+    static TAG_RES_ANIM_WEAPON GetTagResAnimWeapon(const TAG_RES_STATIC tag);
+
 private:
     static string getPath(const TAG_RES_EQUIPMENT tag);
     static string getFilename(const TAG_RES_EQUIPMENT tag);
