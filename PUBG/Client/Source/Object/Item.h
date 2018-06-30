@@ -6,14 +6,15 @@ class EffectMeshRenderer;
 class Item : public IObject
 {
 public:
-    static const int DEFAULT_NUM_BULLET = 30;
+    static const int DEFAULT_NUM_BULLET  = 30;
+    static const int DEFAULT_NUM_BANDAGE = 5;
 
 private:
     const TAG_RES_STATIC m_tagResStatic;
     bool  m_isInField;  //필드에 놓여있는지
 
     float m_durability; //내구성
-    int   m_numBullet;  //총알의 개수
+    int   m_count;      //아이템의 개수
 
     EffectMeshRenderer* pEffectMeshRenderer;
 
@@ -36,6 +37,9 @@ public:
     void SetDurability(const float durability);
     float GetDurability() const;
 
-    void SetNumBullet(const int numBullet);
-    int GetNumBullet() const;
+    void SetCount(const int count);
+    int GetCount() const;
+
+    void SetIsInField(const bool isInField);
+    bool IsInField() const;
 };

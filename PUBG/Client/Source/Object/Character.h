@@ -88,6 +88,9 @@ private:
     D3DXVECTOR3 getForward();
     D3DXVECTOR3 getRight();
 
+    //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
+    void CreateOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);
+
 public:
              Character(const int index);
     virtual ~Character();
@@ -104,7 +107,7 @@ public:
     TAG_COLLISION GetTagCollisionDamage(const int index);
 
     //for inventory
-    void PutItemInInventory(Item* item);
-    void ShowInventory();
+    void PutItemInTotalInventory(Item* item);
+    void ShowTotalInventory();
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
 };

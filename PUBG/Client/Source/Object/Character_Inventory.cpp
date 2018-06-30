@@ -3,38 +3,31 @@
 #include "Item.h"
 #include "ItemInfo.h"
 
-void Character::PutItemInInventory(Item* item)
+void Character::PutItemInTotalInventory(Item* item)
 {
     TAG_RES_STATIC tag = item->GetTagResStatic();
     TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(tag);
 
-    auto it = m_mapInventory.find(tag);
-    int bulletNum = 0;
     switch (category)
     {
     case TAG_ITEM_CATEGORY::Ammo:
-    {
-        bulletNum = item->GetNumBullet();
-        if (it == m_mapInventory.end())
-        {
-            //총알이 없는 경우는 새로 생성한다
-            m_mapInventory[tag].push_back(item);
-            item->SetNumBullet(bulletNum);
-        }
-        else
-        {
-            //이미 인벤토리에 해당 총알이 있는 경우, 기존 총알 개수와 합친다
-            auto origin_item = (*it).second.back();
-            origin_item->SetNumBullet(origin_item->GetNumBullet() + bulletNum);
-        }
-        m_capacity += bulletNum * ItemInfo::GetCapacity(tag);
-    }
+        CreateOrMergeItem(&m_mapInventory, item);
         break;
 
     case TAG_ITEM_CATEGORY::Attach:
     case TAG_ITEM_CATEGORY::Consumable:
-        m_mapInventory[tag].push_back(item);
-        m_capacity += ItemInfo::GetCapacity(tag);
+    {
+        if (tag == TAG_RES_STATIC::Bandage ||
+            tag == TAG_RES_STATIC::FirstAidKit)
+        {
+            CreateOrMergeItem(&m_mapInventory, item);
+        }
+        else
+        {
+            m_mapInventory[tag].push_back(item);
+            m_capacity += ItemInfo::GetCapacity(tag);
+        }
+    }
         break;
 
     case TAG_ITEM_CATEGORY::Equipment:
@@ -47,9 +40,35 @@ void Character::PutItemInInventory(Item* item)
         m_capacity += ItemInfo::GetCapacity(tag);
         break;
     }
+   
+    item->SetIsInField(false);
 }
 
-void Character::ShowInventory()
+void Character::CreateOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item)
+{
+    assert(map && item && "Character::CreateOrMergeItem(), argument is null.");
+
+    TAG_RES_STATIC tag = item->GetTagResStatic();
+    auto it = map->find(tag);
+    int count = item->GetCount();
+
+    if (it == map->end())
+    {
+       //아이템이 없는 경우는 새로 생성한다
+        (*map)[tag].push_back(item);
+        item->SetCount(count);
+    }
+    else
+    {
+        //이미 인벤토리에 붕대가 있는 경우, 기존 붕대 개수와 합친다
+        auto origin_item = it->second.back();
+        origin_item->SetCount(origin_item->GetCount() + count);
+        SAFE_DELETE(item);
+    }
+    m_capacity += count * ItemInfo::GetCapacity(tag);
+}
+
+void Character::ShowTotalInventory()
 {
     cout << "용량: " << m_capacity << endl;
     cout << "<인벤토리>" << endl;
@@ -61,9 +80,7 @@ void Character::ShowInventory()
         {
             auto tag = item->GetTagResStatic();
             cout << "- " << ItemInfo::GetName(tag);
-            if (tag == TAG_RES_STATIC::Ammo_5_56mm ||
-                tag == TAG_RES_STATIC::Ammo_7_62mm)
-                cout << " " << item->GetNumBullet();
+            cout << " " << item->GetCount() << "개";
             cout << " 용량: " << ItemInfo::GetCapacity(tag);
             cout << endl;
         }
@@ -78,6 +95,7 @@ void Character::ShowInventory()
         {
             auto tag = item->GetTagResStatic();
             cout << "- " << ItemInfo::GetName(tag);
+            cout << " " << item->GetCount();
             cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
         }
     }
@@ -91,6 +109,7 @@ void Character::ShowInventory()
         {
             auto tag = item->GetTagResStatic();
             cout << "- " << ItemInfo::GetName(tag);
+            cout << " " << item->GetCount();
             cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
         }
     }

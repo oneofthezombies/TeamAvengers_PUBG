@@ -12,7 +12,7 @@ Item::Item(
     , m_tagResStatic(tag)
     , m_isInField(true)
     , m_durability(0.0f)
-    , m_numBullet(0)
+    , m_count(0)
 
     , pEffectMeshRenderer(nullptr)
 {
@@ -50,10 +50,15 @@ void Item::setup(const TAG_RES_STATIC tag)
     {
     case TAG_RES_STATIC::Ammo_5_56mm:
     case TAG_RES_STATIC::Ammo_7_62mm:
-        m_numBullet = Item::DEFAULT_NUM_BULLET;
+        m_count = Item::DEFAULT_NUM_BULLET;
         break;
+
+    case TAG_RES_STATIC::Bandage:
+        m_count = Item::DEFAULT_NUM_BANDAGE;
+        break;
+
     default: 
-        m_numBullet = 0; 
+        m_count = 1; 
         break;
     }
 }
@@ -73,12 +78,22 @@ float Item::GetDurability() const
     return m_durability;
 }
 
-void Item::SetNumBullet(const int numBullet)
+void Item::SetCount(const int count)
 {
-    m_numBullet = numBullet;
+    m_count = count;
 }
 
-int Item::GetNumBullet() const
+int Item::GetCount() const
 {
-    return m_numBullet;
+    return m_count;
+}
+
+void Item::SetIsInField(const bool isInField)
+{
+    m_isInField = isInField;
+}
+
+bool Item::IsInField() const
+{
+    return m_isInField;
 }
