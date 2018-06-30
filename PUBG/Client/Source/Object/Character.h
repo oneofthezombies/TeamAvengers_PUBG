@@ -94,9 +94,6 @@ private:
     D3DXVECTOR3 m_rotationForCamera;
 
     Info m_info;
-
-    D3DXVECTOR3 m_rotForCameraTP;
-    TargetTransform* pTargetTransform;
     
     //for inventory
     TotalInventory m_totalInventory;

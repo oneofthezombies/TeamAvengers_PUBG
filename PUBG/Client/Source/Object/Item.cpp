@@ -3,6 +3,7 @@
 #include "ItemInfo.h"
 #include "EffectMeshRenderer.h"
 #include "SkinnedMeshController.h"
+#include "DirectionalLight.h"
 
 Item::Item(
     const TAG_RES_STATIC tag, 
@@ -40,7 +41,18 @@ void Item::OnUpdate()
 void Item::OnRender()
 {
     if (m_isRenderEffectMesh)
-        pEffectMeshRenderer->Render();
+        pEffectMeshRenderer->Render
+        (
+            [this](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(
+            Shader::World,
+            &GetTransform()->GetTransformationMatrix());
+
+        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
+        D3DXVECTOR3 lightDir = light->GetDirection();
+        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
+    });
 }
 
 void Item::setup(const TAG_RES_STATIC tag)
@@ -121,10 +133,30 @@ Weapon::~Weapon()
 void Weapon::OnRender()
 {
     if (m_isRenderEffectMesh && !m_isRenderSkinnedMesh)
-        pEffectMeshRenderer->Render();
+        pEffectMeshRenderer->Render(
+            [this](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(
+            Shader::World,
+            &GetTransform()->GetTransformationMatrix());
+
+        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
+        D3DXVECTOR3 lightDir = light->GetDirection();
+        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
+    });
     
     if (!m_isRenderEffectMesh && m_isRenderSkinnedMesh)
-        pSkinnedMeshController->Render();
+        pSkinnedMeshController->Render(
+            [this](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(
+            Shader::World,
+            &GetTransform()->GetTransformationMatrix());
+
+        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
+        D3DXVECTOR3 lightDir = light->GetDirection();
+        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
+    });
 }
 
 void Weapon::SetIsRenderSkinnedMesh(const bool isRenderSkinnedMesh)
