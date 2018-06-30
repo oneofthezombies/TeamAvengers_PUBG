@@ -27,7 +27,7 @@ void ScenePlay::OnInit()
     //    AddObject(new Character(i));
     AddObject(new Character(0));
 
-    LoadObjectsFromFile("./Resource/save.txt");
+    //LoadObjectsFromFile("./Resource/save.txt");
 }
 
 void ScenePlay::OnUpdate()

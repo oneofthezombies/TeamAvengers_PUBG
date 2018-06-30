@@ -22,6 +22,21 @@ Character::Info::Info()
     , pTPP(nullptr)
 {
 }
+Character::IsPressing::IsPressing()
+    : _LAlt(false)
+    , _LCtrl(false)
+    , _LShift(false)
+    , _W(false)
+    , _S(false)
+    , _A(false)
+    , _D(false)
+    , _Z(false)
+    , _X(false)
+    , _C(false)
+    , _Space(false)
+{
+}
+
 
 Character::FramePtr::FramePtr()
     : pRoot(nullptr)
@@ -56,6 +71,208 @@ void Character::subscribeCollisionEvent()
     }
 }
 
+Character::IsPressing Character::HandleInput(IsPressing& m_isPressing)
+{
+    InputManager* pInput = Input()();
+
+    m_isPressing._LAlt = pInput->IsStayKeyDown(VK_LMENU);
+    m_isPressing._LCtrl = pInput->IsStayKeyDown(VK_LCONTROL);
+    m_isPressing._LShift = pInput->IsStayKeyDown(VK_LSHIFT);
+    m_isPressing._W = pInput->IsStayKeyDown('W');
+    m_isPressing._S = pInput->IsStayKeyDown('S');
+    m_isPressing._A = pInput->IsStayKeyDown('A');
+    m_isPressing._D = pInput->IsStayKeyDown('D');
+    m_isPressing._Z = pInput->IsStayKeyDown('Z');
+    m_isPressing._X = pInput->IsStayKeyDown('X');
+    m_isPressing._C = pInput->IsStayKeyDown('C');
+    m_isPressing._Space = pInput->IsOnceKeyDown(VK_SPACE);
+
+    return m_isPressing;
+}
+void Character::CameraCharacterRotation(OUT D3DXQUATERNION* rOut)
+{
+    ICamera*       pCurrentCamera = CurrentCamera()();
+    const float dt = Time()()->GetDeltaTime();
+
+    // get mouse pos
+    POINT mouse;
+    GetCursorPos(&mouse);
+    ScreenToClient(g_hWnd, &mouse);
+
+    POINT diff;
+    diff.x = mouse.x - 1280 / 2;
+    diff.y = mouse.y - 720 / 2;
+    if (diff.x < 2 && diff.x > -2) diff.x = 0;
+    if (diff.y < 2 && diff.y > -2) diff.y = 0;
+    const float yaw = diff.x * 0.2f * dt;
+    const float pitch = diff.y * 0.2f * dt;
+
+    static bool tempBool = false;
+    if (m_currentInput._LAlt)
+    {
+        if (pCurrentCamera)
+        {
+            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person || pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
+            {
+                m_rotationForCamera.x += -pitch;
+                m_rotationForCamera.y += yaw;
+                tempBool = true;
+            }
+        }
+    }
+    else // isPressing_LAlt == false
+    {
+        // update rotation of transform
+
+        D3DXQUATERNION q;
+        D3DXQuaternionRotationYawPitchRoll(&q, yaw, 0.0f, 0.0f);
+        //cout << "pitch : " << pitch << " yaw : " << yaw << endl;
+
+        *rOut *= q;
+        m_rotationForCamera.x += -pitch;
+        // reset rotFotCameraTP
+        if (tempBool)
+        {
+            m_rotationForCamera = Vector3::ZERO;
+            tempBool = false;
+        }
+
+    }
+
+    /*
+    in : mouse
+    out : character r <= mouse only one axis
+    out : camera r <= mouse wto axis
+    */
+
+    POINT center;
+    center.x = 1280 / 2;
+    center.y = 720 / 2;
+    ClientToScreen(g_hWnd, &center);
+    SetCursorPos(center.x, center.y);
+}
+
+void Character::AnimationControl(OUT D3DXVECTOR3* pOut)
+{
+
+
+    switch (m_animState)
+    {
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1:
+    {
+        if (m_currentInput._Space)
+        {
+            if (m_currentInput._W)
+            {
+                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
+            }
+            else
+            {
+                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
+            }
+        }
+        else
+        {
+            if (m_currentInput._W)
+            {
+                if (m_currentInput._LCtrl)
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_F, true);
+                    *pOut += getForward() * 0.5f;
+                }
+                else if (m_currentInput._LShift)
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F, true);
+                    *pOut += getForward() * 2.0f;
+                }
+                else
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F, true);
+                    *pOut += getForward();
+                }
+            }
+            else if (m_currentInput._S)
+            {
+                if (m_currentInput._LCtrl)
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_B, true);
+                    *pOut += getForward() * -0.5f;
+                }
+                else
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B, true);
+                    *pOut += getForward() * -1.0f;
+                }
+            }
+
+        }
+    }
+    break;
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_F:
+    {
+        if (m_currentInput._W)
+        {
+            *pOut += getForward() * 0.5f;
+        }
+        else
+        {
+            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
+        }
+    }
+    break;
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F:
+    {
+        if (m_currentInput._W)
+        {
+            *pOut += getForward() * 2.0f;
+        }
+        else
+        {
+            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
+        }
+    }
+    break;
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F:
+    {
+        if (m_currentInput._W)
+        {
+            *pOut += getForward();
+        }
+        else
+        {
+            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
+        }
+    }
+    break;
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_B:
+    {
+        if (m_currentInput._S)
+        {
+            *pOut += getForward() * -0.5f;
+        }
+        else
+        {
+            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
+        }
+    }
+    break;
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B:
+    {
+        if (m_currentInput._S)
+        {
+            *pOut += getForward() * -1.0f;
+        }
+        else
+        {
+            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
+        }
+    }
+    break;
+    }
+
+
+
+}
 bool Character::isMine() const
 {
     return m_index == Communication()()->m_MyInfo.m_ID;
@@ -120,6 +337,7 @@ void Character::updateBone()
     D3DXMatrixRotationX(&rx, m_waistRotation.m_angle);
     m_framePtr.pWaist->TransformationMatrix *= rx;
 
+    //TODO 애니메이션 다시 돌아오게 하기
     // for root motion animation
     m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
 }

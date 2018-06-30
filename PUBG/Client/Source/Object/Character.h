@@ -35,6 +35,43 @@ public:
         Info();
     };
 
+    struct IsPressing
+    {
+        bool _LAlt    ;
+        bool _LCtrl   ;
+        bool _LShift  ;
+        bool _W       ;
+        bool _S       ;
+        bool _A       ;
+        bool _D       ;
+        bool _Z       ;
+        bool _X       ;
+        bool _C       ;
+        bool _Space   ;
+
+        IsPressing();
+        bool operator==(const IsPressing& other) const
+        {
+
+            if (_LAlt   != other._LAlt    ) return false;
+            if (_LCtrl  != other._LCtrl   ) return false;
+            if (_LShift != other._LShift  ) return false;
+            if (_W      != other._W       ) return false;
+            if (_S      != other._S       ) return false;
+            if (_A      != other._A       ) return false;
+            if (_D      != other._D       ) return false;
+            if (_Z      != other._Z       ) return false;
+            if (_X      != other._X       ) return false;
+            if (_C      != other._C       ) return false;
+            if (_Space  != other._Space   ) return false;
+            return true;
+        }
+        bool operator!=(const IsPressing& other) const
+        {
+            return !(*this == other);
+        }        
+    };
+
 private:
     struct FramePtr
     {
@@ -69,10 +106,16 @@ private:
     D3DXVECTOR3 m_rotationForCamera;
 
     Info m_info;
+    IsPressing m_savedInput;
+    IsPressing m_currentInput;
 
 private:
     void setFramePtr();
     void subscribeCollisionEvent();
+
+    IsPressing HandleInput(IsPressing& m_isPressing);
+    void CameraCharacterRotation(OUT D3DXQUATERNION* rOut);
+    void AnimationControl(OUT D3DXVECTOR3* pOut);
 
     void updateMine();
     void updateOther();

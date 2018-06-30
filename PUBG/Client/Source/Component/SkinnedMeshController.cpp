@@ -110,14 +110,14 @@ void SkinnedMeshController::UpdateAnimation()
     assert(m_pSkinnedMeshInstance &&
         "SkinnedMeshController::UpdateAnimation(), \
          skinned mesh instance is null.");
-
+    const float factor = 2.0f;
     const auto dt = Time()()->GetDeltaTime();
     auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
-    pAniCon->AdvanceTime(dt, nullptr);
+    pAniCon->AdvanceTime(dt *factor, nullptr);
 
     if (m_passedBlendTime < m_totalBlendTime)
     {
-        m_passedBlendTime += dt;
+        m_passedBlendTime += dt * factor;
         const auto weight = m_passedBlendTime / m_totalBlendTime;
         if (weight >= 1.0f)
         {

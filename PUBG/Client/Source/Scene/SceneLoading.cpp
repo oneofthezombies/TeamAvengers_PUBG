@@ -97,7 +97,7 @@ void SceneLoading::OnUpdate()
 void SceneLoading::loadEffectMesh()
 {
     //addTask(TAG_RES_STATIC::SkySphere);
-    addTask(TAG_RES_STATIC::Bandage);
+    //addTask(TAG_RES_STATIC::Bandage);
     //addTask(TAG_RES_STATIC::Church);
 
 
@@ -123,8 +123,8 @@ void SceneLoading::loadSkinnedMesh()
 
 void SceneLoading::loadCharacterAnimation()
 {
-    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Idling);
-    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Stand);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Idling);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Stand);
 
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack_FPP);
