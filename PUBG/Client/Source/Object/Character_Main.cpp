@@ -148,15 +148,15 @@ void Character::updateMine()
     if (diff.y < 2 && diff.y > -2) diff.y = 0;
     const float yaw = diff.x * 0.2f * dt;
     const float pitch = diff.y * 0.2f * dt;
+
     if (isPressing_LAlt)
     {
         if (pCurrentCamera)
         {
-            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person)
+            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person|| pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
             {
-
-                //m_rotForCameraTP.x += -pitch;
-                //m_rotForCameraTP.y += yaw;
+                m_rotationForCamera.x += pitch;
+                m_rotationForCamera.y += yaw;
             }
         }
     }
@@ -171,7 +171,7 @@ void Character::updateMine()
         r *= q;
 
         // reset rotFotCameraTP
-        m_rotationForCamera = Vector3::ZERO;
+         m_rotationForCamera = Vector3::ZERO;
     }
 
     /*

@@ -24,11 +24,14 @@ private:    //fustum Culling
 
 protected:
     D3DXVECTOR3    m_position;
+
     D3DXQUATERNION m_quarernion;
     float          m_fovY;
 
 protected:
     Character::Info* GetTargetInfo();
+    // to show camera position temporary
+    LPD3DXMESH m_pSphereMesh[3];
 
 public:
     ICamera(const TAG_CAMERA tag);
@@ -36,6 +39,7 @@ public:
 
     virtual void Reset() = 0;
     virtual void Update() = 0;
+    void CameraRender();
 
     void UpdateViewProjMatrix();
     void UpdateFrustumCulling();
@@ -51,6 +55,8 @@ public:
 
 class CameraFree : public ICamera
 {
+private:
+    D3DXVECTOR3    m_rotation;
 public:
     CameraFree();
     virtual ~CameraFree();

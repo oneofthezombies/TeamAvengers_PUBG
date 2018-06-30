@@ -36,14 +36,10 @@ void CameraManager::Update()
 
     if (pInput->IsOnceKeyUp('P'))
     {
-        if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
-        {
-            SetCurrentCamera(TAG_CAMERA::Third_Person);
-        }
-        else 
-        {
+        if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::Default)
             SetCurrentCamera(TAG_CAMERA::Default);
-        }
+        else
+            SetCurrentCamera(TAG_CAMERA::Third_Person);
     }
 
 
