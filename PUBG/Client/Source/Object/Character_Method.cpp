@@ -19,6 +19,8 @@ Character::FramePtr::FramePtr()
     : pRoot(nullptr)
     , pWaist(nullptr)
     , pHandGun(nullptr)
+    , pTPP(nullptr)
+    , pFPP(nullptr)
 {
 }
 
@@ -27,6 +29,8 @@ void Character::setFramePtr()
     m_framePtr.pWaist = pSkinnedMeshController->FindFrame("spine_01");
     m_framePtr.pRoot = pSkinnedMeshController->FindFrame("root");
     m_framePtr.pHandGun = pSkinnedMeshController->FindFrame("ik_hand_gun");
+    m_framePtr.pTPP = pSkinnedMeshController->FindFrame("camera_tpp");
+    m_framePtr.pFPP = pSkinnedMeshController->FindFrame("camera_fpp");
 }
 
 void Character::subscribeCollisionEvent()
@@ -66,18 +70,37 @@ void Character::setAnimation(
     m_animState = tag;
 }
 
+void Character::setInfo()
+{
+    m_info.pTransform = GetTransform();
+    m_info.pRotationForCamera = &m_rotationForCamera;
+    m_info.pTPP = m_framePtr.pTPP;
+    m_info.pFPP = m_framePtr.pFPP;
+}
+
 D3DXVECTOR3 Character::getForward()
 {
-    auto rot = GetTransform()->GetRotation() * OFFSET_ROTATION;
+    auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::FORWARD, rot);
+    dir.z *= -1.0f;
     D3DXVec3Normalize(&dir, &dir);
     return dir;
 }
 
 D3DXVECTOR3 Character::getRight()
 {
-    auto rot = GetTransform()->GetRotation() * OFFSET_ROTATION;
+    auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::RIGHT, rot);
+    dir.x *= -1.0f;
+    D3DXVec3Normalize(&dir, &dir);
+    return dir;
+}
+
+D3DXVECTOR3 Character::getUp()
+{
+    auto rot = GetTransform()->GetRotation();
+    auto dir = Vector3::Rotate(Vector3::UP, rot);
+    //dir.y *= -1.0f;
     D3DXVec3Normalize(&dir, &dir);
     return dir;
 }

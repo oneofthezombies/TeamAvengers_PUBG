@@ -2,6 +2,39 @@
 #include "ICamera.h"
 #include "ComponentTransform.h"
 #include "Character.h"
+
+TargetTransform* ICamera::GetTarget()
+{
+    return Camera()()->GetTargetTransformPtr();
+}
+
+ICamera::ICamera(const TAG_CAMERA tag)
+    : MemoryAllocator()
+    , m_tagCamera(tag)
+    , m_position(Vector3::ZERO)
+{
+
+
+
+    for (int i = 0; i < 8; i++)
+    {
+        m_vecWorld[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    }
+
+    m_vecProj[0]=(D3DXVECTOR3(-1, 1, 1));	//ÁÂ»óÈÄ
+    m_vecProj[1]=(D3DXVECTOR3(1, 1, 1));	//¿ì»óÈÄ
+    m_vecProj[2]=(D3DXVECTOR3(-1, 1, 0));	//ÁÂ»óÀü
+    m_vecProj[3]=(D3DXVECTOR3(1, 1, 0));	//¿ì»óÀü
+    m_vecProj[4]=(D3DXVECTOR3(-1, -1, 1));	//ÁÂÇÏÈÄ
+    m_vecProj[5]=(D3DXVECTOR3(1, -1, 1));	//¿ìÇÏÈÄ
+    m_vecProj[6]=(D3DXVECTOR3(-1, -1, 0));	//ÁÂÇÏÀü
+    m_vecProj[7]=(D3DXVECTOR3(1, -1, 0));	//¿ìÇÏÀü
+}
+
+ICamera::~ICamera()
+{
+}
+
 void ICamera::UpdateViewProjMatrix()
 {
     D3DXVECTOR3 eye = Vector3::ZERO;
@@ -44,24 +77,46 @@ void ICamera::UpdateViewProjMatrix()
         pD->SetTransform(D3DTS_PROJECTION, &m_projectionMatrix);
     }
 }
-
-TargetTransform* ICamera::GetTarget()
+void ICamera::UpdateFrustumCulling()
 {
-    return Camera()()->GetTargetTransformPtr();
+    //D3DXMATRIX InvVP;
+    //InvVP = m_viewMatrix * m_projectionMatrix;
+    //D3DXMatrixInverse(&InvVP, NULL, &InvVP);
+
+    //D3DXMATRIX rotY,ret;
+    //D3DXMatrixRotationY(&rotY, D3DX_PI);
+    //ret = m_viewMatrix * rotY;
+
+    for (int i = 0; i < 8; ++i)
+    {
+        //D3DXVec3TransformCoord(&m_vecWorld[i], &m_vecProj[i], &InvVP);
+        D3DXVec3Unproject(&m_vecWorld[i], &m_vecProj[i], NULL,  &m_projectionMatrix, &m_viewMatrix, NULL);
+    }
+
+    //±ÙÆò¸é//ÁÂ»óÀü//¿ì»óÀü//ÁÂÇÏÀü
+    D3DXPlaneFromPoints(&m_vecPlane[0], &m_vecWorld[2], &m_vecWorld[3], &m_vecWorld[6]);
+    //¿øÆò¸é//¿ì»óÈÄ//ÁÂ»óÈÄ//¿ìÇÏÈÄ
+    D3DXPlaneFromPoints(&m_vecPlane[1], &m_vecWorld[1], &m_vecWorld[0], &m_vecWorld[5]);
+    //ÁÂÆò¸é//ÁÂ»óÈÄ//ÁÂ»óÀü//ÁÂÇÏÈÄ
+    D3DXPlaneFromPoints(&m_vecPlane[2], &m_vecWorld[0], &m_vecWorld[2], &m_vecWorld[4]);
+    //¿ìÆò¸é//¿ì»óÀü//¿ì»óÈÄ//¿ìÇÏÀü
+    D3DXPlaneFromPoints(&m_vecPlane[3], &m_vecWorld[3], &m_vecWorld[1], &m_vecWorld[7]);
+    //»óÆò¸é//ÁÂ»óÈÄ//¿ì»óÈÄ//ÁÂ»óÀü
+    D3DXPlaneFromPoints(&m_vecPlane[4], &m_vecWorld[0], &m_vecWorld[1], &m_vecWorld[2]);
+    //ÇÏÆò¸é//ÁÂÇÏÀü//¿ìÇÏÀü//ÁÂÇÏÈÄ
+    D3DXPlaneFromPoints(&m_vecPlane[5], &m_vecWorld[6], &m_vecWorld[7], &m_vecWorld[4]);
+
 }
-
-ICamera::ICamera(const TAG_CAMERA tag)
-    : MemoryAllocator()
-    , m_tagCamera(tag)
-    , m_position(Vector3::ZERO)
-    /*, m_rotation(Vector3::ZERO)*/
-    
+bool ICamera::IsObjectInsideFrustum(const D3DXVECTOR3 center, const float radius)
 {
-    //D3DXQuaternionRotationYawPitchRoll(&m_quarernion, m_rotation.x, m_rotation.y, m_rotation.z);
-}
-
-ICamera::~ICamera()
-{
+    for (int i = 0; i < 6; i++)
+    {
+        if (D3DXPlaneDotCoord(&m_vecPlane[i], &center) > radius)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 
@@ -80,6 +135,9 @@ TAG_CAMERA ICamera::GetTagCamera() const
 {
     return m_tagCamera;
 }
+
+
+
 //-----------------------------------------------------------------
 CameraFree::CameraFree()
     : ICamera(TAG_CAMERA::Default)

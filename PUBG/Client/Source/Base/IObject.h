@@ -13,9 +13,9 @@ private:
 	
     Transform* pTransform;
     IObject*   pParent;
-
+    
 protected:
-	IObject();
+    IObject();
 
 public:
 	virtual ~IObject();

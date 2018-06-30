@@ -4,6 +4,9 @@
 
 IObject::IObject()
     : MemoryAllocator()
+    , pTransform(nullptr)
+    , pParent(nullptr)
+
 {
 	pTransform = AddComponent<Transform>();
 }
@@ -27,10 +30,11 @@ void IObject::Update()
 
 void IObject::Render()
 {
-	OnRender();
 
-	for (auto& c : m_children)
-		if (c) c->Render();
+        OnRender();
+        for (auto& c : m_children)
+            if (c) c->Render();
+
 }
 
 void IObject::SetTagObject(const TAG_OBJECT tag)

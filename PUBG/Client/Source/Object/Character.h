@@ -50,6 +50,15 @@ public:
         ~TotalInventory();
     };
 
+    struct Info
+    {
+        Transform*   pTransform;
+        D3DXVECTOR3* pRotationForCamera;
+        Frame*       pFPP;
+        Frame*       pTPP;
+
+        Info();
+    };
 
 private:
     struct FramePtr
@@ -57,6 +66,8 @@ private:
         Frame* pWaist;
         Frame* pRoot;
         Frame* pHandGun;
+        Frame* pTPP;
+        Frame* pFPP;
 
         FramePtr();
     };
@@ -80,6 +91,10 @@ private:
     CharacterPart*         m_pRootCharacterPart;
 
     D3DXMATRIX m_prevRootModel;
+    D3DXVECTOR3 m_rotationForCamera;
+
+    Info m_info;
+
     D3DXVECTOR3 m_rotForCameraTP;
     TargetTransform* pTargetTransform;
     
@@ -105,8 +120,11 @@ private:
         const float currentWeight = 1.0f, const float nextWeight = 0.0f,
         const float blendTime = 0.3f);
 
-    D3DXVECTOR3 getForward();
+    void setInfo();
+
     D3DXVECTOR3 getRight();
+    D3DXVECTOR3 getUp();
+    D3DXVECTOR3 getForward();
 
     //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수

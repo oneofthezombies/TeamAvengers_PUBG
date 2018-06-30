@@ -18,7 +18,7 @@ void CameraManager::Init()
     m_cameras.emplace(TAG_CAMERA::Third_Person, new CameraThirdPerson);
     m_cameras.emplace(TAG_CAMERA::KyunChak, new CameraKyunChak);
     //m_cameras.emplace(TAG_CAMERA::Scope2X, new Camera2xScope);
-    
+
     //SetCurrentCamera(TAG_CAMERA::Default);
     SetCurrentCamera(TAG_CAMERA::Third_Person);
 }
@@ -46,15 +46,18 @@ void CameraManager::Update()
     }
 
 
-
-
-
-
     if (pCurrentCamera)
     {
         pCurrentCamera->Update();
-        if(pCurrentCamera->GetTagCamera()!=TAG_CAMERA::Default)
+
+        if(pCurrentCamera->GetTagCamera()!=TAG_CAMERA::Default)//디버그 카메라는 player의 이동에 영향이 없도록
           pCurrentCamera->UpdateViewProjMatrix();
+        
+        if (Input()()->IsOnceKeyUp(VK_SPACE)) //눌렀을때 볼 수 있도록
+        {
+            pCurrentCamera->UpdateFrustumCulling();
+        }
+        
     }
 }
 
@@ -67,11 +70,6 @@ void CameraManager::SetTarget(Transform* pTarget, D3DXVECTOR3* pTargetRotForCame
     m_targetTransform.pRotForCameraTP = pTargetRotForCameraTP;
 }
 
-TargetTransform* CameraManager::GetTarget()
-{
-    return &m_targetTransform;
-}
-
 void CameraManager::SetCurrentCamera(const TAG_CAMERA tag)
 {
     const auto search = m_cameras.find(tag);
@@ -80,19 +78,6 @@ void CameraManager::SetCurrentCamera(const TAG_CAMERA tag)
 
     pCurrentCamera = search->second;
     pCurrentCamera->Reset();
-}
-
-ICamera* CameraManager::GetCurrentCamera()
-{
-    assert(pCurrentCamera && 
-        "CameraManager::GetCurrentCamera(), current camera is null.");
-
-    return pCurrentCamera;
-}
-
-TargetTransform* CameraManager::GetTargetTransformPtr()
-{
-    return &m_targetTransform;
 }
 
 TargetTransform::TargetTransform()

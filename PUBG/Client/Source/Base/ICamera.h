@@ -20,6 +20,11 @@ private:
           D3DXMATRIX  m_viewMatrix;
           D3DXMATRIX  m_projectionMatrix;
 
+private:    //fustum Culling
+    D3DXPLANE	    m_vecPlane[6];
+    D3DXVECTOR3     m_vecWorld[8];
+    D3DXVECTOR3	    m_vecProj[8];
+
 protected:
     D3DXVECTOR3    m_position;
     //D3DXVECTOR3    m_rotation;
@@ -37,19 +42,16 @@ public:
     virtual void Update() = 0;
 
     void UpdateViewProjMatrix();
+    void UpdateFrustumCulling();
+    bool IsObjectInsideFrustum(const D3DXVECTOR3 center,const float radius);
 
-    void SetViewMatrix(D3DXMATRIX* viewMatrix)
-    {
-        m_viewMatrix = *viewMatrix;
-    }
-    void SetProjectionMatrix(D3DXMATRIX* projectionMatrix)
-    {
-        m_projectionMatrix = *projectionMatrix;
-    }
+    void SetViewMatrix(D3DXMATRIX* viewMatrix) { m_viewMatrix = *viewMatrix; }
+    void SetProjectionMatrix(D3DXMATRIX* projectionMatrix) { m_projectionMatrix = *projectionMatrix; }
     const D3DXMATRIX& GetViewMatrix()       const;
     const D3DXMATRIX& GetProjectionMatrix() const;
           TAG_CAMERA  GetTagCamera()        const;
 };
+ 
 
 class CameraFree : public ICamera
 {
