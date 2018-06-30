@@ -21,6 +21,7 @@
 
 // math and usefuls
 #include "Structure.h"
+#include "Shader.h"
 // end math and usefuls
 
 // managers and interfaces for global access

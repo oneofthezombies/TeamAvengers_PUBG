@@ -1,4 +1,0 @@
-/// Unarmed_Idling.X (무기 없이 Idle상태 일 때 애니메이션)
-0. (0      ~ 340)[341] - Unarmed_Combat_Crouch_Idling_1
-1. (341  ~ 1221)[881] - Unarmed_Combat_Prone_Idling_1
-2. (1222 ~ 1900)[679] - Unarmed_Combat_Stand_Idling_1

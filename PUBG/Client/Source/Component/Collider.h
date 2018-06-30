@@ -27,7 +27,6 @@ private:
 protected:
     D3DXVECTOR3 m_center;
     D3DCOLOR    m_color;
-    bool        m_isRender;
 
     Collider(IObject* pOwner, const TYPE type);
 
@@ -73,7 +72,9 @@ private:
     // row 2 : x, y and z of axis 2
     // row 3 : x, y and z of translation
     D3DXMATRIX m_transformationMatrix;
-    vector<VERTEX_PC> m_vertices;
+
+    vector<D3DXVECTOR3> m_vertices;
+    LPD3DXEFFECT pEffect;
 
 public:
     static vector<WORD> s_indices;
@@ -82,10 +83,8 @@ public:
     BoxCollider(IObject* pOwner);
     virtual ~BoxCollider();
 
-    void Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max, 
-        const float isRenderable = true);
-    
-    void Init(const D3DXMATRIX& transform, const float isRenderable = true);
+    void Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max);
+    void Init(const D3DXMATRIX& transform);
 
     void Update(const D3DXMATRIX& transform);
 
