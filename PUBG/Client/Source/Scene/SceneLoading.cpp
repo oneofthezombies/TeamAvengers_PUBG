@@ -123,7 +123,9 @@ void SceneLoading::loadSkinnedMesh()
 
 void SceneLoading::loadCharacterAnimation()
 {
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Idling);
+    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Idling);
+    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Stand);
+
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack_FPP);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_DoorOpen_And_Pickup);
@@ -131,7 +133,6 @@ void SceneLoading::loadCharacterAnimation()
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump_FPP);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Landing);
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Stand);
 
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);

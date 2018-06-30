@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "SkinnedMeshController.h"
 #include "CharacterPart.h"
+#include "DirectionalLight.h"
 
 Character::WaistRotation::WaistRotation(const float limit, const float factor)
     : LIMIT_OF_ANGLE(limit)
@@ -131,10 +132,19 @@ void Character::updateDependency()
     pSkinnedMeshController->UpdateModel();
     if (m_pRootCharacterPart) m_pRootCharacterPart->Update();
 
-        pSkinnedMeshController->Render();
-        if (m_pRootCharacterPart) m_pRootCharacterPart->Render();
+    pSkinnedMeshController->Render(
+        [this](LPD3DXEFFECT pEffect) 
+    {
+        pEffect->SetMatrix(
+            Shader::World, 
+            &GetTransform()->GetTransformationMatrix());
 
+        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
+        D3DXVECTOR3 lightDir = light->GetDirection();
+        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
+    });
 
+    if (m_pRootCharacterPart) m_pRootCharacterPart->Render();
 }
 
 void Character::communicate()

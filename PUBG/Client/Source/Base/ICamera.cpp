@@ -2,6 +2,7 @@
 #include "ICamera.h"
 #include "ComponentTransform.h"
 #include "Character.h"
+#include "Collider.h"
 
 Character::Info* ICamera::GetTargetInfo()//(Àü)TargetTransform* GetTarget()
 {
@@ -83,7 +84,30 @@ void ICamera::CameraRender()
 
 
     }
-    
+
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"), 
+        nullptr, 
+        [this](LPD3DXEFFECT pEffect) 
+    {
+        D3DXMATRIX s;
+        D3DXMatrixScaling(&s, 1.0f, 1.0f, 1.0f);
+        pEffect->SetMatrix(Shader::World, &s);
+        D3DXCOLOR white(1.0f, 1.0f, 1.0f, 1.0f);
+        pEffect->SetValue("Color", &white, sizeof white);
+    }, 
+        [this]() 
+    {
+        Device()()->DrawIndexedPrimitiveUP(
+            D3DPT_LINELIST,
+            0,
+            sizeof m_vecWorld / sizeof m_vecWorld[0],
+            BoxCollider::s_indices.size() / 2,
+            BoxCollider::s_indices.data(),
+            D3DFMT_INDEX16,
+            &m_vecWorld[0],
+            sizeof D3DXVECTOR3);
+    });
 }
 
 void ICamera::UpdateViewProjMatrix()

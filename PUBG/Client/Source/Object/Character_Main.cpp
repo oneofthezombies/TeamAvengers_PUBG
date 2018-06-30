@@ -68,22 +68,24 @@ void Character::OnUpdate()
 
 void Character::OnRender()
 {
-    auto pD = Device()();
-    pD->SetRenderState(D3DRS_LIGHTING, true);
-     
-    pD->SetTexture(0, NULL);
-    pD->SetMaterial(&MaterialTemplate::GetWhite());
-    pD->SetTransform(
-        D3DTS_WORLD, &GetTransform()->GetTransformationMatrix());
-    m_pSphereMesh->DrawSubset(0);
-
-    // for distance measurement
+    //// for distance measurement
     for (int i = 0; i < 10; ++i)
     {
         D3DXMATRIX t;
         D3DXMatrixTranslation(&t, static_cast<float>(i * 10), 0.0f, 0.0f);
-        pD->SetTransform(D3DTS_WORLD, &t);
-        m_pSphereMesh->DrawSubset(0);
+
+        Shader::Draw(
+            Resource()()->GetEffect("./Resource/", "Color.fx"),
+            nullptr,
+            m_pSphereMesh,
+            0,
+            [this, &t](LPD3DXEFFECT pEffect)
+        {
+            pEffect->SetMatrix(Shader::World, &t);
+
+            D3DXCOLOR white(1.0f, 1.0f, 1.0f, 1.0f);
+            pEffect->SetValue("Color", &white, sizeof white);
+        });
     }
 }
 
