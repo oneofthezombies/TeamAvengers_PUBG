@@ -92,8 +92,6 @@ void Character::PutItemInTotalInventory(Item* item)
         assert(false && "PutItemInTotalInventory(), default case.");
         break;
     }
-   
-    item->SetIsRenderEffectMesh(false);
 }
 
 void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item)
@@ -137,6 +135,7 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
     else
     {
         *originItem = newItem;
+        newItem->SetIsRenderEffectMesh(true);
         m_totalInventory.m_capacity += ItemInfo::GetCapacity(newItem->GetTagResStatic());
         CurrentScene()()->RemoveObject(newItem);
         // TODO : send "delete item on field" to server
@@ -145,7 +144,84 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
 
 void Character::updateTotalInventory()
 {
+    Transform* pTr = GetTransform();
 
+    Item* pArmor = m_totalInventory.m_equipArmor;
+    if (pArmor)
+    {
+    }
+
+    Item* pBack = m_totalInventory.m_equipBack;
+    if (pBack)
+    {
+
+    }
+
+    Item* pHead = m_totalInventory.m_equipHead;
+    if (pHead)
+    {
+
+    }
+
+    //주무기
+    Item* pWeaponPrimary = m_totalInventory.m_weaponPrimary;
+    if (pWeaponPrimary)
+    {
+        //Transform* pWeaponPrimaryTr = pWeaponPrimary->GetTransform();
+
+        //// 모델스페이스 m_framePtr.pSlotPrimary->CombinedTransformationMatrix
+        //// 월드스페이스 = 모델스페이스 * 캐릭터 월드스페이스
+
+        //D3DXMATRIX weaponWorld = m_framePtr.pSlotPrimary->CombinedTransformationMatrix
+        //    * pTr->GetTransformationMatrix();
+
+        //pWeaponPrimaryTr->SetTransformationMatrix(weaponWorld);
+
+        //Debug << "primary weapon matrix : \n" << weaponWorld << '\n';
+
+        //pWeaponPrimaryTr->Update();
+        //pWeaponPrimary->SetIsRenderEffectMesh(false);
+        //pWeaponPrimary->SetIsRenderSkinnedMesh(true);
+
+        //for test
+        Transform* pWeaponPrimaryTr = pWeaponPrimary->GetTransform();
+        D3DXMATRIX weaponWorld = m_framePtr.pHandGun->CombinedTransformationMatrix
+            * pTr->GetTransformationMatrix();
+
+        pWeaponPrimaryTr->SetTransformationMatrix(weaponWorld);
+        pWeaponPrimaryTr->Update();
+        pWeaponPrimary->SetIsRenderEffectMesh(false);
+        pWeaponPrimary->SetIsRenderSkinnedMesh(true);
+
+    }
+    
+    //보조무기
+    Item* pWeaponSecondary = m_totalInventory.m_weaponSecondary;
+    if (pWeaponSecondary)
+    {
+        Transform* pWeaponSecondaryTr = pWeaponSecondary->GetTransform();
+        D3DXMATRIX weaponWorld = m_framePtr.pSlotSecondary->CombinedTransformationMatrix
+            * pTr->GetTransformationMatrix();
+
+        pWeaponSecondaryTr->SetTransformationMatrix(weaponWorld);
+
+        Debug << "secondary weapon matrix : \n" << weaponWorld << '\n';
+
+        pWeaponSecondaryTr->Update();
+        pWeaponSecondary->SetIsRenderEffectMesh(false);
+        pWeaponSecondary->SetIsRenderSkinnedMesh(true);
+
+        //for test
+        //Transform* pWeaponSecondaryTr = pWeaponSecondary->GetTransform();
+        //D3DXMATRIX weaponWorld = m_framePtr.pHandGun->CombinedTransformationMatrix
+        //    * pTr->GetTransformationMatrix();
+
+        //pWeaponSecondaryTr->SetTransformationMatrix(weaponWorld);
+        //pWeaponSecondaryTr->Update();
+        //pWeaponSecondary->SetIsRenderEffectMesh(false);
+        //pWeaponSecondary->SetIsRenderSkinnedMesh(true);
+
+    }
 }
 
 void Character::renderTotalInventory()
@@ -159,10 +235,10 @@ void Character::renderTotalInventory()
     Item* pHead = m_totalInventory.m_equipHead;
     if (pHead) pHead->Render();
 
-    Weapon* pWeaponPrimary = m_totalInventory.m_weaponPrimary;
+    Item* pWeaponPrimary = m_totalInventory.m_weaponPrimary;
     if (pWeaponPrimary) pWeaponPrimary->Render();
 
-    Weapon* pWeaponSecondary = m_totalInventory.m_weaponSecondary;
+    Item* pWeaponSecondary = m_totalInventory.m_weaponSecondary;
     if (pWeaponSecondary) pWeaponSecondary->Render();
 }
 
@@ -185,69 +261,60 @@ void Character::ShowTotalInventory()
         }
     }
 
-    //cout << "<장비>" << endl;
-    //for (auto items : m_totalInventory.m_mapEquip)
-    //{
-    //    TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(items.first);
-    //    cout << "[" << ForDebugGetItemCategory(category) << "] ";
-    //    for (auto item : items.second)
-    //    {
-    //        tag = item->GetTagResStatic();
-    //        cout << "- " << ItemInfo::GetName(tag);
-    //        cout << " " << item->GetCount();
-    //        cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
-    //    }
-    //}
+    TAG_ITEM_CATEGORY category;
     cout << "<장비>" << endl;
-    tag = m_totalInventory.m_equipArmor->GetTagResStatic();
-    TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(tag);
-    cout << "[" << ForDebugGetItemCategory(category) << "] ";
-    cout << "- " << ItemInfo::GetName(tag);
-    cout << " " << m_totalInventory.m_equipArmor->GetCount() << "개";
-    cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
 
-    tag = m_totalInventory.m_equipBack->GetTagResStatic();
-    category = ItemInfo::GetItemCategory(tag);
-    cout << "[" << ForDebugGetItemCategory(category) << "] ";
-    cout << "- " << ItemInfo::GetName(tag);
-    cout << " " << m_totalInventory.m_equipBack->GetCount() << "개";
-    cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
+    if (m_totalInventory.m_equipArmor)
+    {
+        tag = m_totalInventory.m_equipArmor->GetTagResStatic();
+        category = ItemInfo::GetItemCategory(tag);
+        cout << "[" << ForDebugGetItemCategory(category) << "] ";
+        cout << "- " << ItemInfo::GetName(tag);
+        cout << " " << m_totalInventory.m_equipArmor->GetCount() << "개";
+        cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
+    }
 
-    tag = m_totalInventory.m_equipHead->GetTagResStatic();
-    category = ItemInfo::GetItemCategory(tag);
-    cout << "[" << ForDebugGetItemCategory(category) << "] ";
-    cout << "- " << ItemInfo::GetName(tag);
-    cout << " " << m_totalInventory.m_equipHead->GetCount() << "개";
-    cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
+    if (m_totalInventory.m_equipBack)
+    {
+        tag = m_totalInventory.m_equipBack->GetTagResStatic();
+        category = ItemInfo::GetItemCategory(tag);
+        cout << "[" << ForDebugGetItemCategory(category) << "] ";
+        cout << "- " << ItemInfo::GetName(tag);
+        cout << " " << m_totalInventory.m_equipBack->GetCount() << "개";
+        cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
+    }
 
-    //cout << "<무기>" << endl;
-    //for (auto items : m_mapWeapon)
-    //{
-    //    TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(items.first);
-    //    cout << "[" << ForDebugGetItemCategory(category) << "] ";
-    //    for (auto item : items.second)
-    //    {
-    //        tag = item->GetTagResStatic();
-    //        cout << "- " << ItemInfo::GetName(tag);
-    //        cout << " " << item->GetCount();
-    //        cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
-    //    }
-    //}
+    if (m_totalInventory.m_equipHead)
+    {
+        tag = m_totalInventory.m_equipHead->GetTagResStatic();
+        category = ItemInfo::GetItemCategory(tag);
+        cout << "[" << ForDebugGetItemCategory(category) << "] ";
+        cout << "- " << ItemInfo::GetName(tag);
+        cout << " " << m_totalInventory.m_equipHead->GetCount() << "개";
+        cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
+    }
 
     cout << "<무기>" << endl;
-    tag = m_totalInventory.m_weaponPrimary->GetTagResStatic();
-    category = ItemInfo::GetItemCategory(tag);
-    cout << "[" << ForDebugGetItemCategory(category) << "] ";
-    cout << "- " << ItemInfo::GetName(tag);
-    cout << " " << m_totalInventory.m_weaponPrimary->GetCount() << "개";
-    cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
 
-    tag = m_totalInventory.m_weaponSecondary->GetTagResStatic();
-    category = ItemInfo::GetItemCategory(tag);
-    cout << "[" << ForDebugGetItemCategory(category) << "] ";
-    cout << "- " << ItemInfo::GetName(tag);
-    cout << " " << m_totalInventory.m_weaponSecondary->GetCount() << "개";
-    cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
+    if (m_totalInventory.m_weaponPrimary)
+    {
+        tag = m_totalInventory.m_weaponPrimary->GetTagResStatic();
+        category = ItemInfo::GetItemCategory(tag);
+        cout << "[" << ForDebugGetItemCategory(category) << "] ";
+        cout << "- " << ItemInfo::GetName(tag);
+        cout << " " << m_totalInventory.m_weaponPrimary->GetCount() << "개";
+        cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
+    }
+
+    if (m_totalInventory.m_weaponSecondary)
+    {
+        tag = m_totalInventory.m_weaponSecondary->GetTagResStatic();
+        category = ItemInfo::GetItemCategory(tag);
+        cout << "[" << ForDebugGetItemCategory(category) << "] ";
+        cout << "- " << ItemInfo::GetName(tag);
+        cout << " " << m_totalInventory.m_weaponSecondary->GetCount() << "개";
+        cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
+    }
 }
 
 string Character::ForDebugGetItemCategory(TAG_ITEM_CATEGORY category)

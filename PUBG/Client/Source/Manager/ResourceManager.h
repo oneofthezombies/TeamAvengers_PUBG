@@ -30,10 +30,11 @@ private:
 
     unordered_map<TAG_FONT, LPD3DXFONT> m_fonts;
 
-    unordered_map<string, SkinnedMesh*> m_skinnedMeshs;
-
     SkinnedMesh*                        m_pCharacter;
     array<LPD3DXANIMATIONCONTROLLER, 4> m_characterAnimControllers;
+
+    unordered_map<string, SkinnedMesh*> m_skinnedMeshs;
+    unordered_map<SkinnedMesh*, LPD3DXANIMATIONCONTROLLER> m_animationController;
 
 private:
              ResourceManager();
@@ -44,10 +45,12 @@ public:
     void Destroy();
 
     void AddResource(ResourceContainer* pResourceContainer);
+    
     void AddCharacter(ResourceContainer* pResourceContainer);
 
     LPD3DXFONT GetFont(const TAG_FONT tag);
 
+    SkinnedMesh* GetSkinnedMesh(const string& path, const string& filename);
     SkinnedMesh* GetCharacterSkinnedMesh();
     EffectMesh*  GetEffectMesh(const TAG_RES_STATIC tag);
     LPDIRECT3DTEXTURE9 GetTexture(const string& path, const string& filename);

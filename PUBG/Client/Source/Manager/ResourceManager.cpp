@@ -234,6 +234,15 @@ LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
     //return m_umapFont[val];
 }
 
+SkinnedMesh* ResourceManager::GetSkinnedMesh(const string& path, const string& filename)
+{
+    const auto search = m_skinnedMeshs.find(path + filename);
+    if (search != m_skinnedMeshs.end())
+        return search->second;
+
+    return nullptr;
+}
+
 SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh()
 {
     return m_pCharacter;

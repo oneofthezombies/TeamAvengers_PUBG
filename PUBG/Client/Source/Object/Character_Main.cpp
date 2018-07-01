@@ -31,7 +31,11 @@ Character::Character(const int index)
     pSkinnedMeshController->SetSkinnedMesh(
         Resource()()->GetCharacterSkinnedMesh());
     
-    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+    //setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+
+    //for test
+    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false);
+    //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, false);
 
     setFramePtr();
 
@@ -199,118 +203,118 @@ void Character::updateMine()
 
     //Debug << "rot for TP : " << m_rotForCameraTP << '\n';
 
-    switch (m_animState)
-    {
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1:
-        {
-            if (isPressed_Space)
-            {
-                if (isPressing_W)
-                {
-                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
-                }
-                else
-                {
-                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
-                }
-            }
-            else
-            {
-                if (isPressing_W)
-                {
-                    if (isPressing_LCtrl)
-                    {
-                        setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_F, true);
-                        p += getForward() * 0.5f;
-                    }
-                    else if (isPressing_LShift)
-                    {
-                        setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F, true);
-                        p += getForward() * 2.0f;
-                    }
-                    else
-                    {
-                        setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F, true);
-                        p += getForward();
-                    }
-                }
-                else if (isPressing_S)
-                {
-                    if (isPressing_LCtrl)
-                    {
-                        setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_B, true);
-                        p += getForward() * -0.5f;
-                    }
-                    else
-                    {
-                        setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B, true);
-                        p += getForward() * -1.0f;
-                    }
-                }
-            }
-        }
-        break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_F:
-        {
-            if (isPressing_W) 
-            {
-                p += getForward() * 0.5f;
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-            }
-        }
-        break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F:
-        {
-            if (isPressing_W) 
-            {
-                p += getForward() * 2.0f;
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-            }
-        }
-        break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F:
-        {
-            if (isPressing_W) 
-            {
-                p += getForward();
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-            }
-        }
-        break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_B:
-        {
-            if (isPressing_S)
-            {
-                p += getForward() * -0.5f;
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-            }
-        }
-        break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B:
-        {
-            if (isPressing_S)
-            {
-                p += getForward() * -1.0f;
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-            }
-        }
-        break;
-    }
+    //switch (m_animState)
+    //{
+    //case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1:
+    //    {
+    //        if (isPressed_Space)
+    //        {
+    //            if (isPressing_W)
+    //            {
+    //                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
+    //            }
+    //            else
+    //            {
+    //                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
+    //            }
+    //        }
+    //        else
+    //        {
+    //            if (isPressing_W)
+    //            {
+    //                if (isPressing_LCtrl)
+    //                {
+    //                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_F, true);
+    //                    p += getForward() * 0.5f;
+    //                }
+    //                else if (isPressing_LShift)
+    //                {
+    //                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F, true);
+    //                    p += getForward() * 2.0f;
+    //                }
+    //                else
+    //                {
+    //                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F, true);
+    //                    p += getForward();
+    //                }
+    //            }
+    //            else if (isPressing_S)
+    //            {
+    //                if (isPressing_LCtrl)
+    //                {
+    //                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_B, true);
+    //                    p += getForward() * -0.5f;
+    //                }
+    //                else
+    //                {
+    //                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B, true);
+    //                    p += getForward() * -1.0f;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    break;
+    //case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_F:
+    //    {
+    //        if (isPressing_W) 
+    //        {
+    //            p += getForward() * 0.5f;
+    //        }
+    //        else
+    //        {
+    //            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
+    //        }
+    //    }
+    //    break;
+    //case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F:
+    //    {
+    //        if (isPressing_W) 
+    //        {
+    //            p += getForward() * 2.0f;
+    //        }
+    //        else
+    //        {
+    //            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
+    //        }
+    //    }
+    //    break;
+    //case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F:
+    //    {
+    //        if (isPressing_W) 
+    //        {
+    //            p += getForward();
+    //        }
+    //        else
+    //        {
+    //            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
+    //        }
+    //    }
+    //    break;
+    //case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_B:
+    //    {
+    //        if (isPressing_S)
+    //        {
+    //            p += getForward() * -0.5f;
+    //        }
+    //        else
+    //        {
+    //            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
+    //        }
+    //    }
+    //    break;
+    //case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B:
+    //    {
+    //        if (isPressing_S)
+    //        {
+    //            p += getForward() * -1.0f;
+    //        }
+    //        else
+    //        {
+    //            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
+    //        }
+    //    }
+    //    break;
+    //}
 
     if (isPressing_A)
     {
