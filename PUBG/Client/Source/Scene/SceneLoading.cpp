@@ -122,7 +122,7 @@ void SceneLoading::loadEffectMesh()
     //addTask(TAG_RES_STATIC::Ammo_7_62mm);
 
     addTask(TAG_RES_STATIC::QBZ);
-    //addTask(TAG_RES_STATIC::Kar98k);
+    addTask(TAG_RES_STATIC::Kar98k);
 
     //addTask(TAG_RES_STATIC::RedDot);
     //addTask(TAG_RES_STATIC::Aimpoint2X);
@@ -152,6 +152,7 @@ void SceneLoading::loadSkinnedMesh()
 
     // weapon
     addTask(TAG_RES_ANIM_WEAPON::QBZ_Anim, &m_skinnedMeshTasks);
+    addTask(TAG_RES_ANIM_WEAPON::Kar98k_Anim, &m_skinnedMeshTasks);
 }
 
 void SceneLoading::loadCharacterAnimation()

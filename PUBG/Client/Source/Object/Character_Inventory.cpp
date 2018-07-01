@@ -163,6 +163,7 @@ void Character::updateTotalInventory()
 
     }
 
+    //주무기
     Item* pWeaponPrimary = m_totalInventory.m_weaponPrimary;
     if (pWeaponPrimary)
     {
@@ -174,8 +175,6 @@ void Character::updateTotalInventory()
         D3DXMATRIX weaponWorld = m_framePtr.pSlotPrimary->CombinedTransformationMatrix
             * pTr->GetTransformationMatrix();
 
-        // TODO : rotate item
-
         pWeaponPrimaryTr->SetTransformationMatrix(weaponWorld);
 
         Debug << "primary weapon matrix : \n" << weaponWorld << '\n';
@@ -185,10 +184,21 @@ void Character::updateTotalInventory()
         pWeaponPrimary->SetIsRenderSkinnedMesh(true);
     }
 
+    //보조무기
     Item* pWeaponSecondary = m_totalInventory.m_weaponSecondary;
     if (pWeaponSecondary)
     {
+        Transform* pWeaponSecondaryTr = pWeaponSecondary->GetTransform();
+        D3DXMATRIX weaponWorld = m_framePtr.pSlotSecondary->CombinedTransformationMatrix
+            * pTr->GetTransformationMatrix();
 
+        pWeaponSecondaryTr->SetTransformationMatrix(weaponWorld);
+
+        Debug << "secondary weapon matrix : \n" << weaponWorld << '\n';
+
+        pWeaponSecondaryTr->Update();
+        pWeaponSecondary->SetIsRenderEffectMesh(false);
+        pWeaponSecondary->SetIsRenderSkinnedMesh(true);
     }
 }
 

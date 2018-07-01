@@ -816,8 +816,12 @@ TAG_RES_ANIM_WEAPON ResourceInfo::GetTagResAnimWeapon(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
-    case TAG_RES_STATIC::QBZ: return TAG_RES_ANIM_WEAPON::QBZ_Anim;
-    default:                  return TAG_RES_ANIM_WEAPON::QBZ_Anim;
+    case TAG_RES_STATIC::QBZ:    return TAG_RES_ANIM_WEAPON::QBZ_Anim;
+    case TAG_RES_STATIC::Kar98k: return TAG_RES_ANIM_WEAPON::Kar98k_Anim;
+
+    default:                  
+        assert(false && "ResourceInfo::GetTagResAnimWeapon(), default case.");
+        return TAG_RES_ANIM_WEAPON::Idle;
     }
 }
 

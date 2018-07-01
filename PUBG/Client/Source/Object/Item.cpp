@@ -57,6 +57,7 @@ void Item::setup(const TAG_RES_STATIC tag)
     //내구성 셋팅
     m_durability = ItemInfo::GetDefaultDurability(tag);
 
+    //아이템 개수 셋팅
     switch (tag)
     {
     case TAG_RES_STATIC::Ammo_5_56mm:

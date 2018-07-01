@@ -142,6 +142,7 @@ enum class TAG_RES_STATIC
 //애니메이션이 있는 리소스 -------------------------------------
 enum class TAG_RES_ANIM_WEAPON
 {
+    Idle,
 //Weapon - 총 자체의 애니메이션
     QBZ_Anim,
     Kar98k_Anim
