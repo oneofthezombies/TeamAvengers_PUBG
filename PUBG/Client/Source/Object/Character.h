@@ -170,9 +170,10 @@ private:
     bool isMine() const;
 
     void setAnimation(
-        const TAG_ANIM_CHARACTER tag, const bool isBlend, 
-        const float currentWeight = 1.0f, const float nextWeight = 0.0f,
-        const float blendTime = 0.3f);
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend = true,
+        const float blendTime = 0.3f,
+        const float nextWeight = 0.0f);
 
     void setInfo();
 

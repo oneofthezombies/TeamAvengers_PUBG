@@ -110,14 +110,16 @@ void SkinnedMeshController::UpdateAnimation()
     assert(m_pSkinnedMeshInstance &&
         "SkinnedMeshController::UpdateAnimation(), \
          skinned mesh instance is null.");
+
     const float factor = 2.0f;
-    const auto dt = Time()()->GetDeltaTime();
+    const float dt = Time()()->GetDeltaTime();
+    const float calcedDt = dt * factor;
     auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
-    pAniCon->AdvanceTime(dt *factor, nullptr);
+    pAniCon->AdvanceTime(calcedDt, nullptr);
 
     if (m_passedBlendTime < m_totalBlendTime)
     {
-        m_passedBlendTime += dt * factor;
+        m_passedBlendTime += calcedDt;
         const auto weight = m_passedBlendTime / m_totalBlendTime;
         if (weight >= 1.0f)
         {
@@ -212,8 +214,11 @@ void SkinnedMeshController::SetAnimationIndex(
 }
 
 void SkinnedMeshController::SetAnimation(
-    const string& name, const bool isBlend, const float currentWeight, 
-    const float nextWeight, const float blendTime)
+    const string& name,
+    const float nextSpeed,
+    const bool isBlend,
+    const float blendTime,
+    const float nextWeight)
 {
     LPD3DXANIMATIONSET pNext = nullptr;
     auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
@@ -229,15 +234,15 @@ void SkinnedMeshController::SetAnimation(
     if (isBlend)
     {
         LPD3DXANIMATIONSET pCurrent = nullptr;
-        pAniCon->GetTrackAnimationSet(0u, &pCurrent);
-        pAniCon->SetTrackAnimationSet(1u, pCurrent);
+        pAniCon->GetTrackAnimationSet(0, &pCurrent);
+        pAniCon->SetTrackAnimationSet(1, pCurrent);
 
         D3DXTRACK_DESC desc;
-        pAniCon->GetTrackDesc(0u, &desc);
-        pAniCon->SetTrackDesc(1u, &desc);
+        pAniCon->GetTrackDesc(0, &desc);
+        pAniCon->SetTrackDesc(1, &desc);
 
-        pAniCon->SetTrackWeight(0u, nextWeight);
-        pAniCon->SetTrackWeight(1u, currentWeight);
+        pAniCon->SetTrackWeight(0, nextWeight);
+        pAniCon->SetTrackWeight(1, 1.0f - nextWeight);
 
         SAFE_RELEASE(pCurrent);
 
@@ -245,9 +250,10 @@ void SkinnedMeshController::SetAnimation(
         m_totalBlendTime = blendTime;
     }
 
-    pAniCon->SetTrackAnimationSet(0u, pNext);
+    pAniCon->SetTrackAnimationSet(0, pNext);
     //pAniCon->ResetTime();
-    pAniCon->SetTrackPosition(0u, 0.0);
+    pAniCon->SetTrackPosition(0, 0.0);
+    pAniCon->SetTrackSpeed(0, nextSpeed);
 
     SAFE_RELEASE(pNext);
 }

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "TagAnimation.h"
 
-std::string TagAnimToString::Get(const TAG_ANIM_WEAPON tag)
+std::string TagAnimation::GetString(const TAG_ANIM_WEAPON tag)
 {
     switch (tag)
     {
@@ -30,7 +30,7 @@ std::string TagAnimToString::Get(const TAG_ANIM_WEAPON tag)
     }
 }
 
-std::string TagAnimToString::Get(const TAG_ANIM_CHARACTER tag)
+std::string TagAnimation::GetString(const TAG_ANIM_CHARACTER tag)
 {
     switch (tag)
     {
@@ -460,5 +460,24 @@ std::string TagAnimToString::Get(const TAG_ANIM_CHARACTER tag)
             assert(false && "TagAnimToString::Get(), default case.");
             return "";
         }
+    }
+}
+
+float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
+{
+    switch (tag)
+    {
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_F:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_FR:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_R:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_BR:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_B:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_BL:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_L:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_FL:
+        return 0.5f;
+
+    default:
+        return 1.0f;
     }
 }

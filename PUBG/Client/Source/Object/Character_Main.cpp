@@ -154,7 +154,7 @@ void Character::updateMine()
         }
         else
         {
-            setAnimation(m_animState, true);
+            setAnimation(m_animState);
 
             m_savedInput = m_currentInput;
         }
@@ -163,13 +163,13 @@ void Character::updateMine()
         if (m_currentInput._Num1)
         {
             cout << "Click Num1" << endl;
-            setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, true);
+            setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand);
 
         }
         else if (m_currentInput._Num2)
         {
             cout << "Click Num2" << endl;
-            setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, true);
+            setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand);
         }
     }
     else

@@ -184,7 +184,7 @@ void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHA
 
 
     //Attacking 3개 -----------------------------------------------------
-    if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
+    if (true/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
     {
         attacking = Attacking::Rifle;
     }
@@ -294,18 +294,20 @@ bool Character::isMine() const
 }
 
 void Character::setAnimation(
-    const TAG_ANIM_CHARACTER tag, const bool isBlend, 
-    const float currentWeight, const float nextWeight, const float blendTime)
+    const TAG_ANIM_CHARACTER tag,
+    const bool isBlend,
+    const float blendTime,
+    const float nextWeight)
 {
     assert(pSkinnedMeshController && 
         "Character::setAnimation(), skinned mesh controller is null.");
 
     pSkinnedMeshController->SetAnimation(
-        TagAnimToString::Get(tag), 
-        isBlend, 
-        currentWeight, 
-        nextWeight, 
-        blendTime);
+        TagAnimation::GetString(tag), 
+        TagAnimation::GetSpeed(tag),
+        isBlend,
+        blendTime,
+        nextWeight);
 
     m_animState = tag;
 }

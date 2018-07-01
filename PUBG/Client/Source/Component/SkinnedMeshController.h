@@ -32,14 +32,18 @@ public:
     void Render(const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
 
     void SetSkinnedMesh(SkinnedMesh* pSkinnedMesh);
+
     void SetAnimationIndex(
         const size_t index, const bool isBlend, 
         const float currentWeight = 1.0f, const float nextWeight = 0.0f, 
         const float blendTime = 0.3f);
+
     void SetAnimation(
-        const string& name, const bool isBlend,
-        const float currentWeight = 1.0f, const float nextWeight = 0.0f,
-        const float blendTime = 0.3f);
+        const string& name,
+        const float nextSpeed = 1.0f,
+        const bool isBlend = true,
+        const float blendTime = 0.3f,
+        const float nextWeight = 0.0f);
 
           size_t  GetCurrentAnimationIndex() const;
     const string& GetCurrentAnimationName()  const;
