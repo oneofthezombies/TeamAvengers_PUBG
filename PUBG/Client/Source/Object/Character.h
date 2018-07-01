@@ -72,6 +72,11 @@ public:
         bool _X       ;
         bool _C       ;
         bool _Space   ;
+        bool _Num1    ;
+        bool _Num2    ;
+        bool _Num3    ;
+        bool _Num4    ;
+        bool _Num5    ;
 
         IsPressing();
         bool operator==(const IsPressing& other) const
@@ -88,6 +93,11 @@ public:
             if (_X      != other._X       ) return false;
             if (_C      != other._C       ) return false;
             if (_Space  != other._Space   ) return false;
+            if (_Num1   != other._Num1    ) return false;
+            if (_Num2   != other._Num2    ) return false;
+            if (_Num3   != other._Num3    ) return false;
+            if (_Num4   != other._Num4    ) return false;
+            if (_Num5   != other._Num5    ) return false;
             return true;
         }
         bool operator!=(const IsPressing& other) const

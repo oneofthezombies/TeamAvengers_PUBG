@@ -35,6 +35,11 @@ Character::IsPressing::IsPressing()
     , _X(false)
     , _C(false)
     , _Space(false)
+    , _Num1(false)
+    , _Num2(false)
+    , _Num3(false)
+    , _Num4(false)
+    , _Num5(false)
 {
 }
 
@@ -91,10 +96,15 @@ Character::IsPressing Character::HandleInput(IsPressing& m_isPressing)
     m_isPressing._S = pInput->IsStayKeyDown('S');
     m_isPressing._A = pInput->IsStayKeyDown('A');
     m_isPressing._D = pInput->IsStayKeyDown('D');
-    m_isPressing._Z = pInput->IsStayKeyDown('Z');
-    m_isPressing._X = pInput->IsStayKeyDown('X');
-    m_isPressing._C = pInput->IsStayKeyDown('C');
+    m_isPressing._Z = pInput->IsOnceKeyDown('Z');
+    m_isPressing._X = pInput->IsOnceKeyDown('X');
+    m_isPressing._C = pInput->IsOnceKeyDown('C');
     m_isPressing._Space = pInput->IsOnceKeyDown(VK_SPACE);
+    m_isPressing._Num1 = pInput->IsOnceKeyDown('1');
+    m_isPressing._Num2 = pInput->IsOnceKeyDown('2');
+    m_isPressing._Num3 = pInput->IsOnceKeyDown('3');
+    m_isPressing._Num4 = pInput->IsOnceKeyDown('4');
+    m_isPressing._Num5 = pInput->IsOnceKeyDown('5');
 
     return m_isPressing;
 }

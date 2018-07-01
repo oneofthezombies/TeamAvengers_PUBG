@@ -142,7 +142,7 @@ void Character::updateMine()
 
     //이곳에서 Input을 넣습니다 그리고 m_currentInput으로 사용
     m_currentInput = HandleInput(m_currentInput);
-
+    // HERE
     if (m_savedInput != m_currentInput)
     {
         //setting animation and movements
@@ -156,6 +156,17 @@ void Character::updateMine()
             setAnimation(m_animState, true);
 
             m_savedInput = m_currentInput;
+        }
+
+        // HERE
+        if (m_currentInput._Num1)
+        {
+            cout << "Click Num1" << endl;
+
+        }
+        else if (m_currentInput._Num2)
+        {
+            cout << "Click Num2" << endl;
         }
     }
     else
