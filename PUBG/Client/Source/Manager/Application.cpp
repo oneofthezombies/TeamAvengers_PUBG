@@ -13,6 +13,7 @@ Application::~Application()
 void Application::Init()
 {
 	DeviceMgr()()->Init();
+    Resource ()()->Init();
     UI       ()()->Init();
     Input    ()()->Init();
     Sound    ()()->Init();

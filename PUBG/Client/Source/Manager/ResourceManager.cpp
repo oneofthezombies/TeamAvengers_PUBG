@@ -2,53 +2,31 @@
 #include "ResourceManager.h"
 #include "Structure.h"
 #include "Character.h"
-#include "ResPathFileName.h"
+#include "ResourceInfo.h"
 
 ResourceManager::ResourceManager()
     : Singleton<ResourceManager>()
     , m_pEffectPool(nullptr)
 {
-    const auto hr = D3DXCreateEffectPool(&m_pEffectPool);
-    assert(!FAILED(hr) && "ResourceManager::Constructor() failed. \
-                           D3DXCreateEffectPool() failed.");
 }
 
 ResourceManager::~ResourceManager()
 {
 }
 
-LPD3DXEFFECT ResourceManager::GetEffect(const string& fullPath)
+void ResourceManager::Init()
 {
-    const auto search = m_effects.find(fullPath);
-    if (search == m_effects.end())
-    {
-        LPD3DXEFFECT pEffect = nullptr;
-        LPD3DXBUFFER pError = nullptr;
-        DWORD flags = D3DXSHADER_DEBUG | D3DXFX_NOT_CLONEABLE;
+    HRESULT hr = D3DXCreateEffectPool(&m_pEffectPool);
+    assert(!FAILED(hr) && "ResourceManager::Constructor(),\
+                           D3DXCreateEffectPool() failed.");
 
-        const auto hr = D3DXCreateEffectFromFileA(Device()(), 
-            fullPath.c_str(), nullptr, nullptr, flags, m_pEffectPool, 
-            &pEffect, &pError);
+    ResourceContainer* pResourceContainer = new ResourceContainer;
 
-        if (!pEffect && pError)
-        {
-            const auto size = pError->GetBufferSize();
-            const auto errorMsg = pError->GetBufferPointer();
+    ResourceAsync::CreateEffect(
+        "./Resource/", "Color.fx", 
+        pResourceContainer);
 
-            string str((char*)errorMsg, size);
-            str = string("ResourceManager::LoadEffect() failed. ") + str;
-            assert(false && str.c_str());
-        }
-
-        m_effects[fullPath] = pEffect;
-    }
-    return m_effects[fullPath];
-}
-
-LPD3DXEFFECT ResourceManager::GetEffect(const string& path,
-    const string& effectFilename)
-{
-    return GetEffect(path + effectFilename);
+    AddResource(pResourceContainer);
 }
 
 void ResourceManager::Destroy()
@@ -75,53 +53,89 @@ void ResourceManager::Destroy()
     //RemoveFontResource(TEXT("resources/fonts/SeoulNamsanM.ttf"));
 }
 
-LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& fullPath)
-{
-    const auto search = m_textures.find(fullPath);
-    if (search == m_textures.end())
-    {
-        const auto hr = D3DXCreateTextureFromFileExA(Device()(), 
-            fullPath.c_str(), D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2, 
-            D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_DEFAULT, 
-            D3DX_DEFAULT, 0, nullptr, nullptr, &m_textures[fullPath]);
+//LPD3DXEFFECT ResourceManager::GetEffect(const string& fullPath)
+//{
+//    const auto search = m_effects.find(fullPath);
+//    if (search == m_effects.end())
+//    {
+//        LPD3DXEFFECT pEffect = nullptr;
+//        LPD3DXBUFFER pError = nullptr;
+//        DWORD flags = D3DXSHADER_DEBUG | D3DXFX_NOT_CLONEABLE;
+//
+//        const auto hr = D3DXCreateEffectFromFileA(Device()(), 
+//            fullPath.c_str(), nullptr, nullptr, flags, m_pEffectPool, 
+//            &pEffect, &pError);
+//
+//        if (!pEffect && pError)
+//        {
+//            const auto size = pError->GetBufferSize();
+//            const auto errorMsg = pError->GetBufferPointer();
+//
+//            string str((char*)errorMsg, size);
+//            str = string("ResourceManager::LoadEffect() failed. ") + str;
+//            assert(false && str.c_str());
+//        }
+//
+//        m_effects[fullPath] = pEffect;
+//    }
+//    return m_effects[fullPath];
+//}
+//
+//LPD3DXEFFECT ResourceManager::GetEffect(const string& path,
+//    const string& effectFilename)
+//{
+//    return GetEffect(path + effectFilename);
+//}
+//
 
-        assert(!FAILED(hr) && "TextureManager::GetTexture() failed.");
-    }
-    return m_textures[fullPath];
-}
-
-LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& path,
-    const string& textureFilename)
-{
-    return GetTexture(path + textureFilename);
-}
-
-EffectMesh* ResourceManager::GetEffectMesh(const string& path,
-    const string& xFilename)
-{
-    auto pEffectMesh = FindEffectMesh(path, xFilename);
-    if (!pEffectMesh)
-    {
-        LPD3DXBUFFER pEffectInstances = nullptr;
-        LPD3DXMESH pMesh = nullptr;
-        DWORD numMaterials = 0u;
-
-        auto hr = D3DXLoadMeshFromXA((path + xFilename).c_str(), 
-            D3DXMESH_MANAGED, Device()(), nullptr, nullptr, &pEffectInstances, 
-            &numMaterials, &pMesh);
-
-        assert(!FAILED(hr) &&
-            "ResourceManager::GetEffectMesh(), D3DXLoadMeshFromXA() failed.");
-
-        D3DXEFFECTINSTANCE* pEIs =
-            static_cast<D3DXEFFECTINSTANCE*>(
-                pEffectInstances->GetBufferPointer());
-
-        pEffectMesh = AddEffectMesh(
-            path, xFilename, pMesh, pEIs, numMaterials);
-    }
-    return pEffectMesh;
-}
+//
+//LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& fullPath)
+//{
+//    const auto search = m_textures.find(fullPath);
+//    if (search == m_textures.end())
+//    {
+//        const auto hr = D3DXCreateTextureFromFileExA(Device()(), 
+//            fullPath.c_str(), D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2, 
+//            D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_DEFAULT, 
+//            D3DX_DEFAULT, 0, nullptr, nullptr, &m_textures[fullPath]);
+//
+//        assert(!FAILED(hr) && "TextureManager::GetTexture() failed.");
+//    }
+//    return m_textures[fullPath];
+//}
+//
+//LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& path,
+//    const string& textureFilename)
+//{
+//    return GetTexture(path + textureFilename);
+//}
+//
+//EffectMesh* ResourceManager::GetEffectMesh(const string& path,
+//    const string& xFilename)
+//{
+//    auto pEffectMesh = FindEffectMesh(path, xFilename);
+//    if (!pEffectMesh)
+//    {
+//        LPD3DXBUFFER pEffectInstances = nullptr;
+//        LPD3DXMESH pMesh = nullptr;
+//        DWORD numMaterials = 0u;
+//
+//        auto hr = D3DXLoadMeshFromXA((path + xFilename).c_str(), 
+//            D3DXMESH_MANAGED, Device()(), nullptr, nullptr, &pEffectInstances, 
+//            &numMaterials, &pMesh);
+//
+//        assert(!FAILED(hr) &&
+//            "ResourceManager::GetEffectMesh(), D3DXLoadMeshFromXA() failed.");
+//
+//        D3DXEFFECTINSTANCE* pEIs =
+//            static_cast<D3DXEFFECTINSTANCE*>(
+//                pEffectInstances->GetBufferPointer());
+//
+//        pEffectMesh = AddEffectMesh(
+//            path, xFilename, pMesh, pEIs, numMaterials);
+//    }
+//    return pEffectMesh;
+//}
 
 LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
 {
@@ -220,6 +234,15 @@ LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
     //return m_umapFont[val];
 }
 
+SkinnedMesh* ResourceManager::GetSkinnedMesh(const string& path, const string& filename)
+{
+    const auto search = m_skinnedMeshs.find(path + filename);
+    if (search != m_skinnedMeshs.end())
+        return search->second;
+
+    return nullptr;
+}
+
 SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh()
 {
     return m_pCharacter;
@@ -227,7 +250,7 @@ SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh()
 
 EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
 {
-    const auto keys = ResPathFileName::Get(tag);
+    const auto keys = ResourceInfo::GetPathFileName(tag);
     const auto search = m_effectMeshs.find(keys.first + keys.second);
 
     if (search == m_effectMeshs.end())
@@ -237,6 +260,37 @@ EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
     }
 
     return search->second;
+}
+
+LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(
+    const string& path, const string& filename)
+{
+    return GetTexture(path + filename);
+}
+
+LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& fullPath)
+{
+    const auto search = m_textures.find(fullPath);
+    if (search != m_textures.end())
+        return search->second;
+
+    return nullptr;
+}
+
+LPD3DXEFFECT ResourceManager::GetEffect(
+    const string& path, 
+    const string& filename)
+{
+    return GetEffect(path + filename);
+}
+
+LPD3DXEFFECT ResourceManager::GetEffect(const string& fullPath)
+{
+    const auto search = m_effects.find(fullPath);
+    if (search != m_effects.end())
+        return search->second;
+
+    return nullptr;
 }
 
 //void ResourceManager::AddCharacters(std::vector<ResourceContainer*> characters)
@@ -249,87 +303,87 @@ EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
 //    }
 //}
 
-EffectMesh* ResourceManager::FindEffectMesh(
-    const string& path, const string& name)
-{
-    const auto key(path + name);
-    const auto search = m_effectMeshs.find(key);
-    EffectMesh* p = nullptr;
-
-    if (search != m_effectMeshs.end())
-        p = search->second;
-    
-    return p;
-}
-
-EffectMesh* ResourceManager::AddEffectMesh(
-    const string& path, const string& name, LPD3DXMESH pMesh, 
-    const D3DXEFFECTINSTANCE* pEffectInstances, DWORD numMaterials)
-{
-    assert(pMesh && pEffectInstances && 
-        "ResourceManager::AddEffectMesh(), \
-         mesh or effect instances is nullptr");
-
-    auto pEffectMesh = new EffectMesh;
-    pEffectMesh->m_pMesh = pMesh;
-
-    auto& pEIs = pEffectInstances;
-    for (DWORD ei = 0u; ei < numMaterials; ++ei)
-    {
-        const D3DXEFFECTINSTANCE& EI = pEIs[ei];
-
-        if (!EI.pEffectFilename) continue;
-
-        EffectParam EP;
-        EP.name = string(EI.pEffectFilename);
-        EP.pEffect = GetEffect(path, EI.pEffectFilename);
-        LPD3DXEFFECT& pEffect = EP.pEffect;
-
-        D3DXHANDLE hTech = nullptr;
-        pEffect->FindNextValidTechnique(nullptr, &hTech);
-        pEffect->SetTechnique(hTech);
-
-        pEffect->BeginParameterBlock();
-        for (DWORD di = 0u; di < EI.NumDefaults; ++di)
-        {
-            auto& d = EI.pDefaults[di];
-
-            D3DXHANDLE h = pEffect->GetParameterByName(nullptr, d.pParamName);
-            if (!h) continue;
-
-            D3DXPARAMETER_DESC desc;
-            pEffect->GetParameterDesc(h, &desc);
-
-            switch (desc.Type)
-            {
-            case D3DXPT_TEXTURE:
-                {
-                    pEffect->SetTexture(
-                        d.pParamName,
-                        GetTexture(path, static_cast<char*>(d.pValue)));
-                }
-                break;
-            case D3DXPT_BOOL:
-            case D3DXPT_INT:
-            case D3DXPT_FLOAT:
-            case D3DXPT_STRING:
-                {
-                    pEffect->SetValue(d.pParamName, d.pValue, d.NumBytes);
-                }
-                break;
-            default:
-                {
-                }
-                break;
-            }
-        }
-        EP.hParam = pEffect->EndParameterBlock();
-        pEffectMesh->m_effectParams.emplace_back(EP);
-    }
-
-    m_effectMeshs[path + name] = pEffectMesh;
-    return pEffectMesh;
-}
+//EffectMesh* ResourceManager::FindEffectMesh(
+//    const string& path, const string& name)
+//{
+//    const auto key(path + name);
+//    const auto search = m_effectMeshs.find(key);
+//    EffectMesh* p = nullptr;
+//
+//    if (search != m_effectMeshs.end())
+//        p = search->second;
+//    
+//    return p;
+//}
+//
+//EffectMesh* ResourceManager::AddEffectMesh(
+//    const string& path, const string& name, LPD3DXMESH pMesh, 
+//    const D3DXEFFECTINSTANCE* pEffectInstances, DWORD numMaterials)
+//{
+//    assert(pMesh && pEffectInstances && 
+//        "ResourceManager::AddEffectMesh(), \
+//         mesh or effect instances is nullptr");
+//
+//    auto pEffectMesh = new EffectMesh;
+//    pEffectMesh->m_pMesh = pMesh;
+//
+//    auto& pEIs = pEffectInstances;
+//    for (DWORD ei = 0u; ei < numMaterials; ++ei)
+//    {
+//        const D3DXEFFECTINSTANCE& EI = pEIs[ei];
+//
+//        if (!EI.pEffectFilename) continue;
+//
+//        EffectParam EP;
+//        EP.name = string(EI.pEffectFilename);
+//        EP.pEffect = GetEffect(path, EI.pEffectFilename);
+//        LPD3DXEFFECT& pEffect = EP.pEffect;
+//
+//        D3DXHANDLE hTech = nullptr;
+//        pEffect->FindNextValidTechnique(nullptr, &hTech);
+//        pEffect->SetTechnique(hTech);
+//
+//        pEffect->BeginParameterBlock();
+//        for (DWORD di = 0u; di < EI.NumDefaults; ++di)
+//        {
+//            auto& d = EI.pDefaults[di];
+//
+//            D3DXHANDLE h = pEffect->GetParameterByName(nullptr, d.pParamName);
+//            if (!h) continue;
+//
+//            D3DXPARAMETER_DESC desc;
+//            pEffect->GetParameterDesc(h, &desc);
+//
+//            switch (desc.Type)
+//            {
+//            case D3DXPT_TEXTURE:
+//                {
+//                    pEffect->SetTexture(
+//                        d.pParamName,
+//                        GetTexture(path, static_cast<char*>(d.pValue)));
+//                }
+//                break;
+//            case D3DXPT_BOOL:
+//            case D3DXPT_INT:
+//            case D3DXPT_FLOAT:
+//            case D3DXPT_STRING:
+//                {
+//                    pEffect->SetValue(d.pParamName, d.pValue, d.NumBytes);
+//                }
+//                break;
+//            default:
+//                {
+//                }
+//                break;
+//            }
+//        }
+//        EP.hParam = pEffect->EndParameterBlock();
+//        pEffectMesh->m_effectParams.emplace_back(EP);
+//    }
+//
+//    m_effectMeshs[path + name] = pEffectMesh;
+//    return pEffectMesh;
+//}
 
 void ResourceManager::AddResource(ResourceContainer* pResourceContainer)
 {

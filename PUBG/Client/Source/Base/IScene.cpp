@@ -3,6 +3,8 @@
 #include "IObject.h"
 #include "TerrainFeature.h"
 #include "DirectionalLight.h"
+#include "ResourceInfo.h"
+#include "Item.h"
 
 BoxColliderInFile::BoxColliderInFile()
 {
@@ -120,16 +122,23 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
         //    cout << b.m_transform << '\n';
         //}
 
-        TerrainFeature* pObj = new TerrainFeature(
-            o.m_tagResStatic, 
-            o.m_position, 
-            o.m_rotation, 
-            o.m_scale);
+        if (ResourceInfo::IsItem(o.m_tagResStatic))
+        {
+            AddObject(new Item(o.m_tagResStatic, o.m_position, o.m_rotation, o.m_scale));
+        }
+        else
+        {
+            TerrainFeature* pTerrainFeature = new TerrainFeature(
+                o.m_tagResStatic,
+                o.m_position,
+                o.m_rotation,
+                o.m_scale);
 
-        for (auto b : o.m_boxColliders)
-            pObj->AddBoxCollider(b.m_transform);
+            for (auto b : o.m_boxColliders)
+                pTerrainFeature->AddBoxCollider(b.m_transform);
 
-        AddObject(pObj);
+            AddObject(pTerrainFeature);
+        }
     }
 }
 

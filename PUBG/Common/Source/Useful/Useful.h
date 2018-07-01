@@ -18,9 +18,18 @@ struct Vector3
 {
     static const D3DXVECTOR3& ZERO;
     static const D3DXVECTOR3& ONE;
-    static const D3DXVECTOR3& RIGHT;
     static const D3DXVECTOR3& UP;
+    static const D3DXVECTOR3& DOWN;
+    static const D3DXVECTOR3& RIGHT;
+    static const D3DXVECTOR3& LEFT;
     static const D3DXVECTOR3& FORWARD;
+    static const D3DXVECTOR3& BACKWARD;
+
+    static const D3DXVECTOR3& FORWARD_RIGNT;
+    static const D3DXVECTOR3& FORWARD_LEFT;
+    static const D3DXVECTOR3& BACKWARD_RIGHT;
+    static const D3DXVECTOR3& BACKWARD_LEFT;
+
 
     static D3DXVECTOR3 Rotate(const D3DXVECTOR3& v, const D3DXQUATERNION& q);
 };
@@ -35,6 +44,7 @@ struct Matrix
     static const D3DXMATRIX& IDENTITY;
 
     static D3DXVECTOR3 GetTranslation(const D3DXMATRIX& val);
+    static void GetScaleAndRotation(const D3DXMATRIX& val, D3DXVECTOR3* OutScale, D3DXQUATERNION* OutRotation);
 };
 
 struct MaterialTemplate

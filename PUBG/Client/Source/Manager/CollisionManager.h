@@ -24,6 +24,7 @@ private:
         m_prevCollisions;
     unordered_map<TAG_COLLISION, unordered_set<TAG_COLLISION>> 
         m_collisionRelations;
+    bool m_isRender;
 
 private:
              CollisionManager();
@@ -52,6 +53,9 @@ public:
         const TAG_COLLISION victim);
     void GetCollideds(Collider* pPerpetrator, const TAG_COLLISION victim, 
         vector<Collider*>* OutCollideds);
+
+    void SetIsRender(const bool val);
+    bool IsRender() const;
 
     friend Singleton<CollisionManager>;
 };

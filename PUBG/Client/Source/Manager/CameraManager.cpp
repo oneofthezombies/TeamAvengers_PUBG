@@ -4,6 +4,7 @@
 CameraManager::CameraManager()
     : Singleton<CameraManager>()
     , pCurrentCamera(nullptr)
+    , m_targetInfo(nullptr)
 {
 }
 
@@ -18,7 +19,7 @@ void CameraManager::Init()
     m_cameras.emplace(TAG_CAMERA::Third_Person, new CameraThirdPerson);
     m_cameras.emplace(TAG_CAMERA::KyunChak, new CameraKyunChak);
     //m_cameras.emplace(TAG_CAMERA::Scope2X, new Camera2xScope);
-    
+
     //SetCurrentCamera(TAG_CAMERA::Default);
     SetCurrentCamera(TAG_CAMERA::Third_Person);
 }
@@ -35,14 +36,10 @@ void CameraManager::Update()
 
     if (pInput->IsOnceKeyUp('P'))
     {
-        if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
-        {
-            SetCurrentCamera(TAG_CAMERA::Third_Person);
-        }
-        else 
-        {
+        if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::Default)
             SetCurrentCamera(TAG_CAMERA::Default);
-        }
+        else
+            SetCurrentCamera(TAG_CAMERA::Third_Person);
     }
 
 
@@ -61,13 +58,18 @@ void CameraManager::Update()
     }
 }
 
-void CameraManager::SetTarget(Transform* pTarget, D3DXVECTOR3* pTargetRotForCameraTP)
+void CameraManager::SetTarget(Character::Info* info/*Transform* pTarget, D3DXVECTOR3* pTargetRotForCameraTP*/)
 {
-    assert(pTarget && pTargetRotForCameraTP && 
+    assert(info &&
         "CameraManager::SetTarget(), pointer is null.");
+    m_targetInfo = info;
+    //m_targetTransform.pTransform = pTarget;
+    //m_targetTransform.pRotForCameraTP = pTargetRotForCameraTP;
+}
 
-    m_targetTransform.pTransform = pTarget;
-    m_targetTransform.pRotForCameraTP = pTargetRotForCameraTP;
+Character::Info * CameraManager::GetTargetInfo()
+{
+    return m_targetInfo;
 }
 
 void CameraManager::SetCurrentCamera(const TAG_CAMERA tag)
@@ -80,8 +82,8 @@ void CameraManager::SetCurrentCamera(const TAG_CAMERA tag)
     pCurrentCamera->Reset();
 }
 
-TargetTransform::TargetTransform()
-    : pTransform(nullptr)
-    , pRotForCameraTP(nullptr)
-{
-}
+//TargetTransform::TargetTransform()
+//    : pTransform(nullptr)
+//    , pRotForCameraTP(nullptr)
+//{
+//}

@@ -5,6 +5,7 @@
 
 CollisionManager::CollisionManager()
     : Singleton<CollisionManager>()
+    , m_isRender(true)
 {
 }
 
@@ -227,4 +228,14 @@ void CollisionManager::GetCollideds(Collider* pPerpetrator,
         if (hasCollision(pPerpetrator, v))
             OutCollideds->emplace_back(v);
     }
+}
+
+void CollisionManager::SetIsRender(const bool val)
+{
+    m_isRender = val;
+}
+
+bool CollisionManager::IsRender() const
+{
+    return m_isRender;
 }

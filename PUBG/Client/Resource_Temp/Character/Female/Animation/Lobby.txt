@@ -1,5 +1,0 @@
-/// Lobby.X (로비에 있을 때 애니메이션)
-0. (0      ~ 1095)[1096] - Lobby_P1_NotReady
-1. (1096 ~ 1325)[230]   - Lobby_P1_NotReady_Ready
-2. (1326 ~ 2070)[745]   - Lobby_P1_Ready
-3. (2071 ~ 2197)[127]   - Lobby_P1_Ready_NotReady
