@@ -27,14 +27,16 @@ void SkinnedMeshController::checkIsFinishedAndSetNextAnimation(const float calce
 
     if (current + static_cast<double>(calcedDt) >= period)
     {
-        if (!m_nextAnims.empty())
-        {
-            NextAnimation& next = m_nextAnims.front();
-            SetAnimation(next.name, next.nextSpeed, next.isBlend, next.blendTime, next.nextWeight);
-            m_nextAnims.pop_front();
-        }
-
         m_isFinishedCurrentAnim = true;
+
+        if (!m_finishEvent.empty())
+        {
+            if (m_finishEvent.front())
+            {
+                m_finishEvent.front()();
+                m_finishEvent.pop_front();
+            }
+        }
     }
     else
     {
@@ -268,7 +270,7 @@ void SkinnedMeshController::SetAnimation(
 {
     LPD3DXANIMATIONSET pNext = nullptr;
     auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
-
+    cout << name << '\n';
     HRESULT hr = pAniCon->GetAnimationSetByName(name.c_str(), &pNext);
 
     assert(!FAILED(hr) &&
@@ -304,20 +306,16 @@ void SkinnedMeshController::SetAnimation(
     SAFE_RELEASE(pNext);
 }
 
-void SkinnedMeshController::AddNextAnimation(
+void SkinnedMeshController::SetAnimation(
     const string& name, 
     const float nextSpeed, 
     const bool isBlend, 
     const float blendTime, 
-    const float nextWeight)
+    const float nextWeight, 
+    const std::function<void()>& finishEvent)
 {
-    NextAnimation na;
-    na.name = name;
-    na.nextSpeed = nextSpeed;
-    na.isBlend = isBlend;
-    na.blendTime = blendTime;
-    na.nextWeight = nextWeight;
-    m_nextAnims.emplace_back(na);
+    SetAnimation(name, nextSpeed, isBlend, blendTime, nextWeight);
+    m_finishEvent.emplace_back(finishEvent);
 }
 
 size_t SkinnedMeshController::GetCurrentAnimationIndex() const
@@ -357,4 +355,9 @@ Frame* SkinnedMeshController::FindFrame(const string& name)
 bool SkinnedMeshController::IsFinishedCurrentAnim() const
 {
     return m_isFinishedCurrentAnim;
+}
+
+bool SkinnedMeshController::HasFinishEvent() const
+{
+    return !m_finishEvent.empty();
 }

@@ -2,6 +2,7 @@
 #include "IObject.h"
 #include "TagClientOnly.h"
 #include "TagAnimation.h"
+#include "AnimationState.h"
 
 class SkinnedMeshController;
 class CharacterPart;
@@ -28,6 +29,8 @@ public:
 
     struct TotalInventory
     {
+        Item* m_hand; //손에 든 무기
+
         static const float DEFAULT_CAPACITY;
 
         map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
@@ -68,19 +71,25 @@ public:
         bool _S       ;
         bool _A       ;
         bool _D       ;
-        bool _Z       ;
-        bool _X       ;
-        bool _C       ;
-        bool _Space   ;
-        bool _Num1    ;
-        bool _Num2    ;
-        bool _Num3    ;
-        bool _Num4    ;
-        bool _Num5    ;
 
         IsPressing();
         bool operator==(const IsPressing& other) const;
         bool operator!=(const IsPressing& other) const;
+    };
+
+    struct IsPressed
+    {
+        bool _Z;
+        bool _X;
+        bool _C;
+        bool _Space;
+        bool _Num1; 
+        bool _Num2; 
+        bool _Num3; 
+        bool _Num4; 
+        bool _Num5; 
+
+        IsPressed();
     };
 
     struct FramePtr
@@ -126,14 +135,23 @@ private:
 
     IsPressing m_savedInput;
     IsPressing m_currentInput;
+    IsPressed  m_currentPressed;
+
+    Stance    m_stance;
+    Attacking m_attacking;
 
 private:
     void setFramePtr();
     void subscribeCollisionEvent();
 
-    IsPressing HandleInput(IsPressing& m_isPressing);
-    void CameraCharacterRotation(OUT D3DXQUATERNION* rOut);
-    void AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut);
+    void handleInput(IsPressing* OutIsPressing);
+    void handleInput(IsPressed* OutIsPressed);
+
+    void setAttacking();
+    void setStance();
+    
+    void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
+    void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
 
     void updateMine();
     void updateOther();
@@ -150,13 +168,14 @@ private:
         const bool isBlend = true,
         const float blendTime = 0.3f,
         const float nextWeight = 0.0f);
-    void addNextAnimation(
-        const TAG_ANIM_CHARACTER tag,
-        const bool isBlend = true,
-        const float blendTime = 0.3f,
-        const float nextWeight = 0.0f);
-    bool isFinishedCurrentAnim() const;
 
+    void setAnimation(
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend,
+        const std::function<void()>& finishEvent);
+
+    bool hasFinishEvent() const;
+    
     void setInfo();
 
     D3DXVECTOR3 getUp();

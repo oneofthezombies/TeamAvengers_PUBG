@@ -31,15 +31,6 @@ Character::IsPressing::IsPressing()
     , _S(false)
     , _A(false)
     , _D(false)
-    , _Z(false)
-    , _X(false)
-    , _C(false)
-    , _Space(false)
-    , _Num1(false)
-    , _Num2(false)
-    , _Num3(false)
-    , _Num4(false)
-    , _Num5(false)
 {
 }
 
@@ -52,21 +43,26 @@ bool Character::IsPressing::operator==(const IsPressing& other) const
     if (_S != other._S) return false;
     if (_A != other._A) return false;
     if (_D != other._D) return false;
-    if (_Z != other._Z) return false;
-    if (_X != other._X) return false;
-    if (_C != other._C) return false;
-    if (_Space != other._Space) return false;
-    if (_Num1 != other._Num1) return false;
-    if (_Num2 != other._Num2) return false;
-    if (_Num3 != other._Num3) return false;
-    if (_Num4 != other._Num4) return false;
-    if (_Num5 != other._Num5) return false;
+
     return true;
 }
 
 bool Character::IsPressing::operator!=(const IsPressing& other) const
 {
     return !(*this == other);
+}
+
+Character::IsPressed::IsPressed()
+    : _Z(false)
+    , _X(false)
+    , _C(false)
+    , _Space(false)
+    , _Num1(false)
+    , _Num2(false)
+    , _Num3(false)
+    , _Num4(false)
+    , _Num5(false)
+{
 }
 
 Character::FramePtr::FramePtr()
@@ -110,33 +106,157 @@ void Character::subscribeCollisionEvent()
     }
 }
 
-Character::IsPressing Character::HandleInput(IsPressing& m_isPressing)
+void Character::handleInput(IsPressing* OutIsPressing)
 {
+    assert(OutIsPressing && "Character::handleInput(IsPressing), argument is null.");
+
     InputManager* pInput = Input()();
 
-    m_isPressing._LAlt = pInput->IsStayKeyDown(VK_LMENU);
-    m_isPressing._LCtrl = pInput->IsStayKeyDown(VK_LCONTROL);
-    m_isPressing._LShift = pInput->IsStayKeyDown(VK_LSHIFT);
-    m_isPressing._W = pInput->IsStayKeyDown('W');
-    m_isPressing._S = pInput->IsStayKeyDown('S');
-    m_isPressing._A = pInput->IsStayKeyDown('A');
-    m_isPressing._D = pInput->IsStayKeyDown('D');
-    m_isPressing._Z = pInput->IsOnceKeyDown('Z');
-    m_isPressing._X = pInput->IsOnceKeyDown('X');
-    m_isPressing._C = pInput->IsOnceKeyDown('C');
-    m_isPressing._Space = pInput->IsOnceKeyDown(VK_SPACE);
-    m_isPressing._Num1 = pInput->IsOnceKeyDown('1');
-    m_isPressing._Num2 = pInput->IsOnceKeyDown('2');
-    m_isPressing._Num3 = pInput->IsOnceKeyDown('3');
-    m_isPressing._Num4 = pInput->IsOnceKeyDown('4');
-    m_isPressing._Num5 = pInput->IsOnceKeyDown('5');
-
-    return m_isPressing;
+    OutIsPressing->_LAlt   = pInput->IsStayKeyDown(VK_LMENU);
+    OutIsPressing->_LCtrl  = pInput->IsStayKeyDown(VK_LCONTROL);
+    OutIsPressing->_LShift = pInput->IsStayKeyDown(VK_LSHIFT);
+    OutIsPressing->_W      = pInput->IsStayKeyDown('W');
+    OutIsPressing->_S      = pInput->IsStayKeyDown('S');
+    OutIsPressing->_A      = pInput->IsStayKeyDown('A');
+    OutIsPressing->_D      = pInput->IsStayKeyDown('D');
 }
-void Character::CameraCharacterRotation(OUT D3DXQUATERNION* rOut)
+
+void Character::handleInput(IsPressed* OutIsPressed)
 {
-    ICamera*       pCurrentCamera = CurrentCamera()();
-    const float dt = Time()()->GetDeltaTime();
+    assert(OutIsPressed && "Character::handleInput(IsPressed), argument is null.");
+
+    InputManager* pInput = Input()();
+
+    OutIsPressed->_Z     = pInput->IsOnceKeyDown('Z');
+    OutIsPressed->_X     = pInput->IsOnceKeyDown('X');
+    OutIsPressed->_C     = pInput->IsOnceKeyDown('C');
+    OutIsPressed->_Space = pInput->IsOnceKeyDown(VK_SPACE);
+    OutIsPressed->_Num1  = pInput->IsOnceKeyDown('1');
+    OutIsPressed->_Num2  = pInput->IsOnceKeyDown('2');
+    OutIsPressed->_Num3  = pInput->IsOnceKeyDown('3');
+    OutIsPressed->_Num4  = pInput->IsOnceKeyDown('4');
+    OutIsPressed->_Num5  = pInput->IsOnceKeyDown('5');
+}
+
+void Character::setAttacking()
+{
+    TotalInventory& inven = m_totalInventory;
+
+    if (hasFinishEvent()) return;
+
+    if (m_currentPressed._Num1)
+    {
+        if (inven.m_weaponPrimary)
+        {
+            //등짝에 주무기가 있다
+            if (m_attacking == Attacking::Unarmed)
+            {
+                m_attacking = Attacking::Rifle;
+
+                inven.m_hand = inven.m_weaponPrimary;
+                inven.m_weaponPrimary = nullptr;
+                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false, [this]() 
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                });
+            }
+            else if (m_attacking == Attacking::Rifle)
+            {
+                //보조무기를 해제하고, 주무기를 장착한다
+                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static, false, [this, &inven]() 
+                {
+                    inven.m_weaponSecondary = inven.m_hand;
+
+                    inven.m_hand = inven.m_weaponPrimary;
+                    inven.m_weaponPrimary = nullptr;
+                    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false, [this]() 
+                    {                        
+                        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                    });
+                });
+            }
+            else if (m_attacking == Attacking::Melee)
+            {
+                //TODO: melee 생기면 구현
+            }
+        }
+    }
+    else if (m_currentPressed._Num2)
+    {
+        if (inven.m_weaponSecondary)
+        {
+            //등짝에 보조무기가 있다
+            if (m_attacking == Attacking::Unarmed)
+            {
+                m_attacking = Attacking::Rifle;
+
+                inven.m_hand = inven.m_weaponSecondary;
+                inven.m_weaponSecondary = nullptr;
+                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, false, [this]()
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                });
+            }
+            else if (m_attacking == Attacking::Rifle)
+            {
+                //주무기를 해제하고 보조무기를 장착한다
+                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static, false, [this, &inven]()
+                {
+                    inven.m_weaponPrimary = inven.m_hand;
+
+                    inven.m_hand = inven.m_weaponSecondary;
+                    inven.m_weaponSecondary = nullptr;
+                    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, false, [this]()
+                    {
+                        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                    });
+                });
+            }
+            else if (m_attacking == Attacking::Melee)
+            {
+                //TODO: melee 생기면 구현
+            }
+        }
+    }
+}
+
+void Character::setStance()
+{
+    if (m_currentPressed._C)
+    {
+        if (m_stance == Stance::Crouch)
+        {
+            // TODO : check obstacle
+
+            m_stance = Stance::Stand;
+        }
+        else
+        {
+            // TODO : check obstacle
+
+            m_stance = Stance::Crouch;
+        }
+    }
+    else if (m_currentPressed._Z)
+    {
+        if (m_stance == Stance::Prone)
+        {
+            // TODO : check obstacle
+
+            m_stance = Stance::Stand;
+        }
+        else
+        {
+            // TODO : check obstacle
+
+            m_stance = Stance::Prone;
+        }
+    }
+}
+
+void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation)
+{
+    ICamera* pCurrentCamera = CurrentCamera()();
 
     // get mouse pos
     POINT mouse;
@@ -172,7 +292,7 @@ void Character::CameraCharacterRotation(OUT D3DXQUATERNION* rOut)
         D3DXQuaternionRotationYawPitchRoll(&q, yaw, 0.0f, 0.0f);
         //cout << "pitch : " << pitch << " yaw : " << yaw << endl;
 
-        *rOut *= q;
+        *OutRotation *= q;
         m_rotationForCamera.x += -pitch;
         // reset rotFotCameraTP
         if (tempBool)
@@ -196,47 +316,42 @@ void Character::CameraCharacterRotation(OUT D3DXQUATERNION* rOut)
     SetCursorPos(center.x, center.y);
 }
 
-void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut)
+void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag)
 {
-    TAG_ANIM_CHARACTER ret;
-
-    Attacking attacking;
-    Direction direction ;
-    Moving    moving ;
-    Stance    stance;
+    //Attacking attacking;
+    Direction direction;
+    Moving    moving;
+    //Stance    stance;
 
     float movingFactor;
 
+    ////Attacking 3개 -----------------------------------------------------
+    //if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
+    //{
+    //    attacking = Attacking::Rifle;
+    //}
+    //else if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
+    //{
+    //    attacking = Attacking::Melee;
+    //}
+    //else
+    //{
+    //    attacking = Attacking::Unarmed;
+    //}
 
-    //Attacking 3개 -----------------------------------------------------
-    if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
-    {
-        attacking = Attacking::Rifle;
-    }
-    else if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
-    {
-        attacking = Attacking::Melee;
-    }
-    else
-    {
-        attacking = Attacking::Unarmed;
-    }
-
-    //Stance 3개 -----------------------------------------------------
-    if (m_currentInput._C)
-    {
-        stance = Stance::Crouch;
-    }
-    else if (m_currentInput._Z)
-    {
-        stance = Stance::Prone;
-    }
-    else
-    {
-        stance = Stance::Stand;
-    }
-
-
+    ////Stance 3개 -----------------------------------------------------
+    //if (m_currentPressed._C)
+    //{
+    //    stance = Stance::Crouch;
+    //}
+    //else if (m_currentPressed._Z)
+    //{
+    //    stance = Stance::Prone;
+    //}
+    //else
+    //{
+    //    stance = Stance::Stand;
+    //}
 
     //Moving 3개 -----------------------------------------------------
     if (m_currentInput._LShift && !m_currentInput._LCtrl)
@@ -255,63 +370,58 @@ void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHA
         movingFactor = 1.0f;
     }
 
-
     //Direction 8개 -----------------------------------------------------
     if (m_currentInput._W&&m_currentInput._D)
     {
         direction = Direction::FrontRight;
-        *pOut += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+        *OutPosition += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._D&&m_currentInput._S)
     {
         direction = Direction::BackRight;
-        *pOut += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+        *OutPosition += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._S&&m_currentInput._A)
     {
         direction = Direction::BackLeft;
-        *pOut += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+        *OutPosition += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._A&&m_currentInput._W)
     {
         direction = Direction::FrontLeft;
-        *pOut += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+        *OutPosition += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._W)
     {
         direction = Direction::Front;
-        *pOut += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
+        *OutPosition += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
 
     }
     else if (m_currentInput._D)
     {
         direction = Direction::Right;
-        *pOut += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+        *OutPosition += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._S)
     {
         direction = Direction::Back;
         //*pOut += getForward() * -1.0f;
-        *pOut += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
+        *OutPosition += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._A)
     {
         direction = Direction::Left;
-        *pOut += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+        *OutPosition += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else
     {
         direction = Direction::StandStill;
     }
 
-
-
-
-    if (tagOut) //if null, no changes in animation
+    if (OutTag) //if null, no changes in animation
     {
-        *tagOut = AnimationState::Get(attacking, stance, moving, direction);
+        *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
     }
-        
 }
 bool Character::isMine() const
 {
@@ -337,29 +447,31 @@ void Character::setAnimation(
     m_animState = tag;
 }
 
-void Character::addNextAnimation(
-    const TAG_ANIM_CHARACTER tag,
-    const bool isBlend,
-    const float blendTime,
-    const float nextWeight)
+bool Character::hasFinishEvent() const
 {
     assert(pSkinnedMeshController &&
-        "Character::setNextAnimation(), skinned mesh controller is null.");
+        "Character::hasFinishEvent(), skinned mesh controller is null.");
 
-    pSkinnedMeshController->AddNextAnimation(
+    return pSkinnedMeshController->HasFinishEvent();
+}
+
+void Character::setAnimation(
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const std::function<void()>& finishEvent)
+{
+    assert(pSkinnedMeshController &&
+        "Character::setAnimation(), skinned mesh controller is null.");
+
+    pSkinnedMeshController->SetAnimation(
         TagAnimation::GetString(tag),
         TagAnimation::GetSpeed(tag),
         isBlend,
-        blendTime,
-        nextWeight);
-}
+        0.3f,
+        0.0f,
+        finishEvent);
 
-bool Character::isFinishedCurrentAnim() const
-{
-    assert(pSkinnedMeshController && 
-        "Character::isFinishedCurrentAnim(), skinned mesh controller is null.");
-
-    return pSkinnedMeshController->IsFinishedCurrentAnim();
+    m_animState = tag;
 }
 
 void Character::setInfo()

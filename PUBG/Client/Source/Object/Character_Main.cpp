@@ -23,6 +23,8 @@ Character::Character(const int index)
     , m_pSphereMesh(nullptr)
     , m_pRootCharacterPart(nullptr)
     , m_totalInventory()
+    , m_attacking(Attacking::Unarmed)
+    , m_stance(Stance::Stand)
 
     , pSkinnedMeshController(nullptr)
 {
@@ -34,13 +36,13 @@ Character::Character(const int index)
     pSkinnedMeshController->SetSkinnedMesh(
         Resource()()->GetCharacterSkinnedMesh());
     
-    //setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
     //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
 
     //for test
-    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false);
+    //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false);
     //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, false);
-    addNextAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+    //addNextAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
 
     setFramePtr();
 
@@ -134,69 +136,40 @@ void Character::updateMine()
     //}
 
 
-
+    const float    dt = Time()()->GetDeltaTime();
     Transform*     pTr = GetTransform();
     D3DXVECTOR3    p = pTr->GetPosition();
     D3DXQUATERNION r = pTr->GetRotation();
 
-
-    /****************여러분! delta time 을 넣을 까요???*************/
-
     //이곳에서 Input을 넣습니다 그리고 m_currentInput으로 사용
-    //m_currentInput = HandleInput(m_currentInput);
-    //// HERE
-    //if (m_savedInput != m_currentInput)
-    //{
-    //    //setting animation and movements
-    //    AnimationMovementControl(&p, &m_animState);
-    //    if (m_animState == TAG_ANIM_CHARACTER::COUNT)
-    //    {
-    //        // handle exception
-    //    }
-    //    else
-    //    {
-    //        setAnimation(m_animState);
+    handleInput(&m_currentInput);
+    handleInput(&m_currentPressed);
 
-    //        m_savedInput = m_currentInput;
-    //    }
+    setStance();
+    setAttacking();
 
-    //    // HERE
-    //    if (m_currentInput._Num1)
-    //    {
-    //        cout << "Click Num1" << endl;
-    //        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand);
+    if (m_savedInput != m_currentInput)
+    {
+        //setting animation and movements
+        animationMovementControl(&p, &m_animState);
+        if (m_animState == TAG_ANIM_CHARACTER::COUNT)
+        {
+            // handle exception
+        }
+        else
+        {
+            setAnimation(m_animState);
 
-    //    }
-    //    else if (m_currentInput._Num2)
-    //    {
-    //        cout << "Click Num2" << endl;
-    //        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand);
-    //    }
-    //}
-    //else
-    //{
-    //    AnimationMovementControl(&p, NULL); // NULL means not changing animation
-    //}
-
-    //if (isFinishedCurrentAnim())
-    //{
-    //    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle);
-    //}
-
-    //if (isFinishedCurrentAnim())
-    //{
-
-    //    cout << "!";
-    //}
-
+            m_savedInput = m_currentInput;
+        }
+    }
+    else
+    {
+        animationMovementControl(&p, NULL); // NULL means not changing animation
+    }
 
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
-    CameraCharacterRotation(&r);
-    //animation Switch 문
-
-
-
-
+    cameraCharacterRotation(dt, &r);
 
     //if (pInput->IsOnceKeyDown(VK_RETURN))
     //    isFired = true;

@@ -26,7 +26,7 @@ private:
     SkinnedMeshInstance* m_pSkinnedMeshInstance;
 
     bool m_isFinishedCurrentAnim;
-    deque<NextAnimation> m_nextAnims;
+    std::deque<std::function<void()>> m_finishEvent;
 
 private:
     void checkIsFinishedAndSetNextAnimation(const float calcedDt);
@@ -61,12 +61,13 @@ public:
         const float blendTime = 0.3f,
         const float nextWeight = 0.0f);
 
-    void AddNextAnimation(
+    void SetAnimation(
         const string& name,
-        const float nextSpeed = 1.0f,
-        const bool isBlend = true,
-        const float blendTime = 0.3f,
-        const float nextWeight = 0.0f);
+        const float nextSpeed,
+        const bool isBlend,
+        const float blendTime,
+        const float nextWeight,
+        const std::function<void()>& finishEvent);
 
           size_t  GetCurrentAnimationIndex() const;
     const string& GetCurrentAnimationName()  const;
@@ -75,4 +76,5 @@ public:
     Frame* FindFrame(const string& name);
 
     bool IsFinishedCurrentAnim() const;
+    bool HasFinishEvent() const;
 };
