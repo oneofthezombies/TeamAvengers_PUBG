@@ -167,12 +167,12 @@ void SceneLoading::loadCharacterAnimation()
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump_FPP);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Landing);
 
-    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
-    ////addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand); // has bug
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand); // has bug
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
-    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
 
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
     addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
     addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
     // ...
@@ -308,6 +308,7 @@ void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks)
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 
     auto keys = ResourceInfo::GetPathFileName(tag);
+    cout << "path : " << keys.first << ", name : " << keys.second << '\n';
     OutTasks->emplace_back(
         std::make_pair(
             OutTasks->size(),

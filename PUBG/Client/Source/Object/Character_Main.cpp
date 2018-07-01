@@ -13,7 +13,7 @@ Character::Character(const int index)
     : IObject()
 
     , m_index(index)
-    , m_animState(TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot)
+    , m_animState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_rootTransform(1.0f)
     , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
     , m_framePtr()
@@ -34,7 +34,8 @@ Character::Character(const int index)
     pSkinnedMeshController->SetSkinnedMesh(
         Resource()()->GetCharacterSkinnedMesh());
     
-    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+    //setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
 
     //for test
     //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false);
@@ -149,7 +150,7 @@ void Character::updateMine()
         AnimationMovementControl(&p, &m_animState);
         if (m_animState == TAG_ANIM_CHARACTER::COUNT)
         {
-
+            // handle exception
         }
         else
         {
@@ -162,11 +163,13 @@ void Character::updateMine()
         if (m_currentInput._Num1)
         {
             cout << "Click Num1" << endl;
+            setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, true);
 
         }
         else if (m_currentInput._Num2)
         {
             cout << "Click Num2" << endl;
+            setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, true);
         }
     }
     else

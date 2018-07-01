@@ -7,5 +7,5 @@
 /// Rifle_Stand_PrimarySlot_OnHand.X (서서 주무기를 손에 드는 애니메이션)
 0. (0 ~ 50)[51] - Rifle_Combat_Stand_PrimarySlot
 
-/// Rifle_Stand_SecondarySlot_OnHanf.X (서서 보조무기를 손에 드는 애니메이션)
+/// Rifle_Stand_SecondarySlot_OnHand.X (서서 보조무기를 손에 드는 애니메이션)
 0. (0 ~ 50)[51] - Rifle_Combat_Stand_SecondarySlot
