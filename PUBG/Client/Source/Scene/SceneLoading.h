@@ -59,6 +59,8 @@ private:
     void addEffectMeshs();
     void addSkinnedMeshs();
 
+    void addHeightmap();
+
     bool verifyTasks(tasks_t* OutTasks, resources_t* OutResources);
 
     void addTask(const TAG_RES_STATIC tag, tasks_t* OutTasks);

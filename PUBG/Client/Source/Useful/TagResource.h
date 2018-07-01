@@ -134,6 +134,8 @@ enum class TAG_RES_STATIC
     // SR
     Kar98k,
 
+// Height Map
+    HeightMap,
 //    
     COUNT
 };

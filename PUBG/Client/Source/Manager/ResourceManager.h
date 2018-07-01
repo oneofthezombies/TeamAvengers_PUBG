@@ -45,7 +45,6 @@ public:
     void Destroy();
 
     void AddResource(ResourceContainer* pResourceContainer);
-    
     void AddCharacter(ResourceContainer* pResourceContainer);
 
     LPD3DXFONT GetFont(const TAG_FONT tag);

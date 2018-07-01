@@ -4,6 +4,7 @@
 
 class ScenePlay : public IScene
 {
+
 public:
     ScenePlay();
     virtual ~ScenePlay();

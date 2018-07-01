@@ -1,33 +1,49 @@
 #pragma once
-//#include "IMap.h"
-//
-//class HeightMap :	public IMap
-//{
-//protected:
-//	//LPD3DXMESH	m_pMesh;
-//	//MTLTEX*		m_pMtlTex;
-//	
-//	vector<D3DXVECTOR3>	m_vecSurfaceVertex;
-//	vector<D3DXVECTOR3>	m_vecObstacleVertex;
-//
-//public:
-//	HeightMap();
-//	virtual ~HeightMap();
-//
-//	void Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat = NULL);
-//	void SetMtlTex(D3DMATERIAL9 &Mtl, LPDIRECT3DTEXTURE9 pTex);
-//	
-//
-//    void Init();
-//    // Inherited via IMap
-//    virtual void OnUpdate() override;
-//    virtual void OnRender() override;
-//    virtual bool GetHeight(const D3DXVECTOR3 & pos, float * OutHeight) override;
-//    virtual bool CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY) override;
-//    
-//    void SetSurface();
-//    void SetObstacle();
-//};
+#include "IMap.h"
+struct VERTEX_PNT
+{
+    D3DXVECTOR3 p;
+    D3DXVECTOR3	n;
+    D3DXVECTOR2	t;
+
+    VERTEX_PNT() {}
+    VERTEX_PNT(D3DXVECTOR3 _p, D3DXVECTOR3 _n, D3DXVECTOR2 _t) : p(_p), n(_n), t(_t) {}
+
+    enum { FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 };
+};
+
+//extern D3DVERTEXELEMENT9 decl[];
+
+class HeightMap :	public IMap
+{
+protected:
+    D3DXVECTOR3			m_size;
+    D3DXVECTOR3			m_scale;
+
+	LPD3DXMESH	        m_pMesh;
+	//MTLTEX*		m_pMtlTex;
+	
+	vector<D3DXVECTOR3>	m_vecSurfaceVertex;
+	vector<D3DXVECTOR3>	m_vecObstacleVertex;
+
+public:
+	HeightMap();
+	virtual ~HeightMap();
+
+	void Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat = NULL);
+    void SetSurface();
+	
+	
+
+    // Inherited via IMap
+    virtual void OnUpdate() override;
+    virtual void OnRender() override;
+    virtual bool GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight) override;
+    virtual bool CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY) override;
+    
+    //void SetMtlTex(D3DMATERIAL9 &Mtl, LPDIRECT3DTEXTURE9 pTex);
+    /*void SetObstacle();*/
+};
 //
 //
 ///*

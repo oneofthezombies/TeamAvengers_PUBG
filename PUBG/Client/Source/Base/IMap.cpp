@@ -12,11 +12,11 @@ IMap::~IMap()
 
 void IMap::SetDimension(const int dimension)
 {
-    m_Dimension = dimension; 
-    m_NumTile = m_Dimension - 1;
+    m_dimension = dimension;
+    m_numTile = m_dimension - 1;
 }
 
 const vector<D3DXVECTOR3>& IMap::GetVertices() const
 {
-    return m_Vertices;
+    return m_vecVertex;
 }

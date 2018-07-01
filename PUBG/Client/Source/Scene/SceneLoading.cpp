@@ -38,6 +38,10 @@ void SceneLoading::OnUpdate()
 {
     if (m_isFinished)
     {
+        /**/
+        addHeightmap();
+        /**/
+        
         Debug << "elapsed time : " << m_elapsed.count() << '\n';
 
         UI()()->Destroy(m_pPercentageImage);
@@ -121,8 +125,8 @@ void SceneLoading::loadEffectMesh()
     //addTask(TAG_RES_STATIC::Ammo_5_56mm);
     //addTask(TAG_RES_STATIC::Ammo_7_62mm);
 
-    addTask(TAG_RES_STATIC::QBZ);
-    addTask(TAG_RES_STATIC::Kar98k);
+    //addTask(TAG_RES_STATIC::QBZ);
+    //addTask(TAG_RES_STATIC::Kar98k);
 
     //addTask(TAG_RES_STATIC::RedDot);
     //addTask(TAG_RES_STATIC::Aimpoint2X);
@@ -151,8 +155,8 @@ void SceneLoading::loadSkinnedMesh()
     loadCharacterAnimation();
 
     // weapon
-    addTask(TAG_RES_ANIM_WEAPON::QBZ_Anim, &m_skinnedMeshTasks);
-    addTask(TAG_RES_ANIM_WEAPON::Kar98k_Anim, &m_skinnedMeshTasks);
+    //addTask(TAG_RES_ANIM_WEAPON::QBZ_Anim, &m_skinnedMeshTasks);
+    //addTask(TAG_RES_ANIM_WEAPON::Kar98k_Anim, &m_skinnedMeshTasks);
 }
 
 void SceneLoading::loadCharacterAnimation()
@@ -173,8 +177,8 @@ void SceneLoading::loadCharacterAnimation()
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
 
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
+    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
+    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
     // ...
 }
 
@@ -240,6 +244,14 @@ void SceneLoading::addSkinnedMeshs()
         pRM->AddResource(pR.second);
 
     m_isDoneSkinnedMeshs = true;
+}
+
+void SceneLoading::addHeightmap()
+{
+    ResourceContainer* pResourceContainer = new ResourceContainer;
+    ResourceAsync::CreateEffect("./Resource/Heightmap/", "Heightmap.fx", pResourceContainer);
+    ResourceAsync::CreateTexture("./Resource/Heightmap/", "Heightmap.jpg", pResourceContainer);
+    Resource()()->AddResource(pResourceContainer);
 }
 
 bool SceneLoading::verifyTasks(tasks_t* OutTasks, resources_t* OutResources)
