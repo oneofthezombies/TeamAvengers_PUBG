@@ -51,10 +51,7 @@ void ICamera::CameraRender()
         //              (model space)                      (rotation get from character) 
         matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
     }
-    Debug << endl;
-    Debug << "  ¿ì·ÎR(8)  ÁÂ·ÎR(9)   " << endl;
-    Debug << "     ¾Õ(U)»ó(I)µÚ(O)    " << endl;
-    Debug << " ÁÂ(J)    ÇÏ(K)    ¿ì(L)" << endl;
+
     Shader::Draw(
         Resource()()->GetEffect("./Resource/", "Color.fx"), 
         nullptr, 
@@ -260,12 +257,17 @@ void CameraFree::Update()
 
     InputManager* pInput= Input()();
 
+    Debug << endl;
+    Debug << "  ¿ì·ÎR(8)  ÁÂ·ÎR(9)   " << endl;
+    Debug << "     ¾Õ(U)»ó(I)µÚ(O)    " << endl;
+    Debug << " ÁÂ(J)    ÇÏ(K)    ¿ì(L)" << endl;
+
     if (pInput->IsStayKeyDown('K')) { m_position.y -= factor; }
     if (pInput->IsStayKeyDown('I')) { m_position.y += factor; }
     if (pInput->IsStayKeyDown('J')) { m_position.x -= factor; }
     if (pInput->IsStayKeyDown('L')) { m_position.x += factor; }
-    if (pInput->IsStayKeyDown('U')) { m_position.z -= factor; }
-    if (pInput->IsStayKeyDown('O')) { m_position.z += factor; }
+    if (pInput->IsStayKeyDown('O')) { m_position.z -= factor; }
+    if (pInput->IsStayKeyDown('U')) { m_position.z += factor; }
     if (pInput->IsStayKeyDown('9')) { m_rotation.y -= factor * 0.01f; }
     if (pInput->IsStayKeyDown('8')) { m_rotation.y += factor * 0.01f; }
     

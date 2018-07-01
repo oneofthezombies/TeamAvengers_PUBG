@@ -56,6 +56,7 @@ TAG_ANIM_CHARACTER AnimationState::get_Unarmed_Stand_Run(const Direction d)
     case Direction::BackLeft:   return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_BL;
     case Direction::Left:       return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_L;
     case Direction::FrontLeft:  return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_FL;
+    case Direction::StandStill: return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1;
     default:                    return TAG_ANIM_CHARACTER::COUNT;
     }
 }
@@ -68,6 +69,7 @@ TAG_ANIM_CHARACTER AnimationState::get_Unarmed_Stand_Sprint(const Direction d)
     case Direction::Right:      return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_R;
     case Direction::Left:       return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_L;
     case Direction::FrontLeft:  return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_FL;
+    case Direction::StandStill: return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1;
     default:                    return TAG_ANIM_CHARACTER::COUNT;
     }
 }
@@ -83,6 +85,7 @@ TAG_ANIM_CHARACTER AnimationState::get_Unarmed_Stand_Walk(const Direction d)
     case Direction::BackLeft:   return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_BL;
     case Direction::Left:       return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_L;
     case Direction::FrontLeft:  return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_FL;
+    case Direction::StandStill: return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1;
     default:                    return TAG_ANIM_CHARACTER::COUNT;
     }
 }

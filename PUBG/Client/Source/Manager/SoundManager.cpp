@@ -48,6 +48,10 @@ void SoundManager::AddSound(const TAG_SOUND tag, const string& path)
 	if (search != m_sounds.end()) return;
 
     CheckError(m_pSystem->createSound(path.c_str(), FMOD_DEFAULT, nullptr, &m_sounds[tag]));
+
+    //explain : 30까지는 본래의 소리를 냄 30이후부터 줄어들고 10000까지 Fmod::system에 저장한 감쇠량만큼 감소됨
+    CheckError(m_sounds[tag]->set3DMinMaxDistance(30.0f, 10000.0f));
+
 }
 
 int SoundManager::Play(const TAG_SOUND tag)

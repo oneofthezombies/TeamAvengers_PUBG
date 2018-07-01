@@ -30,7 +30,8 @@ enum class Direction
     Back,
     BackLeft,
     Left,
-    FrontLeft
+    FrontLeft,
+    StandStill
 };
 
 struct AnimationState

@@ -20,11 +20,17 @@ private:
     tasks_t     m_skinnedMeshTasks;
     resources_t m_skinnedMeshResources;
 
+    // character skinned mesh using character animation
     tasks_t     m_characterSkinnedMeshTasks;
     resources_t m_characterSkinnedMeshResources;
 
+    // character animation
     tasks_t     m_characterAnimationTasks;
     resources_t m_characterAnimationResources;
+
+    // equipment skinned mesh using character animation
+    tasks_t     m_equipmentSkinnedMeshTasks;
+    resources_t m_equipmentSkinnedMeshResources;
 
     std::chrono::system_clock::time_point m_start;
     std::chrono::system_clock::time_point m_finish;
@@ -38,18 +44,20 @@ private:
     std::string m_percentage;
     UIText*     m_pPercentageImage;
 
-    UINT   m_numAddedAnim;
-    bool   m_isDoneCharacters;
-    bool   m_isDoneEffectMeshs;
-    bool   m_isFinished;
+    UINT m_numAddedAnim;
+    bool m_isDoneCharacters;
+    bool m_isDoneEffectMeshs;
+    bool m_isDoneSkinnedMeshs;
+    bool m_isFinished;
 
 private:
     void loadEffectMesh();
     void loadSkinnedMesh();
     void loadCharacterAnimation();
+
     void addAnimationsToCharacter();
-    //void copyAnimationsToOtherCharacters();
     void addEffectMeshs();
+    void addSkinnedMeshs();
 
     bool verifyTasks(tasks_t* OutTasks, resources_t* OutResources);
 
@@ -57,6 +65,8 @@ private:
     void addTask(const TAG_RES_STATIC tag);
     void addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks);
     void addTask(const TAG_RES_ANIM_CHARACTER tag);
+    void addTask(const TAG_RES_EQUIPMENT tag, tasks_t* OutTasks);
+    void addTask(const TAG_RES_ANIM_WEAPON tag, tasks_t* OutTasks);
 
 public:
              SceneLoading();

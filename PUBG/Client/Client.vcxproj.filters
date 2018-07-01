@@ -31,7 +31,6 @@
     <ClCompile Include="Source\Base\IObject.cpp" />
     <ClCompile Include="Source\Component\SkinnedMeshController.cpp" />
     <ClCompile Include="Source\Component\EffectMeshRenderer.cpp" />
-    <ClCompile Include="Source\Useful\ResPathFileName.cpp" />
     <ClCompile Include="Source\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\Scene\SceneLogin.cpp" />
     <ClCompile Include="Source\Scene\ScenePlay.cpp" />
@@ -42,11 +41,16 @@
     <ClCompile Include="Source\Object\TerrainFeature.cpp" />
     <ClCompile Include="Source\Useful\TagAnimation.cpp" />
     <ClCompile Include="Source\Object\DirectionalLight.cpp" />
+    <ClCompile Include="Source\Object\Item.cpp" />
+    <ClCompile Include="Source\Object\Character_Inventory.cpp" />
+    <ClCompile Include="Source\Useful\ItemInfo.cpp" />
+    <ClCompile Include="Source\Useful\ResourceInfo.cpp" />
+    <ClCompile Include="Source\Object\Grid.cpp" />
     <ClCompile Include="Source\Object\SkySphere.cpp" />
     <ClCompile Include="Source\Useful\Shader.cpp" />
     <ClCompile Include="Source\Object\Grid.cpp" />
-    <ClCompile Include="Source\Object\Character_AnimationState.cpp" />
     <ClCompile Include="Source\Useful\AnimationState.cpp" />
+    <ClCompile Include="Source\HeightMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -83,7 +87,6 @@
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Component\SkinnedMeshController.h" />
     <ClInclude Include="Source\Component\EffectMeshRenderer.h" />
-    <ClInclude Include="Source\Useful\ResPathFileName.h" />
     <ClInclude Include="Source\Useful\TagResource.h" />
     <ClInclude Include="Source\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Scene\SceneLogin.h" />
@@ -93,9 +96,15 @@
     <ClInclude Include="Source\Object\TerrainFeature.h" />
     <ClInclude Include="Source\Useful\TagAnimation.h" />
     <ClInclude Include="Source\Object\DirectionalLight.h" />
+    <ClInclude Include="Source\Useful\StructItem.h" />
+    <ClInclude Include="Source\Object\Item.h" />
+    <ClInclude Include="Source\Useful\ItemInfo.h" />
+    <ClInclude Include="Source\Useful\ResourceInfo.h" />
+    <ClInclude Include="Source\Object\Grid.h" />
     <ClInclude Include="Source\Object\SkySphere.h" />
     <ClInclude Include="Source\Useful\Shader.h" />
     <ClInclude Include="Source\Object\Grid.h" />
     <ClInclude Include="Source\Useful\AnimationState.h" />
+    <ClInclude Include="Source\HeightMap.h" />
   </ItemGroup>
 </Project>

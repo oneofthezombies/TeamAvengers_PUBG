@@ -18,13 +18,13 @@ void Grid::Init()
 
     pEffect = Resource()()->GetEffect("./Resource/", "Color.fx");
 
-	float interval = 1.0f;
-	int numHalfLine = 15;
-	float halfLength = interval * numHalfLine;
-	float tmpInterval;
-	for (int i = 1; i <= numHalfLine; i++)
-	{
-		tmpInterval = interval * i;
+    float interval = 1.0f;
+    int numHalfLine = 15;
+    float halfLength = interval * numHalfLine;
+    float tmpInterval;
+    for (int i = 1; i <= numHalfLine; i++)
+    {
+        tmpInterval = interval * i;
         if (i % 5 == 0)
         {
             m_whites.push_back(D3DXVECTOR3(-halfLength, 0.0f, tmpInterval));
@@ -47,16 +47,16 @@ void Grid::Init()
             m_grays.push_back(D3DXVECTOR3(-tmpInterval, 0.0f, -halfLength));
             m_grays.push_back(D3DXVECTOR3(-tmpInterval, 0.0f, halfLength));
         }
-	}
+    }
 
     m_reds.push_back(D3DXVECTOR3(-halfLength, 0.0f, 0.0f));
-    m_reds.push_back(D3DXVECTOR3( halfLength, 0.0f, 0.0f));
+    m_reds.push_back(D3DXVECTOR3(halfLength, 0.0f, 0.0f));
 
     m_greens.push_back(D3DXVECTOR3(0.0f, -halfLength, 0.0f));
-    m_greens.push_back(D3DXVECTOR3(0.0f,  halfLength, 0.0f));
+    m_greens.push_back(D3DXVECTOR3(0.0f, halfLength, 0.0f));
 
     m_blues.push_back(D3DXVECTOR3(0.0f, 0.0f, -halfLength));
-    m_blues.push_back(D3DXVECTOR3(0.0f, 0.0f,  halfLength));
+    m_blues.push_back(D3DXVECTOR3(0.0f, 0.0f, halfLength));
 }
 
 void Grid::OnUpdate()

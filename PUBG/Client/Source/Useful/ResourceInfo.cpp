@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "ResPathFileName.h"
+#include "ResourceInfo.h"
 
-pair<string, string> ResPathFileName::Get(const TAG_RES_STATIC tag)
+pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_STATIC tag)
 {
     string filePath, fileName;
     switch (tag)
@@ -15,14 +15,14 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_STATIC tag)
 
             //Ammunition
             {
-            case TAG_RES_STATIC::Ammu_5_56mm:
+            case TAG_RES_STATIC::Ammo_5_56mm:
             filePath = "Item/Ammunition/";
-            fileName = "Ammu_5_56mm";
+            fileName = "Ammo_5_56mm";
             break;
 
-            case TAG_RES_STATIC::Ammu_7_62mm:
+            case TAG_RES_STATIC::Ammo_7_62mm:
             filePath = "Item/Ammunition/";
-            fileName = "Ammu_7_62mm";
+            fileName = "Ammo_7_62mm";
             break;
             }
 
@@ -474,7 +474,7 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_STATIC tag)
         default:
         {
             assert(false &&
-                "ResPathFilename::Get(TAG_RES_STATIC), default case.");
+                "ResourceInfo::GetPathFileName(TAG_RES_STATIC), default case.");
         }
         break;
     }//switch
@@ -482,7 +482,7 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_STATIC tag)
     return make_pair("./Resource/Static/" + filePath + fileName + "/", fileName + ".X");
 }
 
-pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_WEAPON tag)
+pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_WEAPON tag)
 {
     string filePath, fileName;
     switch(tag)
@@ -505,14 +505,14 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_WEAPON tag)
         default:
         {
             assert(false &&
-                "ResPathFilename::Get(TAG_RES_ANIM_WEAPON), default case.");
+                "ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON), default case.");
         }
         break;
     }
 
     return make_pair("./Resource/Anim/Weapon/" + filePath, fileName + ".X");
 }
-pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_CHARACTER tag)
+pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_CHARACTER tag)
 {
     string fileName;
     switch (tag)
@@ -692,10 +692,162 @@ pair<string, string> ResPathFileName::Get(const TAG_RES_ANIM_CHARACTER tag)
         default:
         {
             assert(false &&
-                "ResPathFilename::Get(TAG_RES_ANIM_CHARACTER), default case.");
+                "ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER), default case.");
         }
         break;
     }
 
     return make_pair("./Resource/Anim/Character/", fileName + ".X");
+}
+
+pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_EQUIPMENT tag)
+{
+    string path("");
+    string filename("");
+
+    switch (tag)
+    {
+    case TAG_RES_EQUIPMENT::Head_Lv1_Anim: 
+        path = getPath(tag); 
+        filename = getFilename(tag); 
+        break;
+    default:
+    {
+        assert(false &&
+            "ResourceInfo::GetPathFileName(), default case.");
+        return make_pair("", "");
+    }
+    }
+
+    return make_pair(path, filename);
+}
+
+pair<string, string> ResourceInfo::GetUIPathFileName(const TAG_RES_STATIC tag)
+{
+    string filePath("");
+    string fileName("");
+    switch (tag)
+    {
+        //탄약, 소모품, 무기부착물
+    case TAG_RES_STATIC::Ammo_5_56mm:
+        filePath = "Inventory/Item/Ammunition/";
+        fileName = "icon_ammo_556mm.tga";
+        break;
+    case TAG_RES_STATIC::Ammo_7_62mm:
+        filePath = "Inventory/Item/Ammunition/";
+        fileName = "icon_ammo_762mm.tga";
+        break;
+
+    case TAG_RES_STATIC::Bandage:
+        filePath = "Inventory/Item/Consumable/";
+        fileName = "icon_Heal_Bandage.tga";
+        break;
+    case TAG_RES_STATIC::FirstAidKit:
+        filePath = "Inventory/Item/Consumable/";
+        fileName = "icon_Heal_FirstAid.tga";
+        break;
+    case TAG_RES_STATIC::MedKit:
+        filePath = "Inventory/Item/Consumable/";
+        fileName = "icon_Heal_MedKit.tga";
+        break;
+
+    case TAG_RES_STATIC::ACOG:
+        filePath = "Inventory/Item/Attachment/";
+        fileName = "icon_attach_Upper_ACOG.tga";
+        break;
+    case TAG_RES_STATIC::Aimpoint2X:
+        filePath = "Inventory/Item/Attachment/";
+        fileName = "icon_attach_Upper_Aimpoint2X.tga";
+        break;
+    case TAG_RES_STATIC::RedDot:
+        filePath = "Inventory/Item/Attachment/";
+        fileName = "icon_attach_Upper_DotSight.tga";
+        break;
+    
+    //장비
+    case TAG_RES_STATIC::Armor_Lv1:
+        filePath = "Inventory/Item/Equipment/";
+        fileName = "icon_equipment_Armor_Lv1.tga";
+        break;
+    case TAG_RES_STATIC::Back_Lv1:
+        filePath = "Inventory/Item/Equipment/";
+        fileName = "icon_equipment_Back_Lv1.tga";
+        break;
+    case TAG_RES_STATIC::Head_Lv1:
+        filePath = "Inventory/Item/Equipment/";
+        fileName = "icon_equipment_Head_Lv1.tga";
+        break;
+
+    default:
+        assert(false && "ResourceInfo::GetUIPathFileName(), default case.");
+        break;
+    }
+    return make_pair("./Resource/UI/" + filePath, fileName);
+}
+
+bool ResourceInfo::IsItem(const TAG_RES_STATIC tag)
+{
+    switch (tag)
+    {
+    case TAG_RES_STATIC::Head_Lv1:
+    case TAG_RES_STATIC::Armor_Lv1:
+    case TAG_RES_STATIC::Back_Lv1:
+
+    case TAG_RES_STATIC::Bandage:
+    case TAG_RES_STATIC::FirstAidKit:
+    case TAG_RES_STATIC::MedKit:
+
+    case TAG_RES_STATIC::Ammo_5_56mm:
+    case TAG_RES_STATIC::Ammo_7_62mm:
+
+    case TAG_RES_STATIC::QBZ:
+    case TAG_RES_STATIC::Kar98k:
+
+    case TAG_RES_STATIC::RedDot:
+    case TAG_RES_STATIC::Aimpoint2X:
+    case TAG_RES_STATIC::ACOG:
+        return true;
+
+    default: return false;
+    }
+}
+
+TAG_RES_ANIM_WEAPON ResourceInfo::GetTagResAnimWeapon(const TAG_RES_STATIC tag)
+{
+    switch (tag)
+    {
+    case TAG_RES_STATIC::QBZ:    return TAG_RES_ANIM_WEAPON::QBZ_Anim;
+    case TAG_RES_STATIC::Kar98k: return TAG_RES_ANIM_WEAPON::Kar98k_Anim;
+
+    default:                  
+        assert(false && "ResourceInfo::GetTagResAnimWeapon(), default case.");
+        return TAG_RES_ANIM_WEAPON::Idle;
+    }
+}
+
+string ResourceInfo::getPath(const TAG_RES_EQUIPMENT tag)
+{
+    string base("./Resource/Anim/Item/Equipment/");
+    switch (tag) 
+    {
+    case TAG_RES_EQUIPMENT::Head_Lv1_Anim: return base + "Head_Lv1_Anim/";
+    default: 
+    {
+        assert(false && "ResourceInfo::getPath(), default case.");
+        return "";
+    }
+    }
+}
+
+string ResourceInfo::getFilename(const TAG_RES_EQUIPMENT tag)
+{
+    switch (tag)
+    {
+    case TAG_RES_EQUIPMENT::Head_Lv1_Anim: return "Head_Lv1_Anim.X";
+    default:
+    {
+        assert(false && "ResourceInfo::getFilename(), default case.");
+        return "";
+    }
+    }
 }

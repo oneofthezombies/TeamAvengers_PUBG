@@ -2,7 +2,7 @@
 #include "ResourceManager.h"
 #include "Structure.h"
 #include "Character.h"
-#include "ResPathFileName.h"
+#include "ResourceInfo.h"
 
 ResourceManager::ResourceManager()
     : Singleton<ResourceManager>()
@@ -234,6 +234,15 @@ LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
     //return m_umapFont[val];
 }
 
+SkinnedMesh* ResourceManager::GetSkinnedMesh(const string& path, const string& filename)
+{
+    const auto search = m_skinnedMeshs.find(path + filename);
+    if (search != m_skinnedMeshs.end())
+        return search->second;
+
+    return nullptr;
+}
+
 SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh()
 {
     return m_pCharacter;
@@ -241,7 +250,7 @@ SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh()
 
 EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
 {
-    const auto keys = ResPathFileName::Get(tag);
+    const auto keys = ResourceInfo::GetPathFileName(tag);
     const auto search = m_effectMeshs.find(keys.first + keys.second);
 
     if (search == m_effectMeshs.end())

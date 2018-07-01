@@ -77,6 +77,6 @@ public:
     void               SetScale(const D3DXVECTOR3& s);
     const D3DXVECTOR3& GetScale() const;
 
-    void              SetTransform(const D3DXMATRIX& m);
+    void              SetTransformationMatrix(const D3DXMATRIX& m);
     const D3DXMATRIX& GetTransformationMatrix();
 };
