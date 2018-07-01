@@ -1,0 +1,14 @@
+kar98
+Complete name : C:\Users\승훈\Desktop\리소스\Sound\export\WeaponsBank\Wear_RustleBank.060.mp3
+scar
+스ㄹ
+
+
+
+
+상황
+-shoot
+-silence Shoot
+-reload
+-fakeShoot
+-특이 케이스kar98 한발한발 장전
