@@ -59,6 +59,43 @@ public:
         Info();
     };
 
+    struct IsPressing
+    {
+        bool _LAlt    ;
+        bool _LCtrl   ;
+        bool _LShift  ;
+        bool _W       ;
+        bool _S       ;
+        bool _A       ;
+        bool _D       ;
+        bool _Z       ;
+        bool _X       ;
+        bool _C       ;
+        bool _Space   ;
+
+        IsPressing();
+        bool operator==(const IsPressing& other) const
+        {
+
+            if (_LAlt   != other._LAlt    ) return false;
+            if (_LCtrl  != other._LCtrl   ) return false;
+            if (_LShift != other._LShift  ) return false;
+            if (_W      != other._W       ) return false;
+            if (_S      != other._S       ) return false;
+            if (_A      != other._A       ) return false;
+            if (_D      != other._D       ) return false;
+            if (_Z      != other._Z       ) return false;
+            if (_X      != other._X       ) return false;
+            if (_C      != other._C       ) return false;
+            if (_Space  != other._Space   ) return false;
+            return true;
+        }
+        bool operator!=(const IsPressing& other) const
+        {
+            return !(*this == other);
+        }        
+    };
+
 private:
     struct FramePtr
     {
@@ -101,9 +138,16 @@ private:
     //for inventory
     TotalInventory m_totalInventory;
 
+    IsPressing m_savedInput;
+    IsPressing m_currentInput;
+
 private:
     void setFramePtr();
     void subscribeCollisionEvent();
+
+    IsPressing HandleInput(IsPressing& m_isPressing);
+    void CameraCharacterRotation(OUT D3DXQUATERNION* rOut);
+    void AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut);
 
     void updateMine();
     void updateOther();
@@ -122,9 +166,19 @@ private:
 
     void setInfo();
 
-    D3DXVECTOR3 getRight();
     D3DXVECTOR3 getUp();
+    //D3DXVECTOR3 getDown();
     D3DXVECTOR3 getForward();
+    D3DXVECTOR3 getBackward();
+    D3DXVECTOR3 getLeft();
+    D3DXVECTOR3 getRight();
+    
+    D3DXVECTOR3 getForwardLeft();
+    D3DXVECTOR3 getForwardRight();
+    D3DXVECTOR3 getBackwardLeft();
+    D3DXVECTOR3 getBackwardRight();
+    
+
 
     //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수

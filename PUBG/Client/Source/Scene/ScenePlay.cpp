@@ -5,6 +5,7 @@
 #include "SkySphere.h"
 #include "Grid.h"
 #include "Item.h"
+#include "HeightMap.h"
 
 ScenePlay::ScenePlay()
     : IScene()
@@ -22,6 +23,7 @@ void ScenePlay::OnInit()
 
     //AddObject(new SkySphere);
     AddObject(new Grid);
+    //AddObject(new HeightMap);
 
     Communication()()->m_MyInfo.m_ID = 0;
     //for (int i = 0; i < Character::NUM_PLAYER; ++i)
@@ -128,6 +130,7 @@ void ScenePlay::OnInit()
     //character0->PutItemInTotalInventory(item);
 
     character0->ShowTotalInventory();
+    //LoadObjectsFromFile("./Resource/save.txt");
 }
 
 void ScenePlay::OnUpdate()
