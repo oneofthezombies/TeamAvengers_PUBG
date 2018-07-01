@@ -75,8 +75,16 @@ enum class TAG_SOUND
     Kar98_SilenceShoot,
     Kar98_Reload0,
     Kar98_Reload1,
-    kar98_Reload2,
-    kar98_Reload3,
+    Kar98_Reload2,
+    Kar98_Reload3,
+    Qbz_BoltMove76,
+    Qbz_BoltMove77,
+    Qbz_FakeShoot,
+    Qbz_NormalShoot,
+    Qbz_Reload,
+    Qbz_SilenceShoot
+
+
 };
 
 enum class TAG_CHANNEL
