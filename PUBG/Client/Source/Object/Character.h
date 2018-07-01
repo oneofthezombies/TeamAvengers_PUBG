@@ -115,7 +115,7 @@ private:
 
     IsPressing HandleInput(IsPressing& m_isPressing);
     void CameraCharacterRotation(OUT D3DXQUATERNION* rOut);
-    void AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut);
+    void AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut);
 
     void updateMine();
     void updateOther();
@@ -134,9 +134,19 @@ private:
 
     void setInfo();
 
-    D3DXVECTOR3 getRight();
     D3DXVECTOR3 getUp();
+    //D3DXVECTOR3 getDown();
     D3DXVECTOR3 getForward();
+    D3DXVECTOR3 getBackward();
+    D3DXVECTOR3 getLeft();
+    D3DXVECTOR3 getRight();
+    
+    D3DXVECTOR3 getForwardLeft();
+    D3DXVECTOR3 getForwardRight();
+    D3DXVECTOR3 getBackwardLeft();
+    D3DXVECTOR3 getBackwardRight();
+    
+
 
 public:
              Character(const int index);

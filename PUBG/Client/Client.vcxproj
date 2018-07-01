@@ -128,6 +128,7 @@
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
+    <ClCompile Include="Source\HeightMap.cpp" />
     <ClCompile Include="Source\Object\DirectionalLight.cpp" />
     <ClCompile Include="Source\Object\Grid.cpp" />
     <ClCompile Include="Source\Object\SkySphere.cpp" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
+    <ClInclude Include="Source\HeightMap.h" />
     <ClInclude Include="Source\Object\DirectionalLight.h" />
     <ClInclude Include="Source\Object\Grid.h" />
     <ClInclude Include="Source\Object\SkySphere.h" />

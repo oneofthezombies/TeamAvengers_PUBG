@@ -133,18 +133,23 @@ void Character::updateMine()
     D3DXQUATERNION r = pTr->GetRotation();
 
 
+    /****************여러분! delta time 을 넣을 까요???*************/
 
     //이곳에서 Input을 넣습니다 그리고 m_currentInput으로 사용
     m_currentInput = HandleInput(m_currentInput);
 
     if (m_savedInput != m_currentInput)
     {
-        //set animation
-        AnimationControl(&p, &m_animState);
+        //setting animation and movements
+        AnimationMovementControl(&p, &m_animState);
 
         setAnimation(m_animState, true);
 
         m_savedInput = m_currentInput;
+    }
+    else
+    {
+        AnimationMovementControl(&p, NULL); // NULL means not changing animation
     }
 
 
@@ -152,11 +157,6 @@ void Character::updateMine()
     CameraCharacterRotation(&r);
     //animation Switch 문
 
-
-    D3DXVECTOR3 vr = Vector3::BACKWARD + Vector3::RIGHT;
-
-    D3DXVec3Normalize(&vr,&vr);
-    Debug << " vr : " << vr << endl;
 
 
 

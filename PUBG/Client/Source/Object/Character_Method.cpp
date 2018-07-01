@@ -153,7 +153,7 @@ void Character::CameraCharacterRotation(OUT D3DXQUATERNION* rOut)
     SetCursorPos(center.x, center.y);
 }
 
-void Character::AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut)
+void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut)
 {
     TAG_ANIM_CHARACTER ret;
 
@@ -161,6 +161,8 @@ void Character::AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* 
     Direction direction ;
     Moving    moving ;
     Stance    stance;
+
+    float movingFactor;
 
 
     //Attacking 3개 -----------------------------------------------------
@@ -191,18 +193,23 @@ void Character::AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* 
         stance = Stance::Stand;
     }
 
+
+
     //Moving 3개 -----------------------------------------------------
-    if (m_currentInput._LShift)
+    if (m_currentInput._LShift && !m_currentInput._LCtrl)
     {
         moving = Moving::Sprint;
+        movingFactor = 2.0f;
     }
-    else if (m_currentInput._LCtrl)
+    else if (m_currentInput._LCtrl && !m_currentInput._LShift)
     {
         moving = Moving::Walk;
+        movingFactor = 0.5f;
     }
     else
     {
         moving = Moving::Run;
+        movingFactor = 1.0f;
     }
 
 
@@ -210,39 +217,44 @@ void Character::AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* 
     if (m_currentInput._W&&m_currentInput._D)
     {
         direction = Direction::FrontRight;
+        *pOut += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._D&&m_currentInput._S)
     {
         direction = Direction::BackRight;
+        *pOut += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._S&&m_currentInput._A)
     {
         direction = Direction::BackLeft;
+        *pOut += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._A&&m_currentInput._W)
     {
         direction = Direction::FrontLeft;
+        *pOut += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._W)
     {
         direction = Direction::Front;
-        *pOut += getForward();
+        *pOut += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
 
     }
     else if (m_currentInput._D)
     {
         direction = Direction::Right;
-        *pOut += getRight() * m_rootTransform.MOVE_SPEED;
+        *pOut += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._S)
     {
         direction = Direction::Back;
-        *pOut += getForward() * -1.0f;
+        //*pOut += getForward() * -1.0f;
+        *pOut += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentInput._A)
     {
         direction = Direction::Left;
-        *pOut += getRight() * -m_rootTransform.MOVE_SPEED;
+        *pOut += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else
     {
@@ -252,124 +264,11 @@ void Character::AnimationControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* 
 
 
 
-
-
-    *tagOut = AnimationState::Get(attacking, stance, moving, direction);
-
-
-    switch (m_animState)
+    if (tagOut) //if null, no changes in animation
     {
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1:
-    {
-        if (m_currentInput._Space)
-        {
-            if (m_currentInput._W)
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
-            }
-        }
-        else
-        {
-            if (m_currentInput._W)
-            {
-                if (m_currentInput._LCtrl)
-                {
-                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_F, true);
-                    *pOut += getForward() * 0.5f;
-                }
-                else if (m_currentInput._LShift)
-                {
-                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F, true);
-                    *pOut += getForward() * 2.0f;
-                }
-                else
-                {
-                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F, true);
-                    *pOut += getForward();
-                }
-            }
-            else if (m_currentInput._S)
-            {
-                if (m_currentInput._LCtrl)
-                {
-                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_B, true);
-                    *pOut += getForward() * -0.5f;
-                }
-                else
-                {
-                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B, true);
-                    *pOut += getForward() * -1.0f;
-                }
-            }
-
-        }
+        *tagOut = AnimationState::Get(attacking, stance, moving, direction);
     }
-    break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_F:
-    {
-        if (m_currentInput._W)
-        {
-            *pOut += getForward() * 0.5f;
-        }
-        else
-        {
-            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-        }
-    }
-    break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F:
-    {
-        if (m_currentInput._W)
-        {
-            *pOut += getForward() * 2.0f;
-        }
-        else
-        {
-            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-        }
-    }
-    break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F:
-    {
-        if (m_currentInput._W)
-        {
-            *pOut += getForward();
-        }
-        else
-        {
-            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-        }
-    }
-    break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_B:
-    {
-        if (m_currentInput._S)
-        {
-            *pOut += getForward() * -0.5f;
-        }
-        else
-        {
-            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-        }
-    }
-    break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B:
-    {
-        if (m_currentInput._S)
-        {
-            *pOut += getForward() * -1.0f;
-        }
-        else
-        {
-            setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-        }
-    }
-    break;
-    }
+        
 }
 bool Character::isMine() const
 {
@@ -401,11 +300,38 @@ void Character::setInfo()
     m_info.pFPP = m_framePtr.pFPP;
 }
 
+D3DXVECTOR3 Character::getUp()
+{
+    auto rot = GetTransform()->GetRotation();
+    auto dir = Vector3::Rotate(Vector3::UP, rot);
+    //dir.y *= -1.0f;
+    D3DXVec3Normalize(&dir, &dir);
+    return dir;
+}
+
 D3DXVECTOR3 Character::getForward()
 {
     auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::FORWARD, rot);
     dir.z *= -1.0f;
+    D3DXVec3Normalize(&dir, &dir);
+    return dir;
+}
+
+D3DXVECTOR3 Character::getBackward()
+{
+    auto rot = GetTransform()->GetRotation();
+    auto dir = Vector3::Rotate(Vector3::BACKWARD, rot);
+    dir.z *= -1.0f; 
+    D3DXVec3Normalize(&dir, &dir);
+    return dir;
+}
+
+D3DXVECTOR3 Character::getLeft()
+{
+    auto rot = GetTransform()->GetRotation();
+    auto dir = Vector3::Rotate(Vector3::LEFT, rot);
+    dir.x *= -1.0f;
     D3DXVec3Normalize(&dir, &dir);
     return dir;
 }
@@ -419,14 +345,45 @@ D3DXVECTOR3 Character::getRight()
     return dir;
 }
 
-D3DXVECTOR3 Character::getUp()
+D3DXVECTOR3 Character::getForwardLeft()
 {
     auto rot = GetTransform()->GetRotation();
-    auto dir = Vector3::Rotate(Vector3::UP, rot);
-    //dir.y *= -1.0f;
+    auto dir = Vector3::Rotate(Vector3::FORWARD_RIGNT, rot);//왜 forward_Right인지..?? 이래야 잘 돌아 가는 이유는?
+    dir.z *= -1.0f;
     D3DXVec3Normalize(&dir, &dir);
     return dir;
 }
+
+D3DXVECTOR3 Character::getForwardRight()
+{
+    auto rot = GetTransform()->GetRotation();
+    auto dir = Vector3::Rotate(Vector3::FORWARD_LEFT, rot); //왜 forward_left인지..?? 이래야 잘 돌아 가는 이유는?
+    dir.z *= -1.0f;
+    D3DXVec3Normalize(&dir, &dir);
+    return dir;
+}
+
+
+
+D3DXVECTOR3 Character::getBackwardRight()
+{
+    auto rot = GetTransform()->GetRotation();
+    auto dir = Vector3::Rotate(Vector3::BACKWARD_LEFT, rot);
+    dir.z *= -1.0f;
+    D3DXVec3Normalize(&dir, &dir);
+    return dir;
+}
+
+D3DXVECTOR3 Character::getBackwardLeft()
+{
+    auto rot = GetTransform()->GetRotation();
+    auto dir = Vector3::Rotate(Vector3::BACKWARD_RIGHT, rot);
+    dir.z *= -1.0f;
+    D3DXVec3Normalize(&dir, &dir);
+    return dir;
+}
+
+
 
 void Character::updateBone()
 {
