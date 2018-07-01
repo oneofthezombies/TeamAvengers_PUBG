@@ -34,10 +34,10 @@ Character::Character(const int index)
     pSkinnedMeshController->SetSkinnedMesh(
         Resource()()->GetCharacterSkinnedMesh());
     
-    //setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
 
     //for test
-    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false);
+    //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false);
     //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, false);
 
     setFramePtr();
@@ -147,10 +147,16 @@ void Character::updateMine()
     {
         //setting animation and movements
         AnimationMovementControl(&p, &m_animState);
+        if (m_animState == TAG_ANIM_CHARACTER::COUNT)
+        {
 
-        setAnimation(m_animState, true);
+        }
+        else
+        {
+            setAnimation(m_animState, true);
 
-        m_savedInput = m_currentInput;
+            m_savedInput = m_currentInput;
+        }
     }
     else
     {

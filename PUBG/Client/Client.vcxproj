@@ -132,7 +132,6 @@
     <ClCompile Include="Source\Object\DirectionalLight.cpp" />
     <ClCompile Include="Source\Object\Grid.cpp" />
     <ClCompile Include="Source\Object\Character_Inventory.cpp" />
-    <ClCompile Include="Source\Object\DirectionalLight.cpp" />
     <ClCompile Include="Source\Object\Item.cpp" />
     <ClCompile Include="Source\Object\SkySphere.cpp" />
     <ClCompile Include="Source\Object\TerrainFeature.cpp" />
