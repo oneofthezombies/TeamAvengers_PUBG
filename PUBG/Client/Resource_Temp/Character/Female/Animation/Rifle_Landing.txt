@@ -1,3 +1,0 @@
-/// Rifle_Landing.X
-0. (0 ~ 59)[60] - Rifle_Combat_Fall_Landing_Extreme
-1. (60 ~ 183)[124] - Rifle_Combat_Fall_Landing_Hard

@@ -1,24 +1,20 @@
 #pragma once
 #include "Singleton.h"
-#include "ICamera.h"
+#include "ICamera.h"    //ÈÆÈ¸Çü! struct °¡ ¾È¸ÔÇô¼­ ÀÌ·¸°Ô ³Ö¾ú´Âµ¥ ±¦Âú³ª¿ä?
+
+#include "Character.h"
 
 #define g_pCamera        Camera       ()()
 #define g_pCurrentCamera CurrentCamera()()
-class Transform;
-struct TargetTransform
-{
-    Transform*   pTransform;
-    D3DXVECTOR3* pRotForCameraTP;
 
-    TargetTransform();
-};
+
 class CameraManager : public Singleton<CameraManager>
 {
 private:
     unordered_map<TAG_CAMERA, ICamera*> m_cameras;
 
     ICamera*   pCurrentCamera;
-    TargetTransform m_targetTransform;
+    Character::Info* m_targetInfo;
 
              CameraManager();
     virtual ~CameraManager();
@@ -28,16 +24,13 @@ public:
     void Destroy();
     void Update();
 
-    void             SetTarget(Transform* pTarget, D3DXVECTOR3* pTargetRotForCameraTP);
-    TargetTransform* GetTarget()
-    {
-        return &m_targetTransform;
-    }
+    void  SetTarget(Character::Info* info);
+    Character::Info* GetTargetInfo();
 
     void     SetCurrentCamera(const TAG_CAMERA tag);
     ICamera* GetCurrentCamera() { assert(pCurrentCamera &&"CameraManager::GetCurrentCamera(), current camera is null."); return pCurrentCamera; }
 
-    TargetTransform* GetTargetTransformPtr() { return &m_targetTransform; }
+    //TargetTransform* GetTargetTransformPtr() { return &m_targetTransform; }
 
     friend Singleton<CameraManager>;
 };

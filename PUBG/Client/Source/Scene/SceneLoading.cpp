@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SceneLoading.h"
-#include "ResPathFileName.h"
+#include "ResourceInfo.h"
 #include "Character.h"
 #include "UIText.h"
 
@@ -58,6 +58,16 @@ void SceneLoading::OnUpdate()
             }
         }
 
+        if (!m_isDoneSkinnedMeshs)
+        {
+            if (verifyTasks(
+                &m_skinnedMeshTasks,
+                &m_skinnedMeshResources))
+            {
+                addSkinnedMeshs();
+            }
+        }
+
         if (!m_isDoneEffectMeshs)
         {
             if (verifyTasks(&m_effectMeshTasks, &m_effectMeshResources))
@@ -67,7 +77,8 @@ void SceneLoading::OnUpdate()
         }
 
         if (m_isDoneEffectMeshs &&
-            m_isDoneCharacters)
+            m_isDoneCharacters &&
+            m_isDoneSkinnedMeshs)
         {
             m_isFinished = true;
             m_finish = std::chrono::system_clock::now();
@@ -96,10 +107,26 @@ void SceneLoading::OnUpdate()
 
 void SceneLoading::loadEffectMesh()
 {
-    addTask(TAG_RES_STATIC::Bandage);
-    addTask(TAG_RES_STATIC::Church);
+    //addTask(TAG_RES_STATIC::SkySphere);
+    //addTask(TAG_RES_STATIC::Church);
 
+    //addTask(TAG_RES_STATIC::Head_Lv1);
+    //addTask(TAG_RES_STATIC::Armor_Lv1);
+    //addTask(TAG_RES_STATIC::Back_Lv1);
 
+    //addTask(TAG_RES_STATIC::Bandage);
+    //addTask(TAG_RES_STATIC::FirstAidKit);
+    //addTask(TAG_RES_STATIC::MedKit);
+
+    //addTask(TAG_RES_STATIC::Ammo_5_56mm);
+    //addTask(TAG_RES_STATIC::Ammo_7_62mm);
+
+    addTask(TAG_RES_STATIC::QBZ);
+    addTask(TAG_RES_STATIC::Kar98k);
+
+    //addTask(TAG_RES_STATIC::RedDot);
+    //addTask(TAG_RES_STATIC::Aimpoint2X);
+    //addTask(TAG_RES_STATIC::ACOG);
     // ...
 }
 
@@ -113,22 +140,32 @@ void SceneLoading::loadSkinnedMesh()
 
     /* do NOT remove &m_characterSkinnedMeshTasks, 
        single argument function is for animaiton. */
-    addTask(TAG_RES_ANIM_CHARACTER::Lobby, &m_characterSkinnedMeshTasks);
+    //addTask(TAG_RES_ANIM_CHARACTER::Lobby, &m_characterSkinnedMeshTasks);
+
+    // character
+    addTask(TAG_RES_ANIM_CHARACTER::ForTest, &m_characterSkinnedMeshTasks);
+
+    // equipment
+    //addTask(TAG_RES_EQUIPMENT::Head_Lv1_Anim, &m_equipmentSkinnedMeshTasks);
 
     loadCharacterAnimation();
+
+    // weapon
+    addTask(TAG_RES_ANIM_WEAPON::QBZ_Anim, &m_skinnedMeshTasks);
+    addTask(TAG_RES_ANIM_WEAPON::Kar98k_Anim, &m_skinnedMeshTasks);
 }
 
 void SceneLoading::loadCharacterAnimation()
 {
-    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Idling);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_DoorOpen_And_Pickup);
+
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Idling);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack_FPP);
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_DoorOpen_And_Pickup);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Pickup_FPP);
-    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump_FPP);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Landing);
-    addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Stand);
 
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
@@ -136,17 +173,8 @@ void SceneLoading::loadCharacterAnimation()
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
 
-
-    /*
-    //아직 두개 이상 들어가는게 안되네여????
-    pair<string, string> p;
-    for (int i = 0; i < static_cast<int>(TAG_RES_ANIM_CHARACTER::COUNT); ++i)
-    {
-        p = ResPathFileName::Get(static_cast<TAG_RES_ANIM_CHARACTER>(i));
-        cout << p.second << endl;
-        addTask(static_cast<TAG_RES_ANIM_CHARACTER>(i), &m_characterAnimationTasks); //enum 순서대로 x파일이 들어감
-    }
-    */
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
     // ...
 }
 
@@ -194,53 +222,6 @@ void SceneLoading::addAnimationsToCharacter()
     m_isDoneCharacters = true;
 }
 
-//void SceneLoading::copyAnimationsToOtherCharacters()
-//{
-//    ResourceContainer* pC0 = m_characterSkinnedMeshResources.begin()->second;
-//
-//    LPD3DXANIMATIONCONTROLLER pC0AniCon = 
-//        pC0->m_pSkinnedMesh->m_pAnimController;
-//
-//    LPD3DXANIMATIONCONTROLLER pNew    = nullptr;
-//    LPD3DXANIMATIONSET        pAddSet = nullptr;
-//
-//    for (auto i = std::next(m_characterSkinnedMeshResources.begin()); 
-//              i != m_characterSkinnedMeshResources.end();
-//            ++i)
-//    {
-//        LPD3DXANIMATIONCONTROLLER& pOld =
-//            i->second->m_pSkinnedMesh->m_pAnimController;
-//
-//        UINT numDefaultAnim = pOld->GetMaxNumAnimationSets();
-//
-//        pOld->CloneAnimationController(
-//            pOld->GetMaxNumAnimationOutputs(),
-//            pOld->GetMaxNumAnimationSets() + m_numAddedAnim,
-//            pOld->GetMaxNumTracks(),
-//            pOld->GetMaxNumEvents(),
-//            &pNew);
-//
-//        for (UINT i = numDefaultAnim; i < numDefaultAnim + m_numAddedAnim; ++i)
-//        {
-//            pC0AniCon->GetAnimationSet(i, &pAddSet);
-//            pNew->RegisterAnimationSet(pAddSet);
-//            pAddSet->Release();
-//        }
-//
-//        pOld->Release();
-//        pOld = pNew;
-//    }
-//
-//    std::vector<ResourceContainer*> characters(Character::NUM_PLAYER);
-//    for (auto c : m_characterSkinnedMeshResources)
-//    {
-//        characters[c.first] = c.second;
-//    }
-//    Resource()()->AddCharacters(characters);
-//
-//    m_isDoneCharacters = true;
-//}
-
 void SceneLoading::addEffectMeshs()
 {
     ResourceManager* pRM = Resource()();
@@ -249,6 +230,16 @@ void SceneLoading::addEffectMeshs()
         pRM->AddResource(pR.second);
 
     m_isDoneEffectMeshs = true;
+}
+
+void SceneLoading::addSkinnedMeshs()
+{
+    ResourceManager* pRM = Resource()();
+
+    for (auto pR : m_skinnedMeshResources)
+        pRM->AddResource(pR.second);
+
+    m_isDoneSkinnedMeshs = true;
 }
 
 bool SceneLoading::verifyTasks(tasks_t* OutTasks, resources_t* OutResources)
@@ -294,7 +285,7 @@ void SceneLoading::addTask(const TAG_RES_STATIC tag, tasks_t* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 
-    auto keys = ResPathFileName::Get(tag);
+    auto keys = ResourceInfo::GetPathFileName(tag);
     OutTasks->emplace_back(
         std::make_pair(
             OutTasks->size(),
@@ -316,7 +307,7 @@ void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 
-    auto keys = ResPathFileName::Get(tag);
+    auto keys = ResourceInfo::GetPathFileName(tag);
     OutTasks->emplace_back(
         std::make_pair(
             OutTasks->size(),
@@ -332,4 +323,38 @@ void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks)
 void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag)
 {
     addTask(tag, &m_characterAnimationTasks);
+}
+
+void SceneLoading::addTask(const TAG_RES_EQUIPMENT tag, tasks_t* OutTasks)
+{
+    assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
+
+    auto keys = ResourceInfo::GetPathFileName(tag);
+    OutTasks->emplace_back(
+        std::make_pair(
+            OutTasks->size(),
+            std::async(
+                std::launch::async,
+                &ResourceAsync::OnLoadSkinnedMeshAsync,
+                keys.first,
+                keys.second)));
+
+    ++m_numTotalTasks;
+}
+
+void SceneLoading::addTask(const TAG_RES_ANIM_WEAPON tag, tasks_t* OutTasks)
+{
+    assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
+
+    auto keys = ResourceInfo::GetPathFileName(tag);
+    OutTasks->emplace_back(
+        std::make_pair(
+            OutTasks->size(),
+            std::async(
+                std::launch::async,
+                &ResourceAsync::OnLoadSkinnedMeshAsync,
+                keys.first,
+                keys.second)));
+
+    ++m_numTotalTasks;
 }

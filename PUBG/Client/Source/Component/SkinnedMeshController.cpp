@@ -20,24 +20,27 @@ void SkinnedMeshController::updateFrameToModelSpace(LPD3DXFRAME pFrameBase,
     updateFrameToModelSpace(pFrame->pFrameFirstChild, pFrame);
 }
 
-void SkinnedMeshController::drawFrame(LPD3DXFRAME pFrameBase)
+void SkinnedMeshController::drawFrame(
+    LPD3DXFRAME pFrameBase, 
+    const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
     if (!pFrameBase) return;
 
     auto pMeshContainer = pFrameBase->pMeshContainer;
     while (pMeshContainer)
     {
-        drawMeshContainer(pMeshContainer);
+        drawMeshContainer(pMeshContainer, setGlobalVariable);
 
         pMeshContainer = pMeshContainer->pNextMeshContainer;
     }
 
-    drawFrame(pFrameBase->pFrameSibling);
-    drawFrame(pFrameBase->pFrameFirstChild);
+    drawFrame(pFrameBase->pFrameSibling, setGlobalVariable);
+    drawFrame(pFrameBase->pFrameFirstChild, setGlobalVariable);
 }
 
 void SkinnedMeshController::drawMeshContainer(
-    LPD3DXMESHCONTAINER pMeshContainerBase)
+    LPD3DXMESHCONTAINER pMeshContainerBase,
+    const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
     if (!pMeshContainerBase || !pMeshContainerBase->pSkinInfo) return;
 
@@ -81,9 +84,10 @@ void SkinnedMeshController::drawMeshContainer(
     pMeshContainer->pEffectMesh->m_pMesh->UnlockVertexBuffer();
     pMeshContainer->m_pWorkMesh->UnlockVertexBuffer();
 
-    pMeshContainer->pEffectMesh->Render(
-        GetTransform()->GetTransformationMatrix(), 
-        pMeshContainer->m_pWorkMesh);
+    Shader::Draw(
+        pMeshContainer->pEffectMesh->m_effectParams, 
+        pMeshContainer->m_pWorkMesh, 
+        setGlobalVariable);
 }
 
 SkinnedMeshController::SkinnedMeshController(IObject* pOwner)
@@ -106,14 +110,14 @@ void SkinnedMeshController::UpdateAnimation()
     assert(m_pSkinnedMeshInstance &&
         "SkinnedMeshController::UpdateAnimation(), \
          skinned mesh instance is null.");
-
+    const float factor = 2.0f;
     const auto dt = Time()()->GetDeltaTime();
     auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
-    pAniCon->AdvanceTime(dt, nullptr);
+    pAniCon->AdvanceTime(dt *factor, nullptr);
 
     if (m_passedBlendTime < m_totalBlendTime)
     {
-        m_passedBlendTime += dt;
+        m_passedBlendTime += dt * factor;
         const auto weight = m_passedBlendTime / m_totalBlendTime;
         if (weight >= 1.0f)
         {
@@ -135,12 +139,13 @@ void SkinnedMeshController::UpdateModel()
         m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame, nullptr);
 }
 
-void SkinnedMeshController::Render()
+void SkinnedMeshController::Render(
+    const std::function<void(LPD3DXEFFECT)>& shaderGlobalSetup)
 {
     assert(m_pSkinnedMeshInstance &&
         "SkinnedMeshController::Render(), skinned mesh is null.");
 
-    drawFrame(m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame);
+    drawFrame(m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame, shaderGlobalSetup);
 }
 
 void SkinnedMeshController::SetSkinnedMesh(SkinnedMesh* pSkinnedMesh)

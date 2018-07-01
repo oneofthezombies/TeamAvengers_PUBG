@@ -5,6 +5,7 @@
 #include "SkinnedMeshController.h"
 #include "DirectionalLight.h"
 
+
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -16,11 +17,14 @@ Character::Character(const int index)
     , m_rootTransform(1.0f)
     , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
     , m_framePtr()
+    , m_info()
+    , m_savedInput()
+    , m_currentInput()
     , m_pSphereMesh(nullptr)
     , m_pRootCharacterPart(nullptr)
+    , m_totalInventory()
 
     , pSkinnedMeshController(nullptr)
-    , pTargetTransform(nullptr)
 {
     Transform* tr = GetTransform();
     tr->SetRotation(OFFSET_ROTATION);
@@ -31,6 +35,10 @@ Character::Character(const int index)
         Resource()()->GetCharacterSkinnedMesh());
     
     setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+
+    //for test
+    //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false);
+    //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, false);
 
     setFramePtr();
 
@@ -44,11 +52,11 @@ Character::Character(const int index)
 
     if (isMine())
     {
-        Camera()()->SetTarget(GetTransform(), &m_rotForCameraTP);
-        pTargetTransform = Camera()()->GetTargetTransformPtr();
+        setInfo();
+        Camera()()->SetTarget(&m_info);
     }
 
-    m_rotForCameraTP = Vector3::ZERO;
+    m_rotationForCamera = Vector3::ZERO;
 }
 
 Character::~Character()
@@ -67,22 +75,24 @@ void Character::OnUpdate()
 
 void Character::OnRender()
 {
-    auto pD = Device()();
-    pD->SetRenderState(D3DRS_LIGHTING, true);
-     
-    pD->SetTexture(0, NULL);
-    pD->SetMaterial(&MaterialTemplate::GetWhite());
-    pD->SetTransform(
-        D3DTS_WORLD, &GetTransform()->GetTransformationMatrix());
-    m_pSphereMesh->DrawSubset(0);
-
-    // for distance measurement
+    //// for distance measurement
     for (int i = 0; i < 10; ++i)
     {
         D3DXMATRIX t;
         D3DXMatrixTranslation(&t, static_cast<float>(i * 10), 0.0f, 0.0f);
-        pD->SetTransform(D3DTS_WORLD, &t);
-        m_pSphereMesh->DrawSubset(0);
+
+        Shader::Draw(
+            Resource()()->GetEffect("./Resource/", "Color.fx"),
+            nullptr,
+            m_pSphereMesh,
+            0,
+            [this, &t](LPD3DXEFFECT pEffect)
+        {
+            pEffect->SetMatrix(Shader::World, &t);
+
+            D3DXCOLOR white(1.0f, 1.0f, 1.0f, 1.0f);
+            pEffect->SetValue("Color", &white, sizeof white);
+        });
     }
 }
 
@@ -90,23 +100,24 @@ void Character::updateMine()
 {
     if (!isMine()) return;
 
-    // for anim debug
-    //auto animIndex = pSkiCon->GetCurrentAnimationIndex();
-    //const auto numAnim = pSkiCon->GetNumAnimation();
+    //// for anim debug
+    //InputManager*  pInput = Input()();
+    //auto animIndex = pSkinnedMeshController->GetCurrentAnimationIndex();
+    //const auto numAnim = pSkinnedMeshController->GetNumAnimation();
 
     //if (pInput->IsOnceKeyDown('1'))
     //{
     //    if (animIndex > 0)
     //        animIndex--;
 
-    //    pSkiCon->SetAnimationIndex(animIndex, true);
+    //    pSkinnedMeshController->SetAnimationIndex(animIndex, true);
     //}
     //if (pInput->IsOnceKeyDown('2'))
     //{
     //    if (animIndex < numAnim - 1)
     //        animIndex++;
 
-    //    pSkiCon->SetAnimationIndex(animIndex, true);
+    //    pSkinnedMeshController->SetAnimationIndex(animIndex, true);
     //}
 
     //Debug << "num Anim : " << numAnim << ", anim index : " << animIndex << '\n';
@@ -119,196 +130,47 @@ void Character::updateMine()
     //{
     //    RotateWaist(m_WaistRotation.QUANTITY_FACTOR);
     //}
-    ICamera*       pCurrentCamera = CurrentCamera()();
-    InputManager*  pInput = Input()();
+
+
+
     Transform*     pTr = GetTransform();
     D3DXVECTOR3    p = pTr->GetPosition();
     D3DXQUATERNION r = pTr->GetRotation();
-    const bool isPressing_LAlt = pInput->IsStayKeyDown(VK_LMENU);
-    const bool isPressing_LCtrl  = pInput->IsStayKeyDown(VK_LCONTROL);
-    const bool isPressing_LShift = pInput->IsStayKeyDown(VK_LSHIFT);
-    const bool isPressing_W      = pInput->IsStayKeyDown('W');
-    const bool isPressing_S      = pInput->IsStayKeyDown('S');
-    const bool isPressing_A      = pInput->IsStayKeyDown('A');
-    const bool isPressing_D      = pInput->IsStayKeyDown('D');
 
-    const bool isPressed_Space = pInput->IsOnceKeyDown(VK_SPACE);
-    const float dt = Time()()->GetDeltaTime();
 
-    // get mouse pos
-    POINT mouse;
-    GetCursorPos(&mouse);
-    ScreenToClient(g_hWnd, &mouse);
+    /****************여러분! delta time 을 넣을 까요???*************/
 
-    POINT diff;
-    diff.x = mouse.x - 1280 / 2;
-    diff.y = mouse.y - 720 / 2;
-    const float yaw = diff.x * 0.2f * dt;
-    const float pitch = diff.y * 0.2f * dt;
-    if (isPressing_LAlt)
+    //이곳에서 Input을 넣습니다 그리고 m_currentInput으로 사용
+    m_currentInput = HandleInput(m_currentInput);
+
+    if (m_savedInput != m_currentInput)
     {
-        if (pCurrentCamera)
+        //setting animation and movements
+        AnimationMovementControl(&p, &m_animState);
+        if (m_animState == TAG_ANIM_CHARACTER::COUNT)
         {
-            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person)
-            {
 
-                //m_rotForCameraTP.x += -pitch;
-                m_rotForCameraTP.y += yaw;
-            }
+        }
+        else
+        {
+            setAnimation(m_animState, true);
+
+            m_savedInput = m_currentInput;
         }
     }
-    else // isPressing_LAlt == false
+    else
     {
-        // update rotation of transform
-
-        D3DXQUATERNION q;
-        D3DXQuaternionRotationYawPitchRoll(&q, yaw, 0.0f, 0.0f);
-        cout << "pitch : " << pitch << " yaw : " << yaw << endl;
-
-        r *= q;
-
-        // reset rotFotCameraTP
-        m_rotForCameraTP = Vector3::ZERO;
+        AnimationMovementControl(&p, NULL); // NULL means not changing animation
     }
 
-    /*
-    in : mouse
-    out : character r <= mouse only one axis
-    out : camera r <= mouse wto axis
-    */
 
-    POINT center;
-    center.x = 1280 / 2;
-    center.y = 720 / 2;
-    ClientToScreen(g_hWnd, &center);
-    SetCursorPos(center.x, center.y);
-
-    Debug << "rot for TP : " << m_rotForCameraTP << '\n';
+    //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
+    CameraCharacterRotation(&r);
+    //animation Switch 문
 
 
-    switch (m_animState)
-    {
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1:
-        {
-            if (isPressed_Space)
-            {
-                //if (isPressing_W)
-                //{
-                //    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F, true);
-                //}
-                //else
-                //{
-                //    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary, true);
-                //}
-            }
-            else
-            {
-                if (isPressing_W)
-                {
-                    if (isPressing_LCtrl)
-                    {
-                        setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_F, true);
-                        p += getForward() * 0.5f;
-                    }
-                    else if (isPressing_LShift)
-                    {
-                        setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F, true);
-                        p += getForward() * 2.0f;
-                    }
-                    else
-                    {
-                        setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F, true);
-                        p += getForward();
-                    }
-                }
-                else if (isPressing_S)
-                {
-                    if (isPressing_LCtrl)
-                    {
-                        setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_B, true);
-                        p += getForward() * -0.5f;
-                    }
-                    else
-                    {
-                        setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B, true);
-                        p += getForward() * -1.0f;
-                    }
-                }
-            }
-        }
-        break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_F:
-        {
-            if (isPressing_W) 
-            {
-                p += getForward() * 0.5f;
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-            }
-        }
-        break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F:
-        {
-            if (isPressing_W) 
-            {
-                p += getForward() * 2.0f;
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-            }
-        }
-        break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F:
-        {
-            if (isPressing_W) 
-            {
-                p += getForward();
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-            }
-        }
-        break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Walk_B:
-        {
-            if (isPressing_S)
-            {
-                p += getForward() * -0.5f;
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-            }
-        }
-        break;
-    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B:
-        {
-            if (isPressing_S)
-            {
-                p += getForward() * -1.0f;
-            }
-            else
-            {
-                setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, true);
-            }
-        }
-        break;
-    }
 
-    if (pInput->IsStayKeyDown('A'))
-    {
-        p += getRight() * -m_rootTransform.MOVE_SPEED;
-        //isUpdated = true;
-    }
-    if (pInput->IsStayKeyDown('D'))
-    {
-        p += getRight() * m_rootTransform.MOVE_SPEED;
-        //isUpdated = true;
-    }
+
 
     //if (pInput->IsOnceKeyDown(VK_RETURN))
     //    isFired = true;

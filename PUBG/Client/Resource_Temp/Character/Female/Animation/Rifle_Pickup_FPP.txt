@@ -1,4 +1,0 @@
-/// Rifle_Pickup_FPP_Rifle.X (무기를 든 채 줍는 애니메이션 FPP용)
-0. (0   ~ 80)[81] - Rifle_Combat_Crouch_Pickup_FPP
-1. (81  ~ 161)[81] - Rifle_Combat_Prone_Pickup_FPP 
-2. (162 ~ 242)[81] - Rifle_Combat_Stand_Pickup_FPP

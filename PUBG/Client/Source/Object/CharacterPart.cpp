@@ -46,7 +46,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             //void* pData = nullptr;
             //auto pMesh = pMeshContainer->pEffectMesh->m_pMesh;
             //pMesh->LockVertexBuffer(D3DLOCK_READONLY, &pData);
-            //D3DXVECTOR3 min, max;
+            //D3DXVECTOR3 center;
+            //float radius;
+            //D3DXComputeBoundingSphere((D3DXVECTOR3*)pData, pMesh->GetNumVertices(), pMesh->GetNumBytesPerVertex(), &center, &radius);
+            //pMesh->UnlockVertexBuffer();
             //D3DXComputeBoundingBox((D3DXVECTOR3*)pData, 
             //    pMesh->GetNumVertices(), pMesh->GetNumBytesPerVertex(), 
             //    &min, &max);

@@ -78,3 +78,44 @@ enum class TAG_CAMERA
     KyunChak,
     Scope2X
 };
+
+//enum class TAG_ITEM_CATEGORY
+//{
+//    Idle,
+//    Equipment,  //장비
+//    Consumable, //소모품
+//    Ammo,       //탄약
+//    Weapon,     //무기
+//    Attach      //무기 부착물
+//};
+
+enum class TAG_ITEM_CATEGORY
+{
+    Idle,
+
+    Armor,           //방탄조끼
+    Back,            //백팩
+    Head,            //헬멧
+
+    Consumable,      //소모품
+    Ammo,            //탄약
+
+    Rifle,           //주무기/보조무기
+    Melee,           //근접무기
+    Throwable,       //수류탄류
+    
+    Attach           //무기 부착물
+};
+
+enum class TAG_ATTACH_POINT
+{
+    Primary_Muzzle,     //소음기, 소염기 등
+    Primary_LowerRail,  //수직손잡이 등
+    Primary_UpperRail,  //스코프류
+    Primary_Mag,        //탄창
+     
+    Secondary_Muzzle,
+    Secondary_LowerRail,
+    Secondary_UpperRail,
+    Secondary_Mag,
+};

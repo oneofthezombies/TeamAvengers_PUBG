@@ -9,8 +9,8 @@ enum class TAG_RES_STATIC
     DeathDropBox,
 
     //Ammunition
-    Ammu_5_56mm,
-    Ammu_7_62mm,
+    Ammo_5_56mm,
+    Ammo_7_62mm,
 
     //Attachment
     ACOG,
@@ -142,6 +142,7 @@ enum class TAG_RES_STATIC
 //애니메이션이 있는 리소스 -------------------------------------
 enum class TAG_RES_ANIM_WEAPON
 {
+    Idle,
 //Weapon - 총 자체의 애니메이션
     QBZ_Anim,
     Kar98k_Anim
@@ -210,6 +211,13 @@ enum class TAG_RES_ANIM_CHARACTER
 //5. 기절과 관련한 애니메이션
     DBNO,
 
+//6. for test
+    ForTest,
+
     COUNT
 };
 
+enum class TAG_RES_EQUIPMENT
+{
+    Head_Lv1_Anim,
+};
