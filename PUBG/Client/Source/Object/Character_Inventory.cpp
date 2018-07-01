@@ -167,23 +167,34 @@ void Character::updateTotalInventory()
     Item* pWeaponPrimary = m_totalInventory.m_weaponPrimary;
     if (pWeaponPrimary)
     {
+        //Transform* pWeaponPrimaryTr = pWeaponPrimary->GetTransform();
+
+        //// 모델스페이스 m_framePtr.pSlotPrimary->CombinedTransformationMatrix
+        //// 월드스페이스 = 모델스페이스 * 캐릭터 월드스페이스
+
+        //D3DXMATRIX weaponWorld = m_framePtr.pSlotPrimary->CombinedTransformationMatrix
+        //    * pTr->GetTransformationMatrix();
+
+        //pWeaponPrimaryTr->SetTransformationMatrix(weaponWorld);
+
+        //Debug << "primary weapon matrix : \n" << weaponWorld << '\n';
+
+        //pWeaponPrimaryTr->Update();
+        //pWeaponPrimary->SetIsRenderEffectMesh(false);
+        //pWeaponPrimary->SetIsRenderSkinnedMesh(true);
+
+        //for test
         Transform* pWeaponPrimaryTr = pWeaponPrimary->GetTransform();
-
-        // 모델스페이스 m_framePtr.pSlotPrimary->CombinedTransformationMatrix
-        // 월드스페이스 = 모델스페이스 * 캐릭터 월드스페이스
-
-        D3DXMATRIX weaponWorld = m_framePtr.pSlotPrimary->CombinedTransformationMatrix
+        D3DXMATRIX weaponWorld = m_framePtr.pHandGun->CombinedTransformationMatrix
             * pTr->GetTransformationMatrix();
 
         pWeaponPrimaryTr->SetTransformationMatrix(weaponWorld);
-
-        Debug << "primary weapon matrix : \n" << weaponWorld << '\n';
-
         pWeaponPrimaryTr->Update();
         pWeaponPrimary->SetIsRenderEffectMesh(false);
         pWeaponPrimary->SetIsRenderSkinnedMesh(true);
-    }
 
+    }
+    
     //보조무기
     Item* pWeaponSecondary = m_totalInventory.m_weaponSecondary;
     if (pWeaponSecondary)
@@ -199,6 +210,17 @@ void Character::updateTotalInventory()
         pWeaponSecondaryTr->Update();
         pWeaponSecondary->SetIsRenderEffectMesh(false);
         pWeaponSecondary->SetIsRenderSkinnedMesh(true);
+
+        //for test
+        //Transform* pWeaponSecondaryTr = pWeaponSecondary->GetTransform();
+        //D3DXMATRIX weaponWorld = m_framePtr.pHandGun->CombinedTransformationMatrix
+        //    * pTr->GetTransformationMatrix();
+
+        //pWeaponSecondaryTr->SetTransformationMatrix(weaponWorld);
+        //pWeaponSecondaryTr->Update();
+        //pWeaponSecondary->SetIsRenderEffectMesh(false);
+        //pWeaponSecondary->SetIsRenderSkinnedMesh(true);
+
     }
 }
 

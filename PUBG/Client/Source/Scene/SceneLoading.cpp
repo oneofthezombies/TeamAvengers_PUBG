@@ -173,6 +173,8 @@ void SceneLoading::loadCharacterAnimation()
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
 
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
     // ...
 }
 
