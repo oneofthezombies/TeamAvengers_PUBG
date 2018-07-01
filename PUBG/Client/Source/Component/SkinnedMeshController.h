@@ -1,6 +1,17 @@
 #pragma once
 #include "ComponentTransform.h"
 
+struct NextAnimation
+{
+    string name;
+    float nextSpeed;
+    bool isBlend;
+    float blendTime;
+    float nextWeight;
+
+    NextAnimation();
+};
+
 struct SkinnedMeshInstance;
 
 class SkinnedMeshController : public Component
@@ -14,8 +25,13 @@ private:
 
     SkinnedMeshInstance* m_pSkinnedMeshInstance;
 
+    bool m_isFinishedCurrentAnim;
+    deque<NextAnimation> m_nextAnims;
+
 private:
+    void checkIsFinishedAndSetNextAnimation(const float calcedDt);
     void updateFrameToModelSpace(LPD3DXFRAME pFrameBase, LPD3DXFRAME pParent);
+    
     void drawFrame(
         LPD3DXFRAME pFrameBase, 
         const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
@@ -45,9 +61,18 @@ public:
         const float blendTime = 0.3f,
         const float nextWeight = 0.0f);
 
+    void AddNextAnimation(
+        const string& name,
+        const float nextSpeed = 1.0f,
+        const bool isBlend = true,
+        const float blendTime = 0.3f,
+        const float nextWeight = 0.0f);
+
           size_t  GetCurrentAnimationIndex() const;
     const string& GetCurrentAnimationName()  const;
           size_t  GetNumAnimation()          const;
 
     Frame* FindFrame(const string& name);
+
+    bool IsFinishedCurrentAnim() const;
 };

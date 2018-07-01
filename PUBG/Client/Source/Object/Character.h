@@ -83,7 +83,6 @@ public:
         bool operator!=(const IsPressing& other) const;
     };
 
-private:
     struct FramePtr
     {
         Frame* pWaist;
@@ -151,6 +150,12 @@ private:
         const bool isBlend = true,
         const float blendTime = 0.3f,
         const float nextWeight = 0.0f);
+    void addNextAnimation(
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend = true,
+        const float blendTime = 0.3f,
+        const float nextWeight = 0.0f);
+    bool isFinishedCurrentAnim() const;
 
     void setInfo();
 

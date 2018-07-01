@@ -34,12 +34,13 @@ Character::Character(const int index)
     pSkinnedMeshController->SetSkinnedMesh(
         Resource()()->GetCharacterSkinnedMesh());
     
-    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+    //setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
     //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
 
     //for test
-    //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false);
+    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false);
     //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, false);
+    addNextAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
 
     setFramePtr();
 
@@ -142,40 +143,51 @@ void Character::updateMine()
     /****************여러분! delta time 을 넣을 까요???*************/
 
     //이곳에서 Input을 넣습니다 그리고 m_currentInput으로 사용
-    m_currentInput = HandleInput(m_currentInput);
-    // HERE
-    if (m_savedInput != m_currentInput)
-    {
-        //setting animation and movements
-        AnimationMovementControl(&p, &m_animState);
-        if (m_animState == TAG_ANIM_CHARACTER::COUNT)
-        {
-            // handle exception
-        }
-        else
-        {
-            setAnimation(m_animState);
+    //m_currentInput = HandleInput(m_currentInput);
+    //// HERE
+    //if (m_savedInput != m_currentInput)
+    //{
+    //    //setting animation and movements
+    //    AnimationMovementControl(&p, &m_animState);
+    //    if (m_animState == TAG_ANIM_CHARACTER::COUNT)
+    //    {
+    //        // handle exception
+    //    }
+    //    else
+    //    {
+    //        setAnimation(m_animState);
 
-            m_savedInput = m_currentInput;
-        }
+    //        m_savedInput = m_currentInput;
+    //    }
 
-        // HERE
-        if (m_currentInput._Num1)
-        {
-            cout << "Click Num1" << endl;
-            setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand);
+    //    // HERE
+    //    if (m_currentInput._Num1)
+    //    {
+    //        cout << "Click Num1" << endl;
+    //        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand);
 
-        }
-        else if (m_currentInput._Num2)
-        {
-            cout << "Click Num2" << endl;
-            setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand);
-        }
-    }
-    else
-    {
-        AnimationMovementControl(&p, NULL); // NULL means not changing animation
-    }
+    //    }
+    //    else if (m_currentInput._Num2)
+    //    {
+    //        cout << "Click Num2" << endl;
+    //        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand);
+    //    }
+    //}
+    //else
+    //{
+    //    AnimationMovementControl(&p, NULL); // NULL means not changing animation
+    //}
+
+    //if (isFinishedCurrentAnim())
+    //{
+    //    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle);
+    //}
+
+    //if (isFinishedCurrentAnim())
+    //{
+
+    //    cout << "!";
+    //}
 
 
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.

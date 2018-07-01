@@ -69,7 +69,6 @@ bool Character::IsPressing::operator!=(const IsPressing& other) const
     return !(*this == other);
 }
 
-
 Character::FramePtr::FramePtr()
     : pRoot(nullptr)
     , pWaist(nullptr)
@@ -336,6 +335,31 @@ void Character::setAnimation(
         nextWeight);
 
     m_animState = tag;
+}
+
+void Character::addNextAnimation(
+    const TAG_ANIM_CHARACTER tag,
+    const bool isBlend,
+    const float blendTime,
+    const float nextWeight)
+{
+    assert(pSkinnedMeshController &&
+        "Character::setNextAnimation(), skinned mesh controller is null.");
+
+    pSkinnedMeshController->AddNextAnimation(
+        TagAnimation::GetString(tag),
+        TagAnimation::GetSpeed(tag),
+        isBlend,
+        blendTime,
+        nextWeight);
+}
+
+bool Character::isFinishedCurrentAnim() const
+{
+    assert(pSkinnedMeshController && 
+        "Character::isFinishedCurrentAnim(), skinned mesh controller is null.");
+
+    return pSkinnedMeshController->IsFinishedCurrentAnim();
 }
 
 void Character::setInfo()
