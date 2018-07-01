@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ScenePlay.h"
 #include "DirectionalLight.h"
+#include "Grid.h"
 
 ScenePlay::ScenePlay()
     : IScene()
@@ -19,6 +20,8 @@ void ScenePlay::OnInit()
     //for (int i = 0; i < Character::NUM_PLAYER; ++i)
     //    AddObject(new Character(i));
     AddObject(new Character(0));
+
+    AddObject(new Grid());
 
     LoadObjectsFromFile("./Resource/save.txt");
 }

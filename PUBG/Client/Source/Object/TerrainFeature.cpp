@@ -14,10 +14,11 @@ TerrainFeature::TerrainFeature(
     pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
     pEffectMeshRenderer->SetEffectMesh(tag);
 
-    Transform* tr = GetTransform();
-    tr->SetPosition(position);
-    tr->SetRotation(rotation);
-    tr->SetScale(scale);
+    //Transform* tr = GetTransform();
+    //tr->SetPosition(position);
+    //tr->SetRotation(rotation);
+    //tr->SetScale(scale);
+    //tr->Update();
 }
 
 TerrainFeature::~TerrainFeature()

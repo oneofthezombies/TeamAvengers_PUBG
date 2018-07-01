@@ -76,7 +76,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	hInst = hInstance;
 
 	const int style = WS_OVERLAPPED | WS_CAPTION | WS_DLGFRAME | WS_SYSMENU;
-	const int left = 500;
+	const int left = 0;
 	const int top = 0;
 	const int width = 1280;
 	const int height = 720;

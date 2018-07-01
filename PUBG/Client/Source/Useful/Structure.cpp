@@ -46,6 +46,8 @@ EffectParam::~EffectParam()
 
 EffectMesh::EffectMesh()
     : m_pMesh(nullptr)
+    , m_radius(0.0f)
+    , m_center(Vector3::ZERO)
 {
 }
 

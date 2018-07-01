@@ -51,7 +51,9 @@ void Application::Update()
     Camera       ()()->Update();
     Collision    ()()->Update();
     UI           ()()->Update();
+
     Scene        ()()->Render();
+
     UI           ()()->Render();
     DebugMgr     ()()->Render();
     Device       ()()->EndScene();

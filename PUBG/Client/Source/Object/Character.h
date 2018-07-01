@@ -54,6 +54,8 @@ private:
     CharacterPart*         m_pRootCharacterPart;
 
     D3DXMATRIX m_prevRootModel;
+    D3DXVECTOR3 m_rotForCameraTP;
+    TargetTransform* pTargetTransform;
 
 private:
     void setFramePtr();
@@ -74,8 +76,9 @@ private:
         const float currentWeight = 1.0f, const float nextWeight = 0.0f,
         const float blendTime = 0.3f);
 
-    D3DXVECTOR3 getForward();
     D3DXVECTOR3 getRight();
+    D3DXVECTOR3 getUp();
+    D3DXVECTOR3 getForward();
 
 public:
              Character(const int index);
