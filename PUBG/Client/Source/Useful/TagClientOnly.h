@@ -68,7 +68,15 @@ enum class TAG_FONT
 enum class TAG_SOUND
 {
     Idle,
-
+    Kar98_BoltMove0,
+    Kar98_BoltMove1,
+    Kar98_BoltMove2,
+    Kar98_NormalShoot,
+    Kar98_SilenceShoot,
+    Kar98_Reload0,
+    Kar98_Reload1,
+    kar98_Reload2,
+    kar98_Reload3,
 };
 
 enum class TAG_CHANNEL
