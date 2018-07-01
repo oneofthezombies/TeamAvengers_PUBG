@@ -43,6 +43,32 @@ Character::IsPressing::IsPressing()
 {
 }
 
+bool Character::IsPressing::operator==(const IsPressing& other) const
+{
+    if (_LAlt != other._LAlt) return false;
+    if (_LCtrl != other._LCtrl) return false;
+    if (_LShift != other._LShift) return false;
+    if (_W != other._W) return false;
+    if (_S != other._S) return false;
+    if (_A != other._A) return false;
+    if (_D != other._D) return false;
+    if (_Z != other._Z) return false;
+    if (_X != other._X) return false;
+    if (_C != other._C) return false;
+    if (_Space != other._Space) return false;
+    if (_Num1 != other._Num1) return false;
+    if (_Num2 != other._Num2) return false;
+    if (_Num3 != other._Num3) return false;
+    if (_Num4 != other._Num4) return false;
+    if (_Num5 != other._Num5) return false;
+    return true;
+}
+
+bool Character::IsPressing::operator!=(const IsPressing& other) const
+{
+    return !(*this == other);
+}
+
 
 Character::FramePtr::FramePtr()
     : pRoot(nullptr)
@@ -184,7 +210,7 @@ void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHA
 
 
     //Attacking 3개 -----------------------------------------------------
-    if (true/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
+    if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
     {
         attacking = Attacking::Rifle;
     }

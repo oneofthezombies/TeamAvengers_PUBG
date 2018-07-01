@@ -114,6 +114,7 @@ void SkinnedMeshController::UpdateAnimation()
     const float factor = 2.0f;
     const float dt = Time()()->GetDeltaTime();
     const float calcedDt = dt * factor;
+
     auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
     pAniCon->AdvanceTime(calcedDt, nullptr);
 
