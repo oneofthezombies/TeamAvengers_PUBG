@@ -4,6 +4,7 @@
 #include "Bullet.h"
 #include "SkinnedMeshController.h"
 #include "DirectionalLight.h"
+#include "AnimationState.h"
 
 
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
@@ -71,6 +72,8 @@ void Character::OnUpdate()
     updateOther();
     updateDependency();
     communicate();
+
+    TAG_ANIM_CHARACTER res = AnimationState::Get(Attacking::Rifle, Stance::Stand, Moving::Run, Direction::Front);
 }
 
 void Character::OnRender()
