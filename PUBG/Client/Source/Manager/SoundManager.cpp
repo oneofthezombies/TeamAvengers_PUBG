@@ -27,7 +27,10 @@ void SoundManager::Init()
 {
 	CheckError(FMOD::System_Create(&m_pSystem));
 	CheckError(m_pSystem->init(MAX_CHANNEL_SIZE, FMOD_INIT_NORMAL, nullptr));
+    CheckError(m_pSystem->set3DSettings(1.0f, 1.0f, 3.01f));
     //set3DSetting(진동수,거리에따른 진동 조절(게임내 1M를 설정해주면된다), 거리에따른 감쇠 비율(커질수록 소리 감소가 커진다))
+
+    AddSound(TAG_SOUND::Kar98_NormalShoot, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D);
 }
 
 void SoundManager::Destroy()

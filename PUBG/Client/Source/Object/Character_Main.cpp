@@ -135,6 +135,13 @@ void Character::updateMine()
     const bool isPressed_Space = pInput->IsOnceKeyDown(VK_SPACE);
     const float dt = Time()()->GetDeltaTime();
 
+    // sh test
+    if (pInput->IsOnceKeyDown('X'))
+    {
+        Sound()()->Play(TAG_SOUND::Kar98_NormalShoot);
+    }
+
+
     // get mouse pos
     POINT mouse;
     GetCursorPos(&mouse);
