@@ -170,6 +170,8 @@ void SceneLoading::loadCharacterAnimation()
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump_FPP);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Landing);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
+    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone);
 
     addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
     addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
@@ -179,6 +181,9 @@ void SceneLoading::loadCharacterAnimation()
     addTask(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
     addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
     addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
+
+    addTask(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    addTask(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
     // ...
 }
 

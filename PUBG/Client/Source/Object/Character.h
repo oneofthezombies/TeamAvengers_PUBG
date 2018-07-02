@@ -236,6 +236,9 @@ public:
     //for inventory
     void PutItemInTotalInventory(Item* item);
     void ShowTotalInventory();
+
+    //for Debug
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
     string ForDebugGetAttacking(Attacking attcking);
+    string ForDebugGetStance(Stance stance);
 };

@@ -281,6 +281,9 @@ void Character::setAttacking()
 
 void Character::setStance()
 {
+    //for Debug
+    Debug << "Stance: " << ForDebugGetStance(m_stance) << "\n";
+
     if (m_currentOnceKey._C)
     {
         if (m_stance == Stance::Crouch)
@@ -317,7 +320,10 @@ void Character::setReload()
 {
     TotalInventory& inven = m_totalInventory;
 
-    //R버튼을 눌렀는데, 1. 총을 들고 있고 2. 총에 알맞은 총알이 있다면 3. 총알 개수 내에서 (장탄수-현재 장전된 총알개수) 만큼 총알을 장전해준다
+    //R버튼을 눌렀는데,
+    //1. 총을 들고 있고 
+    //2. 총에 알맞은 총알이 있다면 
+    //3. 갖고있는 총알 개수 내에서 (장탄수-현재 장전된 총알개수) 만큼 총알을 장전해준다
     if (m_currentOnceKey._R)
     {
         if (inven.m_hand)
@@ -325,28 +331,41 @@ void Character::setReload()
             TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic(); //총 종류
             TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag); //탄약 종류
             int magSize = ItemInfo::GetMagazineSize(tag);         //장탄 수
-
-            int numBulletInInventory = 0; //인벤토리에 있는 총알 수
             int numBulletCurrentLoad = inven.m_hand->GetNumBullet(); //장전되어있는 총알 수
-            int numBulletNeedReload = 0;  //장전할 총알 수
 
-            if (numBulletCurrentLoad == magSize)
-            {
-                cout << "이미 가득 장전되어있따!!!" << endl;
+            if (numBulletCurrentLoad == magSize) //이미 가득 장전 되어있는 경우
                 return;
-            }
-
+        
+            //총에 알맞는 총알이 있는지 확인해서 장전
             auto it = inven.m_mapInventory.find(ammoType);
             if (it != inven.m_mapInventory.end())
             {
-                //해당 총알이 있으면
+                /*
+                    TODO: 장전 애니메이션 추가
+                    //우선 서있을 때 장전하는거 넣어보게뜸 //
+                */
+                if (tag == TAG_RES_STATIC::QBZ)
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Base, false, [this]()
+                    {
+                        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                    });
+                }
+                else if (tag == TAG_RES_STATIC::Kar98k) //TODO: 남은 총알 수 만큼
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_StartLoopEnd_Base, false, [this]() //두발 장전됨
+                    {
+                        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                    });                
+                }
+
+                int numBulletInInventory = (*it).second.back()->GetCount(); //인벤토리에 있는 총알 수
+                int numBulletNeedReload = magSize - numBulletCurrentLoad;   //장전할 총알 수 (장탄수 - 현재 장전된 총알 개수)
+
                 cout << ItemInfo::GetName(ammoType);
                 cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
-                numBulletInInventory = (*it).second.back()->GetCount();
-
                 cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
-                numBulletNeedReload = magSize - numBulletCurrentLoad; //(장탄수 - 현재 장전된 총알 개수)
-                cout << "장전해야할 총알 수: " << numBulletNeedReload << endl;
+
                 if (numBulletInInventory >= numBulletNeedReload)
                 {
                     inven.m_hand->SetNumBullet(numBulletNeedReload);
@@ -363,11 +382,13 @@ void Character::setReload()
             else
             {
                 cout << "총알이 필요해" << endl;
+                //do nothing
             }
         }
-        else
+        else //inven.m_hand == nullptr
         {
             cout << "총을 장착해줘" << endl;
+            //do nothing
         }
     }
 }

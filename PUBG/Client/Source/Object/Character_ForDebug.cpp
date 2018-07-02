@@ -30,3 +30,16 @@ string Character::ForDebugGetAttacking(Attacking attcking)
         return "";
     }
 }
+
+string Character::ForDebugGetStance(Stance stance)
+{
+    switch (stance)
+    {
+    case Stance::Stand: return "Stand";
+    case Stance::Crouch: return "Crouch";
+    case Stance::Prone: return "Prone";
+    default:
+        assert(false && "Character::ForDebugGetStance(), default case.");
+        return "";   
+    }
+}
