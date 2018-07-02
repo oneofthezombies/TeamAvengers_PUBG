@@ -7,13 +7,15 @@ HeightMap::HeightMap()
 	: IMap()
     , m_pMesh(NULL)
 {
-    D3DXMATRIXA16 matS;
-    D3DXMatrixScaling(&matS, 10.0f, 1.0f, 10.0f);
-
     SetDimension(257);
+
+
+    D3DXMATRIXA16 matS, matT;
+    D3DXMatrixScaling(&matS, 10.0f, 1.0f, 10.0f);
     Load(_T("./Resource/Heightmap/Heightmap.raw"), &matS);
     
-    //<<색을 입히던데 어떻게 할꺼냐?
+
+    m_matWorld = matS /** matT*/;
 
     SetSurface();
 
@@ -25,15 +27,38 @@ HeightMap::HeightMap()
             Resource()()->GetTexture(
                 "./Resource/Heightmap/", 
                 "Heightmap.jpg"));
+
+
+
+
+
+    //ray box
+    SetRayBox();
+    
+
+
 }
 
 
 HeightMap::~HeightMap()
 {
 	SAFE_RELEASE(m_pMesh);
-	//SAFE_DELETE(m_pMtlTex);
-	//SAFE_RELEASE(m_pAStar);
 }
+
+vector<WORD> indices = {
+    4,0,1,
+    4,1,5,
+    5,1,3,
+    5,3,7,
+    6,2,0,
+    6,0,4,
+    7,3,2,
+    7,2,6,
+    0,2,3,
+    0,3,1,
+    6,4,5,
+    6,5,7
+};
 
 void HeightMap::Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat)
 {
@@ -150,6 +175,49 @@ void HeightMap::Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat)
 	m_pMesh->OptimizeInplace(D3DXMESHOPT_COMPACT | D3DXMESHOPT_VERTEXCACHE, &vecAdjBuf[0], 0, 0, 0);
 }
 
+void HeightMap::SetSurface()
+{
+    vector<D3DXVECTOR3>	vecPos;
+    vector<DWORD>		vecIndex;
+    size_t surfaceDim = 5;
+    size_t numSurfaceTile = surfaceDim - 1;
+
+    vecPos.reserve(surfaceDim * surfaceDim);
+    for (size_t z = 0; z < surfaceDim; ++z)
+    {
+        for (size_t x = 0; x < surfaceDim; ++x)
+        {
+            DWORD index = z / (float)numSurfaceTile * m_numTile * m_dimension
+                + x / (float)numSurfaceTile * m_numTile;
+            vecPos.push_back(m_vecVertex[index]);
+        }
+    }
+
+    vecIndex.reserve(numSurfaceTile * numSurfaceTile * 2 * 3);
+    for (size_t z = 0; z < numSurfaceTile; ++z)
+    {
+        for (size_t x = 0; x < numSurfaceTile; ++x)
+        {
+            DWORD _0 = (z + 0) * surfaceDim + x + 0;
+            DWORD _1 = (z + 1) * surfaceDim + x + 0;
+            DWORD _2 = (z + 0) * surfaceDim + x + 1;
+            DWORD _3 = (z + 1) * surfaceDim + x + 1;
+
+            vecIndex.push_back(_0);
+            vecIndex.push_back(_1);
+            vecIndex.push_back(_2);
+            vecIndex.push_back(_2);
+            vecIndex.push_back(_1);
+            vecIndex.push_back(_3);
+        }
+    }
+
+    for (size_t i = 0; i < vecIndex.size(); ++i)
+    {
+        m_vecSurfaceVertex.push_back(vecPos[vecIndex[i]]);
+    }
+}
+
 
 void HeightMap::OnUpdate()
 {
@@ -169,7 +237,7 @@ void HeightMap::OnUpdate()
 void HeightMap::OnRender()
 {
     Shader::Draw(
-        Resource()()->GetEffect("./Resource/Heightmap/", "Heightmap.fx"), 
+        Resource()()->GetEffect("./Resource/Heightmap/", "Heightmap.fx"),
         nullptr, 
         m_pMesh, 
         0, 
@@ -184,37 +252,27 @@ void HeightMap::OnRender()
         pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
     });
 
-	//DX::GetDevice()->SetRenderState(D3DRS_FOGENABLE, true);
-	//DX::GetDevice()->SetRenderState(D3DRS_FOGCOLOR, 0xffcccccc);
-	//DX::GetDevice()->SetRenderState(D3DRS_FOGDENSITY, FtoDw(0.1f));
-	//DX::GetDevice()->SetRenderState(D3DRS_FOGSTART, FtoDw(20.0f));
-	//DX::GetDevice()->SetRenderState(D3DRS_FOGEND, FtoDw(40.0f));
-	//DX::GetDevice()->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_LINEAR);
 
-	//DX::GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	//DX::GetDevice()->SetRenderState(D3DRS_LIGHTING, true);
-	//DX::GetDevice()->SetTransform(D3DTS_WORLD, &m_matWorld);
-	//DX::GetDevice()->SetMaterial(&m_pMtlTex->GetMaterial());
-	//DX::GetDevice()->SetTexture(0, m_pMtlTex->GetTexture());
-	//m_pMesh->DrawSubset(0);
-	//DX::GetDevice()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	//
-	//SAFE_RENDER(m_pAStar);
-	//
-	////PreRender
-	//DX::GetDevice()->SetRenderState(D3DRS_LIGHTING, true);
-	//DX::GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	//
-
-	//DX::GetDevice()->SetMaterial(&DXUtil::BLUE_MTRL);
-	////DX::GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, m_vecSurfaceVertex.size() / 3,
-	////	&m_vecSurfaceVertex[0], sizeof(D3DXVECTOR3));
-	//DX::GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, m_vecObstacleVertex.size() / 3, 
-	//	&m_vecObstacleVertex[0], sizeof(D3DXVECTOR3));
-
-	////PostRender
-	//DX::GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	//DX::GetDevice()->SetRenderState(D3DRS_FOGENABLE, false);
+    draw(m_RayBox, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+}
+void HeightMap::draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color)
+{
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        [this, &color](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &m_matWorld);
+        pEffect->SetValue("Color", &color, sizeof color);
+    },
+        [this, &vertices]()
+    {
+        Device()()->DrawPrimitiveUP(
+            D3DPT_LINELIST,
+            vertices.size() / 2,
+            vertices.data(),
+            sizeof vertices.front());
+    });
 }
 
 
@@ -259,6 +317,36 @@ bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
 	return true;
 }
 
+void HeightMap::SetRayBox()
+{    
+    vector<D3DXVECTOR3> vec;
+    vec.resize(8);
+    //ray Direction box 
+    vec[0] = (D3DXVECTOR3(0,        500.0f,      25.7f));	//좌상후
+    vec[1] = (D3DXVECTOR3(25.7f,    500.0f,     25.7f));	//우상후
+    vec[2] = (D3DXVECTOR3(0,        500.0f,      0));	//좌상전
+    vec[3] = (D3DXVECTOR3(25.7f,    500.0f,      0));	//우상전
+    vec[4] = (D3DXVECTOR3(0,        -1,         25.7f));	//좌하후
+    vec[5] = (D3DXVECTOR3(25.7f,    -1,         25.7f));	//우하후
+    vec[6] = (D3DXVECTOR3(0,        -1,         0));	//좌하전
+    vec[7] = (D3DXVECTOR3(25.7f,    -1,         0));	//우하전
+    
+    
+    
+    for (int i = 0; i < vec.size(); i++)
+    {
+        D3DXVec3TransformCoord(&vec[i], &vec[i], &m_matWorld);
+    }
+
+    m_RayBox.resize(indices.size());
+    for (int i = 0; i < indices.size(); i++)
+    {
+        m_RayBox[i] = vec[indices[i]];
+    }
+
+    vec.clear();
+}
+
 
 //bool HeightMap::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
 //{
@@ -283,46 +371,3 @@ bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
 //    return false;
 //}
 
-
-void HeightMap::SetSurface()
-{
-	vector<D3DXVECTOR3>	vecPos;
-	vector<DWORD>		vecIndex;
-	size_t surfaceDim = 5;
-	size_t numSurfaceTile = surfaceDim - 1;
-
-	vecPos.reserve(surfaceDim * surfaceDim);
-	for (size_t z = 0; z < surfaceDim; ++z)
-	{
-		for (size_t x = 0; x < surfaceDim; ++x)
-		{
-			DWORD index = z / (float)numSurfaceTile * m_numTile * m_dimension
-				+ x / (float)numSurfaceTile * m_numTile;
-			vecPos.push_back(m_vecVertex[index]);
-		}
-	}
-	
-	vecIndex.reserve(numSurfaceTile * numSurfaceTile * 2 * 3);
-	for (size_t z = 0; z < numSurfaceTile; ++z)
-	{
-		for (size_t x = 0; x < numSurfaceTile; ++x)
-		{
-			DWORD _0 = (z + 0) * surfaceDim + x + 0;
-			DWORD _1 = (z + 1) * surfaceDim + x + 0;
-			DWORD _2 = (z + 0) * surfaceDim + x + 1;
-			DWORD _3 = (z + 1) * surfaceDim + x + 1;
-
-			vecIndex.push_back(_0);
-			vecIndex.push_back(_1);
-			vecIndex.push_back(_2);
-			vecIndex.push_back(_2);
-			vecIndex.push_back(_1);
-			vecIndex.push_back(_3);
-		}
-	}
-
-	for (size_t i = 0; i < vecIndex.size(); ++i)
-	{
-		m_vecSurfaceVertex.push_back(vecPos[vecIndex[i]]);
-	}
-}

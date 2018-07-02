@@ -15,6 +15,7 @@ public:
     virtual ~IMap();
 
 	virtual bool GetHeight(const D3DXVECTOR3& pos,OUT float* OutHeight) = 0;
+    virtual void SetRayBox() = 0;
 	//virtual bool CalcPickedPosition(D3DXVECTOR3 &vOut, WORD screenX, WORD screenY) = 0;
 
     const vector<D3DXVECTOR3>& GetVertices() const;

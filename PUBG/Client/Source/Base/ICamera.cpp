@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Collider.h"
 #include "Ray.h"
+#include "HeightMap.h"
 
 Character::Info* ICamera::GetTargetInfo()//(전)TargetTransform* GetTarget()
 {
@@ -238,18 +239,21 @@ bool ICamera::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
     float intersectionDist;
     bool bIntersect = false;
 
-    //for (size_t i = 0u; i < m_vecSurfaceVertex.size(); i += 3)
-    //{
-    //    if (ray.CalcIntersectTri(&m_vecSurfaceVertex[i], &intersectionDist))
-    //    {
-    //        if (intersectionDist < minDist)
-    //        {
-    //            bIntersect = true;
-    //            minDist = intersectionDist;
-    //            vOut = ray.m_pos + ray.m_dir * intersectionDist;
-    //        }
-    //    }
-    //}
+    vector<D3DXVECTOR3>& rayBox = CurrentScene()()->GetHeightMap()->GetRayBox(); //이건 data가 copy 되나요? referance 되나요?
+    
+    
+    for (size_t i = 0u; i < rayBox.size(); i += 3)
+    {
+        if (ray.CalcIntersectTri(&rayBox[i], &intersectionDist))
+        {
+            if (intersectionDist < minDist)
+            {
+                bIntersect = true;
+                minDist = intersectionDist;
+                vOut = ray.m_pos + ray.m_dir * intersectionDist;
+            }
+        }
+    }
 
     return bIntersect;
 }
