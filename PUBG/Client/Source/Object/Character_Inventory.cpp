@@ -6,7 +6,8 @@
 const float Character::TotalInventory::DEFAULT_CAPACITY = 70.0f;
 
 Character::TotalInventory::TotalInventory()
-    : m_equipArmor(nullptr)
+    : m_hand(nullptr)
+    , m_equipArmor(nullptr)
     , m_equipBack(nullptr)
     , m_equipHead(nullptr)
     , m_weaponPrimary(nullptr)
@@ -17,6 +18,8 @@ Character::TotalInventory::TotalInventory()
 
 Character::TotalInventory::~TotalInventory()
 {
+    SAFE_DELETE(m_hand);
+
     for (auto v : m_mapInventory)
         for (auto i : v.second)
             SAFE_DELETE(i);
@@ -135,9 +138,12 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
     else
     {
         *originItem = newItem;
-        newItem->SetIsRenderEffectMesh(true);
         m_totalInventory.m_capacity += ItemInfo::GetCapacity(newItem->GetTagResStatic());
         CurrentScene()()->RemoveObject(newItem);
+
+        // eqiup
+        newItem->SetIsRenderEffectMesh(false);
+        newItem->SetIsRenderSkinnedMesh(true);
         // TODO : send "delete item on field" to server
     }
 }
@@ -145,6 +151,18 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
 void Character::updateTotalInventory()
 {
     Transform* pTr = GetTransform();
+
+    Item* pHand = m_totalInventory.m_hand;
+    if (pHand)
+    {
+        Transform* pHandTr = pHand->GetTransform();
+        D3DXMATRIX weaponWorld = 
+            m_framePtr.pHandGun->CombinedTransformationMatrix
+            * pTr->GetTransformationMatrix();
+
+        pHandTr->SetTransformationMatrix(weaponWorld);
+        pHandTr->Update();
+    }
 
     Item* pArmor = m_totalInventory.m_equipArmor;
     if (pArmor)
@@ -167,32 +185,20 @@ void Character::updateTotalInventory()
     Item* pWeaponPrimary = m_totalInventory.m_weaponPrimary;
     if (pWeaponPrimary)
     {
-        //Transform* pWeaponPrimaryTr = pWeaponPrimary->GetTransform();
-
-        //// 모델스페이스 m_framePtr.pSlotPrimary->CombinedTransformationMatrix
-        //// 월드스페이스 = 모델스페이스 * 캐릭터 월드스페이스
-
-        //D3DXMATRIX weaponWorld = m_framePtr.pSlotPrimary->CombinedTransformationMatrix
-        //    * pTr->GetTransformationMatrix();
-
-        //pWeaponPrimaryTr->SetTransformationMatrix(weaponWorld);
-
-        //Debug << "primary weapon matrix : \n" << weaponWorld << '\n';
-
-        //pWeaponPrimaryTr->Update();
-        //pWeaponPrimary->SetIsRenderEffectMesh(false);
-        //pWeaponPrimary->SetIsRenderSkinnedMesh(true);
-
-        //for test
         Transform* pWeaponPrimaryTr = pWeaponPrimary->GetTransform();
-        D3DXMATRIX weaponWorld = m_framePtr.pHandGun->CombinedTransformationMatrix
+
+        // 모델스페이스 m_framePtr.pSlotPrimary->CombinedTransformationMatrix
+        // 월드스페이스 = 모델스페이스 * 캐릭터 월드스페이스
+
+        D3DXMATRIX weaponWorld = 
+            m_framePtr.pSlotPrimary->CombinedTransformationMatrix
             * pTr->GetTransformationMatrix();
 
         pWeaponPrimaryTr->SetTransformationMatrix(weaponWorld);
-        pWeaponPrimaryTr->Update();
-        pWeaponPrimary->SetIsRenderEffectMesh(false);
-        pWeaponPrimary->SetIsRenderSkinnedMesh(true);
 
+        //Debug << "primary weapon matrix : \n" << weaponWorld << '\n';
+
+        pWeaponPrimaryTr->Update();
     }
     
     //보조무기
@@ -205,27 +211,17 @@ void Character::updateTotalInventory()
 
         pWeaponSecondaryTr->SetTransformationMatrix(weaponWorld);
 
-        Debug << "secondary weapon matrix : \n" << weaponWorld << '\n';
+        //Debug << "secondary weapon matrix : \n" << weaponWorld << '\n';
 
         pWeaponSecondaryTr->Update();
-        pWeaponSecondary->SetIsRenderEffectMesh(false);
-        pWeaponSecondary->SetIsRenderSkinnedMesh(true);
-
-        //for test
-        //Transform* pWeaponSecondaryTr = pWeaponSecondary->GetTransform();
-        //D3DXMATRIX weaponWorld = m_framePtr.pHandGun->CombinedTransformationMatrix
-        //    * pTr->GetTransformationMatrix();
-
-        //pWeaponSecondaryTr->SetTransformationMatrix(weaponWorld);
-        //pWeaponSecondaryTr->Update();
-        //pWeaponSecondary->SetIsRenderEffectMesh(false);
-        //pWeaponSecondary->SetIsRenderSkinnedMesh(true);
-
     }
 }
 
 void Character::renderTotalInventory()
 {
+    Item* pHand = m_totalInventory.m_hand;
+    if (pHand) pHand->Render();
+
     Item* pArmor = m_totalInventory.m_equipArmor;
     if (pArmor) pArmor->Render();
 

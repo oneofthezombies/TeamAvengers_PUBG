@@ -588,9 +588,14 @@ HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
     //TODO
     void* pData = nullptr;
     pEffectMesh->m_pMesh->LockVertexBuffer(D3DLOCK_READONLY, &pData);
-    D3DXComputeBoundingSphere((D3DXVECTOR3*)pData, pEffectMesh->m_pMesh->GetNumVertices(), pEffectMesh->m_pMesh->GetNumBytesPerVertex(), &pEffectMesh->m_center, &pEffectMesh->m_radius);
+    D3DXComputeBoundingSphere(
+        (D3DXVECTOR3*)pData, 
+        pEffectMesh->m_pMesh->GetNumVertices(), 
+        pEffectMesh->m_pMesh->GetNumBytesPerVertex(), 
+        &pEffectMesh->m_center, 
+        &pEffectMesh->m_radius);
     pEffectMesh->m_pMesh->UnlockVertexBuffer();
-    cout << name << " " << pEffectMesh->m_center << ", " << pEffectMesh->m_radius << endl;
+    //cout << name << " " << pEffectMesh->m_center << ", " << pEffectMesh->m_radius << endl;
     /**/
 
     for (DWORD i = 0u; i < numEffectInstances; ++i)

@@ -439,8 +439,10 @@ enum class TAG_ANIM_CHARACTER
     COUNT
 };
 
-struct TagAnimToString
+struct TagAnimation
 {
-    static std::string Get(const TAG_ANIM_WEAPON tag);
-    static std::string Get(const TAG_ANIM_CHARACTER tag);
+    static std::string GetString(const TAG_ANIM_WEAPON tag);
+    static std::string GetString(const TAG_ANIM_CHARACTER tag);
+
+    static float GetSpeed(const TAG_ANIM_CHARACTER tag);
 };

@@ -2,6 +2,49 @@
 #include "SkinnedMeshController.h"
 #include "TagAnimation.h"
 
+NextAnimation::NextAnimation()
+    : name("")
+    , nextSpeed(0.0f)
+    , isBlend(false)
+    , blendTime(0.0f)
+    , nextWeight(0.0f)
+{
+}
+
+void SkinnedMeshController::checkIsFinishedAndSetNextAnimation(const float calcedDt)
+{
+    auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
+
+    D3DXTRACK_DESC desc;
+    pAniCon->GetTrackDesc(0, &desc);
+    LPD3DXANIMATIONSET pSet = nullptr;
+    pAniCon->GetTrackAnimationSet(0, &pSet);
+    double current = desc.Position;
+    double period = pSet->GetPeriod();
+    //Debug << "position : " << current << '\n';
+    //Debug << "period : " << period << '\n';
+    //Debug << "periodic position : " << pSet->GetPeriodicPosition(desc.Position);
+
+    if (current + static_cast<double>(calcedDt) >= period)
+    {
+        m_isFinishedCurrentAnim = true;
+
+        if (!m_finishEvent.empty())
+        {
+            if (m_finishEvent.front())
+            {
+                m_finishEvent.front()();
+                m_finishEvent.pop_front();
+            }
+        }
+    }
+    else
+    {
+        m_isFinishedCurrentAnim = false;
+    }
+    pSet->Release();
+}
+
 void SkinnedMeshController::updateFrameToModelSpace(LPD3DXFRAME pFrameBase,
     LPD3DXFRAME pParent)
 {
@@ -97,6 +140,7 @@ SkinnedMeshController::SkinnedMeshController(IObject* pOwner)
     , m_totalBlendTime(0.3f)
     , m_passedBlendTime(0.0f)
     , m_pSkinnedMeshInstance(nullptr)
+    , m_isFinishedCurrentAnim(false)
 {
 }
 
@@ -110,14 +154,20 @@ void SkinnedMeshController::UpdateAnimation()
     assert(m_pSkinnedMeshInstance &&
         "SkinnedMeshController::UpdateAnimation(), \
          skinned mesh instance is null.");
-    const float factor = 2.0f;
-    const auto dt = Time()()->GetDeltaTime();
-    auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
-    pAniCon->AdvanceTime(dt *factor, nullptr);
 
+    const float factor = 2.0f;
+    const float dt = Time()()->GetDeltaTime();
+    const float calcedDt = dt * factor;
+
+    checkIsFinishedAndSetNextAnimation(calcedDt);
+
+    auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
+    pAniCon->AdvanceTime(calcedDt, nullptr);
+
+    // for blend
     if (m_passedBlendTime < m_totalBlendTime)
     {
-        m_passedBlendTime += dt * factor;
+        m_passedBlendTime += calcedDt;
         const auto weight = m_passedBlendTime / m_totalBlendTime;
         if (weight >= 1.0f)
         {
@@ -212,12 +262,15 @@ void SkinnedMeshController::SetAnimationIndex(
 }
 
 void SkinnedMeshController::SetAnimation(
-    const string& name, const bool isBlend, const float currentWeight, 
-    const float nextWeight, const float blendTime)
+    const string& name,
+    const float nextSpeed,
+    const bool isBlend,
+    const float blendTime,
+    const float nextWeight)
 {
     LPD3DXANIMATIONSET pNext = nullptr;
     auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
-
+    cout << name << '\n';
     HRESULT hr = pAniCon->GetAnimationSetByName(name.c_str(), &pNext);
 
     assert(!FAILED(hr) &&
@@ -229,15 +282,15 @@ void SkinnedMeshController::SetAnimation(
     if (isBlend)
     {
         LPD3DXANIMATIONSET pCurrent = nullptr;
-        pAniCon->GetTrackAnimationSet(0u, &pCurrent);
-        pAniCon->SetTrackAnimationSet(1u, pCurrent);
+        pAniCon->GetTrackAnimationSet(0, &pCurrent);
+        pAniCon->SetTrackAnimationSet(1, pCurrent);
 
         D3DXTRACK_DESC desc;
-        pAniCon->GetTrackDesc(0u, &desc);
-        pAniCon->SetTrackDesc(1u, &desc);
+        pAniCon->GetTrackDesc(0, &desc);
+        pAniCon->SetTrackDesc(1, &desc);
 
-        pAniCon->SetTrackWeight(0u, nextWeight);
-        pAniCon->SetTrackWeight(1u, currentWeight);
+        pAniCon->SetTrackWeight(0, nextWeight);
+        pAniCon->SetTrackWeight(1, 1.0f - nextWeight);
 
         SAFE_RELEASE(pCurrent);
 
@@ -245,11 +298,24 @@ void SkinnedMeshController::SetAnimation(
         m_totalBlendTime = blendTime;
     }
 
-    pAniCon->SetTrackAnimationSet(0u, pNext);
+    pAniCon->SetTrackAnimationSet(0, pNext);
     //pAniCon->ResetTime();
-    pAniCon->SetTrackPosition(0u, 0.0);
+    pAniCon->SetTrackPosition(0, 0.0);
+    pAniCon->SetTrackSpeed(0, nextSpeed);
 
     SAFE_RELEASE(pNext);
+}
+
+void SkinnedMeshController::SetAnimation(
+    const string& name, 
+    const float nextSpeed, 
+    const bool isBlend, 
+    const float blendTime, 
+    const float nextWeight, 
+    const std::function<void()>& finishEvent)
+{
+    SetAnimation(name, nextSpeed, isBlend, blendTime, nextWeight);
+    m_finishEvent.emplace_back(finishEvent);
 }
 
 size_t SkinnedMeshController::GetCurrentAnimationIndex() const
@@ -284,4 +350,14 @@ Frame* SkinnedMeshController::FindFrame(const string& name)
         "SkinnedMeshController::FindFrame(), D3DXFrameFind() failed.");
 
     return static_cast<Frame*>(pFrame);
+}
+
+bool SkinnedMeshController::IsFinishedCurrentAnim() const
+{
+    return m_isFinishedCurrentAnim;
+}
+
+bool SkinnedMeshController::HasFinishEvent() const
+{
+    return !m_finishEvent.empty();
 }

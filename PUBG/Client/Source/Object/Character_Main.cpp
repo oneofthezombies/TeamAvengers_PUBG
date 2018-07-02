@@ -14,18 +14,19 @@ Character::Character(const int index)
     : IObject()
 
     , m_index(index)
-    , m_animState(TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot)
+    , m_animState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_rootTransform(1.0f)
     , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
     , m_framePtr()
     , m_info()
-    , m_isSavedInput()
-    , m_isCurrentInput()
-    , m_isOnceInput()
+    , m_savedInput()
+    , m_currentInput()
     , m_pSphereMesh(nullptr)
     , m_pRootCharacterPart(nullptr)
     , m_totalInventory()
-    , m_Jump()
+    , m_attacking(Attacking::Unarmed)
+    , m_stance(Stance::Stand)
+
     , pSkinnedMeshController(nullptr)
 {
     Transform* tr = GetTransform();
@@ -37,6 +38,7 @@ Character::Character(const int index)
         Resource()()->GetCharacterSkinnedMesh());
     
     setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+    //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
 
     setFramePtr();
 
@@ -130,43 +132,46 @@ void Character::updateMine()
     //}
 
 
-
+    const float    dt = Time()()->GetDeltaTime();
     Transform*     pTr = GetTransform();
     D3DXVECTOR3    p = pTr->GetPosition();
     D3DXQUATERNION r = pTr->GetRotation();
 
+    //이곳에서 Input을 넣습니다 그리고 m_currentInput으로 사용
+    handleInput(&m_currentInput);
+    handleInput(&m_currentPressed);
 
-    /****************여러분! delta time 을 넣을 까요???*************/
+    setStance();
+    setAttacking();
 
-    //이곳에서 Input을 넣습니다 그리고 m_isCurrentInput으로 계속 눌리는것 사용 , m_isOnceInput로 한번 눌리는 것 사용
-    bool onceKeyPressed = HandleInput(OUT m_isCurrentInput,OUT m_isOnceInput);
-
-    if (m_isSavedInput != m_isCurrentInput || onceKeyPressed || m_isOnceInput.isAnimEnded) //키 값이 다를때만 setAnimation을 하기 위해
+    if (m_savedInput != m_currentInput)
     {
-        m_isOnceInput.isAnimEnded = false;
         //setting animation and movements
-        AnimationMovementControl(&p, &m_animState);
+        animationMovementControl(&p, &m_animState);
         if (m_animState == TAG_ANIM_CHARACTER::COUNT)
         {
             //애니메이션이 없습니다.
         }
         else
         {
-            setAnimation(m_animState, true);
-            m_isSavedInput = m_isCurrentInput;  //pressing 하는 키 값이 바뀐 것을 save 해놓음 
+            setAnimation(m_animState);
+
+            m_savedInput = m_currentInput;
         }
     }
     else
     {
-        AnimationMovementControl(&p, NULL); // NULL means not changing animation
+        animationMovementControl(&p, NULL); // NULL means not changing animation
     }
 
 
     
-    CameraCharacterRotation(&r);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
+    cameraCharacterRotation(dt, &r);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
 
     
     ApplyTarget_Y_Position(&p); //apply height and control jumping
+    //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
+    
 
 
     pTr->SetPosition(p);

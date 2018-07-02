@@ -2,6 +2,7 @@
 #include "IObject.h"
 #include "TagClientOnly.h"
 #include "TagAnimation.h"
+#include "AnimationState.h"
 
 class SkinnedMeshController;
 class CharacterPart;
@@ -28,6 +29,8 @@ public:
 
     struct TotalInventory
     {
+        Item* m_hand; //손에 든 무기
+
         static const float DEFAULT_CAPACITY;
 
         map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
@@ -69,42 +72,26 @@ public:
         bool _A       ;
         bool _D       ;
 
-
         IsPressing();
-        bool operator==(const IsPressing& other) const
-        {
-
-            if (_LAlt   != other._LAlt    ) return false;
-            if (_LCtrl  != other._LCtrl   ) return false;
-            if (_LShift != other._LShift  ) return false;
-            if (_W      != other._W       ) return false;
-            if (_S      != other._S       ) return false;
-            if (_A      != other._A       ) return false;
-            if (_D      != other._D       ) return false;
-            //if (_Z      != other._Z       ) return false;
-            //if (_X      != other._X       ) return false;
-            //if (_C      != other._C       ) return false;
-            //if (_Space  != other._Space   ) return false;
-            return true;
-        }
-        bool operator!=(const IsPressing& other) const
-        {
-            return !(*this == other);
-        }        
+        bool operator==(const IsPressing& other) const;
+        bool operator!=(const IsPressing& other) const;
     };
-    
-    struct IsPressedOnce
+
+    struct IsPressed
     {
         bool _Z;
         bool _X;
         bool _C;
         bool _Space;
-        bool isAnimEnded;
+        bool _Num1; 
+        bool _Num2; 
+        bool _Num3; 
+        bool _Num4; 
+        bool _Num5; 
 
-        IsPressedOnce();
+        IsPressed();
     };
 
-private:
     struct FramePtr
     {
         Frame* pWaist;
@@ -157,15 +144,27 @@ private:
     //for inventory
     TotalInventory m_totalInventory;
 
-    IsPressing m_isSavedInput;
-    IsPressing m_isCurrentInput;
-    IsPressedOnce m_isOnceInput;
+    IsPressing m_savedInput;
+    IsPressing m_currentInput;
+    IsPressed  m_currentPressed;
+
+    Stance    m_stance;
+    Attacking m_attacking;
+
     IsJumping m_Jump;
 
 private:
     void setFramePtr();
     void subscribeCollisionEvent();
 
+    void handleInput(IsPressing* OutIsPressing);
+    void handleInput(IsPressed* OutIsPressed);
+
+    void setAttacking();
+    void setStance();
+    
+    void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
+    void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
     bool HandleInput(OUT IsPressing& isPressing,OUT IsPressedOnce& isPressedOnce);
     void CameraCharacterRotation(OUT D3DXQUATERNION* rOut);
     void AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut);
@@ -183,10 +182,18 @@ private:
     bool isMine() const;
 
     void setAnimation(
-        const TAG_ANIM_CHARACTER tag, const bool isBlend, 
-        const float currentWeight = 1.0f, const float nextWeight = 0.0f,
-        const float blendTime = 0.3f);
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend = true,
+        const float blendTime = 0.3f,
+        const float nextWeight = 0.0f);
 
+    void setAnimation(
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend,
+        const std::function<void()>& finishEvent);
+
+    bool hasFinishEvent() const;
+    
     void setInfo();
 
     D3DXVECTOR3 getUp();
