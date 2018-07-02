@@ -39,6 +39,7 @@ Character::IsPressedOnce::IsPressedOnce()
     , _X(false)
     , _C(false)
     , _Space(false)
+    , isAnimEnded(false)
 {
 
 }
@@ -58,10 +59,11 @@ Character::FramePtr::FramePtr()
 
 Character::IsJumping::IsJumping()
     : isJumping(false)
-    , jumpPower(1.0f)
-    , gravity(0.05f)
+    
+    , jumpPower(15.0f)
+    , gravity(0.5f)
     , currGravity(0.0f)
-    , maxStepHeight(0.5f)
+    , maxStepHeight(5.f)
 {
 }
 
@@ -93,7 +95,7 @@ void Character::subscribeCollisionEvent()
     }
 }
 
-void Character::HandleInput(OUT IsPressing& isPressing, OUT IsPressedOnce& isPressedOnce)
+bool Character::HandleInput(OUT IsPressing& isPressing, OUT IsPressedOnce& isPressedOnce)
 {
     InputManager* pInput = Input()();
 
@@ -110,6 +112,11 @@ void Character::HandleInput(OUT IsPressing& isPressing, OUT IsPressedOnce& isPre
     isPressedOnce._X = pInput->IsOnceKeyDown('X');
     isPressedOnce._C = pInput->IsOnceKeyDown('C');
     isPressedOnce._Space = pInput->IsOnceKeyDown(VK_SPACE);
+    if (isPressedOnce._Z || isPressedOnce._X || isPressedOnce._C || isPressedOnce._Space)
+        return true;
+        
+
+    return false;
 
 }
 void Character::CameraCharacterRotation(OUT D3DXQUATERNION* rOut)
@@ -185,7 +192,8 @@ void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHA
     Stance    stance;
 
     float movingFactor;
-
+    if (m_isOnceInput._Space)
+        m_Jump.isJumping = true;
 
     //Attacking 3개 -----------------------------------------------------
     if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
@@ -284,24 +292,27 @@ void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHA
     }
 
 
-
+    
 
     if (tagOut) //if null, no changes in animation
     {
-        *tagOut = AnimationState::Get(attacking, stance, moving, direction);
+        
+        if (m_Jump.isJumping&&m_isCurrentInput._W)
+            *tagOut = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F;
+        else if(m_Jump.isJumping)
+            *tagOut = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary;
+        else
+            *tagOut = AnimationState::Get(attacking, stance, moving, direction);
     }
 
 }
 
-void Character::ApplyTargetPosition(OUT D3DXVECTOR3 * pOut)
+void Character::ApplyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 {
     
     IScene* pCurrentScene = CurrentScene()();
     if (!pCurrentScene)
         assert(false && "No CurrentScene");
-
-    if (m_isOnceInput._Space) 
-        m_Jump.isJumping = true;
 
 
     D3DXVECTOR3 targetPos = *pOut;
@@ -331,6 +342,7 @@ void Character::ApplyTargetPosition(OUT D3DXVECTOR3 * pOut)
             targetPos.y = height;
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;
+            m_isOnceInput.isAnimEnded = true;
         }
     }
     else //when no jump

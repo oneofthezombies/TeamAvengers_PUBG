@@ -139,10 +139,11 @@ void Character::updateMine()
     /****************여러분! delta time 을 넣을 까요???*************/
 
     //이곳에서 Input을 넣습니다 그리고 m_isCurrentInput으로 계속 눌리는것 사용 , m_isOnceInput로 한번 눌리는 것 사용
-    HandleInput(OUT m_isCurrentInput,OUT m_isOnceInput);
+    bool onceKeyPressed = HandleInput(OUT m_isCurrentInput,OUT m_isOnceInput);
 
-    if (m_isSavedInput != m_isCurrentInput) //키 값이 다를때만 setAnimation을 하기 위해
+    if (m_isSavedInput != m_isCurrentInput || onceKeyPressed || m_isOnceInput.isAnimEnded) //키 값이 다를때만 setAnimation을 하기 위해
     {
+        m_isOnceInput.isAnimEnded = false;
         //setting animation and movements
         AnimationMovementControl(&p, &m_animState);
         if (m_animState == TAG_ANIM_CHARACTER::COUNT)
@@ -162,10 +163,10 @@ void Character::updateMine()
 
 
     
-    CameraCharacterRotation(&r); //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
+    CameraCharacterRotation(&r);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
 
     
-    ApplyTargetPosition(&p); //apply height and control jumping
+    ApplyTarget_Y_Position(&p); //apply height and control jumping
 
 
     pTr->SetPosition(p);

@@ -99,6 +99,7 @@ public:
         bool _X;
         bool _C;
         bool _Space;
+        bool isAnimEnded;
 
         IsPressedOnce();
     };
@@ -165,10 +166,10 @@ private:
     void setFramePtr();
     void subscribeCollisionEvent();
 
-    void HandleInput(OUT IsPressing& isPressing,OUT IsPressedOnce& isPressedOnce);
+    bool HandleInput(OUT IsPressing& isPressing,OUT IsPressedOnce& isPressedOnce);
     void CameraCharacterRotation(OUT D3DXQUATERNION* rOut);
     void AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut);
-    void ApplyTargetPosition(OUT D3DXVECTOR3* pOut);
+    void ApplyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
 
 
     void updateMine();
