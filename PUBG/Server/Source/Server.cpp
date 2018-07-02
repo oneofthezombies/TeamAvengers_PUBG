@@ -206,6 +206,15 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             pRoom->Echo(id, Message::Create(
                 TAG_REQUEST::SEND_EVENT_FIRE_BULLET, description));
         }
+    case TAG_REQUEST::SEND_EVENT_SOUND:
+    {
+        auto parsedDesc = Message::ParseDescription(description);
+        auto& id = parsedDesc.first;
+        auto& eventSoundStr = parsedDesc.second;
+
+        pRoom->Echo(id, Message::Create(
+            TAG_REQUEST::SEND_EVENT_SOUND, description));
+    }
         break;
     }
 }

@@ -68,11 +68,17 @@ enum class TAG_FONT
 enum class TAG_SOUND
 {
     Idle,
+
+    Kar98_NormalShoot,
+    Qbz_NormalShoot,
+
+    Kar98_SilenceShoot,
+    Qbz_SilenceShoot,
+
+
     Kar98_BoltMove0,
     Kar98_BoltMove1,
     Kar98_BoltMove2,
-    Kar98_NormalShoot,
-    Kar98_SilenceShoot,
     Kar98_Reload0,
     Kar98_Reload1,
     Kar98_Reload2,
@@ -80,9 +86,7 @@ enum class TAG_SOUND
     Qbz_BoltMove76,
     Qbz_BoltMove77,
     Qbz_FakeShoot,
-    Qbz_NormalShoot,
     Qbz_Reload,
-    Qbz_SilenceShoot
 
 
 };

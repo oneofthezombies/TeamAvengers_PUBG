@@ -27,11 +27,11 @@ void SoundManager::Init()
 {
 	CheckError(FMOD::System_Create(&m_pSystem));
 	CheckError(m_pSystem->init(MAX_CHANNEL_SIZE, FMOD_INIT_NORMAL, nullptr));
-    CheckError(m_pSystem->set3DSettings(1.0f, 1.0f, 3.01f));
+    CheckError(m_pSystem->set3DSettings(1.0f, 1.0f, 1.01f));
     //set3DSetting(진동수,거리에따른 진동 조절(게임내 1M를 설정해주면된다), 거리에따른 감쇠 비율(커질수록 소리 감소가 커진다))
 
     AddSound(TAG_SOUND::Kar98_NormalShoot, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D,false);
-    AddSound(TAG_SOUND::Kar98_SilenceShoot, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Kar98_SilenceShoot, "Resource/Sound/kar98/Kar98_SilenceShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Kar98_BoltMove0, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Kar98_BoltMove1, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Kar98_BoltMove2, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
@@ -62,6 +62,11 @@ void SoundManager::AddSound(const TAG_SOUND tag, const string& path, const FMOD_
     CheckError(m_pSystem->createSound(path.c_str(), mode/*| FMOD_LOOP_NORMAL*/, nullptr, &m_sounds[tag]));
     //explain : 30까지는 본래의 소리를 냄 30이후부터 줄어들고 10000까지 Fmod::system에 저장한 감쇠량만큼 감소됨
     CheckError(m_sounds[tag]->set3DMinMaxDistance(30.0f, 10000.0f));
+    // 총/폭발음 이외에는 디스턴스 조절 감소가 시작하는 시점을 아주 적은 시점부터 시작하여 소리를 작게만듬.
+    if (static_cast<int>(tag) > 4)
+    {
+        CheckError(m_sounds[tag]->set3DMinMaxDistance(10.0f, 10000.0f));
+    }
 }
 
 int SoundManager::Play(const TAG_SOUND tag)
@@ -84,7 +89,7 @@ int SoundManager::Play(const TAG_SOUND tag)
 
     if (i == m_channels.size()) return -1;
 
-    search->second->setMode(FMOD_2D);
+    search->second->setMode(FMOD_3D);
     CheckError(m_pSystem->playSound(search->second, nullptr, false, &m_channels[i]));
     m_channels[i]->set3DAttributes(&m_soundPos, nullptr);
     m_channels[i]->setVolume(m_volume);
@@ -111,13 +116,20 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
 
     if (i == m_channels.size()) return -1;
 
+    //normalShoot 만 1이고 나머지는 0.8 
+    float fVol = 1.0f;
+    if (static_cast<int>(tag) > 2)
+    {
+        fVol = 0.5f;
+    }
+
     SetPosition(pos);
     search->second->setMode(mode);
 
     CheckError(m_pSystem->playSound(search->second, nullptr, false, &m_channels[i]));
     
     m_channels[i]->set3DAttributes(&m_soundPos, nullptr);
-    m_channels[i]->setVolume(vol);
+    m_channels[i]->setVolume(fVol);
     return i;
 }
 
