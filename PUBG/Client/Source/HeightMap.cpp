@@ -51,7 +51,7 @@ void HeightMap::Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat)
 		{
 			int index = z * (m_dimension)+x;
 			int y = fin.get();
-			vecVertex[index].p = D3DXVECTOR3(x, y, z);
+			vecVertex[index].p = D3DXVECTOR3(x, static_cast<float>(y), z);
 			vecVertex[index].n = D3DXVECTOR3(0, 1, 0);
 			vecVertex[index].t = D3DXVECTOR2(x / (float)m_numTile, z / (float)m_numTile);
 
@@ -297,7 +297,7 @@ void HeightMap::SetSurface()
 		for (size_t x = 0; x < surfaceDim; ++x)
 		{
 			DWORD index = z / (float)numSurfaceTile * m_numTile * m_dimension
-				+ x / (float)numSurfaceTile * m_numTile;
+				+ x / (float)(numSurfaceTile * m_numTile);
 			vecPos.push_back(m_vecVertex[index]);
 		}
 	}

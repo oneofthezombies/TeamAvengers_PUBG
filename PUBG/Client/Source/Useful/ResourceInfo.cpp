@@ -785,6 +785,11 @@ pair<string, string> ResourceInfo::GetUIPathFileName(const TAG_RES_STATIC tag)
     return make_pair("./Resource/UI/" + filePath, fileName);
 }
 
+pair<string, string> ResourceInfo::GetCharacterPathFileName()
+{
+    return make_pair("Character/", "Female");
+}
+
 bool ResourceInfo::IsItem(const TAG_RES_STATIC tag)
 {
     switch (tag)

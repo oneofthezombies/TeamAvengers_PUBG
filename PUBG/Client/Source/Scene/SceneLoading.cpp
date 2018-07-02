@@ -184,9 +184,23 @@ void SceneLoading::loadCharacterAnimation()
 
 void SceneLoading::addAnimationsToCharacter()
 {
-    Resource()()->AddCharacter(
-        m_characterSkinnedMeshResources.begin()->second);
-    SkinnedMesh* pCharacter = Resource()()->GetCharacterSkinnedMesh();
+    ResourceContainer* pCharacterResource = 
+        m_characterSkinnedMeshResources.begin()->second;
+
+    const auto pathFilename = ResourceInfo::GetCharacterPathFileName();
+    
+    pCharacterResource->m_pSkinnedMesh.first = 
+        pathFilename.first + pathFilename.second;
+
+    Resource()()->AddResource(pCharacterResource);
+
+    SkinnedMesh* pCharacter = 
+        Resource()()->GetSkinnedMesh(pathFilename.first, pathFilename.second);
+
+    bool res = pCharacter->Seperate("spine_01");
+    assert(res && 
+        "SceneLoading::addAnimationsToCharacter(), \
+         SkinnedMesh::Seperate() failed.");
 
     LPD3DXANIMATIONCONTROLLER& pOld = pCharacter->m_pAnimController;
 

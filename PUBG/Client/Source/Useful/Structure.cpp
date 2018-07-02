@@ -93,17 +93,21 @@ MeshContainer::MeshContainer()
 
 SkinnedMesh::SkinnedMesh()
     : m_pRootFrame(nullptr)
+    , m_pSubRootFrame(nullptr)
     , m_pAnimController(nullptr)
+    , pConnectFrame(nullptr)
 {
 }
 
 SkinnedMesh::~SkinnedMesh()
 {
+    AllocateHierarchyAsync ah;
+
     if (m_pRootFrame)
-    {
-        AllocateHierarchyAsync ah;
         D3DXFrameDestroy(m_pRootFrame, &ah);
-    }
+
+    if (m_pSubRootFrame)
+        D3DXFrameDestroy(m_pSubRootFrame, &ah);
 
     SAFE_RELEASE(m_pAnimController);
 }
@@ -111,6 +115,16 @@ SkinnedMesh::~SkinnedMesh()
 void SkinnedMesh::Setup()
 {
     setupBoneMatrixPointers(m_pRootFrame);
+}
+
+bool SkinnedMesh::Seperate(const string& name)
+{
+    if (m_pSubRootFrame) return false;
+
+    seperate(m_pRootFrame, name);
+
+    if (m_pSubRootFrame) return true;
+    else return false;
 }
 
 void SkinnedMesh::setupBoneMatrixPointers(LPD3DXFRAME pFrame)
@@ -142,6 +156,35 @@ void SkinnedMesh::setupBoneMatrixPointersOnMesh(
                 &pSearch->CombinedTransformationMatrix;
         }
     }
+}
+
+void SkinnedMesh::seperate(LPD3DXFRAME pFrame, const string& name)
+{
+    if (m_pSubRootFrame) return;
+    if (!pFrame) return;
+
+    if (pFrame->pFrameFirstChild)
+    {
+        if (string(pFrame->pFrameFirstChild->Name) == name)
+        {
+            m_pSubRootFrame = pFrame->pFrameFirstChild;
+            pConnectFrame = pFrame;
+            pConnectFrame->pFrameFirstChild = nullptr;
+        }
+    }
+
+    if (pFrame->pFrameSibling)
+    {
+        if (string(pFrame->pFrameSibling->Name) == name)
+        {
+            m_pSubRootFrame = pFrame->pFrameSibling;
+            pConnectFrame = pFrame;
+            pConnectFrame->pFrameSibling = nullptr;
+        }
+    }
+
+    seperate(pFrame->pFrameSibling, name);
+    seperate(pFrame->pFrameFirstChild, name);
 }
 
 //AllocateHierarchy::AllocateHierarchy()

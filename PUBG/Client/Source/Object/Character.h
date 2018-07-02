@@ -133,7 +133,8 @@ private:
     // for root position
     LPD3DXMESH m_pSphereMesh;
 
-    SkinnedMeshController* pSkinnedMeshController;
+    SkinnedMeshController* pUpperBodyController;
+    SkinnedMeshController* m_pLowerBodyController;
     CharacterPart*         m_pRootCharacterPart;
 
     D3DXMATRIX m_prevRootModel;
@@ -204,8 +205,6 @@ private:
     D3DXVECTOR3 getBackwardLeft();
     D3DXVECTOR3 getBackwardRight();
     
-
-
     //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
     void createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);

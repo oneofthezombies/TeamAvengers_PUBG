@@ -1,5 +1,6 @@
 #pragma once
 #include "TagResource.h"
+#include "TagClientOnly.h"
 
 struct ResourceInfo
 {
@@ -12,6 +13,7 @@ struct ResourceInfo
     static pair<string, string> GetPathFileName(const TAG_RES_ANIM_CHARACTER tag);
     static pair<string, string> GetPathFileName(const TAG_RES_EQUIPMENT tag);
     static pair<string, string> GetUIPathFileName(const TAG_RES_STATIC tag);
+    static pair<string, string> GetCharacterPathFileName();
 
     static bool IsItem(const TAG_RES_STATIC tag);
 

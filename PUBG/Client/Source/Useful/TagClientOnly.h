@@ -119,3 +119,9 @@ enum class TAG_ATTACH_POINT
     Secondary_UpperRail,
     Secondary_Mag,
 };
+
+enum class TAG_CHARACTER_PART
+{
+    UpperBody,
+    LowerBody
+};

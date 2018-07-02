@@ -61,7 +61,9 @@ struct MeshContainer : public D3DXMESHCONTAINER
 struct SkinnedMesh
 {
     LPD3DXFRAME               m_pRootFrame;
+    LPD3DXFRAME               m_pSubRootFrame;
     LPD3DXANIMATIONCONTROLLER m_pAnimController;
+    LPD3DXFRAME               pConnectFrame;
 
     SkinnedMesh();
     ~SkinnedMesh();
@@ -69,9 +71,11 @@ struct SkinnedMesh
 private:
     void setupBoneMatrixPointers(LPD3DXFRAME pFrame);
     void setupBoneMatrixPointersOnMesh(LPD3DXMESHCONTAINER pMeshContainerBase);
+    void seperate(LPD3DXFRAME pFrame, const string& name);
 
 public:
     void Setup();
+    bool Seperate(const string& name);
 };
 
 struct SkinnedMeshInstance

@@ -5,7 +5,7 @@
 #include "SkinnedMeshController.h"
 #include "DirectionalLight.h"
 #include "AnimationState.h"
-
+#include "ResourceInfo.h"
 
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
@@ -26,16 +26,25 @@ Character::Character(const int index)
     , m_totalInventory()
     , m_attacking(Attacking::Unarmed)
     , m_stance(Stance::Stand)
+    , m_pLowerBodyController(nullptr)
 
-    , pSkinnedMeshController(nullptr)
+    , pUpperBodyController(nullptr)
 {
     Transform* tr = GetTransform();
     tr->SetRotation(OFFSET_ROTATION);
-    tr->SetPosition(D3DXVECTOR3(static_cast<float>(index) * 100.0f, 0.0f, 0.0f));
+    tr->SetPosition(
+        D3DXVECTOR3(static_cast<float>(index) * 100.0f, 0.0f, 0.0f));
 
-    pSkinnedMeshController = AddComponent<SkinnedMeshController>();
-    pSkinnedMeshController->SetSkinnedMesh(
-        Resource()()->GetCharacterSkinnedMesh());
+    const auto pathFilename = 
+        ResourceInfo::GetCharacterPathFileName();
+
+    pUpperBodyController = AddComponent<SkinnedMeshController>();
+    pUpperBodyController->SetSkinnedMesh(
+        Resource()()->GetSkinnedMesh(pathFilename.first, pathFilename.second));
+
+    m_pLowerBodyController = new SkinnedMeshController(this);
+    m_pLowerBodyController->SetSkinnedMesh(
+        Resource()()->GetSkinnedMesh(pathFilename.first, pathFilename.second));
     
     setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
     //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
