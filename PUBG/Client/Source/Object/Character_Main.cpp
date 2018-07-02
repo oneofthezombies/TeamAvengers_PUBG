@@ -175,7 +175,7 @@ void Character::updateMine()
     Debug << "current animation : "
           << pSkinnedMeshController->GetCurrentAnimationName() << '\n';
 
-    Debug << "current position : " << p << '\n';
+
 
 
     //sh tset
@@ -188,11 +188,14 @@ void Character::updateMine()
     
     if (Input()()->IsOnceKeyDown('N'))
     {
-        Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)),
-            0.5f, FMOD_3D);
+        //Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
+        Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)));
     }
 
     Sound()()->Listen(GetTransform()->GetPosition(), getForward());
+
+    Communication()()->SendPosition(p);
+    Debug << "index : " << m_index << ", position : " << p << '\n';
 }
 
 void Character::updateOther()
@@ -208,7 +211,7 @@ void Character::updateOther()
     auto pSkiCon = pSkinnedMeshController;
 
     auto& pi = pCom->m_RoomInfo.m_PlayerInfos[m_index];
-    //pos = pi.m_Position;
+    pos = pi.m_Position;
 
     const auto uAnimState = static_cast<unsigned int>(m_animState);
     if (uAnimState != pi.m_AnimationIndex)
@@ -218,4 +221,5 @@ void Character::updateOther()
     }
 
     tr->SetPosition(pos);
+    Debug << "index : " << m_index << ", position : " << pos << '\n';
 }

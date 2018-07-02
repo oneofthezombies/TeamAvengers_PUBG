@@ -319,12 +319,23 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     out : character r <= mouse only one axis
     out : camera r <= mouse wto axis
     */
+    static bool test_sound = true;
 
-    POINT center;
-    center.x = 1280 / 2;
-    center.y = 720 / 2;
-    ClientToScreen(g_hWnd, &center);
-    SetCursorPos(center.x, center.y);
+    if (Input()()->IsOnceKeyDown(VK_LEFT))
+        test_sound = true;
+    if (Input()()->IsOnceKeyDown(VK_RIGHT))
+    {
+        test_sound = false;
+    }
+    if (test_sound)
+    {
+        POINT center;
+        center.x = 1280 / 2;
+        center.y = 720 / 2;
+        ClientToScreen(g_hWnd, &center);
+        SetCursorPos(center.x, center.y);
+    }
+
 }
 
 void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag)

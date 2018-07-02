@@ -237,6 +237,7 @@ void CommunicationManager::ReceiveMessage(const TAG_REQUEST tag, const string& d
         break;
     case TAG_REQUEST::SEND_EVENT_SOUND:
         {
+            
             auto parsedDesc = Message::ParseDescription(description);
             auto& id = parsedDesc.first;
             auto& eventSoundStr = parsedDesc.second;
@@ -329,7 +330,7 @@ void CommunicationManager::SendEventSound(const TAG_SOUND tag, const D3DXVECTOR3
     
     int tagSound = static_cast<int>(tag);
     stringstream ss;
-    ss << m_MyInfo.m_ID << pos.x << pos.y << pos.z << tagSound;
+    ss << m_MyInfo.m_ID << pos.x << ' ' << pos.y << ' ' << pos.z << ' ' << tagSound;
 
     m_pClient->Write(Message::Create(TAG_REQUEST::SEND_EVENT_SOUND, ss.str()));
 }
