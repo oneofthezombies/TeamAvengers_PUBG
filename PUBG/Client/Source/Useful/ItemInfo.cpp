@@ -205,3 +205,27 @@ float ItemInfo::GetRecovery(const TAG_RES_STATIC tag)
     default: return 0.0f;
     }
 }
+
+float ItemInfo::GetMagazineSize(const TAG_RES_STATIC tag)
+{
+    switch (tag)
+    {
+    case TAG_RES_STATIC::QBZ: return 30.0f;
+    case TAG_RES_STATIC::Kar98k: return 5.0f;
+
+    default: return 0.0f;
+    }
+}
+
+TAG_RES_STATIC ItemInfo::GetAmmoType(const TAG_RES_STATIC tag)
+{
+    switch (tag)
+    {
+    case TAG_RES_STATIC::QBZ: return TAG_RES_STATIC::Ammo_5_56mm;
+    case TAG_RES_STATIC::Kar98k: return TAG_RES_STATIC::Ammo_7_62mm;
+
+    default: 
+        assert(false && "ItemInfo::GetAmmoType(), default case.");
+        return TAG_RES_STATIC::COUNT;
+    }
+}

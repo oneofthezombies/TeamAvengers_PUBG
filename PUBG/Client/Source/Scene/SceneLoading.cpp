@@ -122,8 +122,8 @@ void SceneLoading::loadEffectMesh()
     //addTask(TAG_RES_STATIC::FirstAidKit);
     //addTask(TAG_RES_STATIC::MedKit);
 
-    //addTask(TAG_RES_STATIC::Ammo_5_56mm);
-    //addTask(TAG_RES_STATIC::Ammo_7_62mm);
+    addTask(TAG_RES_STATIC::Ammo_5_56mm);
+    addTask(TAG_RES_STATIC::Ammo_7_62mm);
 
     addTask(TAG_RES_STATIC::QBZ);
     addTask(TAG_RES_STATIC::Kar98k);

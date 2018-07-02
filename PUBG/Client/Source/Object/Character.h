@@ -82,6 +82,7 @@ public:
         bool _Z;
         bool _X;
         bool _C;
+        bool _R;
         bool _Space;
         bool _Num1; 
         bool _Num2; 
@@ -162,6 +163,7 @@ private:
 
     void setAttacking();
     void setStance();
+    void setReload();
     
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
     void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);

@@ -58,6 +58,7 @@ Character::IsPressed::IsPressed()
     : _Z(false)
     , _X(false)
     , _C(false)
+    , _R(false)
     , _Space(false)
     , _Num1(false)
     , _Num2(false)
@@ -143,6 +144,7 @@ void Character::handleInput(IsPressed* OutIsPressed)
     OutIsPressed->_Z     = pInput->IsOnceKeyDown('Z');
     OutIsPressed->_X     = pInput->IsOnceKeyDown('X');
     OutIsPressed->_C     = pInput->IsOnceKeyDown('C');
+    OutIsPressed->_R     = pInput->IsOnceKeyDown('R');
     OutIsPressed->_Space = pInput->IsOnceKeyDown(VK_SPACE);
     OutIsPressed->_Num1  = pInput->IsOnceKeyDown('1');
     OutIsPressed->_Num2  = pInput->IsOnceKeyDown('2');
@@ -242,7 +244,7 @@ void Character::setAttacking()
             }
         }
     }
-    //for test 'X'
+    //for test 'X' - 다시 X누르면 이전 무기 장착되는 것도 해야함
     else if (m_currentOnceKey._X)
     {
         //손에 무기를 들고 있다면 해제한다
@@ -307,6 +309,65 @@ void Character::setStance()
             // TODO : check obstacle
 
             m_stance = Stance::Prone;
+        }
+    }
+}
+
+void Character::setReload()
+{
+    TotalInventory& inven = m_totalInventory;
+
+    //R버튼을 눌렀는데, 1. 총을 들고 있고 2. 총에 알맞은 총알이 있다면 3. 총알 개수 내에서 (장탄수-현재 장전된 총알개수) 만큼 총알을 장전해준다
+    if (m_currentOnceKey._R)
+    {
+        if (inven.m_hand)
+        {
+            TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic(); //총 종류
+            TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag); //탄약 종류
+            int magSize = ItemInfo::GetMagazineSize(tag);         //장탄 수
+
+            int numBulletInInventory = 0; //인벤토리에 있는 총알 수
+            int numBulletCurrentLoad = inven.m_hand->GetNumBullet(); //장전되어있는 총알 수
+            int numBulletNeedReload = 0;  //장전할 총알 수
+
+            if (numBulletCurrentLoad == magSize)
+            {
+                cout << "이미 가득 장전되어있따!!!" << endl;
+                return;
+            }
+
+            auto it = inven.m_mapInventory.find(ammoType);
+            if (it != inven.m_mapInventory.end())
+            {
+                //해당 총알이 있으면
+                cout << ItemInfo::GetName(ammoType);
+                cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
+                numBulletInInventory = (*it).second.back()->GetCount();
+
+                cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
+                numBulletNeedReload = magSize - numBulletCurrentLoad; //(장탄수 - 현재 장전된 총알 개수)
+                cout << "장전해야할 총알 수: " << numBulletNeedReload << endl;
+                if (numBulletInInventory >= numBulletNeedReload)
+                {
+                    inven.m_hand->SetNumBullet(numBulletNeedReload);
+                    (*it).second.back()->SetCount(numBulletInInventory - numBulletNeedReload);
+                }
+                else
+                {
+                    inven.m_hand->SetNumBullet(numBulletInInventory);
+                    (*it).second.back()->SetCount(0);
+                }
+                cout << "장정된 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
+                cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
+            }
+            else
+            {
+                cout << "총알이 필요해" << endl;
+            }
+        }
+        else
+        {
+            cout << "총을 장착해줘" << endl;
         }
     }
 }
