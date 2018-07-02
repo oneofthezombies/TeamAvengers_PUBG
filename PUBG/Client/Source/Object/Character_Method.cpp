@@ -4,6 +4,8 @@
 #include "CharacterPart.h"
 #include "DirectionalLight.h"
 #include "AnimationState.h"
+#include "Item.h"
+#include "ItemInfo.h"
 
 Character::WaistRotation::WaistRotation(const float limit, const float factor)
     : LIMIT_OF_ANGLE(limit)
@@ -151,7 +153,18 @@ void Character::handleInput(IsPressed* OutIsPressed)
 
 void Character::setAttacking()
 {
-    TotalInventory& inven = m_totalInventory;
+    //for Debug
+    TAG_RES_STATIC tag;
+    Item* hand = m_totalInventory.m_hand;
+    if (hand)
+    {
+        Debug << "On hand Weapon: ";
+        tag = hand->GetTagResStatic();
+        Debug << ItemInfo::GetName(tag) << "\n";
+    }
+    Debug << "Attacking: " << ForDebugGetAttacking(m_attacking) << "\n";
+
+    TotalInventory& inven = m_totalInventory; 
 
     if (hasFinishEvent()) return;
 
@@ -226,6 +239,39 @@ void Character::setAttacking()
             else if (m_attacking == Attacking::Melee)
             {
                 //TODO: melee 생기면 구현
+            }
+        }
+    }
+    //for test 'X'
+    else if (m_currentOnceKey._X)
+    {
+        //손에 무기를 들고 있다면 해제한다
+        //무기가 주무기냐, 보조무기냐에 따라서 다른 애니메이션을 실행한다. 우선 QBZ 주무기 Kar98k 보조무기
+        if (inven.m_hand)
+        {
+            TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic();
+            if (tag == TAG_RES_STATIC::QBZ)
+            {
+                m_attacking = Attacking::Unarmed;
+                //주무기를 해제한다
+                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static, false, [this, &inven]()
+                {
+                    inven.m_weaponPrimary = inven.m_hand;
+                    inven.m_hand = nullptr;
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false); //TODO: 해제는 되는데 다리가 부자연스러움
+                });
+
+            }
+            else if (tag == TAG_RES_STATIC::Kar98k)
+            {
+                m_attacking = Attacking::Unarmed;
+                //보조무기를 해제한다
+                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static, false, [this, &inven]()
+                {
+                    inven.m_weaponSecondary = inven.m_hand;
+                    inven.m_hand = nullptr;
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+                });
             }
         }
     }
