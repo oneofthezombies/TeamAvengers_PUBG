@@ -68,6 +68,36 @@ enum class TAG_FONT
 enum class TAG_SOUND
 {
     Idle,
+
+    Kar98_NormalShoot,
+    Qbz_NormalShoot,
+
+    Kar98_SilenceShoot,
+    Qbz_SilenceShoot,
+
+
+    Kar98_BoltMove0,
+    Kar98_BoltMove1,
+    Kar98_BoltMove2,
+    Kar98_Reload0,
+    Kar98_Reload1,
+    Kar98_Reload2,
+    Kar98_Reload3,
+    Qbz_BoltMove76,
+    Qbz_BoltMove77,
+    Qbz_FakeShoot,
+    Qbz_Reload,
+
+
+};
+
+enum class TAG_CHANNEL
+{
+    My_Ch,
+    Other_Ch1,      //다른 유저 하나당.
+    Other_Ch2,
+    Other_Ch3,
+    Environment_Ch
 };
 
 enum class TAG_CAMERA

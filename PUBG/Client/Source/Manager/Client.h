@@ -64,6 +64,7 @@ public:
     void SendAnimationIndex(const int index);
     void SendAnimationTime(const float time);
     void SendEventFireBullet(Bullet* pBullet);
+    void SendEventSound(const TAG_SOUND tag, const D3DXVECTOR3& pos);
 
     friend Singleton<CommunicationManager>;
 };

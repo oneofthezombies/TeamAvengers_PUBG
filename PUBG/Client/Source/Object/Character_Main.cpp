@@ -176,6 +176,23 @@ void Character::updateMine()
           << pSkinnedMeshController->GetCurrentAnimationName() << '\n';
 
     Debug << "current position : " << p << '\n';
+
+
+    //sh tset
+    if (Input()()->IsOnceKeyDown('B'))
+    {
+        Sound()()->SetPosition(D3DXVECTOR3(0, 0, 100));
+        Sound()()->SetVolume(0.8f);
+        Sound()()->Play(TAG_SOUND::Kar98_NormalShoot);
+    }
+    
+    if (Input()()->IsOnceKeyDown('N'))
+    {
+        Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)),
+            0.5f, FMOD_3D);
+    }
+
+    Sound()()->Listen(GetTransform()->GetPosition(), getForward());
 }
 
 void Character::updateOther()
