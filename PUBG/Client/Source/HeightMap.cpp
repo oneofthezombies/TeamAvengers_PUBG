@@ -271,28 +271,28 @@ bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
 }
 
 
-bool HeightMap::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
-{
-	//Ray		ray = Ray::RayAtWorldSpace(screenX, screenY);
-	//float	minDist = FLT_MAX;
-	//float	intersectionDist;
-	//bool	bIntersect = false;
-
-	//for (int i = 0; i < m_vecSurfaceVertex.size(); i += 3)
-	//{
-	//	if ( ray.CalcIntersectTri(&m_vecSurfaceVertex[i], &intersectionDist) )
-	//	{
-	//		if (intersectionDist < minDist)
-	//		{
-	//			bIntersect = true;
-	//			minDist = intersectionDist;
-	//			vOut = ray.m_pos + ray.m_dir * intersectionDist;
-	//		}
-	//	}
-	//}
-	//return bIntersect;
-    return false;
-}
+//bool HeightMap::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
+//{
+//	//Ray		ray = Ray::RayAtWorldSpace(screenX, screenY);
+//	//float	minDist = FLT_MAX;
+//	//float	intersectionDist;
+//	//bool	bIntersect = false;
+//
+//	//for (int i = 0; i < m_vecSurfaceVertex.size(); i += 3)
+//	//{
+//	//	if ( ray.CalcIntersectTri(&m_vecSurfaceVertex[i], &intersectionDist) )
+//	//	{
+//	//		if (intersectionDist < minDist)
+//	//		{
+//	//			bIntersect = true;
+//	//			minDist = intersectionDist;
+//	//			vOut = ray.m_pos + ray.m_dir * intersectionDist;
+//	//		}
+//	//	}
+//	//}
+//	//return bIntersect;
+//    return false;
+//}
 
 
 void HeightMap::SetSurface()

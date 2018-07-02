@@ -30,7 +30,6 @@ public:
     void     SetCurrentCamera(const TAG_CAMERA tag);
     ICamera* GetCurrentCamera() { assert(pCurrentCamera &&"CameraManager::GetCurrentCamera(), current camera is null."); return pCurrentCamera; }
 
-    //TargetTransform* GetTargetTransformPtr() { return &m_targetTransform; }
 
     friend Singleton<CameraManager>;
 };
