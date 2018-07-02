@@ -82,6 +82,7 @@ public:
         bool _Z;
         bool _X;
         bool _C;
+        bool _R;
         bool _Space;
         bool _Num1; 
         bool _Num2; 
@@ -162,6 +163,7 @@ private:
 
     void setAttacking();
     void setStance();
+    void setReload();
     
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
     void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
@@ -204,8 +206,6 @@ private:
     D3DXVECTOR3 getBackwardLeft();
     D3DXVECTOR3 getBackwardRight();
     
-
-
     //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
     void createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);
@@ -236,5 +236,9 @@ public:
     //for inventory
     void PutItemInTotalInventory(Item* item);
     void ShowTotalInventory();
+
+    //for Debug
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
+    string ForDebugGetAttacking(Attacking attcking);
+    string ForDebugGetStance(Stance stance);
 };

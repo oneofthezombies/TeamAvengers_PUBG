@@ -143,6 +143,7 @@ void Character::updateMine()
 
     setStance();
     setAttacking();
+    setReload();
 
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
     if (m_savedInput != m_currentStayKey)

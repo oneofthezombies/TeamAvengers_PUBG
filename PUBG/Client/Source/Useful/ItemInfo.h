@@ -16,5 +16,10 @@ struct ItemInfo
     static float  GetCastTime(const TAG_RES_STATIC tag);         //사용시간
     static float  GetRecovery(const TAG_RES_STATIC tag);         //회복정도
 
-    ////총 관련된 상수는 아직 안해뜸 ㅎㅎ;;
+    //총 관련 상수
+    static float GetMagazineSize(const TAG_RES_STATIC tag);      //장탄수
+    static TAG_RES_STATIC GetAmmoType(const TAG_RES_STATIC tag); //사용하는 탄약종류
+    static float GetBaseDamage(const TAG_RES_STATIC tag);        //기본 데미지
+    static float GetInitialBulletSpeed(const TAG_RES_STATIC tag);//탄속
+    //..
 };
