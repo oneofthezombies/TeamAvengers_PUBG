@@ -270,7 +270,7 @@ void SkinnedMeshController::SetAnimation(
 {
     LPD3DXANIMATIONSET pNext = nullptr;
     auto& pAniCon = m_pSkinnedMeshInstance->m_pAnimController;
-    cout << name << '\n';
+    //cout << name << '\n';
     HRESULT hr = pAniCon->GetAnimationSetByName(name.c_str(), &pNext);
 
     assert(!FAILED(hr) &&

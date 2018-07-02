@@ -145,8 +145,8 @@ private:
     TotalInventory m_totalInventory;
 
     IsPressing m_savedInput;
-    IsPressing m_currentInput;
-    IsPressed  m_currentPressed;
+    IsPressing m_currentStayKey;
+    IsPressed  m_currentOnceKey;
 
     Stance    m_stance;
     Attacking m_attacking;
@@ -165,11 +165,7 @@ private:
     
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
     void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
-    bool HandleInput(OUT IsPressing& isPressing,OUT IsPressedOnce& isPressedOnce);
-    void CameraCharacterRotation(OUT D3DXQUATERNION* rOut);
-    void AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut);
-    void ApplyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
-
+    void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
 
     void updateMine();
     void updateOther();

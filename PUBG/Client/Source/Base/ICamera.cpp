@@ -238,8 +238,6 @@ bool ICamera::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
     float intersectionDist;
     bool bIntersect = false;
 
-    
-
     //for (size_t i = 0u; i < m_vecSurfaceVertex.size(); i += 3)
     //{
     //    if (ray.CalcIntersectTri(&m_vecSurfaceVertex[i], &intersectionDist))

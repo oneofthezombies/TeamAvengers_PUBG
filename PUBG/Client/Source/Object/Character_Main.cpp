@@ -20,7 +20,7 @@ Character::Character(const int index)
     , m_framePtr()
     , m_info()
     , m_savedInput()
-    , m_currentInput()
+    , m_currentStayKey()
     , m_pSphereMesh(nullptr)
     , m_pRootCharacterPart(nullptr)
     , m_totalInventory()
@@ -137,14 +137,15 @@ void Character::updateMine()
     D3DXVECTOR3    p = pTr->GetPosition();
     D3DXQUATERNION r = pTr->GetRotation();
 
-    //이곳에서 Input을 넣습니다 그리고 m_currentInput으로 사용
-    handleInput(&m_currentInput);
-    handleInput(&m_currentPressed);
+    //이곳에서 Input을 넣습니다 그리고 m_currentStayKey으로 사용
+    handleInput(&m_currentStayKey);
+    handleInput(&m_currentOnceKey);
 
     setStance();
     setAttacking();
 
-    if (m_savedInput != m_currentInput)
+    // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
+    if (m_savedInput != m_currentStayKey)
     {
         //setting animation and movements
         animationMovementControl(&p, &m_animState);
@@ -156,7 +157,7 @@ void Character::updateMine()
         {
             setAnimation(m_animState);
 
-            m_savedInput = m_currentInput;
+            m_savedInput = m_currentStayKey;
         }
     }
     else
@@ -164,16 +165,10 @@ void Character::updateMine()
         animationMovementControl(&p, NULL); // NULL means not changing animation
     }
 
-
-    
     cameraCharacterRotation(dt, &r);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
-
-    
-    ApplyTarget_Y_Position(&p); //apply height and control jumping
+    applyTarget_Y_Position(&p); //apply height and control jumping
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     
-
-
     pTr->SetPosition(p);
     pTr->SetRotation(r);
 

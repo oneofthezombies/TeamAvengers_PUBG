@@ -155,7 +155,7 @@ void Character::setAttacking()
 
     if (hasFinishEvent()) return;
 
-    if (m_currentPressed._Num1)
+    if (m_currentOnceKey._Num1)
     {
         if (inven.m_weaponPrimary)
         {
@@ -192,7 +192,7 @@ void Character::setAttacking()
             }
         }
     }
-    else if (m_currentPressed._Num2)
+    else if (m_currentOnceKey._Num2)
     {
         if (inven.m_weaponSecondary)
         {
@@ -233,7 +233,7 @@ void Character::setAttacking()
 
 void Character::setStance()
 {
-    if (m_currentPressed._C)
+    if (m_currentOnceKey._C)
     {
         if (m_stance == Stance::Crouch)
         {
@@ -248,7 +248,7 @@ void Character::setStance()
             m_stance = Stance::Crouch;
         }
     }
-    else if (m_currentPressed._Z)
+    else if (m_currentOnceKey._Z)
     {
         if (m_stance == Stance::Prone)
         {
@@ -283,7 +283,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     const float pitch = diff.y * 0.2f * dt;
 
     static bool tempBool = false;
-    if (m_currentInput._LAlt)
+    if (m_currentStayKey._LAlt)
     {
         if (pCurrentCamera)
         {
@@ -329,13 +329,11 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
 
 void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag)
 {
-    //Attacking attacking;
     Direction direction;
     Moving    moving;
-    //Stance    stance;
 
     float movingFactor;
-    if (m_isOnceInput._Space)
+    if (m_currentOnceKey._Space)
         m_Jump.isJumping = true;
 
     ////Attacking 3개 -----------------------------------------------------
@@ -353,11 +351,11 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
     //}
 
     ////Stance 3개 -----------------------------------------------------
-    //if (m_currentPressed._C)
+    //if (m_currentOnceKey._C)
     //{
     //    stance = Stance::Crouch;
     //}
-    //else if (m_currentPressed._Z)
+    //else if (m_currentOnceKey._Z)
     //{
     //    stance = Stance::Prone;
     //}
@@ -367,12 +365,12 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
     //}
 
     //Moving 3개 -----------------------------------------------------
-    if (m_currentInput._LShift && !m_currentInput._LCtrl)
+    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl)
     {
         moving = Moving::Sprint;
         movingFactor = 2.0f;
     }
-    else if (m_currentInput._LCtrl && !m_currentInput._LShift)
+    else if (m_currentStayKey._LCtrl && !m_currentStayKey._LShift)
     {
         moving = Moving::Walk;
         movingFactor = 0.5f;
@@ -384,44 +382,44 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
     }
 
     //Direction 8개 -----------------------------------------------------
-    if (m_currentInput._W&&m_currentInput._D)
+    if (m_currentStayKey._W&&m_currentStayKey._D)
     {
         direction = Direction::FrontRight;
         *OutPosition += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._D&&m_currentInput._S)
+    else if (m_currentStayKey._D&&m_currentStayKey._S)
     {
         direction = Direction::BackRight;
         *OutPosition += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._S&&m_currentInput._A)
+    else if (m_currentStayKey._S&&m_currentStayKey._A)
     {
         direction = Direction::BackLeft;
         *OutPosition += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._A&&m_currentInput._W)
+    else if (m_currentStayKey._A&&m_currentStayKey._W)
     {
         direction = Direction::FrontLeft;
         *OutPosition += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._W)
+    else if (m_currentStayKey._W)
     {
         direction = Direction::Front;
         *OutPosition += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
 
     }
-    else if (m_currentInput._D)
+    else if (m_currentStayKey._D)
     {
         direction = Direction::Right;
         *OutPosition += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._S)
+    else if (m_currentStayKey._S)
     {
         direction = Direction::Back;
         //*pOut += getForward() * -1.0f;
         *OutPosition += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._A)
+    else if (m_currentStayKey._A)
     {
         direction = Direction::Left;
         *OutPosition += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
@@ -433,7 +431,12 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
 
     if (OutTag) //if null, no changes in animation
     {
-        *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
+        if (m_Jump.isJumping&&m_currentStayKey._W)
+            *OutTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F;
+        else if (m_Jump.isJumping)
+            *OutTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary;
+        else
+            *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
     }
 }
 bool Character::isMine() const
@@ -456,21 +459,9 @@ void Character::setAnimation(
         isBlend,
         blendTime,
         nextWeight);
-
-    if (tagOut) //if null, no changes in animation
-    {
-        
-        if (m_Jump.isJumping&&m_isCurrentInput._W)
-            *tagOut = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F;
-        else if(m_Jump.isJumping)
-            *tagOut = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary;
-        else
-            *tagOut = AnimationState::Get(attacking, stance, moving, direction);
-    }
-
 }
 
-void Character::ApplyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
+void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 {
     
     IScene* pCurrentScene = CurrentScene()();
@@ -505,7 +496,6 @@ void Character::ApplyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
             targetPos.y = height;
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;
-            m_isOnceInput.isAnimEnded = true;
         }
     }
     else //when no jump
@@ -525,7 +515,7 @@ void Character::ApplyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
     *pOut = targetPos;
 }
 
-bool Character::isMine() const
+bool Character::hasFinishEvent() const
 {
     assert(pSkinnedMeshController &&
         "Character::hasFinishEvent(), skinned mesh controller is null.");
