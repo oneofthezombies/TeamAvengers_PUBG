@@ -19,12 +19,13 @@ Character::Character(const int index)
     , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
     , m_framePtr()
     , m_info()
-    , m_savedInput()
-    , m_currentInput()
+    , m_isSavedInput()
+    , m_isCurrentInput()
+    , m_isOnceInput()
     , m_pSphereMesh(nullptr)
     , m_pRootCharacterPart(nullptr)
     , m_totalInventory()
-
+    , m_Jump()
     , pSkinnedMeshController(nullptr)
 {
     Transform* tr = GetTransform();
@@ -36,10 +37,6 @@ Character::Character(const int index)
         Resource()()->GetCharacterSkinnedMesh());
     
     setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
-
-    //for test
-    //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false);
-    //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, false);
 
     setFramePtr();
 
@@ -72,8 +69,6 @@ void Character::OnUpdate()
     updateOther();
     updateDependency();
     communicate();
-
-    TAG_ANIM_CHARACTER res = AnimationState::Get(Attacking::Rifle, Stance::Stand, Moving::Run, Direction::Front);
 }
 
 void Character::OnRender()
@@ -143,22 +138,21 @@ void Character::updateMine()
 
     /****************여러분! delta time 을 넣을 까요???*************/
 
-    //이곳에서 Input을 넣습니다 그리고 m_currentInput으로 사용
-    m_currentInput = HandleInput(m_currentInput);
+    //이곳에서 Input을 넣습니다 그리고 m_isCurrentInput으로 계속 눌리는것 사용 , m_isOnceInput로 한번 눌리는 것 사용
+    HandleInput(OUT m_isCurrentInput,OUT m_isOnceInput);
 
-    if (m_savedInput != m_currentInput)
+    if (m_isSavedInput != m_isCurrentInput) //키 값이 다를때만 setAnimation을 하기 위해
     {
         //setting animation and movements
         AnimationMovementControl(&p, &m_animState);
         if (m_animState == TAG_ANIM_CHARACTER::COUNT)
         {
-
+            //애니메이션이 없습니다.
         }
         else
         {
             setAnimation(m_animState, true);
-
-            m_savedInput = m_currentInput;
+            m_isSavedInput = m_isCurrentInput;  //pressing 하는 키 값이 바뀐 것을 save 해놓음 
         }
     }
     else
@@ -167,16 +161,12 @@ void Character::updateMine()
     }
 
 
-    //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
-    CameraCharacterRotation(&r);
-    //animation Switch 문
+    
+    CameraCharacterRotation(&r); //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
 
+    
+    ApplyTargetPosition(&p); //apply height and control jumping
 
-
-
-
-    //if (pInput->IsOnceKeyDown(VK_RETURN))
-    //    isFired = true;
 
     pTr->SetPosition(p);
     pTr->SetRotation(r);

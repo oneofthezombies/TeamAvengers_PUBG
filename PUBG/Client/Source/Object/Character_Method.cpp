@@ -31,13 +31,17 @@ Character::IsPressing::IsPressing()
     , _S(false)
     , _A(false)
     , _D(false)
-    , _Z(false)
+
+{
+}
+Character::IsPressedOnce::IsPressedOnce()
+    : _Z(false)
     , _X(false)
     , _C(false)
     , _Space(false)
 {
-}
 
+}
 
 Character::FramePtr::FramePtr()
     : pRoot(nullptr)
@@ -49,6 +53,15 @@ Character::FramePtr::FramePtr()
     , pSlotSecondary(nullptr)
     , pSlotMelee(nullptr)
     , pSlotThrowable(nullptr)
+{
+}
+
+Character::IsJumping::IsJumping()
+    : isJumping(false)
+    , jumpPower(1.0f)
+    , gravity(0.05f)
+    , currGravity(0.0f)
+    , maxStepHeight(0.5f)
 {
 }
 
@@ -80,23 +93,24 @@ void Character::subscribeCollisionEvent()
     }
 }
 
-Character::IsPressing Character::HandleInput(IsPressing& m_isPressing)
+void Character::HandleInput(OUT IsPressing& isPressing, OUT IsPressedOnce& isPressedOnce)
 {
     InputManager* pInput = Input()();
 
-    m_isPressing._LAlt = pInput->IsStayKeyDown(VK_LMENU);
-    m_isPressing._LCtrl = pInput->IsStayKeyDown(VK_LCONTROL);
-    m_isPressing._LShift = pInput->IsStayKeyDown(VK_LSHIFT);
-    m_isPressing._W = pInput->IsStayKeyDown('W');
-    m_isPressing._S = pInput->IsStayKeyDown('S');
-    m_isPressing._A = pInput->IsStayKeyDown('A');
-    m_isPressing._D = pInput->IsStayKeyDown('D');
-    m_isPressing._Z = pInput->IsStayKeyDown('Z');
-    m_isPressing._X = pInput->IsStayKeyDown('X');
-    m_isPressing._C = pInput->IsStayKeyDown('C');
-    m_isPressing._Space = pInput->IsOnceKeyDown(VK_SPACE);
+    isPressing._LAlt = pInput->IsStayKeyDown(VK_LMENU);
+    isPressing._LCtrl = pInput->IsStayKeyDown(VK_LCONTROL);
+    isPressing._LShift = pInput->IsStayKeyDown(VK_LSHIFT);
+    isPressing._W = pInput->IsStayKeyDown('W');
+    isPressing._S = pInput->IsStayKeyDown('S');
+    isPressing._A = pInput->IsStayKeyDown('A');
+    isPressing._D = pInput->IsStayKeyDown('D');
 
-    return m_isPressing;
+
+    isPressedOnce._Z = pInput->IsOnceKeyDown ('Z');
+    isPressedOnce._X = pInput->IsOnceKeyDown('X');
+    isPressedOnce._C = pInput->IsOnceKeyDown('C');
+    isPressedOnce._Space = pInput->IsOnceKeyDown(VK_SPACE);
+
 }
 void Character::CameraCharacterRotation(OUT D3DXQUATERNION* rOut)
 {
@@ -117,7 +131,7 @@ void Character::CameraCharacterRotation(OUT D3DXQUATERNION* rOut)
     const float pitch = diff.y * 0.2f * dt;
 
     static bool tempBool = false;
-    if (m_currentInput._LAlt)
+    if (m_isCurrentInput._LAlt)
     {
         if (pCurrentCamera)
         {
@@ -188,11 +202,11 @@ void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHA
     }
 
     //Stance 3°³ -----------------------------------------------------
-    if (m_currentInput._C)
+    if (m_isOnceInput._C)
     {
         stance = Stance::Crouch;
     }
-    else if (m_currentInput._Z)
+    else if (m_isOnceInput._Z)
     {
         stance = Stance::Prone;
     }
@@ -204,12 +218,12 @@ void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHA
 
 
     //Moving 3°³ -----------------------------------------------------
-    if (m_currentInput._LShift && !m_currentInput._LCtrl)
+    if (m_isCurrentInput._LShift && !m_isCurrentInput._LCtrl)
     {
         moving = Moving::Sprint;
         movingFactor = 2.0f;
     }
-    else if (m_currentInput._LCtrl && !m_currentInput._LShift)
+    else if (m_isCurrentInput._LCtrl && !m_isCurrentInput._LShift)
     {
         moving = Moving::Walk;
         movingFactor = 0.5f;
@@ -222,44 +236,44 @@ void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHA
 
 
     //Direction 8°³ -----------------------------------------------------
-    if (m_currentInput._W&&m_currentInput._D)
+    if (m_isCurrentInput._W&&m_isCurrentInput._D)
     {
         direction = Direction::FrontRight;
         *pOut += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._D&&m_currentInput._S)
+    else if (m_isCurrentInput._D&&m_isCurrentInput._S)
     {
         direction = Direction::BackRight;
         *pOut += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._S&&m_currentInput._A)
+    else if (m_isCurrentInput._S&&m_isCurrentInput._A)
     {
         direction = Direction::BackLeft;
         *pOut += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._A&&m_currentInput._W)
+    else if (m_isCurrentInput._A&&m_isCurrentInput._W)
     {
         direction = Direction::FrontLeft;
         *pOut += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._W)
+    else if (m_isCurrentInput._W)
     {
         direction = Direction::Front;
         *pOut += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
 
     }
-    else if (m_currentInput._D)
+    else if (m_isCurrentInput._D)
     {
         direction = Direction::Right;
         *pOut += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._S)
+    else if (m_isCurrentInput._S)
     {
         direction = Direction::Back;
         //*pOut += getForward() * -1.0f;
         *pOut += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
-    else if (m_currentInput._A)
+    else if (m_isCurrentInput._A)
     {
         direction = Direction::Left;
         *pOut += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
@@ -276,8 +290,66 @@ void Character::AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHA
     {
         *tagOut = AnimationState::Get(attacking, stance, moving, direction);
     }
-        
+
 }
+
+void Character::ApplyTargetPosition(OUT D3DXVECTOR3 * pOut)
+{
+    
+    IScene* pCurrentScene = CurrentScene()();
+    if (!pCurrentScene)
+        assert(false && "No CurrentScene");
+
+    if (m_isOnceInput._Space) 
+        m_Jump.isJumping = true;
+
+
+    D3DXVECTOR3 targetPos = *pOut;
+    float height = 0;
+    bool isIntersected = true;
+
+    if (m_Jump.isJumping)
+    {
+
+        targetPos.y += m_Jump.jumpPower - m_Jump.currGravity;
+        m_Jump.currGravity += m_Jump.gravity;
+        
+        isIntersected = pCurrentScene->GetHeight(targetPos, &height);
+
+        //if (!isIntersected)
+        //{
+        //    // Do nothing just yet
+
+        //}
+        //else
+        //{
+
+        //}
+
+        if (targetPos.y <= height && m_Jump.jumpPower < m_Jump.currGravity)
+        {
+            targetPos.y = height;
+            m_Jump.isJumping = false;
+            m_Jump.currGravity = 0.0f;
+        }
+    }
+    else //when no jump
+    {
+        isIntersected = pCurrentScene->GetHeight(targetPos, &height);
+        if (!isIntersected /*|| fabs(height - *pOut.y) > m_Jump.maxStepHeight*/)
+        {
+            //Do nothing
+        }
+        else
+        {
+            targetPos.y = height;
+        }
+
+    }
+
+    *pOut = targetPos;
+}
+
 bool Character::isMine() const
 {
     return m_index == Communication()()->m_MyInfo.m_ID;

@@ -19,7 +19,7 @@ HeightMap::HeightMap()
     , m_pMesh(NULL)
 {
     D3DXMATRIXA16 matS;
-    D3DXMatrixScaling(&matS, 1.0f, 0.03f, 1.0f);
+    D3DXMatrixScaling(&matS, 10.0f, 1.0f, 10.0f);
 
     SetDimension(257);
     Load(_T("./Resource/Heightmap/Heightmap.raw"), &matS);
@@ -45,10 +45,6 @@ HeightMap::~HeightMap()
 	//SAFE_DELETE(m_pMtlTex);
 	//SAFE_RELEASE(m_pAStar);
 }
-
-
-
-
 
 void HeightMap::Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat)
 {
@@ -341,37 +337,3 @@ void HeightMap::SetSurface()
 		m_vecSurfaceVertex.push_back(vecPos[vecIndex[i]]);
 	}
 }
-
-
-
-//void HeightMap::SetMtlTex(D3DMATERIAL9 &mtl, LPDIRECT3DTEXTURE9 pTex)
-//{
-//	//m_pMtlTex = new MTLTEX;
-//	//m_pMtlTex->SetMaterial(mtl);
-//	//m_pMtlTex->SetTexture(pTex);
-//}
-
-
-//void HeightMap::SetObstacle()
-//{
-//	float posX = m_pAStar->GetNodes()[2]->GetLocation().x - 0.7f;
-//	float posZ = m_pAStar->GetNodes()[30 * 4 + 2]->GetLocation().z + 0.9f;
-//	float height = 6;
-//
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, 3, posZ));
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, height, 0));
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, 3, 0));
-//
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, 3, posZ));
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, height, posZ));
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, height, 0));
-//
-//	posX += 1.4f;
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, 3, posZ));
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, height, 0));
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, 3, 0));
-//
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, 3, posZ));
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, height, posZ));
-//	m_vecObstacleVertex.push_back(D3DXVECTOR3(posX, height, 0));
-//}

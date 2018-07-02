@@ -5,6 +5,7 @@
 #include "DirectionalLight.h"
 #include "ResourceInfo.h"
 #include "Item.h"
+#include "HeightMap.h"
 
 BoxColliderInFile::BoxColliderInFile()
 {
@@ -23,6 +24,7 @@ ObjectInFile::ObjectInFile()
 IScene::IScene()
     : MemoryAllocator()
     , m_pDirectionalLight(nullptr)
+    , pHeightMap(nullptr)
 {
 }
 
@@ -282,3 +284,21 @@ DirectionalLight* IScene::GetDirectionalLight()
 {
     return m_pDirectionalLight;
 }
+
+void IScene::SetHeightMap(HeightMap * p)
+{
+    assert(p && "IScene::SetHeightMap(), SetHeightMapis null.");
+    m_objects.emplace(p);
+    pHeightMap = p;
+}
+
+HeightMap * IScene::GetHeightMap()
+{
+    return pHeightMap;
+}
+
+bool IScene::GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight)
+{
+    return pHeightMap->GetHeight(pos, OutHeight);
+}
+

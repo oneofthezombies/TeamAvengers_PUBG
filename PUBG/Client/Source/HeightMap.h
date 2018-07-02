@@ -38,7 +38,7 @@ public:
     // Inherited via IMap
     virtual void OnUpdate() override;
     virtual void OnRender() override;
-    virtual bool GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight) override;
+    virtual bool GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight) override;
     virtual bool CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY) override;
     
     //void SetMtlTex(D3DMATERIAL9 &Mtl, LPDIRECT3DTEXTURE9 pTex);

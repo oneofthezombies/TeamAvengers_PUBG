@@ -19,12 +19,14 @@ ScenePlay::~ScenePlay()
 void ScenePlay::OnInit()
 {
     SetDirectionalLight(new DirectionalLight);
+    
     //AddObject(new TerrainFeature(TAG_RES_STATIC::SkySphere, Vector3::ZERO, Vector3::ZERO, Vector3::ONE* 0.18f));
 
     //AddObject(new SkySphere);
     AddObject(new Grid);
+
+    SetHeightMap(new HeightMap);
     
-    AddObject(new HeightMap);
 
     Communication()()->m_MyInfo.m_ID = 0;
     //for (int i = 0; i < Character::NUM_PLAYER; ++i)
@@ -35,11 +37,11 @@ void ScenePlay::OnInit()
 
     //LoadObjectsFromFile("./Resource/save.txt");
 
-    //For inventory Test
-    Item* item;
-    D3DXVECTOR3 p(10, 0, 10);
-    D3DXVECTOR3 r(0, 0, 0);
-    D3DXVECTOR3 s(1, 1, 1);
+    ////For inventory Test
+    //Item* item;
+    //D3DXVECTOR3 p(10, 0, 10);
+    //D3DXVECTOR3 r(0, 0, 0);
+    //D3DXVECTOR3 s(1, 1, 1);
 
     //item = new Item(TAG_RES_STATIC::Head_Lv1, p, r, s);
     //AddObject(item);
