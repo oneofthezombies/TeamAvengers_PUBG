@@ -33,7 +33,8 @@ protected:  //Camera Position Rotation Fov
 
 protected:
     Ray*                m_pRayFireDirection;
-    
+    vector<D3DXVECTOR3> drawRay;
+    bool                temp = false;
 protected:
     Character::Info*    GetTargetInfo();
 
@@ -44,6 +45,7 @@ public:
     virtual void Reset() = 0;
     virtual void Update() = 0;
     void CameraRender();
+    void draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color);
 
     void UpdateViewProjMatrix();
     void UpdateFrustumCulling();
