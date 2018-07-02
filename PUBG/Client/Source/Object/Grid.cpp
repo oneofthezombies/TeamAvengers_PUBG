@@ -3,6 +3,7 @@
 
 Grid::Grid()
     : IObject()
+    , pEffect(nullptr)
 {
     Init();
 }

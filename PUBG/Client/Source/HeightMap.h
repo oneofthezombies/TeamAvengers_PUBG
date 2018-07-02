@@ -20,13 +20,19 @@ protected:
     D3DXVECTOR3			m_size;
     D3DXVECTOR3			m_scale;
 
+    
+
 	LPD3DXMESH	        m_pMesh;
+    D3DXMATRIXA16       m_matWorld;
 	//MTLTEX*		m_pMtlTex;
 	
 	vector<D3DXVECTOR3>	m_vecSurfaceVertex;
 	vector<D3DXVECTOR3>	m_vecObstacleVertex;
 
-    D3DXVECTOR3 m_arrBox[8];
+    vector<D3DXVECTOR3> m_RayBox;
+    //static vector<WORD> indices;
+private:
+    void draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color);
 
 public:
 	HeightMap();
@@ -34,12 +40,17 @@ public:
 
 	void Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat = NULL);
     void SetSurface();
-	
+    virtual void SetRayBox();
+    vector<D3DXVECTOR3>& GetRayBox()
+    {
+        return m_RayBox;
+    }
 
     // Inherited via IMap
     virtual void OnUpdate() override;
     virtual void OnRender() override;
     virtual bool GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight) override;
+
     //virtual bool CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY) override;
     
     //void SetMtlTex(D3DMATERIAL9 &Mtl, LPDIRECT3DTEXTURE9 pTex);
