@@ -47,6 +47,7 @@ public:
         //Weapon* m_weaponMelee;
         //Weapon* m_weaponThrowable;
         float m_capacity;
+        int   m_numReload;
 
          TotalInventory();
         ~TotalInventory();
@@ -82,6 +83,7 @@ public:
         bool _Z;
         bool _X;
         bool _C;
+        bool _R;
         bool _Space;
         bool _Num1; 
         bool _Num2; 
@@ -163,6 +165,7 @@ private:
 
     void setAttacking();
     void setStance();
+    void setReload();
     
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
     void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
@@ -217,6 +220,9 @@ private:
     void updateTotalInventory();
     void renderTotalInventory();
 
+    void onKar98kReloadEnd();
+    void onKar98kReload();
+
 public:
              Character(const int index);
     virtual ~Character();
@@ -235,5 +241,9 @@ public:
     //for inventory
     void PutItemInTotalInventory(Item* item);
     void ShowTotalInventory();
+
+    //for Debug
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
+    string ForDebugGetAttacking(Attacking attcking);
+    string ForDebugGetStance(Stance stance);
 };

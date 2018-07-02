@@ -145,7 +145,7 @@ float ItemInfo::GetMagnification(const TAG_RES_STATIC tag)
     case TAG_RES_STATIC::Aimpoint2X: return 1.8f;
     case TAG_RES_STATIC::ACOG: return 4.0f;
 
-    default:return  1.0f;
+    default: return  1.0f;
     }
 }
 
@@ -201,6 +201,53 @@ float ItemInfo::GetRecovery(const TAG_RES_STATIC tag)
     case TAG_RES_STATIC::Bandage: return 10.0f;
     case TAG_RES_STATIC::FirstAidKit: return 75.0f;
     case TAG_RES_STATIC::MedKit: return 100.0f;
+
+    default: return 0.0f;
+    }
+}
+
+float ItemInfo::GetMagazineSize(const TAG_RES_STATIC tag)
+{
+    switch (tag)
+    {
+    case TAG_RES_STATIC::QBZ: return 30.0f;
+    case TAG_RES_STATIC::Kar98k: return 5.0f;
+
+    default: return 0.0f;
+    }
+}
+
+TAG_RES_STATIC ItemInfo::GetAmmoType(const TAG_RES_STATIC tag)
+{
+    switch (tag)
+    {
+    case TAG_RES_STATIC::QBZ: return TAG_RES_STATIC::Ammo_5_56mm;
+    case TAG_RES_STATIC::Kar98k: return TAG_RES_STATIC::Ammo_7_62mm;
+
+    default: 
+        assert(false && "ItemInfo::GetAmmoType(), default case.");
+        return TAG_RES_STATIC::COUNT;
+    }
+}
+
+float ItemInfo::GetBaseDamage(const TAG_RES_STATIC tag)
+{
+    switch (tag)
+    {
+    case TAG_RES_STATIC::QBZ: return 43.0f;
+    case TAG_RES_STATIC::Kar98k: return 75.0f;
+
+    default: return 0.0f;
+    }
+}
+
+float ItemInfo::GetInitialBulletSpeed(const TAG_RES_STATIC tag)
+{
+    //´ÜÀ§´Â m/s
+    switch (tag)
+    {
+    case TAG_RES_STATIC::QBZ: return 870.0f;
+    case TAG_RES_STATIC::Kar98k: return 760.0f;
 
     default: return 0.0f;
     }

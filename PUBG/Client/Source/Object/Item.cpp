@@ -17,6 +17,7 @@ Item::Item(
     , m_tagResStatic(tag)
     , m_durability(0.0f)
     , m_count(0)
+    , m_numBullet(0)
 
     , pEffectMeshRenderer(nullptr)
     , m_isRenderEffectMesh(false)
@@ -196,5 +197,16 @@ void Item::SetUIPosition(const D3DXVECTOR2& position)
     assert(pUIImage && "Item::SetUIPosition(), ui image is null.");
 
     pUIImage->SetPosition(D3DXVECTOR3(position.x, position.y, 0.0f));
+}
+
+void Item::SetNumBullet(const int numBullet)
+{
+    //TODO: 장탄수를 넘어서면 안된다
+    m_numBullet = numBullet;
+}
+
+int Item::GetNumBullet() const
+{
+    return m_numBullet;
 }
 

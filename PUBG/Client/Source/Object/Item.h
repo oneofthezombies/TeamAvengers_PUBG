@@ -16,6 +16,8 @@ private:
     
     float m_durability; //내구성
     int   m_count;      //아이템의 개수
+    //for Rifle
+    int   m_numBullet;  //장전된 총알의 개수
 
     EffectMeshRenderer* pEffectMeshRenderer;
     bool                m_isRenderEffectMesh;
@@ -59,4 +61,8 @@ public:
 
     void SetPosition(const D3DXVECTOR3& position);
     void SetUIPosition(const D3DXVECTOR2& position);
+
+    //for Rifle
+    void SetNumBullet(const int numBullet);
+    int GetNumBullet() const;
 };

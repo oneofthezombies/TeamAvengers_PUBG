@@ -74,6 +74,11 @@ enum class TAG_ANIM_CHARACTER
     Weapon_Kar98k_ReloadFast_FPP,
     Weapon_Kar98k_ReloadFast_Prone_FPP,
 
+    //Weapon_Kar98k_Reload_Test(3)
+    Kar98k_Reload_Start,
+    Kar98k_Reload_Loop,
+    Kar98k_Reload_End,
+
     //2. 무기를 들고있지 않을 때 애니메이션
     //Unarmed_Transition(6) - 자세 간의 전이 ex. 쭈그려있다가 -> 엎드린다
     Unarmed_Combat_Crouch_Prone, //쭈그리다 -> 엎드리다

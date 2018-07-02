@@ -13,6 +13,7 @@ Character::TotalInventory::TotalInventory()
     , m_weaponPrimary(nullptr)
     , m_weaponSecondary(nullptr)
     , m_capacity(DEFAULT_CAPACITY)
+    , m_numReload(0)
 {
 }
 
@@ -241,6 +242,7 @@ void Character::renderTotalInventory()
 void Character::ShowTotalInventory()
 {
     TAG_RES_STATIC tag;
+
     cout << "용량: " << m_totalInventory.m_capacity << endl;
     cout << "<인벤토리>" << endl;
     for (auto items : m_totalInventory.m_mapInventory)
@@ -310,22 +312,5 @@ void Character::ShowTotalInventory()
         cout << "- " << ItemInfo::GetName(tag);
         cout << " " << m_totalInventory.m_weaponSecondary->GetCount() << "개";
         cout << " 용량: " << ItemInfo::GetCapacity(tag) << endl;
-    }
-}
-
-string Character::ForDebugGetItemCategory(TAG_ITEM_CATEGORY category)
-{
-    switch (category)
-    {
-    case TAG_ITEM_CATEGORY::Armor: return "Armor";
-    case TAG_ITEM_CATEGORY::Back: return "Backpack";
-    case TAG_ITEM_CATEGORY::Head: return "Helmet";
-    case TAG_ITEM_CATEGORY::Consumable: return "Consumable";
-    case TAG_ITEM_CATEGORY::Ammo: return "Ammo";
-    case TAG_ITEM_CATEGORY::Rifle: return "Rifle";
-    case TAG_ITEM_CATEGORY::Attach: return "Attach";
-    default: 
-        assert(false && "Character::ForDebugGetItemCategory(), default case.");
-        return "";
     }
 }

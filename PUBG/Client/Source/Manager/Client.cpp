@@ -235,6 +235,23 @@ void CommunicationManager::ReceiveMessage(const TAG_REQUEST tag, const string& d
                 static_cast<TAG_COLLISION>(tag));
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_SOUND:
+        {
+            
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& eventSoundStr = parsedDesc.second;
+
+            stringstream ss(eventSoundStr);
+            //TAG_SOUND tagSound;
+            int tagSound;
+            D3DXVECTOR3 pos;
+
+            ss >> pos.x >> pos.y >> pos.z
+                >> tagSound;
+            Sound()()->Play(static_cast<TAG_SOUND>(tagSound), pos, 0.3f, FMOD_3D);
+        }
+        break;
     }
 }
 
@@ -306,4 +323,14 @@ void CommunicationManager::SendEventFireBullet(Bullet* pBullet)
 
     m_pClient->Write(
         Message::Create(TAG_REQUEST::SEND_EVENT_FIRE_BULLET, ss.str()));
+}
+
+void CommunicationManager::SendEventSound(const TAG_SOUND tag, const D3DXVECTOR3& pos)
+{
+    
+    int tagSound = static_cast<int>(tag);
+    stringstream ss;
+    ss << m_MyInfo.m_ID << pos.x << ' ' << pos.y << ' ' << pos.z << ' ' << tagSound;
+
+    m_pClient->Write(Message::Create(TAG_REQUEST::SEND_EVENT_SOUND, ss.str()));
 }

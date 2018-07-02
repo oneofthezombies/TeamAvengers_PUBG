@@ -152,6 +152,7 @@ void Character::updateMine()
 
     setStance();
     setAttacking();
+    setReload();
 
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
     if (m_savedInput != m_currentStayKey)
@@ -184,7 +185,27 @@ void Character::updateMine()
     Debug << "current animation : "
           << pSkinnedMeshController->GetCurrentAnimationName() << '\n';
 
-    Debug << "current position : " << p << '\n';
+
+
+
+    //sh tset
+    if (Input()()->IsOnceKeyDown('B'))
+    {
+        Sound()()->SetPosition(D3DXVECTOR3(0, 0, 100));
+        Sound()()->SetVolume(0.8f);
+        Sound()()->Play(TAG_SOUND::Kar98_NormalShoot);
+    }
+    
+    if (Input()()->IsOnceKeyDown('N'))
+    {
+        //Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
+        Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)));
+    }
+
+    Sound()()->Listen(GetTransform()->GetPosition(), getForward());
+
+    //Communication()()->SendPosition(p);
+        Debug << "current position : " << p << '\n';
 }
 
 void Character::updateOther()
@@ -200,7 +221,7 @@ void Character::updateOther()
     auto pSkiCon = pSkinnedMeshController;
 
     auto& pi = pCom->m_RoomInfo.m_PlayerInfos[m_index];
-    //pos = pi.m_Position;
+    pos = pi.m_Position;
 
     const auto uAnimState = static_cast<unsigned int>(m_animState);
     if (uAnimState != pi.m_AnimationIndex)

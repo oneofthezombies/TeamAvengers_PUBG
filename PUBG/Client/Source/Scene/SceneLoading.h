@@ -51,6 +51,7 @@ private:
     bool m_isFinished;
 
 private:
+    void loadImage();
     void loadEffectMesh();
     void loadSkinnedMesh();
     void loadCharacterAnimation();
@@ -59,7 +60,7 @@ private:
     void addEffectMeshs();
     void addSkinnedMeshs();
 
-    void addHeightmap();
+    void addHeightmapResource();
 
     bool verifyTasks(tasks_t* OutTasks, resources_t* OutResources);
 

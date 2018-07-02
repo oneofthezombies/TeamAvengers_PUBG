@@ -82,6 +82,11 @@ std::string TagAnimation::GetString(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_StartLoopEnd_Prone_FPP: return "Weapon_Kar98k_Reload_StartLoopEnd_Prone_FPP";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_FPP:                return "Weapon_Kar98k_ReloadFast_FPP";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Prone_FPP:          return "Weapon_Kar98k_ReloadFast_Prone_FPP";
+
+    //Weapon_Kar98k_Reload_Test(3)
+    case TAG_ANIM_CHARACTER::Kar98k_Reload_Start:                         return "Kar98k_Reload_Start";
+    case TAG_ANIM_CHARACTER::Kar98k_Reload_Loop:                          return "Kar98k_Reload_Loop";
+    case TAG_ANIM_CHARACTER::Kar98k_Reload_End:                           return "Kar98k_Reload_End";
             
     //2. 무기를 들고있지 않을 때 애니메이션
     //Unarmed_Transition(6) - 자세 간의 전이 ex. 쭈그려있다가 -> 엎드린다
@@ -475,6 +480,8 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_BL:
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_L:
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_FL:
+
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Run_FL:
         return 0.5f;
 
     default:

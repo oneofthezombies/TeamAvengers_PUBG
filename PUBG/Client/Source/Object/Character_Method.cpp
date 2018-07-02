@@ -4,6 +4,8 @@
 #include "CharacterPart.h"
 #include "DirectionalLight.h"
 #include "AnimationState.h"
+#include "Item.h"
+#include "ItemInfo.h"
 
 Character::WaistRotation::WaistRotation(const float limit, const float factor)
     : LIMIT_OF_ANGLE(limit)
@@ -56,6 +58,7 @@ Character::IsPressed::IsPressed()
     : _Z(false)
     , _X(false)
     , _C(false)
+    , _R(false)
     , _Space(false)
     , _Num1(false)
     , _Num2(false)
@@ -141,6 +144,7 @@ void Character::handleInput(IsPressed* OutIsPressed)
     OutIsPressed->_Z     = pInput->IsOnceKeyDown('Z');
     OutIsPressed->_X     = pInput->IsOnceKeyDown('X');
     OutIsPressed->_C     = pInput->IsOnceKeyDown('C');
+    OutIsPressed->_R     = pInput->IsOnceKeyDown('R');
     OutIsPressed->_Space = pInput->IsOnceKeyDown(VK_SPACE);
     OutIsPressed->_Num1  = pInput->IsOnceKeyDown('1');
     OutIsPressed->_Num2  = pInput->IsOnceKeyDown('2');
@@ -151,7 +155,18 @@ void Character::handleInput(IsPressed* OutIsPressed)
 
 void Character::setAttacking()
 {
-    TotalInventory& inven = m_totalInventory;
+    //for Debug
+    TAG_RES_STATIC tag;
+    Item* hand = m_totalInventory.m_hand;
+    if (hand)
+    {
+        Debug << "On hand Weapon: ";
+        tag = hand->GetTagResStatic();
+        Debug << ItemInfo::GetName(tag) << "\n";
+    }
+    Debug << "Attacking: " << ForDebugGetAttacking(m_attacking) << "\n";
+
+    TotalInventory& inven = m_totalInventory; 
 
     if (hasFinishEvent()) return;
 
@@ -229,10 +244,46 @@ void Character::setAttacking()
             }
         }
     }
+    //for test 'X' - 다시 X누르면 이전 무기 장착되는 것도 해야함
+    else if (m_currentOnceKey._X)
+    {
+        //손에 무기를 들고 있다면 해제한다
+        //무기가 주무기냐, 보조무기냐에 따라서 다른 애니메이션을 실행한다. 우선 QBZ 주무기 Kar98k 보조무기
+        if (inven.m_hand)
+        {
+            TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic();
+            if (tag == TAG_RES_STATIC::QBZ)
+            {
+                m_attacking = Attacking::Unarmed;
+                //주무기를 해제한다
+                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static, false, [this, &inven]()
+                {
+                    inven.m_weaponPrimary = inven.m_hand;
+                    inven.m_hand = nullptr;
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false); //TODO: 해제는 되는데 다리가 부자연스러움
+                });
+
+            }
+            else if (tag == TAG_RES_STATIC::Kar98k)
+            {
+                m_attacking = Attacking::Unarmed;
+                //보조무기를 해제한다
+                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static, false, [this, &inven]()
+                {
+                    inven.m_weaponSecondary = inven.m_hand;
+                    inven.m_hand = nullptr;
+                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+                });
+            }
+        }
+    }
 }
 
 void Character::setStance()
 {
+    //for Debug
+    Debug << "Stance: " << ForDebugGetStance(m_stance) << "\n";
+
     if (m_currentOnceKey._C)
     {
         if (m_stance == Stance::Crouch)
@@ -261,6 +312,93 @@ void Character::setStance()
             // TODO : check obstacle
 
             m_stance = Stance::Prone;
+        }
+    }
+}
+
+void Character::setReload()
+{
+    TotalInventory& inven = m_totalInventory;
+
+    //R버튼을 눌렀는데,
+    //1. 총을 들고 있고 
+    //2. 총에 알맞은 총알이 있다면 
+    //3. 갖고있는 총알 개수 내에서 (장탄수-현재 장전된 총알개수) 만큼 총알을 장전해준다
+    if (m_currentOnceKey._R)
+    {
+        if (inven.m_hand)
+        {
+            TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic(); //총 종류
+            TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag); //탄약 종류
+            int magSize = ItemInfo::GetMagazineSize(tag);         //장탄 수
+            int numBulletCurrentLoad = inven.m_hand->GetNumBullet(); //장전되어있는 총알 수
+
+            if (numBulletCurrentLoad == magSize) //이미 가득 장전 되어있는 경우
+                return;
+        
+            //총에 알맞는 총알이 있는지 확인해서 장전
+            auto it = inven.m_mapInventory.find(ammoType);
+            if (it != inven.m_mapInventory.end())
+            {
+                int numBulletInInventory = (*it).second.back()->GetCount(); //인벤토리에 있는 총알 수
+                int numBulletNeedReload = magSize - numBulletCurrentLoad;   //장전할 총알 수 (장탄수 - 현재 장전된 총알 개수)
+
+                cout << ItemInfo::GetName(ammoType);
+                cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
+                cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
+
+                inven.m_numReload = 0;
+                if (numBulletInInventory >= numBulletNeedReload)
+                {
+                    inven.m_hand->SetNumBullet(numBulletNeedReload);
+                    (*it).second.back()->SetCount(numBulletInInventory - numBulletNeedReload);
+
+                    inven.m_numReload = numBulletNeedReload;
+                }
+                else
+                {
+                    inven.m_hand->SetNumBullet(numBulletInInventory);
+                    (*it).second.back()->SetCount(0);
+
+                    inven.m_numReload = numBulletInInventory;
+                }
+                cout << "장정된 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
+                cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
+
+                /*
+                TODO: 장전 애니메이션 추가 - Prone인 경우, fast reload
+                */
+                if (tag == TAG_RES_STATIC::QBZ)
+                {
+                    setAnimation(TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Base, false, [this]()
+                    {
+                        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                    });
+                }
+                else if (tag == TAG_RES_STATIC::Kar98k)
+                {
+                    inven.m_numReload = 4;
+
+                    if (inven.m_numReload == 5)
+                    {
+                        // fast reload
+                    }
+                    else
+                    {
+                        setAnimation(TAG_ANIM_CHARACTER::Kar98k_Reload_Start, false, std::bind(&Character::onKar98kReload, this));
+                    }
+                }
+            }
+            else
+            {
+                cout << "총알이 필요해" << endl;
+                //do nothing
+            }
+        }
+        else //inven.m_hand == nullptr
+        {
+            cout << "총을 장착해줘" << endl;
+            //do nothing
         }
     }
 }
@@ -319,12 +457,23 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     out : character r <= mouse only one axis
     out : camera r <= mouse wto axis
     */
+    static bool test_sound = true;
 
-    POINT center;
-    center.x = 1280 / 2;
-    center.y = 720 / 2;
-    ClientToScreen(g_hWnd, &center);
-    SetCursorPos(center.x, center.y);
+    if (Input()()->IsOnceKeyDown(VK_LEFT))
+        test_sound = true;
+    if (Input()()->IsOnceKeyDown(VK_RIGHT))
+    {
+        test_sound = false;
+    }
+    if (test_sound)
+    {
+        POINT center;
+        center.x = 1280 / 2;
+        center.y = 720 / 2;
+        ClientToScreen(g_hWnd, &center);
+        SetCursorPos(center.x, center.y);
+    }
+
 }
 
 void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag)
@@ -739,3 +888,4 @@ TAG_COLLISION Character::GetTagCollisionDamage(const int index)
         }
     }
 }
+

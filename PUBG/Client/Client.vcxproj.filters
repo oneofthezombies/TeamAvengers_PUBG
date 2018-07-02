@@ -52,6 +52,8 @@
     <ClCompile Include="Source\Useful\AnimationState.cpp" />
     <ClCompile Include="Source\HeightMap.cpp" />
     <ClCompile Include="Source\Ray.cpp" />
+    <ClCompile Include="Source\Object\Character_ForDebug.cpp" />
+    <ClCompile Include="Source\Object\Character_Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
