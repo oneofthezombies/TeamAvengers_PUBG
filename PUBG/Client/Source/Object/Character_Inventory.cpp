@@ -13,6 +13,7 @@ Character::TotalInventory::TotalInventory()
     , m_weaponPrimary(nullptr)
     , m_weaponSecondary(nullptr)
     , m_capacity(DEFAULT_CAPACITY)
+    , m_numReload(0)
 {
 }
 

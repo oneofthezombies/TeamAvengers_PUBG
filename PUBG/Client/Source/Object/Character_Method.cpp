@@ -340,9 +340,33 @@ void Character::setReload()
             auto it = inven.m_mapInventory.find(ammoType);
             if (it != inven.m_mapInventory.end())
             {
+                int numBulletInInventory = (*it).second.back()->GetCount(); //인벤토리에 있는 총알 수
+                int numBulletNeedReload = magSize - numBulletCurrentLoad;   //장전할 총알 수 (장탄수 - 현재 장전된 총알 개수)
+
+                cout << ItemInfo::GetName(ammoType);
+                cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
+                cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
+
+                inven.m_numReload = 0;
+                if (numBulletInInventory >= numBulletNeedReload)
+                {
+                    inven.m_hand->SetNumBullet(numBulletNeedReload);
+                    (*it).second.back()->SetCount(numBulletInInventory - numBulletNeedReload);
+
+                    inven.m_numReload = numBulletNeedReload;
+                }
+                else
+                {
+                    inven.m_hand->SetNumBullet(numBulletInInventory);
+                    (*it).second.back()->SetCount(0);
+
+                    inven.m_numReload = numBulletInInventory;
+                }
+                cout << "장정된 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
+                cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
+
                 /*
-                    TODO: 장전 애니메이션 추가
-                    //우선 서있을 때 장전하는거 넣어보게뜸 //
+                TODO: 장전 애니메이션 추가 - Prone인 경우, fast reload
                 */
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
@@ -351,33 +375,19 @@ void Character::setReload()
                         setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
                     });
                 }
-                else if (tag == TAG_RES_STATIC::Kar98k) //TODO: 남은 총알 수 만큼
+                else if (tag == TAG_RES_STATIC::Kar98k)
                 {
-                    setAnimation(TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_StartLoopEnd_Base, false, [this]() //두발 장전됨
+                    inven.m_numReload = 4;
+
+                    if (inven.m_numReload == 5)
                     {
-                        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
-                    });                
+                        // fast reload
+                    }
+                    else
+                    {
+                        setAnimation(TAG_ANIM_CHARACTER::Kar98k_Reload_Start, false, std::bind(&Character::onKar98kReload, this));
+                    }
                 }
-
-                int numBulletInInventory = (*it).second.back()->GetCount(); //인벤토리에 있는 총알 수
-                int numBulletNeedReload = magSize - numBulletCurrentLoad;   //장전할 총알 수 (장탄수 - 현재 장전된 총알 개수)
-
-                cout << ItemInfo::GetName(ammoType);
-                cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
-                cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
-
-                if (numBulletInInventory >= numBulletNeedReload)
-                {
-                    inven.m_hand->SetNumBullet(numBulletNeedReload);
-                    (*it).second.back()->SetCount(numBulletInInventory - numBulletNeedReload);
-                }
-                else
-                {
-                    inven.m_hand->SetNumBullet(numBulletInInventory);
-                    (*it).second.back()->SetCount(0);
-                }
-                cout << "장정된 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
-                cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
             }
             else
             {
@@ -878,3 +888,4 @@ TAG_COLLISION Character::GetTagCollisionDamage(const int index)
         }
     }
 }
+

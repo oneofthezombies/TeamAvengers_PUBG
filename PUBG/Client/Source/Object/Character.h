@@ -47,6 +47,7 @@ public:
         //Weapon* m_weaponMelee;
         //Weapon* m_weaponThrowable;
         float m_capacity;
+        int   m_numReload;
 
          TotalInventory();
         ~TotalInventory();
@@ -217,6 +218,9 @@ private:
     
     void updateTotalInventory();
     void renderTotalInventory();
+
+    void onKar98kReloadEnd();
+    void onKar98kReload();
 
 public:
              Character(const int index);

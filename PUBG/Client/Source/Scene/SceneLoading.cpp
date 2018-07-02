@@ -46,8 +46,8 @@ void SceneLoading::OnUpdate()
         Debug << "elapsed time : " << m_elapsed.count() << '\n';
 
         UI()()->Destroy(m_pPercentageImage);
-        //Scene()()->SetCurrentScene(TAG_SCENE::Play);
-        Scene()()->SetCurrentScene(TAG_SCENE::Login);
+        Scene()()->SetCurrentScene(TAG_SCENE::Play);
+        //Scene()()->SetCurrentScene(TAG_SCENE::Login);
     }
     else
     {
@@ -134,8 +134,8 @@ void SceneLoading::loadEffectMesh()
     addTask(TAG_RES_STATIC::Ammo_5_56mm);
     addTask(TAG_RES_STATIC::Ammo_7_62mm);
 
-    //addTask(TAG_RES_STATIC::QBZ);
-    //addTask(TAG_RES_STATIC::Kar98k);
+    addTask(TAG_RES_STATIC::QBZ);
+    addTask(TAG_RES_STATIC::Kar98k);
 
     //addTask(TAG_RES_STATIC::RedDot);
     //addTask(TAG_RES_STATIC::Aimpoint2X);
@@ -164,8 +164,8 @@ void SceneLoading::loadSkinnedMesh()
     loadCharacterAnimation();
 
     // weapon
-    //addTask(TAG_RES_ANIM_WEAPON::QBZ_Anim, &m_skinnedMeshTasks);
-    //addTask(TAG_RES_ANIM_WEAPON::Kar98k_Anim, &m_skinnedMeshTasks);
+    addTask(TAG_RES_ANIM_WEAPON::QBZ_Anim, &m_skinnedMeshTasks);
+    addTask(TAG_RES_ANIM_WEAPON::Kar98k_Anim, &m_skinnedMeshTasks);
 }
 
 void SceneLoading::loadCharacterAnimation()
@@ -182,10 +182,10 @@ void SceneLoading::loadCharacterAnimation()
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone);
 
-    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
-    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
-    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
-    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
+    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
 
     addTask(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
     addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
@@ -193,6 +193,9 @@ void SceneLoading::loadCharacterAnimation()
 
     addTask(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addTask(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+
+    //for test
+    addTask(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
     // ...
 }
 

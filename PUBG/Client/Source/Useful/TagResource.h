@@ -162,6 +162,8 @@ enum class TAG_RES_ANIM_CHARACTER
     Weapon_Kar98k_Character,
     Weapon_Kar98k_Character_FPP,
 
+    Weapon_Kar98k_Reload_Test,
+
 //2. 무기를 들고있지 않을 때 애니메이션
     Unarmed_Transition,
     Unarmed_Locomotion_Stand,
