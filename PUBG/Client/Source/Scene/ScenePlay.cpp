@@ -29,11 +29,10 @@ void ScenePlay::OnInit()
     
 
     Communication()()->m_MyInfo.m_ID = 0;
-    //for (int i = 0; i < Character::NUM_PLAYER; ++i)
-    //    AddObject(new Character(i));
     Character* character0 = new Character(0);
     AddObject(character0);
-    //AddObject(new Character(0));
+    for (int i = 1; i < Character::NUM_PLAYER; ++i)
+        AddObject(new Character(i));
 
     //LoadObjectsFromFile("./Resource/save.txt");
 

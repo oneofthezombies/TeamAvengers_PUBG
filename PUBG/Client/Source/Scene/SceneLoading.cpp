@@ -24,6 +24,7 @@ void SceneLoading::OnInit()
 {
     m_start = std::chrono::system_clock::now();
 
+    loadImage();
     loadEffectMesh();
     loadSkinnedMesh();
 
@@ -39,13 +40,14 @@ void SceneLoading::OnUpdate()
     if (m_isFinished)
     {
         /**/
-        addHeightmap();
+        addHeightmapResource();
         /**/
         
         Debug << "elapsed time : " << m_elapsed.count() << '\n';
 
         UI()()->Destroy(m_pPercentageImage);
-        Scene()()->SetCurrentScene(TAG_SCENE::Play);
+        //Scene()()->SetCurrentScene(TAG_SCENE::Play);
+        Scene()()->SetCurrentScene(TAG_SCENE::Login);
     }
     else
     {
@@ -107,6 +109,13 @@ void SceneLoading::OnUpdate()
     m_percentage += " percentage : " + std::to_string(percentage);
     for (std::size_t i = 0; i < m_dotDotDot; ++i)
         m_percentage += '.';
+}
+
+void SceneLoading::loadImage()
+{
+    ResourceContainer* pResourceContainer = new ResourceContainer;
+    ResourceAsync::CreateTexture("./Resource", "input_field.png", pResourceContainer);
+    Resource()()->AddResource(pResourceContainer);
 }
 
 void SceneLoading::loadEffectMesh()
@@ -246,7 +255,7 @@ void SceneLoading::addSkinnedMeshs()
     m_isDoneSkinnedMeshs = true;
 }
 
-void SceneLoading::addHeightmap()
+void SceneLoading::addHeightmapResource()
 {
     ResourceContainer* pResourceContainer = new ResourceContainer;
     ResourceAsync::CreateEffect("./Resource/Heightmap/", "Heightmap.fx", pResourceContainer);
