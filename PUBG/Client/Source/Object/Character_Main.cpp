@@ -195,7 +195,7 @@ void Character::updateMine()
     Sound()()->Listen(GetTransform()->GetPosition(), getForward());
 
     Communication()()->SendPosition(p);
-    Debug << "index : " << m_index << ", position : " << p << '\n';
+        Debug << "current position : " << p << '\n';
 }
 
 void Character::updateOther()
@@ -221,5 +221,4 @@ void Character::updateOther()
     }
 
     tr->SetPosition(pos);
-    Debug << "index : " << m_index << ", position : " << pos << '\n';
 }
