@@ -68,10 +68,7 @@ public:
         bool _S       ;
         bool _A       ;
         bool _D       ;
-        bool _Z       ;
-        bool _X       ;
-        bool _C       ;
-        bool _Space   ;
+
 
         IsPressing();
         bool operator==(const IsPressing& other) const
@@ -84,16 +81,27 @@ public:
             if (_S      != other._S       ) return false;
             if (_A      != other._A       ) return false;
             if (_D      != other._D       ) return false;
-            if (_Z      != other._Z       ) return false;
-            if (_X      != other._X       ) return false;
-            if (_C      != other._C       ) return false;
-            if (_Space  != other._Space   ) return false;
+            //if (_Z      != other._Z       ) return false;
+            //if (_X      != other._X       ) return false;
+            //if (_C      != other._C       ) return false;
+            //if (_Space  != other._Space   ) return false;
             return true;
         }
         bool operator!=(const IsPressing& other) const
         {
             return !(*this == other);
         }        
+    };
+    
+    struct IsPressedOnce
+    {
+        bool _Z;
+        bool _X;
+        bool _C;
+        bool _Space;
+        bool isAnimEnded;
+
+        IsPressedOnce();
     };
 
 private:
@@ -110,6 +118,17 @@ private:
         Frame* pSlotThrowable;
 
         FramePtr();
+    };
+
+    struct IsJumping
+    {
+        bool			isJumping;
+        float			jumpPower;
+        float			gravity;
+        float			currGravity;
+        float			maxStepHeight;
+
+        IsJumping();
     };
 
 public:
@@ -138,16 +157,20 @@ private:
     //for inventory
     TotalInventory m_totalInventory;
 
-    IsPressing m_savedInput;
-    IsPressing m_currentInput;
+    IsPressing m_isSavedInput;
+    IsPressing m_isCurrentInput;
+    IsPressedOnce m_isOnceInput;
+    IsJumping m_Jump;
 
 private:
     void setFramePtr();
     void subscribeCollisionEvent();
 
-    IsPressing HandleInput(IsPressing& m_isPressing);
+    bool HandleInput(OUT IsPressing& isPressing,OUT IsPressedOnce& isPressedOnce);
     void CameraCharacterRotation(OUT D3DXQUATERNION* rOut);
     void AnimationMovementControl(OUT D3DXVECTOR3* pOut, OUT TAG_ANIM_CHARACTER* tagOut);
+    void ApplyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
+
 
     void updateMine();
     void updateOther();

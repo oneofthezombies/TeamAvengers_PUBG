@@ -51,6 +51,7 @@
     <ClCompile Include="Source\Object\Grid.cpp" />
     <ClCompile Include="Source\Useful\AnimationState.cpp" />
     <ClCompile Include="Source\HeightMap.cpp" />
+    <ClCompile Include="Source\Ray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -106,5 +107,6 @@
     <ClInclude Include="Source\Object\Grid.h" />
     <ClInclude Include="Source\Useful\AnimationState.h" />
     <ClInclude Include="Source\HeightMap.h" />
+    <ClInclude Include="Source\Ray.h" />
   </ItemGroup>
 </Project>

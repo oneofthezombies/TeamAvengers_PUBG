@@ -10,26 +10,32 @@
 #define TP_BASEPOSX -50.0f
 #define TP_BASEPOSY 45.0f
 
+
+class Ray;
+
 class ICamera : public MemoryAllocator
 {
 private:
-    const TAG_CAMERA  m_tagCamera;
-          D3DXMATRIX  m_worldMatrix;
-          D3DXMATRIX  m_viewMatrix;
-          D3DXMATRIX  m_projectionMatrix;
+    const TAG_CAMERA    m_tagCamera;
+          D3DXMATRIX    m_worldMatrix;
+          D3DXMATRIX    m_viewMatrix;
+          D3DXMATRIX    m_projectionMatrix;
 
 private:    //fustum Culling
-    D3DXPLANE	    m_vecPlane[6];
-    D3DXVECTOR3     m_vecWorld[8];
-    D3DXVECTOR3	    m_vecProj[8];
+    D3DXPLANE	        m_vecPlane[6];
+    D3DXVECTOR3         m_vecWorld[8];
+    D3DXVECTOR3	        m_vecProj[8];
+
+protected:  //Camera Position Rotation Fov
+    D3DXVECTOR3         m_position;
+    D3DXQUATERNION      m_quarernion;
+    float               m_fovY;
 
 protected:
-    D3DXVECTOR3    m_position;
-    D3DXQUATERNION m_quarernion;
-    float          m_fovY;
-    //D3DXVECTOR3 temp = Vector3::ZERO;
+    Ray*                m_pRayFireDirection;
+    
 protected:
-    Character::Info* GetTargetInfo();
+    Character::Info*    GetTargetInfo();
 
 public:
     ICamera(const TAG_CAMERA tag);
@@ -48,6 +54,8 @@ public:
     const D3DXMATRIX& GetViewMatrix()       const;
     const D3DXMATRIX& GetProjectionMatrix() const;
           TAG_CAMERA  GetTagCamera()        const;
+
+    bool CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY);
 };
  
 
@@ -119,30 +127,3 @@ public:
     virtual void Update() override;
 
 };
-
-
-
-
-//#include "BaseObject.h"
-//
-//#define FP_DISTANCE 0.0f
-//#define FP_BASEPOSX 0.0f
-//#define FP_BASEPOSY 5.0f
-//
-//#define TP_DISTANCE 10.0f
-//#define TP_BASEPOSX 2.0f
-//#define TP_BASEPOSY 8.0f
-//
-//namespace CameraState
-//{
-//    enum CameraState
-//    {
-//        FIRSTPERSON = 1,
-//        THIRDPERSON = 3,
-//        TP2FP,
-//        FP2TP,
-//        KYUNCHAK,
-//        SCOPE2X,
-//        SCOPE4X
-//    };
-//}

@@ -3,6 +3,7 @@
 #include "ComponentTransform.h"
 #include "Character.h"
 #include "Collider.h"
+#include "Ray.h"
 
 Character::Info* ICamera::GetTargetInfo()//(Àü)TargetTransform* GetTarget()
 {
@@ -13,6 +14,7 @@ ICamera::ICamera(const TAG_CAMERA tag)
     : MemoryAllocator()
     , m_tagCamera(tag)
     , m_position(Vector3::ZERO)
+    , m_pRayFireDirection(nullptr)
 {
     for (int i = 0; i < 8; i++)
     {
@@ -31,6 +33,7 @@ ICamera::ICamera(const TAG_CAMERA tag)
 
 ICamera::~ICamera()
 {
+    SAFE_DELETE(m_pRayFireDirection);
 }
 
 void ICamera::CameraRender()
@@ -226,6 +229,31 @@ const D3DXMATRIX& ICamera::GetProjectionMatrix() const
 TAG_CAMERA ICamera::GetTagCamera() const
 {
     return m_tagCamera;
+}
+
+bool ICamera::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
+{
+    Ray ray = Ray::RayAtWorldSpace(screenX, screenY);
+    float minDist = FLT_MAX;
+    float intersectionDist;
+    bool bIntersect = false;
+
+    
+
+    //for (size_t i = 0u; i < m_vecSurfaceVertex.size(); i += 3)
+    //{
+    //    if (ray.CalcIntersectTri(&m_vecSurfaceVertex[i], &intersectionDist))
+    //    {
+    //        if (intersectionDist < minDist)
+    //        {
+    //            bIntersect = true;
+    //            minDist = intersectionDist;
+    //            vOut = ray.m_pos + ray.m_dir * intersectionDist;
+    //        }
+    //    }
+    //}
+
+    return bIntersect;
 }
 
 

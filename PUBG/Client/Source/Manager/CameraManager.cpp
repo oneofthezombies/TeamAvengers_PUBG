@@ -82,6 +82,7 @@ void CameraManager::SetCurrentCamera(const TAG_CAMERA tag)
     pCurrentCamera->Reset();
 }
 
+
 //TargetTransform::TargetTransform()
 //    : pTransform(nullptr)
 //    , pRotForCameraTP(nullptr)

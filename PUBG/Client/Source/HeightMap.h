@@ -26,6 +26,8 @@ protected:
 	vector<D3DXVECTOR3>	m_vecSurfaceVertex;
 	vector<D3DXVECTOR3>	m_vecObstacleVertex;
 
+    D3DXVECTOR3 m_arrBox[8];
+
 public:
 	HeightMap();
 	virtual ~HeightMap();
@@ -33,13 +35,12 @@ public:
 	void Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat = NULL);
     void SetSurface();
 	
-	
 
     // Inherited via IMap
     virtual void OnUpdate() override;
     virtual void OnRender() override;
-    virtual bool GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight) override;
-    virtual bool CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY) override;
+    virtual bool GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight) override;
+    //virtual bool CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY) override;
     
     //void SetMtlTex(D3DMATERIAL9 &Mtl, LPDIRECT3DTEXTURE9 pTex);
     /*void SetObstacle();*/

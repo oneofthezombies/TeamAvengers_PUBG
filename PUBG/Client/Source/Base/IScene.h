@@ -2,6 +2,7 @@
 
 class IObject;
 class DirectionalLight;
+class HeightMap;
 
 struct BoxColliderInFile
 {
@@ -30,6 +31,7 @@ private:
     unordered_map<IObject*, float> m_toDeleteObjects;
 
     DirectionalLight* m_pDirectionalLight;
+    HeightMap* pHeightMap;
 
 protected:
     IScene();
@@ -55,6 +57,10 @@ public:
 
     void              SetDirectionalLight(DirectionalLight* p);
     DirectionalLight* GetDirectionalLight();
+
+    void              SetHeightMap(HeightMap* p);
+    HeightMap*        GetHeightMap();
+    bool GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight);
 
     virtual void OnInit() = 0;
 	virtual void OnUpdate() = 0;
