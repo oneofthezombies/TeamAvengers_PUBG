@@ -26,6 +26,8 @@ protected:
 	vector<D3DXVECTOR3>	m_vecSurfaceVertex;
 	vector<D3DXVECTOR3>	m_vecObstacleVertex;
 
+    D3DXVECTOR3 m_arrBox[8];
+
 public:
 	HeightMap();
 	virtual ~HeightMap();
