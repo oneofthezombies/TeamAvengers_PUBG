@@ -4,6 +4,13 @@
 
 #define g_pSound Sound()()
 
+struct PlayInfo
+{
+    TAG_SOUND TAG;
+    D3DXVECTOR3 pos;
+    float curtime;
+};
+
 class SoundManager : public Singleton<SoundManager>
 {
 private:
@@ -19,6 +26,8 @@ private:
     FMOD_VECTOR     m_forwardDir;
     FMOD_VECTOR     m_upDir = { 0,1,0 };
     FMOD_VECTOR     m_listenerPos;
+
+    deque<PlayInfo> m_playInfo;
 
 private:
     SoundManager();
@@ -36,6 +45,7 @@ public:
 
     int Play(const TAG_SOUND tag);
     int Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float vol, const FMOD_MODE& mode);
+    int addPlay(const TAG_SOUND tag, const D3DXVECTOR3& pos, float time, const FMOD_MODE& mode);
     int Repeat(const TAG_SOUND tag, const int channelKey);
     int Pause(const int channelKey, const bool paused);
     int Stop(const int channelKey);
