@@ -4,7 +4,7 @@
 #include "Item.h"
 #include "ItemInfo.h"
 
-void Character::setAttacking()
+void Character::setAttacking() //Num1, Num2, X
 {
     //for Debug =========================================================
     Item* hand = m_totalInventory.m_hand;
@@ -123,39 +123,58 @@ void Character::setAttacking()
     }
 }
 
-void Character::setStance()
+void Character::setStance() //C, Z
 {
-    //for Debug
+    //for Debug =========================================================
     Debug << "Stance: " << ForDebugGetStance(m_stance) << "\n";
+    //===================================================================
 
     if (m_currentOnceKey._C)
     {
-        if (m_stance == Stance::Crouch)
+        //서 있으면 쭈그리고, 쭈그리고 있으면 서고, 엎드려 있으면 쭈그린다
+        //TODO: 인게임 다시 확인
+        // TODO : check obstacle
+        if (m_stance == Stance::Stand)
         {
-            // TODO : check obstacle
-
-            m_stance = Stance::Stand;
-        }
-        else
-        {
-            // TODO : check obstacle
-
+            cout << "Stand to Crouch" << endl;
             m_stance = Stance::Crouch;
+            setStandAnimation(m_stance);
+        }
+        else if (m_stance == Stance::Crouch)
+        {
+            cout << "Crouch to Stand" << endl;
+            m_stance = Stance::Stand;
+            setCrouchAnimation(m_stance);
+        }
+        else if (m_stance == Stance::Prone)
+        {
+            cout << "Prone to Crouch" << endl;
+            m_stance = Stance::Crouch;
+            setProneAnimation(m_stance);
         }
     }
     else if (m_currentOnceKey._Z)
     {
-        if (m_stance == Stance::Prone)
+        //서 있으면 엎드리고, 쭈그려있으면 엎드리고, 엎드려있으면 선다
+        //TODO: 인게임 다시 확인
+        // TODO : check obstacle
+        if (m_stance == Stance::Stand)
         {
-            // TODO : check obstacle
-
-            m_stance = Stance::Stand;
-        }
-        else
-        {
-            // TODO : check obstacle
-
+            cout << "Stand to Prone" << endl;
             m_stance = Stance::Prone;
+            setStandAnimation(m_stance);
+        }
+        else if (m_stance == Stance::Crouch)
+        {
+            cout << "Crouch to Prone" << endl;
+            m_stance = Stance::Prone;
+            setCrouchAnimation(m_stance);
+        }
+        else if (m_stance == Stance::Prone)
+        {
+            cout << "Prone to Stand" << endl;
+            m_stance = Stance::Stand;
+            setProneAnimation(m_stance);
         }
     }
 }
@@ -266,6 +285,9 @@ void Character::setReload()
     }
 }
 
+/*
+무기 장착 및 해제 애니메이션
+*/
 void Character::setRifleOnHand(TAG_RIFLE tagRifle)
 {
     //주무기를 손에 든다
@@ -336,6 +358,211 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
         });
     }
 }
+
+/*
+Stance 관련 애니메이션
+*/
+void Character::setStandAnimation(Stance toStance)
+{
+    if (m_attacking == Attacking::Unarmed)
+    {
+        //Stand to Crouch
+        if (toStance == Stance::Crouch)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Crouch,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Idling_1, false);
+            });
+        }
+        //Stand to Prone
+        else if (toStance == Stance::Prone)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Prone,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Idling_1, false);
+            });        
+        }
+    }
+    else if (m_attacking == Attacking::Rifle)
+    {
+        //Stand to Crouch
+        if (toStance == Stance::Crouch)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_Crouch,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Low_Idle_Still, false);
+            });
+        }
+        //Stand to Prone
+        else if (toStance == Stance::Prone)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_Prone,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Low_Idle_Still, false);
+            });
+        }
+    
+    }
+}
+
+void Character::setCrouchAnimation(Stance toStance)
+{
+    if (m_attacking == Attacking::Unarmed)
+    {
+        //Crouch to Stand
+        if (toStance == Stance::Stand)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Stand,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+            });
+        }
+        //Crouch to Prone
+        else if (toStance == Stance::Prone)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Prone,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Idling_1, false);
+            });      
+        }
+    }
+    else if (m_attacking == Attacking::Rifle)
+    {
+        //Crouch to Stand
+        if (toStance == Stance::Stand)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Stand,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Low_Idle_Still_Very, false);
+            });
+        }
+        //Crouch to Prone
+        else if (toStance == Stance::Prone)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Prone,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Low_Idle_Still, false);
+            });
+        }
+
+    }
+}
+
+void Character::setProneAnimation(Stance toStance)
+{
+    if (m_attacking == Attacking::Unarmed)
+    {
+        //Prone to Stand
+        if (toStance == Stance::Stand)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Stand,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+            });
+        }
+        //Prone to Crouch
+        else if (toStance == Stance::Crouch)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Crouch,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Idling_1, false);
+            });       
+        }
+    }
+    else if (m_attacking == Attacking::Rifle)
+    {
+        //Prone to Stand
+        if (toStance == Stance::Stand)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Base_Stand,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Low_Idle_Still_Very, false);
+            });
+        }
+        //Prone to Crouch
+        else if (toStance == Stance::Crouch)
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Base_Crouch,
+                false,
+                [this]()
+            {
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Low_Idle_Still, false);
+            });
+        }
+
+    }
+}
+
 
 /*
 Kar98k 재장전 애니메이션 관련

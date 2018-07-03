@@ -60,6 +60,16 @@ void SceneLoading::loadSync()
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
     m_characterAnimationResources.emplace(8, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
+    //stance
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Unarmed_Transition);
+    m_characterAnimationResources.emplace(9, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
+    m_characterAnimationResources.emplace(10, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
+    m_characterAnimationResources.emplace(11, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
     addAnimationsToCharacter();
 }
 

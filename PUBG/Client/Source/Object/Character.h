@@ -217,10 +217,6 @@ private:
 
     void handleInput(IsPressing* OutIsPressing);
     void handleInput(IsPressed* OutIsPressed);
-
-    void setAttacking();
-    void setStance();
-    void setReload();
     
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
     void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
@@ -262,11 +258,21 @@ private:
     void updateTotalInventory();
     void renderTotalInventory();
 
-    void onKar98kReloadEnd();
-    void onKar98kReload();
+    //for Character_Input.cpp
+    void setAttacking();
+    void setStance();
+    void setReload();
 
     void setRifleOnHand(TAG_RIFLE tagRifle);
     void setRifleOnBody(TAG_RIFLE tagRifle);
+
+    void setStandAnimation(Stance toStance);
+    void setCrouchAnimation(Stance toStance);
+    void setProneAnimation(Stance toStance);
+
+    void onKar98kReloadEnd();
+    void onKar98kReload();
+
 
 /**************************** end member method ******************************/
 
