@@ -48,94 +48,8 @@ void ResourceManager::Destroy()
     for (auto sm : m_skinnedMeshs)
         SAFE_DELETE(sm.second);
 
-    SAFE_DELETE(m_pCharacter);
-
     //RemoveFontResource(TEXT("resources/fonts/SeoulNamsanM.ttf"));
 }
-
-//LPD3DXEFFECT ResourceManager::GetEffect(const string& fullPath)
-//{
-//    const auto search = m_effects.find(fullPath);
-//    if (search == m_effects.end())
-//    {
-//        LPD3DXEFFECT pEffect = nullptr;
-//        LPD3DXBUFFER pError = nullptr;
-//        DWORD flags = D3DXSHADER_DEBUG | D3DXFX_NOT_CLONEABLE;
-//
-//        const auto hr = D3DXCreateEffectFromFileA(Device()(), 
-//            fullPath.c_str(), nullptr, nullptr, flags, m_pEffectPool, 
-//            &pEffect, &pError);
-//
-//        if (!pEffect && pError)
-//        {
-//            const auto size = pError->GetBufferSize();
-//            const auto errorMsg = pError->GetBufferPointer();
-//
-//            string str((char*)errorMsg, size);
-//            str = string("ResourceManager::LoadEffect() failed. ") + str;
-//            assert(false && str.c_str());
-//        }
-//
-//        m_effects[fullPath] = pEffect;
-//    }
-//    return m_effects[fullPath];
-//}
-//
-//LPD3DXEFFECT ResourceManager::GetEffect(const string& path,
-//    const string& effectFilename)
-//{
-//    return GetEffect(path + effectFilename);
-//}
-//
-
-//
-//LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& fullPath)
-//{
-//    const auto search = m_textures.find(fullPath);
-//    if (search == m_textures.end())
-//    {
-//        const auto hr = D3DXCreateTextureFromFileExA(Device()(), 
-//            fullPath.c_str(), D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2, 
-//            D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_DEFAULT, 
-//            D3DX_DEFAULT, 0, nullptr, nullptr, &m_textures[fullPath]);
-//
-//        assert(!FAILED(hr) && "TextureManager::GetTexture() failed.");
-//    }
-//    return m_textures[fullPath];
-//}
-//
-//LPDIRECT3DTEXTURE9 ResourceManager::GetTexture(const string& path,
-//    const string& textureFilename)
-//{
-//    return GetTexture(path + textureFilename);
-//}
-//
-//EffectMesh* ResourceManager::GetEffectMesh(const string& path,
-//    const string& xFilename)
-//{
-//    auto pEffectMesh = FindEffectMesh(path, xFilename);
-//    if (!pEffectMesh)
-//    {
-//        LPD3DXBUFFER pEffectInstances = nullptr;
-//        LPD3DXMESH pMesh = nullptr;
-//        DWORD numMaterials = 0u;
-//
-//        auto hr = D3DXLoadMeshFromXA((path + xFilename).c_str(), 
-//            D3DXMESH_MANAGED, Device()(), nullptr, nullptr, &pEffectInstances, 
-//            &numMaterials, &pMesh);
-//
-//        assert(!FAILED(hr) &&
-//            "ResourceManager::GetEffectMesh(), D3DXLoadMeshFromXA() failed.");
-//
-//        D3DXEFFECTINSTANCE* pEIs =
-//            static_cast<D3DXEFFECTINSTANCE*>(
-//                pEffectInstances->GetBufferPointer());
-//
-//        pEffectMesh = AddEffectMesh(
-//            path, xFilename, pMesh, pEIs, numMaterials);
-//    }
-//    return pEffectMesh;
-//}
 
 LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
 {
@@ -243,11 +157,6 @@ SkinnedMesh* ResourceManager::GetSkinnedMesh(const string& path, const string& f
     return nullptr;
 }
 
-SkinnedMesh* ResourceManager::GetCharacterSkinnedMesh()
-{
-    return m_pCharacter;
-}
-
 EffectMesh* ResourceManager::GetEffectMesh(const TAG_RES_STATIC tag)
 {
     const auto keys = ResourceInfo::GetPathFileName(tag);
@@ -292,98 +201,6 @@ LPD3DXEFFECT ResourceManager::GetEffect(const string& fullPath)
 
     return nullptr;
 }
-
-//void ResourceManager::AddCharacters(std::vector<ResourceContainer*> characters)
-//{
-//    for (std::size_t i = 0; i < characters.size(); ++i)
-//    {
-//        m_characters[i] = characters[i]->m_pSkinnedMesh;
-//        characters[i]->m_pSkinnedMesh = nullptr;
-//        AddResource(characters[i]);
-//    }
-//}
-
-//EffectMesh* ResourceManager::FindEffectMesh(
-//    const string& path, const string& name)
-//{
-//    const auto key(path + name);
-//    const auto search = m_effectMeshs.find(key);
-//    EffectMesh* p = nullptr;
-//
-//    if (search != m_effectMeshs.end())
-//        p = search->second;
-//    
-//    return p;
-//}
-//
-//EffectMesh* ResourceManager::AddEffectMesh(
-//    const string& path, const string& name, LPD3DXMESH pMesh, 
-//    const D3DXEFFECTINSTANCE* pEffectInstances, DWORD numMaterials)
-//{
-//    assert(pMesh && pEffectInstances && 
-//        "ResourceManager::AddEffectMesh(), \
-//         mesh or effect instances is nullptr");
-//
-//    auto pEffectMesh = new EffectMesh;
-//    pEffectMesh->m_pMesh = pMesh;
-//
-//    auto& pEIs = pEffectInstances;
-//    for (DWORD ei = 0u; ei < numMaterials; ++ei)
-//    {
-//        const D3DXEFFECTINSTANCE& EI = pEIs[ei];
-//
-//        if (!EI.pEffectFilename) continue;
-//
-//        EffectParam EP;
-//        EP.name = string(EI.pEffectFilename);
-//        EP.pEffect = GetEffect(path, EI.pEffectFilename);
-//        LPD3DXEFFECT& pEffect = EP.pEffect;
-//
-//        D3DXHANDLE hTech = nullptr;
-//        pEffect->FindNextValidTechnique(nullptr, &hTech);
-//        pEffect->SetTechnique(hTech);
-//
-//        pEffect->BeginParameterBlock();
-//        for (DWORD di = 0u; di < EI.NumDefaults; ++di)
-//        {
-//            auto& d = EI.pDefaults[di];
-//
-//            D3DXHANDLE h = pEffect->GetParameterByName(nullptr, d.pParamName);
-//            if (!h) continue;
-//
-//            D3DXPARAMETER_DESC desc;
-//            pEffect->GetParameterDesc(h, &desc);
-//
-//            switch (desc.Type)
-//            {
-//            case D3DXPT_TEXTURE:
-//                {
-//                    pEffect->SetTexture(
-//                        d.pParamName,
-//                        GetTexture(path, static_cast<char*>(d.pValue)));
-//                }
-//                break;
-//            case D3DXPT_BOOL:
-//            case D3DXPT_INT:
-//            case D3DXPT_FLOAT:
-//            case D3DXPT_STRING:
-//                {
-//                    pEffect->SetValue(d.pParamName, d.pValue, d.NumBytes);
-//                }
-//                break;
-//            default:
-//                {
-//                }
-//                break;
-//            }
-//        }
-//        EP.hParam = pEffect->EndParameterBlock();
-//        pEffectMesh->m_effectParams.emplace_back(EP);
-//    }
-//
-//    m_effectMeshs[path + name] = pEffectMesh;
-//    return pEffectMesh;
-//}
 
 void ResourceManager::AddResource(ResourceContainer* pResourceContainer)
 {
@@ -446,21 +263,6 @@ void ResourceManager::AddResource(ResourceContainer* pResourceContainer)
     SAFE_DELETE(pResourceContainer);
 }
 
-void ResourceManager::AddCharacter(ResourceContainer* pResourceContainer)
-{
-    assert(
-        pResourceContainer && 
-        pResourceContainer->m_pSkinnedMesh.second &&
-        "ResourceManager::AddCharacter(), resource container is null.");
-
-    m_pCharacter = pResourceContainer->m_pSkinnedMesh.second;
-    pResourceContainer->m_pSkinnedMesh.second = nullptr;
-
-    m_pCharacter->Setup();
-
-    AddResource(pResourceContainer);
-}
-
 ResourceContainer::ResourceContainer()
     : m_filename("")
 {
@@ -492,11 +294,12 @@ ResourceContainer::~ResourceContainer()
 ResourceContainer* ResourceAsync::OnLoadEffectMeshAsync(
     const string path, const string xFilename)
 {
+    const string fullPath(path + xFilename);
     LPD3DXBUFFER pEffectInstancesBuffer = nullptr;
     LPD3DXMESH   pMesh = nullptr;
     DWORD        numMaterials = 0u;
 
-    HRESULT hr = D3DXLoadMeshFromXA((path + xFilename).c_str(), 
+    HRESULT hr = D3DXLoadMeshFromXA(fullPath.c_str(),
         D3DXMESH_MANAGED, Device()(), nullptr, nullptr, 
         &pEffectInstancesBuffer, &numMaterials, &pMesh);
 
@@ -527,6 +330,8 @@ ResourceContainer* ResourceAsync::OnLoadEffectMeshAsync(
 ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
     const string path, const string xFilename)
 {
+    const string fullPath(path + xFilename);
+
     ResourceContainer* pResourceContainer = new ResourceContainer;
     if (!pResourceContainer)
     {
@@ -534,7 +339,7 @@ ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
     }
 
     pResourceContainer->m_pSkinnedMesh = 
-        make_pair(path + xFilename, new SkinnedMesh);
+        make_pair(fullPath, new SkinnedMesh);
     SkinnedMesh* pSkinnedMesh = pResourceContainer->m_pSkinnedMesh.second;
     if (!pSkinnedMesh)
     {
@@ -543,7 +348,7 @@ ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
 
     AllocateHierarchyAsync allocAsync(path, xFilename, pResourceContainer);
 
-    HRESULT hr = D3DXLoadMeshHierarchyFromXA((path + xFilename).c_str(),
+    HRESULT hr = D3DXLoadMeshHierarchyFromXA(fullPath.c_str(),
         D3DXMESH_MANAGED, Device()(), &allocAsync, nullptr, 
         &pSkinnedMesh->m_pRootFrame,
         &pSkinnedMesh->m_pAnimController);
@@ -562,7 +367,7 @@ ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
     return pResourceContainer;
 }
 
-HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
+HRESULT ResourceAsync::CreateEffectMesh(const string path, const string name,
     LPD3DXMESH pMesh, const D3DXEFFECTINSTANCE* pEffectInstances, 
     const DWORD numEffectInstances, ResourceContainer* OutResourceContainer)
 {
@@ -581,7 +386,7 @@ HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
     }
 
     EffectMesh* pEffectMesh = new EffectMesh;
-    OutResourceContainer->m_effectMeshs[path + name] = pEffectMesh;
+    OutResourceContainer->m_effectMeshs[key] = pEffectMesh;
 
     pEffectMesh->m_pMesh = pMesh;
     /**/
@@ -681,7 +486,7 @@ HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
     return S_OK;
 }
 
-HRESULT ResourceAsync::CreateEffect(const string& path, const string& filename,
+HRESULT ResourceAsync::CreateEffect(const string path, const string filename,
     ResourceContainer* OutResourceContainer)
 {
     if (OutResourceContainer == nullptr)
@@ -721,7 +526,7 @@ HRESULT ResourceAsync::CreateEffect(const string& path, const string& filename,
 }
 
 HRESULT ResourceAsync::CreateTexture(
-    const string& path, const string& filename, 
+    const string path, const string filename, 
     ResourceContainer* OutResourceContainer)
 {
     if (OutResourceContainer == nullptr)

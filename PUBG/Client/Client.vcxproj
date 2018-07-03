@@ -128,6 +128,7 @@
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
+    <ClCompile Include="Source\Object\CharacterAnimation.cpp" />
     <ClCompile Include="Source\HeightMap.cpp" />
     <ClCompile Include="Source\Object\Character_ForDebug.cpp" />
     <ClCompile Include="Source\Object\Character_Input.cpp" />
@@ -188,6 +189,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
+    <ClInclude Include="Source\Object\CharacterAnimation.h" />
     <ClInclude Include="Source\HeightMap.h" />
     <ClInclude Include="Source\Object\CollisionTestBox.h" />
     <ClInclude Include="Source\Object\DirectionalLight.h" />

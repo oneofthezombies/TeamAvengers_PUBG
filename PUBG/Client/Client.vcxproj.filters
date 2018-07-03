@@ -55,6 +55,7 @@
     <ClCompile Include="Source\Object\Character_ForDebug.cpp" />
     <ClCompile Include="Source\Object\Character_Input.cpp" />
     <ClCompile Include="Source\Object\CollisionTestBox.cpp" />
+    <ClCompile Include="Source\Object\CharacterAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -112,5 +113,6 @@
     <ClInclude Include="Source\HeightMap.h" />
     <ClInclude Include="Source\Ray.h" />
     <ClInclude Include="Source\Object\CollisionTestBox.h" />
+    <ClInclude Include="Source\Object\CharacterAnimation.h" />
   </ItemGroup>
 </Project>

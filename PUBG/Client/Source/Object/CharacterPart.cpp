@@ -3,7 +3,7 @@
 #include "Collider.h"
 #include "UIText.h"
 #include "Character.h"
-#include "SkinnedMeshController.h"
+#include "CharacterAnimation.h"
 
 CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
     Character* pCharacter)
@@ -16,7 +16,7 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
     assert(pCharacter && 
         "CharacterPart::Constructor() failed. character is null.");
 
-    auto pSkiCon = pCharacter->GetComponent<SkinnedMeshController>();
+    auto pSkiCon = pCharacter->GetCharacterAnimation();
 
     pBoxCollider = AddComponent<BoxCollider>();
     pBoxCollider->SetTag(
@@ -353,7 +353,7 @@ TAG_COLLIDER_CHARACTER_PART CharacterPart::GetTagColliderCharacterPart() const
 }
 
 void CharacterPart::addFrame(
-    const string& name, SkinnedMeshController* pSkiCon)
+    const string& name, CharacterAnimation* pSkiCon)
 {
     auto pFrame = pSkiCon->FindFrame(name);
     if (!pFrame)

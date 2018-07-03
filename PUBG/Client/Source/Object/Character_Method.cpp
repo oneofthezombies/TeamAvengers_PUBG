@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Character.h"
-#include "SkinnedMeshController.h"
+#include "CharacterAnimation.h"
 #include "CharacterPart.h"
 #include "DirectionalLight.h"
 #include "AnimationState.h"
@@ -25,6 +25,7 @@ Character::Info::Info()
     , pTPP(nullptr)
 {
 }
+
 Character::IsPressing::IsPressing()
     : _LAlt(false)
     , _LCtrl(false)
@@ -94,15 +95,27 @@ Character::IsJumping::IsJumping()
 
 void Character::setFramePtr()
 {
-    m_framePtr.pWaist = pSkinnedMeshController->FindFrame("spine_01");
-    m_framePtr.pRoot = pSkinnedMeshController->FindFrame("root");
-    m_framePtr.pHandGun = pSkinnedMeshController->FindFrame("ik_hand_gun");
-    m_framePtr.pTPP = pSkinnedMeshController->FindFrame("camera_tpp");
-    m_framePtr.pFPP = pSkinnedMeshController->FindFrame("camera_fpp");
-    m_framePtr.pSlotPrimary = pSkinnedMeshController->FindFrame("slot_primary");
-    m_framePtr.pSlotSecondary = pSkinnedMeshController->FindFrame("slot_secondary");
-    m_framePtr.pSlotMelee = pSkinnedMeshController->FindFrame("slot_melee");
-    m_framePtr.pSlotThrowable = pSkinnedMeshController->FindFrame("slot_throwable");
+    m_framePtr.pWaist         = m_pAnimation->FindFrame("spine_01");
+    m_framePtr.pRoot          = m_pAnimation->FindFrame("root");
+    m_framePtr.pHandGun       = m_pAnimation->FindFrame("ik_hand_gun");
+    m_framePtr.pTPP           = m_pAnimation->FindFrame("camera_tpp");
+    m_framePtr.pFPP           = m_pAnimation->FindFrame("camera_fpp");
+    m_framePtr.pSlotPrimary   = m_pAnimation->FindFrame("slot_primary");
+    m_framePtr.pSlotSecondary = m_pAnimation->FindFrame("slot_secondary");
+    m_framePtr.pSlotMelee     = m_pAnimation->FindFrame("slot_melee");
+    m_framePtr.pSlotThrowable = m_pAnimation->FindFrame("slot_throwable");
+
+    FramePtr& p = m_framePtr;
+    assert(
+        p.pWaist &&
+        p.pRoot &&
+        p.pHandGun &&
+        p.pTPP &&
+        p.pFPP &&
+        p.pSlotPrimary &&
+        p.pSlotSecondary &&
+        p.pSlotMelee &&
+        p.pSlotThrowable && "Character::setFramePtr(), pointer is null.");
 }
 
 void Character::subscribeCollisionEvent()
@@ -168,7 +181,7 @@ void Character::setAttacking()
 
     TotalInventory& inven = m_totalInventory; 
 
-    if (hasFinishEvent()) return;
+    if (m_pAnimation->HasUpperFinishEvent()) return;
 
     if (m_currentOnceKey._Num1)
     {
@@ -181,23 +194,38 @@ void Character::setAttacking()
 
                 inven.m_hand = inven.m_weaponPrimary;
                 inven.m_weaponPrimary = nullptr;
-                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false, [this]() 
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::UPPER,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand,
+                    false, [this]() 
                 {
-                    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                    m_pAnimation->Set(
+                        CharacterAnimation::BodyPart::UPPER,
+                        TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
+                        false);
                 });
             }
             else if (m_attacking == Attacking::Rifle)
             {
                 //보조무기를 해제하고, 주무기를 장착한다
-                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static, false, [this, &inven]() 
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::UPPER,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static, 
+                    false, [this, &inven]()
                 {
                     inven.m_weaponSecondary = inven.m_hand;
 
                     inven.m_hand = inven.m_weaponPrimary;
                     inven.m_weaponPrimary = nullptr;
-                    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand, false, [this]() 
-                    {                        
-                        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                    m_pAnimation->Set(
+                        CharacterAnimation::BodyPart::UPPER,
+                        TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand,
+                        false, [this]()
+                    {
+                        m_pAnimation->Set(
+                            CharacterAnimation::BodyPart::UPPER,
+                            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
+                            false);
                     });
                 });
             }
@@ -218,23 +246,38 @@ void Character::setAttacking()
 
                 inven.m_hand = inven.m_weaponSecondary;
                 inven.m_weaponSecondary = nullptr;
-                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, false, [this]()
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::UPPER,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand,
+                    false, [this]()
                 {
-                    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                    m_pAnimation->Set(
+                        CharacterAnimation::BodyPart::UPPER,
+                        TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
+                        false);
                 });
             }
             else if (m_attacking == Attacking::Rifle)
             {
                 //주무기를 해제하고 보조무기를 장착한다
-                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static, false, [this, &inven]()
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::UPPER,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
+                    false, [this, &inven]()
                 {
                     inven.m_weaponPrimary = inven.m_hand;
 
                     inven.m_hand = inven.m_weaponSecondary;
                     inven.m_weaponSecondary = nullptr;
-                    setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand, false, [this]()
+                    m_pAnimation->Set(
+                        CharacterAnimation::BodyPart::UPPER,
+                        TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand,
+                        false, [this]()
                     {
-                        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                        m_pAnimation->Set(
+                            CharacterAnimation::BodyPart::UPPER,
+                            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
+                            false);
                     });
                 });
             }
@@ -256,23 +299,35 @@ void Character::setAttacking()
             {
                 m_attacking = Attacking::Unarmed;
                 //주무기를 해제한다
-                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static, false, [this, &inven]()
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::UPPER,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
+                    false,
+                    [this, &inven]()
                 {
                     inven.m_weaponPrimary = inven.m_hand;
                     inven.m_hand = nullptr;
-                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false); //TODO: 해제는 되는데 다리가 부자연스러움
+                    m_pAnimation->Set(
+                        CharacterAnimation::BodyPart::UPPER,
+                        TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, 
+                        false); //TODO: 해제는 되는데 다리가 부자연스러움
                 });
-
             }
             else if (tag == TAG_RES_STATIC::Kar98k)
             {
                 m_attacking = Attacking::Unarmed;
                 //보조무기를 해제한다
-                setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static, false, [this, &inven]()
+                m_pAnimation->Set(
+                    CharacterAnimation::BodyPart::UPPER,
+                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static, 
+                    false, 
+                    [this, &inven]()
                 {
                     inven.m_weaponSecondary = inven.m_hand;
                     inven.m_hand = nullptr;
-                    setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+                    m_pAnimation->Set(
+                        CharacterAnimation::BodyPart::UPPER, 
+                        TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
                 });
             }
         }
@@ -330,7 +385,7 @@ void Character::setReload()
         {
             TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic(); //총 종류
             TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag); //탄약 종류
-            int magSize = ItemInfo::GetMagazineSize(tag);         //장탄 수
+            int magSize = static_cast<int>(ItemInfo::GetMagazineSize(tag)); //장탄 수
             int numBulletCurrentLoad = inven.m_hand->GetNumBullet(); //장전되어있는 총알 수
 
             if (numBulletCurrentLoad == magSize) //이미 가득 장전 되어있는 경우
@@ -370,9 +425,16 @@ void Character::setReload()
                 */
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
-                    setAnimation(TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Base, false, [this]()
+                    m_pAnimation->Set(
+                        CharacterAnimation::BodyPart::UPPER,
+                        TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Base,
+                        false,
+                        [this]()
                     {
-                        setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+                        m_pAnimation->Set(
+                            CharacterAnimation::BodyPart::UPPER,
+                            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
+                            false);
                     });
                 }
                 else if (tag == TAG_RES_STATIC::Kar98k)
@@ -385,7 +447,11 @@ void Character::setReload()
                     }
                     else
                     {
-                        setAnimation(TAG_ANIM_CHARACTER::Kar98k_Reload_Start, false, std::bind(&Character::onKar98kReload, this));
+                        m_pAnimation->Set(
+                            CharacterAnimation::BodyPart::UPPER,
+                            TAG_ANIM_CHARACTER::Kar98k_Reload_Start,
+                            false,
+                            std::bind(&Character::onKar98kReload, this));
                     }
                 }
             }
@@ -593,23 +659,6 @@ bool Character::isMine() const
     return m_index == Communication()()->m_MyInfo.m_ID;
 }
 
-void Character::setAnimation(
-    const TAG_ANIM_CHARACTER tag,
-    const bool isBlend,
-    const float blendTime,
-    const float nextWeight)
-{
-    assert(pSkinnedMeshController && 
-        "Character::setAnimation(), skinned mesh controller is null.");
-
-    pSkinnedMeshController->SetAnimation(
-        TagAnimation::GetString(tag), 
-        TagAnimation::GetSpeed(tag),
-        isBlend,
-        blendTime,
-        nextWeight);
-}
-
 void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 {
     
@@ -662,33 +711,6 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
     }
 
     *pOut = targetPos;
-}
-
-bool Character::hasFinishEvent() const
-{
-    assert(pSkinnedMeshController &&
-        "Character::hasFinishEvent(), skinned mesh controller is null.");
-
-    return pSkinnedMeshController->HasFinishEvent();
-}
-
-void Character::setAnimation(
-    const TAG_ANIM_CHARACTER tag, 
-    const bool isBlend, 
-    const std::function<void()>& finishEvent)
-{
-    assert(pSkinnedMeshController &&
-        "Character::setAnimation(), skinned mesh controller is null.");
-
-    pSkinnedMeshController->SetAnimation(
-        TagAnimation::GetString(tag),
-        TagAnimation::GetSpeed(tag),
-        isBlend,
-        0.3f,
-        0.0f,
-        finishEvent);
-
-    m_animState = tag;
 }
 
 void Character::setInfo()
@@ -762,8 +784,6 @@ D3DXVECTOR3 Character::getForwardRight()
     return dir;
 }
 
-
-
 D3DXVECTOR3 Character::getBackwardRight()
 {
     auto rot = GetTransform()->GetRotation();
@@ -782,8 +802,6 @@ D3DXVECTOR3 Character::getBackwardLeft()
     return dir;
 }
 
-
-
 void Character::updateBone()
 {
     // modify local bones
@@ -791,28 +809,26 @@ void Character::updateBone()
     D3DXMatrixRotationX(&rx, m_waistRotation.m_angle);
     m_framePtr.pWaist->TransformationMatrix *= rx;
 
-    //TODO 애니메이션 다시 돌아오게 하기
-    // for root motion animation
-    m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
+    //// for root motion animation
+    //m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
 }
 
 void Character::updateDependency()
 {
     // update
-    GetTransform()->Update();
-    pSkinnedMeshController->UpdateAnimation();
+    pTransform->Update();
+    m_pAnimation->UpdateAnimation();
     updateBone();
-    pSkinnedMeshController->UpdateModel();
+    m_pAnimation->UpdateModel();
     updateTotalInventory();
     if (m_pRootCharacterPart) m_pRootCharacterPart->Update();
 
     // render
-    pSkinnedMeshController->Render(
-        [this](LPD3DXEFFECT pEffect) 
+    m_pAnimation->Render([this](LPD3DXEFFECT pEffect) 
     {
         pEffect->SetMatrix(
             Shader::World, 
-            &GetTransform()->GetTransformationMatrix());
+            &pTransform->GetTransformationMatrix());
 
         DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
         D3DXVECTOR3 lightDir = light->GetDirection();
@@ -889,3 +905,7 @@ TAG_COLLISION Character::GetTagCollisionDamage(const int index)
     }
 }
 
+CharacterAnimation* Character::GetCharacterAnimation()
+{
+    return m_pAnimation;
+}

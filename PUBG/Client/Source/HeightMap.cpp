@@ -76,9 +76,11 @@ void HeightMap::Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat)
 		{
 			int index = z * (m_dimension)+x;
 			int y = fin.get();
-			vecVertex[index].p = D3DXVECTOR3(x, y, z);
+            float fX = static_cast<float>(x);
+            float fZ = static_cast<float>(z);
+			vecVertex[index].p = D3DXVECTOR3(fX, static_cast<float>(y), fZ);
 			vecVertex[index].n = D3DXVECTOR3(0, 1, 0);
-			vecVertex[index].t = D3DXVECTOR2(x / (float)m_numTile, z / (float)m_numTile);
+			vecVertex[index].t = D3DXVECTOR2(fX / (float)m_numTile, fZ / (float)m_numTile);
 
 			if (pMat)
 				D3DXVec3TransformCoord(&vecVertex[index].p, &vecVertex[index].p, pMat);
@@ -187,8 +189,10 @@ void HeightMap::SetSurface()
     {
         for (size_t x = 0; x < surfaceDim; ++x)
         {
-            DWORD index = z / (float)numSurfaceTile * m_numTile * m_dimension
-                + x / (float)numSurfaceTile * m_numTile;
+            DWORD index = 
+                static_cast<DWORD>(
+                    z / (float)numSurfaceTile * m_numTile * m_dimension
+                + x / (float)numSurfaceTile * m_numTile);
             vecPos.push_back(m_vecVertex[index]);
         }
     }
@@ -333,13 +337,13 @@ void HeightMap::SetRayBox()
     vec[7] = (D3DXVECTOR3(257.f,    -1,             0));	//¿ìÇÏÀü
     
     
-    for (int i = 0; i < vec.size(); i++)
+    for (std::size_t i = 0; i < vec.size(); i++)
     {
         D3DXVec3TransformCoord(&vec[i], &vec[i], &m_matWorld);
     }
 
     m_RayBox.resize(indices.size());
-    for (int i = 0; i < indices.size(); i++)
+    for (std::size_t i = 0; i < indices.size(); i++)
     {
         m_RayBox[i] = vec[indices[i]];
     }
