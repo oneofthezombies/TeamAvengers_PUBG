@@ -186,13 +186,6 @@ void Character::updateMine()
 
 
 
-
-
-
-    
-
-
-
     pTr->SetPosition(p);
     pTr->SetRotation(r);
 

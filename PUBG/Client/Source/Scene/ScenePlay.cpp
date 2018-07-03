@@ -152,7 +152,7 @@ void ScenePlay::OnInit()
     ////character0->PutItemInTotalInventory(item);
 
     //character0->ShowTotalInventory();
-    ////LoadObjectsFromFile("./Resource/save.txt");
+    LoadObjectsFromFile("./Resource/save.txt");
 }
 
 void ScenePlay::OnUpdate()
