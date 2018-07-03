@@ -352,7 +352,7 @@ void CameraThirdPerson::Update()
     D3DXVECTOR3 v;
     if (Input()()->IsOnceKeyDown(VK_LBUTTON))
     {
-        if (CalcPickedPosition(m_vBulletDestination, 1280 / 2, 720 / 2))
+        if (CalcPickedPosition(v, 1280 / 2, 720 / 2))
         {
             D3DXVec3Normalize(&v, &v);
         }
