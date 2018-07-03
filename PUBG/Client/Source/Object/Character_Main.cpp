@@ -170,6 +170,25 @@ void Character::updateMine()
     applyTarget_Y_Position(&p); //apply height and control jumping
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     
+
+
+
+
+    //if (Input()()->IsOnceKeyDown(VK_LBUTTON))
+    //{
+    //    //앞으로 어떻게 바꿀꺼냐면 여기 r을 쏘는 targetpos - 총구 pos 해서 나오는 direction으로 쏘는 걸로 할꺼야!
+
+    //    BulletPool()()->Fire((p + D3DXVECTOR3(0,100.0f,0)), r*Character::OFFSET_ROTATION, 1.0f, 10.0f, TAG_COLLISION::Impassable);
+    //}
+        
+
+
+
+
+
+
+
+
     pTr->SetPosition(p);
     pTr->SetRotation(r);
 
