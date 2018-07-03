@@ -726,33 +726,6 @@ void Character::rifleShooting()
     }
 }
 
-bool Character::hasFinishEvent() const
-{
-    assert(pSkinnedMeshController &&
-        "Character::hasFinishEvent(), skinned mesh controller is null.");
-
-    return pSkinnedMeshController->HasFinishEvent();
-}
-
-void Character::setAnimation(
-    const TAG_ANIM_CHARACTER tag, 
-    const bool isBlend, 
-    const std::function<void()>& finishEvent)
-{
-    assert(pSkinnedMeshController &&
-        "Character::setAnimation(), skinned mesh controller is null.");
-
-    pSkinnedMeshController->SetAnimation(
-        TagAnimation::GetString(tag),
-        TagAnimation::GetSpeed(tag),
-        isBlend,
-        0.3f,
-        0.0f,
-        finishEvent);
-
-    m_animState = tag;
-}
-
 void Character::setInfo()
 {
     m_info.pTransform = GetTransform();

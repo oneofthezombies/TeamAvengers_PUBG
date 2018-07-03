@@ -20,6 +20,9 @@ void SceneLoading::loadSync()
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Kar98k);
     m_effectMeshResources.emplace(3, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
 
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Bandage);
+    m_effectMeshResources.emplace(4, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+
     // add effect mesh resource
 
     addEffectMeshs();
