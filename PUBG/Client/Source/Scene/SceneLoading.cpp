@@ -60,9 +60,6 @@ void SceneLoading::loadSync()
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
     m_characterAnimationResources.emplace(8, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
-    m_characterAnimationResources.emplace(9, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
-
     addAnimationsToCharacter();
 }
 
@@ -263,10 +260,6 @@ void SceneLoading::loadCharacterAnimation()
 
     addTask(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addTask(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
-
-    //for test
-    addTask(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
-    //...
 }
 
 void SceneLoading::addAnimationsToCharacter()

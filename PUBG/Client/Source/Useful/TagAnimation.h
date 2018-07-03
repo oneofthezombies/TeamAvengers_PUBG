@@ -42,42 +42,53 @@ enum class TAG_ANIM_CHARACTER
     Weapon_QBZ_Reload_Charge_Base,
     Weapon_QBZ_Reload_Charge_Prone,
     Weapon_QBZ_Reload_Prone,
+
     //Weapon_QBZ_Character_FPP(4)
     Weapon_QBZ_Reload_Charge_FPP,
     Weapon_QBZ_Reload_Charge_Prone_FPP,
     Weapon_QBZ_Reload_FPP,
     Weapon_QBZ_Reload_Prone_FPP,
 
-    //Weapon_Kar98k_Character(13)
+    //Weapon_Kar98k_Character(17)
+    Weapon_Kar98k_Reload_Start_Base,
+    Weapon_Kar98k_Reload_Loop_Base,
+    Weapon_Kar98k_Reload_End_Base,
+    Weapon_Kar98k_Reload_Start_Prone,
+    Weapon_Kar98k_Reload_Loop_Prone,
+    Weapon_Kar98k_Reload_End_Prone,
+
     Weapon_Kar98k_BoltAction_1_Base,
     Weapon_Kar98k_BoltAction_1_Prone,
     Weapon_Kar98k_BoltAction_2_Base,
     Weapon_Kar98k_BoltAction_2_Prone,
     Weapon_Kar98k_BoltAction_3_Base,
     Weapon_Kar98k_BoltAction_3_Prone,
+
     Weapon_Kar98k_Grip_Carry,
     Weapon_Kar98k_Grip_Ready,
     Weapon_Kar98k_Grip_Short,
-    Weapon_Kar98k_Reload_StartLoopEnd_Base,
-    Weapon_Kar98k_Reload_StartLoopEnd_Prone,
+
     Weapon_Kar98k_ReloadFast_Base,
     Weapon_Kar98k_ReloadFast_Prone,
-    //Weapon_Kar98k_Character_FPP(10)
+
+    //Weapon_Kar98k_Character_FPP(14)
     Weapon_Kar98k_BoltAction_1_FPP,
     Weapon_Kar98k_BoltAction_1_Prone_FPP,
     Weapon_Kar98k_BoltAction_2_FPP,
     Weapon_Kar98k_BoltAction_2_Prone_FPP,
     Weapon_Kar98k_BoltAction_3_FPP,
     Weapon_Kar98k_BoltAction_3_Prone_FPP,
-    Weapon_Kar98k_Reload_StartLoopEnd_FPP,
-    Weapon_Kar98k_Reload_StartLoopEnd_Prone_FPP,
+
+    Weapon_Kar98k_Reload_Start_FPP,
+    Weapon_Kar98k_Reload_Loop_FPP,
+    Weapon_Kar98k_Reload_End_FPP,
+
+    Weapon_Kar98k_Reload_Start_Prone_FPP,
+    Weapon_Kar98k_Reload_Loop_Prone_FPP,
+    Weapon_Kar98k_Reload_End_Prone_FPP,
+
     Weapon_Kar98k_ReloadFast_FPP,
     Weapon_Kar98k_ReloadFast_Prone_FPP,
-
-    //Weapon_Kar98k_Reload_Test(3)
-    Kar98k_Reload_Start,
-    Kar98k_Reload_Loop,
-    Kar98k_Reload_End,
 
     //2. 무기를 들고있지 않을 때 애니메이션
     //Unarmed_Transition(6) - 자세 간의 전이 ex. 쭈그려있다가 -> 엎드린다
