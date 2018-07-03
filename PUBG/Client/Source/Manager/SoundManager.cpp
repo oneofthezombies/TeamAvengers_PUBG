@@ -51,6 +51,22 @@ void SoundManager::Destroy()
 
 void SoundManager::Update()
 {
+    const float dt = Time()()->GetDeltaTime();
+
+    for (auto it = m_playInfo.begin(); it != m_playInfo.end();)
+    {
+        it->curtime -= dt;
+        if (it->curtime > 0.0f)
+        {
+            ++it;
+        }
+        else
+        {
+            Play(it->TAG, it->pos, 1.0f, FMOD_3D);
+            it = m_playInfo.erase(it);
+        }
+    }
+
     if (m_pSystem) m_pSystem->update();
 }
 
@@ -131,6 +147,13 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
     m_channels[i]->set3DAttributes(&m_soundPos, nullptr);
     m_channels[i]->setVolume(fVol);
     return i;
+}
+
+int SoundManager::addPlay(const TAG_SOUND tag, const D3DXVECTOR3 & pos, float time, const FMOD_MODE & mode)
+{
+    PlayInfo PI = { tag, pos, time };
+    m_playInfo.push_back(PI);
+    return 0;
 }
 
 int SoundManager::Repeat(const TAG_SOUND tag, const int channelKey)
