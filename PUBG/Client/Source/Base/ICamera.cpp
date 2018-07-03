@@ -218,7 +218,7 @@ TAG_CAMERA ICamera::GetTagCamera() const
     return m_tagCamera;
 }
 
-bool ICamera::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
+bool ICamera::CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY)
 {
     Ray ray = Ray::RayAtWorldSpace(screenX, screenY);
     float intersectionDist;
@@ -232,13 +232,13 @@ bool ICamera::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
         if (ray.CalcIntersectTri(&rayBox[i], &intersectionDist))
         {
             bIntersect = true;
-            vOut = ray.m_pos + ray.m_dir * intersectionDist;
+            *vOut = ray.m_pos + ray.m_dir * intersectionDist;
 
 
             //rendering À» À§ÇØ
             temp = true;
             drawRay.push_back(ray.m_pos);
-            drawRay.push_back(vOut);
+            drawRay.push_back(*vOut);
             //--------------------------
             
             return bIntersect;
@@ -348,15 +348,13 @@ void CameraThirdPerson::Update()
     if (Input()()->IsOnceKeyDown(VK_RBUTTON))
         Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
 
-    bool a = false;
-    D3DXVECTOR3 v;
-    if (Input()()->IsOnceKeyDown(VK_LBUTTON))
-    {
-        if (CalcPickedPosition(v, 1280 / 2, 720 / 2))
-        {
-            D3DXVec3Normalize(&v, &v);
-        }
-    }
+    //D3DXVECTOR3 v;
+    //if (Input()()->IsOnceKeyDown(VK_LBUTTON))
+    //{
+    //    if (CalcPickedPosition(&v, 1280 / 2, 720 / 2))
+    //    {
+    //    }
+    //}
 
 
 

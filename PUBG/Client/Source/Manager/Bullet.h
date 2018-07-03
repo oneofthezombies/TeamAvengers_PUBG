@@ -8,6 +8,7 @@ class BoxCollider;
 class Bullet : public IObject
 {
 private:
+    D3DXVECTOR3 m_dir;
     float       m_Speed;
     float       m_Damage;
     bool        m_IsActive;
@@ -24,7 +25,9 @@ public:
     virtual void OnUpdate() override;
     virtual void OnRender() override;
 
-    void Set(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
+    //void Set(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
+    //    const float speed, const float damage, const TAG_COLLISION tag);
+    void Set(const D3DXVECTOR3& startPos, const D3DXVECTOR3& dir,
         const float speed, const float damage, const TAG_COLLISION tag);
     void Reset();
 
@@ -47,7 +50,10 @@ public:
     void Destroy();
     void PrintNumBullet();
 
-    Bullet* Fire(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
+    //Bullet* Fire(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
+    //    const float speed, const float damage, const TAG_COLLISION tag);
+
+    Bullet* Fire(const D3DXVECTOR3& startPos, const D3DXVECTOR3& dir,
         const float speed, const float damage, const TAG_COLLISION tag);
 
     LPD3DXMESH GetCylinder() const;

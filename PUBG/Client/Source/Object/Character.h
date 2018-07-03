@@ -56,6 +56,8 @@ public:
         //Weapon* m_weaponPistol;
         //Weapon* m_weaponMelee;
         //Weapon* m_weaponThrowable;
+        
+        float m_bulletFireCoolDown; //총알 발사는 지정된 쿨타임 시간이 지나야 다시 발사가능
         float m_capacity;
         int   m_numReload;
 
@@ -100,6 +102,8 @@ public:
         bool _Num3; 
         bool _Num4; 
         bool _Num5; 
+        bool _LButton;
+        bool _RButton;
 
         IsPressed();
     };
@@ -183,6 +187,7 @@ private:
 
     // for inventory
     TotalInventory m_totalInventory;
+    
 
     // state
     TAG_ANIM_CHARACTER m_upperAnimState;
@@ -222,6 +227,7 @@ private:
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
     void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
+    void rifleShooting();
 
     void updateMine();
     void updateOther();

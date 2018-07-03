@@ -67,6 +67,8 @@ Character::IsPressed::IsPressed()
     , _Num3(false)
     , _Num4(false)
     , _Num5(false)
+    , _LButton(false)
+    , _RButton(false)
 {
 
 }
@@ -156,16 +158,18 @@ void Character::handleInput(IsPressed* OutIsPressed)
 
     InputManager* pInput = Input()();
 
-    OutIsPressed->_Z     = pInput->IsOnceKeyDown('Z');
-    OutIsPressed->_X     = pInput->IsOnceKeyDown('X');
-    OutIsPressed->_C     = pInput->IsOnceKeyDown('C');
-    OutIsPressed->_R     = pInput->IsOnceKeyDown('R');
-    OutIsPressed->_Space = pInput->IsOnceKeyDown(VK_SPACE);
-    OutIsPressed->_Num1  = pInput->IsOnceKeyDown('1');
-    OutIsPressed->_Num2  = pInput->IsOnceKeyDown('2');
-    OutIsPressed->_Num3  = pInput->IsOnceKeyDown('3');
-    OutIsPressed->_Num4  = pInput->IsOnceKeyDown('4');
-    OutIsPressed->_Num5  = pInput->IsOnceKeyDown('5');
+    OutIsPressed->_Z            = pInput->IsOnceKeyDown('Z');
+    OutIsPressed->_X            = pInput->IsOnceKeyDown('X');
+    OutIsPressed->_C            = pInput->IsOnceKeyDown('C');
+    OutIsPressed->_R            = pInput->IsOnceKeyDown('R');
+    OutIsPressed->_Space        = pInput->IsOnceKeyDown(VK_SPACE);
+    OutIsPressed->_Num1         = pInput->IsOnceKeyDown('1');
+    OutIsPressed->_Num2         = pInput->IsOnceKeyDown('2');
+    OutIsPressed->_Num3         = pInput->IsOnceKeyDown('3');
+    OutIsPressed->_Num4         = pInput->IsOnceKeyDown('4');
+    OutIsPressed->_Num5         = pInput->IsOnceKeyDown('5');
+    OutIsPressed->_LButton      = pInput->IsOnceKeyDown(VK_LBUTTON);
+    OutIsPressed->_RButton      = pInput->IsOnceKeyDown(VK_RBUTTON);
 }
 
 void Character::setAttacking()
@@ -235,6 +239,7 @@ void Character::setAttacking()
             {
                 //TODO: melee 생기면 구현
             }
+            inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_hand->GetTagResStatic());
         }
     }
     else if (m_currentOnceKey._Num2)
@@ -287,6 +292,7 @@ void Character::setAttacking()
             {
                 //TODO: melee 생기면 구현
             }
+            inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_hand->GetTagResStatic());
         }
     }
     //for test 'X' - 다시 X누르면 이전 무기 장착되는 것도 해야함
@@ -391,7 +397,10 @@ void Character::setReload()
             int numBulletCurrentLoad = inven.m_hand->GetNumBullet(); //장전되어있는 총알 수
 
             if (numBulletCurrentLoad == magSize) //이미 가득 장전 되어있는 경우
+            {
+                cout << "이미 가득차있다!!" << endl;
                 return;
+            }
         
             //총에 알맞는 총알이 있는지 확인해서 장전
             auto it = inven.m_mapInventory.find(ammoType);
@@ -404,10 +413,17 @@ void Character::setReload()
                 cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
                 cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
 
+                if (numBulletInInventory == 0)
+                {
+                    cout << "인벤토리에 더이상 총알이 없어 ㅠㅠ" << endl;
+                    return;
+                }
+
                 inven.m_numReload = 0;
                 if (numBulletInInventory >= numBulletNeedReload)
                 {
-                    inven.m_hand->SetNumBullet(numBulletNeedReload);
+                    int numBullet = inven.m_hand->GetNumBullet();
+                    inven.m_hand->SetNumBullet(numBullet + numBulletNeedReload);
                     (*it).second.back()->SetCount(numBulletInInventory - numBulletNeedReload);
 
                     inven.m_numReload = numBulletNeedReload;
@@ -419,7 +435,8 @@ void Character::setReload()
 
                     inven.m_numReload = numBulletInInventory;
                 }
-                cout << "장정된 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
+                cout << "장전한 총알 개수: " << inven.m_numReload << "\n";
+                cout << "총에 장전된 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
                 cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
 
                 /*
@@ -441,8 +458,6 @@ void Character::setReload()
                 }
                 else if (tag == TAG_RES_STATIC::Kar98k)
                 {
-                    inven.m_numReload = 4;
-
                     if (inven.m_numReload == 5)
                     {
                         // fast reload
@@ -503,12 +518,8 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     }
     else // isPressing_LAlt == false
     {
-        // update rotation of transform
-
         D3DXQUATERNION q;
         D3DXQuaternionRotationYawPitchRoll(&q, yaw, 0.0f, 0.0f);
-        //cout << "pitch : " << pitch << " yaw : " << yaw << endl;
-
         *OutRotation *= q;
         m_rotationForCamera.x += -pitch;
         // reset rotFotCameraTP
@@ -517,14 +528,8 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
             m_rotationForCamera = Vector3::ZERO;
             tempBool = false;
         }
-
     }
 
-    /*
-    in : mouse
-    out : character r <= mouse only one axis
-    out : camera r <= mouse wto axis
-    */
     static bool test_sound = true;
 
     if (Input()()->IsOnceKeyDown(VK_LEFT))
@@ -552,34 +557,6 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
     float movingFactor;
     if (m_currentOnceKey._Space)
         m_Jump.isJumping = true;
-
-    ////Attacking 3개 -----------------------------------------------------
-    //if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
-    //{
-    //    attacking = Attacking::Rifle;
-    //}
-    //else if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
-    //{
-    //    attacking = Attacking::Melee;
-    //}
-    //else
-    //{
-    //    attacking = Attacking::Unarmed;
-    //}
-
-    ////Stance 3개 -----------------------------------------------------
-    //if (m_currentOnceKey._C)
-    //{
-    //    stance = Stance::Crouch;
-    //}
-    //else if (m_currentOnceKey._Z)
-    //{
-    //    stance = Stance::Prone;
-    //}
-    //else
-    //{
-    //    stance = Stance::Stand;
-    //}
 
     //Moving 3개 -----------------------------------------------------
     if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl)
@@ -713,6 +690,42 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
     }
 
     *pOut = targetPos;
+}
+
+void Character::rifleShooting()
+{
+    auto& inven = m_totalInventory;
+    inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_hand->GetTagResStatic());
+
+    int numBullet = inven.m_hand->GetNumBullet();
+    inven.m_hand->SetNumBullet(--numBullet);
+    cout << "총에 남아있는 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
+
+    //Goal : get Fire starting position , get fire direction
+    inven.m_hand->UpdateModel(); //update to get position of frame "gun_bolt" 
+    D3DXMATRIX mat =
+        inven.m_hand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
+        * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
+        * GetTransform()->GetTransformationMatrix();    //character world matrix
+    
+    D3DXVECTOR3 bulletFirePos = D3DXVECTOR3(mat._41, mat._42, mat._43); 
+    
+    D3DXVECTOR3 bulletDir;
+    CurrentCamera()()->CalcPickedPosition(&bulletDir, 1280 / 2, 720 / 2);
+    bulletDir = bulletDir - bulletFirePos;
+    D3DXVec3Normalize(&bulletDir, &bulletDir);
+    //-------------------------
+
+
+    switch (inven.m_hand->GetTagResStatic())
+    {
+    case TAG_RES_STATIC::QBZ:
+        BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_COLLISION::Impassable);
+        break;
+    case TAG_RES_STATIC::Kar98k:
+        BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_COLLISION::Impassable);
+        break;
+    }
 }
 
 void Character::setInfo()

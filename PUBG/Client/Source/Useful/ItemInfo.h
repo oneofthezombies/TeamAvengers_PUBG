@@ -21,5 +21,6 @@ struct ItemInfo
     static TAG_RES_STATIC GetAmmoType(const TAG_RES_STATIC tag); //사용하는 탄약종류
     static float GetBaseDamage(const TAG_RES_STATIC tag);        //기본 데미지
     static float GetInitialBulletSpeed(const TAG_RES_STATIC tag);//탄속
+    static float GetBulletFireCoolTime(const TAG_RES_STATIC tag); //연사간격
     //..
 };

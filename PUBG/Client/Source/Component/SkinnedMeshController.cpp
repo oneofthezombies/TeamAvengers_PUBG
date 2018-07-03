@@ -145,10 +145,10 @@ void SkinnedMeshController::notifyAnimationEvent(
     double periodicPosition = pSet->GetPeriodicPosition(currentPosition);
     pSet->Release();
 
-    Debug << "animation name    : " << name             << '\n'
-          << "current  position : " << currentPosition  << '\n'
-          << "periodic position : " << periodicPosition << '\n'
-          << "period            : " << period           << '\n';
+    //Debug << "animation name    : " << name             << '\n'
+    //      << "current  position : " << currentPosition  << '\n'
+    //      << "periodic position : " << periodicPosition << '\n'
+    //      << "period            : " << period           << '\n';
 
     const double dDT = static_cast<double>(dt);
 
