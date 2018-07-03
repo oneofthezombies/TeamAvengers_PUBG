@@ -340,7 +340,10 @@ void Character::setReload()
             int numBulletCurrentLoad = inven.m_hand->GetNumBullet(); //장전되어있는 총알 수
 
             if (numBulletCurrentLoad == magSize) //이미 가득 장전 되어있는 경우
+            {
+                cout << "이미 가득차있다!!" << endl;
                 return;
+            }
         
             //총에 알맞는 총알이 있는지 확인해서 장전
             auto it = inven.m_mapInventory.find(ammoType);
@@ -353,10 +356,17 @@ void Character::setReload()
                 cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
                 cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
 
+                if (numBulletInInventory == 0)
+                {
+                    cout << "인벤토리에 더이상 총알이 없어 ㅠㅠ" << endl;
+                    return;
+                }
+
                 inven.m_numReload = 0;
                 if (numBulletInInventory >= numBulletNeedReload)
                 {
-                    inven.m_hand->SetNumBullet(numBulletNeedReload);
+                    int numBullet = inven.m_hand->GetNumBullet();
+                    inven.m_hand->SetNumBullet(numBullet + numBulletNeedReload);
                     (*it).second.back()->SetCount(numBulletInInventory - numBulletNeedReload);
 
                     inven.m_numReload = numBulletNeedReload;
@@ -368,7 +378,8 @@ void Character::setReload()
 
                     inven.m_numReload = numBulletInInventory;
                 }
-                cout << "장정된 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
+                cout << "장전한 총알 개수: " << inven.m_numReload << "\n";
+                cout << "총에 장전된 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
                 cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
 
                 /*
@@ -383,8 +394,6 @@ void Character::setReload()
                 }
                 else if (tag == TAG_RES_STATIC::Kar98k)
                 {
-                    inven.m_numReload = 4;
-
                     if (inven.m_numReload == 5)
                     {
                         // fast reload
@@ -634,12 +643,17 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 
 void Character::rifleShooting()
 {
-    m_totalInventory.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(m_totalInventory.m_hand->GetTagResStatic());
-    m_totalInventory.m_numReload--;
+    auto& inven = m_totalInventory;
+    inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_hand->GetTagResStatic());
+
+    int numBullet = inven.m_hand->GetNumBullet();
+    inven.m_hand->SetNumBullet(--numBullet);
+    cout << "총에 남아있는 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
+
     //Goal : get Fire starting position , get fire direction
-    m_totalInventory.m_hand->UpdateModel(); //update to get position of frame "gun_bolt" 
+    inven.m_hand->UpdateModel(); //update to get position of frame "gun_bolt" 
     D3DXMATRIX mat =
-        m_totalInventory.m_hand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
+        inven.m_hand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
         * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
         * GetTransform()->GetTransformationMatrix();    //character world matrix
     
@@ -652,7 +666,7 @@ void Character::rifleShooting()
     //-------------------------
 
 
-    switch (m_totalInventory.m_hand->GetTagResStatic())
+    switch (inven.m_hand->GetTagResStatic())
     {
     case TAG_RES_STATIC::QBZ:
         BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_COLLISION::Impassable);
@@ -661,7 +675,6 @@ void Character::rifleShooting()
         BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_COLLISION::Impassable);
         break;
     }
-
 }
 
 bool Character::hasFinishEvent() const
