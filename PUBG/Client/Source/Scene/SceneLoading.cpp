@@ -39,7 +39,7 @@ void SceneLoading::OnUpdate()
     if (m_isFinished)
     {
         /**/
-        //addHeightmap();
+        addHeightmap();
         /**/
         
         Debug << "elapsed time : " << m_elapsed.count() << '\n';
@@ -49,28 +49,28 @@ void SceneLoading::OnUpdate()
     }
     else
     {
-        //if (!m_isDoneCharacters)
-        //{
-        //    if (verifyTasks(
-        //        &m_characterSkinnedMeshTasks,
-        //        &m_characterSkinnedMeshResources) &&
-        //        verifyTasks(
-        //            &m_characterAnimationTasks,
-        //            &m_characterAnimationResources))
-        //    {
-        //        addAnimationsToCharacter();
-        //    }
-        //}
+        if (!m_isDoneCharacters)
+        {
+            if (verifyTasks(
+                &m_characterSkinnedMeshTasks,
+                &m_characterSkinnedMeshResources) &&
+                verifyTasks(
+                    &m_characterAnimationTasks,
+                    &m_characterAnimationResources))
+            {
+                addAnimationsToCharacter();
+            }
+        }
 
-        //if (!m_isDoneSkinnedMeshs)
-        //{
-        //    if (verifyTasks(
-        //        &m_skinnedMeshTasks,
-        //        &m_skinnedMeshResources))
-        //    {
-        //        addSkinnedMeshs();
-        //    }
-        //}
+        if (!m_isDoneSkinnedMeshs)
+        {
+            if (verifyTasks(
+                &m_skinnedMeshTasks,
+                &m_skinnedMeshResources))
+            {
+                addSkinnedMeshs();
+            }
+        }
 
         if (!m_isDoneEffectMeshs)
         {
@@ -80,9 +80,9 @@ void SceneLoading::OnUpdate()
             }
         }
 
-        if (m_isDoneEffectMeshs /*&&
+        if (m_isDoneEffectMeshs &&
             m_isDoneCharacters &&
-            m_isDoneSkinnedMeshs*/)
+            m_isDoneSkinnedMeshs)
         {
             m_isFinished = true;
             m_finish = std::chrono::system_clock::now();
@@ -118,7 +118,7 @@ void SceneLoading::loadEffectMesh()
     //addTask(TAG_RES_STATIC::Armor_Lv1);
     //addTask(TAG_RES_STATIC::Back_Lv1);
 
-    addTask(TAG_RES_STATIC::Bandage);
+    //addTask(TAG_RES_STATIC::Bandage);
     //addTask(TAG_RES_STATIC::FirstAidKit);
     //addTask(TAG_RES_STATIC::MedKit);
 
@@ -147,7 +147,7 @@ void SceneLoading::loadSkinnedMesh()
     //addTask(TAG_RES_ANIM_CHARACTER::Lobby, &m_characterSkinnedMeshTasks);
 
     // character
-    //addTask(TAG_RES_ANIM_CHARACTER::ForTest, &m_characterSkinnedMeshTasks);
+    addTask(TAG_RES_ANIM_CHARACTER::ForTest, &m_characterSkinnedMeshTasks);
 
     // equipment
     //addTask(TAG_RES_EQUIPMENT::Head_Lv1_Anim, &m_equipmentSkinnedMeshTasks);
