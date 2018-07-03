@@ -195,7 +195,7 @@ void Character::updateMine()
 
     Sound()()->Listen(GetTransform()->GetPosition(), getForward());
 
-    Communication()()->SendPosition(p);
+    //Communication()()->SendPosition(p);
         Debug << "current position : " << p << '\n';
 }
 
