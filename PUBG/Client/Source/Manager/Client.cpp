@@ -224,12 +224,13 @@ void CommunicationManager::ReceiveMessage(const TAG_REQUEST tag, const string& d
 
             stringstream ss(eventFireBulletStr);
             D3DXVECTOR3 pos;
-            D3DXQUATERNION rot;
+            //D3DXQUATERNION rot;
+            D3DXVECTOR3 rot;
             float speed;
             float damage;
             int tag;
             ss >> pos.x >> pos.y >> pos.z 
-               >> rot.x >> rot.y >> rot.z >> rot.w
+               >> rot.x >> rot.y >> rot.z /*>> rot.w*/
                >> speed >> damage >> tag;
             BulletPool()()->Fire(pos, rot, speed, damage, 
                 static_cast<TAG_COLLISION>(tag));

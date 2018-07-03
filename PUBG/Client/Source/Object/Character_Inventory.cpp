@@ -14,6 +14,7 @@ Character::TotalInventory::TotalInventory()
     , m_weaponSecondary(nullptr)
     , m_capacity(DEFAULT_CAPACITY)
     , m_numReload(0)
+    , m_bulletFireCoolDown(0)
 {
 }
 
