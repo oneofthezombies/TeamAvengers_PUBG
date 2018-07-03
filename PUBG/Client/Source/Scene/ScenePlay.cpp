@@ -24,8 +24,6 @@ void ScenePlay::OnInit()
     ClientToScreen(g_hWnd, &center);
     SetCursorPos(center.x, center.y);
 
-    //Collision()()->SubscribeCollisionEvent(TAG_COLLISION::Impassable, TAG_COLLISION::Player_0_Body);
-
     SetDirectionalLight(new DirectionalLight);
     
     //AddObject(new TerrainFeature(TAG_RES_STATIC::SkySphere, Vector3::ZERO, Vector3::ZERO, Vector3::ONE* 0.18f));
@@ -130,10 +128,10 @@ void ScenePlay::OnInit()
     AddObject(item);
     character0->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(100, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
-    //AddObject(item);
-    //character0->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(100, 0, 10);
+    item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
+    AddObject(item);
+    character0->PutItemInTotalInventory(item);
 
     ////p = D3DXVECTOR3(110, 0, 10);
     ////item = new Item(TAG_RES_STATIC::RedDot, p, r, s);
