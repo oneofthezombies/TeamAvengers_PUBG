@@ -254,6 +254,7 @@ void HeightMap::OnRender()
 
 
     draw(m_RayBox, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
+    CurrentCamera()()->CameraRender();
 }
 void HeightMap::draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color)
 {

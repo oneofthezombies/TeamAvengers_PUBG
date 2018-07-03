@@ -188,6 +188,7 @@
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\HeightMap.h" />
+    <ClInclude Include="Source\Object\CollisionTestBox.h" />
     <ClInclude Include="Source\Object\DirectionalLight.h" />
     <ClInclude Include="Source\Object\Grid.h" />
     <ClInclude Include="Source\Object\SkySphere.h" />

@@ -39,48 +39,71 @@ ICamera::~ICamera()
 
 void ICamera::CameraRender()
 {
-    Character::Info* pTarInfo = GetTargetInfo();
-    if (pTarInfo)
-    {
-        
-//        Debug << "Rot : " << *pTarInfo->pRotationForCamera << endl;
+//    Character::Info* pTarInfo = GetTargetInfo();
+//    if (pTarInfo)
+//    {
+//        
+////        Debug << "Rot : " << *pTarInfo->pRotationForCamera << endl;
+//
+//        D3DXMATRIX tarR, matWorld;
+//        D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
+//        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
+//        
+//        D3DXMATRIX testT;
+//        D3DXMatrixTranslation(&testT, TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
+//        testT *=pTarInfo->pTransform->GetTransformationMatrix();
+//        //              (model space)                      (rotation get from character) 
+//        matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
+//    }
+//
+//    Shader::Draw(
+//        Resource()()->GetEffect("./Resource/", "Color.fx"), 
+//        nullptr, 
+//        [this](LPD3DXEFFECT pEffect) 
+//    {
+//        D3DXMATRIX s;
+//        D3DXMatrixScaling(&s, 1.0f, 1.0f, 1.0f);
+//        pEffect->SetMatrix(Shader::World, &s);
+//        D3DXCOLOR white(1.0f, 1.0f, 1.0f, 1.0f);
+//        pEffect->SetValue("Color", &white, sizeof white);
+//    }, 
+//        [this]() 
+//    {
+//        Device()()->DrawIndexedPrimitiveUP(
+//            D3DPT_LINELIST,
+//            0,
+//            sizeof m_vecWorld / sizeof m_vecWorld[0],
+//            BoxCollider::f_indices.size() / 2,
+//            BoxCollider::s_indices.data(),
+//            D3DFMT_INDEX16,
+//            &m_vecWorld[0],
+//            sizeof D3DXVECTOR3);
+//    });
 
-        D3DXMATRIX tarR, matWorld;
-        D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
-        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
-        
-        D3DXMATRIX testT;
-        D3DXMatrixTranslation(&testT, TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
-        testT *=pTarInfo->pTransform->GetTransformationMatrix();
-        //              (model space)                      (rotation get from character) 
-        matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
-    }
-
+    if (temp)
+        draw(drawRay, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+}
+void ICamera::draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color)
+{
     Shader::Draw(
-        Resource()()->GetEffect("./Resource/", "Color.fx"), 
-        nullptr, 
-        [this](LPD3DXEFFECT pEffect) 
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        [this, &color](LPD3DXEFFECT pEffect)
     {
-        D3DXMATRIX s;
-        D3DXMatrixScaling(&s, 1.0f, 1.0f, 1.0f);
-        pEffect->SetMatrix(Shader::World, &s);
-        D3DXCOLOR white(1.0f, 1.0f, 1.0f, 1.0f);
-        pEffect->SetValue("Color", &white, sizeof white);
-    }, 
-        [this]() 
+        D3DXMATRIX mat;
+        D3DXMatrixIdentity(&mat);
+        pEffect->SetMatrix(Shader::World, &mat);
+        pEffect->SetValue("Color", &color, sizeof color);
+    },
+        [this, &vertices]()
     {
-        Device()()->DrawIndexedPrimitiveUP(
+        Device()()->DrawPrimitiveUP(
             D3DPT_LINELIST,
-            0,
-            sizeof m_vecWorld / sizeof m_vecWorld[0],
-            BoxCollider::f_indices.size() / 2,
-            BoxCollider::s_indices.data(),
-            D3DFMT_INDEX16,
-            &m_vecWorld[0],
-            sizeof D3DXVECTOR3);
+            vertices.size() / 2,
+            vertices.data(),
+            sizeof vertices.front());
     });
 }
-
 void ICamera::UpdateViewProjMatrix()
 {
     D3DXVECTOR3 eye = Vector3::ZERO;
@@ -135,44 +158,7 @@ void ICamera::UpdateViewProjMatrix()
     }
 
 }
-//D3DXVECTOR3 eye = Vector3::ZERO;
-//D3DXVECTOR3 look = eye + -Vector3::FORWARD;
 
-//D3DXMATRIX camT, tarR, tarWorld, world;
-
-//D3DXMatrixTranslation(&camT, m_position.x, m_position.y, m_position.z);
-
-//Character::Info* pTar = GetTargetInfo();
-////if (!pTar || !pTar->pRotForCameraTP)
-////{
-//    D3DXMatrixIdentity(&tarR);
-//    D3DXMatrixIdentity(&tarWorld);
-////}
-////else
-////{
-////    const D3DXVECTOR3 rot = *pTar->pRotForCameraTP;
-////    D3DXMatrixRotationYawPitchRoll(&tarR, rot.y, rot.x, rot.z);
-////    tarWorld = pTar->pTransform->GetTransformationMatrix();
-////}
-
-//world = camT * tarR * tarWorld;
-//D3DXVec3TransformCoord(&eye, &eye, &world);
-//D3DXVec3TransformCoord(&look, &look, &world);
-
-//D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &look, &Vector3::UP);
-
-//auto pD = Device()();
-//pD->SetTransform(D3DTS_VIEW, &m_viewMatrix);
-
-//if (m_tagCamera != TAG_CAMERA::Scope2X)
-//{
-//    RECT rc;
-//    GetClientRect(g_hWnd, &rc);
-//    D3DXMatrixPerspectiveFovLH(&m_projectionMatrix,
-//        m_fovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom),
-//        1.0f, 5000.0f);
-//    pD->SetTransform(D3DTS_PROJECTION, &m_projectionMatrix);
-//}
 void ICamera::UpdateFrustumCulling()
 {
     //D3DXMATRIX InvVP;
@@ -248,15 +234,21 @@ bool ICamera::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
         {
             if (intersectionDist < minDist)
             {
+                temp = true;
                 bIntersect = true;
                 minDist = intersectionDist;
                 vOut = ray.m_pos + ray.m_dir * intersectionDist;
+                drawRay.push_back(ray.m_pos);
+                drawRay.push_back(vOut);
+                //return bIntersect;
             }
         }
     }
 
     return bIntersect;
 }
+
+
 
 
 
@@ -355,6 +347,19 @@ void CameraThirdPerson::Update()
     //견착하는 부분은 3인칭에서만 있기에
     if (Input()()->IsOnceKeyDown(VK_RBUTTON))
         Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
+
+    bool a;
+    D3DXVECTOR3 v;
+    if (Input()()->IsOnceKeyDown(VK_LBUTTON))
+    {
+        if (CalcPickedPosition(v, 1280 / 2, 720 / 2))
+        {
+            D3DXVec3Normalize(&v, &v);
+        }
+    }
+
+
+
 
 }
 //-----------------------------------------------------------------------
