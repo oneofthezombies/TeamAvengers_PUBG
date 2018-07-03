@@ -14,6 +14,7 @@ Character::TotalInventory::TotalInventory()
     , m_weaponSecondary(nullptr)
     , m_capacity(DEFAULT_CAPACITY)
     , m_numReload(0)
+    , m_tempSaveWeaponForX(nullptr)
 {
 }
 
@@ -31,6 +32,8 @@ Character::TotalInventory::~TotalInventory()
 
     SAFE_DELETE(m_weaponPrimary);
     SAFE_DELETE(m_weaponSecondary);
+
+    SAFE_DELETE(m_tempSaveWeaponForX);
 }
 
 void Character::PutItemInTotalInventory(Item* item)

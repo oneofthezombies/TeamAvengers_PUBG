@@ -6,16 +6,16 @@
 
 void Character::setAttacking()
 {
-    //for Debug
-    TAG_RES_STATIC tag;
+    //for Debug =========================================================
     Item* hand = m_totalInventory.m_hand;
     if (hand)
     {
+        TAG_RES_STATIC tagDebug = hand->GetTagResStatic();
         Debug << "On hand Weapon: ";
-        tag = hand->GetTagResStatic();
-        Debug << ItemInfo::GetName(tag) << "\n";
+        Debug << ItemInfo::GetName(tagDebug) << "\n";
     }
     Debug << "Attacking: " << ForDebugGetAttacking(m_attacking) << "\n";
+    //===================================================================
 
     TotalInventory& inven = m_totalInventory;
 
@@ -25,46 +25,25 @@ void Character::setAttacking()
     {
         if (inven.m_weaponPrimary)
         {
-            //등짝에 주무기가 있다
             if (m_attacking == Attacking::Unarmed)
             {
                 m_attacking = Attacking::Rifle;
 
                 inven.m_hand = inven.m_weaponPrimary;
                 inven.m_weaponPrimary = nullptr;
-                m_pAnimation->Set(
-                    CharacterAnimation::BodyPart::UPPER,
-                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand,
-                    false, [this]()
-                {
-                    m_pAnimation->Set(
-                        CharacterAnimation::BodyPart::UPPER,
-                        TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
-                        false);
-                });
+                setRifleOnHand(TAG_RIFLE::Primary);
             }
-            else if (m_attacking == Attacking::Rifle)
+            else if (m_attacking == Attacking::Rifle) //보조무기를 해제하고, 주무기를 장착한다
             {
-                //보조무기를 해제하고, 주무기를 장착한다
                 m_pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static,
                     false, [this, &inven]()
                 {
                     inven.m_weaponSecondary = inven.m_hand;
-
                     inven.m_hand = inven.m_weaponPrimary;
                     inven.m_weaponPrimary = nullptr;
-                    m_pAnimation->Set(
-                        CharacterAnimation::BodyPart::UPPER,
-                        TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand,
-                        false, [this]()
-                    {
-                        m_pAnimation->Set(
-                            CharacterAnimation::BodyPart::UPPER,
-                            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
-                            false);
-                    });
+                    setRifleOnHand(TAG_RIFLE::Primary);
                 });
             }
             else if (m_attacking == Attacking::Melee)
@@ -77,46 +56,25 @@ void Character::setAttacking()
     {
         if (inven.m_weaponSecondary)
         {
-            //등짝에 보조무기가 있다
             if (m_attacking == Attacking::Unarmed)
             {
                 m_attacking = Attacking::Rifle;
 
                 inven.m_hand = inven.m_weaponSecondary;
                 inven.m_weaponSecondary = nullptr;
-                m_pAnimation->Set(
-                    CharacterAnimation::BodyPart::UPPER,
-                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand,
-                    false, [this]()
-                {
-                    m_pAnimation->Set(
-                        CharacterAnimation::BodyPart::UPPER,
-                        TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
-                        false);
-                });
+                setRifleOnHand(TAG_RIFLE::Secondary);
             }
-            else if (m_attacking == Attacking::Rifle)
+            else if (m_attacking == Attacking::Rifle) //주무기를 등짝에 붙이고 보조무기를 손에 든다
             {
-                //주무기를 해제하고 보조무기를 장착한다
                 m_pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
                     false, [this, &inven]()
                 {
                     inven.m_weaponPrimary = inven.m_hand;
-
                     inven.m_hand = inven.m_weaponSecondary;
                     inven.m_weaponSecondary = nullptr;
-                    m_pAnimation->Set(
-                        CharacterAnimation::BodyPart::UPPER,
-                        TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand,
-                        false, [this]()
-                    {
-                        m_pAnimation->Set(
-                            CharacterAnimation::BodyPart::UPPER,
-                            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
-                            false);
-                    });
+                    setRifleOnHand(TAG_RIFLE::Secondary);
                 });
             }
             else if (m_attacking == Attacking::Melee)
@@ -125,48 +83,41 @@ void Character::setAttacking()
             }
         }
     }
-    //for test 'X' - 다시 X누르면 이전 무기 장착되는 것도 해야함
     else if (m_currentOnceKey._X)
     {
-        //손에 무기를 들고 있다면 해제한다
         //무기가 주무기냐, 보조무기냐에 따라서 다른 애니메이션을 실행한다. 우선 QBZ 주무기 Kar98k 보조무기
+        //등에 부착한다
         if (inven.m_hand)
         {
+            m_attacking = Attacking::Unarmed;
+            inven.m_tempSaveWeaponForX = inven.m_hand;
             TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic();
+
             if (tag == TAG_RES_STATIC::QBZ)
-            {
-                m_attacking = Attacking::Unarmed;
-                //주무기를 해제한다
-                m_pAnimation->Set(
-                    CharacterAnimation::BodyPart::UPPER,
-                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
-                    false,
-                    [this, &inven]()
-                {
-                    inven.m_weaponPrimary = inven.m_hand;
-                    inven.m_hand = nullptr;
-                    m_pAnimation->Set(
-                        CharacterAnimation::BodyPart::UPPER,
-                        TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1,
-                        false); //TODO: 해제는 되는데 다리가 부자연스러움
-                });
-            }
+                setRifleOnBody(TAG_RIFLE::Primary);
             else if (tag == TAG_RES_STATIC::Kar98k)
+                setRifleOnBody(TAG_RIFLE::Secondary);
+        }
+        //손에 무기를 들고 있지않는데 X버튼을 누른다면, 이전에 장착했던 무기를 다시 손에 든다
+        else
+        {
+            if (inven.m_tempSaveWeaponForX)
             {
-                m_attacking = Attacking::Unarmed;
-                //보조무기를 해제한다
-                m_pAnimation->Set(
-                    CharacterAnimation::BodyPart::UPPER,
-                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static,
-                    false,
-                    [this, &inven]()
+                m_attacking = Attacking::Rifle;
+                inven.m_hand = inven.m_tempSaveWeaponForX;
+                inven.m_tempSaveWeaponForX = nullptr;
+                TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic();
+
+                if (tag == TAG_RES_STATIC::QBZ)
                 {
-                    inven.m_weaponSecondary = inven.m_hand;
-                    inven.m_hand = nullptr;
-                    m_pAnimation->Set(
-                        CharacterAnimation::BodyPart::UPPER,
-                        TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
-                });
+                    inven.m_weaponPrimary = nullptr;
+                    setRifleOnHand(TAG_RIFLE::Primary);
+                }
+                else if (tag == TAG_RES_STATIC::Kar98k)
+                {
+                    inven.m_weaponSecondary = nullptr;
+                    setRifleOnHand(TAG_RIFLE::Secondary);                
+                }
             }
         }
     }
@@ -312,6 +263,77 @@ void Character::setReload()
             cout << "총을 장착해줘" << endl;
             //do nothing
         }
+    }
+}
+
+void Character::setRifleOnHand(TAG_RIFLE tagRifle)
+{
+    //주무기를 손에 든다
+    if (tagRifle == TAG_RIFLE::Primary)
+    {
+        m_pAnimation->Set(
+            CharacterAnimation::BodyPart::UPPER,
+            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand,
+            false, [this]()
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::UPPER,
+                TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
+                false);
+        });
+    }
+    //보조무기를 손에 든다
+    else if (tagRifle == TAG_RIFLE::Secondary)
+    {
+        m_pAnimation->Set(
+            CharacterAnimation::BodyPart::UPPER,
+            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand,
+            false, [this]()
+        {
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::UPPER,
+                TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
+                false);
+        });
+    }
+}
+
+void Character::setRifleOnBody(TAG_RIFLE tagRifle)
+{
+    TotalInventory& inven = m_totalInventory;
+
+    //주무기를 다시 몸에 장착
+    if (tagRifle == TAG_RIFLE::Primary)
+    {
+        m_pAnimation->Set(
+            CharacterAnimation::BodyPart::UPPER,
+            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
+            false,
+            [this, &inven]()
+        {
+            inven.m_weaponPrimary = inven.m_hand;
+            inven.m_hand = nullptr;
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::UPPER,
+                TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1,
+                false);
+        });
+    }
+    //보조무기를 다시 몸에 장착
+    else if (tagRifle == TAG_RIFLE::Secondary)
+    {
+        m_pAnimation->Set(
+            CharacterAnimation::BodyPart::UPPER,
+            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static,
+            false,
+            [this, &inven]()
+        {
+            inven.m_weaponSecondary = inven.m_hand;
+            inven.m_hand = nullptr;
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::UPPER,
+                TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
+        });
     }
 }
 

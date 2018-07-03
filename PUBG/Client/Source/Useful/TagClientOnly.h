@@ -137,6 +137,12 @@ enum class TAG_ITEM_CATEGORY
     Attach           //무기 부착물
 };
 
+enum class TAG_RIFLE
+{
+    Primary,
+    Secondary
+};
+
 enum class TAG_ATTACH_POINT
 {
     Primary_Muzzle,     //소음기, 소염기 등

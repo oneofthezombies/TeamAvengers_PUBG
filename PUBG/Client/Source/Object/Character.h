@@ -56,8 +56,11 @@ public:
         //Weapon* m_weaponPistol;
         //Weapon* m_weaponMelee;
         //Weapon* m_weaponThrowable;
+
         float m_capacity;
         int   m_numReload;
+
+        Item* m_tempSaveWeaponForX;
 
          TotalInventory();
         ~TotalInventory();
@@ -262,7 +265,8 @@ private:
     void onKar98kReloadEnd();
     void onKar98kReload();
 
-
+    void setRifleOnHand(TAG_RIFLE tagRifle);
+    void setRifleOnBody(TAG_RIFLE tagRifle);
 
 /**************************** end member method ******************************/
 
