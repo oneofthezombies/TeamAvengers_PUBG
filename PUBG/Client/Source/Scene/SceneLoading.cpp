@@ -20,6 +20,8 @@ void SceneLoading::loadSync()
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Kar98k);
     m_effectMeshResources.emplace(3, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
 
+    // add effect mesh resource
+
     addEffectMeshs();
 
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON::QBZ_Anim);
@@ -28,10 +30,14 @@ void SceneLoading::loadSync()
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
     m_skinnedMeshResources.emplace(1, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
+    // add skinned mesh resource
+
     addSkinnedMeshs();
 
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::ForTest);
     m_characterSkinnedMeshResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
+    // start animation resource 
 
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
     m_characterAnimationResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
