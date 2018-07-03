@@ -19,7 +19,7 @@ ScenePlay::~ScenePlay()
 
 void ScenePlay::OnInit()
 {
-    Collision()()->SubscribeCollisionEvent(TAG_COLLISION::Impassable, TAG_COLLISION::Player_0_Body);
+    //Collision()()->SubscribeCollisionEvent(TAG_COLLISION::Impassable, TAG_COLLISION::Player_0_Body);
 
     SetDirectionalLight(new DirectionalLight);
     
@@ -29,22 +29,25 @@ void ScenePlay::OnInit()
     AddObject(new Grid);
 
     SetHeightMap(new HeightMap);
-    
+    //
 
     Communication()()->m_MyInfo.m_ID = 0;
+    ////for (int i = 0; i < Character::NUM_PLAYER; ++i)
+    ////    AddObject(new Character(i));
     Character* character0 = new Character(0);
     AddObject(character0);
-    for (int i = 1; i < Character::NUM_PLAYER; ++i)
-        AddObject(new Character(i));
+    //AddObject(new Character(0));
 
-    TerrainFeature* pTerrainFeature = new TerrainFeature(TAG_RES_STATIC::Bandage, D3DXVECTOR3(0, 0, 0), Vector3::ONE, Vector3::ONE);
-    D3DXMATRIX stt, ttt;
-    D3DXMatrixScaling(&stt, 1.0f, 1.0f, 1.0f);
-    //D3DXMatrixTranslation(&ttt, 100.0f, 200.0f, 200.0f);
-    pTerrainFeature->AddBoxCollider(stt /** ttt*/);
-    AddObject(pTerrainFeature);
+    ////LoadObjectsFromFile("./Resource/save.txt");
 
-    AddObject(new SampleCollisionBox);
+    //TerrainFeature* pTerrainFeature = new TerrainFeature(TAG_RES_STATIC::Bandage, D3DXVECTOR3(0, 0, 0), Vector3::ONE, Vector3::ONE);
+    //D3DXMATRIX stt, ttt;
+    //D3DXMatrixScaling(&stt, 1.0f, 1.0f, 1.0f);
+    ////D3DXMatrixTranslation(&ttt, 100.0f, 200.0f, 200.0f);
+    //pTerrainFeature->AddBoxCollider(stt /** ttt*/);
+    //AddObject(pTerrainFeature);
+
+    //AddObject(new SampleCollisionBox);
 
     ////For inventory Test
     Item* item = nullptr;

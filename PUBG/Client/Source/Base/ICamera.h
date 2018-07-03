@@ -11,8 +11,6 @@
 #define TP_BASEPOSY 45.0f
 
 
-class Ray;
-
 class ICamera : public MemoryAllocator
 {
 private:
@@ -32,7 +30,7 @@ protected:  //Camera Position Rotation Fov
     float               m_fovY;
 
 protected:
-    Ray*                m_pRayFireDirection;
+    //D3DXVECTOR3         m_vBulletDestination;
     vector<D3DXVECTOR3> drawRay;
     bool                temp = false;
 protected:
@@ -58,6 +56,10 @@ public:
           TAG_CAMERA  GetTagCamera()        const;
 
     bool CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY);
+    //D3DXVECTOR3* GetBulletDestination()
+    //{
+    //    return &m_vBulletDestination;
+    //}
 };
  
 

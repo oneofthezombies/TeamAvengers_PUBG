@@ -323,15 +323,14 @@ void HeightMap::SetRayBox()
     vector<D3DXVECTOR3> vec;
     vec.resize(8);
     //ray Direction box 
-    vec[0] = (D3DXVECTOR3(0,        500.0f,      25.7f));	//좌상후
-    vec[1] = (D3DXVECTOR3(25.7f,    500.0f,     25.7f));	//우상후
-    vec[2] = (D3DXVECTOR3(0,        500.0f,      0));	//좌상전
-    vec[3] = (D3DXVECTOR3(25.7f,    500.0f,      0));	//우상전
-    vec[4] = (D3DXVECTOR3(0,        -1,         25.7f));	//좌하후
-    vec[5] = (D3DXVECTOR3(25.7f,    -1,         25.7f));	//우하후
-    vec[6] = (D3DXVECTOR3(0,        -1,         0));	//좌하전
-    vec[7] = (D3DXVECTOR3(25.7f,    -1,         0));	//우하전
-    
+    vec[0] = (D3DXVECTOR3(0,        500.0f,         257.f));	//좌상후
+    vec[1] = (D3DXVECTOR3(257.f,    500.0f,         257.f));	//우상후
+    vec[2] = (D3DXVECTOR3(0,        500.0f,         0));	//좌상전
+    vec[3] = (D3DXVECTOR3(257.f,    500.0f,         0));	//우상전
+    vec[4] = (D3DXVECTOR3(0,        -1,             257.f));	//좌하후
+    vec[5] = (D3DXVECTOR3(257.f,    -1,             257.f));	//우하후
+    vec[6] = (D3DXVECTOR3(0,        -1,             0));	//좌하전
+    vec[7] = (D3DXVECTOR3(257.f,    -1,             0));	//우하전
     
     
     for (int i = 0; i < vec.size(); i++)

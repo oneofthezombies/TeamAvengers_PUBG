@@ -15,7 +15,7 @@ ICamera::ICamera(const TAG_CAMERA tag)
     : MemoryAllocator()
     , m_tagCamera(tag)
     , m_position(Vector3::ZERO)
-    , m_pRayFireDirection(nullptr)
+
 {
     for (int i = 0; i < 8; i++)
     {
@@ -34,7 +34,7 @@ ICamera::ICamera(const TAG_CAMERA tag)
 
 ICamera::~ICamera()
 {
-    SAFE_DELETE(m_pRayFireDirection);
+
 }
 
 void ICamera::CameraRender()
@@ -221,7 +221,6 @@ TAG_CAMERA ICamera::GetTagCamera() const
 bool ICamera::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
 {
     Ray ray = Ray::RayAtWorldSpace(screenX, screenY);
-    float minDist = FLT_MAX;
     float intersectionDist;
     bool bIntersect = false;
 
@@ -232,16 +231,17 @@ bool ICamera::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
     {
         if (ray.CalcIntersectTri(&rayBox[i], &intersectionDist))
         {
-            if (intersectionDist < minDist)
-            {
-                temp = true;
-                bIntersect = true;
-                minDist = intersectionDist;
-                vOut = ray.m_pos + ray.m_dir * intersectionDist;
-                drawRay.push_back(ray.m_pos);
-                drawRay.push_back(vOut);
-                //return bIntersect;
-            }
+            bIntersect = true;
+            vOut = ray.m_pos + ray.m_dir * intersectionDist;
+
+
+            //rendering À» À§ÇØ
+            temp = true;
+            drawRay.push_back(ray.m_pos);
+            drawRay.push_back(vOut);
+            //--------------------------
+            
+            return bIntersect;
         }
     }
 
@@ -352,7 +352,7 @@ void CameraThirdPerson::Update()
     D3DXVECTOR3 v;
     if (Input()()->IsOnceKeyDown(VK_LBUTTON))
     {
-        if (CalcPickedPosition(v, 1280 / 2, 720 / 2))
+        if (CalcPickedPosition(m_vBulletDestination, 1280 / 2, 720 / 2))
         {
             D3DXVec3Normalize(&v, &v);
         }
