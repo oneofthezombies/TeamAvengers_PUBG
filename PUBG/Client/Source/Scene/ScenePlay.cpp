@@ -19,6 +19,12 @@ ScenePlay::~ScenePlay()
 
 void ScenePlay::OnInit()
 {
+    POINT center;
+    center.x = 1280 / 2;
+    center.y = 720 / 2;
+    ClientToScreen(g_hWnd, &center);
+    SetCursorPos(center.x, center.y);
+
     //Collision()()->SubscribeCollisionEvent(TAG_COLLISION::Impassable, TAG_COLLISION::Player_0_Body);
 
     SetDirectionalLight(new DirectionalLight);
