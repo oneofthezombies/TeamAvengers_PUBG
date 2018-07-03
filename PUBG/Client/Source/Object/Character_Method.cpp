@@ -6,6 +6,7 @@
 #include "AnimationState.h"
 #include "Item.h"
 #include "ItemInfo.h"
+#include "ComponentTransform.h"
 
 Character::WaistRotation::WaistRotation(const float limit, const float factor)
     : LIMIT_OF_ANGLE(limit)
@@ -127,8 +128,9 @@ void Character::subscribeCollisionEvent()
         {
             if (i == m_index) continue;
 
-            Collision()()->SubscribeCollisionEvent(
-                GetTagCollisionDamage(i), tagBody);
+            Collision()()->AddCollisionEvent(
+                GetTagCollisionDamage(i), 
+                tagBody);
         }
     }
 }

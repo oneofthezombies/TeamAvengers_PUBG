@@ -348,7 +348,7 @@ void CameraThirdPerson::Update()
     if (Input()()->IsOnceKeyDown(VK_RBUTTON))
         Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
 
-    bool a;
+    bool a = false;
     D3DXVECTOR3 v;
     if (Input()()->IsOnceKeyDown(VK_LBUTTON))
     {

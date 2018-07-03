@@ -6,6 +6,7 @@
 #include "DirectionalLight.h"
 #include "AnimationState.h"
 #include "ResourceInfo.h"
+#include "ComponentTransform.h"
 
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);

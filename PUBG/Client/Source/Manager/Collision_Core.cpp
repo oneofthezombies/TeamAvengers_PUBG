@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "CollisionCore.h"
+#include "Collision.h"
 #include "Collider.h"
 
-bool CollisionCore::HasCollision(BoxCollider* pLhs, BoxCollider* pRhs)
+bool Collision::Core::HasCollision(BoxCollider* pLhs, BoxCollider* pRhs)
 {
     assert(pLhs && pRhs &&
         "CollisionCore::HasCollision() failed. collider is null.");

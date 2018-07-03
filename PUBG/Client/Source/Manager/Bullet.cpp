@@ -15,7 +15,7 @@ Bullet::Bullet()
 
     pBoxCollider = AddComponent<BoxCollider>();
     pBoxCollider->Init(-Vector3::ONE, Vector3::ONE);
-    pBoxCollider->SetTag(TAG_COLLISION::Idle);
+    pBoxCollider->SetTagCollision(TAG_COLLISION::Idle);
 
     pCylinder = BulletPool()()->GetCylinder();
 }
@@ -65,7 +65,7 @@ void Bullet::OnRender()
 void Bullet::Reset()
 {
     pTr->SetPosition(Vector3::ZERO);
-    pBoxCollider->SetTag(TAG_COLLISION::Idle);
+    pBoxCollider->SetTagCollision(TAG_COLLISION::Idle);
     m_IsActive = false;
 
     CurrentScene()()->RemoveObject(this);
@@ -88,7 +88,7 @@ float Bullet::GetDamage() const
 
 TAG_COLLISION Bullet::GetTagCollision() const
 {
-    return pBoxCollider->GetTag();
+    return pBoxCollider->GetTagCollision();
 }
 
 void Bullet::Set(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation, 
@@ -100,7 +100,7 @@ void Bullet::Set(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
     pTr->Update();
     m_Speed = speed;
     m_Damage = damage;
-    pBoxCollider->SetTag(tag);
+    pBoxCollider->SetTagCollision(tag);
     m_IsActive = true;
 
     CurrentScene()()->AddObject(this);

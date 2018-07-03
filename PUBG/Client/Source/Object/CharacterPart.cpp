@@ -19,7 +19,7 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
     auto pSkiCon = pCharacter->GetCharacterAnimation();
 
     pBoxCollider = AddComponent<BoxCollider>();
-    pBoxCollider->SetTag(
+    pBoxCollider->SetTagCollision(
         pCharacter->GetTagCollisionBody(pCharacter->GetIndex()));
 
     pBoxCollider->AddOnCollisionEnterCallback(

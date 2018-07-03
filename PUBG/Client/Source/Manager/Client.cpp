@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Client.h"
+#include "ComponentTransform.h"
 
 void Client::Connect(const tcp::resolver::results_type& endpoints)
 {

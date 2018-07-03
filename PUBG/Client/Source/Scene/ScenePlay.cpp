@@ -6,7 +6,6 @@
 #include "Grid.h"
 #include "Item.h"
 #include "HeightMap.h"
-#include "CollisionTestBox.h"
 
 ScenePlay::ScenePlay()
     : IScene()
@@ -45,7 +44,7 @@ void ScenePlay::OnInit()
     //for (int i = 1; i < Character::NUM_PLAYER; ++i)
     //    AddObject(new Character(i));
 
-    ////LoadObjectsFromFile("./Resource/save.txt");
+    LoadObjectsFromFile("./Resource/save.txt");
 
     //TerrainFeature* pTerrainFeature = new TerrainFeature(TAG_RES_STATIC::Bandage, D3DXVECTOR3(0, 0, 0), Vector3::ONE, Vector3::ONE);
     //D3DXMATRIX stt, ttt;
@@ -152,7 +151,6 @@ void ScenePlay::OnInit()
     ////character0->PutItemInTotalInventory(item);
 
     //character0->ShowTotalInventory();
-    ////LoadObjectsFromFile("./Resource/save.txt");
 }
 
 void ScenePlay::OnUpdate()

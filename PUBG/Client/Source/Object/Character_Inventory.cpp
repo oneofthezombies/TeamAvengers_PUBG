@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "Item.h"
 #include "ItemInfo.h"
+#include "ComponentTransform.h"
 
 const float Character::TotalInventory::DEFAULT_CAPACITY = 70.0f;
 
