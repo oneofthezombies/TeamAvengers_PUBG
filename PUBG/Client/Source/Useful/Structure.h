@@ -62,8 +62,9 @@ struct SkinnedMesh
 {
     LPD3DXFRAME               m_pRootFrame;
     LPD3DXFRAME               m_pSubRootFrame;
-    LPD3DXANIMATIONCONTROLLER m_pAnimController;
     LPD3DXFRAME               pConnectFrame;
+
+    LPD3DXANIMATIONCONTROLLER m_pAnimController;
 
     SkinnedMesh();
     ~SkinnedMesh();
@@ -82,6 +83,7 @@ struct SkinnedMeshInstance
 {
     SkinnedMesh* pSkinnedMesh;
     LPD3DXANIMATIONCONTROLLER m_pAnimController;
+    LPD3DXANIMATIONCONTROLLER m_pSubAnimController;
 
     SkinnedMeshInstance();
     ~SkinnedMeshInstance();

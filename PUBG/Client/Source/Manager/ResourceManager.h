@@ -55,10 +55,38 @@ public:
 
 struct Resource
 {
+    enum class Policy
+    {
+        SYNC,
+        ASYNC,
+    };
+
+    struct Container
+    {
+
+    };
+
+    struct Async
+    {
+
+    };
+
+    struct Info
+    {
+
+    };
+
+    class Manager
+    {
+
+    };
+
     ResourceManager* operator()()
     {
         return ResourceManager::GetInstance();
     }
+
+    static void Load(const Policy policy) {}
 };
 
 struct ResourceAsync
@@ -69,15 +97,15 @@ struct ResourceAsync
     static ResourceContainer* OnLoadSkinnedMeshAsync(
         const string path, const string xFilename);
 
-    static HRESULT CreateEffectMesh(const string& path, const string& name,
+    static HRESULT CreateEffectMesh(const string path, const string name,
         LPD3DXMESH pMesh, const D3DXEFFECTINSTANCE* pEffectInstances,
         const DWORD numEffectInstances, 
         ResourceContainer* OutResourceContainer);
 
-    static HRESULT CreateEffect(const string& path, const string& filename,
+    static HRESULT CreateEffect(const string path, const string filename,
         ResourceContainer* OutResourceContainer);
 
-    static HRESULT CreateTexture(const string& path, const string& filename,
+    static HRESULT CreateTexture(const string path, const string filename,
         ResourceContainer* OutResourceContainer);
 };
 

@@ -4,6 +4,37 @@
 #include "Character.h"
 #include "UIText.h"
 
+void SceneLoading::loadSync()
+{
+    std::pair<std::string, std::string> pathFilename;
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
+    m_effectMeshResources.emplace(0, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
+    m_effectMeshResources.emplace(1, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::QBZ);
+    m_effectMeshResources.emplace(2, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Kar98k);
+    m_effectMeshResources.emplace(3, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::ForTest);
+    m_characterAnimationResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
+}
+
 SceneLoading::SceneLoading()
     : IScene()
     , m_isFinished(false)
@@ -28,9 +59,13 @@ void SceneLoading::OnInit()
     loadEffectMesh();
     loadSkinnedMesh();
 
-    m_pPercentageImage = new UIText(Resource()()->GetFont(TAG_FONT::Default), 
-        D3DXVECTOR2(1000.0f, 50.0f), &m_percentage, D3DCOLOR_XRGB(0, 255, 0), 
-        nullptr);
+    m_pPercentageImage = 
+        new UIText(
+            Resource()()->GetFont(TAG_FONT::Default), 
+            D3DXVECTOR2(1000.0f, 50.0f), 
+            &m_percentage, 
+            D3DCOLOR_XRGB(0, 255, 0), 
+            nullptr);
     m_pPercentageImage->SetPosition(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
     m_pPercentageImage->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
 }
@@ -114,7 +149,9 @@ void SceneLoading::OnUpdate()
 void SceneLoading::loadImage()
 {
     ResourceContainer* pResourceContainer = new ResourceContainer;
-    ResourceAsync::CreateTexture("./Resource", "input_field.png", pResourceContainer);
+    ResourceAsync::CreateTexture(
+        "./Resource", "input_field.png", 
+        pResourceContainer);
     Resource()()->AddResource(pResourceContainer);
 }
 
@@ -196,7 +233,7 @@ void SceneLoading::loadCharacterAnimation()
 
     //for test
     addTask(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
-    // ...
+    //...
 }
 
 void SceneLoading::addAnimationsToCharacter()
@@ -212,7 +249,7 @@ void SceneLoading::addAnimationsToCharacter()
     Resource()()->AddResource(pCharacterResource);
 
     SkinnedMesh* pCharacter = 
-        Resource()()->GetSkinnedMesh(pathFilename.first, pathFilename.second);
+        Resource()()->GetSkinnedMesh(pathFilename.first, pathFilename.second); 
 
     bool res = pCharacter->Seperate("spine_01");
     assert(res && 

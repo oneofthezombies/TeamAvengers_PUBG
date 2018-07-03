@@ -5,7 +5,7 @@
 class Character;
 class BoxCollider;
 class UIText;
-class SkinnedMeshController;
+class CharacterAnimation;
 struct Frame;
 
 class CharacterPart : public IObject
@@ -18,7 +18,7 @@ private:
     Character*   pCharacter;
     BoxCollider* pBoxCollider;
 
-    void addFrame(const string& name, SkinnedMeshController* pSkiCon);
+    void addFrame(const string& name, CharacterAnimation* pSkiCon);
     void updateUI();
 
 public:

@@ -294,11 +294,12 @@ ResourceContainer::~ResourceContainer()
 ResourceContainer* ResourceAsync::OnLoadEffectMeshAsync(
     const string path, const string xFilename)
 {
+    const string fullPath(path + xFilename);
     LPD3DXBUFFER pEffectInstancesBuffer = nullptr;
     LPD3DXMESH   pMesh = nullptr;
     DWORD        numMaterials = 0u;
 
-    HRESULT hr = D3DXLoadMeshFromXA((path + xFilename).c_str(), 
+    HRESULT hr = D3DXLoadMeshFromXA(fullPath.c_str(),
         D3DXMESH_MANAGED, Device()(), nullptr, nullptr, 
         &pEffectInstancesBuffer, &numMaterials, &pMesh);
 
@@ -329,6 +330,8 @@ ResourceContainer* ResourceAsync::OnLoadEffectMeshAsync(
 ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
     const string path, const string xFilename)
 {
+    const string fullPath(path + xFilename);
+
     ResourceContainer* pResourceContainer = new ResourceContainer;
     if (!pResourceContainer)
     {
@@ -336,7 +339,7 @@ ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
     }
 
     pResourceContainer->m_pSkinnedMesh = 
-        make_pair(path + xFilename, new SkinnedMesh);
+        make_pair(fullPath, new SkinnedMesh);
     SkinnedMesh* pSkinnedMesh = pResourceContainer->m_pSkinnedMesh.second;
     if (!pSkinnedMesh)
     {
@@ -345,7 +348,7 @@ ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
 
     AllocateHierarchyAsync allocAsync(path, xFilename, pResourceContainer);
 
-    HRESULT hr = D3DXLoadMeshHierarchyFromXA((path + xFilename).c_str(),
+    HRESULT hr = D3DXLoadMeshHierarchyFromXA(fullPath.c_str(),
         D3DXMESH_MANAGED, Device()(), &allocAsync, nullptr, 
         &pSkinnedMesh->m_pRootFrame,
         &pSkinnedMesh->m_pAnimController);
@@ -364,7 +367,7 @@ ResourceContainer* ResourceAsync::OnLoadSkinnedMeshAsync(
     return pResourceContainer;
 }
 
-HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
+HRESULT ResourceAsync::CreateEffectMesh(const string path, const string name,
     LPD3DXMESH pMesh, const D3DXEFFECTINSTANCE* pEffectInstances, 
     const DWORD numEffectInstances, ResourceContainer* OutResourceContainer)
 {
@@ -383,7 +386,7 @@ HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
     }
 
     EffectMesh* pEffectMesh = new EffectMesh;
-    OutResourceContainer->m_effectMeshs[path + name] = pEffectMesh;
+    OutResourceContainer->m_effectMeshs[key] = pEffectMesh;
 
     pEffectMesh->m_pMesh = pMesh;
     /**/
@@ -483,7 +486,7 @@ HRESULT ResourceAsync::CreateEffectMesh(const string& path, const string& name,
     return S_OK;
 }
 
-HRESULT ResourceAsync::CreateEffect(const string& path, const string& filename,
+HRESULT ResourceAsync::CreateEffect(const string path, const string filename,
     ResourceContainer* OutResourceContainer)
 {
     if (OutResourceContainer == nullptr)
@@ -523,7 +526,7 @@ HRESULT ResourceAsync::CreateEffect(const string& path, const string& filename,
 }
 
 HRESULT ResourceAsync::CreateTexture(
-    const string& path, const string& filename, 
+    const string path, const string filename, 
     ResourceContainer* OutResourceContainer)
 {
     if (OutResourceContainer == nullptr)

@@ -45,42 +45,6 @@ EffectMesh::~EffectMesh()
     m_effectParams.resize(0);
 }
 
-//void EffectMesh::Render(const D3DXMATRIX& world, LPD3DXMESH pMesh)
-//{
-//    assert(pMesh && "EffectMesh::Render(), mesh is null.");
-//
-//    for (auto ei = 0u; ei < m_effectParams.size(); ++ei)
-//    {
-//        const auto& ep = m_effectParams[ei];
-//        ep.pEffect->ApplyParameterBlock(ep.hParam);
-//
-//        ep.pEffect->SetMatrix("World", &world);
-//        ep.pEffect->SetMatrix("View", &CurrentCamera()()->GetViewMatrix());
-//        ep.pEffect->SetMatrix(
-//            "Projection", &CurrentCamera()()->GetProjectionMatrix());
-//
-//        D3DXVECTOR3 lightDirection(1.0f, -1.0f, 1.0f);
-//        DirectionalLight* pDirectionalLight = 
-//            CurrentScene()()->GetDirectionalLight();
-//        if (pDirectionalLight)
-//            lightDirection = pDirectionalLight->GetDirection();
-//
-//        ep.pEffect->SetValue(
-//            "lightDirection", &lightDirection, sizeof lightDirection);
-//
-//        ep.pEffect->CommitChanges();
-//        UINT numPasses = 0u;
-//        ep.pEffect->Begin(&numPasses, 0);
-//        for (auto pi = 0u; pi < numPasses; ++pi)
-//        {
-//            ep.pEffect->BeginPass(pi);
-//            pMesh->DrawSubset(ei);
-//            ep.pEffect->EndPass();
-//        }
-//        ep.pEffect->End();
-//    }
-//}
-
 Frame::Frame()
 {
     memset(this, 0, sizeof Frame);
@@ -94,8 +58,8 @@ MeshContainer::MeshContainer()
 SkinnedMesh::SkinnedMesh()
     : m_pRootFrame(nullptr)
     , m_pSubRootFrame(nullptr)
-    , m_pAnimController(nullptr)
     , pConnectFrame(nullptr)
+    , m_pAnimController(nullptr)
 {
 }
 
@@ -124,7 +88,7 @@ bool SkinnedMesh::Seperate(const string& name)
     seperate(m_pRootFrame, name);
 
     if (m_pSubRootFrame) return true;
-    else return false;
+    else                 return false;
 }
 
 void SkinnedMesh::setupBoneMatrixPointers(LPD3DXFRAME pFrame)
@@ -169,7 +133,7 @@ void SkinnedMesh::seperate(LPD3DXFRAME pFrame, const string& name)
         {
             m_pSubRootFrame = pFrame->pFrameFirstChild;
             pConnectFrame = pFrame;
-            pConnectFrame->pFrameFirstChild = nullptr;
+            pFrame->pFrameFirstChild = nullptr;
         }
     }
 
@@ -179,7 +143,7 @@ void SkinnedMesh::seperate(LPD3DXFRAME pFrame, const string& name)
         {
             m_pSubRootFrame = pFrame->pFrameSibling;
             pConnectFrame = pFrame;
-            pConnectFrame->pFrameSibling = nullptr;
+            pFrame->pFrameSibling = nullptr;
         }
     }
 
@@ -545,10 +509,12 @@ STDMETHODIMP AllocateHierarchyAsync::DestroyMeshContainer(
 SkinnedMeshInstance::SkinnedMeshInstance()
     : pSkinnedMesh(nullptr)
     , m_pAnimController(nullptr)
+    , m_pSubAnimController(nullptr)
 {
 }
 
 SkinnedMeshInstance::~SkinnedMeshInstance()
 {
     SAFE_RELEASE(m_pAnimController);
+    SAFE_RELEASE(m_pSubAnimController);
 }

@@ -4,12 +4,22 @@
 #include "TagAnimation.h"
 #include "AnimationState.h"
 
-class SkinnedMeshController;
+class CharacterAnimation;
 class CharacterPart;
 class Item;
 
 class Character : public IObject
 {
+
+
+
+
+/*****************************************************************************/
+/*                                                                           */
+/*                              nested structure                             */
+/*                                                                           */
+/*****************************************************************************/
+
 public:
     struct WaistRotation
     {
@@ -120,32 +130,63 @@ public:
         IsJumping();
     };
 
+
+
+
+/**************************** end nested structure ***************************/
+ 
+
+
+ 
+/*****************************************************************************/
+/*                                                                           */
+/*                                 constant                                  */
+/*                                                                           */
+/*****************************************************************************/
+
 public:
     static const int            NUM_PLAYER = 4;
     static const D3DXQUATERNION OFFSET_ROTATION;
 
-private:
-    int                m_index;
-    TAG_ANIM_CHARACTER m_animState;
+/******************************* end constant ********************************/
 
+
+
+
+/*****************************************************************************/
+/*                                                                           */
+/*                              member variable                              */
+/*                                                                           */
+/*****************************************************************************/
+
+private:
+
+    // id
+    int m_index;
+
+    Transform*          pTransform;
+    CharacterAnimation* m_pAnimation;
+    CharacterPart*      m_pRootCharacterPart;
+
+    //
+    FramePtr      m_framePtr;
     RootTransform m_rootTransform;
     WaistRotation m_waistRotation;
-    FramePtr      m_framePtr;
 
-    // for root position
-    LPD3DXMESH m_pSphereMesh;
+    // collision part
 
-    SkinnedMeshController* pUpperBodyController;
-    SkinnedMeshController* m_pLowerBodyController;
-    CharacterPart*         m_pRootCharacterPart;
 
+    // for camera
     D3DXMATRIX m_prevRootModel;
     D3DXVECTOR3 m_rotationForCamera;
-
     Info m_info;
-    
-    //for inventory
+
+    // for inventory
     TotalInventory m_totalInventory;
+
+    // state
+    TAG_ANIM_CHARACTER m_upperAnimState;
+    TAG_ANIM_CHARACTER m_lowerAnimState;
 
     IsPressing m_savedInput;
     IsPressing m_currentStayKey;
@@ -155,6 +196,17 @@ private:
     Attacking m_attacking;
 
     IsJumping m_Jump;
+
+/**************************** end member variable ****************************/
+
+
+
+
+/*****************************************************************************/
+/*                                                                           */
+/*                               member method                               */
+/*                                                                           */
+/*****************************************************************************/
 
 private:
     void setFramePtr();
@@ -181,19 +233,6 @@ private:
 
     bool isMine() const;
 
-    void setAnimation(
-        const TAG_ANIM_CHARACTER tag,
-        const bool isBlend = true,
-        const float blendTime = 0.3f,
-        const float nextWeight = 0.0f);
-
-    void setAnimation(
-        const TAG_ANIM_CHARACTER tag,
-        const bool isBlend,
-        const std::function<void()>& finishEvent);
-
-    bool hasFinishEvent() const;
-    
     void setInfo();
 
     D3DXVECTOR3 getUp();
@@ -223,6 +262,19 @@ private:
     void onKar98kReloadEnd();
     void onKar98kReload();
 
+
+
+/**************************** end member method ******************************/
+
+
+
+
+/*****************************************************************************/
+/*                                                                           */
+/*                               public method                               */
+/*                                                                           */
+/*****************************************************************************/
+
 public:
              Character(const int index);
     virtual ~Character();
@@ -246,4 +298,12 @@ public:
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
     string ForDebugGetAttacking(Attacking attcking);
     string ForDebugGetStance(Stance stance);
+
+    CharacterAnimation* GetCharacterAnimation();
+
+/**************************** end public method ******************************/
+
+
+
+
 };

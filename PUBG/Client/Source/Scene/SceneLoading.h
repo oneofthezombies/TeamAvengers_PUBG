@@ -9,6 +9,14 @@ using tasks_t = std::deque<
 >;
 using resources_t = std::map<std::size_t, ResourceContainer*>;
 
+enum class PlayMode
+{
+    // for local test
+    ALONE,
+
+    WITH_OTHERS
+};
+
 class UIText;
 
 class SceneLoading : public IScene
@@ -70,6 +78,11 @@ private:
     void addTask(const TAG_RES_ANIM_CHARACTER tag);
     void addTask(const TAG_RES_EQUIPMENT tag, tasks_t* OutTasks);
     void addTask(const TAG_RES_ANIM_WEAPON tag, tasks_t* OutTasks);
+
+    // TODO : impl
+    void load(const Resource::Policy policy, const PlayMode mode) {}
+
+    void loadSync();
 
 public:
              SceneLoading();
