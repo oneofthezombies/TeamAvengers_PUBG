@@ -390,7 +390,7 @@ HRESULT ResourceAsync::CreateEffectMesh(const string path, const string name,
 
     pEffectMesh->m_pMesh = pMesh;
     /**/
-    //TODO
+    //TODO JOHN HAN
     void* pData = nullptr;
     pEffectMesh->m_pMesh->LockVertexBuffer(D3DLOCK_READONLY, &pData);
     D3DXComputeBoundingSphere(
