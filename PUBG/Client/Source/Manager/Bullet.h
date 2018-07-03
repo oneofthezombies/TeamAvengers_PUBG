@@ -11,6 +11,8 @@ private:
     float       m_Speed;
     float       m_Damage;
     bool        m_IsActive;
+    
+    Transform*  pTr;
 
     LPD3DXMESH   pCylinder;
     BoxCollider* pBoxCollider;

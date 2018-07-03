@@ -28,36 +28,43 @@ void Bullet::OnUpdate()
 {
     if (!m_IsActive) return;
 
-    auto tr = GetTransform();
-
-    auto pos = tr->GetPosition();
+    auto pos = pTr->GetPosition();
     D3DXMATRIX r;
-    D3DXMatrixRotationQuaternion(&r, &tr->GetRotation());
+    D3DXMatrixRotationQuaternion(&r, &pTr->GetRotation());
     D3DXVECTOR3 forward;
     D3DXVec3TransformNormal(&forward, &Vector3::FORWARD, &r);
     D3DXVec3Normalize(&forward, &forward);
     pos += forward * m_Speed;
-    tr->SetPosition(pos);
-
-    pBoxCollider->Update(tr->GetTransformationMatrix());
+    pTr->SetPosition(pos);
+    pTr->Update();
+    pBoxCollider->Update(pTr->GetTransformationMatrix());
 }
 
 void Bullet::OnRender()
 {
     if (!m_IsActive) return;
 
-    auto pDevice = Device()();
-    pDevice->SetRenderState(D3DRS_LIGHTING, true);
-    pDevice->SetTexture(0, nullptr);
-    pDevice->SetMaterial(&MaterialTemplate::GetWhite());
-    pDevice->SetTransform(
-        D3DTS_WORLD, &GetTransform()->GetTransformationMatrix());
-    pCylinder->DrawSubset(0);
+    //// visualize cylider
+    D3DXMATRIX mat = pTr->GetTransformationMatrix();
+
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        pCylinder,
+        0,
+        [this, &mat](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &mat);
+
+        D3DXCOLOR red(1.0f, 0.0f, 0.0f, 1.0f);
+        pEffect->SetValue("Color", &red, sizeof red);
+    });
+
 }
 
 void Bullet::Reset()
 {
-    GetTransform()->SetPosition(Vector3::ZERO);
+    pTr->SetPosition(Vector3::ZERO);
     pBoxCollider->SetTag(TAG_COLLISION::Idle);
     m_IsActive = false;
 
@@ -87,9 +94,10 @@ TAG_COLLISION Bullet::GetTagCollision() const
 void Bullet::Set(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation, 
     const float speed, const float damage, const TAG_COLLISION tag)
 {
-    auto tr = GetTransform();
-    tr->SetPosition(position);
-    tr->SetRotation(rotation);
+    pTr = GetTransform();
+    pTr->SetPosition(position);
+    pTr->SetRotation(rotation);
+    pTr->Update();
     m_Speed = speed;
     m_Damage = damage;
     pBoxCollider->SetTag(tag);
@@ -101,7 +109,7 @@ void Bullet::Set(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
 _BulletPool::_BulletPool()
     : Singleton<_BulletPool>()
 {
-    D3DXCreateCylinder(Device()(), 1.0f, 1.0f, 1.0f, 10, 10, &m_pCylinder, 
+    D3DXCreateCylinder(Device()(), 3.0f, 3.0f, 10.0f, 10, 10, &m_pCylinder, 
         nullptr);
 }
 
@@ -111,8 +119,8 @@ _BulletPool::~_BulletPool()
 
 void _BulletPool::Destroy()
 {
-    for (auto b : m_Bullets)
-        SAFE_DELETE(b);
+    //for (auto b : m_Bullets)
+    //    SAFE_DELETE(b);
 
     SAFE_RELEASE(m_pCylinder);
 }
