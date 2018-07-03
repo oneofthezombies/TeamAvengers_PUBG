@@ -47,10 +47,10 @@ void ScenePlay::OnInit()
     AddObject(new SampleCollisionBox);
 
     ////For inventory Test
-    //Item* item = nullptr;
-    //D3DXVECTOR3 p(10, 0, 10);
-    //D3DXVECTOR3 r(0, 0, 0);
-    //D3DXVECTOR3 s(1, 1, 1);
+    Item* item = nullptr;
+    D3DXVECTOR3 p(10, 0, 10);
+    D3DXVECTOR3 r(0, 0, 0);
+    D3DXVECTOR3 s(1, 1, 1);
 
     ////item = new Item(TAG_RES_STATIC::Head_Lv1, p, r, s);
     ////AddObject(item);

@@ -127,7 +127,7 @@ void SceneLoading::loadEffectMesh()
     //addTask(TAG_RES_STATIC::Armor_Lv1);
     //addTask(TAG_RES_STATIC::Back_Lv1);
 
-    //addTask(TAG_RES_STATIC::Bandage);
+    addTask(TAG_RES_STATIC::Bandage);
     //addTask(TAG_RES_STATIC::FirstAidKit);
     //addTask(TAG_RES_STATIC::MedKit);
 
