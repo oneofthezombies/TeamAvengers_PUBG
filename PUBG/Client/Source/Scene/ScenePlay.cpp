@@ -19,6 +19,12 @@ ScenePlay::~ScenePlay()
 
 void ScenePlay::OnInit()
 {
+    POINT center;
+    center.x = 1280 / 2;
+    center.y = 720 / 2;
+    ClientToScreen(g_hWnd, &center);
+    SetCursorPos(center.x, center.y);
+
     //Collision()()->SubscribeCollisionEvent(TAG_COLLISION::Impassable, TAG_COLLISION::Player_0_Body);
 
     SetDirectionalLight(new DirectionalLight);
@@ -36,8 +42,8 @@ void ScenePlay::OnInit()
     ////    AddObject(new Character(i));
     Character* character0 = new Character(0);
     AddObject(character0);
-    for (int i = 1; i < Character::NUM_PLAYER; ++i)
-        AddObject(new Character(i));
+    //for (int i = 1; i < Character::NUM_PLAYER; ++i)
+    //    AddObject(new Character(i));
 
     ////LoadObjectsFromFile("./Resource/save.txt");
 
@@ -100,35 +106,35 @@ void ScenePlay::OnInit()
     ////AddObject(item);
     ////character0->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(70, 0, 10);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    AddObject(item);
-    character0->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(70, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    //AddObject(item);
+    //character0->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(70, 0, 10);
     item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
     AddObject(item);
     character0->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(80, 0, 10);
-    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
-    AddObject(item);
-    character0->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(80, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
+    //AddObject(item);
+    //character0->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(80, 0, 10);
-    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
-    AddObject(item);
-    character0->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(80, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
+    //AddObject(item);
+    //character0->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(90, 0, 10);
     item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
     AddObject(item);
     character0->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(100, 0, 10);
-    item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
-    AddObject(item);
-    character0->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(100, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
+    //AddObject(item);
+    //character0->PutItemInTotalInventory(item);
 
     ////p = D3DXVECTOR3(110, 0, 10);
     ////item = new Item(TAG_RES_STATIC::RedDot, p, r, s);

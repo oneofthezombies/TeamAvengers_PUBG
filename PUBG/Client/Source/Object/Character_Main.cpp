@@ -5,6 +5,7 @@
 #include "SkinnedMeshController.h"
 #include "DirectionalLight.h"
 #include "AnimationState.h"
+#include "Item.h"
 
 
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
@@ -38,7 +39,7 @@ Character::Character(const int index)
         Resource()()->GetCharacterSkinnedMesh());
     
     setAnimation(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
-    //setAnimation(TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle, false);
+
 
     setFramePtr();
 
@@ -132,6 +133,7 @@ void Character::updateMine()
     //}
 
 
+
     const float    dt = Time()()->GetDeltaTime();
     Transform*     pTr = GetTransform();
     D3DXVECTOR3    p = pTr->GetPosition();
@@ -171,32 +173,23 @@ void Character::updateMine()
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     
 
-
-    //John TODO list
-    //<<1. CalcPickedPosition 함수를 v를 포인터로 받게 하기
-
-    if (Input()()->IsOnceKeyDown(VK_LBUTTON))
+    m_totalInventory.m_bulletFireCoolDown -= dt;
+    if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
+    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton)
     {
-        //앞으로 어떻게 바꿀꺼냐면 여기 r을 쏘는 targetpos - 총구 pos 해서 나오는 direction으로 쏘는 걸로 할꺼야!
-        D3DXVECTOR3 v; 
-        CurrentCamera()()->CalcPickedPosition(v, 1207 / 2, 600 / 2); 
-        D3DXVECTOR3 dir = v - (/*이곳은 나중에 총구 pos*/p + D3DXVECTOR3(0, 100.0f, 0));
-        
-        D3DXQUATERNION rrr;
-        D3DXQuaternionRotationYawPitchRoll(&rrr, m_rotationForCamera.y, m_rotationForCamera.x, m_rotationForCamera.z);
-        BulletPool()()->Fire((p + D3DXVECTOR3(0, 100.0f, 0)), rrr * Character::OFFSET_ROTATION, 1.0f, 10.0f, TAG_COLLISION::Impassable);
-            
-            
-            
-        //실행가능    
-        //BulletPool()()->Fire((p + D3DXVECTOR3(0,100.0f,0)), r*Character::OFFSET_ROTATION, 1.0f, 10.0f, TAG_COLLISION::Impassable);
+        if (m_totalInventory.m_bulletFireCoolDown <= 0.f && m_totalInventory.m_numReload > 0)
+        {
+            rifleShooting();
+            //pistolShooting();?? 이란것도 나중에는 만들겠지요?
+        }
     }
-        
 
 
 
 
 
+
+    
 
 
 
