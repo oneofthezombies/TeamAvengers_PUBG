@@ -809,9 +809,8 @@ void Character::updateBone()
     D3DXMatrixRotationX(&rx, m_waistRotation.m_angle);
     m_framePtr.pWaist->TransformationMatrix *= rx;
 
-    // TODO 애니메이션 다시 돌아오게 하기
-    // for root motion animation
-    m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
+    //// for root motion animation
+    //m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
 }
 
 void Character::updateDependency()

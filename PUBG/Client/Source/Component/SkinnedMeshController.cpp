@@ -6,6 +6,9 @@ void SkinnedMeshController::updateFrameToModelSpace(LPD3DXFRAME pFrameBase,
 {
     if (!pFrameBase) return;
 
+    //if (pFrameBase->Name)
+    //    cout << pFrameBase->Name << endl;
+
     auto pFrame = static_cast<Frame*>(pFrameBase);
     pFrame->CombinedTransformationMatrix = pFrame->TransformationMatrix;
 
@@ -225,11 +228,11 @@ void SkinnedMeshController::UpdateAnimation()
         m_pSkinnedMeshInstance->m_pAnimController,
         &m_passedBlendingTime);
 
-    FindFrame("root")->TransformationMatrix = Matrix::IDENTITY;
-    updateFrameToModelSpace(pSkinnedMesh->m_pRootFrame, nullptr);
+    //FindFrame("root")->TransformationMatrix = Matrix::IDENTITY;
+    //updateFrameToModelSpace(pSkinnedMesh->m_pRootFrame, nullptr);
 
     for (auto& a : m_animationBackup)
-        a.second = a.first->CombinedTransformationMatrix;
+        a.second = a.first->TransformationMatrix;
 
     notifyAnimationEvent(
         calcedDT,
@@ -244,7 +247,7 @@ void SkinnedMeshController::UpdateAnimation()
         m_pSkinnedMeshInstance->m_pSubAnimController,
         &m_subPassedBlendingTime);
 
-    FindFrame("root")->TransformationMatrix = Matrix::IDENTITY;
+    //FindFrame("root")->TransformationMatrix = Matrix::IDENTITY;
 }
 
 void SkinnedMeshController::UpdateModel()
@@ -257,6 +260,9 @@ void SkinnedMeshController::UpdateModel()
 
     SkinnedMesh* pSkinnedMesh = m_pSkinnedMeshInstance->pSkinnedMesh;
 
+    for (auto& a : m_animationBackup)
+        a.first->TransformationMatrix = a.second;
+
     updateFrameToModelSpace(
         pSkinnedMesh->m_pRootFrame,
         nullptr);
@@ -267,9 +273,6 @@ void SkinnedMeshController::UpdateModel()
             pSkinnedMesh->m_pSubRootFrame,
             pSkinnedMesh->pConnectFrame);
     }
-
-    for (auto& a : m_animationBackup)
-        a.first->CombinedTransformationMatrix = a.second;
 }
 
 void SkinnedMeshController::Render(
@@ -284,8 +287,8 @@ void SkinnedMeshController::Render(
     SkinnedMesh* pSkinnedMesh = m_pSkinnedMeshInstance->pSkinnedMesh;
     drawFrame(pSkinnedMesh->m_pRootFrame, setGlobalVariable);
 
-    if (pSkinnedMesh->m_pSubRootFrame)
-        drawFrame(pSkinnedMesh->m_pSubRootFrame, setGlobalVariable);
+    //if (pSkinnedMesh->m_pSubRootFrame)
+    //    drawFrame(pSkinnedMesh->m_pSubRootFrame, setGlobalVariable);
 }
 
 void SkinnedMeshController::SetSkinnedMesh(SkinnedMesh* pSkinnedMesh)

@@ -20,19 +20,50 @@ void SceneLoading::loadSync()
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Kar98k);
     m_effectMeshResources.emplace(3, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
 
+    addEffectMeshs();
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON::QBZ_Anim);
+    m_skinnedMeshResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    m_skinnedMeshResources.emplace(1, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
+    addSkinnedMeshs();
+
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::ForTest);
-    m_characterAnimationResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    m_characterSkinnedMeshResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
+    m_characterAnimationResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
+    m_characterAnimationResources.emplace(1, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
+    m_characterAnimationResources.emplace(2, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
+    m_characterAnimationResources.emplace(3, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
+    m_characterAnimationResources.emplace(4, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
+    m_characterAnimationResources.emplace(5, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
+    m_characterAnimationResources.emplace(6, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    m_characterAnimationResources.emplace(7, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+    m_characterAnimationResources.emplace(8, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
+    m_characterAnimationResources.emplace(9, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
+    addAnimationsToCharacter();
 }
 
 SceneLoading::SceneLoading()
@@ -55,9 +86,9 @@ void SceneLoading::OnInit()
 {
     m_start = std::chrono::system_clock::now();
 
-    loadImage();
-    loadEffectMesh();
-    loadSkinnedMesh();
+    //loadImage();
+    //loadEffectMesh();
+    //loadSkinnedMesh();
 
     m_pPercentageImage = 
         new UIText(
@@ -68,6 +99,8 @@ void SceneLoading::OnInit()
             nullptr);
     m_pPercentageImage->SetPosition(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
     m_pPercentageImage->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
+
+    loadSync();
 }
 
 void SceneLoading::OnUpdate()
@@ -251,7 +284,7 @@ void SceneLoading::addAnimationsToCharacter()
     SkinnedMesh* pCharacter = 
         Resource()()->GetSkinnedMesh(pathFilename.first, pathFilename.second); 
 
-    bool res = pCharacter->Seperate("spine_01");
+    bool res = pCharacter->Seperate("spine_02");
     assert(res && 
         "SceneLoading::addAnimationsToCharacter(), \
          SkinnedMesh::Seperate() failed.");
