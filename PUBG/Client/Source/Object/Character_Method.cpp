@@ -839,8 +839,8 @@ void Character::updateDependency()
 
     // render
     pAnimation->Render(
-        m_framePtr.pWaist->CombinedTransformationMatrix 
-        * GetTransform()->GetTransformationMatrix(), 
+        /*m_framePtr.pWaist->CombinedTransformationMatrix 
+        **/ GetTransform()->GetTransformationMatrix(), 
         [this](LPD3DXEFFECT pEffect)
     {
         pEffect->SetMatrix(

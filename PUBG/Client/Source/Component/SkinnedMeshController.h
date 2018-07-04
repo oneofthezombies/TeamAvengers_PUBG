@@ -10,8 +10,8 @@ struct SkinnedMeshInstance;
 
 class SkinnedMeshController : public Component
 {
-private:
-    LPD3DXMESH  m_testmeshSphere;
+//private:
+//    LPD3DXMESH  m_testmeshSphere;
 private:
     SkinnedMeshInstance* m_pSkinnedMeshInstance;
 

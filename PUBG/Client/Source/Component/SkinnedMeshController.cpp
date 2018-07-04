@@ -41,14 +41,6 @@ void SkinnedMeshController::drawFrame(
     drawFrame(pFrameBase->pFrameFirstChild, world, setGlobalVariable);
 }
 
-//이건 되는 코드임 찬응아! 지우지 말것
-////****frustum culling for player attachedments ex) GUN
-//GetTransform()->Update();
-//D3DXVECTOR3 center = Vector3::ZERO;
-//D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_center, &GetTransform()->GetTransformationMatrix());
-//if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_radius))
-//    return;
-////*********************************************
 void SkinnedMeshController::drawMeshContainer(
     LPD3DXMESHCONTAINER pMeshContainerBase,
     const D3DXMATRIX& world,
@@ -59,39 +51,24 @@ void SkinnedMeshController::drawMeshContainer(
     auto pMeshContainer = static_cast<MeshContainer*>(pMeshContainerBase);
     
 
-
-
-
-
-    //****frustum culling for player attachedments ex) GUN
-    GetTransform()->Update();
+    //**************frustum culling ************************
     D3DXVECTOR3 center = Vector3::ZERO;
-    
-    //world matrix 가 필요하다!!!
     D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_center, &world);
     if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_radius))
         return;
-    //*********************************************
+    //******************************************************
 
-
-
-    Shader::Draw(
-        Resource()()->GetEffect("./Resource/", "Color.fx"),
-        nullptr,
-        m_testmeshSphere,
-        0,
-        [this, &world](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(Shader::World, &world);
-
-        D3DXCOLOR White(1.0f, 1.0f, 1.0f, 1.0f);
-        pEffect->SetValue("Color", &White, sizeof White);
-    });
-
-
-
-
-
+    //Shader::Draw(
+    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
+    //    nullptr,
+    //    m_testmeshSphere,
+    //    0,
+    //    [this, &world](LPD3DXEFFECT pEffect)
+    //{
+    //    pEffect->SetMatrix(Shader::World, &world);
+    //    D3DXCOLOR White(1.0f, 1.0f, 1.0f, 1.0f);
+    //    pEffect->SetValue("Color", &White, sizeof White);
+    //});
 
 
     auto numBones = pMeshContainer->pSkinInfo->GetNumBones();
@@ -234,15 +211,15 @@ SkinnedMeshController::SkinnedMeshController(IObject* pOwner)
     , m_subTotalBlendingTime(0.3f)
     , m_subPassedBlendingTime(0.0f)
     , m_pSkinnedMeshInstance(nullptr)
-    , m_testmeshSphere(NULL)
+    //, m_testmeshSphere(NULL)
 {
-    D3DXCreateSphere(Device()(), 96.42f, 10, 10, &m_testmeshSphere, NULL);
+    //D3DXCreateSphere(Device()(), 96.42f, 10, 10, &m_testmeshSphere, NULL);
 }
 
 SkinnedMeshController::~SkinnedMeshController()
 {
     SAFE_DELETE(m_pSkinnedMeshInstance);
-    SAFE_RELEASE(m_testmeshSphere);
+    //SAFE_RELEASE(m_testmeshSphere);
 }
 
 void SkinnedMeshController::UpdateAnimation()
