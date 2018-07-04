@@ -18,6 +18,7 @@ enum class PlayMode
 };
 
 class UIText;
+class UIImage;
 
 class SceneLoading : public IScene
 {
@@ -51,6 +52,7 @@ private:
     std::string m_lastFinishedTaskName;
     std::string m_percentage;
     UIText*     m_pPercentageImage;
+    UIImage*    m_pBackground;
 
     UINT m_numAddedAnim;
     bool m_isDoneCharacters;
@@ -59,6 +61,8 @@ private:
     bool m_isFinished;
 
     Resource::Policy m_policy;
+
+    std::thread t;
 
 private:
     void addAnimationsToCharacter();
@@ -74,7 +78,6 @@ private:
     void addTask(const TAG_RES_EQUIPMENT      tag, tasks_t* OutTasks);
     void addTask(const TAG_RES_ANIM_WEAPON    tag, tasks_t* OutTasks);
 
-    void load();
     void load(const TAG_RES_STATIC         tag);
     void load(const TAG_RES_ANIM_WEAPON    tag);
     void load(const TAG_RES_EQUIPMENT      tag);
@@ -90,4 +93,6 @@ public:
 
     virtual void OnInit() override;
     virtual void OnUpdate() override;
+
+    void Load();
 };

@@ -3,25 +3,30 @@
 #include "ResourceInfo.h"
 #include "Character.h"
 #include "UIText.h"
+#include "UIImage.h"
 
-void SceneLoading::load()
+void SceneLoading::Load()
 {
     // set policy 
     // sync  -> on main thread
     // async -> multi threading
     setPolicy(Resource::Policy::ASYNC);
 
+    // load effect meshs
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
 
+    // load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
     load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
+    // load character
     load(TAG_RES_ANIM_CHARACTER::ForTest);
 
+    // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
@@ -158,6 +163,17 @@ SceneLoading::~SceneLoading()
 
 void SceneLoading::OnInit()
 {
+    Resource::XContainer* pXContainer = new Resource::XContainer;
+    Resource::Async::CreateTexture("./Resource/", "dedenne.png", pXContainer);
+    Resource()()->AddResource(pXContainer);
+    m_pBackground =
+        new UIImage(
+            "./Resource/",
+            "dedenne.png",
+            D3DXVECTOR3(-600.0f, -200.0f, 0.0f),
+            nullptr,
+            nullptr);
+
     m_pPercentageImage = 
         new UIText(
             Resource()()->GetFont(TAG_FONT::Default), 
@@ -169,12 +185,16 @@ void SceneLoading::OnInit()
     m_pPercentageImage->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
 
     m_start = std::chrono::system_clock::now();
-
-    load();
+    t  = std::thread(std::bind(&SceneLoading::Load, this));
 }
 
 void SceneLoading::OnUpdate()
 {
+    if (t.joinable())
+    {
+        t.join();
+    }
+
     if (isFinished())
     {
         m_finish = std::chrono::system_clock::now();
@@ -183,6 +203,7 @@ void SceneLoading::OnUpdate()
         addHeightmapResource();
 
         UI()()->Destroy(m_pPercentageImage);
+        UI()()->Destroy(m_pBackground);
         Scene()()->SetCurrentScene(TAG_SCENE::Play);
         //Scene()()->SetCurrentScene(TAG_SCENE::Login);
     }
@@ -346,8 +367,8 @@ bool SceneLoading::verifyTasks(tasks_t* OutTasks, resources_t* OutResources)
     std::future_status futureStatus;
     for (auto i = OutTasks->begin(); i != OutTasks->end();)
     {
-        futureStatus = i->second.wait_until(std::chrono::system_clock::now());
-        //futureStatus = i->second.wait_for(std::chrono::nanoseconds(1));
+        //futureStatus = i->second.wait_until(std::chrono::system_clock::now());
+        futureStatus = i->second.wait_for(std::chrono::milliseconds(100));
         switch (futureStatus)
         {
         case std::future_status::deferred:
