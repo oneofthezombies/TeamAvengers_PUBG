@@ -113,7 +113,7 @@ void ScenePlay::setAloneMode()
 
 void ScenePlay::setWithOthersMode()
 {
-    for (int i = 0; i < Character::NUM_PLAYER; ++i)
+    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
         AddObject(new Character(i));
 }
 

@@ -134,9 +134,8 @@ void _BulletPool::PrintNumBullet()
     Debug << "Current number of active bullets : " << count << '\n';
 }
 
-
-Bullet * _BulletPool::Fire(const D3DXVECTOR3 & startPos,
-    const D3DXVECTOR3 & dir, const float speed, const float damage,
+Bullet* _BulletPool::Fire(const D3DXVECTOR3& startPos,
+    const D3DXVECTOR3& dir, const float speed, const float damage,
     const TAG_COLLISION tag)
 {
     for (auto& b : m_Bullets)

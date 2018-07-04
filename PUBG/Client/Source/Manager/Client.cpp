@@ -146,7 +146,7 @@ void CommunicationManager::Connect(const string& host, const string& port,
 
     Sleep(500);
 
-    m_MyInfo.m_Nickname = nickname;
+    m_MyInfo.m_nickname = nickname;
 
     m_pClient->Write(Message::Create(TAG_REQUEST::RECEIVE_MY_ID, nickname));
 }
@@ -163,7 +163,7 @@ void CommunicationManager::ReceiveMessage(const TAG_REQUEST tag, const string& d
             ReceiveID(id);
             
             SendID(m_MyInfo.m_ID);
-            SendNickname(m_MyInfo.m_Nickname);
+            SendNickname(m_MyInfo.m_nickname);
         }
         break;
     case TAG_REQUEST::SEND_ID:
@@ -180,7 +180,7 @@ void CommunicationManager::ReceiveMessage(const TAG_REQUEST tag, const string& d
             auto& id = parsedDesc.first;
             auto& nickname = parsedDesc.second;
 
-            m_RoomInfo.m_PlayerInfos[id].m_Nickname = nickname;
+            m_RoomInfo.m_PlayerInfos[id].m_nickname = nickname;
         }
         break;
     case TAG_REQUEST::SEND_POSITION:
@@ -192,7 +192,7 @@ void CommunicationManager::ReceiveMessage(const TAG_REQUEST tag, const string& d
             stringstream ss(positionStr);
             D3DXVECTOR3 pos;
             ss >> pos.x >> pos.y >> pos.z;
-            m_RoomInfo.m_PlayerInfos[id].m_Position = pos;
+            m_RoomInfo.m_PlayerInfos[id].m_position = pos;
         }
         break;
     case TAG_REQUEST::SEND_ANIMATION_INDEX:
@@ -202,7 +202,7 @@ void CommunicationManager::ReceiveMessage(const TAG_REQUEST tag, const string& d
             auto& indexStr = parsedDesc.second;
 
             const int index = std::stoi(indexStr);
-            m_RoomInfo.m_PlayerInfos[id].m_AnimationIndex = index;
+            m_RoomInfo.m_PlayerInfos[id].m_upperAnimState = index;
         }
         break;
     case TAG_REQUEST::SEND_ANIMATION_TIME:
@@ -214,7 +214,7 @@ void CommunicationManager::ReceiveMessage(const TAG_REQUEST tag, const string& d
             stringstream ss(timeStr);
             float time;
             ss >> time;
-            m_RoomInfo.m_PlayerInfos[id].m_AnimationTime = time;
+            //m_RoomInfo.m_PlayerInfos[id].m_AnimationTime = time;
         }
         break;
     case TAG_REQUEST::SEND_EVENT_FIRE_BULLET:
@@ -272,7 +272,7 @@ void CommunicationManager::SendID(const int id)
 
 void CommunicationManager::SendNickname(const string& nickname)
 {
-    m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_Nickname = nickname;
+    m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_nickname = nickname;
 
     stringstream ss;
     ss << m_MyInfo.m_ID << nickname;
@@ -281,7 +281,7 @@ void CommunicationManager::SendNickname(const string& nickname)
 
 void CommunicationManager::SendPosition(const D3DXVECTOR3& pos)
 {
-    m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_Position = pos;
+    m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_position = pos;
 
     stringstream ss;
     ss << m_MyInfo.m_ID << pos.x << ' ' << pos.y << ' ' << pos.z;
@@ -290,7 +290,7 @@ void CommunicationManager::SendPosition(const D3DXVECTOR3& pos)
 
 void CommunicationManager::SendAnimationIndex(const int index)
 {
-    m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_AnimationIndex = index;
+    m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_upperAnimState = index;
 
     stringstream ss;
     ss << m_MyInfo.m_ID << index;
@@ -300,7 +300,7 @@ void CommunicationManager::SendAnimationIndex(const int index)
 
 void CommunicationManager::SendAnimationTime(const float time)
 {
-    m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_AnimationTime = time;
+    //m_RoomInfo.m_PlayerInfos[m_MyInfo.m_ID].m_AnimationTime = time;
 
     stringstream ss;
     ss << m_MyInfo.m_ID << time;

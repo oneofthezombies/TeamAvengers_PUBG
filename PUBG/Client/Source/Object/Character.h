@@ -149,7 +149,6 @@ public:
 /*****************************************************************************/
 
 public:
-    static const int            NUM_PLAYER = 4;
     static const D3DXQUATERNION OFFSET_ROTATION;
 
 /******************************* end constant ********************************/
@@ -288,9 +287,9 @@ public:
     virtual void OnUpdate() override;
     virtual void OnRender() override;
 
-    void OnCollisionEnter(Collider* pPerpetrator, Collider* pVictim);
-    void OnCollisionStay (Collider* pPerpetrator, Collider* pVictim);
-    void OnCollisionExit (Collider* pPerpetrator, Collider* pVictim);
+    void OnCollisionEnter(Collider* pOffence, Collider* pDefence);
+    void OnCollisionStay (Collider* pOffence, Collider* pDefence);
+    void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
     int GetIndex() const;
     TAG_COLLISION GetTagCollisionBody(const int index);

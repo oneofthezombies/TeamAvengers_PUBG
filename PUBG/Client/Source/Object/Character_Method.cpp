@@ -126,7 +126,7 @@ void Character::subscribeCollisionEvent()
     if (isMine())
     {
         auto tagBody = GetTagCollisionBody(m_index);
-        for (int i = 0; i < NUM_PLAYER; ++i)
+        for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
         {
             if (i == m_index) continue;
 

@@ -36,14 +36,14 @@ Character::Character(const int index)
 {
     pTransform = GetTransform();
     pTransform->SetRotation(OFFSET_ROTATION);
-    pTransform->SetPosition(D3DXVECTOR3(100.0f, 0.0f, 100.0f));
+    const float factor(static_cast<float>(m_index + 1) * 100.0f);
+    pTransform->SetPosition(D3DXVECTOR3(factor, 0.0f, factor));
 
     m_pAnimation = new CharacterAnimation;
     m_pAnimation->Set(
         CharacterAnimation::BodyPart::BOTH, 
         TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, 
         false);
-
 
     setFramePtr();
 
@@ -156,9 +156,15 @@ void Character::updateMine()
         Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)));
     }
 
-    Sound()()->Listen(GetTransform()->GetPosition(), getForward());
+    Sound()()->Listen(pos, getForward());
 
-    Debug << "current        position : " << pos << '\n'
+    if (Input()()->IsOnceKeyDown(VK_UP))
+    {
+        BulletPool()()->Fire(pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_COLLISION::Player_1_Damage);
+
+    }
+
+    Debug << "current position : " << pos << '\n'
         << "current upper animation : "
         << m_pAnimation->GetUpperAnimationName() << '\n'
         << "current lower animation : "
@@ -177,19 +183,18 @@ void Character::updateOther()
 {
     if (isMine()) return;
 
-    //auto pInput = Input()();
-    //auto pCom = Communication()();
-    //auto pos = pTransform->GetPosition();
-    //auto pSkiCon = pSkinnedMeshController;
+    auto pInput = Input()();
+    auto pCom = Communication()();
+    D3DXVECTOR3 pos = pTransform->GetPosition();
 
-    //auto& pi = pCom->m_RoomInfo.m_PlayerInfos[m_index];
-    //pos = pi.m_Position;
+    auto& pi = pCom->m_RoomInfo.m_PlayerInfos[m_index];
+    pos = pi.m_position;
 
     //const auto uAnimState = static_cast<unsigned int>(m_animState);
     //if (uAnimState != pi.m_AnimationIndex)
     //{
     //    m_animState = static_cast<TAG_ANIM_CHARACTER>(pi.m_AnimationIndex);
-    //    pSkiCon->SetAnimationIndex(pi.m_AnimationIndex, true);
+    //    m_pAnimation->SetAnimationIndex(pi.m_AnimationIndex, true);
     //}
 
     //tr->SetPosition(pos);

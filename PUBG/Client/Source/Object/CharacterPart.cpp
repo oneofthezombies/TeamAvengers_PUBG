@@ -14,31 +14,30 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
     , pBoxCollider(nullptr)
 {
     assert(pCharacter && 
-        "CharacterPart::Constructor() failed. character is null.");
+        "CharacterPart::Constructor(), character is null.");
 
-    auto pSkiCon = pCharacter->GetCharacterAnimation();
+    CharacterAnimation* pAnimation = 
+        pCharacter->GetCharacterAnimation();
 
     pBoxCollider = AddComponent<BoxCollider>();
     pBoxCollider->SetTagCollision(
         pCharacter->GetTagCollisionBody(pCharacter->GetIndex()));
-
     pBoxCollider->AddOnCollisionEnterCallback(
-        bind(&Character::OnCollisionEnter, pCharacter, _1, _2));
+        std::bind(&Character::OnCollisionEnter, pCharacter, _1, _2));
     pBoxCollider->AddOnCollisionStayCallback(
-        bind(&Character::OnCollisionStay, pCharacter, _1, _2));
+        std::bind(&Character::OnCollisionStay, pCharacter, _1, _2));
     pBoxCollider->AddOnCollisionExitCallback(
-        bind(&Character::OnCollisionExit, pCharacter, _1, _2));
+        std::bind(&Character::OnCollisionExit, pCharacter, _1, _2));
 
     switch (tag)
     {
     case TAG_COLLIDER_CHARACTER_PART::Head:
         {
-            addFrame("hair_f_01", pSkiCon);
-            addFrame("hair_b_01", pSkiCon);
-            addFrame("head", pSkiCon);
+            addFrame("hair_f_01", pAnimation);
+            addFrame("hair_b_01", pAnimation);
+            addFrame("head", pAnimation);
 
-            AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::Neck, 
-                pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Neck);
 
             //auto pF = pSkiCon->FindFrame("F_Face_03");
             //auto pMeshContainer = 
@@ -61,21 +60,17 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             //max.y *= 0.5f;
 
             //pBoxCollider->Init(min, max);
-
             pBoxCollider->Init(Vector3::ONE * -10.0, Vector3::ONE * 10.0f);
         }
         break;
     case TAG_COLLIDER_CHARACTER_PART::Neck:
         {
-            addFrame("head", pSkiCon);
-            addFrame("neck_01", pSkiCon);
+            addFrame("head", pAnimation);
+            addFrame("neck_01", pAnimation);
 
-            AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::Breast,
-                pCharacter));
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Clavicle_Left, pCharacter));
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Clavicle_Right, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Breast);
+            addChild(TAG_COLLIDER_CHARACTER_PART::Clavicle_Left);
+            addChild(TAG_COLLIDER_CHARACTER_PART::Clavicle_Right);
 
             pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
@@ -83,11 +78,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Breast:
         {
-            addFrame("neck_01", pSkiCon);
-            addFrame("spine_03", pSkiCon);
+            addFrame("neck_01", pAnimation);
+            addFrame("spine_03", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Stomach_Upper, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Stomach_Upper);
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
                 D3DXVECTOR3(10.0f, 10.0f, 10.0f));
@@ -95,11 +89,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Stomach_Upper:
         {
-            addFrame("spine_03", pSkiCon);
-            addFrame("spine_02", pSkiCon);
+            addFrame("spine_03", pAnimation);
+            addFrame("spine_02", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Stomach_Lower, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Stomach_Lower);
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
                 D3DXVECTOR3(10.0f, 10.0f, 10.0f));
@@ -107,11 +100,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Stomach_Lower:
         {
-            addFrame("spine_02", pSkiCon);
-            addFrame("spine_01", pSkiCon);
+            addFrame("spine_02", pAnimation);
+            addFrame("spine_01", pAnimation);
 
-            AddChildren(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::Waist,
-                pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Waist);
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
                 D3DXVECTOR3(10.0f, 10.0f, 10.0f));
@@ -119,13 +111,11 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Waist:
         {
-            addFrame("pelvis", pSkiCon);
-            addFrame("spine_01", pSkiCon);
+            addFrame("pelvis", pAnimation);
+            addFrame("spine_01", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Leg_Left_Upper, pCharacter));
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Leg_Right_Upper, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Leg_Left_Upper);
+            addChild(TAG_COLLIDER_CHARACTER_PART::Leg_Right_Upper);
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
                 D3DXVECTOR3(10.0f, 10.0f, 10.0f));
@@ -133,11 +123,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Clavicle_Left:
         {
-            addFrame("clavicle_l", pSkiCon);
-            addFrame("upperarm_l", pSkiCon);
+            addFrame("clavicle_l", pAnimation);
+            addFrame("upperarm_l", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Arm_Left_Upper, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Arm_Left_Upper);
 
             pBoxCollider->Init(D3DXVECTOR3(-6.0f, -7.0f, -5.0f), 
                 D3DXVECTOR3(6.0f, 7.0f, 5.0f));
@@ -145,11 +134,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Clavicle_Right:
         {
-            addFrame("clavicle_r", pSkiCon);
-            addFrame("upperarm_r", pSkiCon);
+            addFrame("clavicle_r", pAnimation);
+            addFrame("upperarm_r", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Arm_Right_Upper, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Arm_Right_Upper);
 
             pBoxCollider->Init(D3DXVECTOR3(-6.0f, -7.0f, -5.0f),
                 D3DXVECTOR3(6.0f, 7.0f, 5.0f));
@@ -157,11 +145,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Arm_Left_Upper:
         {
-            addFrame("upperarm_l", pSkiCon);
-            addFrame("lowerarm_l", pSkiCon);
+            addFrame("upperarm_l", pAnimation);
+            addFrame("lowerarm_l", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Arm_Left_Lower, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Arm_Left_Lower);
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(10.0f, 5.0f, 5.0f));
@@ -169,11 +156,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Arm_Left_Lower:
         {
-            addFrame("lowerarm_l", pSkiCon);
-            addFrame("hand_l", pSkiCon);
+            addFrame("lowerarm_l", pAnimation);
+            addFrame("hand_l", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Hand_Left, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Hand_Left);
 
             pBoxCollider->Init(D3DXVECTOR3(-12.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(12.0f, 5.0f, 5.0f));
@@ -181,11 +167,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Arm_Right_Upper:
         {
-            addFrame("upperarm_r", pSkiCon);
-            addFrame("lowerarm_r", pSkiCon);
+            addFrame("upperarm_r", pAnimation);
+            addFrame("lowerarm_r", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Arm_Right_Lower, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Arm_Right_Lower);
 
             pBoxCollider->Init(D3DXVECTOR3(-10.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(10.0f, 5.0f, 5.0f));
@@ -193,11 +178,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Arm_Right_Lower:
         {
-            addFrame("lowerarm_r", pSkiCon);
-            addFrame("hand_r", pSkiCon);
+            addFrame("lowerarm_r", pAnimation);
+            addFrame("hand_r", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Hand_Right, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Hand_Right);
 
             pBoxCollider->Init(D3DXVECTOR3(-12.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(12.0f, 5.0f, 5.0f));
@@ -205,8 +189,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Hand_Left:
         {
-            addFrame("hand_l", pSkiCon);
-            addFrame("middle_01_l", pSkiCon);
+            addFrame("hand_l", pAnimation);
+            addFrame("middle_01_l", pAnimation);
 
             pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
@@ -214,8 +198,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Hand_Right:
         {
-            addFrame("hand_r", pSkiCon);
-            addFrame("middle_01_r", pSkiCon);
+            addFrame("hand_r", pAnimation);
+            addFrame("middle_01_r", pAnimation);
 
             pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
@@ -223,11 +207,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Leg_Left_Upper:
         {
-            addFrame("thigh_l", pSkiCon);
-            addFrame("calf_l", pSkiCon);
+            addFrame("thigh_l", pAnimation);
+            addFrame("calf_l", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Leg_Left_Lower, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Leg_Left_Lower);
 
             pBoxCollider->Init(D3DXVECTOR3(-23.0f, -7.0f, -7.0f), 
                 D3DXVECTOR3(23.0f, 7.0f, 7.0f));
@@ -235,11 +218,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Leg_Left_Lower:
         {
-            addFrame("calf_l", pSkiCon);
-            addFrame("foot_l", pSkiCon);
+            addFrame("calf_l", pAnimation);
+            addFrame("foot_l", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Foot_Left, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Foot_Left);
 
             pBoxCollider->Init(D3DXVECTOR3(-23.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(23.0f, 5.0f, 5.0f));
@@ -247,11 +229,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Leg_Right_Upper:
         {
-            addFrame("thigh_r", pSkiCon);
-            addFrame("calf_r", pSkiCon);
+            addFrame("thigh_r", pAnimation);
+            addFrame("calf_r", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Leg_Right_Lower, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Leg_Right_Lower);
 
             pBoxCollider->Init(D3DXVECTOR3(-23.0f, -7.0f, -7.0f), 
                 D3DXVECTOR3(23.0f, 7.0f, 7.0f));
@@ -259,11 +240,10 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Leg_Right_Lower:
         {
-            addFrame("calf_r", pSkiCon);
-            addFrame("foot_r", pSkiCon);
+            addFrame("calf_r", pAnimation);
+            addFrame("foot_r", pAnimation);
 
-            AddChildren(new CharacterPart(
-                TAG_COLLIDER_CHARACTER_PART::Foot_Right, pCharacter));
+            addChild(TAG_COLLIDER_CHARACTER_PART::Foot_Right);
 
             pBoxCollider->Init(D3DXVECTOR3(-23.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(23.0f, 5.0f, 5.0f));
@@ -271,8 +251,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Foot_Left:
         {
-            addFrame("foot_l", pSkiCon);
-            addFrame("ball_l", pSkiCon);
+            addFrame("foot_l", pAnimation);
+            addFrame("ball_l", pAnimation);
 
             pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
@@ -280,8 +260,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         break;
     case TAG_COLLIDER_CHARACTER_PART::Foot_Right:
         {
-            addFrame("foot_r", pSkiCon);
-            addFrame("ball_r", pSkiCon);
+            addFrame("foot_r", pAnimation);
+            addFrame("ball_r", pAnimation);
 
             pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
@@ -388,4 +368,9 @@ void CharacterPart::updateUI()
             &pCharacter->GetTransform()->GetTransformationMatrix());
         m_UITexts[i]->SetPosition(v);
     }
+}
+
+void CharacterPart::addChild(const TAG_COLLIDER_CHARACTER_PART tag)
+{
+    AddChild(new CharacterPart(tag, pCharacter));
 }

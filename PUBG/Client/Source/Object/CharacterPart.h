@@ -20,6 +20,7 @@ private:
 
     void addFrame(const string& name, CharacterAnimation* pSkiCon);
     void updateUI();
+    void addChild(const TAG_COLLIDER_CHARACTER_PART tag);
 
 public:
     CharacterPart(
