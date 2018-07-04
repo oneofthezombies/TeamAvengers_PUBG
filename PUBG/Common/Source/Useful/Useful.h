@@ -36,7 +36,7 @@ struct Vector3
 
 struct Quaternion
 {
-    static const D3DXQUATERNION& ZERO;
+    static const D3DXQUATERNION& IDENTITY;
 };
 
 struct Matrix

@@ -20,12 +20,9 @@
     <ClCompile Include="Source\Manager\TimeManager.cpp" />
     <ClCompile Include="Source\Component\ComponentTransform.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
-    <ClCompile Include="Source\Useful\CollisionCore.cpp" />
-    <ClCompile Include="Source\Manager\ResourceManager.cpp" />
     <ClCompile Include="Source\Manager\InputManager.cpp" />
     <ClCompile Include="Source\Manager\DeviceManager.cpp" />
     <ClCompile Include="Source\Manager\DebugManager.cpp" />
-    <ClCompile Include="Source\Manager\CollisionManager.cpp" />
     <ClCompile Include="Source\Base\ICamera.cpp" />
     <ClCompile Include="Source\UI\UIObject.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
@@ -54,8 +51,11 @@
     <ClCompile Include="Source\Ray.cpp" />
     <ClCompile Include="Source\Object\Character_ForDebug.cpp" />
     <ClCompile Include="Source\Object\Character_Input.cpp" />
-    <ClCompile Include="Source\Object\CollisionTestBox.cpp" />
     <ClCompile Include="Source\Object\CharacterAnimation.cpp" />
+    <ClCompile Include="Source\Manager\Collision.cpp" />
+    <ClCompile Include="Source\Manager\Collision_Core.cpp" />
+    <ClCompile Include="Source\Scene\SceneCollisionTest.cpp" />
+    <ClCompile Include="Source\Manager\Resource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -82,12 +82,9 @@
     <ClInclude Include="Source\Manager\TimeManager.h" />
     <ClInclude Include="Source\Component\ComponentTransform.h" />
     <ClInclude Include="Source\Base\IMap.h" />
-    <ClInclude Include="Source\Useful\CollisionCore.h" />
-    <ClInclude Include="Source\Manager\ResourceManager.h" />
     <ClInclude Include="Source\Manager\InputManager.h" />
     <ClInclude Include="Source\Manager\DeviceManager.h" />
     <ClInclude Include="Source\Manager\DebugManager.h" />
-    <ClInclude Include="Source\Manager\CollisionManager.h" />
     <ClInclude Include="Source\Base\ICamera.h" />
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Component\SkinnedMeshController.h" />
@@ -112,7 +109,9 @@
     <ClInclude Include="Source\Useful\AnimationState.h" />
     <ClInclude Include="Source\HeightMap.h" />
     <ClInclude Include="Source\Ray.h" />
-    <ClInclude Include="Source\Object\CollisionTestBox.h" />
     <ClInclude Include="Source\Object\CharacterAnimation.h" />
+    <ClInclude Include="Source\Manager\Collision.h" />
+    <ClInclude Include="Source\Scene\SceneCollisionTest.h" />
+    <ClInclude Include="Source\Manager\Resource.h" />
   </ItemGroup>
 </Project>

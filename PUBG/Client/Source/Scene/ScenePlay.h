@@ -4,6 +4,9 @@
 
 class ScenePlay : public IScene
 {
+private:
+    void setAloneMode();
+    void setWithOthersMode();
 
 public:
     ScenePlay();

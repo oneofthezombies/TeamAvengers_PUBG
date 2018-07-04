@@ -28,9 +28,9 @@ Transform* Component::GetTransform() const
 Transform::Transform(IObject* pOwner)
 	: Component(pOwner)
 	, m_position(Vector3::ZERO)
-	, m_rotation(Quaternion::ZERO)
 	, m_scale(Vector3::ONE)
 {
+    D3DXQuaternionIdentity(&m_rotation);
     D3DXMatrixIdentity(&m_transformationMatrix);
 }
 

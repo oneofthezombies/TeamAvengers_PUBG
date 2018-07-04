@@ -27,6 +27,10 @@ private:
 
     UIImage* pUIImage;
 
+    //총알이 나갈 위치 테스트
+    Frame* pGunBolt;
+    
+
 private:
     void setup(const TAG_RES_STATIC tag);
     void setGlobalVariable(LPD3DXEFFECT pEffect);
@@ -65,4 +69,11 @@ public:
     //for Rifle
     void SetNumBullet(const int numBullet);
     int GetNumBullet() const;
+
+    Frame* GetGunBolt() const
+    {
+        return pGunBolt;
+    }
+
+    void UpdateModel();
 };

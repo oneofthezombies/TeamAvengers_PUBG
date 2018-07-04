@@ -24,5 +24,5 @@ public:
     virtual void OnUpdate() override;
     virtual void OnRender() override;
 
-    void AddBoxCollider(const D3DXMATRIX&  transform);
+    void AddBoxCollider(const D3DXMATRIX&  transformationMatrix);
 };

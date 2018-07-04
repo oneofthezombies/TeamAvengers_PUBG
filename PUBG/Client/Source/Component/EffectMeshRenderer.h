@@ -7,6 +7,7 @@ class EffectMeshRenderer : public Component
 {
 private:
     EffectMesh* pEffectMesh;
+    //LPD3DXMESH  m_pSphere;
 
 public:
              EffectMeshRenderer(IObject* pOwner);
@@ -16,4 +17,8 @@ public:
 
     void SetEffectMesh(EffectMesh* pEffectMesh);
     void SetEffectMesh(const TAG_RES_STATIC tag);
+    EffectMesh* GetEffectMesh()
+    {
+        return pEffectMesh;
+    }
 };

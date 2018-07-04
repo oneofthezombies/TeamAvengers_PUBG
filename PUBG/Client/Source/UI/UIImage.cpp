@@ -12,11 +12,11 @@ UIImage::UIImage(UIObject* pParent)
 UIImage::UIImage(const string& path, const string& filename, const D3DXVECTOR3& position, IObject* pAttach, UIObject* pParent)
     : UIObject(pParent)
 {
-    assert(pAttach && "UIImage::Constructor(), attach is null.");
-
     SetTexture(path + filename);
     SetPosition(position);
-    AttachToObject(pAttach);
+
+    if (pAttach)
+        AttachToObject(pAttach);
 }
 
 UIImage::~UIImage()

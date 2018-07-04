@@ -51,12 +51,11 @@ void TerrainFeature::OnRender()
         c->Render();
 }
 
-void TerrainFeature::AddBoxCollider(const D3DXMATRIX& transform)
+void TerrainFeature::AddBoxCollider(const D3DXMATRIX& transformationMatrix)
 {
     BoxCollider* pBoxCollider = new BoxCollider(this);
-    pBoxCollider->Init(D3DXVECTOR3(-0.5, -0.5, -0.5), D3DXVECTOR3(0.5, 0.5, 0.5));
-    //pBoxCollider->Init(transform);
-    pBoxCollider->SetTag(TAG_COLLISION::Impassable);
+    pBoxCollider->Init(transformationMatrix);
+    pBoxCollider->SetTagCollision(TAG_COLLISION::Impassable);
 
     m_colliders.emplace_back(pBoxCollider);
 }

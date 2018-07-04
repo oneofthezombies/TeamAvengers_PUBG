@@ -44,6 +44,7 @@ public:
     virtual void Update() = 0;
     void CameraRender();
     void draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color);
+    void drawIndices(const vector<WORD>& indices, const D3DXCOLOR& color);
 
     void UpdateViewProjMatrix();
     void UpdateFrustumCulling();
@@ -55,7 +56,7 @@ public:
     const D3DXMATRIX& GetProjectionMatrix() const;
           TAG_CAMERA  GetTagCamera()        const;
 
-    bool CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY);
+    bool CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY);
     //D3DXVECTOR3* GetBulletDestination()
     //{
     //    return &m_vBulletDestination;

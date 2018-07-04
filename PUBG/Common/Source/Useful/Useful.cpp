@@ -15,8 +15,8 @@ const D3DXVECTOR3& Vector3::FORWARD_LEFT    = D3DXVECTOR3(-0.707107f, 0.0f, 0.70
 const D3DXVECTOR3& Vector3::BACKWARD_RIGHT  = D3DXVECTOR3(0.707107f, 0.0f, -0.707107f);
 const D3DXVECTOR3& Vector3::BACKWARD_LEFT   = D3DXVECTOR3(-0.707107f, 0.0f,-0.707107f);
 
-const D3DXQUATERNION& Quaternion::ZERO = 
-    D3DXQUATERNION(0.0f, 0.0f, 0.0f, 0.0f);
+const D3DXQUATERNION& Quaternion::IDENTITY =
+    D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
 
 const D3DXMATRIX& Matrix::IDENTITY = D3DXMATRIX(1.0f, 0.0f, 0.0f, 0.0f,
                                                 0.0f, 1.0f, 0.0f, 0.0f,

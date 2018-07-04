@@ -246,8 +246,20 @@ float ItemInfo::GetInitialBulletSpeed(const TAG_RES_STATIC tag)
     //단위는 m/s
     switch (tag)
     {
-    case TAG_RES_STATIC::QBZ: return 870.0f;
+    case TAG_RES_STATIC::QBZ: return 1.0f;/*870.0f;*/
     case TAG_RES_STATIC::Kar98k: return 760.0f;
+
+    default: return 0.0f;
+    }
+}
+
+float ItemInfo::GetBulletFireCoolTime(const TAG_RES_STATIC tag)
+{
+    //단위는 sec
+    switch (tag)
+    {
+    case TAG_RES_STATIC::QBZ: return /*0.92f;*/0.092f;
+    case TAG_RES_STATIC::Kar98k: return 19.0f;/*1.900f;*/
 
     default: return 0.0f;
     }

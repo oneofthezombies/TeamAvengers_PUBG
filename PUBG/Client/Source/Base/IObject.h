@@ -27,7 +27,7 @@ public:
     TAG_OBJECT GetTagObject() const;
 
 	void SetParent(IObject* pParent);
-	void AddChildren(IObject* pChild);
+	void AddChild(IObject* pChild);
 
 	Transform* GetTransform();
 

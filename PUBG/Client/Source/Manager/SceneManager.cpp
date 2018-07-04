@@ -4,6 +4,7 @@
 #include "SceneLogin.h"
 #include "ScenePlay.h"
 #include "SceneLoading.h"
+#include "SceneCollisionTest.h"
 
 SceneManager::SceneManager()
 	: Singleton<SceneManager>()
@@ -20,8 +21,10 @@ void SceneManager::Init()
     m_scenes.emplace(TAG_SCENE::Loading, new SceneLoading);
     m_scenes.emplace(TAG_SCENE::Login,   new SceneLogin);
     m_scenes.emplace(TAG_SCENE::Play,    new ScenePlay);
+    //m_scenes.emplace(TAG_SCENE::CollisionTest, new SceneCollisionTest);
 
     SetCurrentScene(TAG_SCENE::Loading);
+    //SetCurrentScene(TAG_SCENE::CollisionTest);
 }
 
 void SceneManager::Destroy()

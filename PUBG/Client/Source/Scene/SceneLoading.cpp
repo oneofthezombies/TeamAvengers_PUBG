@@ -3,67 +3,155 @@
 #include "ResourceInfo.h"
 #include "Character.h"
 #include "UIText.h"
+#include "UIImage.h"
 
-void SceneLoading::loadSync()
+void SceneLoading::Load()
 {
-    std::pair<std::string, std::string> pathFilename;
+    // set policy 
+    // sync  -> on main thread
+    // async -> multi threading
+    setPolicy(Resource::Policy::ASYNC);
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
-    m_effectMeshResources.emplace(0, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+    // set play mode
+    // alone       -> no network
+    // with others -> login to network
+    setPlayMode(PlayMode::ALONE);
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
-    m_effectMeshResources.emplace(1, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+    // load effect meshs
+    load(TAG_RES_STATIC::Ammo_5_56mm);
+    load(TAG_RES_STATIC::Ammo_7_62mm);
+    load(TAG_RES_STATIC::QBZ);
+    load(TAG_RES_STATIC::Kar98k);
+    load(TAG_RES_STATIC::Bandage);
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::QBZ);
-    m_effectMeshResources.emplace(2, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+    // load skined meshs
+    load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
+    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Kar98k);
-    m_effectMeshResources.emplace(3, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+    // load character
+    load(TAG_RES_ANIM_CHARACTER::ForTest);
 
-    addEffectMeshs();
+    // load animation
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
+}
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    m_skinnedMeshResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+void SceneLoading::load(const TAG_RES_STATIC tag)
+{
+    std::pair<std::string, std::string> pathFilename = 
+        ResourceInfo::GetPathFileName(tag);
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
-    m_skinnedMeshResources.emplace(1, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    if (m_policy == Resource::Policy::SYNC)
+    {
+        m_effectMeshResources.emplace(
+            m_effectMeshResources.size(), 
+            Resource::Async::OnLoadEffectMesh(
+                pathFilename.first, 
+                pathFilename.second));
+    }
+    else if (m_policy == Resource::Policy::ASYNC)
+    {
+        addTask(tag, &m_effectMeshTasks);
+    }
+}
 
-    addSkinnedMeshs();
+void SceneLoading::load(const TAG_RES_ANIM_WEAPON tag)
+{
+    std::pair<std::string, std::string> pathFilename =
+        ResourceInfo::GetPathFileName(tag);
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::ForTest);
-    m_characterSkinnedMeshResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    if (m_policy == Resource::Policy::SYNC)
+    {
+        m_skinnedMeshResources.emplace(
+            m_skinnedMeshResources.size(),
+            Resource::Async::OnLoadSkinnedMesh(
+                pathFilename.first,
+                pathFilename.second));
+    }
+    else if (m_policy == Resource::Policy::ASYNC)
+    {
+        addTask(tag, &m_skinnedMeshTasks);
+    }
+}
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
-    m_characterAnimationResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+void SceneLoading::load(const TAG_RES_EQUIPMENT tag)
+{
+    std::pair<std::string, std::string> pathFilename =
+        ResourceInfo::GetPathFileName(tag);
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
-    m_characterAnimationResources.emplace(1, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    if (m_policy == Resource::Policy::SYNC)
+    {
+        m_equipmentSkinnedMeshResources.emplace(
+            m_equipmentSkinnedMeshResources.size(),
+            Resource::Async::OnLoadSkinnedMesh(
+                pathFilename.first,
+                pathFilename.second));
+    }
+    else if (m_policy == Resource::Policy::ASYNC)
+    {
+        addTask(tag, &m_equipmentSkinnedMeshTasks);
+    }
+}
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
-    m_characterAnimationResources.emplace(2, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+void SceneLoading::load(const TAG_RES_ANIM_CHARACTER tag)
+{
+    std::pair<std::string, std::string> pathFilename =
+        ResourceInfo::GetPathFileName(tag);
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
-    m_characterAnimationResources.emplace(3, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    if (m_policy == Resource::Policy::SYNC)
+    {
+        m_characterSkinnedMeshResources.emplace(
+            m_characterSkinnedMeshResources.size(),
+            Resource::Async::OnLoadSkinnedMesh(
+                pathFilename.first,
+                pathFilename.second));
+    }
+    else if (m_policy == Resource::Policy::ASYNC)
+    {
+        addTask(tag, &m_characterSkinnedMeshTasks);
+    }
+}
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
-    m_characterAnimationResources.emplace(4, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+void SceneLoading::addAnimation(const TAG_RES_ANIM_CHARACTER tag)
+{
+    std::pair<std::string, std::string> pathFilename =
+        ResourceInfo::GetPathFileName(tag);
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
-    m_characterAnimationResources.emplace(5, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    if (m_policy == Resource::Policy::SYNC)
+    {
+        m_characterAnimationResources.emplace(
+            m_characterAnimationResources.size(),
+            Resource::Async::OnLoadSkinnedMesh(
+                pathFilename.first,
+                pathFilename.second));
+    }
+    else if (m_policy == Resource::Policy::ASYNC)
+    {
+        addTask(tag, &m_characterAnimationTasks);
+    }
+}
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
-    m_characterAnimationResources.emplace(6, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+void SceneLoading::setPolicy(const Resource::Policy policy)
+{
+    m_policy = policy;
+}
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
-    m_characterAnimationResources.emplace(7, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+void SceneLoading::setPlayMode(const PlayMode mode)
+{
+    m_playMode = mode;
+}
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
-    m_characterAnimationResources.emplace(8, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
-
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
-    m_characterAnimationResources.emplace(9, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
-
-    addAnimationsToCharacter();
+bool SceneLoading::isFinished() const
+{
+    return m_isDoneCharacters && m_isDoneEffectMeshs && m_isDoneSkinnedMeshs;
 }
 
 SceneLoading::SceneLoading()
@@ -75,6 +163,7 @@ SceneLoading::SceneLoading()
     , m_percentage("")
     , m_lastFinishedTaskName("")
     , m_dotDotDot(0)
+    , m_policy(Resource::Policy::SYNC)
 {
 }
 
@@ -84,194 +173,121 @@ SceneLoading::~SceneLoading()
 
 void SceneLoading::OnInit()
 {
-    m_start = std::chrono::system_clock::now();
-
-    //loadImage();
-    //loadEffectMesh();
-    //loadSkinnedMesh();
+    Resource::XContainer* pXContainer = new Resource::XContainer;
+    Resource::Async::CreateTexture("./Resource/", "dedenne.png", pXContainer);
+    Resource()()->AddResource(pXContainer);
+    m_pBackground =
+        new UIImage(
+            "./Resource/",
+            "dedenne.png",
+            D3DXVECTOR3(-600.0f, -200.0f, 0.0f),
+            nullptr,
+            nullptr);
 
     m_pPercentageImage = 
         new UIText(
             Resource()()->GetFont(TAG_FONT::Default), 
-            D3DXVECTOR2(1000.0f, 50.0f), 
+            D3DXVECTOR2(500.0f, 100.0f), 
             &m_percentage, 
             D3DCOLOR_XRGB(0, 255, 0), 
-            nullptr);
-    m_pPercentageImage->SetPosition(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
+            m_pBackground);
+    m_pPercentageImage->SetPosition(D3DXVECTOR3(1000.0f, 300.0f, 0.0f));
     m_pPercentageImage->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
 
-    loadSync();
+    m_start = std::chrono::system_clock::now();
+    t  = std::thread(std::bind(&SceneLoading::Load, this));
 }
 
 void SceneLoading::OnUpdate()
 {
-    if (m_isFinished)
+    if (t.joinable())
     {
-        /**/
-        addHeightmapResource();
-        /**/
-        
-        Debug << "elapsed time : " << m_elapsed.count() << '\n';
+        t.join();
+    }
 
-        UI()()->Destroy(m_pPercentageImage);
-        Scene()()->SetCurrentScene(TAG_SCENE::Play);
-        //Scene()()->SetCurrentScene(TAG_SCENE::Login);
+    if (isFinished())
+    {
+        m_finish = std::chrono::system_clock::now();
+        m_elapsed = m_finish - m_start;
+
+        addHeightmapResource();
+
+        UI()()->Destroy(m_pBackground);
+
+        if (m_playMode == PlayMode::ALONE)
+        {
+            Scene()()->SetCurrentScene(TAG_SCENE::Play);
+        }
+        else if (m_playMode == PlayMode::WITH_OTHERS)
+        {
+            Scene()()->SetCurrentScene(TAG_SCENE::Login);
+        }
     }
     else
     {
-        if (!m_isDoneCharacters)
-        {
-            if (verifyTasks(
-                &m_characterSkinnedMeshTasks,
-                &m_characterSkinnedMeshResources) &&
-                verifyTasks(
-                    &m_characterAnimationTasks,
-                    &m_characterAnimationResources))
-            {
-                addAnimationsToCharacter();
-            }
-        }
-
-        if (!m_isDoneSkinnedMeshs)
-        {
-            if (verifyTasks(
-                &m_skinnedMeshTasks,
-                &m_skinnedMeshResources))
-            {
-                addSkinnedMeshs();
-            }
-        }
-
         if (!m_isDoneEffectMeshs)
         {
             if (verifyTasks(&m_effectMeshTasks, &m_effectMeshResources))
             {
                 addEffectMeshs();
+
+                m_isDoneEffectMeshs = true;
             }
         }
 
-        if (m_isDoneEffectMeshs &&
-            m_isDoneCharacters &&
-            m_isDoneSkinnedMeshs)
+        if (!m_isDoneSkinnedMeshs)
         {
-            m_isFinished = true;
-            m_finish = std::chrono::system_clock::now();
-            m_elapsed = m_finish - m_start;
+            if (verifyTasks(&m_skinnedMeshTasks, &m_skinnedMeshResources))
+            {
+                addSkinnedMeshs();
+
+                m_isDoneSkinnedMeshs = true;
+            }
+        }
+
+        if (!m_isDoneCharacters)
+        {
+            if (verifyTasks(
+                &m_characterSkinnedMeshTasks,
+                &m_characterSkinnedMeshResources) &&
+                //verifyTasks(
+                //    &m_equipmentSkinnedMeshTasks,
+                //    &m_equipmentSkinnedMeshResources) &&
+                verifyTasks(
+                    &m_characterAnimationTasks,
+                    &m_characterAnimationResources))
+            {
+                addAnimationsToCharacter();
+
+                m_isDoneCharacters = true;
+            }
         }
     }
 
     Debug << "number of finished tasks : " << m_numFinishedTasks
-          << " / number of total tasks : " << m_numTotalTasks << '\n';
+        << " / number of total tasks : " << m_numTotalTasks << '\n';
 
-    const float percentage = static_cast<float>(m_numFinishedTasks) 
-                           / static_cast<float>(m_numTotalTasks)
-                           * 100.0f;
+    const float percentage = static_cast<float>(m_numFinishedTasks)
+        / static_cast<float>(m_numTotalTasks)
+        * 100.0f;
 
     ++m_dotDotDot;
-    if (m_dotDotDot > 100)
+    if (m_dotDotDot > 10)
         m_dotDotDot = 0;
 
     m_percentage = "Finished file : " + m_lastFinishedTaskName + "\n";
-    for (int i = 0; i < static_cast<int>(percentage * 0.1f); ++i)
-        m_percentage += "@";
-    m_percentage += " percentage : " + std::to_string(percentage);
+    m_percentage += "Percentage : " + std::to_string(percentage);
     for (std::size_t i = 0; i < m_dotDotDot; ++i)
         m_percentage += '.';
-}
+    m_percentage += '\n';
+    for (int i = 0; i < static_cast<int>(percentage * 0.1f); ++i)
+        m_percentage += "@";
 
-void SceneLoading::loadImage()
-{
-    ResourceContainer* pResourceContainer = new ResourceContainer;
-    ResourceAsync::CreateTexture(
-        "./Resource", "input_field.png", 
-        pResourceContainer);
-    Resource()()->AddResource(pResourceContainer);
-}
-
-void SceneLoading::loadEffectMesh()
-{
-    //addTask(TAG_RES_STATIC::SkySphere);
-    //addTask(TAG_RES_STATIC::Church);
-
-    //addTask(TAG_RES_STATIC::Head_Lv1);
-    //addTask(TAG_RES_STATIC::Armor_Lv1);
-    //addTask(TAG_RES_STATIC::Back_Lv1);
-
-    addTask(TAG_RES_STATIC::Bandage);
-    //addTask(TAG_RES_STATIC::FirstAidKit);
-    //addTask(TAG_RES_STATIC::MedKit);
-
-    addTask(TAG_RES_STATIC::Ammo_5_56mm);
-    addTask(TAG_RES_STATIC::Ammo_7_62mm);
-
-    addTask(TAG_RES_STATIC::QBZ);
-    addTask(TAG_RES_STATIC::Kar98k);
-
-    //addTask(TAG_RES_STATIC::RedDot);
-    //addTask(TAG_RES_STATIC::Aimpoint2X);
-    //addTask(TAG_RES_STATIC::ACOG);
-    // ...
-}
-
-void SceneLoading::loadSkinnedMesh()
-{
-    // Rifle_Prone_PrimarySlot_OnHand.X
-    // 이 엑스파일이 애니메이션을 갖고 있는 애들 중 제일 작다 (애니메이션 1개)
-    /* now, all characters use the same skinned mesh, 
-       so we do not need to have duplicates.
-    */
-
-    /* do NOT remove &m_characterSkinnedMeshTasks, 
-       single argument function is for animaiton. */
-    //addTask(TAG_RES_ANIM_CHARACTER::Lobby, &m_characterSkinnedMeshTasks);
-
-    // character
-    addTask(TAG_RES_ANIM_CHARACTER::ForTest, &m_characterSkinnedMeshTasks);
-
-    // equipment
-    //addTask(TAG_RES_EQUIPMENT::Head_Lv1_Anim, &m_equipmentSkinnedMeshTasks);
-
-    loadCharacterAnimation();
-
-    // weapon
-    addTask(TAG_RES_ANIM_WEAPON::QBZ_Anim, &m_skinnedMeshTasks);
-    addTask(TAG_RES_ANIM_WEAPON::Kar98k_Anim, &m_skinnedMeshTasks);
-}
-
-void SceneLoading::loadCharacterAnimation()
-{
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_DoorOpen_And_Pickup);
-
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Idling);
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack);
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Attack_FPP);
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Pickup_FPP);
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Jump_FPP);
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Landing);
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
-    //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone);
-
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
-
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
-
-    addTask(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
-    addTask(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
-
-    //for test
-    addTask(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
-    //...
 }
 
 void SceneLoading::addAnimationsToCharacter()
 {
-    ResourceContainer* pCharacterResource = 
+    Resource::XContainer* pCharacterResource = 
         m_characterSkinnedMeshResources.begin()->second;
 
     const auto pathFilename = ResourceInfo::GetCharacterPathFileName();
@@ -323,35 +339,39 @@ void SceneLoading::addAnimationsToCharacter()
 
         SAFE_DELETE(pR.second);
     }
-
-    m_isDoneCharacters = true;
 }
 
 void SceneLoading::addEffectMeshs()
 {
-    ResourceManager* pRM = Resource()();
+    Resource::Manager* pRM = Resource()();
 
     for (auto pR : m_effectMeshResources)
         pRM->AddResource(pR.second);
 
-    m_isDoneEffectMeshs = true;
+    m_effectMeshResources.clear();
 }
 
 void SceneLoading::addSkinnedMeshs()
 {
-    ResourceManager* pRM = Resource()();
+    Resource::Manager* pRM = Resource()();
 
     for (auto pR : m_skinnedMeshResources)
         pRM->AddResource(pR.second);
 
-    m_isDoneSkinnedMeshs = true;
+    m_skinnedMeshResources.clear();
 }
 
 void SceneLoading::addHeightmapResource()
 {
-    ResourceContainer* pResourceContainer = new ResourceContainer;
-    ResourceAsync::CreateEffect("./Resource/Heightmap/", "Heightmap.fx", pResourceContainer);
-    ResourceAsync::CreateTexture("./Resource/Heightmap/", "Heightmap.jpg", pResourceContainer);
+    Resource::XContainer* pResourceContainer = new Resource::XContainer;
+    Resource::Async::CreateEffect(
+        "./Resource/Heightmap/", 
+        "Heightmap.fx", 
+        pResourceContainer);
+    Resource::Async::CreateTexture(
+        "./Resource/Heightmap/", 
+        "Heightmap.jpg", 
+        pResourceContainer);
     Resource()()->AddResource(pResourceContainer);
 }
 
@@ -365,11 +385,14 @@ bool SceneLoading::verifyTasks(tasks_t* OutTasks, resources_t* OutResources)
     std::future_status futureStatus;
     for (auto i = OutTasks->begin(); i != OutTasks->end();)
     {
-        futureStatus = i->second.wait_until(std::chrono::system_clock::now());
-        //futureStatus = i->second.wait_for(std::chrono::nanoseconds(1));
+        //futureStatus = i->second.wait_until(std::chrono::system_clock::now());
+        futureStatus = i->second.wait_for(std::chrono::milliseconds(100));
         switch (futureStatus)
         {
         case std::future_status::deferred:
+            {
+            }
+            break;
         case std::future_status::timeout:
             {
                 // waiting...
@@ -378,11 +401,11 @@ bool SceneLoading::verifyTasks(tasks_t* OutTasks, resources_t* OutResources)
             break;
         case std::future_status::ready:
             {
-                ResourceContainer* pResourceContainer = i->second.get();
-                OutResources->emplace(i->first, pResourceContainer);
+                Resource::XContainer* pXContainer = i->second.get();
+                OutResources->emplace(i->first, pXContainer);
                 i = OutTasks->erase(i);
 
-                m_lastFinishedTaskName = pResourceContainer->m_filename;
+                m_lastFinishedTaskName = pXContainer->m_filename;
                 ++m_numFinishedTasks;
             }
             break;
@@ -404,16 +427,11 @@ void SceneLoading::addTask(const TAG_RES_STATIC tag, tasks_t* OutTasks)
             OutTasks->size(),
             std::async(
                 std::launch::async, 
-                &ResourceAsync::OnLoadEffectMeshAsync, 
+                &Resource::Async::OnLoadEffectMesh, 
                 keys.first, 
                 keys.second)));
 
     ++m_numTotalTasks;
-}
-
-void SceneLoading::addTask(const TAG_RES_STATIC tag)
-{
-    addTask(tag, &m_effectMeshTasks);
 }
 
 void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks)
@@ -426,16 +444,11 @@ void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks)
             OutTasks->size(),
             std::async(
                 std::launch::async, 
-                &ResourceAsync::OnLoadSkinnedMeshAsync, 
+                &Resource::Async::OnLoadSkinnedMesh, 
                 keys.first, 
                 keys.second)));
 
     ++m_numTotalTasks;
-}
-
-void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag)
-{
-    addTask(tag, &m_characterAnimationTasks);
 }
 
 void SceneLoading::addTask(const TAG_RES_EQUIPMENT tag, tasks_t* OutTasks)
@@ -448,7 +461,7 @@ void SceneLoading::addTask(const TAG_RES_EQUIPMENT tag, tasks_t* OutTasks)
             OutTasks->size(),
             std::async(
                 std::launch::async,
-                &ResourceAsync::OnLoadSkinnedMeshAsync,
+                &Resource::Async::OnLoadSkinnedMesh,
                 keys.first,
                 keys.second)));
 
@@ -465,7 +478,7 @@ void SceneLoading::addTask(const TAG_RES_ANIM_WEAPON tag, tasks_t* OutTasks)
             OutTasks->size(),
             std::async(
                 std::launch::async,
-                &ResourceAsync::OnLoadSkinnedMeshAsync,
+                &Resource::Async::OnLoadSkinnedMesh,
                 keys.first,
                 keys.second)));
 

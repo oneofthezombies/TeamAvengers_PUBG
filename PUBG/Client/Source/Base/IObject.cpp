@@ -52,9 +52,9 @@ void IObject::SetParent(IObject* pParent)
 	this->pParent = pParent;
 }
 
-void IObject::AddChildren(IObject* pChild)
+void IObject::AddChild(IObject* pChild)
 {
-    assert(pChild && "IObject::SetParent(), pointer is null.");
+    assert(pChild && "IObject::AddChild(), pointer is null.");
 	pChild->SetParent(this);
 	m_children.emplace_back(pChild);
 }
