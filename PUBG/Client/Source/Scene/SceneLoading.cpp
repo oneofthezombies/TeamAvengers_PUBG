@@ -13,7 +13,7 @@ void SceneLoading::Load()
     setPolicy(Resource::Policy::ASYNC);
 
     // set play mode
-    // alone -> no network
+    // alone       -> no network
     // with others -> login to network
     setPlayMode(PlayMode::ALONE);
 
