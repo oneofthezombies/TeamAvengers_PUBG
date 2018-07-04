@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Character.h"
+#include "Item.h"
+#include "ItemInfo.h"
 
 string Character::ForDebugGetItemCategory(TAG_ITEM_CATEGORY category)
 {
@@ -42,4 +44,21 @@ string Character::ForDebugGetStance(Stance stance)
         assert(false && "Character::ForDebugGetStance(), default case.");
         return "";   
     }
+}
+
+void Character::ForDebug()
+{
+    Item* hand = m_totalInventory.m_hand;
+    if (hand)
+    {
+        TAG_RES_STATIC tagDebug = hand->GetTagResStatic();
+        Debug << "On hand Weapon: ";
+        Debug << ItemInfo::GetName(tagDebug) << "\n";
+    }
+    else
+    {
+        Debug << "On hand Weapon: NONE" << "\n";
+    }
+    Debug << "Attacking: " << ForDebugGetAttacking(m_attacking) << "\n";
+    Debug << "Stance: " << ForDebugGetStance(m_stance) << "\n";
 }

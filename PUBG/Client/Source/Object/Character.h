@@ -259,16 +259,16 @@ private:
     void renderTotalInventory();
 
     //for Character_Input.cpp
-    void setAttacking();
     void setStance();
+    void setAttacking();
     void setReload();
 
     void setRifleOnHand(TAG_RIFLE tagRifle);
     void setRifleOnBody(TAG_RIFLE tagRifle);
 
-    void setStandAnimation(Stance toStance);
-    void setCrouchAnimation(Stance toStance);
-    void setProneAnimation(Stance toStance);
+    void setStandTo(Stance stance);
+    void setCrouchTo(Stance stance);
+    void setProneTo(Stance stance);
 
     void onKar98kReloadEnd();
     void onKar98kReload();
@@ -308,6 +308,7 @@ public:
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
     string ForDebugGetAttacking(Attacking attcking);
     string ForDebugGetStance(Stance stance);
+    void ForDebug();
 
     CharacterAnimation* GetCharacterAnimation();
 

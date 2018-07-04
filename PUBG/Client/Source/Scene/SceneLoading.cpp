@@ -30,45 +30,58 @@ void SceneLoading::loadSync()
 
     addSkinnedMeshs();
 
+    /*
+    ForTest는 아래 4개의 X파일들을 합친 것
+    Lobby.X
+    Unarmed_Idle.X
+    Unarmed_Jump.X
+    Unarmed_Locomotion_Stand.X
+    */
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::ForTest);
     m_characterSkinnedMeshResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
+    //무기 없을 때
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
     m_characterAnimationResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone);
     m_characterAnimationResources.emplace(1, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Unarmed_Transition);
     m_characterAnimationResources.emplace(2, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
+    //무기 있을 때
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
     m_characterAnimationResources.emplace(3, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
     m_characterAnimationResources.emplace(4, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
     m_characterAnimationResources.emplace(5, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
     m_characterAnimationResources.emplace(6, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
     m_characterAnimationResources.emplace(7, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+    //주무기, 보조무기 해제 및 장착
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
     m_characterAnimationResources.emplace(8, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    //stance
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Unarmed_Transition);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
     m_characterAnimationResources.emplace(9, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
     m_characterAnimationResources.emplace(10, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
+    //무기관련
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     m_characterAnimationResources.emplace(11, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+
+    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+    m_characterAnimationResources.emplace(12, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
     addAnimationsToCharacter();
 }

@@ -99,12 +99,14 @@ void Character::updateMine()
     setStance();
     setAttacking();
     setReload();
+    ForDebug();
+
+    //setting animation and movements
+    animationMovementControl(&pos, &m_lowerAnimState);
 
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
     if (m_savedInput != m_currentStayKey)
     {
-        //setting animation and movements
-        animationMovementControl(&pos, &m_lowerAnimState);
         if (m_lowerAnimState == TAG_ANIM_CHARACTER::COUNT)
         {
             //애니메이션이 없습니다.
@@ -112,23 +114,21 @@ void Character::updateMine()
         else
         {
             m_pAnimation->Set(
-                CharacterAnimation::BodyPart::LOWER, 
+                CharacterAnimation::BodyPart::BOTH, 
                 m_lowerAnimState);
 
             m_savedInput = m_currentStayKey;
         }
     }
-    else
-    {
-        animationMovementControl(&pos, NULL); // NULL means not changing animation
-    }
+    //else
+    //{
+    //    animationMovementControl(&pos, NULL); // NULL means not changing animation
+    //}
 
     cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     
-
-
     //John TODO list
     //<<1. CalcPickedPosition 함수를 v를 포인터로 받게 하기
 
@@ -165,11 +165,11 @@ void Character::updateMine()
 
     Sound()()->Listen(GetTransform()->GetPosition(), getForward());
 
-    Debug << "current        position : " << pos << '\n'
+    Debug << "current        position : " << pos << "\n\n"
         << "current upper animation : "
         << m_pAnimation->GetUpperAnimationName() << '\n'
         << "current lower animation : "
-        << m_pAnimation->GetLowerAnimationName() << '\n';
+        << m_pAnimation->GetLowerAnimationName() << "\n\n";
 
 ///////////////////////////////////////////////////////////////////////////////
 

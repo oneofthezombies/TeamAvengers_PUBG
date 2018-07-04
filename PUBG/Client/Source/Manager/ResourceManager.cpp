@@ -62,8 +62,8 @@ LPD3DXFONT ResourceManager::GetFont(const TAG_FONT tag)
         case TAG_FONT::Default:
             {
                 hr = D3DXCreateFont(Device()(), 24, 12, FW_NORMAL, 1, false,
-                    DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY,
-                    FF_DONTCARE, TEXT("¸¼Àº °íµñ"), &m_fonts[tag]);
+                    HANGEUL_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY,
+                    FF_DONTCARE, TEXT("±¼¸²Ã¼"), &m_fonts[tag]);
             }
             break;
         default:

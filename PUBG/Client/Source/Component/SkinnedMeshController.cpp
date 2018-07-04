@@ -127,8 +127,8 @@ void SkinnedMeshController::notifyAnimationEvent(
     const float dt, 
     const std::string& name,
     LPD3DXANIMATIONCONTROLLER pController, 
-    loop_events_t* OutLoopEvents, 
-    finish_events_t* OutFinishEvents)
+    animation_events_t* OutLoopEvents, 
+    animation_events_t* OutFinishEvents)
 {
     assert(
         pController && 
@@ -145,24 +145,61 @@ void SkinnedMeshController::notifyAnimationEvent(
     double periodicPosition = pSet->GetPeriodicPosition(currentPosition);
     pSet->Release();
 
-    Debug << "animation name    : " << name             << '\n'
+    Debug << "track 0\n"
+          << "animation name    : " << name             << '\n'
           << "current  position : " << currentPosition  << '\n'
           << "periodic position : " << periodicPosition << '\n'
           << "period            : " << period           << '\n';
 
-    const double dDT = static_cast<double>(dt);
-
-    if (currentPosition + dDT >= period)
+    pController->GetTrackDesc(1, &desc);
+    if (desc.Enable)
     {
-        if (!OutFinishEvents->empty())
+        std::string track1Name;
+        double track1CurrentPosition, track1PeriodicPosition, track1Period;
+
+        pController->GetTrackAnimationSet(1, &pSet);
+
+        track1Name = std::string(pSet->GetName());
+        track1CurrentPosition = desc.Position;
+        track1PeriodicPosition = pSet->GetPeriodicPosition(currentPosition);
+        track1Period = pSet->GetPeriod();
+        pSet->Release();
+
+        Debug << "track 1\n"
+              << "animation name    : " << track1Name << '\n'
+              << "current  position : " << track1CurrentPosition << '\n'
+              << "periodic position : " << track1PeriodicPosition << '\n'
+              << "period            : " << track1Period << "\n\n";
+    }
+    else
+    {
+        Debug << "track 1\n"
+              << "animation name    : " << '\n'
+              << "current  position : " << '\n'
+              << "periodic position : " << '\n'
+              << "period            : " << "\n\n";
+    }
+
+    const double dDT = static_cast<double>(dt);
+    const double nextPosition = currentPosition + dDT;
+
+    if (!OutFinishEvents->empty())
+    {
+        float           finishEventAgoTime = OutFinishEvents->front().first;
+        std::function<void()>& finishEvent = OutFinishEvents->front().second;
+
+        if (finishEvent)
         {
-            if (OutFinishEvents->front())
+            if (nextPosition >= (period - finishEventAgoTime))
             {
-                OutFinishEvents->front()();
+                finishEvent();
                 OutFinishEvents->pop_front();
             }
         }
+    }
 
+    if (nextPosition >= period)
+    {
         if (!OutLoopEvents->empty())
             OutLoopEvents->pop_front();
     }
@@ -340,7 +377,8 @@ void SkinnedMeshController::SetAnimation(
     const float nextSpeed, 
     const bool isBlend, 
     const float blendingTime, 
-    const float nextWeight)
+    const float nextWeight,
+    const float position)
 {
     assert(
         m_pSkinnedMeshInstance &&
@@ -384,18 +422,49 @@ void SkinnedMeshController::SetAnimation(
         MessageBoxA(nullptr, text.c_str(), nullptr, MB_OK);
     }
 
+    pController->GetTrackAnimationSet(0, &pCurrent);
+    pController->GetTrackDesc(0, &desc);
+
+    const float dt = Time()()->GetDeltaTime() * 2.0f;
+    const double period = pCurrent->GetPeriod();
+    const double nextPosition = desc.Position + static_cast<double>(dt);
+
+    if (isSub)
+    {
+        if (!m_subFinishEvents.empty())
+        {
+            const float finishEventAgoTime = 
+                m_subFinishEvents.front().first;
+
+            std::function<void()>& finishEvent = 
+                m_subFinishEvents.front().second;
+
+            if (nextPosition < (period - finishEventAgoTime))
+                m_subFinishEvents.pop_front();
+        }
+    }
+    else
+    {
+        if (!m_finishEvents.empty())
+        {
+            const float finishEventAgoTime = 
+                m_finishEvents.front().first;
+
+            std::function<void()>& finishEvent = 
+                m_finishEvents.front().second;
+
+            if (nextPosition < (period - finishEventAgoTime))
+                m_finishEvents.pop_front();
+        }
+    }
+
     if (isBlend)
     {
-        pController->GetTrackAnimationSet(0, &pCurrent);
         pController->SetTrackAnimationSet(1, pCurrent);
-
-        pController->GetTrackDesc(0, &desc);
         pController->SetTrackDesc(1, &desc);
 
         pController->SetTrackWeight(0, nextWeight);
         pController->SetTrackWeight(1, 1.0f - nextWeight);
-
-        SAFE_RELEASE(pCurrent);
 
         if (isSub)
         {
@@ -409,8 +478,10 @@ void SkinnedMeshController::SetAnimation(
         }
     }
 
+    SAFE_RELEASE(pCurrent);
+
     pController->SetTrackAnimationSet(0, pNext);
-    pController->SetTrackPosition(0, 0.0);
+    pController->SetTrackPosition(0, static_cast<double>(position));
     pController->SetTrackSpeed(0, nextSpeed);
 
     SAFE_RELEASE(pNext);
@@ -422,53 +493,9 @@ void SkinnedMeshController::SetAnimation(
     const float nextSpeed, 
     const bool isBlend, 
     const float blendingTime, 
-    const float nextWeight, 
-    const float loopEventPeriod, 
-    const std::function<void()>& loopEvent)
-{
-    SetAnimation(isSub, name, nextSpeed, isBlend, blendingTime, nextWeight);
-
-    const auto event = std::make_pair(loopEventPeriod, loopEvent);
-    if (isSub)
-    {
-        m_subLoopEvents.emplace_back(event);
-    }
-    else
-    {
-        m_loopEvents.emplace_back(event);
-    }
-}
-
-void SkinnedMeshController::SetAnimation(
-    const bool isSub, 
-    const std::string& name, 
-    const float nextSpeed, 
-    const bool isBlend, 
-    const float blendingTime, 
-    const float nextWeight, 
-    const std::function<void()>& finishEvent)
-{
-    SetAnimation(isSub, name, nextSpeed, isBlend, blendingTime, nextWeight);
-
-    if (isSub)
-    {
-        m_subFinishEvents.emplace_back(finishEvent);
-    }
-    else
-    {
-        m_finishEvents.emplace_back(finishEvent);
-    }
-}
-
-void SkinnedMeshController::SetAnimation(
-    const bool isSub,
-    const std::string& name, 
-    const float nextSpeed, 
-    const bool isBlend, 
-    const float blendingTime, 
-    const float nextWeight, 
-    const float loopEventPeriod, 
-    const std::function<void()>& loopEvent, 
+    const float nextWeight,
+    const float position,
+    const float finishEventAgoTime, 
     const std::function<void()>& finishEvent)
 {
     SetAnimation(
@@ -478,16 +505,65 @@ void SkinnedMeshController::SetAnimation(
         isBlend, 
         blendingTime, 
         nextWeight, 
-        loopEventPeriod, 
-        loopEvent);
+        position);
 
+    const auto event = std::make_pair(finishEventAgoTime, finishEvent);
     if (isSub)
     {
-        m_subFinishEvents.emplace_back(finishEvent);
+        m_subFinishEvents.emplace_back(event);
     }
     else
     {
-        m_finishEvents.emplace_back(finishEvent);
+        m_finishEvents.emplace_back(event);
+    }
+}
+
+void SkinnedMeshController::SetAnimation(
+    const bool isSub, 
+    const std::string& name, 
+    const float nextSpeed, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight,
+    const float position,
+    const float loopEventPeriod, 
+    const std::function<void()>& loopEvent, 
+    const float finishEventAgoTime, 
+    const std::function<void()>& finishEvent)
+{
+    if (finishEventAgoTime == NO_ANIMATION_FINISH_EVENT)
+    {
+        SetAnimation(
+            isSub,
+            name,
+            nextSpeed,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+    else
+    {
+        SetAnimation(
+            isSub,
+            name,
+            nextSpeed,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+
+    const auto loopPair = std::make_pair(loopEventPeriod, loopEvent);
+    if (isSub)
+    {
+        m_subLoopEvents.emplace_back(loopPair);
+    }
+    else
+    {
+        m_loopEvents.emplace_back(loopPair);
     }
 }
 
@@ -565,4 +641,48 @@ bool SkinnedMeshController::HasFinishEvent() const
 bool SkinnedMeshController::HasSubFinishEvent() const
 {
     return !m_subFinishEvents.empty();
+}
+
+void SkinnedMeshController::GetTrackDescription(
+    const std::size_t index, 
+    D3DXTRACK_DESC* OutDesc)
+{
+    assert(
+        OutDesc &&
+        m_pSkinnedMeshInstance &&
+        m_pSkinnedMeshInstance->m_pAnimController &&
+        "SkinnedMeshController::GetTrackDescription(), \
+         skinned mesh instance or animation controller or argument is null.");
+
+    HRESULT hr = 
+        m_pSkinnedMeshInstance->m_pAnimController->GetTrackDesc(
+            index, 
+            OutDesc);
+
+    assert(
+        !FAILED(hr) && 
+        "SkinnedMeshController::GetTrackDescription(), \
+         ID3DXAnimationController::GetTrackDesc() failed.");
+}
+
+void SkinnedMeshController::GetSubTrackDescription(
+    const std::size_t index, 
+    D3DXTRACK_DESC* OutDesc)
+{
+    assert(
+        OutDesc &&
+        m_pSkinnedMeshInstance &&
+        m_pSkinnedMeshInstance->m_pSubAnimController &&
+        "SkinnedMeshController::GetSubTrackDescription(), \
+         skinned mesh instance or animation controller or argument is null.");
+
+    HRESULT hr =
+        m_pSkinnedMeshInstance->m_pSubAnimController->GetTrackDesc(
+            index, 
+            OutDesc);
+
+    assert(
+        !FAILED(hr) &&
+        "SkinnedMeshController::GetSubTrackDescription(), \
+         ID3DXAnimationController::GetTrackDesc() failed.");
 }

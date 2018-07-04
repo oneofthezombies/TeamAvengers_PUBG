@@ -15,6 +15,8 @@ public:
 
     static const float DEFAULT_BLENDING_TIME;
     static const float DEFAULT_NEXT_WEIGHT;
+    static const float DEFAULT_FINISH_EVENT_AGO_TIME;
+    static const float DEFAULT_POSITION;
 
 private:
     SkinnedMeshController* pSkinnedMeshController;
@@ -35,27 +37,29 @@ public:
         const TAG_ANIM_CHARACTER tag,
         const bool isBlend = true,
         const float blendingTime = 0.3f,
-        const float nextWeight = 0.0f);
+        const float nextWeight = 0.0f,
+        const float position = 0.0f);
 
     void Set(
         const BodyPart part,
         const TAG_ANIM_CHARACTER tag,
         const bool isBlend,
-        const float loopEventPeriod,
-        const std::function<void()>& loopEvent);
-
-    void Set(
-        const BodyPart part,
-        const TAG_ANIM_CHARACTER tag,
-        const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float finishEventAgoTime,
         const std::function<void()>& finishEvent);
 
     void Set(
         const BodyPart part,
         const TAG_ANIM_CHARACTER tag,
         const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
         const float loopEventPeriod,
         const std::function<void()>& loopEvent,
+        const float finishEventAgoTime,
         const std::function<void()>& finishEvent);
 
     Frame* FindFrame(const string& name);

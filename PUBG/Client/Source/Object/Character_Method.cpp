@@ -248,34 +248,6 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
     if (m_currentOnceKey._Space)
         m_Jump.isJumping = true;
 
-    ////Attacking 3개 -----------------------------------------------------
-    //if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
-    //{
-    //    attacking = Attacking::Rifle;
-    //}
-    //else if (false/*이곳에는 아이템이 껴 있는지 없는지를 확인해서 넣기*/)
-    //{
-    //    attacking = Attacking::Melee;
-    //}
-    //else
-    //{
-    //    attacking = Attacking::Unarmed;
-    //}
-
-    ////Stance 3개 -----------------------------------------------------
-    //if (m_currentOnceKey._C)
-    //{
-    //    stance = Stance::Crouch;
-    //}
-    //else if (m_currentOnceKey._Z)
-    //{
-    //    stance = Stance::Prone;
-    //}
-    //else
-    //{
-    //    stance = Stance::Stand;
-    //}
-
     //Moving 3개 -----------------------------------------------------
     if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl)
     {
@@ -351,6 +323,7 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
             *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
     }
 }
+
 bool Character::isMine() const
 {
     return m_index == Communication()()->m_MyInfo.m_ID;
@@ -506,8 +479,8 @@ void Character::updateBone()
     D3DXMatrixRotationX(&rx, m_waistRotation.m_angle);
     m_framePtr.pWaist->TransformationMatrix *= rx;
 
-    //// for root motion animation
-    //m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
+    // for root motion animation
+    m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
 }
 
 void Character::updateDependency()
