@@ -39,47 +39,23 @@ ICamera::~ICamera()
 
 void ICamera::CameraRender()
 {
-//    Character::Info* pTarInfo = GetTargetInfo();
-//    if (pTarInfo)
-//    {
-//        
-////        Debug << "Rot : " << *pTarInfo->pRotationForCamera << endl;
-//
-//        D3DXMATRIX tarR, matWorld;
-//        D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
-//        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
-//        
-//        D3DXMATRIX testT;
-//        D3DXMatrixTranslation(&testT, TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
-//        testT *=pTarInfo->pTransform->GetTransformationMatrix();
-//        //              (model space)                      (rotation get from character) 
-//        matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
-//    }
-//
-//    Shader::Draw(
-//        Resource()()->GetEffect("./Resource/", "Color.fx"), 
-//        nullptr, 
-//        [this](LPD3DXEFFECT pEffect) 
-//    {
-//        D3DXMATRIX s;
-//        D3DXMatrixScaling(&s, 1.0f, 1.0f, 1.0f);
-//        pEffect->SetMatrix(Shader::World, &s);
-//        D3DXCOLOR white(1.0f, 1.0f, 1.0f, 1.0f);
-//        pEffect->SetValue("Color", &white, sizeof white);
-//    }, 
-//        [this]() 
-//    {
-//        Device()()->DrawIndexedPrimitiveUP(
-//            D3DPT_LINELIST,
-//            0,
-//            sizeof m_vecWorld / sizeof m_vecWorld[0],
-//            BoxCollider::f_indices.size() / 2,
-//            BoxCollider::s_indices.data(),
-//            D3DFMT_INDEX16,
-//            &m_vecWorld[0],
-//            sizeof D3DXVECTOR3);
-//    });
+    Character::Info* pTarInfo = GetTargetInfo();
+    if (pTarInfo)
+    {    
+        D3DXMATRIX tarR, matWorld;
+        D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
+        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
+        
+        D3DXMATRIX testT;
+        D3DXMatrixTranslation(&testT, TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
+        testT *=pTarInfo->pTransform->GetTransformationMatrix();
+        //              (model space)                      (rotation get from character) 
+        matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
+    }
 
+
+    drawIndices(BoxCollider::f_indices, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+    
     if (temp)
         draw(drawRay, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 }
@@ -103,6 +79,32 @@ void ICamera::draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color)
             vertices.data(),
             sizeof vertices.front());
     });
+}
+void ICamera::drawIndices(const vector<WORD>& indices, const D3DXCOLOR & color)
+{
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        [this, &color](LPD3DXEFFECT pEffect)
+    {
+        D3DXMATRIX mat;
+        D3DXMatrixIdentity(&mat);
+        pEffect->SetMatrix(Shader::World, &mat);
+        pEffect->SetValue("Color", &color, sizeof color);
+    },
+        [this,&indices]()
+    {
+        Device()()->DrawIndexedPrimitiveUP(
+            D3DPT_LINELIST,
+            0,
+            sizeof m_vecWorld / sizeof m_vecWorld[0],
+            indices.size() / 2,
+            indices.data(),
+            D3DFMT_INDEX16,
+            &m_vecWorld[0],
+            sizeof D3DXVECTOR3);
+    });
+
 }
 void ICamera::UpdateViewProjMatrix()
 {

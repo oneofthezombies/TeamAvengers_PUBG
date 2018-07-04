@@ -44,6 +44,7 @@ public:
     virtual void Update() = 0;
     void CameraRender();
     void draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color);
+    void drawIndices(const vector<WORD>& indices, const D3DXCOLOR& color);
 
     void UpdateViewProjMatrix();
     void UpdateFrustumCulling();
