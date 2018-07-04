@@ -29,6 +29,13 @@ void SceneLoading::Load()
     load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character
+    /*
+    ForTest는 아래 4개의 X파일들을 합친 것
+    Lobby.X
+    Unarmed_Idle.X
+    Unarmed_Jump.X
+    Unarmed_Locomotion_Stand.X
+    */
     load(TAG_RES_ANIM_CHARACTER::ForTest);
 
     // load animation

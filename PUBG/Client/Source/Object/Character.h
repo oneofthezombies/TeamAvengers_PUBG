@@ -61,6 +61,8 @@ public:
         float m_capacity;
         int   m_numReload;
 
+        Item* m_tempSaveWeaponForX;
+
          TotalInventory();
         ~TotalInventory();
     };
@@ -218,10 +220,6 @@ private:
 
     void handleInput(IsPressing* OutIsPressing);
     void handleInput(IsPressed* OutIsPressed);
-
-    void setAttacking();
-    void setStance();
-    void setReload();
     
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
     void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
@@ -264,9 +262,20 @@ private:
     void updateTotalInventory();
     void renderTotalInventory();
 
+    //for Character_Input.cpp
+    void setStance();
+    void setAttacking();
+    void setReload();
+
+    void setRifleOnHand(TAG_RIFLE tagRifle);
+    void setRifleOnBody(TAG_RIFLE tagRifle);
+
+    void setStandTo(Stance stance);
+    void setCrouchTo(Stance stance);
+    void setProneTo(Stance stance);
+
     void onKar98kReloadEnd();
     void onKar98kReload();
-
 
 
 /**************************** end member method ******************************/
@@ -303,6 +312,7 @@ public:
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
     string ForDebugGetAttacking(Attacking attcking);
     string ForDebugGetStance(Stance stance);
+    void ForDebug();
 
     CharacterAnimation* GetCharacterAnimation();
 

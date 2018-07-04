@@ -1,15 +1,22 @@
 /// Weapon_Kar98k_Character_FPP.X (Kar98k를 들고있을 때 캐릭터 애니메이션 FPP용)
-0. (0 ~ 102)[103] - Weapon_Kar98k_BoltAction_1_FPP
-1. (103 ~ 205)[103] - Weapon_Kar98k_BoltAction_1_Prone_FPP
+Weapon_Kar98k_BoltAction_1_FPP
+Weapon_Kar98k_BoltAction_1_Prone_FPP
 
-2. (206 ~ 308)[103] - Weapon_Kar98k_BoltAction_2_FPP
-3. (309 ~ 411)[103] - Weapon_Kar98k_BoltAction_2_Prone_FPP
+Weapon_Kar98k_BoltAction_2_FPP
+Weapon_Kar98k_BoltAction_2_Prone_FPP
 
-4. (412 ~ 514)[103] - Weapon_Kar98k_BoltAction_3_FPP
-5. (515 ~ 617)[103] - Weapon_Kar98k_BoltAction_3_Prone_FPP
+Weapon_Kar98k_BoltAction_3_FPP
+Weapon_Kar98k_BoltAction_3_Prone_FPP
 
-6. (618 ~ 879)[262] - Weapon_Kar98k_Reload_StartLoopEnd_FPP
-7. (880 ~ 1141)[262] - Weapon_Kar98k_Reload_StartLoopEnd_Prone_FPP
+//장전 애니메이션
+Weapon_Kar98k_Reload_Start_FPP
+Weapon_Kar98k_Reload_Loop_FPP
+Weapon_Kar98k_Reload_End_FPP
 
-8. (1142 ~ 1382)[241] - Weapon_Kar98k_ReloadFast_FPP
-9. (1383 ~ 1623)[241] - Weapon_Kar98k_ReloadFast_Prone_FPP
+Weapon_Kar98k_Reload_Start_Prone_FPP
+Weapon_Kar98k_Reload_Loop_Prone_FPP
+Weapon_Kar98k_Reload_End_Prone_FPP
+
+//5발 한번에 장전
+Weapon_Kar98k_ReloadFast_FPP
+Weapon_Kar98k_ReloadFast_Prone_FPP

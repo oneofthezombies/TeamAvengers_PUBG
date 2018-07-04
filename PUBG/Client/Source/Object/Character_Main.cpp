@@ -102,29 +102,31 @@ void Character::updateMine()
     setStance();
     setAttacking();
     setReload();
+    ForDebug();
+
+    //setting animation and movements
+    animationMovementControl(&pos, &m_lowerAnimState);
 
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
     if (m_savedInput != m_currentStayKey)
     {
-        //setting animation and movements
-        animationMovementControl(&pos, &m_lowerAnimState);
         if (m_lowerAnimState == TAG_ANIM_CHARACTER::COUNT)
         {
             //애니메이션이 없습니다.
         }
         else
         {
-            pAnimation->Set(
-                CharacterAnimation::BodyPart::LOWER, 
+            m_pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH, 
                 m_lowerAnimState);
 
             m_savedInput = m_currentStayKey;
         }
     }
-    else
-    {
-        animationMovementControl(&pos, NULL); // NULL means not changing animation
-    }
+    //else
+    //{
+    //    animationMovementControl(&pos, NULL); // NULL means not changing animation
+    //}
 
     cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
@@ -175,11 +177,11 @@ void Character::updateMine()
 
     }
 
-    Debug << "current position : " << pos << '\n'
+    Debug << "current        position : " << pos << "\n\n"
         << "current upper animation : "
         << pAnimation->GetUpperAnimationName() << '\n'
         << "current lower animation : "
-        << pAnimation->GetLowerAnimationName() << '\n';
+        << m_pAnimation->GetLowerAnimationName() << "\n\n";
 
 ///////////////////////////////////////////////////////////////////////////////
 
