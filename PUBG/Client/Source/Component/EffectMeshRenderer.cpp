@@ -3,11 +3,14 @@
 
 EffectMeshRenderer::EffectMeshRenderer(IObject* pOwner)
     : Component(pOwner)
+    , m_pSphere(nullptr)
 {
+    D3DXCreateSphere(Device()(),7.0f, 10, 10,&m_pSphere, nullptr);
 }
 
 EffectMeshRenderer::~EffectMeshRenderer()
 {
+    SAFE_RELEASE(m_pSphere);
 }
 
 void EffectMeshRenderer::Render(
@@ -20,6 +23,26 @@ void EffectMeshRenderer::Render(
         pEffectMesh->m_effectParams, 
         pEffectMesh->m_pMesh, 
         setGlobalVariable);
+
+
+    //JOHN HAN
+    D3DXMATRIX mat;
+    D3DXMatrixIdentity(&mat);
+
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        m_pSphere,
+        0,
+        [this, &mat](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &mat);
+
+        D3DXCOLOR White(1.0f, 1.0f, 1.0f, 1.0f);
+        pEffect->SetValue("Color", &White, sizeof White);
+    });
+
+
 }
 
 void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)

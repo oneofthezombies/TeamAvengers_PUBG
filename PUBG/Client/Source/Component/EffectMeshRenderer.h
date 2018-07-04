@@ -7,6 +7,7 @@ class EffectMeshRenderer : public Component
 {
 private:
     EffectMesh* pEffectMesh;
+    LPD3DXMESH  m_pSphere;
 
 public:
              EffectMeshRenderer(IObject* pOwner);

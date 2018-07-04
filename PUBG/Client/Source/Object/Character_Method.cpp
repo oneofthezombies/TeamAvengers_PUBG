@@ -6,6 +6,7 @@
 #include "AnimationState.h"
 #include "Item.h"
 #include "ItemInfo.h"
+#include "HeightMap.h"
 
 Character::WaistRotation::WaistRotation(const float limit, const float factor)
     : LIMIT_OF_ANGLE(limit)
@@ -639,9 +640,9 @@ bool Character::isMine() const
 void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 {
     
-    IScene* pCurrentScene = CurrentScene()();
+    HeightMap* pCurrentScene = CurrentScene()()->GetHeightMap();
     if (!pCurrentScene)
-        assert(false && "No CurrentScene");
+        return; //assert(false && "No CurrentScene");
 
 
     D3DXVECTOR3 targetPos = *pOut;

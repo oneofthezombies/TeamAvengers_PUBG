@@ -8,17 +8,17 @@ void SceneLoading::loadSync()
 {
     std::pair<std::string, std::string> pathFilename;
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
-    m_effectMeshResources.emplace(0, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
+    //m_effectMeshResources.emplace(0, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
-    m_effectMeshResources.emplace(1, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
+    //m_effectMeshResources.emplace(1, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::QBZ);
-    m_effectMeshResources.emplace(2, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::QBZ);
+    //m_effectMeshResources.emplace(2, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Kar98k);
-    m_effectMeshResources.emplace(3, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Kar98k);
+    //m_effectMeshResources.emplace(3, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
 
     pathFilename = ResourceInfo::GetPathFileName(TAG_RES_STATIC::Bandage);
     m_effectMeshResources.emplace(4, ResourceAsync::OnLoadEffectMeshAsync(pathFilename.first, pathFilename.second));
@@ -27,11 +27,11 @@ void SceneLoading::loadSync()
 
     addEffectMeshs();
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    m_skinnedMeshResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON::QBZ_Anim);
+    //m_skinnedMeshResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
-    m_skinnedMeshResources.emplace(1, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    //m_skinnedMeshResources.emplace(1, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
     // add skinned mesh resource
 
@@ -42,35 +42,35 @@ void SceneLoading::loadSync()
 
     // start animation resource 
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
-    m_characterAnimationResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
+    //m_characterAnimationResources.emplace(0, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
-    m_characterAnimationResources.emplace(1, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
+    //m_characterAnimationResources.emplace(1, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
-    m_characterAnimationResources.emplace(2, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
+    //m_characterAnimationResources.emplace(2, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
-    m_characterAnimationResources.emplace(3, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
+    //m_characterAnimationResources.emplace(3, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
-    m_characterAnimationResources.emplace(4, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
+    //m_characterAnimationResources.emplace(4, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
-    m_characterAnimationResources.emplace(5, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
+    //m_characterAnimationResources.emplace(5, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
-    m_characterAnimationResources.emplace(6, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
+    //m_characterAnimationResources.emplace(6, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
-    m_characterAnimationResources.emplace(7, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    //m_characterAnimationResources.emplace(7, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
-    m_characterAnimationResources.emplace(8, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+    //m_characterAnimationResources.emplace(8, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
-    pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
-    m_characterAnimationResources.emplace(9, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
+    //pathFilename = ResourceInfo::GetPathFileName(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
+    //m_characterAnimationResources.emplace(9, ResourceAsync::OnLoadSkinnedMeshAsync(pathFilename.first, pathFilename.second));
 
     addAnimationsToCharacter();
 }
@@ -210,10 +210,10 @@ void SceneLoading::loadEffectMesh()
     //addTask(TAG_RES_STATIC::FirstAidKit);
     //addTask(TAG_RES_STATIC::MedKit);
 
-    addTask(TAG_RES_STATIC::Ammo_5_56mm);
+    //addTask(TAG_RES_STATIC::Ammo_5_56mm);
     //addTask(TAG_RES_STATIC::Ammo_7_62mm);
 
-    addTask(TAG_RES_STATIC::QBZ);
+    //addTask(TAG_RES_STATIC::QBZ);
     //addTask(TAG_RES_STATIC::Kar98k);
 
     //addTask(TAG_RES_STATIC::RedDot);
@@ -243,7 +243,7 @@ void SceneLoading::loadSkinnedMesh()
     loadCharacterAnimation();
 
     //// weapon
-    addTask(TAG_RES_ANIM_WEAPON::QBZ_Anim, &m_skinnedMeshTasks);
+    //addTask(TAG_RES_ANIM_WEAPON::QBZ_Anim, &m_skinnedMeshTasks);
     //addTask(TAG_RES_ANIM_WEAPON::Kar98k_Anim, &m_skinnedMeshTasks);
 }
 
@@ -261,17 +261,17 @@ void SceneLoading::loadCharacterAnimation()
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
     //addTask(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone);
 
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
+    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
+    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
 
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
-    addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
+    //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
     //addTask(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
 
     //addTask(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
-    addTask(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+    //addTask(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
 
     ////for test
     //addTask(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
