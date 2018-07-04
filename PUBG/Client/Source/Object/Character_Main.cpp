@@ -40,7 +40,7 @@ Character::Character(const int index)
     pTransform->SetPosition(D3DXVECTOR3(factor, 0.0f, factor));
 
     pAnimation = new CharacterAnimation;
-    AddChildren(pAnimation);
+    AddChild(pAnimation);
     pAnimation->Set(
         CharacterAnimation::BodyPart::BOTH, 
         TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, 

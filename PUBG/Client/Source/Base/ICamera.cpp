@@ -55,8 +55,7 @@ void ICamera::CameraRender()
         matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
     }
 
-
-    drawIndices(BoxCollider::f_indices, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+    drawIndices(BoxCollider::FRUSTUM_INDICES, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
     
     if (temp)
         draw(drawRay, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
