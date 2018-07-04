@@ -4,13 +4,13 @@
 
 void Character::onKar98kReloadEnd()
 {
-    m_pAnimation->Set(
+    pAnimation->Set(
         CharacterAnimation::BodyPart::UPPER,
         TAG_ANIM_CHARACTER::Kar98k_Reload_End,
         false,
         [this]() 
     {
-        m_pAnimation->Set(
+        pAnimation->Set(
             CharacterAnimation::BodyPart::UPPER,
             TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
             false);
@@ -25,7 +25,7 @@ void Character::onKar98kReload()
     }
     else
     {
-        m_pAnimation->Set(
+        pAnimation->Set(
             CharacterAnimation::BodyPart::UPPER,
             TAG_ANIM_CHARACTER::Kar98k_Reload_Loop,
             false,

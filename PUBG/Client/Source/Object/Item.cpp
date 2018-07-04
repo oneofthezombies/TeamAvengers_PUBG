@@ -50,10 +50,16 @@ void Item::OnUpdate()
 void Item::OnRender()
 {
     if (m_isRenderEffectMesh)
-        pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
-
+    {
+        EffectMesh* pEM = pEffectMeshRenderer->GetEffectMesh();
+        D3DXVECTOR3 center = Vector3::ZERO;
+        D3DXVec3TransformCoord(&center, &pEM->m_center, &GetTransform()->GetTransformationMatrix());
+        if(CurrentCamera()()->IsObjectInsideFrustum(center, pEM->m_radius))
+            pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
+    }
+        
     if (m_isRenderSkinnedMesh)
-        pSkinnedMeshController->Render(bind(&Item::setGlobalVariable, this, _1));
+        pSkinnedMeshController->Render(GetTransform()->GetTransformationMatrix(), std::bind(&Item::setGlobalVariable, this, _1));
 }
 
 void Item::setup(const TAG_RES_STATIC tag)

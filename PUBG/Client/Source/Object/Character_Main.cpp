@@ -31,7 +31,7 @@ Character::Character(const int index)
     , m_stance(Stance::Stand)
 
     , pTransform(nullptr)
-    , m_pAnimation(nullptr)
+    , pAnimation(nullptr)
     , m_pRootCharacterPart(nullptr)
 {
     pTransform = GetTransform();
@@ -39,8 +39,9 @@ Character::Character(const int index)
     const float factor(static_cast<float>(m_index + 1) * 100.0f);
     pTransform->SetPosition(D3DXVECTOR3(factor, 0.0f, factor));
 
-    m_pAnimation = new CharacterAnimation;
-    m_pAnimation->Set(
+    pAnimation = new CharacterAnimation;
+    AddChildren(pAnimation);
+    pAnimation->Set(
         CharacterAnimation::BodyPart::BOTH, 
         TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, 
         false);
@@ -62,7 +63,6 @@ Character::Character(const int index)
 
 Character::~Character()
 {
-    SAFE_DELETE(m_pAnimation);
     SAFE_DELETE(m_pRootCharacterPart);
 }
 
@@ -114,7 +114,7 @@ void Character::updateMine()
         }
         else
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::LOWER, 
                 m_lowerAnimState);
 
@@ -166,9 +166,9 @@ void Character::updateMine()
 
     Debug << "current position : " << pos << '\n'
         << "current upper animation : "
-        << m_pAnimation->GetUpperAnimationName() << '\n'
+        << pAnimation->GetUpperAnimationName() << '\n'
         << "current lower animation : "
-        << m_pAnimation->GetLowerAnimationName() << '\n';
+        << pAnimation->GetLowerAnimationName() << '\n';
 
 ///////////////////////////////////////////////////////////////////////////////
 

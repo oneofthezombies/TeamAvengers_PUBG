@@ -168,7 +168,7 @@ private:
     int m_index;
 
     Transform*          pTransform;
-    CharacterAnimation* m_pAnimation;
+    CharacterAnimation* pAnimation;
     CharacterPart*      m_pRootCharacterPart;
 
     //
