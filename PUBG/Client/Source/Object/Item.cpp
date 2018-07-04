@@ -50,7 +50,12 @@ void Item::OnUpdate()
 void Item::OnRender()
 {
     if (m_isRenderEffectMesh)
-        pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
+    {
+        EffectMesh* pEM = pEffectMeshRenderer->GetEffectMesh();
+        if(CurrentCamera()()->IsObjectInsideFrustum(pEM->m_center, pEM->m_radius))
+            pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
+    }
+        
 
     if (m_isRenderSkinnedMesh)
         pSkinnedMeshController->Render(bind(&Item::setGlobalVariable, this, _1));

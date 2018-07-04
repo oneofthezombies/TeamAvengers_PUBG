@@ -5,7 +5,7 @@ EffectMeshRenderer::EffectMeshRenderer(IObject* pOwner)
     : Component(pOwner)
     , m_pSphere(nullptr)
 {
-    D3DXCreateSphere(Device()(),7.0f, 10, 10,&m_pSphere, nullptr);
+    
 }
 
 EffectMeshRenderer::~EffectMeshRenderer()
@@ -26,9 +26,9 @@ void EffectMeshRenderer::Render(
 
 
     //JOHN HAN
+    //this is to draw sphere around the Items
     D3DXMATRIX mat;
     D3DXMatrixIdentity(&mat);
-
     Shader::Draw(
         Resource()()->GetEffect("./Resource/", "Color.fx"),
         nullptr,
@@ -51,6 +51,8 @@ void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)
         "EffectMeshRenderer::SetEffectMesh(), effect mesh is null.");
 
     this->pEffectMesh = pEffectMesh;
+
+    D3DXCreateSphere(Device()(), pEffectMesh->m_radius, 10, 10, &m_pSphere, nullptr);
 }
 
 void EffectMeshRenderer::SetEffectMesh(const TAG_RES_STATIC tag)

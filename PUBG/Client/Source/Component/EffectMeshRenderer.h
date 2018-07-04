@@ -17,4 +17,8 @@ public:
 
     void SetEffectMesh(EffectMesh* pEffectMesh);
     void SetEffectMesh(const TAG_RES_STATIC tag);
+    EffectMesh* GetEffectMesh()
+    {
+        return pEffectMesh;
+    }
 };
