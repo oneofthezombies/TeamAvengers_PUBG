@@ -52,7 +52,9 @@ void Item::OnRender()
     if (m_isRenderEffectMesh)
     {
         EffectMesh* pEM = pEffectMeshRenderer->GetEffectMesh();
-        if(CurrentCamera()()->IsObjectInsideFrustum(pEM->m_center, pEM->m_radius))
+        D3DXVECTOR3 center = Vector3::ZERO;
+        D3DXVec3TransformCoord(&center, &pEM->m_center, &GetTransform()->GetTransformationMatrix());
+        if(CurrentCamera()()->IsObjectInsideFrustum(center, pEM->m_radius))
             pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
     }
         

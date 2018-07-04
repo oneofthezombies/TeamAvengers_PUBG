@@ -48,14 +48,17 @@ void SkinnedMeshController::drawMeshContainer(
 
     auto pMeshContainer = static_cast<MeshContainer*>(pMeshContainerBase);
     
-    ///**/
-    //// TODO
-    //D3DXVECTOR3 vCenter(0.0f,0.0f,0.0f);
-    //D3DXVec3TransformCoord(&vCenter, &pMeshContainer->pEffectMesh->m_center, &GetTransform()->GetTransformationMatrix());
-    //if (!CurrentCamera()()->IsObjectInsideFrustum(vCenter, pMeshContainer->pEffectMesh->m_radius))
-    //    return;
-    ///**/
-    
+
+    //****frustum culling for player attachedments ex) GUN
+    GetTransform()->Update();
+    D3DXVECTOR3 center = Vector3::ZERO;
+    D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_center, &GetTransform()->GetTransformationMatrix());
+    if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_radius))
+        return;
+    //*********************************************
+
+
+
     auto numBones = pMeshContainer->pSkinInfo->GetNumBones();
     for (auto i = 0u; i < numBones; ++i)
     {
