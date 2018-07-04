@@ -236,6 +236,9 @@ void Collision::Manager::findCollidersWithTagInsideFrustum(
 
 void Collision::Manager::Update()
 {
+    // 충돌 이벤트 -> 총알 -> (내) 캐릭터
+    // for 총알들
+    // for 내 원형 거리 서치 후 -> 원충돌시 박스충돌계산 -> 이벤트함수 실행
     notifyCollision();
 }
 

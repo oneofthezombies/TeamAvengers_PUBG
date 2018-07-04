@@ -126,6 +126,14 @@ void Character::updateMine()
         animationMovementControl(&pos, NULL); // NULL means not changing animation
     }
 
+    // 카메라 프러스텀 업데이트 
+
+    // 이동가능한치 체크해서 업데이트 하거나 y만되거나 등등
+    //CurrentScene()()->Get
+
+    // 이동가능하다면 cellIndex = CurrentScene()()->GetCellIndex(pos);
+    // if (m_cellIndex != cellIndex) 이사하기
+
     cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
