@@ -2,20 +2,28 @@
 #include "HeightMap.h"
 #include "EffectMeshRenderer.h"
 #include "DirectionalLight.h"
+#include "Collider.h"
 
 HeightMap::HeightMap()
 	: IMap()
     , m_pMesh(NULL)
+    , m_testSphereMesh(NULL)
 {
+    D3DXCreateSphere(Device()(), 10.0f, 10, 10, &m_testSphereMesh, NULL);
+
     SetDimension(257);
 
 
     D3DXMATRIXA16 matS, matT;
     D3DXMatrixScaling(&matS, 10.0f, 1.0f, 10.0f);
-    Load(_T("./Resource/Heightmap/Heightmap.raw"), &matS);
+    D3DXMatrixTranslation(&matT, 0.0f, 0.0f, 0.0f);
+    m_matWorld = matS * matT;
+
+
+    Load(_T("./Resource/Heightmap/Heightmap.raw"), &m_matWorld);
     
 
-    m_matWorld = matS /** matT*/;
+   
 
     SetSurface();
 
@@ -28,14 +36,8 @@ HeightMap::HeightMap()
                 "./Resource/Heightmap/", 
                 "Heightmap.jpg"));
 
-
-
-
-
     //ray box
     SetRayBox();
-    
-
 
 }
 
@@ -43,6 +45,7 @@ HeightMap::HeightMap()
 HeightMap::~HeightMap()
 {
 	SAFE_RELEASE(m_pMesh);
+    SAFE_RELEASE(m_testSphereMesh);
 }
 
 vector<WORD> indices = {
@@ -222,62 +225,60 @@ void HeightMap::SetSurface()
     }
 }
 
-
 void HeightMap::OnUpdate()
 {
-	//if (Mouse::Get()->ButtonDown(Mouse::RBUTTON))
-	//{
-	//	D3DXVECTOR3 pos = Mouse::Get()->GetPosition();
-	//		
-	//	if (CalcPickedPosition(pos, pos.x, pos.y) == true)
-	//	{
-	//		//GetHeight(pos.y, pos);
-	//		static_cast<IUnitObject*>(ObjectManager::Get()->FindObjectByTag(TAG_PLAYER))->SetDestination(pos);
-	//	}
-	//}
 }
-
-
 void HeightMap::OnRender()
 {
-    Shader::Draw(
-        Resource()()->GetEffect("./Resource/Heightmap/", "Heightmap.fx"),
-        nullptr, 
-        m_pMesh, 
-        0, 
-        [this](LPD3DXEFFECT pEffect) 
+    //Draw HeightMap
     {
-        pEffect->SetMatrix(
-            Shader::World,
-            &GetTransform()->GetTransformationMatrix());
+        Shader::Draw(
+            Resource()()->GetEffect("./Resource/Heightmap/", "Heightmap.fx"),
+            nullptr,
+            m_pMesh,
+            0,
+            [this](LPD3DXEFFECT pEffect)
+        {
+            pEffect->SetMatrix(
+                Shader::World,
+                &GetTransform()->GetTransformationMatrix());
 
-        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-        D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
-    });
+            DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
+            D3DXVECTOR3 lightDir = light->GetDirection();
+            pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
+        });
 
-
-    draw(m_RayBox, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
-    //CurrentCamera()()->CameraRender();
+    }
+    
+    //Draw Boundary Box
+    drawIndices(BoxCollider::FRUSTUM_INDICES, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 }
-void HeightMap::draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color)
+
+void HeightMap::drawIndices(const vector<WORD>& indices, const D3DXCOLOR & color)
 {
     Shader::Draw(
         Resource()()->GetEffect("./Resource/", "Color.fx"),
         nullptr,
         [this, &color](LPD3DXEFFECT pEffect)
     {
-        pEffect->SetMatrix(Shader::World, &m_matWorld);
+        D3DXMATRIX mat;
+        D3DXMatrixIdentity(&mat);
+        pEffect->SetMatrix(Shader::World, &mat);
         pEffect->SetValue("Color", &color, sizeof color);
     },
-        [this, &vertices]()
+        [this, &indices]()
     {
-        Device()()->DrawPrimitiveUP(
+        Device()()->DrawIndexedPrimitiveUP(
             D3DPT_LINELIST,
-            vertices.size() / 2,
-            vertices.data(),
-            sizeof vertices.front());
+            0,
+            sizeof m_boundary / sizeof m_boundary[0],
+            indices.size() / 2,
+            indices.data(),
+            D3DFMT_INDEX16,
+            &m_boundary[0],
+            sizeof D3DXVECTOR3);
     });
+
 }
 
 
@@ -322,56 +323,30 @@ bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
 	return true;
 }
 
+
 void HeightMap::SetRayBox()
 {    
-    vector<D3DXVECTOR3> vec;
-    vec.resize(8);
+
     //ray Direction box 
-    vec[0] = (D3DXVECTOR3(0,        500.0f,         257.f));	//좌상후
-    vec[1] = (D3DXVECTOR3(257.f,    500.0f,         257.f));	//우상후
-    vec[2] = (D3DXVECTOR3(0,        500.0f,         0));	//좌상전
-    vec[3] = (D3DXVECTOR3(257.f,    500.0f,         0));	//우상전
-    vec[4] = (D3DXVECTOR3(0,        -1,             257.f));	//좌하후
-    vec[5] = (D3DXVECTOR3(257.f,    -1,             257.f));	//우하후
-    vec[6] = (D3DXVECTOR3(0,        -1,             0));	//좌하전
-    vec[7] = (D3DXVECTOR3(257.f,    -1,             0));	//우하전
+    m_boundary[0] = (D3DXVECTOR3(0,        800.0f,         257.f));	//좌상후
+    m_boundary[1] = (D3DXVECTOR3(257.f,    800.0f,         257.f));	//우상후
+    m_boundary[2] = (D3DXVECTOR3(0,        800.0f,         0));	//좌상전
+    m_boundary[3] = (D3DXVECTOR3(257.f,    800.0f,         0));	//우상전
+    m_boundary[4] = (D3DXVECTOR3(0,        -1,             257.f));	//좌하후
+    m_boundary[5] = (D3DXVECTOR3(257.f,    -1,             257.f));	//우하후
+    m_boundary[6] = (D3DXVECTOR3(0,        -1,             0));	//좌하전
+    m_boundary[7] = (D3DXVECTOR3(257.f,    -1,             0));	//우하전
     
     
-    for (std::size_t i = 0; i < vec.size(); i++)
+    for (std::size_t i = 0; i < 8; i++)
     {
-        D3DXVec3TransformCoord(&vec[i], &vec[i], &m_matWorld);
+        D3DXVec3TransformCoord(&m_boundary[i], &m_boundary[i], &m_matWorld);
     }
 
-    m_RayBox.resize(indices.size());
+    m_boundaryBox.resize(indices.size());
     for (std::size_t i = 0; i < indices.size(); i++)
     {
-        m_RayBox[i] = vec[indices[i]];
+        m_boundaryBox[i] = m_boundary[indices[i]];
     }
 
-    vec.clear();
 }
-
-
-//bool HeightMap::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
-//{
-//	//Ray		ray = Ray::RayAtWorldSpace(screenX, screenY);
-//	//float	minDist = FLT_MAX;
-//	//float	intersectionDist;
-//	//bool	bIntersect = false;
-//
-//	//for (int i = 0; i < m_vecSurfaceVertex.size(); i += 3)
-//	//{
-//	//	if ( ray.CalcIntersectTri(&m_vecSurfaceVertex[i], &intersectionDist) )
-//	//	{
-//	//		if (intersectionDist < minDist)
-//	//		{
-//	//			bIntersect = true;
-//	//			minDist = intersectionDist;
-//	//			vOut = ray.m_pos + ray.m_dir * intersectionDist;
-//	//		}
-//	//	}
-//	//}
-//	//return bIntersect;
-//    return false;
-//}
-

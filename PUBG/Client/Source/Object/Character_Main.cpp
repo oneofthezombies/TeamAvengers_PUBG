@@ -85,7 +85,7 @@ void Character::updateMine()
     const float    dt = Time()()->GetDeltaTime();
     D3DXVECTOR3    pos = pTransform->GetPosition();
     D3DXQUATERNION rot = pTransform->GetRotation();
-
+    D3DXVECTOR3    scl = pTransform->GetScale();
     //if (pInput->IsStayKeyDown('3'))
     //{
     //    RotateWaist(-m_WaistRotation.QUANTITY_FACTOR);
