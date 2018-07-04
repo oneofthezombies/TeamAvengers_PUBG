@@ -24,6 +24,7 @@ void SkinnedMeshController::updateFrameToModelSpace(LPD3DXFRAME pFrameBase,
 
 void SkinnedMeshController::drawFrame(
     LPD3DXFRAME pFrameBase, 
+    const D3DXMATRIX& world,
     const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
     if (!pFrameBase) return;
@@ -31,17 +32,26 @@ void SkinnedMeshController::drawFrame(
     auto pMeshContainer = pFrameBase->pMeshContainer;
     while (pMeshContainer)
     {
-        drawMeshContainer(pMeshContainer, setGlobalVariable);
+        drawMeshContainer(pMeshContainer, world, setGlobalVariable);
 
         pMeshContainer = pMeshContainer->pNextMeshContainer;
     }
 
-    drawFrame(pFrameBase->pFrameSibling, setGlobalVariable);
-    drawFrame(pFrameBase->pFrameFirstChild, setGlobalVariable);
+    drawFrame(pFrameBase->pFrameSibling, world, setGlobalVariable);
+    drawFrame(pFrameBase->pFrameFirstChild, world, setGlobalVariable);
 }
 
+//이건 되는 코드임 찬응아! 지우지 말것
+////****frustum culling for player attachedments ex) GUN
+//GetTransform()->Update();
+//D3DXVECTOR3 center = Vector3::ZERO;
+//D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_center, &GetTransform()->GetTransformationMatrix());
+//if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_radius))
+//    return;
+////*********************************************
 void SkinnedMeshController::drawMeshContainer(
     LPD3DXMESHCONTAINER pMeshContainerBase,
+    const D3DXMATRIX& world,
     const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
     if (!pMeshContainerBase || !pMeshContainerBase->pSkinInfo) return;
@@ -49,13 +59,38 @@ void SkinnedMeshController::drawMeshContainer(
     auto pMeshContainer = static_cast<MeshContainer*>(pMeshContainerBase);
     
 
+
+
+
+
     //****frustum culling for player attachedments ex) GUN
     GetTransform()->Update();
     D3DXVECTOR3 center = Vector3::ZERO;
-    D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_center, &GetTransform()->GetTransformationMatrix());
+    
+    //world matrix 가 필요하다!!!
+    D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_center, &world);
     if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_radius))
         return;
     //*********************************************
+
+
+
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        m_testmeshSphere,
+        0,
+        [this, &world](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &world);
+
+        D3DXCOLOR White(1.0f, 1.0f, 1.0f, 1.0f);
+        pEffect->SetValue("Color", &White, sizeof White);
+    });
+
+
+
+
 
 
 
@@ -199,12 +234,15 @@ SkinnedMeshController::SkinnedMeshController(IObject* pOwner)
     , m_subTotalBlendingTime(0.3f)
     , m_subPassedBlendingTime(0.0f)
     , m_pSkinnedMeshInstance(nullptr)
+    , m_testmeshSphere(NULL)
 {
+    D3DXCreateSphere(Device()(), 96.42f, 10, 10, &m_testmeshSphere, NULL);
 }
 
 SkinnedMeshController::~SkinnedMeshController()
 {
     SAFE_DELETE(m_pSkinnedMeshInstance);
+    SAFE_RELEASE(m_testmeshSphere);
 }
 
 void SkinnedMeshController::UpdateAnimation()
@@ -279,6 +317,7 @@ void SkinnedMeshController::UpdateModel()
 }
 
 void SkinnedMeshController::Render(
+    const D3DXMATRIX& world,
     const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
     assert(
@@ -288,7 +327,7 @@ void SkinnedMeshController::Render(
          skinned mesh instance or skinned mesh is null.");
 
     SkinnedMesh* pSkinnedMesh = m_pSkinnedMeshInstance->pSkinnedMesh;
-    drawFrame(pSkinnedMesh->m_pRootFrame, setGlobalVariable);
+    drawFrame(pSkinnedMesh->m_pRootFrame, world, setGlobalVariable);
 
     //if (pSkinnedMesh->m_pSubRootFrame)
     //    drawFrame(pSkinnedMesh->m_pSubRootFrame, setGlobalVariable);

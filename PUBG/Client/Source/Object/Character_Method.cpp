@@ -98,15 +98,15 @@ Character::IsJumping::IsJumping()
 
 void Character::setFramePtr()
 {
-    m_framePtr.pWaist         = m_pAnimation->FindFrame("spine_01");
-    m_framePtr.pRoot          = m_pAnimation->FindFrame("root");
-    m_framePtr.pHandGun       = m_pAnimation->FindFrame("ik_hand_gun");
-    m_framePtr.pTPP           = m_pAnimation->FindFrame("camera_tpp");
-    m_framePtr.pFPP           = m_pAnimation->FindFrame("camera_fpp");
-    m_framePtr.pSlotPrimary   = m_pAnimation->FindFrame("slot_primary");
-    m_framePtr.pSlotSecondary = m_pAnimation->FindFrame("slot_secondary");
-    m_framePtr.pSlotMelee     = m_pAnimation->FindFrame("slot_melee");
-    m_framePtr.pSlotThrowable = m_pAnimation->FindFrame("slot_throwable");
+    m_framePtr.pWaist         = pAnimation->FindFrame("spine_01");
+    m_framePtr.pRoot          = pAnimation->FindFrame("root");
+    m_framePtr.pHandGun       = pAnimation->FindFrame("ik_hand_gun");
+    m_framePtr.pTPP           = pAnimation->FindFrame("camera_tpp");
+    m_framePtr.pFPP           = pAnimation->FindFrame("camera_fpp");
+    m_framePtr.pSlotPrimary   = pAnimation->FindFrame("slot_primary");
+    m_framePtr.pSlotSecondary = pAnimation->FindFrame("slot_secondary");
+    m_framePtr.pSlotMelee     = pAnimation->FindFrame("slot_melee");
+    m_framePtr.pSlotThrowable = pAnimation->FindFrame("slot_throwable");
 
     FramePtr& p = m_framePtr;
     assert(
@@ -186,7 +186,7 @@ void Character::setAttacking()
 
     TotalInventory& inven = m_totalInventory; 
 
-    if (m_pAnimation->HasUpperFinishEvent()) return;
+    if (pAnimation->HasUpperFinishEvent()) return;
 
     if (m_currentOnceKey._Num1)
     {
@@ -199,12 +199,12 @@ void Character::setAttacking()
 
                 inven.m_hand = inven.m_weaponPrimary;
                 inven.m_weaponPrimary = nullptr;
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand,
                     false, [this]() 
                 {
-                    m_pAnimation->Set(
+                    pAnimation->Set(
                         CharacterAnimation::BodyPart::UPPER,
                         TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
                         false);
@@ -213,7 +213,7 @@ void Character::setAttacking()
             else if (m_attacking == Attacking::Rifle)
             {
                 //보조무기를 해제하고, 주무기를 장착한다
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static, 
                     false, [this, &inven]()
@@ -222,12 +222,12 @@ void Character::setAttacking()
 
                     inven.m_hand = inven.m_weaponPrimary;
                     inven.m_weaponPrimary = nullptr;
-                    m_pAnimation->Set(
+                    pAnimation->Set(
                         CharacterAnimation::BodyPart::UPPER,
                         TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand,
                         false, [this]()
                     {
-                        m_pAnimation->Set(
+                        pAnimation->Set(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
                             false);
@@ -252,12 +252,12 @@ void Character::setAttacking()
 
                 inven.m_hand = inven.m_weaponSecondary;
                 inven.m_weaponSecondary = nullptr;
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand,
                     false, [this]()
                 {
-                    m_pAnimation->Set(
+                    pAnimation->Set(
                         CharacterAnimation::BodyPart::UPPER,
                         TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
                         false);
@@ -266,7 +266,7 @@ void Character::setAttacking()
             else if (m_attacking == Attacking::Rifle)
             {
                 //주무기를 해제하고 보조무기를 장착한다
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
                     false, [this, &inven]()
@@ -275,12 +275,12 @@ void Character::setAttacking()
 
                     inven.m_hand = inven.m_weaponSecondary;
                     inven.m_weaponSecondary = nullptr;
-                    m_pAnimation->Set(
+                    pAnimation->Set(
                         CharacterAnimation::BodyPart::UPPER,
                         TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand,
                         false, [this]()
                     {
-                        m_pAnimation->Set(
+                        pAnimation->Set(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
                             false);
@@ -306,7 +306,7 @@ void Character::setAttacking()
             {
                 m_attacking = Attacking::Unarmed;
                 //주무기를 해제한다
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
                     false,
@@ -314,7 +314,7 @@ void Character::setAttacking()
                 {
                     inven.m_weaponPrimary = inven.m_hand;
                     inven.m_hand = nullptr;
-                    m_pAnimation->Set(
+                    pAnimation->Set(
                         CharacterAnimation::BodyPart::UPPER,
                         TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, 
                         false); //TODO: 해제는 되는데 다리가 부자연스러움
@@ -324,7 +324,7 @@ void Character::setAttacking()
             {
                 m_attacking = Attacking::Unarmed;
                 //보조무기를 해제한다
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static, 
                     false, 
@@ -332,7 +332,7 @@ void Character::setAttacking()
                 {
                     inven.m_weaponSecondary = inven.m_hand;
                     inven.m_hand = nullptr;
-                    m_pAnimation->Set(
+                    pAnimation->Set(
                         CharacterAnimation::BodyPart::UPPER, 
                         TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
                 });
@@ -443,13 +443,13 @@ void Character::setReload()
                 */
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
-                    m_pAnimation->Set(
+                    pAnimation->Set(
                         CharacterAnimation::BodyPart::UPPER,
                         TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Base,
                         false,
                         [this]()
                     {
-                        m_pAnimation->Set(
+                        pAnimation->Set(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_LocoIdle,
                             false);
@@ -463,7 +463,7 @@ void Character::setReload()
                     }
                     else
                     {
-                        m_pAnimation->Set(
+                        pAnimation->Set(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Kar98k_Reload_Start,
                             false,
@@ -831,14 +831,17 @@ void Character::updateDependency()
 {
     // update
     pTransform->Update();
-    m_pAnimation->UpdateAnimation();
+    pAnimation->UpdateAnimation();
     updateBone();
-    m_pAnimation->UpdateModel();
+    pAnimation->UpdateModel();
     updateTotalInventory();
     if (m_pRootCharacterPart) m_pRootCharacterPart->Update();
 
     // render
-    m_pAnimation->Render([this](LPD3DXEFFECT pEffect) 
+    pAnimation->Render(
+        m_framePtr.pWaist->CombinedTransformationMatrix 
+        * GetTransform()->GetTransformationMatrix(), 
+        [this](LPD3DXEFFECT pEffect)
     {
         pEffect->SetMatrix(
             Shader::World, 
@@ -921,5 +924,5 @@ TAG_COLLISION Character::GetTagCollisionDamage(const int index)
 
 CharacterAnimation* Character::GetCharacterAnimation()
 {
-    return m_pAnimation;
+    return pAnimation;
 }

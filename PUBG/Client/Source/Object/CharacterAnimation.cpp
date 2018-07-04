@@ -77,9 +77,11 @@ void CharacterAnimation::UpdateModel()
     pSkinnedMeshController->UpdateModel();
 }
 
-void CharacterAnimation::Render(const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
+void CharacterAnimation::Render(
+    const D3DXMATRIX& world, 
+    const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
-    pSkinnedMeshController->Render(setGlobalVariable);
+    pSkinnedMeshController->Render(world, setGlobalVariable);
 }
 
 void CharacterAnimation::Set(

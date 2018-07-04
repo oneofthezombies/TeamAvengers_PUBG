@@ -58,9 +58,8 @@ void Item::OnRender()
             pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
     }
         
-
     if (m_isRenderSkinnedMesh)
-        pSkinnedMeshController->Render(bind(&Item::setGlobalVariable, this, _1));
+        pSkinnedMeshController->Render(GetTransform()->GetTransformationMatrix(), std::bind(&Item::setGlobalVariable, this, _1));
 }
 
 void Item::setup(const TAG_RES_STATIC tag)
