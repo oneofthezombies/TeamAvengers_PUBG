@@ -8,7 +8,7 @@ void Character::setAttacking() //Num1, Num2, X
 {
     TotalInventory& inven = m_totalInventory;
 
-    if (m_pAnimation->HasUpperFinishEvent()) return;
+    if (pAnimation->HasUpperFinishEvent()) return;
 
     if (m_currentOnceKey._Num1)
     {
@@ -26,7 +26,7 @@ void Character::setAttacking() //Num1, Num2, X
             }
             else if (m_attacking == Attacking::Rifle) //보조무기를 해제하고, 주무기를 장착한다
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static,
                     false, 
@@ -63,7 +63,7 @@ void Character::setAttacking() //Num1, Num2, X
             }
             else if (m_attacking == Attacking::Rifle) //주무기를 등짝에 붙이고 보조무기를 손에 든다
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
                     false, 
@@ -226,7 +226,7 @@ void Character::setReload()
                 */
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
-                    m_pAnimation->Set(
+                    pAnimation->Set(
                         CharacterAnimation::BodyPart::UPPER,
                         TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Base,
                         false,
@@ -236,7 +236,7 @@ void Character::setReload()
                         CharacterAnimation::DEFAULT_POSITION,
                         [this]()
                     {
-                        m_pAnimation->Set(
+                        pAnimation->Set(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Low_Idle_Still_Very,
                             false);
@@ -247,7 +247,7 @@ void Character::setReload()
                     if (inven.m_numReload == 5)
                     {
                         // fast reload
-                        m_pAnimation->Set(
+                        pAnimation->Set(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Base,
                             false,
@@ -257,7 +257,7 @@ void Character::setReload()
                             CharacterAnimation::DEFAULT_POSITION,
                             [this]() 
                         {
-                            m_pAnimation->Set(
+                            pAnimation->Set(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Low_Idle_Still_Very,
                             false);                       
@@ -265,7 +265,7 @@ void Character::setReload()
                     }
                     else
                     {
-                        m_pAnimation->Set(
+                        pAnimation->Set(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Base,
                             false,
@@ -301,7 +301,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
     {
         if (m_stance == Stance::Stand)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand,
                 false, 
@@ -311,7 +311,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_POSITION,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -319,7 +319,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
         }
         else if (m_stance == Stance::Prone)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot_OnHand,
                 false, 
@@ -329,7 +329,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_POSITION,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -342,7 +342,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
     {
         if (m_stance == Stance::Stand)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand,
                 false,
@@ -352,7 +352,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_POSITION,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -360,7 +360,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
         }
         else if (m_stance == Stance::Prone)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot_OnHand,
                 false, 
@@ -370,7 +370,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_POSITION,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -389,7 +389,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
     {
         if (m_stance == Stance::Stand)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
                 false,
@@ -401,7 +401,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             {
                 inven.m_weaponPrimary = inven.m_hand;
                 inven.m_hand = nullptr;
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -409,7 +409,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
         }
         else if (m_stance == Stance::Prone)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot,
                 false,
@@ -421,7 +421,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             {
                 inven.m_weaponPrimary = inven.m_hand;
                 inven.m_hand = nullptr;
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -433,7 +433,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
     {
         if (m_stance == Stance::Stand)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static,
                 false,
@@ -445,7 +445,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             {
                 inven.m_weaponSecondary = inven.m_hand;
                 inven.m_hand = nullptr;
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -453,7 +453,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
         }
         else if(m_stance == Stance::Prone)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot,
                 false,
@@ -465,7 +465,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             {
                 inven.m_weaponSecondary = inven.m_hand;
                 inven.m_hand = nullptr;
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -490,7 +490,7 @@ void Character::setStandTo(Stance stance)
     {
         if (stance == Stance::Crouch)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Crouch,
                 false,
@@ -500,7 +500,7 @@ void Character::setStandTo(Stance stance)
                 1.0f,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState, 
                     true,
@@ -510,7 +510,7 @@ void Character::setStandTo(Stance stance)
         }
         else if (stance == Stance::Prone)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Prone,
                 false,
@@ -520,7 +520,7 @@ void Character::setStandTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -531,7 +531,7 @@ void Character::setStandTo(Stance stance)
     {
         if (stance == Stance::Crouch)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_Crouch,
                 false,
@@ -541,7 +541,7 @@ void Character::setStandTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -549,7 +549,7 @@ void Character::setStandTo(Stance stance)
         }
         else if (stance == Stance::Prone)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_Prone,
                 false,
@@ -559,7 +559,7 @@ void Character::setStandTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -575,7 +575,7 @@ void Character::setCrouchTo(Stance stance)
     {
         if (stance == Stance::Stand)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Stand,
                 false,
@@ -585,7 +585,7 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -593,7 +593,7 @@ void Character::setCrouchTo(Stance stance)
         }
         else if (stance == Stance::Prone)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Prone,
                 false,
@@ -603,7 +603,7 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -614,7 +614,7 @@ void Character::setCrouchTo(Stance stance)
     {
         if (stance == Stance::Stand)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Stand,
                 false,
@@ -624,7 +624,7 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -632,7 +632,7 @@ void Character::setCrouchTo(Stance stance)
         }
         else if (stance == Stance::Prone)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Prone,
                 false,
@@ -642,7 +642,7 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -657,7 +657,7 @@ void Character::setProneTo(Stance stance)
     {
         if (stance == Stance::Stand)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Stand,
                 false,
@@ -667,7 +667,7 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -675,7 +675,7 @@ void Character::setProneTo(Stance stance)
         }
         else if (stance == Stance::Crouch)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Crouch,
                 false,
@@ -685,7 +685,7 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -696,7 +696,7 @@ void Character::setProneTo(Stance stance)
     {
         if (stance == Stance::Stand)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Base_Stand,
                 false,
@@ -706,7 +706,7 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -714,7 +714,7 @@ void Character::setProneTo(Stance stance)
         }
         else if (stance == Stance::Crouch)
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Base_Crouch,
                 false,
@@ -724,7 +724,7 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                m_pAnimation->Set(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);

@@ -116,7 +116,7 @@ void Character::updateMine()
         }
         else
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH, 
                 m_lowerAnimState);
 
@@ -181,7 +181,7 @@ void Character::updateMine()
         << "current upper animation : "
         << pAnimation->GetUpperAnimationName() << '\n'
         << "current lower animation : "
-        << m_pAnimation->GetLowerAnimationName() << "\n\n";
+        << pAnimation->GetLowerAnimationName() << "\n\n";
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -207,7 +207,7 @@ void Character::updateOther()
     //if (uAnimState != pi.m_AnimationIndex)
     //{
     //    m_animState = static_cast<TAG_ANIM_CHARACTER>(pi.m_AnimationIndex);
-    //    m_pAnimation->SetAnimationIndex(pi.m_AnimationIndex, true);
+    //    pAnimation->SetAnimationIndex(pi.m_AnimationIndex, true);
     //}
 
     //tr->SetPosition(pos);
