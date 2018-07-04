@@ -106,12 +106,12 @@ ostream& operator<<(ostream& os, const Message& msg)
 
 GameInfo::PlayerInfo::PlayerInfo()
     : m_ID(-1)
-    , m_Nickname("Unknown")
-    , m_AnimationIndex(0)
-    , m_AnimationTime(0.0f)
+    , m_nickname("Unknown")
+    , m_upperAnimState(135)
+    , m_lowerAnimState(135)
 {
-    memset(&m_Position, 0, sizeof m_Position);
-    memset(&m_Rotation, 0, sizeof m_Rotation);
+    memset(&m_position, 0, sizeof m_position);
+    memset(&m_rotation, 0, sizeof m_rotation);
 }
 
 GameInfo::MyInfo::MyInfo()

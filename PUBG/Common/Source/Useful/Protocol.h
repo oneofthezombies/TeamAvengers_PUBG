@@ -44,11 +44,11 @@ struct GameInfo
     struct PlayerInfo
     {
         int            m_ID;
-        string         m_Nickname;
-        D3DXVECTOR3    m_Position;
-        D3DXQUATERNION m_Rotation;
-        int            m_AnimationIndex;
-        float          m_AnimationTime;
+        string         m_nickname;
+        D3DXVECTOR3    m_position;
+        D3DXQUATERNION m_rotation;
+        int            m_upperAnimState;
+        int            m_lowerAnimState;
 
         PlayerInfo();
     };
@@ -56,7 +56,7 @@ struct GameInfo
     struct MyInfo
     {
         int m_ID;
-        string m_Nickname;
+        string m_nickname;
 
         MyInfo();
     };

@@ -10,6 +10,8 @@ struct SkinnedMeshInstance;
 
 class SkinnedMeshController : public Component
 {
+//private:
+//    LPD3DXMESH  m_testmeshSphere;
 private:
     SkinnedMeshInstance* m_pSkinnedMeshInstance;
 
@@ -45,10 +47,12 @@ private:
     
     void drawFrame(
         LPD3DXFRAME pFrameBase, 
+        const D3DXMATRIX& world,
         const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
 
     void drawMeshContainer(
         LPD3DXMESHCONTAINER pMeshContainerBase,
+        const D3DXMATRIX& world,
         const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
 
 public:
@@ -57,7 +61,9 @@ public:
 
     void UpdateAnimation();
     void UpdateModel();
-    void Render(const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
+    void Render(
+        const D3DXMATRIX& world, 
+        const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
 
     void SetSkinnedMesh(SkinnedMesh* pSkinnedMesh);
     void SetSkinnedMesh(const std::pair<std::string, std::string>& path);

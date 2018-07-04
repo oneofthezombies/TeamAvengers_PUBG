@@ -56,6 +56,8 @@ public:
         //Weapon* m_weaponPistol;
         //Weapon* m_weaponMelee;
         //Weapon* m_weaponThrowable;
+        
+        float m_bulletFireCoolDown; //총알 발사는 지정된 쿨타임 시간이 지나야 다시 발사가능
         float m_capacity;
         int   m_numReload;
 
@@ -100,6 +102,8 @@ public:
         bool _Num3; 
         bool _Num4; 
         bool _Num5; 
+        bool _LButton;
+        bool _RButton;
 
         IsPressed();
     };
@@ -145,7 +149,6 @@ public:
 /*****************************************************************************/
 
 public:
-    static const int            NUM_PLAYER = 4;
     static const D3DXQUATERNION OFFSET_ROTATION;
 
 /******************************* end constant ********************************/
@@ -165,7 +168,7 @@ private:
     int m_index;
 
     Transform*          pTransform;
-    CharacterAnimation* m_pAnimation;
+    CharacterAnimation* pAnimation;
     CharacterPart*      m_pRootCharacterPart;
 
     //
@@ -183,6 +186,7 @@ private:
 
     // for inventory
     TotalInventory m_totalInventory;
+    
 
     // state
     TAG_ANIM_CHARACTER m_upperAnimState;
@@ -222,6 +226,7 @@ private:
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
     void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
+    void rifleShooting();
 
     void updateMine();
     void updateOther();
@@ -282,9 +287,9 @@ public:
     virtual void OnUpdate() override;
     virtual void OnRender() override;
 
-    void OnCollisionEnter(Collider* pPerpetrator, Collider* pVictim);
-    void OnCollisionStay (Collider* pPerpetrator, Collider* pVictim);
-    void OnCollisionExit (Collider* pPerpetrator, Collider* pVictim);
+    void OnCollisionEnter(Collider* pOffence, Collider* pDefence);
+    void OnCollisionStay (Collider* pOffence, Collider* pDefence);
+    void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
     int GetIndex() const;
     TAG_COLLISION GetTagCollisionBody(const int index);

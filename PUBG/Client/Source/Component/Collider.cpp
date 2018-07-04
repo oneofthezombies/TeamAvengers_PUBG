@@ -1,22 +1,24 @@
 #include "stdafx.h"
 #include "Collider.h"
-#include "CollisionManager.h"
+#include "Collision.h"
 
-vector<WORD> BoxCollider::s_indices = 
+std::vector<WORD> BoxCollider::INDICES =
 {
     0, 1, 1, 2, 2, 3, 3, 0,
     4, 5, 5, 6, 6, 7, 7, 4,
     0, 4, 1, 5, 2, 6, 3, 7,
 };
-vector<WORD> BoxCollider::f_indices = {
-    6,2,2,3,3,7,7,6,
-    2,0,0,1,1,3,
-    1,5,5,7,
-    0,4,4,6,
-    5,4
+
+std::vector<WORD> BoxCollider::FRUSTUM_INDICES = 
+{
+    6, 2, 2, 3, 3, 7, 7, 6,
+    2, 0, 0, 1, 1, 3,
+    1, 5, 5, 7,
+    0, 4, 4, 6,
+    5, 4
 };
 
-Collider::Collider(IObject* pOwner, const TYPE type)
+Collider::Collider(IObject* pOwner, const Type type)
     : Component(pOwner)
 
     , m_center(Vector3::ZERO)
@@ -24,7 +26,7 @@ Collider::Collider(IObject* pOwner, const TYPE type)
     , m_tagCollision(TAG_COLLISION::Idle)
     , m_color(D3DCOLOR_XRGB(0, 255, 0))
 {
-    assert(pOwner && "Collider::Constructor() failed. owner is null.");
+    assert(pOwner && "Collider::Constructor(), owner is null.");
 
     Collision()()->AddCollider(this);
 }
@@ -34,7 +36,7 @@ Collider::~Collider()
     Collision()()->RemoveCollider(this);
 }
 
-Collider::TYPE Collider::GetType() const
+Collider::Type Collider::GetTypeCollider() const
 {
     return m_typeCollider;
 }
@@ -44,56 +46,56 @@ const D3DXVECTOR3& Collider::GetCenter() const
     return m_center;
 }
 
-void Collider::SetTag(const TAG_COLLISION tag)
+void Collider::SetTagCollision(const TAG_COLLISION tag)
 {
     m_tagCollision = tag;
 }
 
-TAG_COLLISION Collider::GetTag() const
+TAG_COLLISION Collider::GetTagCollision() const
 {
     return m_tagCollision;
 }
 
 void Collider::AddOnCollisionEnterCallback(
-    const onCollisionCallback_t& callback)
+    const on_collision_callback_t& callback)
 {
-    onCollisionEnterCallbacks.emplace_back(callback);
+    m_onCollisionEnterCallbacks.emplace_back(callback);
 }
 
 void Collider::AddOnCollisionStayCallback(
-    const onCollisionCallback_t& callback)
+    const on_collision_callback_t& callback)
 {
-    onCollisionStayCallbacks.emplace_back(callback);
+    m_onCollisionStayCallbacks.emplace_back(callback);
 }
 
 void Collider::AddOnCollisionExitCallback(
-    const onCollisionCallback_t& callback)
+    const on_collision_callback_t& callback)
 {
-    onCollisionExitCallbacks.emplace_back(callback);
+    m_onCollisionExitCallbacks.emplace_back(callback);
 }
 
-const deque<onCollisionCallback_t>& 
+const on_collision_callbacks_t&
     Collider::GetOnCollisionEnterCallbacks() const
 {
-    return onCollisionEnterCallbacks;
+    return m_onCollisionEnterCallbacks;
 }
 
-const deque<onCollisionCallback_t>& 
+const on_collision_callbacks_t&
     Collider::GetOnCollisionStayCallbacks() const
 {
-    return onCollisionStayCallbacks;
+    return m_onCollisionStayCallbacks;
 }
 
-const deque<onCollisionCallback_t>& 
+const on_collision_callbacks_t&
     Collider::GetOnCollisionExitCallbacks() const
 {
-    return onCollisionExitCallbacks;
+    return m_onCollisionExitCallbacks;
 }
 
 SphereCollider::SphereCollider(IObject* pOwner)
-    : Collider(pOwner, Collider::TYPE::SPHERE)
+    : Collider(pOwner, Collider::Type::SPHERE)
 {
-    assert(false && "No impl.");
+    assert(false && "SphereCollider::Constructor(), No impl.");
 }
 
 void SphereCollider::Init(const float radius)
@@ -105,8 +107,8 @@ void SphereCollider::Update(const D3DXMATRIX& transform)
 }
 
 BoxCollider::BoxCollider(IObject* pOwner)
-    : Collider(pOwner, Collider::TYPE::BOX)
-    , m_extent(0.0f, 0.0f, 0.0f)
+    : Collider(pOwner, Collider::Type::BOX)
+    , m_extent(Vector3::ZERO)
 {
     D3DXMatrixIdentity(&m_transformationMatrix);
 
@@ -133,21 +135,41 @@ void BoxCollider::Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max)
     m_vertices[7] = D3DXVECTOR3(max.x, min.y, max.z);
 }
 
-void BoxCollider::Init(const D3DXMATRIX& transform)
+void BoxCollider::Init(const D3DXMATRIX& transformationMatrix)
 {
-    Init(Vector3::ONE * -0.5f, Vector3::ONE * 0.5f);
-    Update(transform);
+    D3DXVECTOR3 extent(Vector3::ONE * 0.5f);
+
+    D3DXVECTOR3 vs;
+    D3DXQUATERNION qr;
+    Matrix::GetScaleAndRotation(transformationMatrix, &vs, &qr);
+    D3DXVECTOR3 vt = Matrix::GetTranslation(transformationMatrix);
+
+    D3DXMATRIX s;
+    D3DXMatrixScaling(&s, vs.x, vs.y, vs.z);
+    D3DXVec3TransformCoord(&extent, &extent, &s);
+
+    Init(-extent, extent);
+
+    D3DXMATRIX invS;
+    D3DXMatrixScaling(&invS, vs.x, vs.y, vs.z);
+    D3DXMatrixInverse(&invS, nullptr, &invS);
+    Update(invS * transformationMatrix);
 }
 
-void BoxCollider::Update(const D3DXMATRIX& transform)
+void BoxCollider::Update(const D3DXMATRIX& transformationMatrix)
 {
-    D3DXMATRIX InverseMatrixOfCurrent, TM;
-    D3DXMatrixInverse(
-        &InverseMatrixOfCurrent, nullptr, &m_transformationMatrix);
-    TM = InverseMatrixOfCurrent * transform;
-    D3DXVec3TransformCoord(&m_center, &m_center, &TM);
+    D3DXMATRIX invCurrent, variance;
 
-    m_transformationMatrix = transform;
+    D3DXMatrixInverse(
+        &invCurrent,
+        nullptr, 
+        &m_transformationMatrix);
+
+    variance = invCurrent * transformationMatrix;
+
+    D3DXVec3TransformCoord(&m_center, &m_center, &variance);
+
+    m_transformationMatrix = transformationMatrix;
 }
 
 const D3DXVECTOR3& BoxCollider::GetExtent() const
@@ -167,7 +189,7 @@ void BoxCollider::Render()
         nullptr, 
         [this](LPD3DXEFFECT pEffect) 
     {
-        pEffect->SetMatrix(Shader::World, &m_transformationMatrix);
+        pEffect->SetMatrix(Shader::World, &(m_transformationMatrix));
         D3DXCOLOR green(0.0f, 1.0f, 0.0f, 1.0f);
         pEffect->SetValue("Color", &green, sizeof green);
     }, 
@@ -177,8 +199,8 @@ void BoxCollider::Render()
             D3DPT_LINELIST,
             0,
             m_vertices.size(),
-            s_indices.size() / 2,
-            s_indices.data(),
+            INDICES.size() / 2,
+            INDICES.data(),
             D3DFMT_INDEX16,
             m_vertices.data(),
             sizeof m_vertices.front());

@@ -26,6 +26,9 @@ Item::Item(
     , m_isRenderSkinnedMesh(false)
 
     , pUIImage(nullptr)
+
+    , pGunBolt(nullptr)
+
 {
     Transform* pTr = GetTransform();
     pTr->SetPosition(position);
@@ -47,10 +50,16 @@ void Item::OnUpdate()
 void Item::OnRender()
 {
     if (m_isRenderEffectMesh)
-        pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
-
+    {
+        EffectMesh* pEM = pEffectMeshRenderer->GetEffectMesh();
+        D3DXVECTOR3 center = Vector3::ZERO;
+        D3DXVec3TransformCoord(&center, &pEM->m_center, &GetTransform()->GetTransformationMatrix());
+        if(CurrentCamera()()->IsObjectInsideFrustum(center, pEM->m_radius))
+            pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
+    }
+        
     if (m_isRenderSkinnedMesh)
-        pSkinnedMeshController->Render(bind(&Item::setGlobalVariable, this, _1));
+        pSkinnedMeshController->Render(GetTransform()->GetTransformationMatrix(), std::bind(&Item::setGlobalVariable, this, _1));
 }
 
 void Item::setup(const TAG_RES_STATIC tag)
@@ -106,6 +115,14 @@ void Item::setup(const TAG_RES_STATIC tag)
         pSkinnedMeshController = AddComponent<SkinnedMeshController>();
         const auto pathName = ResourceInfo::GetPathFileName(ResourceInfo::GetTagResAnimWeapon(tag));
         pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathName.first, pathName.second));
+
+        //총알이 나갈 위치 테스터
+        if (m_tagResStatic == TAG_RES_STATIC::QBZ)
+        {
+            pGunBolt = pSkinnedMeshController->FindFrame("gun_bolt");
+        }
+
+
     }
         break;
     
@@ -208,5 +225,13 @@ void Item::SetNumBullet(const int numBullet)
 int Item::GetNumBullet() const
 {
     return m_numBullet;
+}
+
+void Item::UpdateModel()
+{
+    if (pSkinnedMeshController)
+    {
+        pSkinnedMeshController->UpdateModel();
+    }
 }
 

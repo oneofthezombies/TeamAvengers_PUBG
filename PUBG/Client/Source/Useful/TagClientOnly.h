@@ -58,6 +58,7 @@ enum class TAG_SCENE
     Loading,
     Login,
     Play,
+    CollisionTest,
 };
 
 enum class TAG_FONT

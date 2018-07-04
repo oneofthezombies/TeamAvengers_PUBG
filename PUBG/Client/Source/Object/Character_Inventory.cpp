@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "Item.h"
 #include "ItemInfo.h"
+#include "ComponentTransform.h"
 
 const float Character::TotalInventory::DEFAULT_CAPACITY = 70.0f;
 
@@ -14,6 +15,7 @@ Character::TotalInventory::TotalInventory()
     , m_weaponSecondary(nullptr)
     , m_capacity(DEFAULT_CAPACITY)
     , m_numReload(0)
+    , m_bulletFireCoolDown(0)
 {
 }
 

@@ -28,11 +28,11 @@
 // accessable method "ManagerName"::GetInstance() or ... below access instance.
 #include "Application.h"      // has App          ()()
 #include "DeviceManager.h"    // has Device       ()()
-#include "ResourceManager.h"  // has Resource     ()()
+#include "Resource.h"         // has Resource     ()()
 #include "UIManager.h"        // has UI           ()()
 #include "SoundManager.h"     // has Sound        ()()
 #include "TimeManager.h"      // has Time         ()()
-#include "CollisionManager.h" // has Collision    ()()
+#include "Collision.h"        // has Collision    ()()
 #include "InputManager.h"     // has Input        ()()       
 #include "SceneManager.h"     // has Scene        ()()
                               //     CurrentScene ()()

@@ -4,10 +4,10 @@
 using tasks_t = std::deque<
     std::pair<
         std::size_t, 
-        std::future<ResourceContainer*>
+        std::future<Resource::XContainer*>
     >
 >;
-using resources_t = std::map<std::size_t, ResourceContainer*>;
+using resources_t = std::map<std::size_t, Resource::XContainer*>;
 
 enum class PlayMode
 {
@@ -18,6 +18,7 @@ enum class PlayMode
 };
 
 class UIText;
+class UIImage;
 
 class SceneLoading : public IScene
 {
@@ -32,13 +33,13 @@ private:
     tasks_t     m_characterSkinnedMeshTasks;
     resources_t m_characterSkinnedMeshResources;
 
-    // character animation
-    tasks_t     m_characterAnimationTasks;
-    resources_t m_characterAnimationResources;
-
     // equipment skinned mesh using character animation
     tasks_t     m_equipmentSkinnedMeshTasks;
     resources_t m_equipmentSkinnedMeshResources;
+
+    // character animation
+    tasks_t     m_characterAnimationTasks;
+    resources_t m_characterAnimationResources;
 
     std::chrono::system_clock::time_point m_start;
     std::chrono::system_clock::time_point m_finish;
@@ -51,6 +52,7 @@ private:
     std::string m_lastFinishedTaskName;
     std::string m_percentage;
     UIText*     m_pPercentageImage;
+    UIImage*    m_pBackground;
 
     UINT m_numAddedAnim;
     bool m_isDoneCharacters;
@@ -58,12 +60,12 @@ private:
     bool m_isDoneSkinnedMeshs;
     bool m_isFinished;
 
-private:
-    void loadImage();
-    void loadEffectMesh();
-    void loadSkinnedMesh();
-    void loadCharacterAnimation();
+    Resource::Policy m_policy;
+    PlayMode         m_playMode;
 
+    std::thread t;
+
+private:
     void addAnimationsToCharacter();
     void addEffectMeshs();
     void addSkinnedMeshs();
@@ -72,17 +74,20 @@ private:
 
     bool verifyTasks(tasks_t* OutTasks, resources_t* OutResources);
 
-    void addTask(const TAG_RES_STATIC tag, tasks_t* OutTasks);
-    void addTask(const TAG_RES_STATIC tag);
+    void addTask(const TAG_RES_STATIC         tag, tasks_t* OutTasks);
     void addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks);
-    void addTask(const TAG_RES_ANIM_CHARACTER tag);
-    void addTask(const TAG_RES_EQUIPMENT tag, tasks_t* OutTasks);
-    void addTask(const TAG_RES_ANIM_WEAPON tag, tasks_t* OutTasks);
+    void addTask(const TAG_RES_EQUIPMENT      tag, tasks_t* OutTasks);
+    void addTask(const TAG_RES_ANIM_WEAPON    tag, tasks_t* OutTasks);
 
-    // TODO : impl
-    void load(const Resource::Policy policy, const PlayMode mode) {}
+    void load(const TAG_RES_STATIC         tag);
+    void load(const TAG_RES_ANIM_WEAPON    tag);
+    void load(const TAG_RES_EQUIPMENT      tag);
+    void load(const TAG_RES_ANIM_CHARACTER tag);
+    void addAnimation(const TAG_RES_ANIM_CHARACTER tag);
 
-    void loadSync();
+    void setPolicy(const Resource::Policy policy);
+    void setPlayMode(const PlayMode mode);
+    bool isFinished() const;
 
 public:
              SceneLoading();
@@ -90,4 +95,6 @@ public:
 
     virtual void OnInit() override;
     virtual void OnUpdate() override;
+
+    void Load();
 };

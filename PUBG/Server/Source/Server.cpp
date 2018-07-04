@@ -138,7 +138,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             const string nickname(m_ReadMsg.GetDescription());
             const int id(pRoom->GetID(nickname));
 
-            m_MyInfo.m_Nickname = nickname;
+            m_MyInfo.m_nickname = nickname;
             m_MyInfo.m_ID = id;
 
             Write(Message::Create(TAG_REQUEST::RECEIVE_MY_ID, to_string(id)));
@@ -163,7 +163,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto& id = parsedDesc.first;
             auto& nickname = parsedDesc.second;
 
-            pRoom->m_RoomInfo.m_PlayerInfos[id].m_Nickname = nickname;
+            pRoom->m_RoomInfo.m_PlayerInfos[id].m_nickname = nickname;
 
             pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_NICKNAME, 
                 description));
@@ -178,7 +178,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             stringstream ss(positionStr);
             D3DXVECTOR3 pos;
             ss >> pos.x >> pos.y >> pos.z;
-            pRoom->m_RoomInfo.m_PlayerInfos[id].m_Position = pos;
+            pRoom->m_RoomInfo.m_PlayerInfos[id].m_position = pos;
 
             pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_POSITION, 
                 description));
@@ -190,7 +190,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto& id = parsedDesc.first;
             auto& animationIndexStr = parsedDesc.second;
 
-            pRoom->m_RoomInfo.m_PlayerInfos[id].m_AnimationIndex = 
+            pRoom->m_RoomInfo.m_PlayerInfos[id].m_upperAnimState = 
                 std::stoi(animationIndexStr);
 
             pRoom->Echo(id, Message::Create(

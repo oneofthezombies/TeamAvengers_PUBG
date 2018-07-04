@@ -15,7 +15,7 @@ Grid::~Grid()
 void Grid::Init()
 {
     //D3DXMatrixIdentity(&m_transformationMatrix);
-    D3DXMatrixScaling(&m_transformationMatrix, 100, 0, 100);
+    D3DXMatrixScaling(&m_transformationMatrix, 1, 0, 1);
 
     pEffect = Resource()()->GetEffect("./Resource/", "Color.fx");
 

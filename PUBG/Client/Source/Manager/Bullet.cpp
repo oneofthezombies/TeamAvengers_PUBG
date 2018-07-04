@@ -4,7 +4,6 @@
 
 Bullet::Bullet()
     : IObject()
-
     , m_Speed(0.0f)
     , m_Damage(0.0f)
     , m_IsActive(false)
@@ -15,7 +14,7 @@ Bullet::Bullet()
 
     pBoxCollider = AddComponent<BoxCollider>();
     pBoxCollider->Init(-Vector3::ONE, Vector3::ONE);
-    pBoxCollider->SetTag(TAG_COLLISION::Idle);
+    pBoxCollider->SetTagCollision(TAG_COLLISION::Idle);
 
     pCylinder = BulletPool()()->GetCylinder();
 }
@@ -29,15 +28,11 @@ void Bullet::OnUpdate()
     if (!m_IsActive) return;
 
     auto pos = pTr->GetPosition();
-    D3DXMATRIX r;
-    D3DXMatrixRotationQuaternion(&r, &pTr->GetRotation());
-    D3DXVECTOR3 forward;
-    D3DXVec3TransformNormal(&forward, &Vector3::FORWARD, &r);
-    D3DXVec3Normalize(&forward, &forward);
-    pos += forward * m_Speed;
+    pos += m_dir * m_Speed;
     pTr->SetPosition(pos);
     pTr->Update();
     pBoxCollider->Update(pTr->GetTransformationMatrix());
+
 }
 
 void Bullet::OnRender()
@@ -65,7 +60,7 @@ void Bullet::OnRender()
 void Bullet::Reset()
 {
     pTr->SetPosition(Vector3::ZERO);
-    pBoxCollider->SetTag(TAG_COLLISION::Idle);
+    pBoxCollider->SetTagCollision(TAG_COLLISION::Idle);
     m_IsActive = false;
 
     CurrentScene()()->RemoveObject(this);
@@ -88,28 +83,29 @@ float Bullet::GetDamage() const
 
 TAG_COLLISION Bullet::GetTagCollision() const
 {
-    return pBoxCollider->GetTag();
+    return pBoxCollider->GetTagCollision();
 }
 
-void Bullet::Set(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation, 
+void Bullet::Set(const D3DXVECTOR3 & startPos, const D3DXVECTOR3 & dir, 
     const float speed, const float damage, const TAG_COLLISION tag)
 {
     pTr = GetTransform();
-    pTr->SetPosition(position);
-    pTr->SetRotation(rotation);
+    pTr->SetPosition(startPos);
     pTr->Update();
+    m_dir = dir;
     m_Speed = speed;
     m_Damage = damage;
-    pBoxCollider->SetTag(tag);
+    pBoxCollider->SetTagCollision(tag);
     m_IsActive = true;
 
     CurrentScene()()->AddObject(this);
 }
 
+
 _BulletPool::_BulletPool()
     : Singleton<_BulletPool>()
 {
-    D3DXCreateCylinder(Device()(), 3.0f, 3.0f, 10.0f, 10, 10, &m_pCylinder, 
+    D3DXCreateCylinder(Device()(), 3.0f, 3.0f, 3.0f, 10, 10, &m_pCylinder, 
         nullptr);
 }
 
@@ -138,22 +134,22 @@ void _BulletPool::PrintNumBullet()
     Debug << "Current number of active bullets : " << count << '\n';
 }
 
-Bullet* _BulletPool::Fire(const D3DXVECTOR3& position,
-    const D3DXQUATERNION& rotation, const float speed, const float damage,
+Bullet* _BulletPool::Fire(const D3DXVECTOR3& startPos,
+    const D3DXVECTOR3& dir, const float speed, const float damage,
     const TAG_COLLISION tag)
 {
     for (auto& b : m_Bullets)
     {
         if (!b->IsActive())
         {
-            b->Set(position, rotation, speed, damage, tag);
+            b->Set(startPos, dir, speed, damage, tag);
             return b;
         }
     }
 
     Bullet* b = new Bullet;
     m_Bullets.emplace_back(b);
-    b->Set(position, rotation, speed, damage, tag);
+    b->Set(startPos, dir, speed, damage, tag);
     return b;
 }
 

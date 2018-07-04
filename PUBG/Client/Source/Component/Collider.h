@@ -2,51 +2,52 @@
 #include "ComponentTransform.h"
 #include "TagClientOnly.h"
 
-using onCollisionCallback_t =
-    function<void(Collider* pPerpetrator, Collider* pVictim)>;
-
 class IObject;
+class Collider;
+
+using on_collision_callback_t =
+    std::function<void(Collider* pOffence, Collider* pDefence)>;
+using on_collision_callbacks_t = std::deque<on_collision_callback_t>;
 
 class Collider : public Component
 {
 public:
-    enum class TYPE
+    enum class Type
     {
         BOX,
         SPHERE,
     };
 
 private:
-    TYPE                m_typeCollider;
-    TAG_COLLISION       m_tagCollision;
-
-    deque<onCollisionCallback_t> onCollisionEnterCallbacks;
-    deque<onCollisionCallback_t> onCollisionStayCallbacks;
-    deque<onCollisionCallback_t> onCollisionExitCallbacks;
+    Type                     m_typeCollider;
+    TAG_COLLISION            m_tagCollision;
+    on_collision_callbacks_t m_onCollisionEnterCallbacks;
+    on_collision_callbacks_t m_onCollisionStayCallbacks;
+    on_collision_callbacks_t m_onCollisionExitCallbacks;
 
 protected:
-    D3DXVECTOR3 m_center;
-    D3DCOLOR    m_color;
+    D3DXVECTOR3              m_center;
+    D3DCOLOR                 m_color;
 
-    Collider(IObject* pOwner, const TYPE type);
+protected:
+             Collider(IObject* pOwner, const Type type);
 
 public:
     virtual ~Collider();
 
-    TYPE        GetType() const;
-
+    Type               GetTypeCollider() const;
     const D3DXVECTOR3& GetCenter() const;
 
-    void          SetTag(const TAG_COLLISION tag);
-    TAG_COLLISION GetTag() const;
+    void          SetTagCollision(const TAG_COLLISION tag);
+    TAG_COLLISION GetTagCollision() const;
 
-    void AddOnCollisionEnterCallback(const onCollisionCallback_t& callback);
-    void AddOnCollisionStayCallback(const onCollisionCallback_t& callback);
-    void AddOnCollisionExitCallback(const onCollisionCallback_t& callback);
+    void AddOnCollisionEnterCallback(const on_collision_callback_t& callback);
+    void AddOnCollisionStayCallback (const on_collision_callback_t& callback);
+    void AddOnCollisionExitCallback (const on_collision_callback_t& callback);
 
-    const deque<onCollisionCallback_t>& GetOnCollisionEnterCallbacks() const;
-    const deque<onCollisionCallback_t>& GetOnCollisionStayCallbacks() const;
-    const deque<onCollisionCallback_t>& GetOnCollisionExitCallbacks() const;
+    const on_collision_callbacks_t& GetOnCollisionEnterCallbacks() const;
+    const on_collision_callbacks_t& GetOnCollisionStayCallbacks() const;
+    const on_collision_callbacks_t& GetOnCollisionExitCallbacks() const;
 };
 
 class SphereCollider : public Collider
@@ -55,40 +56,38 @@ private:
     float m_radius;
 
 public:
-    SphereCollider(IObject* pOwner);
+             SphereCollider(IObject* pOwner);
     virtual ~SphereCollider() = default;
 
     void Init(const float radius);
-    void Update(const D3DXMATRIX& transform);
+    void Update(const D3DXMATRIX& transformationMatrix);
 };
 
 class BoxCollider : public Collider
 {
+public:
+    static std::vector<WORD> INDICES;
+    static std::vector<WORD> FRUSTUM_INDICES;
+
 private:
-    D3DXVECTOR3 m_extent;
+    D3DXVECTOR3              m_extent;
 
     // row 0 : x, y and z of axis 0
     // row 1 : x, y and z of axis 1
     // row 2 : x, y and z of axis 2
     // row 3 : x, y and z of translation
-    D3DXMATRIX m_transformationMatrix;
+    D3DXMATRIX               m_transformationMatrix;
 
-    vector<D3DXVECTOR3> m_vertices;
-    LPD3DXEFFECT pEffect;
-
-public:
-    static vector<WORD> s_indices;
-    static vector<WORD> f_indices;
+    std::vector<D3DXVECTOR3> m_vertices;
+    LPD3DXEFFECT             pEffect;
 
 public:
-    BoxCollider(IObject* pOwner);
+             BoxCollider(IObject* pOwner);
     virtual ~BoxCollider();
 
     void Init(const D3DXVECTOR3& min, const D3DXVECTOR3& max);
-    void Init(const D3DXMATRIX& transform);
-
-    void Update(const D3DXMATRIX& transform);
-
+    void Init(const D3DXMATRIX& transformationMatrix);
+    void Update(const D3DXMATRIX& transformationMatrix);
     void Render();
 
     const D3DXVECTOR3& GetExtent() const;

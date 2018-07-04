@@ -17,10 +17,12 @@ ICamera::ICamera(const TAG_CAMERA tag)
     , m_position(Vector3::ZERO)
 
 {
-    for (int i = 0; i < 8; i++)
-    {
-        m_vecWorld[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    }
+    //지금 각 카메라 마다 8개의 projection과 world, 6개 plane 을 갖고 있다. 하나만 만들어서 나누어 쓰도록 하자!
+    
+    //for (int i = 0; i < 8; i++)   //초기화!
+    //{
+    //    m_vecWorld[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    //}
 
     m_vecProj[0]=(D3DXVECTOR3(-1, 1, 1));	//좌상후
     m_vecProj[1]=(D3DXVECTOR3(1, 1, 1));	//우상후
@@ -39,47 +41,22 @@ ICamera::~ICamera()
 
 void ICamera::CameraRender()
 {
-//    Character::Info* pTarInfo = GetTargetInfo();
-//    if (pTarInfo)
-//    {
-//        
-////        Debug << "Rot : " << *pTarInfo->pRotationForCamera << endl;
-//
-//        D3DXMATRIX tarR, matWorld;
-//        D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
-//        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
-//        
-//        D3DXMATRIX testT;
-//        D3DXMatrixTranslation(&testT, TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
-//        testT *=pTarInfo->pTransform->GetTransformationMatrix();
-//        //              (model space)                      (rotation get from character) 
-//        matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
-//    }
-//
-//    Shader::Draw(
-//        Resource()()->GetEffect("./Resource/", "Color.fx"), 
-//        nullptr, 
-//        [this](LPD3DXEFFECT pEffect) 
-//    {
-//        D3DXMATRIX s;
-//        D3DXMatrixScaling(&s, 1.0f, 1.0f, 1.0f);
-//        pEffect->SetMatrix(Shader::World, &s);
-//        D3DXCOLOR white(1.0f, 1.0f, 1.0f, 1.0f);
-//        pEffect->SetValue("Color", &white, sizeof white);
-//    }, 
-//        [this]() 
-//    {
-//        Device()()->DrawIndexedPrimitiveUP(
-//            D3DPT_LINELIST,
-//            0,
-//            sizeof m_vecWorld / sizeof m_vecWorld[0],
-//            BoxCollider::f_indices.size() / 2,
-//            BoxCollider::s_indices.data(),
-//            D3DFMT_INDEX16,
-//            &m_vecWorld[0],
-//            sizeof D3DXVECTOR3);
-//    });
+    Character::Info* pTarInfo = GetTargetInfo();
+    if (pTarInfo)
+    {    
+        D3DXMATRIX tarR, matWorld;
+        D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
+        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
+        
+        D3DXMATRIX testT;
+        D3DXMatrixTranslation(&testT, TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
+        testT *=pTarInfo->pTransform->GetTransformationMatrix();
+        //              (model space)                      (rotation get from character) 
+        matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
+    }
 
+    drawIndices(BoxCollider::FRUSTUM_INDICES, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+    
     if (temp)
         draw(drawRay, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 }
@@ -103,6 +80,32 @@ void ICamera::draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color)
             vertices.data(),
             sizeof vertices.front());
     });
+}
+void ICamera::drawIndices(const vector<WORD>& indices, const D3DXCOLOR & color)
+{
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        [this, &color](LPD3DXEFFECT pEffect)
+    {
+        D3DXMATRIX mat;
+        D3DXMatrixIdentity(&mat);
+        pEffect->SetMatrix(Shader::World, &mat);
+        pEffect->SetValue("Color", &color, sizeof color);
+    },
+        [this,&indices]()
+    {
+        Device()()->DrawIndexedPrimitiveUP(
+            D3DPT_LINELIST,
+            0,
+            sizeof m_vecWorld / sizeof m_vecWorld[0],
+            indices.size() / 2,
+            indices.data(),
+            D3DFMT_INDEX16,
+            &m_vecWorld[0],
+            sizeof D3DXVECTOR3);
+    });
+
 }
 void ICamera::UpdateViewProjMatrix()
 {
@@ -218,7 +221,7 @@ TAG_CAMERA ICamera::GetTagCamera() const
     return m_tagCamera;
 }
 
-bool ICamera::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
+bool ICamera::CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY)
 {
     Ray ray = Ray::RayAtWorldSpace(screenX, screenY);
     float intersectionDist;
@@ -232,13 +235,13 @@ bool ICamera::CalcPickedPosition(D3DXVECTOR3 & vOut, WORD screenX, WORD screenY)
         if (ray.CalcIntersectTri(&rayBox[i], &intersectionDist))
         {
             bIntersect = true;
-            vOut = ray.m_pos + ray.m_dir * intersectionDist;
+            *vOut = ray.m_pos + ray.m_dir * intersectionDist;
 
 
             //rendering 을 위해
             temp = true;
             drawRay.push_back(ray.m_pos);
-            drawRay.push_back(vOut);
+            drawRay.push_back(*vOut);
             //--------------------------
             
             return bIntersect;
@@ -348,15 +351,13 @@ void CameraThirdPerson::Update()
     if (Input()()->IsOnceKeyDown(VK_RBUTTON))
         Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
 
-    bool a;
-    D3DXVECTOR3 v;
-    if (Input()()->IsOnceKeyDown(VK_LBUTTON))
-    {
-        if (CalcPickedPosition(v, 1280 / 2, 720 / 2))
-        {
-            D3DXVec3Normalize(&v, &v);
-        }
-    }
+    //D3DXVECTOR3 v;
+    //if (Input()()->IsOnceKeyDown(VK_LBUTTON))
+    //{
+    //    if (CalcPickedPosition(&v, 1280 / 2, 720 / 2))
+    //    {
+    //    }
+    //}
 
 
 

@@ -28,7 +28,9 @@ public:
 
     void UpdateAnimation();
     void UpdateModel();
-    void Render(const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
+    void Render(
+        const D3DXMATRIX& world, 
+        const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
 
     void Set(
         const BodyPart part,
