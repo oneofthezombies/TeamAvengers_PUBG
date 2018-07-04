@@ -44,6 +44,10 @@ public:
     {
         return m_boundaryBox;
     }
+    D3DXVECTOR4 GetMinMax()
+    {
+        return D3DXVECTOR4(m_boundary[6].x, m_boundary[6].z, m_boundary[1].x, m_boundary[1].z);
+    }
 
     // Inherited via IMap
     virtual void OnUpdate() override;

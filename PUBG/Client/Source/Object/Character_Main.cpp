@@ -127,6 +127,7 @@ void Character::updateMine()
     }
 
     // 카메라 프러스텀 업데이트 
+    CurrentCamera()()->UpdateFrustumCulling();
 
     // 이동가능한치 체크해서 업데이트 하거나 y만되거나 등등
     //CurrentScene()()->Get

@@ -1,5 +1,7 @@
 #pragma once
 
+#define CellSpaceDim 4
+
 class IObject;
 class DirectionalLight;
 class HeightMap;

@@ -312,12 +312,22 @@ CellSpace::CellSpace(size_t index)
 
 std::size_t IScene::GetCellIndex(const D3DXVECTOR3 & position)
 {
+    D3DXVECTOR4 MinMax = CurrentScene()()->GetHeightMap()->GetMinMax();
 
-    return std::size_t();
+    float Xspace = (MinMax.z - MinMax.x)/ CellSpaceDim;
+    float Zspace = (MinMax.w - MinMax.y)/ CellSpaceDim;
+
+    int Xindex = position.x / Xspace;
+    int Zindex = position.z / Zspace;
+
+    return Zindex * CellSpaceDim + Xindex;
 }
 
 void IScene::MoveCell(std::size_t currentIndex, std::size_t nextIndex)
 {
+    m_pCellSpaces[currentIndex];
+    m_pCellSpaces[nextIndex];
+
 }
 
 bool IScene::IsMovable(const D3DXVECTOR3 & targetPos)
