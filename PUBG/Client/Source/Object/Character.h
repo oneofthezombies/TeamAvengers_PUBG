@@ -223,6 +223,9 @@ private:
     void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
 
+    //ÃÑ ¹Ýµ¿ °ü·Ã
+    void backAction(D3DXQUATERNION* OutRotation ,int virtical = 100 , int horizontal = 50);
+
     void updateMine();
     void updateOther();
     void updateBone();

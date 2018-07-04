@@ -142,7 +142,7 @@ void Character::updateMine()
         D3DXQUATERNION rrr;
         D3DXQuaternionRotationYawPitchRoll(&rrr, m_rotationForCamera.y, m_rotationForCamera.x, m_rotationForCamera.z);
         BulletPool()()->Fire((pos + D3DXVECTOR3(0, 100.0f, 0)), rrr * Character::OFFSET_ROTATION, 1.0f, 10.0f, TAG_COLLISION::Impassable);
-            
+        backAction(&rot);
             
             
         //실행가능    

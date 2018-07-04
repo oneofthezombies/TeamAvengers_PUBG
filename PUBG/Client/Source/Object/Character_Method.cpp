@@ -542,6 +542,31 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
 
 }
 
+void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizontal)
+{
+    ICamera* pCurrentCamera = CurrentCamera()();
+
+    //기본 수직 수평 반동 값
+    float virtical_result;
+    float horizontal_result;
+    int Min = virtical * 0.5f;
+    float Weight = 0.0003f;
+
+    virtical_result = (virtical - (rand() % Min)) * Weight;
+
+    Min = horizontal * 0.5f;
+    horizontal_result = ((horizontal) / 2 - (rand() % horizontal))*Weight;
+
+
+    D3DXQUATERNION q;
+    D3DXQuaternionRotationYawPitchRoll(&q, horizontal_result, 0.0f, 0.0f);
+
+    *OutRotation *= q;
+    m_rotationForCamera.x += virtical_result;
+
+    cout << virtical_result << "=============" << horizontal_result << endl;
+}
+
 void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag)
 {
     Direction direction;
