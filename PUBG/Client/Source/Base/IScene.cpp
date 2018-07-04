@@ -302,3 +302,25 @@ bool IScene::GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight)
     return pHeightMap->GetHeight(pos, OutHeight);
 }
 
+//------------------ Cell Space Partitioning--------------------
+
+CellSpace::CellSpace(size_t index)
+{
+    m_index = index;
+}
+
+
+std::size_t IScene::GetCellIndex(const D3DXVECTOR3 & position)
+{
+
+    return std::size_t();
+}
+
+void IScene::MoveCell(std::size_t currentIndex, std::size_t nextIndex)
+{
+}
+
+bool IScene::IsMovable(const D3DXVECTOR3 & targetPos)
+{
+    return false;
+}

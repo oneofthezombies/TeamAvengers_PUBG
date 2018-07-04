@@ -20,7 +20,7 @@ protected:
     D3DXVECTOR3			m_size;
     D3DXVECTOR3			m_scale;
 
-    LPD3DXMESH          m_testSphereMesh;
+    //LPD3DXMESH          m_testSphereMesh;
 
 	LPD3DXMESH	        m_pMesh;
     D3DXMATRIXA16       m_matWorld;

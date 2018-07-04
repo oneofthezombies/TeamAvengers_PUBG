@@ -34,7 +34,7 @@ struct CellSpace
     std::set<IObject*> m_windows;
     std::set<IObject*> m_items;
 
-    CellSpace();
+    CellSpace(size_t index);
 };
 
 class IScene : public MemoryAllocator
@@ -44,11 +44,11 @@ private:
     unordered_map<IObject*, float> m_toDeleteObjects;
 
     DirectionalLight* m_pDirectionalLight;
-    HeightMap* pHeightMap;
-
-    std::vector<CellSpace>* m_pCells;
 
 protected:
+    HeightMap * pHeightMap;
+    std::vector<CellSpace*> m_pCellSpaces;
+    
     IScene();
 
 	void updateToDeleteObjects();
@@ -77,6 +77,7 @@ public:
     HeightMap*        GetHeightMap();
     bool GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight);
 
+    //Cell - Space  Partitioning 
     std::size_t GetCellIndex(const D3DXVECTOR3& position);
     void MoveCell(std::size_t currentIndex, std::size_t nextIndex);
     bool IsMovable(const D3DXVECTOR3& targetPos); // 갈 수 있는지

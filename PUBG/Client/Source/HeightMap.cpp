@@ -7,9 +7,9 @@
 HeightMap::HeightMap()
 	: IMap()
     , m_pMesh(NULL)
-    , m_testSphereMesh(NULL)
+    //, m_testSphereMesh(NULL)
 {
-    D3DXCreateSphere(Device()(), 10.0f, 10, 10, &m_testSphereMesh, NULL);
+    //D3DXCreateSphere(Device()(), 10.0f, 10, 10, &m_testSphereMesh, NULL);
 
     SetDimension(257);
 
@@ -45,7 +45,7 @@ HeightMap::HeightMap()
 HeightMap::~HeightMap()
 {
 	SAFE_RELEASE(m_pMesh);
-    SAFE_RELEASE(m_testSphereMesh);
+    //SAFE_RELEASE(m_testSphereMesh);
 }
 
 vector<WORD> indices = {

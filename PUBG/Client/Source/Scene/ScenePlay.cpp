@@ -144,6 +144,12 @@ void ScenePlay::OnInit()
 
     SetHeightMap(new HeightMap);
 
+    //cell space partitioning
+    m_pCellSpaces.resize(16);
+    for (size_t i = 0; i < 16; i++)
+    {
+        m_pCellSpaces[i] = new CellSpace(i);
+    }
 
     LoadObjectsFromFile("./Resource/save.txt");
 
