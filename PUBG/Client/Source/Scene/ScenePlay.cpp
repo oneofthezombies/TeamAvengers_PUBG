@@ -68,13 +68,8 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //character0->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(70, 0, 10);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    AddObject(item);
-    character0->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(80, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
+    //p = D3DXVECTOR3(70, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
     //AddObject(item);
     //character0->PutItemInTotalInventory(item);
 
@@ -83,15 +78,20 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //character0->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(90, 0, 10);
-    item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
-    AddObject(item);
-    character0->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(80, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
+    //AddObject(item);
+    //character0->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(100, 0, 10);
-    item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
-    AddObject(item);
-    character0->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(90, 0, 10);
+    //item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
+    //AddObject(item);
+    //character0->PutItemInTotalInventory(item);
+
+    //p = D3DXVECTOR3(100, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
+    //AddObject(item);
+    //character0->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(110, 0, 10);
     //item = new Item(TAG_RES_STATIC::RedDot, p, r, s);
@@ -143,6 +143,7 @@ void ScenePlay::OnInit()
     AddObject(new Grid);
 
     SetHeightMap(new HeightMap);
+
 
     LoadObjectsFromFile("./Resource/save.txt");
 

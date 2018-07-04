@@ -24,14 +24,17 @@ struct ObjectInFile
     ObjectInFile();
 };
 
-struct Cell
+struct CellSpace
 {
+    size_t             m_index;
     std::set<IObject*> m_terrainFeatures;
     std::set<IObject*> m_bullets;
     std::set<IObject*> m_characters;
     std::set<IObject*> m_doors;
     std::set<IObject*> m_windows;
     std::set<IObject*> m_items;
+
+    CellSpace();
 };
 
 class IScene : public MemoryAllocator
@@ -43,7 +46,7 @@ private:
     DirectionalLight* m_pDirectionalLight;
     HeightMap* pHeightMap;
 
-    std::vector<Cell>* m_pCells;
+    std::vector<CellSpace>* m_pCells;
 
 protected:
     IScene();
