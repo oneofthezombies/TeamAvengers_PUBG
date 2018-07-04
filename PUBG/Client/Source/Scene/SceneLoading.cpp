@@ -12,6 +12,11 @@ void SceneLoading::Load()
     // async -> multi threading
     setPolicy(Resource::Policy::ASYNC);
 
+    // set play mode
+    // alone -> no network
+    // with others -> login to network
+    setPlayMode(PlayMode::ALONE);
+
     // load effect meshs
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
@@ -139,6 +144,11 @@ void SceneLoading::setPolicy(const Resource::Policy policy)
     m_policy = policy;
 }
 
+void SceneLoading::setPlayMode(const PlayMode mode)
+{
+    m_playMode = mode;
+}
+
 bool SceneLoading::isFinished() const
 {
     return m_isDoneCharacters && m_isDoneEffectMeshs && m_isDoneSkinnedMeshs;
@@ -177,11 +187,11 @@ void SceneLoading::OnInit()
     m_pPercentageImage = 
         new UIText(
             Resource()()->GetFont(TAG_FONT::Default), 
-            D3DXVECTOR2(1000.0f, 50.0f), 
+            D3DXVECTOR2(500.0f, 100.0f), 
             &m_percentage, 
             D3DCOLOR_XRGB(0, 255, 0), 
-            nullptr);
-    m_pPercentageImage->SetPosition(D3DXVECTOR3(100.0f, 100.0f, 0.0f));
+            m_pBackground);
+    m_pPercentageImage->SetPosition(D3DXVECTOR3(1000.0f, 300.0f, 0.0f));
     m_pPercentageImage->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
 
     m_start = std::chrono::system_clock::now();
@@ -202,10 +212,16 @@ void SceneLoading::OnUpdate()
 
         addHeightmapResource();
 
-        UI()()->Destroy(m_pPercentageImage);
         UI()()->Destroy(m_pBackground);
-        Scene()()->SetCurrentScene(TAG_SCENE::Play);
-        //Scene()()->SetCurrentScene(TAG_SCENE::Login);
+
+        if (m_playMode == PlayMode::ALONE)
+        {
+            Scene()()->SetCurrentScene(TAG_SCENE::Play);
+        }
+        else if (m_playMode == PlayMode::WITH_OTHERS)
+        {
+            Scene()()->SetCurrentScene(TAG_SCENE::Login);
+        }
     }
     else
     {
@@ -260,11 +276,13 @@ void SceneLoading::OnUpdate()
         m_dotDotDot = 0;
 
     m_percentage = "Finished file : " + m_lastFinishedTaskName + "\n";
-    for (int i = 0; i < static_cast<int>(percentage * 0.1f); ++i)
-        m_percentage += "@";
-    m_percentage += " percentage : " + std::to_string(percentage);
+    m_percentage += "Percentage : " + std::to_string(percentage);
     for (std::size_t i = 0; i < m_dotDotDot; ++i)
         m_percentage += '.';
+    m_percentage += '\n';
+    for (int i = 0; i < static_cast<int>(percentage * 0.1f); ++i)
+        m_percentage += "@";
+
 }
 
 void SceneLoading::addAnimationsToCharacter()

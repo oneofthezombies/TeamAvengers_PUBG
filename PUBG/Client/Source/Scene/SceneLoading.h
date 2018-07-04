@@ -61,6 +61,7 @@ private:
     bool m_isFinished;
 
     Resource::Policy m_policy;
+    PlayMode         m_playMode;
 
     std::thread t;
 
@@ -85,6 +86,7 @@ private:
     void addAnimation(const TAG_RES_ANIM_CHARACTER tag);
 
     void setPolicy(const Resource::Policy policy);
+    void setPlayMode(const PlayMode mode);
     bool isFinished() const;
 
 public:
