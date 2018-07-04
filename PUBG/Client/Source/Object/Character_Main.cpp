@@ -5,7 +5,9 @@
 #include "Bullet.h"
 #include "DirectionalLight.h"
 #include "AnimationState.h"
+#include "Item.h"
 #include "ResourceInfo.h"
+#include "ComponentTransform.h"
 
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
@@ -29,15 +31,17 @@ Character::Character(const int index)
     , m_stance(Stance::Stand)
 
     , pTransform(nullptr)
-    , m_pAnimation(nullptr)
+    , pAnimation(nullptr)
     , m_pRootCharacterPart(nullptr)
 {
     pTransform = GetTransform();
     pTransform->SetRotation(OFFSET_ROTATION);
-    pTransform->SetPosition(D3DXVECTOR3(100.0f, 0.0f, 100.0f));
+    const float factor(static_cast<float>(m_index + 1) * 100.0f);
+    pTransform->SetPosition(D3DXVECTOR3(factor, 0.0f, factor));
 
-    m_pAnimation = new CharacterAnimation;
-    m_pAnimation->Set(
+    pAnimation = new CharacterAnimation;
+    AddChild(pAnimation);
+    pAnimation->Set(
         CharacterAnimation::BodyPart::BOTH, 
         TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, 
         false);
@@ -59,7 +63,6 @@ Character::Character(const int index)
 
 Character::~Character()
 {
-    SAFE_DELETE(m_pAnimation);
     SAFE_DELETE(m_pRootCharacterPart);
 }
 
@@ -111,7 +114,7 @@ void Character::updateMine()
         }
         else
         {
-            m_pAnimation->Set(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::LOWER, 
                 m_lowerAnimState);
 
@@ -128,25 +131,15 @@ void Character::updateMine()
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     
 
-
-    //John TODO list
-    //<<1. CalcPickedPosition 함수를 v를 포인터로 받게 하기
-
-    if (Input()()->IsOnceKeyDown(VK_LBUTTON))
+    m_totalInventory.m_bulletFireCoolDown -= dt;
+    if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
+    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton)
     {
-        //앞으로 어떻게 바꿀꺼냐면 여기 r을 쏘는 targetpos - 총구 pos 해서 나오는 direction으로 쏘는 걸로 할꺼야!
-        D3DXVECTOR3 v; 
-        CurrentCamera()()->CalcPickedPosition(v, 1207 / 2, 600 / 2); 
-        D3DXVECTOR3 dir = v - (/*이곳은 나중에 총구 pos*/pos + D3DXVECTOR3(0, 100.0f, 0));
-        
-        D3DXQUATERNION rrr;
-        D3DXQuaternionRotationYawPitchRoll(&rrr, m_rotationForCamera.y, m_rotationForCamera.x, m_rotationForCamera.z);
-        BulletPool()()->Fire((pos + D3DXVECTOR3(0, 100.0f, 0)), rrr * Character::OFFSET_ROTATION, 1.0f, 10.0f, TAG_COLLISION::Impassable);
-        backAction(&rot);
-            
-            
-        //실행가능    
-        //BulletPool()()->Fire((p + D3DXVECTOR3(0,100.0f,0)), r*Character::OFFSET_ROTATION, 1.0f, 10.0f, TAG_COLLISION::Impassable);
+        if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_hand->GetNumBullet() > 0)
+        {
+            rifleShooting();
+            //pistolShooting();?? 이란것도 나중에는 만들겠지요?
+        }
     }
 
     //sh tset
@@ -174,13 +167,19 @@ void Character::updateMine()
     //    Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
     //}
 
-    Sound()()->Listen(GetTransform()->GetPosition(), getForward());
+    Sound()()->Listen(pos, getForward());
 
-    Debug << "current        position : " << pos << '\n'
+    if (Input()()->IsOnceKeyDown(VK_UP))
+    {
+        BulletPool()()->Fire(pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_COLLISION::Player_1_Damage);
+
+    }
+
+    Debug << "current position : " << pos << '\n'
         << "current upper animation : "
-        << m_pAnimation->GetUpperAnimationName() << '\n'
+        << pAnimation->GetUpperAnimationName() << '\n'
         << "current lower animation : "
-        << m_pAnimation->GetLowerAnimationName() << '\n';
+        << pAnimation->GetLowerAnimationName() << '\n';
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -195,19 +194,18 @@ void Character::updateOther()
 {
     if (isMine()) return;
 
-    //auto pInput = Input()();
-    //auto pCom = Communication()();
-    //auto pos = pTransform->GetPosition();
-    //auto pSkiCon = pSkinnedMeshController;
+    auto pInput = Input()();
+    auto pCom = Communication()();
+    D3DXVECTOR3 pos = pTransform->GetPosition();
 
-    //auto& pi = pCom->m_RoomInfo.m_PlayerInfos[m_index];
-    //pos = pi.m_Position;
+    auto& pi = pCom->m_RoomInfo.m_PlayerInfos[m_index];
+    pos = pi.m_position;
 
     //const auto uAnimState = static_cast<unsigned int>(m_animState);
     //if (uAnimState != pi.m_AnimationIndex)
     //{
     //    m_animState = static_cast<TAG_ANIM_CHARACTER>(pi.m_AnimationIndex);
-    //    pSkiCon->SetAnimationIndex(pi.m_AnimationIndex, true);
+    //    m_pAnimation->SetAnimationIndex(pi.m_AnimationIndex, true);
     //}
 
     //tr->SetPosition(pos);
