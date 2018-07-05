@@ -154,18 +154,14 @@ void ICamera::UpdateViewProjMatrix()
 
 void ICamera::UpdateFrustumCulling()
 {
-    //D3DXMATRIX InvVP;
-    //InvVP = m_viewMatrix * m_projectionMatrix;
-    //D3DXMatrixInverse(&InvVP, NULL, &InvVP);
-
-    //D3DXMATRIX rotY,ret;
-    //D3DXMatrixRotationY(&rotY, D3DX_PI);
-    //ret = m_viewMatrix * rotY;
+    D3DXMATRIX InvVP;
+    InvVP = m_viewMatrix * m_projectionMatrix;
+    D3DXMatrixInverse(&InvVP, NULL, &InvVP);
 
     for (int i = 0; i < 8; ++i)
     {
-        //D3DXVec3TransformCoord(&m_vecWorld[i], &m_vecProj[i], &InvVP);
-        D3DXVec3Unproject(&m_vecWorld[i], &m_vecProj[i], NULL,  &m_projectionMatrix, &m_viewMatrix, NULL);
+        D3DXVec3TransformCoord(&m_vecWorld[i], &m_vecProj[i], &InvVP);
+        //D3DXVec3Unproject(&m_vecWorld[i], &m_vecProj[i], NULL,  &m_projectionMatrix, &m_viewMatrix, NULL);
     }
 
     //근평면//좌상전//우상전//좌하전
@@ -180,7 +176,7 @@ void ICamera::UpdateFrustumCulling()
     D3DXPlaneFromPoints(&m_vecPlane[4], &m_vecWorld[0], &m_vecWorld[1], &m_vecWorld[2]);
     //하평면//좌하전//우하전//좌하후
     D3DXPlaneFromPoints(&m_vecPlane[5], &m_vecWorld[6], &m_vecWorld[7], &m_vecWorld[4]);
-
+    
 }
 bool ICamera::IsObjectInsideFrustum(const D3DXVECTOR3 center, const float radius)
 {

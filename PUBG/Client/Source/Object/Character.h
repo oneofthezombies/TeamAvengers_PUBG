@@ -166,6 +166,7 @@ private:
 
     // id
     int m_index;
+    size_t m_cellSpaceIndex;
 
     Transform*          pTransform;
     CharacterAnimation* pAnimation;

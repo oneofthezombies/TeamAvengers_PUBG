@@ -17,7 +17,7 @@ Character::Character(const int index)
 
     // id
     , m_index(index)
-
+    , m_cellSpaceIndex(0)
     , m_upperAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_rootTransform(1.0f)
@@ -38,7 +38,10 @@ Character::Character(const int index)
     pTransform->SetRotation(OFFSET_ROTATION);
     const float factor(static_cast<float>(m_index + 1) * 100.0f);
     pTransform->SetPosition(D3DXVECTOR3(factor, 0.0f, factor));
-
+    
+    m_cellSpaceIndex = CurrentScene()()->GetCellIndex(pTransform->GetPosition());
+    CurrentScene()()->InsertObjIntoCellSpace(TAG_OBJECT::Character, m_cellSpaceIndex, this);
+    
     pAnimation = new CharacterAnimation;
     AddChild(pAnimation);
     pAnimation->Set(
@@ -131,9 +134,19 @@ void Character::updateMine()
 
     // 이동가능한치 체크해서 업데이트 하거나 y만되거나 등등
     //CurrentScene()()->Get
+    IScene* pCurrScene = CurrentScene()();
+    if (pCurrScene->IsMovable(&pos, m_cellSpaceIndex, TAG_OBJECT::Character, this))
+    {
 
+    }
+    
     // 이동가능하다면 cellIndex = CurrentScene()()->GetCellIndex(pos);
     // if (m_cellIndex != cellIndex) 이사하기
+    size_t nextCellSpace = pCurrScene->GetCellIndex(pos);
+    if (m_cellSpaceIndex != nextCellSpace)
+    {
+        pCurrScene->MoveCell(&m_cellSpaceIndex, nextCellSpace,TAG_OBJECT::Character,this);
+    }
 
     cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping

@@ -28,13 +28,13 @@ struct ObjectInFile
 
 struct CellSpace
 {
-    size_t             m_index;
-    std::set<IObject*> m_terrainFeatures;
-    std::set<IObject*> m_bullets;
-    std::set<IObject*> m_characters;
-    std::set<IObject*> m_doors;
-    std::set<IObject*> m_windows;
-    std::set<IObject*> m_items;
+    size_t             pIndex;
+    std::set<IObject*> pTerrainFeatures;
+    std::set<IObject*> pBullets;
+    std::set<IObject*> pCharacters;
+    std::set<IObject*> pDoors;
+    std::set<IObject*> pWindows;
+    std::set<IObject*> pItems;
 
     CellSpace(size_t index);
 };
@@ -80,9 +80,65 @@ public:
     bool GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight);
 
     //Cell - Space  Partitioning 
+    void InsertObjIntoCellSpace(TAG_OBJECT tag, size_t index,IN IObject* obj)
+    {
+        switch (tag)
+        {
+        case TAG_OBJECT::Idle:
+            break;
+        case TAG_OBJECT::TerrainFeature:
+            m_pCellSpaces[index]->pTerrainFeatures.emplace(obj);
+            break;
+        case TAG_OBJECT::Bullet:
+            m_pCellSpaces[index]->pBullets.emplace(obj);
+            break;
+        case TAG_OBJECT::Character:
+            m_pCellSpaces[index]->pCharacters.emplace(obj);
+            break;
+        case TAG_OBJECT::Door:
+            m_pCellSpaces[index]->pDoors.emplace(obj);
+            break;
+        case TAG_OBJECT::Window:
+            m_pCellSpaces[index]->pWindows.emplace(obj);
+            break;
+        case TAG_OBJECT::Item:
+            m_pCellSpaces[index]->pItems.emplace(obj);
+            break;
+        }
+        
+    }
     std::size_t GetCellIndex(const D3DXVECTOR3& position);
-    void MoveCell(std::size_t currentIndex, std::size_t nextIndex);
-    bool IsMovable(const D3DXVECTOR3& targetPos); // 갈 수 있는지
+    
+    void MoveCell(OUT std::size_t* currentCellIndex, std::size_t destCellIndex,TAG_OBJECT tag,IObject* obj)
+    {
+        switch (tag)
+        {
+        case TAG_OBJECT::Bullet:
+            //총알에 대하여 만들기
+            break;
+        case TAG_OBJECT::Character:
+            //object를 찾는다.
+            auto itr = m_pCellSpaces[*currentCellIndex]->pCharacters.find(obj);
+            if (itr == m_pCellSpaces[*currentCellIndex]->pCharacters.end())
+                assert(false && "MoveCell() cannot find obj");
+            //찾고 원래 장소에서 지운다
+            IObject* ptr = *itr;
+            m_pCellSpaces[*currentCellIndex]->pCharacters.erase(itr);
+            //새 장소에 넣어준다
+            m_pCellSpaces[destCellIndex]->pCharacters.emplace(ptr);
+            //현재 인덱스를 바꾸어준다
+            *currentCellIndex = destCellIndex;
+            break;
+        }
+    }
+    
+    bool IsMovable(const D3DXVECTOR3* targetPos,size_t currentCellIndex,TAG_OBJECT tag, IObject* obj)// 갈 수 있는지
+    {
+        
+
+
+        return false;
+    } 
     
     virtual void OnInit() = 0;
 	virtual void OnUpdate() = 0;
