@@ -91,8 +91,8 @@ Character::FramePtr::FramePtr()
 Character::IsJumping::IsJumping()
     : isJumping(false)
     
-    , jumpPower(15.0f)
-    , gravity(0.5f)
+    , jumpPower(12.0f)
+    , gravity(0.3f)
     , currGravity(0.0f)
     , maxStepHeight(5.f)
 {
@@ -244,11 +244,17 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
     Moving    moving;
 
     float movingFactor;
+
+    //점프
     if (m_currentOnceKey._Space)
         m_Jump.isJumping = true;
 
     //Moving 3개 -----------------------------------------------------
-    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl)
+    /*
+    Prone의 경우 Sprint가 없고
+    Stand, Crouch의 경우 BR, B, BL일 때 Sprint가 없다
+    */
+    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl) 
     {
         moving = Moving::Sprint;
         movingFactor = 2.0f;
@@ -324,12 +330,10 @@ bool Character::isMine() const
 }
 
 void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
-{
-    
+{  
     HeightMap* pCurrentScene = CurrentScene()()->GetHeightMap();
     if (!pCurrentScene)
         return; //assert(false && "No CurrentScene");
-
 
     D3DXVECTOR3 targetPos = *pOut;
     float height = 0;
@@ -337,7 +341,6 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 
     if (m_Jump.isJumping)
     {
-
         targetPos.y += m_Jump.jumpPower - m_Jump.currGravity;
         m_Jump.currGravity += m_Jump.gravity;
         
@@ -371,9 +374,7 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         {
             targetPos.y = height;
         }
-
     }
-
     *pOut = targetPos;
 }
 

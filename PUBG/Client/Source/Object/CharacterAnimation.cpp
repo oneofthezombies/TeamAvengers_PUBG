@@ -297,3 +297,17 @@ bool CharacterAnimation::HasLowerFinishEvent() const
 {
     return pSkinnedMeshController->HasFinishEvent();
 }
+
+void CharacterAnimation::GetUpperTrackDescription(
+    const std::size_t index,
+    D3DXTRACK_DESC* OutDesc)
+{
+    pSkinnedMeshController->GetSubTrackDescription(index, OutDesc);
+}
+
+void CharacterAnimation::GetLowerTrackDescription(
+    const std::size_t index,
+    D3DXTRACK_DESC* OutDesc)
+{
+    pSkinnedMeshController->GetTrackDescription(index, OutDesc);
+}

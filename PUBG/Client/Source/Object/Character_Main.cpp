@@ -124,6 +124,8 @@ void Character::updateMine()
                 CharacterAnimation::BodyPart::BOTH, 
                 m_lowerAnimState);
 
+            // set current with same position with finish event m_lowerAnimState
+
             m_savedInput = m_currentStayKey;
         }
     }

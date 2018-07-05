@@ -71,4 +71,12 @@ public:
 
     bool HasUpperFinishEvent() const;
     bool HasLowerFinishEvent() const;
+
+    void GetUpperTrackDescription(
+        const std::size_t index,
+        D3DXTRACK_DESC* OutDesc);
+
+    void GetLowerTrackDescription(
+        const std::size_t index,
+        D3DXTRACK_DESC* OutDesc);
 };
