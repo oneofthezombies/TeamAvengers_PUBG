@@ -102,6 +102,7 @@ void Character::updateMine()
     setStance();
     setAttacking();
     setReload();
+    setPunch();
     ForDebug();
 
     //setting animation and movements

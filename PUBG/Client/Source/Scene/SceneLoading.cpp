@@ -42,6 +42,7 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone);
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Transition);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Attack);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);

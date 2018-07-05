@@ -322,6 +322,43 @@ void Character::setReload()
     }
 }
 
+void Character::setPunch()
+{
+    if (m_attacking == Attacking::Unarmed && m_currentOnceKey._LButton)
+    {
+        TAG_ANIM_CHARACTER animTag = TAG_ANIM_CHARACTER::COUNT;
+        //주먹을 휘두른다
+        if (m_stance == Stance::Stand)
+        {
+            animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_1;
+            //animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_2;
+            //animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_3;
+        }
+        else if (m_stance == Stance::Crouch)
+        {       
+            animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_1;
+            //animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_2;
+            //animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_3;
+        }
+
+        pAnimation->Set(
+            CharacterAnimation::BodyPart::UPPER,
+            animTag,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            CharacterAnimation::DEFAULT_POSITION,
+            [this]()
+        {
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                false);
+        });
+    }
+}
+
 /*
 무기 장착 및 해제 애니메이션
 */

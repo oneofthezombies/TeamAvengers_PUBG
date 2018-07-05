@@ -267,6 +267,7 @@ private:
     void setStance();
     void setAttacking();
     void setReload();
+    void setPunch();
 
     void setRifleOnHand(TAG_RIFLE tagRifle);
     void setRifleOnBody(TAG_RIFLE tagRifle);
