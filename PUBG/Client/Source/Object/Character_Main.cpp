@@ -130,10 +130,16 @@ void Character::updateMine()
     applyTarget_Y_Position(&pos); //apply height and control jumping
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     
+    if (m_currentOnceKey._B)
+    {
+        m_totalInventory.m_hand->ChangeAuto();
+    }
 
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
-    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton)
+    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton 
+        || (m_attacking == Attacking::Rifle && m_totalInventory.m_hand->GetAuto() 
+            && TAG_RES_STATIC::QBZ == m_totalInventory.m_hand->GetTagResStatic() && m_currentStayKey._LButton) )
     {
         if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_hand->GetNumBullet() > 0)
         {
@@ -143,25 +149,10 @@ void Character::updateMine()
         }
     }
 
-    //sh tset
-    if (Input()()->IsOnceKeyDown('B'))
-    {
-        Sound()()->SetPosition(D3DXVECTOR3(0, 0, 100));
-        Sound()()->SetVolume(0.8f);
-        Sound()()->Play(TAG_SOUND::Kar98_NormalShoot);
-    }
-    
-    if (Input()()->IsOnceKeyDown('N'))
-    {
-        //Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
-        //Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)));
-        Sound()()->addPlay(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)), 5.0f, FMOD_3D);
-    }
     if (m_backAction.Ing)
     {
         backActionFrame();
     }
-
 
     Sound()()->Listen(pos, getForward());
 

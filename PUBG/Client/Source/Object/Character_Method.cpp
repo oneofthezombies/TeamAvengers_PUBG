@@ -151,6 +151,7 @@ void Character::handleInput(IsPressing* OutIsPressing)
     OutIsPressing->_S      = pInput->IsStayKeyDown('S');
     OutIsPressing->_A      = pInput->IsStayKeyDown('A');
     OutIsPressing->_D      = pInput->IsStayKeyDown('D');
+    OutIsPressing->_LButton = pInput->IsStayKeyDown(VK_LBUTTON);
 }
 
 void Character::handleInput(IsPressed* OutIsPressed)
@@ -163,6 +164,7 @@ void Character::handleInput(IsPressed* OutIsPressed)
     OutIsPressed->_X            = pInput->IsOnceKeyDown('X');
     OutIsPressed->_C            = pInput->IsOnceKeyDown('C');
     OutIsPressed->_R            = pInput->IsOnceKeyDown('R');
+    OutIsPressed->_B            = pInput->IsOnceKeyDown('B');
     OutIsPressed->_Space        = pInput->IsOnceKeyDown(VK_SPACE);
     OutIsPressed->_Num1         = pInput->IsOnceKeyDown('1');
     OutIsPressed->_Num2         = pInput->IsOnceKeyDown('2');
@@ -549,6 +551,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     }
 
 }
+
 
 void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizontal)
 {

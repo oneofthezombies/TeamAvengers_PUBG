@@ -18,6 +18,7 @@ private:
     int   m_count;      //아이템의 개수
     //for Rifle
     int   m_numBullet;  //장전된 총알의 개수
+    bool  m_auto;
 
     EffectMeshRenderer* pEffectMeshRenderer;
     bool                m_isRenderEffectMesh;
@@ -69,6 +70,9 @@ public:
     //for Rifle
     void SetNumBullet(const int numBullet);
     int GetNumBullet() const;
+
+    void ChangeAuto();
+    bool GetAuto();
 
     Frame* GetGunBolt() const
     {

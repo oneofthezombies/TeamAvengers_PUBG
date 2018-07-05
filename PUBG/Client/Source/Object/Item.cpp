@@ -8,9 +8,9 @@
 #include "ResourceInfo.h"
 
 Item::Item(
-    const TAG_RES_STATIC tag, 
-    const D3DXVECTOR3&   position, 
-    const D3DXVECTOR3&   rotation, 
+    const TAG_RES_STATIC tag,
+    const D3DXVECTOR3&   position,
+    const D3DXVECTOR3&   rotation,
     const D3DXVECTOR3&   scale)
     : IObject()
 
@@ -18,7 +18,8 @@ Item::Item(
     , m_durability(0.0f)
     , m_count(0)
     , m_numBullet(0)
-
+    , m_auto(false)
+    
     , pEffectMeshRenderer(nullptr)
     , m_isRenderEffectMesh(false)
 
@@ -225,6 +226,16 @@ void Item::SetNumBullet(const int numBullet)
 int Item::GetNumBullet() const
 {
     return m_numBullet;
+}
+
+void Item::ChangeAuto()
+{
+    m_auto = !m_auto;
+}
+
+bool Item::GetAuto()
+{
+    return m_auto;
 }
 
 void Item::UpdateModel()

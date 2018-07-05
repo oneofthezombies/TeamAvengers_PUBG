@@ -84,6 +84,8 @@ public:
         bool _S       ;
         bool _A       ;
         bool _D       ;
+        bool _LButton ;
+        bool _RButton ;
 
         IsPressing();
         bool operator==(const IsPressing& other) const;
@@ -96,6 +98,8 @@ public:
         bool _X;
         bool _C;
         bool _R;
+        bool _B;
+
         bool _Space;
         bool _Num1; 
         bool _Num2; 
@@ -248,6 +252,7 @@ private:
     //ÃÑ ¹Ýµ¿ °ü·Ã
     void backAction(D3DXQUATERNION* OutRotation ,int virtical = 100 , int horizontal = 50);
     void backActionFrame();
+
 
     void updateMine();
     void updateOther();
