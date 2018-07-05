@@ -7,7 +7,7 @@ Bullet::Bullet()
     , m_Speed(0.0f)
     , m_Damage(0.0f)
     , m_IsActive(false)
-    
+    , pCylinder(nullptr)
     , pBoxCollider(nullptr)
 {
     GetTransform()->SetPosition(Vector3::ZERO);
@@ -32,6 +32,10 @@ void Bullet::OnUpdate()
     pTr->SetPosition(pos);
     pTr->Update();
     pBoxCollider->Update(pTr->GetTransformationMatrix());
+
+    //deactivating bullet when it is out of boundary
+    if (CurrentScene()()->isOutOfBoundaryBox(pos))
+        m_IsActive = false;
 
 }
 

@@ -48,6 +48,14 @@ public:
     {
         return D3DXVECTOR4(m_boundary[6].x, m_boundary[6].z, m_boundary[1].x, m_boundary[1].z);
     }
+    bool isOutOfBoundaryBox(const D3DXVECTOR3& pos)
+    {
+        if (pos.x > m_boundary[1].x || pos.y > m_boundary[1].y || pos.z > m_boundary[1].z
+            || pos.x < m_boundary[6].x || pos.y < m_boundary[6].y || pos.z < m_boundary[6].z)
+            return true;
+
+        return false;
+    }
 
     // Inherited via IMap
     virtual void OnUpdate() override;

@@ -302,6 +302,12 @@ bool IScene::GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight)
     return pHeightMap->GetHeight(pos, OutHeight);
 }
 
+bool IScene::isOutOfBoundaryBox(const D3DXVECTOR3& pos)
+{
+   
+    return  pHeightMap->isOutOfBoundaryBox(pos);
+}
+
 //------------------ Cell Space Partitioning--------------------
 
 CellSpace::CellSpace(size_t index)
@@ -309,6 +315,33 @@ CellSpace::CellSpace(size_t index)
     pIndex = index;
 }
 
+void IScene::InsertObjIntoCellSpace(TAG_OBJECT tag, size_t index, IN IObject * obj)
+{
+    switch (tag)
+    {
+    case TAG_OBJECT::Idle:
+        break;
+    case TAG_OBJECT::TerrainFeature:
+        m_pCellSpaces[index]->pTerrainFeatures.emplace(obj);
+        break;
+    case TAG_OBJECT::Bullet:
+        m_pCellSpaces[index]->pBullets.emplace(obj);
+        break;
+    case TAG_OBJECT::Character:
+        m_pCellSpaces[index]->pCharacters.emplace(obj);
+        break;
+    case TAG_OBJECT::Door:
+        m_pCellSpaces[index]->pDoors.emplace(obj);
+        break;
+    case TAG_OBJECT::Window:
+        m_pCellSpaces[index]->pWindows.emplace(obj);
+        break;
+    case TAG_OBJECT::Item:
+        m_pCellSpaces[index]->pItems.emplace(obj);
+        break;
+    }
+
+}
 
 std::size_t IScene::GetCellIndex(const D3DXVECTOR3 & position)
 {
@@ -321,5 +354,36 @@ std::size_t IScene::GetCellIndex(const D3DXVECTOR3 & position)
     int Zindex = position.z / Zspace;
 
     return Zindex * CellSpaceDim + Xindex;
+}
+
+void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject * obj)
+{
+    switch (tag)
+    {
+    case TAG_OBJECT::Bullet:
+        //총알에 대하여 만들기
+        break;
+    case TAG_OBJECT::Character:
+        //object를 찾는다.
+        auto itr = m_pCellSpaces[*currentCellIndex]->pCharacters.find(obj);
+        if (itr == m_pCellSpaces[*currentCellIndex]->pCharacters.end())
+            assert(false && "MoveCell() cannot find obj");
+        //찾고 원래 장소에서 지운다
+        IObject* ptr = *itr;
+        m_pCellSpaces[*currentCellIndex]->pCharacters.erase(itr);
+        //새 장소에 넣어준다
+        m_pCellSpaces[destCellIndex]->pCharacters.emplace(ptr);
+        //현재 인덱스를 바꾸어준다
+        *currentCellIndex = destCellIndex;
+        break;
+    }
+}
+
+bool IScene::IsMovable(const D3DXVECTOR3 * targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject * obj)// 갈 수 있는지
+{
+
+
+
+    return false;
 }
 

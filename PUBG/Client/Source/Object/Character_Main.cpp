@@ -137,7 +137,7 @@ void Character::updateMine()
     IScene* pCurrScene = CurrentScene()();
     if (pCurrScene->IsMovable(&pos, m_cellSpaceIndex, TAG_OBJECT::Character, this))
     {
-
+        //이곳을 해야 한다
     }
     
     // 이동가능하다면 cellIndex = CurrentScene()()->GetCellIndex(pos);
