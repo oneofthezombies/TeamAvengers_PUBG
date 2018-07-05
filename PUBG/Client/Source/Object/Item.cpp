@@ -93,43 +93,48 @@ void Item::setup(const TAG_RES_STATIC tag)
     case TAG_ITEM_CATEGORY::Ammo:
     case TAG_ITEM_CATEGORY::Attach:
     case TAG_ITEM_CATEGORY::Consumable:
-    {
-        const auto pathName = ResourceInfo::GetUIPathFileName(tag);
-        pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
-    }
+        {
+            const auto pathName = ResourceInfo::GetUIPathFileName(tag);
+            pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
+        }
         break;
 
     case TAG_ITEM_CATEGORY::Armor:
     case TAG_ITEM_CATEGORY::Back:
     case TAG_ITEM_CATEGORY::Head:
-    {
-        pSkinnedMeshController = AddComponent<SkinnedMeshController>();
-        const auto pathName = ResourceInfo::GetUIPathFileName(tag);
-        pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
-    }
+        {
+            pSkinnedMeshController = AddComponent<SkinnedMeshController>();
+            const auto pathName = ResourceInfo::GetUIPathFileName(tag);
+            pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
+        }
         break;
     
     case TAG_ITEM_CATEGORY::Rifle:
-    {
-        // TODO : putin or equip으로 옮겨야 함
-        pSkinnedMeshController = AddComponent<SkinnedMeshController>();
-        const auto pathName = ResourceInfo::GetPathFileName(ResourceInfo::GetTagResAnimWeapon(tag));
-        pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathName.first, pathName.second));
-
-        //총알이 나갈 위치 테스터
-        if (m_tagResStatic == TAG_RES_STATIC::QBZ)
         {
-            pGunBolt = pSkinnedMeshController->FindFrame("gun_bolt");
+            // TODO : putin or equip으로 옮겨야 함
+            pSkinnedMeshController = AddComponent<SkinnedMeshController>();
+            const auto pathName = ResourceInfo::GetPathFileName(ResourceInfo::GetTagResAnimWeapon(tag));
+            pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathName.first, pathName.second));
+
+            //총알이 나갈 위치
+            if (m_tagResStatic == TAG_RES_STATIC::QBZ)
+            {
+                pGunBolt = pSkinnedMeshController->FindFrame("gun_bolt");
+            }
+            else if (m_tagResStatic == TAG_RES_STATIC::Kar98k)
+            {
+                pGunBolt = pSkinnedMeshController->FindFrame("Gun_bolt_02");
+            }
+            assert(pGunBolt && "Item::setup(), pGunBolt is null.");
         }
-
-
-    }
         break;
     
     //case TAG_ITEM_CATEGORY::Melee:
     //case TAG_ITEM_CATEGORY::Throwable:
     default:
-        assert(false && "Item::setup(), item category default case.");
+        {
+            assert(false && "Item::setup(), item category default case.");
+        }
         break;
     }
 }
@@ -226,6 +231,12 @@ int Item::GetNumBullet() const
 {
     return m_numBullet;
 }
+
+Frame * Item::GetGunBolt() const
+{
+    return pGunBolt;
+}
+
 
 void Item::UpdateModel()
 {

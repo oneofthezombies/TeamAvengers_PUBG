@@ -70,10 +70,7 @@ public:
     void SetNumBullet(const int numBullet);
     int GetNumBullet() const;
 
-    Frame* GetGunBolt() const
-    {
-        return pGunBolt;
-    }
+    Frame* GetGunBolt() const;
 
     void UpdateModel();
 };

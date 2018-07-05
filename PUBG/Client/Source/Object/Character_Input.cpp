@@ -268,8 +268,8 @@ void Character::setReload()
                         [this]()
                     {
                         pAnimation->Set(
-                            CharacterAnimation::BodyPart::UPPER,
-                            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Low_Idle_Still_Very,
+                            CharacterAnimation::BodyPart::BOTH,
+                            m_lowerAnimState,
                             false);
                     });
                 }
@@ -289,8 +289,8 @@ void Character::setReload()
                             [this]() 
                         {
                             pAnimation->Set(
-                            CharacterAnimation::BodyPart::UPPER,
-                            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Low_Idle_Still_Very,
+                            CharacterAnimation::BodyPart::BOTH,
+                            m_lowerAnimState,
                             false);                       
                         });
                     }
@@ -326,182 +326,106 @@ void Character::setReload()
 무기 장착 및 해제 애니메이션
 */
 void Character::setRifleOnHand(TAG_RIFLE tagRifle)
-{
-    //주무기를 손에 든다
-    if (tagRifle == TAG_RIFLE::Primary)
+{  
+    //애니메이션 정하기
+    TAG_ANIM_CHARACTER animTag = TAG_ANIM_CHARACTER::COUNT;
+    if (tagRifle == TAG_RIFLE::Primary)        //주무기 일 때
     {
         if (m_stance == Stance::Stand)
-        {
-            pAnimation->Set(
-                CharacterAnimation::BodyPart::UPPER,
-                TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand,
-                false, 
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                CharacterAnimation::DEFAULT_POSITION,
-                [this]()
-            {
-                pAnimation->Set(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
-            });
-        }
+            animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand;
         else if (m_stance == Stance::Prone)
-        {
-            pAnimation->Set(
-                CharacterAnimation::BodyPart::UPPER,
-                TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot_OnHand,
-                false, 
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                CharacterAnimation::DEFAULT_POSITION,
-                [this]()
-            {
-                pAnimation->Set(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
-            });
-        
-        }
+            animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot_OnHand;
     }
-    //보조무기를 손에 든다
-    else if (tagRifle == TAG_RIFLE::Secondary)
+    else if (tagRifle == TAG_RIFLE::Secondary) //보조무기 일 때
     {
         if (m_stance == Stance::Stand)
-        {
-            pAnimation->Set(
-                CharacterAnimation::BodyPart::UPPER,
-                TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand,
-                false,
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                CharacterAnimation::DEFAULT_POSITION,
-                [this]()
-            {
-                pAnimation->Set(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
-            });
-        }
+            animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand;
         else if (m_stance == Stance::Prone)
-        {
-            pAnimation->Set(
-                CharacterAnimation::BodyPart::UPPER,
-                TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot_OnHand,
-                false, 
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                CharacterAnimation::DEFAULT_POSITION,
-                [this]()
-            {
-                pAnimation->Set(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
-            });
-        
-        }
+            animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot_OnHand;
     }
+    assert((animTag != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnHand(), animTag is COUNT");
+
+    //애니메이션 적용
+    pAnimation->Set(
+        CharacterAnimation::BodyPart::UPPER,
+        animTag,
+        false, 
+        CharacterAnimation::DEFAULT_BLENDING_TIME,
+        CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+        CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+        CharacterAnimation::DEFAULT_POSITION,
+        [this]()
+    {
+        pAnimation->Set(
+            CharacterAnimation::BodyPart::BOTH,
+            m_lowerAnimState,
+            false);
+    });
 }
 
 void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 {
     TotalInventory& inven = m_totalInventory;
 
-    //주무기를 다시 몸에 장착
-    if (tagRifle == TAG_RIFLE::Primary)
+    if (tagRifle == TAG_RIFLE::Primary) //주무기를 다시 몸에 장착
     {
+        //애니메이션 정하기
+        TAG_ANIM_CHARACTER animTag = TAG_ANIM_CHARACTER::COUNT;
         if (m_stance == Stance::Stand)
-        {
-            pAnimation->Set(
-                CharacterAnimation::BodyPart::UPPER,
-                TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
-                false,
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                CharacterAnimation::DEFAULT_POSITION,
-                [this, &inven]()
-            {
-                inven.m_pWeaponPrimary = inven.m_pHand;
-                inven.m_pHand = nullptr;
-                pAnimation->Set(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
-            });
-        }
+            animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static;
         else if (m_stance == Stance::Prone)
+            animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot;    
+
+        assert((animTag != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnBody(), animTag is COUNT");
+
+        //애니메이션 적용
+        pAnimation->Set(
+            CharacterAnimation::BodyPart::UPPER,
+            animTag,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            CharacterAnimation::DEFAULT_POSITION,
+            [this, &inven]()
         {
+            inven.m_pWeaponPrimary = inven.m_pHand;
+            inven.m_pHand = nullptr;
             pAnimation->Set(
-                CharacterAnimation::BodyPart::UPPER,
-                TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot,
-                false,
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                CharacterAnimation::DEFAULT_POSITION,
-                [this, &inven]()
-            {
-                inven.m_pWeaponPrimary = inven.m_pHand;
-                inven.m_pHand = nullptr;
-                pAnimation->Set(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
-            });        
-        }
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                false);
+        });      
     }
-    //보조무기를 다시 몸에 장착
-    else if (tagRifle == TAG_RIFLE::Secondary)
+    else if (tagRifle == TAG_RIFLE::Secondary) //보조무기를 다시 몸에 장착
     {
+        //애니메이션 정하기
+        TAG_ANIM_CHARACTER animTag = TAG_ANIM_CHARACTER::COUNT;
         if (m_stance == Stance::Stand)
+            animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static;
+        else if (m_stance == Stance::Prone)
+            animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot;
+
+        assert((animTag != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnBody(), animTag is COUNT");
+
+        //애니메이션 적용
+        pAnimation->Set(
+            CharacterAnimation::BodyPart::UPPER,
+            animTag,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            CharacterAnimation::DEFAULT_POSITION,
+            [this, &inven]()
         {
+            inven.m_pWeaponSecondary = inven.m_pHand;
+            inven.m_pHand = nullptr;
             pAnimation->Set(
-                CharacterAnimation::BodyPart::UPPER,
-                TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static,
-                false,
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                CharacterAnimation::DEFAULT_POSITION,
-                [this, &inven]()
-            {
-                inven.m_pWeaponSecondary = inven.m_pHand;
-                inven.m_pHand = nullptr;
-                pAnimation->Set(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
-            });
-        }
-        else if(m_stance == Stance::Prone)
-        {
-            pAnimation->Set(
-                CharacterAnimation::BodyPart::UPPER,
-                TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot,
-                false,
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                CharacterAnimation::DEFAULT_POSITION,
-                [this, &inven]()
-            {
-                inven.m_pWeaponSecondary = inven.m_pHand;
-                inven.m_pHand = nullptr;
-                pAnimation->Set(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
-            });
-        }
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                false);
+        });
     }
 }
 
@@ -780,8 +704,8 @@ void Character::onKar98kReloadEnd()
         [this]() 
     {
         pAnimation->Set(
-            CharacterAnimation::BodyPart::UPPER,
-            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Low_Idle_Still_Very,
+            CharacterAnimation::BodyPart::BOTH,
+            m_lowerAnimState,
             false);
     });
 }
