@@ -133,7 +133,21 @@ public:
         IsJumping();
     };
 
+    struct State
+    {
+        D3DXVECTOR3 position;
+        D3DXQUATERNION rotation;
+        D3DXMATRIX transformationMatrix;
+        Stance stance;
+        Attacking attacking;
+        Moving moving;
+        TAG_ANIM_CHARACTER upperAnimState;
+        TAG_ANIM_CHARACTER lowerAnimState;
+        std::size_t cellIndex;
+        std::vector<BoundingBox> boundingBoxes;
 
+        State();
+    };
 
 
 /**************************** end nested structure ***************************/
@@ -169,7 +183,8 @@ private:
 
     Transform*          pTransform;
     CharacterAnimation* pAnimation;
-    CharacterPart*      m_pRootCharacterPart;
+    //CharacterPart*      m_pRootCharacterPart;
+    vector<CharacterPart*> m_characterParts;
 
     //
     FramePtr      m_framePtr;
@@ -200,6 +215,8 @@ private:
     Attacking m_attacking;
 
     IsJumping m_Jump;
+
+    //std::vector<BoundingSphere> m_boundingSphereCharacter;
 
 /**************************** end member variable ****************************/
 
@@ -312,8 +329,10 @@ public:
     string ForDebugGetStance(Stance stance);
     void ForDebug();
 
-    CharacterAnimation* GetCharacterAnimation();
+          CharacterAnimation*        GetCharacterAnimation();
+    const std::vector<BoundingBox*>& GetBoundingBoxes() override;
 
+    void AddPart(CharacterPart* pPart);
 /**************************** end public method ******************************/
 
 

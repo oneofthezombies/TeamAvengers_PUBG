@@ -14,10 +14,11 @@ private:
     Transform* pTransform;
     IObject*   pParent;
 
-    std::size_t m_cellIndex;
-    
 protected:
-    IObject();
+    BoundingSphere*           m_pBoundingSphere;
+    std::vector<BoundingBox*> m_boundingBoxes;
+
+    IObject(const TAG_OBJECT tagObject);
 
 public:
 	virtual ~IObject();
@@ -32,6 +33,9 @@ public:
 	void AddChild(IObject* pChild);
 
 	Transform* GetTransform();
+
+    virtual       BoundingSphere*            GetBoundingSphere();
+    virtual const std::vector<BoundingBox*>& GetBoundingBoxes();
 
     virtual void OnUpdate() = 0;
     virtual void OnRender() = 0;

@@ -24,23 +24,23 @@ void EffectMeshRenderer::Render(
         pEffectMesh->m_pMesh, 
         setGlobalVariable);
 
-    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-    //JOHN HAN
-    //this is to draw sphere around the Items
-    D3DXMATRIX mat = GetTransform()->GetTransformationMatrix();
-    Shader::Draw(
-        Resource()()->GetEffect("./Resource/", "Color.fx"),
-        nullptr,
-        m_pSphere,
-        0,
-        [this, &mat](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(Shader::World, &mat);
+    //Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+    ////JOHN HAN
+    ////this is to draw sphere around the Items
+    //D3DXMATRIX mat = GetTransform()->GetTransformationMatrix();
+    //Shader::Draw(
+    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
+    //    nullptr,
+    //    m_pSphere,
+    //    0,
+    //    [this, &mat](LPD3DXEFFECT pEffect)
+    //{
+    //    pEffect->SetMatrix(Shader::World, &mat);
 
-        D3DXCOLOR Green(0.0f, 1.0f, 0.0f, 1.0f);
-        pEffect->SetValue("Color", &Green, sizeof Green);
-    });
-    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+    //    D3DXCOLOR Green(0.0f, 1.0f, 0.0f, 1.0f);
+    //    pEffect->SetValue("Color", &Green, sizeof Green);
+    //});
+    //Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
 
 void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)
@@ -56,4 +56,12 @@ void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)
 void EffectMeshRenderer::SetEffectMesh(const TAG_RES_STATIC tag)
 {
     SetEffectMesh(Resource()()->GetEffectMesh(tag));
+}
+
+BoundingSphere EffectMeshRenderer::GetBoundingSphere()
+{
+    BoundingSphere bs;
+    bs.center = pEffectMesh->m_center;
+    bs.radius = pEffectMesh->m_radius;
+    return bs;
 }

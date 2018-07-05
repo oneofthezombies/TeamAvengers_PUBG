@@ -55,6 +55,9 @@ private:
         const D3DXMATRIX& world,
         const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
 
+    void findBoundingSphere(LPD3DXFRAME pFrame, std::vector<BoundingSphere>* OutBoundingSpheres);
+    void findBoundingSphere(LPD3DXMESHCONTAINER pMeshContainer, std::vector<BoundingSphere>* OutBoundingSpheres);
+
 public:
              SkinnedMeshController(IObject* pOwner);
     virtual ~SkinnedMeshController();
@@ -121,4 +124,7 @@ public:
     void GetSubTrackDescription(
         const std::size_t index, 
         D3DXTRACK_DESC* OutDesc);
+
+
+    std::vector<BoundingSphere> GetBoundingSpheres();
 };

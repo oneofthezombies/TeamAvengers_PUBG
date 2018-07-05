@@ -2,7 +2,7 @@
 #include "Grid.h"
 
 Grid::Grid()
-    : IObject()
+    : IObject(TAG_OBJECT::Idle)
     , pEffect(nullptr)
 {
     Init();

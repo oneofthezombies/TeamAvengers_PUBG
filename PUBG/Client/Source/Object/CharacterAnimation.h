@@ -71,4 +71,6 @@ public:
 
     bool HasUpperFinishEvent() const;
     bool HasLowerFinishEvent() const;
+
+    std::vector<BoundingSphere> GetBoundingSpheres();
 };

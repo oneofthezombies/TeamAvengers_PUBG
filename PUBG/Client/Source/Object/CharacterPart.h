@@ -16,9 +16,10 @@ private:
     vector<UIText*> m_UITexts;
 
     Character*   pCharacter;
-    BoxCollider* pBoxCollider;
+    //BoxCollider* pBoxCollider;
+    BoundingBox m_boundingBox;
 
-    void addFrame(const string& name, CharacterAnimation* pSkiCon);
+    void addFrame(const string& name, CharacterAnimation* pCharacterAnimation);
     void updateUI();
     void addChild(const TAG_COLLIDER_CHARACTER_PART tag);
 
@@ -32,4 +33,6 @@ public:
     virtual void OnRender() override;
 
     TAG_COLLIDER_CHARACTER_PART GetTagColliderCharacterPart() const;
+
+    BoundingBox* GetBoundingBox();
 };

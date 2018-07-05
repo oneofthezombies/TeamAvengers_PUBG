@@ -146,7 +146,7 @@ void ScenePlay::OnInit()
 
     //cell space partitioning
     m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
-    m_NearArea.GetNearArea(3);
+    //m_NearArea.Create(3);
 
     LoadObjectsFromFile("./Resource/save.txt");
 

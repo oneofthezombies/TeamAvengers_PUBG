@@ -3,7 +3,7 @@
 #include "EffectMeshRenderer.h"
 
 SkySphere::SkySphere()
-    : IObject()
+    : IObject(TAG_OBJECT::Idle)
     , pEffectMeshRenderer(nullptr)
 {
     pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();

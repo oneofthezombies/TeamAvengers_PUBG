@@ -318,13 +318,13 @@ void IScene::InsertObjIntoCellSpace(TAG_OBJECT tag, size_t index, IN IObject * o
     case TAG_OBJECT::Idle:
         break;
     case TAG_OBJECT::TerrainFeature:
-        m_TotalCellSpaces[index].pTerrainFeatures.emplace(obj);
+        m_TotalCellSpaces[index].pTerrainFeatures.emplace(static_cast<TerrainFeature*>(obj));
         break;
     case TAG_OBJECT::Bullet:
-        m_TotalCellSpaces[index].pBullets.emplace(obj);
+        m_TotalCellSpaces[index].pBullets.emplace(static_cast<Bullet*>(obj));
         break;
     case TAG_OBJECT::Character:
-        m_TotalCellSpaces[index].pCharacters.emplace(obj);
+        m_TotalCellSpaces[index].pCharacters.emplace(static_cast<Character*>(obj));
         break;
     case TAG_OBJECT::Door:
         m_TotalCellSpaces[index].pDoors.emplace(obj);
@@ -333,7 +333,7 @@ void IScene::InsertObjIntoCellSpace(TAG_OBJECT tag, size_t index, IN IObject * o
         m_TotalCellSpaces[index].pWindows.emplace(obj);
         break;
     case TAG_OBJECT::Item:
-        m_TotalCellSpaces[index].pItems.emplace(obj);
+        m_TotalCellSpaces[index].pItems.emplace(static_cast<Item*>(obj));
         break;
     }
 
@@ -346,9 +346,9 @@ std::size_t IScene::GetCellIndex(const D3DXVECTOR3 & position)
     float Xspace = (MinMax.z - MinMax.x)/ CellSpace::DIMENSION;
     float Zspace = (MinMax.w - MinMax.y)/ CellSpace::DIMENSION;
 
-    int Xindex = position.x / Xspace;
-    int Zindex = position.z / Zspace;
-
+    int Xindex = static_cast<int>(position.x / Xspace);
+    int Zindex = static_cast<int>(position.z / Zspace);
+    
     return Zindex * CellSpace::DIMENSION + Xindex;
 }
 
@@ -356,13 +356,13 @@ void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIn
 {
     auto itr = m_TotalCellSpaces[*currentCellIndex];
     auto itrDest = m_TotalCellSpaces[destCellIndex];
-    IObject * ptr= nullptr;
 
-    switch(tag)
+    switch (tag)
     {
     case TAG_OBJECT::Bullet:
+    {
         //object를 찾는다.
-        ptr = *itr.pBullets.find(obj);
+        auto ptr = *itr.pBullets.find(static_cast<Bullet*>(obj));
         if (!ptr)
             assert(false && "movecall() cannot find bullet obj");
         //찾고 원래 장소에서 지운다
@@ -371,11 +371,13 @@ void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIn
         itrDest.pBullets.emplace(ptr);
         //현재 인덱스를 바꾸어준다
         *currentCellIndex = destCellIndex;
+    }
         break;
 
     case TAG_OBJECT::Character:
+    {
         //object를 찾는다.
-        ptr = *itr.pCharacters.find(obj);
+        auto ptr = *itr.pCharacters.find(static_cast<Character*>(obj));
         if (!ptr)
             assert(false && "movecall() cannot find bullet obj");
         //찾고 원래 장소에서 지운다
@@ -384,6 +386,7 @@ void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIn
         itrDest.pCharacters.emplace(ptr);
         //현재 인덱스를 바꾸어준다
         *currentCellIndex = destCellIndex;
+    }
         break;
     }
 }
@@ -395,4 +398,3 @@ bool IScene::IsMovable(const D3DXVECTOR3 * targetPos, size_t currentCellIndex, T
 
     return false;
 }
-

@@ -2,6 +2,140 @@
 #include "Collision.h"
 #include "Collider.h"
 
+BoundingShape::BoundingShape()
+    : MemoryAllocator()
+    , center(Vector3::ZERO)
+{
+}
+
+BoundingSphere::BoundingSphere()
+    : BoundingShape()
+    , radius(0.0f)
+{
+    center = Vector3::ZERO;
+}
+
+BoundingSphere BoundingSphere::CopyTo(const D3DXVECTOR3& position)
+{
+    BoundingSphere bs;
+    bs.center = center + position;
+    bs.radius = radius;
+    return bs;
+}
+
+void BoundingSphere::Render()
+{
+    if (!Collision()()->IsRender()) return;
+
+    D3DXMATRIX s, t, m;
+    D3DXMatrixScaling(&s, radius, radius, radius);
+    D3DXMatrixTranslation(&t, center.x, center.y, center.z);
+    m = s * t;
+
+    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        Resource()()->GetBoundingSphereMesh(),
+        0,
+        [&m](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &m);
+
+        D3DXCOLOR Green(0.0f, 1.0f, 0.0f, 1.0f);
+        pEffect->SetValue("Color", &Green, sizeof Green);
+    });
+    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+}
+
+BoundingBox::BoundingBox()
+    : BoundingShape()
+    , extent(Vector3::ZERO)
+    , transformationMatrix(Matrix::IDENTITY)
+{
+}
+
+void BoundingBox::Update(const D3DXMATRIX& transformationMatrix)
+{
+    D3DXMATRIX invCurrent, variance;
+    D3DXMatrixInverse(&invCurrent, nullptr, &transformationMatrix);
+
+    variance = invCurrent * transformationMatrix;
+    D3DXVec3TransformCoord(&center, &center, &variance);
+    this->transformationMatrix = transformationMatrix;
+}
+
+BoundingBox BoundingBox::CopyTo(const D3DXMATRIX& transformationMatrix)
+{
+    BoundingBox bb;
+    bb.extent = extent;
+    bb.center = center;
+    bb.Update(transformationMatrix);
+    return bb;
+}
+
+void BoundingBox::Render()
+{
+    if (!Collision()()->IsRender()) return;
+
+    auto& vertices = Resource()()->GetBoundingBoxVertices();
+    auto& indices  = Resource()()->GetBoundingBoxIndices();
+
+    D3DXMATRIX s, m;
+    D3DXMatrixScaling(&s, extent.x, extent.y, extent.z);
+    m = s * transformationMatrix;
+
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        [&m](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &m);
+        D3DXCOLOR green(0.0f, 1.0f, 0.0f, 1.0f);
+        pEffect->SetValue("Color", &green, sizeof green);
+    },
+        [&vertices, &indices]()
+    {
+        Device()()->DrawIndexedPrimitiveUP(
+            D3DPT_LINELIST,
+            0,
+            vertices.size(),
+            indices.size() / 2,
+            indices.data(),
+            D3DFMT_INDEX16,
+            vertices.data(),
+            sizeof vertices.front());
+    });
+}
+
+BoundingBox BoundingBox::Create(const D3DXVECTOR3& min, const D3DXVECTOR3& max)
+{
+    BoundingBox bb;
+    bb.center = (min + max) * 0.5f;
+    bb.extent = max - bb.center;
+    return bb;
+}
+
+BoundingBox BoundingBox::Create(const D3DXMATRIX& transformationMatrix)
+{
+    D3DXVECTOR3 extent(Vector3::ONE * 0.5f);
+    D3DXVECTOR3 vS;
+    D3DXQUATERNION qR;
+    Matrix::GetScaleAndRotation(transformationMatrix, &vS, &qR);
+    D3DXVECTOR3 vT = Matrix::GetTranslation(transformationMatrix);
+
+    D3DXMATRIX mS;
+    D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+    D3DXVec3TransformCoord(&extent, &extent, &mS);
+
+    BoundingBox bb = Create(-extent, extent);
+
+    D3DXMATRIX invS;
+    D3DXMatrixInverse(&invS, nullptr, &mS);
+    bb.Update(invS * transformationMatrix);
+    return bb;
+}
+
 Collision::Manager::Manager()
     : Singleton<Collision::Manager>()
     , m_isRender(true)
@@ -236,37 +370,7 @@ void Collision::Manager::findCollidersWithTagInsideFrustum(
 
 void Collision::Manager::Update()
 {
-    // 충돌 이벤트 -> 총알 -> (내) 캐릭터
-    // for 총알들
-    // for 내 원형 거리 서치 후 -> 원충돌시 박스충돌계산 -> 이벤트함수 실행
-
-    //character bouding box들과 내것이 아닌 다른 총알들과 계산
-    /*
-    for each others bullet
-    {
-        //여기서 우선 sphere 로 충돌하지 않으면 continue (걸러준다, box 연산이 무겁다)
-        
-
-        for문 돌리는 것
-        {    
-        충돌이 있으면 part queue 에 enque하고 
-    
-
-    
-        여기에서 priority에 의해서 한개만 고르면 된다 (여기에 운이 안좋으면 3개 의 collision까지 올수 있으니)
-        (사람 몸에 겹치는 콜라이더에 들어온 불렛)
-        }
-    }
-    
-    */
-
-
-
-
-
-
-
-    notifyCollision();
+    // notifyBulletEvent()
 }
 
 void Collision::Manager::AddCollider(Collider* pCollider)
@@ -375,4 +479,215 @@ bool Collision::Manager::IsRender() const
 Collision::Manager* Collision::operator()()
 {
     return Manager::GetInstance();
+}
+
+bool Collision::HasCollision(
+    const BoundingSphere& lhs,
+    const BoundingSphere& rhs)
+{
+    return D3DXVec3Length(&(lhs.center - rhs.center)) <=
+        lhs.radius + rhs.radius;
+}
+
+bool Collision::HasCollision(const BoundingBox& lhs, const BoundingBox& rhs)
+{
+    const D3DXMATRIX& A_transform = lhs.transformationMatrix;
+    const D3DXMATRIX& B_transform = rhs.transformationMatrix;
+
+    const D3DXVECTOR3& A_extent = lhs.extent;
+    const D3DXVECTOR3& B_extent = rhs.extent;
+
+    const D3DXVECTOR3 distance = lhs.center - rhs.center;
+
+    vector<D3DXVECTOR3> A_axises(3);
+    vector<D3DXVECTOR3> B_axises(3);
+    vector<vector<float>> dotAB(3, vector<float>(3));
+    vector<vector<float>> absDotAB(3, vector<float>(3));
+    vector<float> dotAD(3);
+    float r0, r1, r01, r;
+
+    // a0
+    A_axises[0].x = A_transform.m[0][0];
+    A_axises[0].y = A_transform.m[0][1];
+    A_axises[0].z = A_transform.m[0][2];
+    B_axises[0].x = B_transform.m[0][0];
+    B_axises[0].y = B_transform.m[0][1];
+    B_axises[0].z = B_transform.m[0][2];
+    B_axises[1].x = B_transform.m[1][0];
+    B_axises[1].y = B_transform.m[1][1];
+    B_axises[1].z = B_transform.m[1][2];
+    B_axises[2].x = B_transform.m[2][0];
+    B_axises[2].y = B_transform.m[2][1];
+    B_axises[2].z = B_transform.m[2][2];
+    dotAB[0][0] = D3DXVec3Dot(&A_axises[0], &B_axises[0]);
+    dotAB[0][1] = D3DXVec3Dot(&A_axises[0], &B_axises[1]);
+    dotAB[0][2] = D3DXVec3Dot(&A_axises[0], &B_axises[2]);
+    dotAD[0] = D3DXVec3Dot(&A_axises[0], &distance);
+    absDotAB[0][0] = abs(dotAB[0][0]);
+    absDotAB[0][1] = abs(dotAB[0][1]);
+    absDotAB[0][2] = abs(dotAB[0][2]);
+    r = abs(dotAD[0]);
+    r1 = B_extent.x * absDotAB[0][0]
+        + B_extent.y * absDotAB[0][1]
+        + B_extent.z * absDotAB[0][2];
+    r01 = A_extent.x + r1;
+    if (r > r01)
+        return false;
+
+    // a1
+    A_axises[1].x = A_transform.m[1][0];
+    A_axises[1].y = A_transform.m[1][1];
+    A_axises[1].z = A_transform.m[1][2];
+    dotAB[1][0] = D3DXVec3Dot(&A_axises[1], &B_axises[0]);
+    dotAB[1][1] = D3DXVec3Dot(&A_axises[1], &B_axises[1]);
+    dotAB[1][2] = D3DXVec3Dot(&A_axises[1], &B_axises[2]);
+    dotAD[1] = D3DXVec3Dot(&A_axises[1], &distance);
+    absDotAB[1][0] = abs(dotAB[1][0]);
+    absDotAB[1][1] = abs(dotAB[1][1]);
+    absDotAB[1][2] = abs(dotAB[1][2]);
+    r = abs(dotAD[1]);
+    r1 = B_extent.x * absDotAB[1][0]
+        + B_extent.y * absDotAB[1][1]
+        + B_extent.z * absDotAB[1][2];
+    r01 = A_extent.y + r1;
+    if (r > r01)
+        return false;
+
+    // a2
+    A_axises[2].x = A_transform.m[2][0];
+    A_axises[2].y = A_transform.m[2][1];
+    A_axises[2].z = A_transform.m[2][2];
+    dotAB[2][0] = D3DXVec3Dot(&A_axises[2], &B_axises[0]);
+    dotAB[2][1] = D3DXVec3Dot(&A_axises[2], &B_axises[1]);
+    dotAB[2][2] = D3DXVec3Dot(&A_axises[2], &B_axises[2]);
+    dotAD[2] = D3DXVec3Dot(&A_axises[2], &distance);
+    absDotAB[2][0] = abs(dotAB[2][0]);
+    absDotAB[2][1] = abs(dotAB[2][1]);
+    absDotAB[2][2] = abs(dotAB[2][2]);
+    r = abs(dotAD[2]);
+    r1 = B_extent.x * absDotAB[2][0]
+        + B_extent.y * absDotAB[2][1]
+        + B_extent.z * absDotAB[2][2];
+    r01 = A_extent.z + r1;
+    if (r > r01)
+        return false;
+
+    // b0
+    r = abs(D3DXVec3Dot(&B_axises[0], &distance));
+    r0 = A_extent.x * absDotAB[0][0]
+        + A_extent.y * absDotAB[1][0]
+        + A_extent.z * absDotAB[2][0];
+    r01 = r0 + B_extent.x;
+    if (r > r01)
+        return false;
+
+    // b1
+    r = abs(D3DXVec3Dot(&B_axises[1], &distance));
+    r0 = A_extent.x * absDotAB[0][1]
+        + A_extent.y * absDotAB[1][1]
+        + A_extent.z * absDotAB[2][1];
+    r01 = r0 + B_extent.y;
+    if (r > r01)
+        return false;
+
+    // b2
+    r = abs(D3DXVec3Dot(&B_axises[2], &distance));
+    r0 = A_extent.x * absDotAB[0][2]
+        + A_extent.y * absDotAB[1][2]
+        + A_extent.z * absDotAB[2][2];
+    r01 = r0 + B_extent.z;
+    if (r > r01)
+        return false;
+
+    // a0 x b0
+    r = abs(dotAD[2] * dotAB[1][0] - dotAD[1] * dotAB[2][0]);
+    r0 = A_extent.y * absDotAB[2][0]
+        + A_extent.z * absDotAB[1][0];
+    r1 = B_extent.y * absDotAB[0][2]
+        + B_extent.z * absDotAB[0][1];
+    r01 = r0 + r1;
+    if (r > r01)
+        return false;
+
+    // a0 x b1
+    r = abs(dotAD[2] * dotAB[1][1] - dotAD[1] * dotAB[2][1]);
+    r0 = A_extent.y * absDotAB[2][1]
+        + A_extent.z * absDotAB[1][1];
+    r1 = B_extent.x * absDotAB[0][2]
+        + B_extent.z * absDotAB[0][0];
+    r01 = r0 + r1;
+    if (r > r01)
+        return false;
+
+    // a0 x b2
+    r = abs(dotAD[2] * dotAB[1][2] - dotAD[1] * dotAB[2][2]);
+    r0 = A_extent.y * absDotAB[2][2]
+        + A_extent.z * absDotAB[1][2];
+    r1 = B_extent.x * absDotAB[0][1]
+        + B_extent.y * absDotAB[0][0];
+    r01 = r0 + r1;
+    if (r > r01)
+        return false;
+
+    // a1 x b0
+    r = abs(dotAD[0] * dotAB[2][0] - dotAD[2] * dotAB[0][0]);
+    r0 = A_extent.x * absDotAB[2][0]
+        + A_extent.z * absDotAB[0][0];
+    r1 = B_extent.y * absDotAB[1][2]
+        + B_extent.z * absDotAB[1][1];
+    r01 = r0 + r1;
+    if (r > r01)
+        return false;
+
+    // a1 x b1
+    r = abs(dotAD[0] * dotAB[2][1] - dotAD[2] * dotAB[0][1]);
+    r0 = A_extent.x * absDotAB[2][1]
+        + A_extent.z * absDotAB[0][1];
+    r1 = B_extent.x * absDotAB[1][2]
+        + B_extent.z * absDotAB[1][0];
+    r01 = r0 + r1;
+    if (r > r01)
+        return false;
+
+    // a1 x b2
+    r = abs(dotAD[0] * dotAB[2][2] - dotAD[2] * dotAB[0][2]);
+    r0 = A_extent.x * absDotAB[2][2]
+        + A_extent.z * absDotAB[0][2];
+    r1 = B_extent.x * absDotAB[1][1]
+        + B_extent.y * absDotAB[1][0];
+    r01 = r0 + r1;
+    if (r > r01)
+        return false;
+
+    // a2 x b0
+    r = abs(dotAD[1] * dotAB[0][0] - dotAD[0] * dotAB[1][0]);
+    r0 = A_extent.x * absDotAB[1][0]
+        + A_extent.y * absDotAB[0][0];
+    r1 = B_extent.y * absDotAB[2][2]
+        + B_extent.z * absDotAB[2][1];
+    r01 = r0 + r1;
+    if (r > r01)
+        return false;
+
+    // a2 x b1
+    r = abs(dotAD[1] * dotAB[0][1] - dotAD[0] * dotAB[1][1]);
+    r0 = A_extent.x * absDotAB[1][1]
+        + A_extent.y * absDotAB[0][1];
+    r1 = B_extent.x * absDotAB[2][2]
+        + B_extent.z * absDotAB[2][0];
+    r01 = r0 + r1;
+    if (r > r01)
+        return false;
+
+    // a2 x b2
+    r = abs(dotAD[1] * dotAB[0][2] - dotAD[0] * dotAB[1][2]);
+    r0 = A_extent.x * absDotAB[1][2]
+        + A_extent.y * absDotAB[0][2];
+    r1 = B_extent.x * absDotAB[2][1]
+        + B_extent.y * absDotAB[2][0];
+    r01 = r0 + r1;
+    if (r > r01)
+        return false;
+
+    return true;
 }

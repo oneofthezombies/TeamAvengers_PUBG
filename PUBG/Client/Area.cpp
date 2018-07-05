@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "IScene.h"
 
-
-
 Area::Area()
 {
 }
@@ -11,50 +9,44 @@ Area::~Area()
 {
 }
 
-void Area::SetCurrentCellSpaceIndex(size_t index)
-{
-    m_currentCellSpaceIndex = index;
-}
-bool checkValid(int v)
-{
-    if (-1 < v&&v < CellSpace::DIMENSION)
-        return true;
-    return false;
-}
-void Area::GetNearArea(size_t index)
+void Area::Create(const std::size_t index)
 {
     vector<CellSpace>* CS = CurrentScene()()->GetTotalCellSpace();
 
     vector<D3DXVECTOR2> p;
     p.push_back(D3DXVECTOR2(-1, -1));
-    p.push_back(D3DXVECTOR2( 0, -1));
-    p.push_back(D3DXVECTOR2( 1, -1));
-    p.push_back(D3DXVECTOR2(-1,  0));
-    p.push_back(D3DXVECTOR2( 1,  0));
-    p.push_back(D3DXVECTOR2(-1,  1));
-    p.push_back(D3DXVECTOR2( 0,  1));
-    p.push_back(D3DXVECTOR2( 1,  1));
+    p.push_back(D3DXVECTOR2(0, -1));
+    p.push_back(D3DXVECTOR2(1, -1));
 
-    int col = index /CellSpace::DIMENSION;
+    p.push_back(D3DXVECTOR2(-1, 0));
+    p.push_back(D3DXVECTOR2(1, 0));
+
+    p.push_back(D3DXVECTOR2(-1, 1));
+    p.push_back(D3DXVECTOR2(0, 1));
+    p.push_back(D3DXVECTOR2(1, 1));
+
+    int col = index / CellSpace::DIMENSION;
     int row = index % CellSpace::DIMENSION;
 
-    //for (int i = 0; i < CellSpace::DIMENSION; i++)
-    //{
-    //    for (int j = 0; j < CellSpace::DIMENSION; j++)
-    //    {
-    //        3
+    m_cellspaces.clear();
+    int nRow = 0;
+    int nCol = 0;
+    for (auto& n : p)
+    {
+        nRow = static_cast<int>(n.x) + row;
+        nCol = static_cast<int>(n.y) + col;
+        if (checkValid(nRow) && checkValid(nCol))
+        {
+            m_cellspaces.emplace_back(&CS->at(nRow + nCol * CellSpace::DIMENSION));
+        }
+    }
 
-    //    }
+    m_cellspaces.emplace_back(&CS->at(row + col * CellSpace::DIMENSION));
+}
 
-    //}
-
-    //if (row != 0)
-    //    m_cellspaces.emplace_back(&CS->at(index - 1));
-    //if(CellSpace::DIMENSION-row > 1 )
-
-
-    //m_cellspaces.emplace_back(&CS->at(index));
-    
+bool Area::checkValid(int v)
+{
+    return-1 < v&&v < CellSpace::DIMENSION;
 }
 
 std::vector<IObject*> Area::GetBullets()
@@ -68,9 +60,9 @@ std::vector<IObject*> Area::GetBullets()
     return vBullets;
 }
 
-std::vector<IObject*> Area::GetTerrainFeatures()
+std::vector<TerrainFeature*> Area::GetTerrainFeatures()
 {
-    std::vector<IObject*> vTerrainFeatures;
+    std::vector<TerrainFeature*> vTerrainFeatures;
     for (int i = 0; i < m_cellspaces.size(); i++)
     {
         auto& set = m_cellspaces[i]->pTerrainFeatures;

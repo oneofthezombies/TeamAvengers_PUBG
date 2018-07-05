@@ -21,4 +21,6 @@ public:
     {
         return pEffectMesh;
     }
+
+    BoundingSphere GetBoundingSphere();
 };

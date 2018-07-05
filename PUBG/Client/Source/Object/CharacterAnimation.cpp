@@ -9,7 +9,7 @@ const float CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME = 0.0f;
 const float CharacterAnimation::DEFAULT_POSITION = 0.0f;
 
 CharacterAnimation::CharacterAnimation()
-    : IObject()
+    : IObject(TAG_OBJECT::Idle)
 {
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
     pSkinnedMeshController->SetSkinnedMesh(ResourceInfo::GetCharacterPathFileName());
@@ -296,4 +296,9 @@ bool CharacterAnimation::HasUpperFinishEvent() const
 bool CharacterAnimation::HasLowerFinishEvent() const
 {
     return pSkinnedMeshController->HasFinishEvent();
+}
+
+std::vector<BoundingSphere> CharacterAnimation::GetBoundingSpheres()
+{
+    return pSkinnedMeshController->GetBoundingSpheres();
 }

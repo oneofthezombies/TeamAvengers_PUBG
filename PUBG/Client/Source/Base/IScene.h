@@ -6,6 +6,10 @@ class IObject;
 class DirectionalLight;
 class HeightMap;
 class Area;
+class Bullet;
+class Item;
+class Character;
+class TerrainFeature;
 
 struct BoxColliderInFile
 {
@@ -29,16 +33,15 @@ struct ObjectInFile
 
 struct CellSpace
 {
-    size_t             pIndex;
-    std::set<IObject*> pTerrainFeatures;
-    std::set<IObject*> pBullets;
-    std::set<IObject*> pCharacters;
-    std::set<IObject*> pDoors;
-    std::set<IObject*> pWindows;
-    std::set<IObject*> pItems;
+    size_t                    pIndex;
+    std::set<TerrainFeature*> pTerrainFeatures;
+    std::set<Bullet*>         pBullets;
+    std::set<Character*>      pCharacters;
+    std::set<IObject*>        pDoors;
+    std::set<IObject*>        pWindows;
+    std::set<Item*>           pItems;
 
     static const int DIMENSION = 4;
-
 };
 
 class IScene : public MemoryAllocator
@@ -97,9 +100,6 @@ public:
     std::size_t GetCellIndex(const D3DXVECTOR3& position);
     void MoveCell(OUT std::size_t* currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject* obj);
     bool IsMovable(const D3DXVECTOR3* targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject* obj);
-
-
-
 
     virtual void OnInit() = 0;
 	virtual void OnUpdate() = 0;

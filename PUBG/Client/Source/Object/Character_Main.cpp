@@ -8,12 +8,13 @@
 #include "Item.h"
 #include "ResourceInfo.h"
 #include "ComponentTransform.h"
+#include "TerrainFeature.h"
 
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
 
 Character::Character(const int index)
-    : IObject()
+    : IObject(TAG_OBJECT::Character)
 
     // id
     , m_index(index)
@@ -32,7 +33,7 @@ Character::Character(const int index)
 
     , pTransform(nullptr)
     , pAnimation(nullptr)
-    , m_pRootCharacterPart(nullptr)
+    //, m_pRootCharacterPart(nullptr)
 {
     pTransform = GetTransform();
     pTransform->SetRotation(OFFSET_ROTATION);
@@ -51,8 +52,11 @@ Character::Character(const int index)
 
     setFramePtr();
 
-    m_pRootCharacterPart =
-        new CharacterPart(TAG_COLLIDER_CHARACTER_PART::Head, this);
+    m_characterParts.resize(static_cast<std::size_t>(TAG_COLLIDER_CHARACTER_PART::COUNT));
+    AddPart(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::Head, this));
+
+    for (auto pPart : m_characterParts)
+        m_boundingBoxes.emplace_back(pPart->GetBoundingBox());
 
     subscribeCollisionEvent();
 
@@ -62,11 +66,15 @@ Character::Character(const int index)
         Camera()()->SetTarget(&m_info);
         m_rotationForCamera = Vector3::ZERO;
     }
+
+    auto a = pAnimation->GetBoundingSpheres();
+    m_pBoundingSphere = new BoundingSphere;
+    m_pBoundingSphere->center = a.front().center;
+    m_pBoundingSphere->radius = a.front().radius;
 }
 
 Character::~Character()
 {
-    SAFE_DELETE(m_pRootCharacterPart);
 }
 
 void Character::OnUpdate()
@@ -87,6 +95,7 @@ void Character::updateMine()
     if (!isMine()) return;
 
     const float    dt = Time()()->GetDeltaTime();
+    IScene*        pCurrentScene = CurrentScene()();
     D3DXVECTOR3    pos = pTransform->GetPosition();
     D3DXQUATERNION rot = pTransform->GetRotation();
     D3DXVECTOR3    scl = pTransform->GetScale();
@@ -105,6 +114,7 @@ void Character::updateMine()
 
     //save pos를 저장해 놓고
     //dest pos 로 계 산
+    State dest; // = current
 
     setStance();
     setAttacking();
@@ -141,8 +151,53 @@ void Character::updateMine()
 
     //dest를 갖고 업데이트 
     // 카메라 프러스텀 업데이트 
-    CurrentCamera()()->UpdateFrustumCulling();
+    //CurrentCamera()()->UpdateFrustumCulling();
 
+
+    /////////////////// 
+    dest.cellIndex =  CurrentScene()()->GetCellIndex(dest.position);
+    if (dest.cellIndex != m_cellSpaceIndex)
+        pCurrentScene->m_NearArea.Create(dest.cellIndex);
+    ////////////////////////////
+
+    bool hasCollision = false;
+    BoundingSphere pMyBoundingSphere = GetBoundingSphere()->CopyTo(dest.position);
+    for (auto tf : pCurrentScene->m_NearArea.GetTerrainFeatures())
+    {
+        if (hasCollision) break;
+
+        // 바운딩스피어가 충돌되지 않으면 다음 터레인피처와 충돌을 검사한다.
+        if (!Collision::HasCollision(pMyBoundingSphere, *(tf->GetBoundingSphere()))) continue;
+
+        if (dest.boundingBoxes.empty())
+        {
+            D3DXMatrixTransformation(&dest.transformationMatrix, nullptr, nullptr, nullptr, nullptr, &dest.rotation, &dest.position);
+
+            for (auto bb : GetBoundingBoxes())
+            {
+                dest.boundingBoxes.emplace_back(bb->CopyTo(dest.transformationMatrix));
+            }
+        }
+
+        for (auto& mine : dest.boundingBoxes)
+        {
+            if (hasCollision) break;
+
+            for (auto& others : tf->GetBoundingBoxes())
+            {
+                if (hasCollision) break;
+
+                hasCollision = Collision::HasCollision(mine, *others);
+            }
+        }
+    }
+
+    if (!hasCollision)
+    {
+        // update state
+    }
+
+    
     //CurrentScene()()->m_NearArea.GetNearArea();
 
 

@@ -1,21 +1,22 @@
 #pragma once
-class CellSpace;
+
+struct CellSpace;
+class TerrainFeature;
+
 class Area : public MemoryAllocator
 {
 private:
     std::vector<CellSpace*> m_cellspaces;
-    size_t m_currentCellSpaceIndex;
 
 public:
     Area();
     ~Area();
 
-    void SetCurrentCellSpaceIndex(size_t index);
-    void GetNearArea(size_t index);
+    void Create(const std::size_t index);
 
     std::vector<IObject*> GetBullets();
-    std::vector<IObject*> GetTerrainFeatures();
-
+    std::vector<TerrainFeature*> GetTerrainFeatures();
+    bool checkValid(int v);
 };
 
 //dest´Â near area pos ÃÑ 9Ä­,

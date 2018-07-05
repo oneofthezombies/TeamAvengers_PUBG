@@ -9,8 +9,8 @@ class EffectMeshRenderer;
 class TerrainFeature : public IObject
 {
 private:
-    vector<BoxCollider*> m_colliders;
     EffectMeshRenderer*  pEffectMeshRenderer;
+    BoundingSphere       m_boundingSphereTerrainFeature;
 
 public:
              TerrainFeature(
@@ -23,6 +23,7 @@ public:
 
     virtual void OnUpdate() override;
     virtual void OnRender() override;
+    virtual BoundingSphere* GetBoundingSphere() override;
 
     void AddBoxCollider(const D3DXMATRIX&  transformationMatrix);
 };
