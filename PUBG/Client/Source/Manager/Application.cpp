@@ -12,6 +12,7 @@ Application::~Application()
 
 void Application::Init()
 {
+    srand(GetTickCount());
 	DeviceMgr()()->Init();
     Resource ()()->Init();
     UI       ()()->Init();

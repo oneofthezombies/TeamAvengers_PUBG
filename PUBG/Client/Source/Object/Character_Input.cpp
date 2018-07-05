@@ -327,19 +327,40 @@ void Character::setPunch()
     if (m_attacking == Attacking::Unarmed && m_currentOnceKey._LButton)
     {
         TAG_ANIM_CHARACTER animTag = TAG_ANIM_CHARACTER::COUNT;
+        int randomNum = rand() % 3;
+        cout << "radomNum: " << randomNum << endl;
         //ÁÖ¸ÔÀ» ÈÖµÎ¸¥´Ù
         if (m_stance == Stance::Stand)
         {
-            animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_1;
-            //animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_2;
-            //animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_3;
+            switch (randomNum)
+            {
+            case 0:
+                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_1;
+                break;
+            case 1:
+                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_2;
+                break;
+            case 2:
+                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_3;
+                break;
+            }
         }
         else if (m_stance == Stance::Crouch)
-        {       
-            animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_1;
-            //animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_2;
-            //animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_3;
+        {    
+            switch (randomNum)
+            {
+            case 0:
+                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_1;
+                break;
+            case 1:
+                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_2;
+                break;
+            case 2:
+                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_3;
+                break;
+            }
         }
+        assert((animTag != TAG_ANIM_CHARACTER::COUNT) && " Character::setPunch(), animTag is COUNT");
 
         pAnimation->Set(
             CharacterAnimation::BodyPart::UPPER,
