@@ -8,7 +8,7 @@ void Character::setAttacking() //Num1, Num2, X
 {
     TotalInventory& inven = m_totalInventory;
 
-    if (pAnimation->HasUpperFinishEvent()) return;
+    //if (pAnimation->HasUpperFinishEvent()) return; //애니메이션 체인 관련 
 
     if (m_currentOnceKey._Num1)
     {
@@ -27,6 +27,7 @@ void Character::setAttacking() //Num1, Num2, X
             else if (m_attacking == Attacking::Rifle) //보조무기를 해제하고, 주무기를 장착한다
             {
                 TAG_ANIM_CHARACTER temp = TAG_ANIM_CHARACTER::COUNT;
+
                 if (m_stance == Stance::Stand)
                     temp = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static;
                 else if (m_stance == Stance::Prone)
@@ -45,6 +46,7 @@ void Character::setAttacking() //Num1, Num2, X
                     inven.m_pWeaponSecondary = inven.m_pHand;
                     inven.m_pHand = inven.m_pWeaponPrimary;
                     inven.m_pWeaponPrimary = nullptr;
+
                     setRifleOnHand(TAG_RIFLE::Primary);
                 });
             }
@@ -66,11 +68,13 @@ void Character::setAttacking() //Num1, Num2, X
 
                 inven.m_pHand = inven.m_pWeaponSecondary;
                 inven.m_pWeaponSecondary = nullptr;
+
                 setRifleOnHand(TAG_RIFLE::Secondary);
             }
             else if (m_attacking == Attacking::Rifle) //주무기를 등짝에 붙이고 보조무기를 손에 든다
             {
                 TAG_ANIM_CHARACTER temp = TAG_ANIM_CHARACTER::COUNT;
+
                 if (m_stance == Stance::Stand)
                     temp = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static;
                 else if (m_stance == Stance::Prone)
@@ -89,6 +93,7 @@ void Character::setAttacking() //Num1, Num2, X
                     inven.m_pWeaponPrimary = inven.m_pHand;
                     inven.m_pHand = inven.m_pWeaponSecondary;
                     inven.m_pWeaponSecondary = nullptr;
+
                     setRifleOnHand(TAG_RIFLE::Secondary);
                 });
             }
@@ -199,13 +204,16 @@ void Character::setReload()
     {
         if (inven.m_pHand)
         {
-            TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic(); //총 종류
-            TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag); //탄약 종류
+            TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();          //총 종류
+            TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag);           //탄약 종류
             int magSize = static_cast<int>(ItemInfo::GetMagazineSize(tag)); //장탄 수
-            int numBulletCurrentLoad = inven.m_pHand->GetNumBullet(); //장전되어있는 총알 수
+            int numBulletCurrentLoad = inven.m_pHand->GetNumBullet();       //장전되어있는 총알 수
 
             if (numBulletCurrentLoad == magSize) //이미 가득 장전 되어있는 경우
+            {
+                cout << "이미 가득차있다!!" << endl;
                 return;
+            }
 
             //총에 알맞는 총알이 있는지 확인해서 장전
             auto it = inven.m_mapInventory.find(ammoType);
@@ -218,10 +226,17 @@ void Character::setReload()
                 cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
                 cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
 
+                if (numBulletInInventory == 0)
+                {
+                    cout << "인벤토리에 더이상 총알이 없어 ㅠㅠ" << endl;
+                    return;
+                }
+
                 inven.m_numReload = 0;
                 if (numBulletInInventory >= numBulletNeedReload)
                 {
-                    inven.m_pHand->SetNumBullet(numBulletNeedReload);
+                    int numBullet = inven.m_pHand->GetNumBullet();
+                    inven.m_pHand->SetNumBullet(numBullet + numBulletNeedReload);
                     (*it).second.back()->SetCount(numBulletInInventory - numBulletNeedReload);
 
                     inven.m_numReload = numBulletNeedReload;
@@ -233,7 +248,8 @@ void Character::setReload()
 
                     inven.m_numReload = numBulletInInventory;
                 }
-                cout << "장정된 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
+                cout << "장전한 총알 개수: " << inven.m_numReload << "\n";
+                cout << "총에 장전된 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
                 cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
 
                 /*
