@@ -144,31 +144,6 @@ void Character::updateMine()
         }
     }
 
-    //sh tset
-    if (Input()()->IsOnceKeyDown('B'))
-    {
-        Sound()()->SetPosition(D3DXVECTOR3(0, 0, 100));
-        Sound()()->SetVolume(0.8f);
-        Sound()()->Play(TAG_SOUND::Kar98_NormalShoot);
-    }
-    
-    if (Input()()->IsOnceKeyDown('N'))
-    {
-        //Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
-        //Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)));
-        Sound()()->addPlay(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)), 5.0f, FMOD_3D);
-    }
-    
-    //float test_distance = 777;
-    //float ddd = test_distance / 340;
-    //
-    //float lastTime_2 = Time()()->GetDeltaTime();
-    //float ingTime = Time()()->GetDeltaTime() - lastTime_2;
-    //if (ddd <= ingTime)
-    //{
-    //    Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
-    //}
-
     Sound()()->Listen(pos, getForward());
 
     if (Input()()->IsOnceKeyDown(VK_UP))
