@@ -39,29 +39,29 @@ public:
 
     struct TotalInventory
     {
-        Item* m_hand; //손에 든 무기
+        Item* m_pHand; //손에 든 무기
 
         static const float DEFAULT_CAPACITY;
 
         map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
 
         //헬멧, 가방, 방탄조끼용
-        Item* m_equipArmor;
-        Item* m_equipBack;
-        Item* m_equipHead;
+        Item* m_pEquipArmor;
+        Item* m_pEquipBack;
+        Item* m_pEquipHead;
 
         //무기용
-        Item* m_weaponPrimary;
-        Item* m_weaponSecondary;
-        //Weapon* m_weaponPistol;
-        //Weapon* m_weaponMelee;
-        //Weapon* m_weaponThrowable;
+        Item* m_pWeaponPrimary;
+        Item* m_pWeaponSecondary;
+        //Weapon* m_pWeaponPistol;
+        //Weapon* m_pWeaponMelee;
+        //Weapon* m_pWeaponThrowable;
         
         float m_bulletFireCoolDown; //총알 발사는 지정된 쿨타임 시간이 지나야 다시 발사가능
         float m_capacity;
         int   m_numReload;
 
-        Item* m_tempSaveWeaponForX;
+        Item* pTempSaveWeaponForX;
 
          TotalInventory();
         ~TotalInventory();
@@ -98,6 +98,7 @@ public:
         bool _X;
         bool _C;
         bool _R;
+        bool _F;
         bool _Space;
         bool _Num1; 
         bool _Num2; 

@@ -13,22 +13,28 @@ void Character::setAttacking() //Num1, Num2, X
     if (m_currentOnceKey._Num1)
     {
         cout << "Num1" << endl;
-        if (inven.m_weaponPrimary)
+        if (inven.m_pWeaponPrimary)
         {
             if (m_attacking == Attacking::Unarmed)    //주무기를 장착한다
             {
                 m_attacking = Attacking::Rifle;
 
-                inven.m_hand = inven.m_weaponPrimary;
-                inven.m_weaponPrimary = nullptr;
+                inven.m_pHand = inven.m_pWeaponPrimary;
+                inven.m_pWeaponPrimary = nullptr;
 
                 setRifleOnHand(TAG_RIFLE::Primary);
             }
             else if (m_attacking == Attacking::Rifle) //보조무기를 해제하고, 주무기를 장착한다
             {
+                TAG_ANIM_CHARACTER temp = TAG_ANIM_CHARACTER::COUNT;
+                if (m_stance == Stance::Stand)
+                    temp = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static;
+                else if (m_stance == Stance::Prone)
+                    temp = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot;
+
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
-                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static,
+                    temp,
                     false, 
                     CharacterAnimation::DEFAULT_BLENDING_TIME,
                     CharacterAnimation::DEFAULT_NEXT_WEIGHT,
@@ -36,9 +42,9 @@ void Character::setAttacking() //Num1, Num2, X
                     CharacterAnimation::DEFAULT_POSITION,
                     [this, &inven]()
                 {
-                    inven.m_weaponSecondary = inven.m_hand;
-                    inven.m_hand = inven.m_weaponPrimary;
-                    inven.m_weaponPrimary = nullptr;
+                    inven.m_pWeaponSecondary = inven.m_pHand;
+                    inven.m_pHand = inven.m_pWeaponPrimary;
+                    inven.m_pWeaponPrimary = nullptr;
                     setRifleOnHand(TAG_RIFLE::Primary);
                 });
             }
@@ -48,24 +54,31 @@ void Character::setAttacking() //Num1, Num2, X
             }
         }
     }
-    else if (m_currentOnceKey._Num2)
+    
+    if (m_currentOnceKey._Num2)
     {
         cout << "Num2" << endl;
-        if (inven.m_weaponSecondary)
+        if (inven.m_pWeaponSecondary)
         {
             if (m_attacking == Attacking::Unarmed)
             {
                 m_attacking = Attacking::Rifle;
 
-                inven.m_hand = inven.m_weaponSecondary;
-                inven.m_weaponSecondary = nullptr;
+                inven.m_pHand = inven.m_pWeaponSecondary;
+                inven.m_pWeaponSecondary = nullptr;
                 setRifleOnHand(TAG_RIFLE::Secondary);
             }
             else if (m_attacking == Attacking::Rifle) //주무기를 등짝에 붙이고 보조무기를 손에 든다
             {
+                TAG_ANIM_CHARACTER temp = TAG_ANIM_CHARACTER::COUNT;
+                if (m_stance == Stance::Stand)
+                    temp = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static;
+                else if (m_stance == Stance::Prone)
+                    temp = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot;
+
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
-                    TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static,
+                    temp,
                     false, 
                     CharacterAnimation::DEFAULT_BLENDING_TIME,
                     CharacterAnimation::DEFAULT_NEXT_WEIGHT,
@@ -73,9 +86,9 @@ void Character::setAttacking() //Num1, Num2, X
                     CharacterAnimation::DEFAULT_POSITION,
                     [this, &inven]()
                 {
-                    inven.m_weaponPrimary = inven.m_hand;
-                    inven.m_hand = inven.m_weaponSecondary;
-                    inven.m_weaponSecondary = nullptr;
+                    inven.m_pWeaponPrimary = inven.m_pHand;
+                    inven.m_pHand = inven.m_pWeaponSecondary;
+                    inven.m_pWeaponSecondary = nullptr;
                     setRifleOnHand(TAG_RIFLE::Secondary);
                 });
             }
@@ -85,16 +98,17 @@ void Character::setAttacking() //Num1, Num2, X
             }
         }
     }
-    else if (m_currentOnceKey._X)
+    
+    if (m_currentOnceKey._X)
     {
         cout << "X" << endl;
         //무기가 주무기냐, 보조무기냐에 따라서 다른 애니메이션을 실행한다. 우선 QBZ 주무기 Kar98k 보조무기
         //등에 부착한다
-        if (inven.m_hand)
+        if (inven.m_pHand)
         {
             m_attacking = Attacking::Unarmed;
-            inven.m_tempSaveWeaponForX = inven.m_hand;
-            TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic();
+            inven.pTempSaveWeaponForX = inven.m_pHand;
+            TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();
 
             if (tag == TAG_RES_STATIC::QBZ)
                 setRifleOnBody(TAG_RIFLE::Primary);
@@ -104,21 +118,21 @@ void Character::setAttacking() //Num1, Num2, X
         //손에 무기를 들고 있지않는데 X버튼을 누른다면, 이전에 장착했던 무기를 다시 손에 든다
         else
         {
-            if (inven.m_tempSaveWeaponForX)
+            if (inven.pTempSaveWeaponForX)
             {
                 m_attacking = Attacking::Rifle;
-                inven.m_hand = inven.m_tempSaveWeaponForX;
-                inven.m_tempSaveWeaponForX = nullptr;
-                TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic();
+                inven.m_pHand = inven.pTempSaveWeaponForX;
+                inven.pTempSaveWeaponForX = nullptr;
+                TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();
 
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
-                    inven.m_weaponPrimary = nullptr;
+                    inven.m_pWeaponPrimary = nullptr;
                     setRifleOnHand(TAG_RIFLE::Primary);
                 }
                 else if (tag == TAG_RES_STATIC::Kar98k)
                 {
-                    inven.m_weaponSecondary = nullptr;
+                    inven.m_pWeaponSecondary = nullptr;
                     setRifleOnHand(TAG_RIFLE::Secondary);                
                 }
             }
@@ -149,7 +163,8 @@ void Character::setStance() //C, Z
             setProneTo(m_stance);
         }
     }
-    else if (m_currentOnceKey._Z)
+    
+    if (m_currentOnceKey._Z)
     {
         cout << "Z" << endl;
         //서 있으면 엎드리고, 쭈그려있으면 엎드리고, 엎드려있으면 선다
@@ -182,12 +197,12 @@ void Character::setReload()
     //3. 갖고있는 총알 개수 내에서 (장탄수-현재 장전된 총알개수) 만큼 총알을 장전해준다
     if (m_currentOnceKey._R)
     {
-        if (inven.m_hand)
+        if (inven.m_pHand)
         {
-            TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic(); //총 종류
+            TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic(); //총 종류
             TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag); //탄약 종류
             int magSize = static_cast<int>(ItemInfo::GetMagazineSize(tag)); //장탄 수
-            int numBulletCurrentLoad = inven.m_hand->GetNumBullet(); //장전되어있는 총알 수
+            int numBulletCurrentLoad = inven.m_pHand->GetNumBullet(); //장전되어있는 총알 수
 
             if (numBulletCurrentLoad == magSize) //이미 가득 장전 되어있는 경우
                 return;
@@ -206,19 +221,19 @@ void Character::setReload()
                 inven.m_numReload = 0;
                 if (numBulletInInventory >= numBulletNeedReload)
                 {
-                    inven.m_hand->SetNumBullet(numBulletNeedReload);
+                    inven.m_pHand->SetNumBullet(numBulletNeedReload);
                     (*it).second.back()->SetCount(numBulletInInventory - numBulletNeedReload);
 
                     inven.m_numReload = numBulletNeedReload;
                 }
                 else
                 {
-                    inven.m_hand->SetNumBullet(numBulletInInventory);
+                    inven.m_pHand->SetNumBullet(numBulletInInventory);
                     (*it).second.back()->SetCount(0);
 
                     inven.m_numReload = numBulletInInventory;
                 }
-                cout << "장정된 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
+                cout << "장정된 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
                 cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
 
                 /*
@@ -283,7 +298,7 @@ void Character::setReload()
                 //do nothing
             }
         }
-        else //inven.m_hand == nullptr
+        else //inven.m_pHand == nullptr
         {
             cout << "총을 장착해줘" << endl;
             //do nothing
@@ -399,8 +414,8 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_POSITION,
                 [this, &inven]()
             {
-                inven.m_weaponPrimary = inven.m_hand;
-                inven.m_hand = nullptr;
+                inven.m_pWeaponPrimary = inven.m_pHand;
+                inven.m_pHand = nullptr;
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -419,8 +434,8 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_POSITION,
                 [this, &inven]()
             {
-                inven.m_weaponPrimary = inven.m_hand;
-                inven.m_hand = nullptr;
+                inven.m_pWeaponPrimary = inven.m_pHand;
+                inven.m_pHand = nullptr;
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -443,8 +458,8 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_POSITION,
                 [this, &inven]()
             {
-                inven.m_weaponSecondary = inven.m_hand;
-                inven.m_hand = nullptr;
+                inven.m_pWeaponSecondary = inven.m_pHand;
+                inven.m_pHand = nullptr;
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -463,8 +478,8 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_POSITION,
                 [this, &inven]()
             {
-                inven.m_weaponSecondary = inven.m_hand;
-                inven.m_hand = nullptr;
+                inven.m_pWeaponSecondary = inven.m_pHand;
+                inven.m_pHand = nullptr;
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,

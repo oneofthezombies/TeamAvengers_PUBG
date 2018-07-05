@@ -62,6 +62,7 @@ Character::IsPressed::IsPressed()
     , _X(false)
     , _C(false)
     , _R(false)
+    , _F(false)
     , _Space(false)
     , _Num1(false)
     , _Num2(false)
@@ -163,6 +164,7 @@ void Character::handleInput(IsPressed* OutIsPressed)
     OutIsPressed->_X            = pInput->IsOnceKeyDown('X');
     OutIsPressed->_C            = pInput->IsOnceKeyDown('C');
     OutIsPressed->_R            = pInput->IsOnceKeyDown('R');
+    OutIsPressed->_F            = pInput->IsOnceKeyDown('F');
     OutIsPressed->_Space        = pInput->IsOnceKeyDown(VK_SPACE);
     OutIsPressed->_Num1         = pInput->IsOnceKeyDown('1');
     OutIsPressed->_Num2         = pInput->IsOnceKeyDown('2');
@@ -383,16 +385,16 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 void Character::rifleShooting()
 {
     auto& inven = m_totalInventory;
-    inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_hand->GetTagResStatic());
+    inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_pHand->GetTagResStatic());
 
-    int numBullet = inven.m_hand->GetNumBullet();
-    inven.m_hand->SetNumBullet(--numBullet);
-    cout << "ÃÑ¿¡ ³²¾ÆÀÖ´Â ÃÑ¾Ë °³¼ö: " << inven.m_hand->GetNumBullet() << "\n";
+    int numBullet = inven.m_pHand->GetNumBullet();
+    inven.m_pHand->SetNumBullet(--numBullet);
+    cout << "ÃÑ¿¡ ³²¾ÆÀÖ´Â ÃÑ¾Ë °³¼ö: " << inven.m_pHand->GetNumBullet() << "\n";
 
     //Goal : get Fire starting position , get fire direction
-    inven.m_hand->UpdateModel(); //update to get position of frame "gun_bolt" 
+    inven.m_pHand->UpdateModel(); //update to get position of frame "gun_bolt" 
     D3DXMATRIX mat =
-        inven.m_hand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
+        inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
         * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
         * GetTransform()->GetTransformationMatrix();    //character world matrix
     
@@ -405,7 +407,7 @@ void Character::rifleShooting()
     //-------------------------
 
 
-    switch (inven.m_hand->GetTagResStatic())
+    switch (inven.m_pHand->GetTagResStatic())
     {
     case TAG_RES_STATIC::QBZ:
         BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_COLLISION::Impassable);
