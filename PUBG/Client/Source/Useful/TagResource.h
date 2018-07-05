@@ -185,12 +185,8 @@ enum class TAG_RES_ANIM_CHARACTER
 //3. 무기를 들고있을 때 애니메이션
     Rifle_Transition,
 
-    Rifle_Stand_SecondarySlot_OnHand,
-    Rifle_Stand_PrimarySlot_OnHand,
-    Rifle_Prone_SecondarySlot_OnHand,
-    Rifle_Prone_PrimarySlot_OnHand,
-
     Rifle_OnBody,
+    Rifle_OnHand,
 
     Rifle_Locomotion_Stand,
     Rifle_Locomotion_Prone,

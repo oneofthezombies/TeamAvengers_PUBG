@@ -606,24 +606,12 @@ pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_CHARACTER 
                 fileName = "Rifle_Transition";
                 break;
 
-            case TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand:
-                fileName = "Rifle_Stand_SecondarySlot_OnHand";
-                break;
-
-            case TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand:
-                fileName = "Rifle_Stand_PrimarySlot_OnHand";
-                break;
-
-            case TAG_RES_ANIM_CHARACTER::Rifle_Prone_SecondarySlot_OnHand:
-                fileName = "Rifle_Prone_SecondarySlot_OnHand";
-                break;
-
-            case TAG_RES_ANIM_CHARACTER::Rifle_Prone_PrimarySlot_OnHand:
-                fileName = "Rifle_Prone_PrimarySlot_OnHand";
-                break;
-
             case TAG_RES_ANIM_CHARACTER::Rifle_OnBody:
                 fileName = "Rifle_OnBody";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_OnHand:
+                fileName = "Rifle_OnHand";
                 break;
 
             case TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand:

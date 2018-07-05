@@ -50,10 +50,7 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_PrimarySlot_OnHand);
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_SecondarySlot_OnHand);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_OnHand);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
