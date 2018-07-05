@@ -5,6 +5,8 @@
 
 const float CharacterAnimation::DEFAULT_BLENDING_TIME = 0.3f;
 const float CharacterAnimation::DEFAULT_NEXT_WEIGHT = 0.0f;
+const float CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME = 0.0f;
+const float CharacterAnimation::DEFAULT_POSITION = 0.0f;
 
 CharacterAnimation::CharacterAnimation()
     : IObject()
@@ -28,6 +30,7 @@ CharacterAnimation::CharacterAnimation()
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_hand_r"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_hand_l"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("spine_01"));
+    //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("spine_02"));
     pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("thigh_l"));
     pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("thigh_r"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("skirt_l_01"));
@@ -89,7 +92,8 @@ void CharacterAnimation::Set(
     const TAG_ANIM_CHARACTER tag,
     const bool isBlend,
     const float blendingTime,
-    const float nextWeight)
+    const float nextWeight,
+    const float position)
 {
     if (part == BodyPart::UPPER)
     {
@@ -98,7 +102,9 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            blendingTime, nextWeight);
+            blendingTime, 
+            nextWeight,
+            position);
     }
     else if (part == BodyPart::LOWER)
     {
@@ -107,7 +113,9 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            blendingTime, nextWeight);
+            blendingTime, 
+            nextWeight,
+            position);
     }
     else if (part == BodyPart::BOTH)
     {
@@ -116,76 +124,29 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            blendingTime, nextWeight);
+            blendingTime, 
+            nextWeight,
+            position);
 
         pSkinnedMeshController->SetAnimation(
             false,
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            blendingTime, nextWeight);
+            blendingTime, 
+            nextWeight,
+            position);
     }
 }
 
 void CharacterAnimation::Set(
-    const BodyPart part,
-    const TAG_ANIM_CHARACTER tag,
-    const bool isBlend,
-    const float loopEventPeriod,
-    const std::function<void()>& loopEvent)
-{
-    if (part == BodyPart::UPPER)
-    {
-        pSkinnedMeshController->SetAnimation(
-            true,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
-            isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
-            loopEventPeriod,
-            loopEvent);
-    }
-    else if (part == BodyPart::LOWER)
-    {
-        pSkinnedMeshController->SetAnimation(
-            false,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
-            isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
-            loopEventPeriod,
-            loopEvent);
-    }
-    else if (part == BodyPart::BOTH)
-    {
-        pSkinnedMeshController->SetAnimation(
-            true,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
-            isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
-            loopEventPeriod,
-            loopEvent);
-
-        pSkinnedMeshController->SetAnimation(
-            false,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
-            isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
-            loopEventPeriod,
-            loopEvent);
-    }
-}
-
-void CharacterAnimation::Set(
-    const BodyPart part,
-    const TAG_ANIM_CHARACTER tag,
-    const bool isBlend,
+    const BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight,
+    const float position,
+    const float finishEventAgoTime, 
     const std::function<void()>& finishEvent)
 {
     if (part == BodyPart::UPPER)
@@ -195,8 +156,10 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
             finishEvent);
     }
     else if (part == BodyPart::LOWER)
@@ -206,8 +169,10 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
             finishEvent);
     }
     else if (part == BodyPart::BOTH)
@@ -217,8 +182,10 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
             finishEvent);
 
         pSkinnedMeshController->SetAnimation(
@@ -226,18 +193,24 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
             finishEvent);
     }
 }
 
 void CharacterAnimation::Set(
-    const BodyPart part,
-    const TAG_ANIM_CHARACTER tag,
-    const bool isBlend,
-    const float loopEventPeriod,
-    const std::function<void()>& loopEvent,
+    const BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight,
+    const float position,
+    const float loopEventPeriod, 
+    const std::function<void()>& loopEvent, 
+    const float finishEventAgoTime, 
     const std::function<void()>& finishEvent)
 {
     if (part == BodyPart::UPPER)
@@ -247,10 +220,12 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
+            blendingTime,
+            nextWeight,
+            position,
             loopEventPeriod,
             loopEvent,
+            finishEventAgoTime,
             finishEvent);
     }
     else if (part == BodyPart::LOWER)
@@ -260,10 +235,12 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
+            blendingTime,
+            nextWeight,
+            position,
             loopEventPeriod,
             loopEvent,
+            finishEventAgoTime,
             finishEvent);
     }
     else if (part == BodyPart::BOTH)
@@ -273,10 +250,12 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
+            blendingTime,
+            nextWeight,
+            position,
             loopEventPeriod,
             loopEvent,
+            finishEventAgoTime,
             finishEvent);
 
         pSkinnedMeshController->SetAnimation(
@@ -284,10 +263,12 @@ void CharacterAnimation::Set(
             TagAnimation::GetString(tag),
             TagAnimation::GetSpeed(tag),
             isBlend,
-            DEFAULT_BLENDING_TIME,
-            DEFAULT_NEXT_WEIGHT,
+            blendingTime,
+            nextWeight,
+            position,
             loopEventPeriod,
             loopEvent,
+            finishEventAgoTime,
             finishEvent);
     }
 }

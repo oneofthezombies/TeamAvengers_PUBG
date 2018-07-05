@@ -543,10 +543,6 @@ pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_CHARACTER 
             case TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character_FPP:
                 fileName = "Weapon_Kar98k_Character_FPP";
                 break;
-
-            case TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test:
-                fileName = "Weapon_Kar98k_Reload_Test";
-                break;
             }
 
             //2. 무기를 들고있지 않을 때 캐릭터 애니메이션

@@ -1,5 +1,7 @@
 #pragma once
 
+#define CellSpaceDim 4
+
 class IObject;
 class DirectionalLight;
 class HeightMap;
@@ -20,8 +22,21 @@ struct ObjectInFile
     D3DXVECTOR3    m_scale;
 
     std::vector<BoxColliderInFile> m_boxColliders;
-
+    
     ObjectInFile();
+};
+
+struct CellSpace
+{
+    size_t             pIndex;
+    std::set<IObject*> pTerrainFeatures;
+    std::set<IObject*> pBullets;
+    std::set<IObject*> pCharacters;
+    std::set<IObject*> pDoors;
+    std::set<IObject*> pWindows;
+    std::set<IObject*> pItems;
+
+    CellSpace(size_t index);
 };
 
 class IScene : public MemoryAllocator
@@ -31,9 +46,11 @@ private:
     unordered_map<IObject*, float> m_toDeleteObjects;
 
     DirectionalLight* m_pDirectionalLight;
-    HeightMap* pHeightMap;
 
 protected:
+    HeightMap * pHeightMap;
+    std::vector<CellSpace*> m_pCellSpaces;
+    
     IScene();
 
 	void updateToDeleteObjects();
@@ -60,7 +77,19 @@ public:
 
     void              SetHeightMap(HeightMap* p);
     HeightMap*        GetHeightMap();
-    bool GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight);
+    bool              GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight);
+
+    bool              isOutOfBoundaryBox(const D3DXVECTOR3& pos);
+
+
+    //Cell - Space  Partitioning function
+    void InsertObjIntoCellSpace(TAG_OBJECT tag, size_t index, IN IObject* obj);
+    std::size_t GetCellIndex(const D3DXVECTOR3& position);
+    void MoveCell(OUT std::size_t* currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject* obj);
+    bool IsMovable(const D3DXVECTOR3* targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject* obj);
+
+
+
 
     virtual void OnInit() = 0;
 	virtual void OnUpdate() = 0;

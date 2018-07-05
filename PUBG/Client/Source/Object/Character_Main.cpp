@@ -17,7 +17,7 @@ Character::Character(const int index)
 
     // id
     , m_index(index)
-
+    , m_cellSpaceIndex(0)
     , m_upperAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_rootTransform(1.0f)
@@ -38,7 +38,10 @@ Character::Character(const int index)
     pTransform->SetRotation(OFFSET_ROTATION);
     const float factor(static_cast<float>(m_index + 1) * 100.0f);
     pTransform->SetPosition(D3DXVECTOR3(factor, 0.0f, factor));
-
+    
+    m_cellSpaceIndex = CurrentScene()()->GetCellIndex(pTransform->GetPosition());
+    CurrentScene()()->InsertObjIntoCellSpace(TAG_OBJECT::Character, m_cellSpaceIndex, this);
+    
     pAnimation = new CharacterAnimation;
     AddChild(pAnimation);
     pAnimation->Set(
@@ -85,7 +88,7 @@ void Character::updateMine()
     const float    dt = Time()()->GetDeltaTime();
     D3DXVECTOR3    pos = pTransform->GetPosition();
     D3DXQUATERNION rot = pTransform->GetRotation();
-
+    D3DXVECTOR3    scl = pTransform->GetScale();
     //if (pInput->IsStayKeyDown('3'))
     //{
     //    RotateWaist(-m_WaistRotation.QUANTITY_FACTOR);
@@ -99,15 +102,22 @@ void Character::updateMine()
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
 
+    //save pos를 저장해 놓고
+    //dest pos 로 계 산
+
     setStance();
     setAttacking();
     setReload();
+    ForDebug();
+
+    //setting animation and movements
+    animationMovementControl(&pos, &m_lowerAnimState);
+
+   
 
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
     if (m_savedInput != m_currentStayKey)
     {
-        //setting animation and movements
-        animationMovementControl(&pos, &m_lowerAnimState);
         if (m_lowerAnimState == TAG_ANIM_CHARACTER::COUNT)
         {
             //애니메이션이 없습니다.
@@ -115,43 +125,81 @@ void Character::updateMine()
         else
         {
             pAnimation->Set(
-                CharacterAnimation::BodyPart::LOWER, 
+                CharacterAnimation::BodyPart::BOTH, 
                 m_lowerAnimState);
 
             m_savedInput = m_currentStayKey;
         }
     }
-    else
+    //else
+    //{
+    //    animationMovementControl(&pos, NULL); // NULL means not changing animation
+    //}
+
+    //dest pos,rot 결정
+
+    //dest를 갖고 업데이트 
+    // 카메라 프러스텀 업데이트 
+    CurrentCamera()()->UpdateFrustumCulling();
+    //dest로 업데이트된 frustum의 min max 사각형을 결정한다(함수) >> x z float 총 4개가 나와서 area 결정
+    //(결정된 사각형에서 한셀씩 더 크게)
+
+
+    //bounding sphere(destpos + center, radius)를 구해서(새로운 변수에 넣어놓는다)
+
+    //for 문
+    //area 내에 있는 모든 terrain feature 와  내꺼 bounding sphere랑 collision이 있는것을 찾아낸다
+    /*{
+    
+        
+        //if has sphere collision 
+        {
+            dest tm을 계산, dest bounding box 계산
+
+            this의(캐릭터의 box colliders 들) 과 terrain feature 가 갖고 있는 box collider 들을 계산 
+            if(하나라도 충돌하면 빠져 나온다 -> 플레이어가 움직이지 못하도록)
+
+            else 하나라도 충돌하지 않는다면
+            this를 업데이트 pos = destpos
+            
+        }
+
+    }*/
+    
+    // character update 끝남
+
+
+
+    // 이동가능한치 체크해서 업데이트 하거나 y만되거나 등등
+    //CurrentScene()()->Get
+    IScene* pCurrScene = CurrentScene()();
+    if (pCurrScene->IsMovable(&pos, m_cellSpaceIndex, TAG_OBJECT::Character, this))
     {
-        animationMovementControl(&pos, NULL); // NULL means not changing animation
+        //이곳을 해야 한다
+    }
+    
+    // 이동가능하다면 cellIndex = CurrentScene()()->GetCellIndex(pos);
+    // if (m_cellIndex != cellIndex) 이사하기
+    size_t nextCellSpace = pCurrScene->GetCellIndex(pos);
+    if (m_cellSpaceIndex != nextCellSpace)
+    {
+        pCurrScene->MoveCell(&m_cellSpaceIndex, nextCellSpace,TAG_OBJECT::Character,this);
     }
 
     cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     
-    if (m_currentOnceKey._B)
-    {
-        m_totalInventory.m_hand->ChangeAuto();
-    }
 
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
-    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton 
-        || (m_attacking == Attacking::Rifle && m_totalInventory.m_hand->GetAuto() 
-            && TAG_RES_STATIC::QBZ == m_totalInventory.m_hand->GetTagResStatic() && m_currentStayKey._LButton) )
+    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton)
     {
         if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_hand->GetNumBullet() > 0)
         {
             rifleShooting();
-            backAction(&rot);
             //pistolShooting();?? 이란것도 나중에는 만들겠지요?
         }
-    }
-
-    if (m_backAction.Ing)
-    {
-        backActionFrame();
     }
 
     Sound()()->Listen(pos, getForward());
@@ -162,11 +210,11 @@ void Character::updateMine()
 
     }
 
-    Debug << "current position : " << pos << '\n'
+    Debug << "current        position : " << pos << "\n\n"
         << "current upper animation : "
         << pAnimation->GetUpperAnimationName() << '\n'
         << "current lower animation : "
-        << pAnimation->GetLowerAnimationName() << '\n';
+        << pAnimation->GetLowerAnimationName() << "\n\n";
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -192,7 +240,7 @@ void Character::updateOther()
     //if (uAnimState != pi.m_AnimationIndex)
     //{
     //    m_animState = static_cast<TAG_ANIM_CHARACTER>(pi.m_AnimationIndex);
-    //    m_pAnimation->SetAnimationIndex(pi.m_AnimationIndex, true);
+    //    pAnimation->SetAnimationIndex(pi.m_AnimationIndex, true);
     //}
 
     //tr->SetPosition(pos);

@@ -3,6 +3,12 @@
 enum class TAG_OBJECT
 {
     Idle,
+    TerrainFeature,
+    Bullet,
+    Character,
+    Door,
+    Window,
+    Item,
 };
 
 enum class TAG_COLLISION
@@ -136,6 +142,12 @@ enum class TAG_ITEM_CATEGORY
     Throwable,       //¼ö·ùÅº·ù
     
     Attach           //¹«±â ºÎÂø¹°
+};
+
+enum class TAG_RIFLE
+{
+    Primary,
+    Secondary
 };
 
 enum class TAG_ATTACH_POINT

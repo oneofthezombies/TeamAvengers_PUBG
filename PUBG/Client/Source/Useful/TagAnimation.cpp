@@ -57,36 +57,47 @@ std::string TagAnimation::GetString(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_FPP:              return "Weapon_QBZ_Reload_FPP";
     case TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Prone_FPP:        return "Weapon_QBZ_Reload_Prone_FPP";
             
-    //Weapon_Kar98k_Character(13)
+    //Weapon_Kar98k_Character(17)
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Base:         return "Weapon_Kar98k_Reload_Start_Base";
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Base:          return "Weapon_Kar98k_Reload_Loop_Base";
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Base:           return "Weapon_Kar98k_Reload_End_Base";
+
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Prone:        return "Weapon_Kar98k_Reload_Start_Prone";
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Prone:         return "Weapon_Kar98k_Reload_Loop_Prone";
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Prone:          return "Weapon_Kar98k_Reload_End_Prone";
+
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Base:         return "Weapon_Kar98k_BoltAction_1_Base";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone:        return "Weapon_Kar98k_BoltAction_1_Prone";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_2_Base:         return "Weapon_Kar98k_BoltAction_2_Base";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_2_Prone:        return "Weapon_Kar98k_BoltAction_2_Prone";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_3_Base:         return "Weapon_Kar98k_BoltAction_3_Base";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_3_Prone:        return "Weapon_Kar98k_BoltAction_3_Prone";
+
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_Grip_Carry:                return "Weapon_Kar98k_Grip_Carry";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_Grip_Ready:                return "Weapon_Kar98k_Grip_Ready";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_Grip_Short:                return "Weapon_Kar98k_Grip_Short";
-    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_StartLoopEnd_Base:  return "Weapon_Kar98k_Reload_StartLoopEnd_Base";
-    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_StartLoopEnd_Prone: return "Weapon_Kar98k_Reload_StartLoopEnd_Prone";
+
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Base:           return "Weapon_Kar98k_ReloadFast_Base";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Prone:          return "Weapon_Kar98k_ReloadFast_Prone";
-    //Weapon_Kar98k_Character_FPP(10)
+    
+    //Weapon_Kar98k_Character_FPP(14)
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_FPP:              return "Weapon_Kar98k_BoltAction_1_FPP";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone_FPP:        return "Weapon_Kar98k_BoltAction_1_Prone_FPP";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_2_FPP:              return "Weapon_Kar98k_BoltAction_2_FPP";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_2_Prone_FPP:        return "Weapon_Kar98k_BoltAction_2_Prone_FPP";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_3_FPP:              return "Weapon_Kar98k_BoltAction_3_FPP";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_3_Prone_FPP:        return "Weapon_Kar98k_BoltAction_3_Prone_FPP";
-    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_StartLoopEnd_FPP:       return "Weapon_Kar98k_Reload_StartLoopEnd_FPP";
-    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_StartLoopEnd_Prone_FPP: return "Weapon_Kar98k_Reload_StartLoopEnd_Prone_FPP";
+
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_FPP:              return "Weapon_Kar98k_Reload_Start_FPP";
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_FPP:               return "Weapon_Kar98k_Reload_Loop_FPP";
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_FPP:                return "Weapon_Kar98k_Reload_End_FPP";
+
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Prone_FPP:        return "Weapon_Kar98k_Reload_Start_Prone_FPP";
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Prone_FPP:         return "Weapon_Kar98k_Reload_Loop_Prone_FPP";
+    case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Prone_FPP:          return "Weapon_Kar98k_Reload_End_Prone_FPP";
+
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_FPP:                return "Weapon_Kar98k_ReloadFast_FPP";
     case TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Prone_FPP:          return "Weapon_Kar98k_ReloadFast_Prone_FPP";
-
-    //Weapon_Kar98k_Reload_Test(3)
-    case TAG_ANIM_CHARACTER::Kar98k_Reload_Start:                         return "Kar98k_Reload_Start";
-    case TAG_ANIM_CHARACTER::Kar98k_Reload_Loop:                          return "Kar98k_Reload_Loop";
-    case TAG_ANIM_CHARACTER::Kar98k_Reload_End:                           return "Kar98k_Reload_End";
             
     //2. 무기를 들고있지 않을 때 애니메이션
     //Unarmed_Transition(6) - 자세 간의 전이 ex. 쭈그려있다가 -> 엎드린다

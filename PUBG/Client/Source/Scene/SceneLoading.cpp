@@ -10,7 +10,7 @@ void SceneLoading::Load()
     // set policy 
     // sync  -> on main thread
     // async -> multi threading
-    setPolicy(Resource::Policy::ASYNC);
+    setPolicy(Resource::Policy::SYNC); //ASYNC
 
     // set play mode
     // alone       -> no network
@@ -19,29 +19,48 @@ void SceneLoading::Load()
 
     // load effect meshs
     load(TAG_RES_STATIC::Ammo_5_56mm);
-    load(TAG_RES_STATIC::Ammo_7_62mm);
+    //load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::QBZ);
-    load(TAG_RES_STATIC::Kar98k);
+    //load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
 
-    // load skined meshs
+    //// load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    //load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character
+    /*
+    ForTest는 아래 4개의 X파일들을 합친 것
+    Lobby.X
+    Unarmed_Idle.X
+    Unarmed_Jump.X
+    Unarmed_Locomotion_Stand.X
+    */
     load(TAG_RES_ANIM_CHARACTER::ForTest);
 
     // load animation
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Transition);
+
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
+
+    // has bug
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
+
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
+
+    // has bug
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_PrimarySlot_OnHand);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_SecondarySlot_OnHand);
+
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Reload_Test);
 }
 
 void SceneLoading::load(const TAG_RES_STATIC tag)
@@ -315,6 +334,17 @@ void SceneLoading::addAnimationsToCharacter()
 
     for (auto pR : m_characterAnimationResources)
     {
+        if (!pR.second)
+        {
+            std::string text(std::to_string(pR.first));
+            MessageBoxA(nullptr, text.c_str(), nullptr, MB_OK);
+
+            assert(
+                false && 
+                "SceneLoading::addAnimationsToCharacter(), \
+                 XContainer is null.");
+        }
+
         pAdd = pR.second->m_pSkinnedMesh.second->m_pAnimController;
 
         pOld->CloneAnimationController(
