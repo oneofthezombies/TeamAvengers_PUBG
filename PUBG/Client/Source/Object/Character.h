@@ -7,13 +7,10 @@
 class CharacterAnimation;
 class CharacterPart;
 class Item;
+class Area;
 
 class Character : public IObject
 {
-
-
-
-
 /*****************************************************************************/
 /*                                                                           */
 /*                              nested structure                             */

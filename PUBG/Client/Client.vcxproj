@@ -125,6 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Area.cpp" />
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
@@ -187,6 +188,7 @@
     <None Include="fmod.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Area.h" />
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Object\CharacterAnimation.h" />

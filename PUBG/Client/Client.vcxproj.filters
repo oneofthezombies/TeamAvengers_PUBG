@@ -56,6 +56,7 @@
     <ClCompile Include="Source\Manager\Collision_Core.cpp" />
     <ClCompile Include="Source\Scene\SceneCollisionTest.cpp" />
     <ClCompile Include="Source\Manager\Resource.cpp" />
+    <ClCompile Include="Area.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -113,5 +114,6 @@
     <ClInclude Include="Source\Manager\Collision.h" />
     <ClInclude Include="Source\Scene\SceneCollisionTest.h" />
     <ClInclude Include="Source\Manager\Resource.h" />
+    <ClInclude Include="Area.h" />
   </ItemGroup>
 </Project>

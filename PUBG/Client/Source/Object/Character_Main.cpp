@@ -81,6 +81,7 @@ void Character::OnRender()
 {
 }
 
+
 void Character::updateMine()
 {
     if (!isMine()) return;
@@ -141,6 +142,11 @@ void Character::updateMine()
     //dest를 갖고 업데이트 
     // 카메라 프러스텀 업데이트 
     CurrentCamera()()->UpdateFrustumCulling();
+
+    CurrentScene()()->m_NearArea.GetNearArea();
+
+
+
     //dest로 업데이트된 frustum의 min max 사각형을 결정한다(함수) >> x z float 총 4개가 나와서 area 결정
     //(결정된 사각형에서 한셀씩 더 크게)
 

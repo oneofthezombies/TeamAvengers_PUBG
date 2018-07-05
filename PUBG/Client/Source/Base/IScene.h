@@ -1,10 +1,11 @@
 #pragma once
-
-#define CellSpaceDim 4
+#include "Area.h"
+//#define CellSpaceDim 4
 
 class IObject;
 class DirectionalLight;
 class HeightMap;
+class Area;
 
 struct BoxColliderInFile
 {
@@ -36,6 +37,8 @@ struct CellSpace
     std::set<IObject*> pWindows;
     std::set<IObject*> pItems;
 
+    static const int DIMENSION = 4;
+
     CellSpace(size_t index);
 };
 
@@ -48,8 +51,11 @@ private:
     DirectionalLight* m_pDirectionalLight;
 
 protected:
-    HeightMap * pHeightMap;
-    std::vector<CellSpace*> m_pCellSpaces;
+    HeightMap *             pHeightMap;
+    std::vector<CellSpace>  m_TotalCellSpaces;
+public:
+    Area                    m_NearArea;
+    Area                    m_FrustumArea;
     
     IScene();
 
@@ -83,6 +89,11 @@ public:
 
 
     //Cell - Space  Partitioning function
+
+    std::vector<CellSpace>* GetTotalCellSpace()
+    {
+        return &m_TotalCellSpaces;
+    }
     void InsertObjIntoCellSpace(TAG_OBJECT tag, size_t index, IN IObject* obj);
     std::size_t GetCellIndex(const D3DXVECTOR3& position);
     void MoveCell(OUT std::size_t* currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject* obj);
