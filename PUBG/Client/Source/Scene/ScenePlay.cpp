@@ -145,8 +145,8 @@ void ScenePlay::OnInit()
     SetHeightMap(new HeightMap);
 
     //cell space partitioning
-    m_cellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
-
+    m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
+    m_NearArea.GetNearArea(3);
 
     LoadObjectsFromFile("./Resource/save.txt");
 

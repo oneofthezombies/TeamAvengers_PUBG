@@ -39,7 +39,6 @@ struct CellSpace
 
     static const int DIMENSION = 4;
 
-    CellSpace(size_t index);
 };
 
 class IScene : public MemoryAllocator
@@ -49,7 +48,7 @@ private:
     unordered_map<IObject*, float> m_toDeleteObjects;
 
     DirectionalLight* m_pDirectionalLight;
-
+    
 protected:
     HeightMap *             pHeightMap;
     std::vector<CellSpace>  m_TotalCellSpaces;

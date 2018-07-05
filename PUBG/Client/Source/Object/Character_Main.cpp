@@ -143,7 +143,7 @@ void Character::updateMine()
     // 카메라 프러스텀 업데이트 
     CurrentCamera()()->UpdateFrustumCulling();
 
-    CurrentScene()()->m_NearArea.GetNearArea();
+    //CurrentScene()()->m_NearArea.GetNearArea();
 
 
 

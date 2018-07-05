@@ -1,5 +1,5 @@
 #pragma once
-
+class CellSpace;
 class Area : public MemoryAllocator
 {
 private:

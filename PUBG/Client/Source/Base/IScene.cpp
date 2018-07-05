@@ -310,10 +310,6 @@ bool IScene::isOutOfBoundaryBox(const D3DXVECTOR3& pos)
 
 //------------------ Cell Space Partitioning--------------------
 
-CellSpace::CellSpace(size_t index)
-{
-    pIndex = index;
-}
 
 void IScene::InsertObjIntoCellSpace(TAG_OBJECT tag, size_t index, IN IObject * obj)
 {
