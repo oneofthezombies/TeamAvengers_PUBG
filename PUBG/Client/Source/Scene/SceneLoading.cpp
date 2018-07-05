@@ -19,14 +19,14 @@ void SceneLoading::Load()
 
     // load effect meshs
     load(TAG_RES_STATIC::Ammo_5_56mm);
-    load(TAG_RES_STATIC::Ammo_7_62mm);
+    //load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::QBZ);
-    load(TAG_RES_STATIC::Kar98k);
+    //load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
 
-    // load skined meshs
+    //// load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    //load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character
     /*

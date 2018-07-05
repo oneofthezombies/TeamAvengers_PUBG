@@ -13,6 +13,8 @@ private:
 	
     Transform* pTransform;
     IObject*   pParent;
+
+    std::size_t m_cellIndex;
     
 protected:
     IObject();

@@ -50,11 +50,11 @@ void CameraManager::Update()
         if(pCurrentCamera->GetTagCamera()!=TAG_CAMERA::Default)//디버그 카메라는 player의 이동에 영향이 없도록
           pCurrentCamera->UpdateViewProjMatrix();
         
-        if (Input()()->IsOnceKeyUp(VK_SPACE)) //눌렀을때 볼 수 있도록
-        {
-            pCurrentCamera->UpdateFrustumCulling();
-        }
-        
+        //if (Input()()->IsOnceKeyUp(VK_SPACE)) //눌렀을때 볼 수 있도록
+        //{
+        //    pCurrentCamera->UpdateFrustumCulling();
+        //}
+        //pCurrentCamera->CameraRender();
     }
 }
 

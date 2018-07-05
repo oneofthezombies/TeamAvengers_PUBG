@@ -8,6 +8,9 @@ class BoxCollider;
 class Bullet : public IObject
 {
 private:
+    size_t      m_CellSpaceIndex;
+    IScene*     pCurrentScene;
+
     D3DXVECTOR3 m_dir;
     float       m_Speed;
     float       m_Damage;

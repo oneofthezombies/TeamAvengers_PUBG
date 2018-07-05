@@ -236,6 +236,36 @@ void Collision::Manager::findCollidersWithTagInsideFrustum(
 
 void Collision::Manager::Update()
 {
+    // 충돌 이벤트 -> 총알 -> (내) 캐릭터
+    // for 총알들
+    // for 내 원형 거리 서치 후 -> 원충돌시 박스충돌계산 -> 이벤트함수 실행
+
+    //character bouding box들과 내것이 아닌 다른 총알들과 계산
+    /*
+    for each others bullet
+    {
+        //여기서 우선 sphere 로 충돌하지 않으면 continue (걸러준다, box 연산이 무겁다)
+        
+
+        for문 돌리는 것
+        {    
+        충돌이 있으면 part queue 에 enque하고 
+    
+
+    
+        여기에서 priority에 의해서 한개만 고르면 된다 (여기에 운이 안좋으면 3개 의 collision까지 올수 있으니)
+        (사람 몸에 겹치는 콜라이더에 들어온 불렛)
+        }
+    }
+    
+    */
+
+
+
+
+
+
+
     notifyCollision();
 }
 
