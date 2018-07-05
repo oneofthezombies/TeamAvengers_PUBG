@@ -552,27 +552,64 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
 
 void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizontal)
 {
-    ICamera* pCurrentCamera = CurrentCamera()();
-
     //기본 수직 수평 반동 값
     float virtical_result;
     float horizontal_result;
     int Min = virtical * 0.5f;
-    float Weight = 0.0003f;
+    float Weight = 0.0005f;
 
-    virtical_result = (virtical - (rand() % Min)) * Weight;
-
-    Min = horizontal * 0.5f;
-    horizontal_result = ((horizontal) / 2 - (rand() % horizontal))*Weight;
+    virtical_result = (virtical - (rand() % Min)) * Weight;                     //최소 값이 총의 수직반동의 반
+    horizontal_result = ((horizontal) / 2 - (rand() % horizontal))*Weight;      // 0이 나올수 있음
 
 
     D3DXQUATERNION q;
     D3DXQuaternionRotationYawPitchRoll(&q, horizontal_result, 0.0f, 0.0f);
 
-    *OutRotation *= q;
-    m_rotationForCamera.x += virtical_result;
+    //m_backAction.afterY = *OutRotation *q;
+    //m_backAction.afterX = m_rotationForCamera.x + virtical_result;
+    //나중에 값 바꾸면 디버그 확인용
+    
+    m_backAction.Ing = true;
+    m_backAction.Rot = OutRotation;
+    m_backAction.curValY = horizontal_result;
+    m_backAction.valY = horizontal_result;
+    m_backAction.curValX = virtical_result ;
+    m_backAction.valX = virtical_result;
 
-    cout << virtical_result << "=============" << horizontal_result << endl;
+    //cout << virtical_result << "=============" << horizontal_result << endl;
+}
+
+void Character::backActionFrame()
+{
+    D3DXQUATERNION q;
+    if (m_backAction.Up)
+    {
+        m_backAction.curValX = m_backAction.curValX * 0.5;
+        m_backAction.curValY = m_backAction.curValY * 0.5;
+        if (m_backAction.curValX < 0.0001f)
+        {
+            m_backAction.Up = false;
+            return;
+        }
+        m_rotationForCamera.x += m_backAction.curValX;
+        D3DXQuaternionRotationYawPitchRoll(&q, m_backAction.curValY, 0.0f, 0.0f);
+        *m_backAction.Rot *= q;
+
+    }
+    else
+    {
+        m_backAction.curValX = m_backAction.curValX / 0.5;
+        m_backAction.curValY = m_backAction.curValY / 0.5;
+        if (m_backAction.curValX >= m_backAction.valX-0.001f)
+        {
+            m_backAction.Up = true;
+            m_backAction.Ing = false;
+            return;
+        }
+        m_rotationForCamera.x -= m_backAction.curValX;
+        D3DXQuaternionRotationYawPitchRoll(&q, -m_backAction.curValY, 0.0f, 0.0f);
+        *m_backAction.Rot *= q;
+    }
 }
 
 void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag)

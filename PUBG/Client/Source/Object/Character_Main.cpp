@@ -138,6 +138,7 @@ void Character::updateMine()
         if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_hand->GetNumBullet() > 0)
         {
             rifleShooting();
+            backAction(&rot);
             //pistolShooting();?? 이란것도 나중에는 만들겠지요?
         }
     }
@@ -156,16 +157,11 @@ void Character::updateMine()
         //Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)));
         Sound()()->addPlay(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)), 5.0f, FMOD_3D);
     }
-    
-    //float test_distance = 777;
-    //float ddd = test_distance / 340;
-    //
-    //float lastTime_2 = Time()()->GetDeltaTime();
-    //float ingTime = Time()()->GetDeltaTime() - lastTime_2;
-    //if (ddd <= ingTime)
-    //{
-    //    Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
-    //}
+    if (m_backAction.Ing)
+    {
+        backActionFrame();
+    }
+
 
     Sound()()->Listen(pos, getForward());
 

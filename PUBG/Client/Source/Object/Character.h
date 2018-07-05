@@ -134,7 +134,22 @@ public:
         IsJumping();
     };
 
-
+    //반동 스트럭트
+    struct WaitBackAction
+    {
+        //D3DXQUATERNION  beforeY;            
+        //float           beforeX;
+        //D3DXQUATERNION  afterY;
+        //float           afterX;
+        ////////// 위에는 디버그용
+        D3DXQUATERNION* Rot;
+        float           valX;
+        float           valY;
+        float           curValX;
+        float           curValY;
+        bool            Ing = false;
+        bool            Up = true;
+    };
 
 
 /**************************** end nested structure ***************************/
@@ -201,6 +216,8 @@ private:
 
     IsJumping m_Jump;
 
+    WaitBackAction m_backAction;
+
 /**************************** end member variable ****************************/
 
 
@@ -230,6 +247,7 @@ private:
 
     //총 반동 관련
     void backAction(D3DXQUATERNION* OutRotation ,int virtical = 100 , int horizontal = 50);
+    void backActionFrame();
 
     void updateMine();
     void updateOther();
