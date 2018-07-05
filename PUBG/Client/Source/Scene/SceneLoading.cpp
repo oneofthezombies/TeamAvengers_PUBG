@@ -19,14 +19,14 @@ void SceneLoading::Load()
 
     // load effect meshs
     load(TAG_RES_STATIC::Ammo_5_56mm);
-    load(TAG_RES_STATIC::Ammo_7_62mm);
+    //load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::QBZ);
-    load(TAG_RES_STATIC::Kar98k);
+    //load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
 
-    // load skined meshs
+    //// load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    //load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character
     /*
@@ -47,11 +47,15 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
+
+    // has bug
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
+
+    // has bug
     //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_PrimarySlot_OnHand);
     //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_SecondarySlot_OnHand);
 

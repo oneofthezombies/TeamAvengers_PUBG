@@ -58,17 +58,22 @@ void SkinnedMeshController::drawMeshContainer(
         return;
     //******************************************************
 
-    //Shader::Draw(
-    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
-    //    nullptr,
-    //    m_testmeshSphere,
-    //    0,
-    //    [this, &world](LPD3DXEFFECT pEffect)
-    //{
-    //    pEffect->SetMatrix(Shader::World, &world);
-    //    D3DXCOLOR White(1.0f, 1.0f, 1.0f, 1.0f);
-    //    pEffect->SetValue("Color", &White, sizeof White);
-    //});
+
+    //sphere around player
+    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        m_testmeshSphere,
+        0,
+        [this, &world](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &world);
+        D3DXCOLOR Green(0.0f, 1.0f, 0.0f, 1.0f);
+        pEffect->SetValue("Color", &Green, sizeof Green);
+    });
+    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+
 
 
     auto numBones = pMeshContainer->pSkinInfo->GetNumBones();
@@ -248,15 +253,15 @@ SkinnedMeshController::SkinnedMeshController(IObject* pOwner)
     , m_subTotalBlendingTime(0.3f)
     , m_subPassedBlendingTime(0.0f)
     , m_pSkinnedMeshInstance(nullptr)
-    //, m_testmeshSphere(NULL)
+    , m_testmeshSphere(NULL)
 {
-    //D3DXCreateSphere(Device()(), 96.42f, 10, 10, &m_testmeshSphere, NULL);
+    D3DXCreateSphere(Device()(), 96.42f, 5, 5, &m_testmeshSphere, NULL);
 }
 
 SkinnedMeshController::~SkinnedMeshController()
 {
     SAFE_DELETE(m_pSkinnedMeshInstance);
-    //SAFE_RELEASE(m_testmeshSphere);
+    SAFE_RELEASE(m_testmeshSphere);
 }
 
 void SkinnedMeshController::UpdateAnimation()
