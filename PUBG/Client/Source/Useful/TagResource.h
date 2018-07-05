@@ -153,8 +153,6 @@ enum class TAG_RES_ANIM_WEAPON
 enum class TAG_RES_ANIM_CHARACTER
 {
 //Character
-//0. 로비씬 애니메이션
-    Lobby,
 //1. 해당 무기를 들고있을 때 캐릭터의 애니메이션
     Weapon_QBZ_Character,
     Weapon_QBZ_Character_FPP,
@@ -163,43 +161,20 @@ enum class TAG_RES_ANIM_CHARACTER
     Weapon_Kar98k_Character_FPP,
 
 //2. 무기를 들고있지 않을 때 애니메이션
-    Unarmed_Transition,
-    Unarmed_Locomotion_Stand,
-    Unarmed_Locomotion_Prone,
-    Unarmed_Locomotion_Crouch,
+    Unarmed_Combined,
+    Unarmed_Locomotion,
+    Unarmed_Jump, //스킨드매쉬 로드용
+
     Unarmed_Locomotion_FPP,
-
-    Unarmed_Landing,
-
-    Unarmed_Jump,
     Unarmed_Jump_FPP,
-
-    Unarmed_Idling,
-
-    Unarmed_DoorOpen_And_Pickup,
     Unarmed_Pickup_FPP,
-
-    Unarmed_Attack,
     Unarmed_Attack_FPP,
 
 //3. 무기를 들고있을 때 애니메이션
-    Rifle_Transition,
+    Rifle_Locomotion,
+    Rifle_Combined,
 
-    Rifle_OnBody,
-    Rifle_OnHand,
-
-    Rifle_Locomotion_Stand,
-    Rifle_Locomotion_Prone,
-    Rifle_Locomotion_Crouch,
     Rifle_Locomotion_FPP,
-
-    Rifle_Landing,
-
-    Rifle_Jump,
-
-    Rifle_Idling,
-
-    Rifle_DoorOpen_And_Pickup,
     Rifle_Pickup_FPP,
 
 //4. 힐템을 사용할 때 애니메이션

@@ -29,29 +29,14 @@ void SceneLoading::Load()
     load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character
-    /*
-    ForTest는 아래 4개의 X파일들을 합친 것
-    Lobby.X
-    Unarmed_Idle.X
-    Unarmed_Jump.X
-    Unarmed_Locomotion_Stand.X
-    */
-    load(TAG_RES_ANIM_CHARACTER::ForTest);
+    load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load animation
-    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Transition);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Attack);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined);
 
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
-
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_OnHand);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);

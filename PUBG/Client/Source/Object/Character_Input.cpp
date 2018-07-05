@@ -26,16 +26,16 @@ void Character::setAttacking() //Num1, Num2, X
             }
             else if (m_attacking == Attacking::Rifle) //보조무기를 해제하고, 주무기를 장착한다
             {
-                TAG_ANIM_CHARACTER temp = TAG_ANIM_CHARACTER::COUNT;
+                TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
 
                 if (m_stance == Stance::Stand)
-                    temp = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static;
+                    tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static;
                 else if (m_stance == Stance::Prone)
-                    temp = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot;
+                    tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot;
 
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
-                    temp,
+                    tagAnim,
                     false, 
                     CharacterAnimation::DEFAULT_BLENDING_TIME,
                     CharacterAnimation::DEFAULT_NEXT_WEIGHT,
@@ -252,9 +252,6 @@ void Character::setReload()
                 cout << "총에 장전된 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
                 cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
 
-                /*
-                TODO: 장전 애니메이션 추가 - Prone인 경우
-                */
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
                     if (m_stance == Stance::Stand)
@@ -437,6 +434,63 @@ void Character::setPunch()
     }
 }
 
+void Character::setInteraction()
+{
+    //F키를 누르면 문열기, 아이템줍기
+    if (m_currentOnceKey._F)
+    {
+        //문열기
+        TAG_ANIM_CHARACTER animTag = TAG_ANIM_CHARACTER::COUNT;
+        if (m_attacking == Attacking::Unarmed)
+        {
+            if (m_stance == Stance::Stand)
+            {
+                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_DoorOpen;
+            }
+            else if (m_stance == Stance::Crouch)
+            {
+                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_DoorOpen;
+            }
+            else if (m_stance == Stance::Prone)
+            {
+                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_DoorOpen;
+            }
+        }
+        else if (m_attacking == Attacking::Rifle)
+        {
+            if (m_stance == Stance::Stand)
+            {
+                animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_DoorOpen;
+            }
+            else if (m_stance == Stance::Crouch)
+            {
+                animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_DoorOpen;
+            }
+            else if (m_stance == Stance::Prone)
+            {
+                animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_DoorOpen;
+            }      
+        }
+        assert((animTag != TAG_ANIM_CHARACTER::COUNT) && "Character::setInteraction(), animTag is COUNT");
+
+        //애니메이션 적용
+        pAnimation->Set(
+            CharacterAnimation::BodyPart::UPPER,
+            animTag,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            CharacterAnimation::DEFAULT_POSITION,
+            [this]()
+        {
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                false);
+        });
+    }
+}
 /*
 무기 장착 및 해제 애니메이션
 */

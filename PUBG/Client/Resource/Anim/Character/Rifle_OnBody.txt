@@ -1,5 +1,0 @@
-/// Rifle_OnBody.X (손에 들고있는 무기를 해제하는 애니메이션)
-0. (0    ~ 50)[51] - Rifle_Combat_Prone_PrimarySlot
-1. (51  ~ 101)[51] - Rifle_Combat_Prone_SecondarySlot
-2. (102 ~ 152)[51] - Rifle_Combat_Stand_PrimarySlot_Static
-3. (153 ~ 203)[51] - Rifle_Combat_Stand_SecondarySlot_Static

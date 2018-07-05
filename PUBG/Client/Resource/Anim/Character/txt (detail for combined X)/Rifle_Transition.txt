@@ -1,0 +1,11 @@
+/// Rifle_Transitions.X (무기를 들고있을 때 자세 간의 전이)
+0. (0     ~ 20)[21] - Rifle_Combat_Crouch_Aim_Stand
+1. (21  ~ 111)[91] - Rifle_Combat_Crouch_Base_Prone
+2. (112 ~ 152)[41] - Rifle_Combat_Crouch_Base_Stand
+3. (153 ~ 251)[99] - Rifle_Combat_Prone_Base_Crouch
+4. (252 ~ 356)[105] - Rifle_Combat_Prone_Base_Stand
+5. (357 ~ 378)[22] - Rifle_Combat_Stand_Aim_Crouch
+6. (379 ~ 421)[43] - Rifle_Combat_Stand_Base_Crouch
+7. (422 ~ 520)[99] - Rifle_Combat_Stand_Base_Prone
+8. (521 ~ 625)[105] - Rifle_Combat_Stand_Run_F_Prone
+9. (626 ~ 743)[118] - Rifle_Combat_Stand_Sprint_F_Prone

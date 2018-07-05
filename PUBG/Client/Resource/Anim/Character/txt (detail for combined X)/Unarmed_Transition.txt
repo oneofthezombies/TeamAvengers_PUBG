@@ -1,0 +1,7 @@
+/// Unarmed_Transition.X (무기없을 때 자세 간의 전이 애니메이션)
+0. (0    ~ 164)[165] - Unarmed_Combat_Crouch_Prone
+1. (165 ~ 253)[89] - Unarmed_Combat_Crouch_Stand
+2. (254 ~ 394)[141] - Unarmed_Combat_Prone_Crouch
+3. (395 ~ 563)[169] - Unarmed_Combat_Prone_Stand
+4. (564 ~ 648)[85] - Unarmed_Combat_Stand_Crouch
+5. (649 ~ 805)[157] - Unarmed_Combat_Stand_Prone
