@@ -191,15 +191,28 @@ void Character::updateMine()
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     
 
+    if (m_currentOnceKey._B)
+    {
+        m_totalInventory.m_hand->ChangeAuto();
+    }
+
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
-    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton)
+    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton
+        || (m_attacking == Attacking::Rifle && m_totalInventory.m_hand->GetAuto()
+            && TAG_RES_STATIC::QBZ == m_totalInventory.m_hand->GetTagResStatic() && m_currentStayKey._LButton))
     {
         if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_hand->GetNumBullet() > 0)
         {
             rifleShooting();
+            backAction(&rot);
             //pistolShooting();?? 이란것도 나중에는 만들겠지요?
         }
+    }
+
+    if (m_backAction.Ing)
+    {
+        backActionFrame();
     }
 
     Sound()()->Listen(pos, getForward());
