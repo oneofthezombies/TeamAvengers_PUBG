@@ -358,25 +358,49 @@ std::size_t IScene::GetCellIndex(const D3DXVECTOR3 & position)
 
 void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject * obj)
 {
-    switch (tag)
+    auto itr = m_pCellSpaces[*currentCellIndex];
+    auto itrDest = m_pCellSpaces[destCellIndex];
+    IObject * ptr= nullptr;
+
+    switch(tag)
     {
     case TAG_OBJECT::Bullet:
-        //총알에 대하여 만들기
+        //object를 찾는다.
+        ptr = *itr->pBullets.find(obj);
+        if (!ptr)
+            assert(false && "movecall() cannot find bullet obj");
+        //찾고 원래 장소에서 지운다
+        itr->pBullets.erase(ptr);
+        //새 장소에 넣어준다
+        itrDest->pBullets.emplace(ptr);
+        //현재 인덱스를 바꾸어준다
+        *currentCellIndex = destCellIndex;
         break;
+
     case TAG_OBJECT::Character:
         //object를 찾는다.
-        auto itr = m_pCellSpaces[*currentCellIndex]->pCharacters.find(obj);
-        if (itr == m_pCellSpaces[*currentCellIndex]->pCharacters.end())
-            assert(false && "MoveCell() cannot find obj");
+        ptr = *itr->pCharacters.find(obj);
+        if (!ptr)
+            assert(false && "movecall() cannot find bullet obj");
         //찾고 원래 장소에서 지운다
-        IObject* ptr = *itr;
-        m_pCellSpaces[*currentCellIndex]->pCharacters.erase(itr);
+        itr->pCharacters.erase(ptr);
         //새 장소에 넣어준다
-        m_pCellSpaces[destCellIndex]->pCharacters.emplace(ptr);
+        itrDest->pCharacters.emplace(ptr);
         //현재 인덱스를 바꾸어준다
         *currentCellIndex = destCellIndex;
         break;
     }
+    //
+    //auto itr = m_pCellSpaces[*currentCellIndex]->pCharacters.find(obj);
+    //if (itr == m_pCellSpaces[*currentCellIndex]->pCharacters.end())
+    //    assert(false && "MoveCell() cannot find obj");
+    ////찾고 원래 장소에서 지운다
+    //IObject* ptr = *itr;
+    //m_pCellSpaces[*currentCellIndex]->pCharacters.erase(itr);
+    ////새 장소에 넣어준다
+    //m_pCellSpaces[destCellIndex]->pCharacters.emplace(ptr);
+    ////현재 인덱스를 바꾸어준다
+    //*currentCellIndex = destCellIndex;
 }
 
 bool IScene::IsMovable(const D3DXVECTOR3 * targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject * obj)// 갈 수 있는지

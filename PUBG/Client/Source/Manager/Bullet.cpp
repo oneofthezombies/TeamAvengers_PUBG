@@ -9,6 +9,7 @@ Bullet::Bullet()
     , m_IsActive(false)
     , pCylinder(nullptr)
     , pBoxCollider(nullptr)
+    , pCurrentScene(nullptr)
 {
     GetTransform()->SetPosition(Vector3::ZERO);
 
@@ -17,6 +18,9 @@ Bullet::Bullet()
     pBoxCollider->SetTagCollision(TAG_COLLISION::Idle);
 
     pCylinder = BulletPool()()->GetCylinder();
+    pCurrentScene = CurrentScene()();
+    if (!pCurrentScene)
+        assert(false && "Bullet() no current Scene");
 }
 
 Bullet::~Bullet()
@@ -33,10 +37,19 @@ void Bullet::OnUpdate()
     pTr->Update();
     pBoxCollider->Update(pTr->GetTransformationMatrix());
 
+    Debug << "bullet pos : " << pos << endl;
+
+
     //deactivating bullet when it is out of boundary
-    if (CurrentScene()()->isOutOfBoundaryBox(pos))
+    if (pCurrentScene->isOutOfBoundaryBox(pos))
         m_IsActive = false;
 
+    //change cell space while moving
+    size_t nextCellSpace = pCurrentScene->GetCellIndex(pos);
+    if (m_CellSpaceIndex != nextCellSpace&&m_IsActive)
+    {
+        pCurrentScene->MoveCell(&m_CellSpaceIndex, nextCellSpace, TAG_OBJECT::Bullet, this);
+    }
 }
 
 void Bullet::OnRender()
@@ -67,7 +80,7 @@ void Bullet::Reset()
     pBoxCollider->SetTagCollision(TAG_COLLISION::Idle);
     m_IsActive = false;
 
-    CurrentScene()()->RemoveObject(this);
+    pCurrentScene->RemoveObject(this);
 }
 
 bool Bullet::IsActive() const
@@ -102,7 +115,9 @@ void Bullet::Set(const D3DXVECTOR3 & startPos, const D3DXVECTOR3 & dir,
     pBoxCollider->SetTagCollision(tag);
     m_IsActive = true;
 
-    CurrentScene()()->AddObject(this);
+    pCurrentScene->AddObject(this);
+    m_CellSpaceIndex = pCurrentScene->GetCellIndex(pTr->GetPosition());
+    pCurrentScene->InsertObjIntoCellSpace(TAG_OBJECT::Bullet, m_CellSpaceIndex, this);
 }
 
 
