@@ -18,9 +18,12 @@ Character::Character(const int index)
 
     // id
     , m_index(index)
-    , m_cellSpaceIndex(0)
-    , m_upperAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
-    , m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
+    , m_currentState()
+    
+    //, m_upperAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
+    //, m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
+    //, m_attacking(Attacking::Unarmed)
+    //, m_stance(Stance::Stand)
     , m_rootTransform(1.0f)
     , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
     , m_framePtr()
@@ -28,21 +31,25 @@ Character::Character(const int index)
     , m_savedInput()
     , m_currentStayKey()
     , m_totalInventory()
-    , m_attacking(Attacking::Unarmed)
-    , m_stance(Stance::Stand)
 
-    , pTransform(nullptr)
+
+    //, pTransform(nullptr)
     , pAnimation(nullptr)
     //, m_pRootCharacterPart(nullptr)
 {
-    pTransform = GetTransform();
-    pTransform->SetRotation(OFFSET_ROTATION);
     const float factor(static_cast<float>(m_index + 1) * 100.0f);
-    pTransform->SetPosition(D3DXVECTOR3(factor, 0.0f, factor));
+    m_currentState.position = D3DXVECTOR3(factor, 0.0f, factor);
+    m_currentState.rotation = OFFSET_ROTATION;
+    //pTransform->SetPosition(D3DXVECTOR3(factor, 0.0f, factor));
+    //pTransform->SetRotation(OFFSET_ROTATION);
+    //pTransform = GetTransform();
+
+    m_currentState.cellIndex = CurrentScene()()->GetCellIndex(m_currentState.position);
+    CurrentScene()()->InsertObjIntoCellSpace(TAG_OBJECT::Character, m_currentState.cellIndex, this);
     
-    m_cellSpaceIndex = CurrentScene()()->GetCellIndex(pTransform->GetPosition());
-    CurrentScene()()->InsertObjIntoCellSpace(TAG_OBJECT::Character, m_cellSpaceIndex, this);
-    
+
+
+
     pAnimation = new CharacterAnimation;
     AddChild(pAnimation);
     pAnimation->Set(
@@ -96,9 +103,12 @@ void Character::updateMine()
 
     const float    dt = Time()()->GetDeltaTime();
     IScene*        pCurrentScene = CurrentScene()();
-    D3DXVECTOR3    pos = pTransform->GetPosition();
-    D3DXQUATERNION rot = pTransform->GetRotation();
-    D3DXVECTOR3    scl = pTransform->GetScale();
+
+    Transform* tm = GetTransform();
+    m_currentState.position = tm->GetPosition();
+    m_currentState.rotation = tm->GetRotation();
+    m_currentState.transformationMatrix = tm->GetTransformationMatrix();
+
     //if (pInput->IsStayKeyDown('3'))
     //{
     //    RotateWaist(-m_WaistRotation.QUANTITY_FACTOR);
@@ -112,24 +122,24 @@ void Character::updateMine()
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
 
-    //save pos를 저장해 놓고
-    //dest pos 로 계 산
-    State dest; // = current
 
-    setStance();
-    setAttacking();
+    //m_currentState를 저장해 놓고 //dest pos 로 계 산
+    State destState = m_currentState; 
+    //*********************************
+
+
+    setStance(&destState);
+    setAttacking(&destState);
     setReload();
-    ForDebug();
+    //ForDebug();
 
     //setting animation and movements
-    animationMovementControl(&pos, &m_lowerAnimState);
-
-   
+    animationMovementControl(&destState, &destState.lowerAnimState);
 
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
     if (m_savedInput != m_currentStayKey)
     {
-        if (m_lowerAnimState == TAG_ANIM_CHARACTER::COUNT)
+        if (destState.lowerAnimState == TAG_ANIM_CHARACTER::COUNT)
         {
             //애니메이션이 없습니다.
         }
@@ -137,7 +147,7 @@ void Character::updateMine()
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH, 
-                m_lowerAnimState);
+                destState.lowerAnimState);
 
             m_savedInput = m_currentStayKey;
         }
@@ -155,13 +165,13 @@ void Character::updateMine()
 
 
     /////////////////// 
-    dest.cellIndex =  CurrentScene()()->GetCellIndex(dest.position);
-    if (dest.cellIndex != m_cellSpaceIndex)
-        pCurrentScene->m_NearArea.Create(dest.cellIndex);
+    destState.cellIndex =  CurrentScene()()->GetCellIndex(destState.position);
+    if (destState.cellIndex != m_currentState.cellIndex)
+        pCurrentScene->m_NearArea.Create(destState.cellIndex);
     ////////////////////////////
 
     bool hasCollision = false;
-    BoundingSphere pMyBoundingSphere = GetBoundingSphere()->CopyTo(dest.position);
+    BoundingSphere pMyBoundingSphere = GetBoundingSphere()->CopyTo(destState.position);
     for (auto tf : pCurrentScene->m_NearArea.GetTerrainFeatures())
     {
         if (hasCollision) break;
@@ -169,17 +179,17 @@ void Character::updateMine()
         // 바운딩스피어가 충돌되지 않으면 다음 터레인피처와 충돌을 검사한다.
         if (!Collision::HasCollision(pMyBoundingSphere, *(tf->GetBoundingSphere()))) continue;
 
-        if (dest.boundingBoxes.empty())
+        if (destState.boundingBoxes.empty())
         {
-            D3DXMatrixTransformation(&dest.transformationMatrix, nullptr, nullptr, nullptr, nullptr, &dest.rotation, &dest.position);
+            D3DXMatrixTransformation(&destState.transformationMatrix, nullptr, nullptr, nullptr, nullptr, &destState.rotation, &destState.position);
 
             for (auto bb : GetBoundingBoxes())
             {
-                dest.boundingBoxes.emplace_back(bb->CopyTo(dest.transformationMatrix));
+                destState.boundingBoxes.emplace_back(bb->CopyTo(destState.transformationMatrix));
             }
         }
 
-        for (auto& mine : dest.boundingBoxes)
+        for (auto& mine : destState.boundingBoxes)
         {
             if (hasCollision) break;
 
@@ -234,27 +244,27 @@ void Character::updateMine()
     // 이동가능한치 체크해서 업데이트 하거나 y만되거나 등등
     //CurrentScene()()->Get
     IScene* pCurrScene = CurrentScene()();
-    if (pCurrScene->IsMovable(&pos, m_cellSpaceIndex, TAG_OBJECT::Character, this))
+    if (pCurrScene->IsMovable(&destState.position, m_currentState.cellIndex, TAG_OBJECT::Character, this))
     {
         //이곳을 해야 한다
     }
     
     // 이동가능하다면 cellIndex = CurrentScene()()->GetCellIndex(pos);
     // if (m_cellIndex != cellIndex) 이사하기
-    size_t nextCellSpace = pCurrScene->GetCellIndex(pos);
-    if (m_cellSpaceIndex != nextCellSpace)
+    size_t nextCellSpace = pCurrScene->GetCellIndex(destState.position);
+    if (destState.cellIndex != nextCellSpace)
     {
-        pCurrScene->MoveCell(&m_cellSpaceIndex, nextCellSpace,TAG_OBJECT::Character,this);
+        pCurrScene->MoveCell(&destState.cellIndex, nextCellSpace,TAG_OBJECT::Character,this);
     }
 
-    cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
-    applyTarget_Y_Position(&pos); //apply height and control jumping
+    cameraCharacterRotation(dt, &destState.rotation);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
+    applyTarget_Y_Position(&destState.position); //apply height and control jumping
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     
 
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
-    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton)
+    if (destState.attacking == Attacking::Rifle && m_currentOnceKey._LButton)
     {
         if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_hand->GetNumBullet() > 0)
         {
@@ -288,15 +298,15 @@ void Character::updateMine()
     //    Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
     //}
 
-    Sound()()->Listen(pos, getForward());
+    Sound()()->Listen(destState.position, getForward());
 
     if (Input()()->IsOnceKeyDown(VK_UP))
     {
-        BulletPool()()->Fire(pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_COLLISION::Player_1_Damage);
+        BulletPool()()->Fire(destState.position + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_COLLISION::Player_1_Damage);
 
     }
 
-    Debug << "current        position : " << pos << "\n\n"
+    Debug << "current        position : " << destState.position << "\n\n"
         << "current upper animation : "
         << pAnimation->GetUpperAnimationName() << '\n'
         << "current lower animation : "
@@ -304,9 +314,14 @@ void Character::updateMine()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+
+    m_currentState = destState;
+
     // set transform
-    pTransform->SetPosition(pos);
-    pTransform->SetRotation(rot);
+    GetTransform()->SetPosition(m_currentState.position);
+    GetTransform()->SetRotation(m_currentState.rotation);
+    //pTransform->SetPosition(pos);
+    //pTransform->SetRotation(rot);
 
     //Communication()()->SendPosition(pos);
 }
@@ -317,7 +332,7 @@ void Character::updateOther()
 
     auto pInput = Input()();
     auto pCom = Communication()();
-    D3DXVECTOR3 pos = pTransform->GetPosition();
+    D3DXVECTOR3 pos = m_currentState.position;//pTransform->GetPosition();
 
     auto& pi = pCom->m_RoomInfo.m_PlayerInfos[m_index];
     pos = pi.m_position;

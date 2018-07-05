@@ -4,8 +4,10 @@
 #include "Item.h"
 #include "ItemInfo.h"
 
-void Character::setAttacking() //Num1, Num2, X
+void Character::setAttacking(OUT State* OutState) //Num1, Num2, X
 {
+    Attacking m_attacking = OutState->attacking;
+
     TotalInventory& inven = m_totalInventory;
 
     if (pAnimation->HasUpperFinishEvent()) return;
@@ -22,7 +24,7 @@ void Character::setAttacking() //Num1, Num2, X
                 inven.m_hand = inven.m_weaponPrimary;
                 inven.m_weaponPrimary = nullptr;
 
-                setRifleOnHand(TAG_RIFLE::Primary);
+                setRifleOnHand(TAG_RIFLE::Primary, OutState);
             }
             else if (m_attacking == Attacking::Rifle) //보조무기를 해제하고, 주무기를 장착한다
             {
@@ -34,12 +36,12 @@ void Character::setAttacking() //Num1, Num2, X
                     CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                     CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                     CharacterAnimation::DEFAULT_POSITION,
-                    [this, &inven]()
+                    [this, &inven, OutState]()
                 {
                     inven.m_weaponSecondary = inven.m_hand;
                     inven.m_hand = inven.m_weaponPrimary;
                     inven.m_weaponPrimary = nullptr;
-                    setRifleOnHand(TAG_RIFLE::Primary);
+                    setRifleOnHand(TAG_RIFLE::Primary, OutState);
                 });
             }
             else if (m_attacking == Attacking::Melee)
@@ -59,7 +61,7 @@ void Character::setAttacking() //Num1, Num2, X
 
                 inven.m_hand = inven.m_weaponSecondary;
                 inven.m_weaponSecondary = nullptr;
-                setRifleOnHand(TAG_RIFLE::Secondary);
+                setRifleOnHand(TAG_RIFLE::Secondary, OutState);
             }
             else if (m_attacking == Attacking::Rifle) //주무기를 등짝에 붙이고 보조무기를 손에 든다
             {
@@ -71,12 +73,12 @@ void Character::setAttacking() //Num1, Num2, X
                     CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                     CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                     CharacterAnimation::DEFAULT_POSITION,
-                    [this, &inven]()
+                    [this, &inven, OutState]()
                 {
                     inven.m_weaponPrimary = inven.m_hand;
                     inven.m_hand = inven.m_weaponSecondary;
                     inven.m_weaponSecondary = nullptr;
-                    setRifleOnHand(TAG_RIFLE::Secondary);
+                    setRifleOnHand(TAG_RIFLE::Secondary, OutState);
                 });
             }
             else if (m_attacking == Attacking::Melee)
@@ -97,9 +99,9 @@ void Character::setAttacking() //Num1, Num2, X
             TAG_RES_STATIC tag = inven.m_hand->GetTagResStatic();
 
             if (tag == TAG_RES_STATIC::QBZ)
-                setRifleOnBody(TAG_RIFLE::Primary);
+                setRifleOnBody(TAG_RIFLE::Primary, OutState);
             else if (tag == TAG_RES_STATIC::Kar98k)
-                setRifleOnBody(TAG_RIFLE::Secondary);
+                setRifleOnBody(TAG_RIFLE::Secondary, OutState);
         }
         //손에 무기를 들고 있지않는데 X버튼을 누른다면, 이전에 장착했던 무기를 다시 손에 든다
         else
@@ -114,20 +116,24 @@ void Character::setAttacking() //Num1, Num2, X
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
                     inven.m_weaponPrimary = nullptr;
-                    setRifleOnHand(TAG_RIFLE::Primary);
+                    setRifleOnHand(TAG_RIFLE::Primary, OutState);
                 }
                 else if (tag == TAG_RES_STATIC::Kar98k)
                 {
                     inven.m_weaponSecondary = nullptr;
-                    setRifleOnHand(TAG_RIFLE::Secondary);                
+                    setRifleOnHand(TAG_RIFLE::Secondary, OutState);
                 }
             }
         }
     }
+
+    OutState->attacking = m_attacking;
 }
 
-void Character::setStance() //C, Z
+void Character::setStance(OUT State* OutState) //C, Z
 {
+    Stance m_stance = OutState->stance;
+
     if (m_currentOnceKey._C)
     {
         cout << "C" << endl;
@@ -136,17 +142,17 @@ void Character::setStance() //C, Z
         if (m_stance == Stance::Stand)
         {
             m_stance = Stance::Crouch;
-            setStandTo(m_stance);
+            setStandTo(m_stance, OutState);
         }
         else if (m_stance == Stance::Crouch)
         {
             m_stance = Stance::Stand;
-            setCrouchTo(m_stance);
+            setCrouchTo(m_stance, OutState);
         }
         else if (m_stance == Stance::Prone)
         {
             m_stance = Stance::Crouch;
-            setProneTo(m_stance);
+            setProneTo(m_stance, OutState);
         }
     }
     else if (m_currentOnceKey._Z)
@@ -157,19 +163,21 @@ void Character::setStance() //C, Z
         if (m_stance == Stance::Stand)
         {
             m_stance = Stance::Prone;
-            setStandTo(m_stance);
+            setStandTo(m_stance, OutState);
         }
         else if (m_stance == Stance::Crouch)
         {
             m_stance = Stance::Prone;
-            setCrouchTo(m_stance);
+            setCrouchTo(m_stance, OutState);
         }
         else if (m_stance == Stance::Prone)
         {
             m_stance = Stance::Stand;
-            setProneTo(m_stance);
+            setProneTo(m_stance, OutState);
         }
     }
+
+    OutState->stance = m_stance;
 }
 
 void Character::setReload()
@@ -294,8 +302,11 @@ void Character::setReload()
 /*
 무기 장착 및 해제 애니메이션
 */
-void Character::setRifleOnHand(TAG_RIFLE tagRifle)
+void Character::setRifleOnHand(TAG_RIFLE tagRifle, OUT State* OutState)
 {
+    Stance m_stance = OutState->stance;
+    TAG_ANIM_CHARACTER m_lowerAnimState = OutState->lowerAnimState;
+
     //주무기를 손에 든다
     if (tagRifle == TAG_RIFLE::Primary)
     {
@@ -309,7 +320,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -327,7 +338,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -350,7 +361,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -368,7 +379,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -378,10 +389,16 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
         
         }
     }
+
+    OutState->stance = m_stance ;
+    OutState->lowerAnimState = m_lowerAnimState;
 }
 
-void Character::setRifleOnBody(TAG_RIFLE tagRifle)
+void Character::setRifleOnBody(TAG_RIFLE tagRifle, OUT State* OutState)
 {
+    Stance m_stance = OutState->stance;
+    TAG_ANIM_CHARACTER m_lowerAnimState = OutState->lowerAnimState;
+
     TotalInventory& inven = m_totalInventory;
 
     //주무기를 다시 몸에 장착
@@ -397,7 +414,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
-                [this, &inven]()
+                [this, &inven,&m_lowerAnimState]()
             {
                 inven.m_weaponPrimary = inven.m_hand;
                 inven.m_hand = nullptr;
@@ -417,7 +434,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
-                [this, &inven]()
+                [this, &inven, &m_lowerAnimState]()
             {
                 inven.m_weaponPrimary = inven.m_hand;
                 inven.m_hand = nullptr;
@@ -441,7 +458,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
-                [this, &inven]()
+                [this, &inven,&m_lowerAnimState]()
             {
                 inven.m_weaponSecondary = inven.m_hand;
                 inven.m_hand = nullptr;
@@ -461,7 +478,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
-                [this, &inven]()
+                [this, &inven,&m_lowerAnimState]()
             {
                 inven.m_weaponSecondary = inven.m_hand;
                 inven.m_hand = nullptr;
@@ -472,6 +489,8 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             });
         }
     }
+    OutState->stance = m_stance;
+    OutState->lowerAnimState = m_lowerAnimState;
 }
 
 /*
@@ -484,8 +503,11 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 
 서있다가 앉다가 섬 -> 앉아있다가 섬의 위치 = 앉아있다가 섬 주기(또는 서있다가 앉음) - 서있다가 앉음의 위치 
 */
-void Character::setStandTo(Stance stance)
+void Character::setStandTo(Stance stance, OUT State* OutState)
 {
+    Attacking m_attacking = OutState->attacking;
+    TAG_ANIM_CHARACTER m_lowerAnimState = OutState->lowerAnimState;
+
     if (m_attacking == Attacking::Unarmed)
     {
         if (stance == Stance::Crouch)
@@ -498,7 +520,7 @@ void Character::setStandTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 1.0f,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -518,7 +540,7 @@ void Character::setStandTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -539,7 +561,7 @@ void Character::setStandTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -557,7 +579,7 @@ void Character::setStandTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -567,10 +589,15 @@ void Character::setStandTo(Stance stance)
         }
     
     }
+    OutState->attacking = m_attacking;
+    OutState->lowerAnimState = m_lowerAnimState;
 }
 
-void Character::setCrouchTo(Stance stance)
+void Character::setCrouchTo(Stance stance, OUT State* OutState)
 {
+    Attacking m_attacking = OutState->attacking;
+    TAG_ANIM_CHARACTER m_lowerAnimState = OutState->lowerAnimState;
+
     if (m_attacking == Attacking::Unarmed)
     {
         if (stance == Stance::Stand)
@@ -583,7 +610,7 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -601,7 +628,7 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -622,7 +649,7 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -640,7 +667,7 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -649,10 +676,15 @@ void Character::setCrouchTo(Stance stance)
             });
         }
     }
+    OutState->attacking = m_attacking;
+    OutState->lowerAnimState = m_lowerAnimState;
 }
 
-void Character::setProneTo(Stance stance)
+void Character::setProneTo(Stance stance, OUT State* OutState)
 {
+    Attacking m_attacking = OutState->attacking;
+    TAG_ANIM_CHARACTER m_lowerAnimState = OutState->lowerAnimState;
+
     if (m_attacking == Attacking::Unarmed)
     {
         if (stance == Stance::Stand)
@@ -665,7 +697,7 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -683,7 +715,7 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -704,7 +736,7 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this, &m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -722,7 +754,7 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
+                [this,&m_lowerAnimState]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
@@ -731,6 +763,8 @@ void Character::setProneTo(Stance stance)
             });
         } 
     }
+    OutState->attacking = m_attacking;
+    OutState->lowerAnimState = m_lowerAnimState;
 }
 
 /*

@@ -249,7 +249,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
 
 }
 
-void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag)
+void Character::animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag)
 {
     Direction direction;
     Moving    moving;
@@ -279,44 +279,44 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
     if (m_currentStayKey._W&&m_currentStayKey._D)
     {
         direction = Direction::FrontRight;
-        *OutPosition += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentStayKey._D&&m_currentStayKey._S)
     {
         direction = Direction::BackRight;
-        *OutPosition += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentStayKey._S&&m_currentStayKey._A)
     {
         direction = Direction::BackLeft;
-        *OutPosition += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentStayKey._A&&m_currentStayKey._W)
     {
         direction = Direction::FrontLeft;
-        *OutPosition += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentStayKey._W)
     {
         direction = Direction::Front;
-        *OutPosition += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
 
     }
     else if (m_currentStayKey._D)
     {
         direction = Direction::Right;
-        *OutPosition += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentStayKey._S)
     {
         direction = Direction::Back;
         //*pOut += getForward() * -1.0f;
-        *OutPosition += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else if (m_currentStayKey._A)
     {
         direction = Direction::Left;
-        *OutPosition += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
     else
     {
@@ -330,7 +330,7 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
         else if (m_Jump.isJumping)
             *OutTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary;
         else
-            *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
+            *OutTag = AnimationState::Get(OutState->attacking,OutState->stance, moving, direction);
     }
 }
 
@@ -532,7 +532,8 @@ void Character::updateBone()
 void Character::updateDependency()
 {
     // update
-    pTransform->Update();
+    GetTransform()->Update();
+    //pTransform->Update();
     pAnimation->UpdateAnimation();
     updateBone();
     pAnimation->UpdateModel();
@@ -549,7 +550,7 @@ void Character::updateDependency()
     {
         pEffect->SetMatrix(
             Shader::World, 
-            &pTransform->GetTransformationMatrix());
+            &GetTransform()->GetTransformationMatrix());
 
         DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
         D3DXVECTOR3 lightDir = light->GetDirection();

@@ -46,19 +46,19 @@ string Character::ForDebugGetStance(Stance stance)
     }
 }
 
-void Character::ForDebug()
-{
-    Item* hand = m_totalInventory.m_hand;
-    if (hand)
-    {
-        TAG_RES_STATIC tagDebug = hand->GetTagResStatic();
-        Debug << "On hand Weapon: ";
-        Debug << ItemInfo::GetName(tagDebug) << "\n";
-    }
-    else
-    {
-        Debug << "On hand Weapon: NONE" << "\n";
-    }
-    Debug << "Attacking: " << ForDebugGetAttacking(m_attacking) << "\n";
-    Debug << "Stance: " << ForDebugGetStance(m_stance) << "\n";
-}
+//void Character::ForDebug()
+//{
+//    Item* hand = m_totalInventory.m_hand;
+//    if (hand)
+//    {
+//        TAG_RES_STATIC tagDebug = hand->GetTagResStatic();
+//        Debug << "On hand Weapon: ";
+//        Debug << ItemInfo::GetName(tagDebug) << "\n";
+//    }
+//    else
+//    {
+//        Debug << "On hand Weapon: NONE" << "\n";
+//    }
+//    Debug << "Attacking: " << ForDebugGetAttacking(m_attacking) << "\n";
+//    Debug << "Stance: " << ForDebugGetStance(m_stance) << "\n";
+//}

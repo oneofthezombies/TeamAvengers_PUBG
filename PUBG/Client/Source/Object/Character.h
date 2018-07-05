@@ -179,9 +179,9 @@ private:
 
     // id
     int m_index;
-    size_t m_cellSpaceIndex;
+    State m_currentState;
 
-    Transform*          pTransform;
+    //Transform*          pTransform;
     CharacterAnimation* pAnimation;
     //CharacterPart*      m_pRootCharacterPart;
     vector<CharacterPart*> m_characterParts;
@@ -204,15 +204,14 @@ private:
     
 
     // state
-    TAG_ANIM_CHARACTER m_upperAnimState;
-    TAG_ANIM_CHARACTER m_lowerAnimState;
+    //TAG_ANIM_CHARACTER m_upperAnimState;
+    //TAG_ANIM_CHARACTER m_lowerAnimState;
+    //Stance    m_stance;
+    //Attacking m_attacking;
 
     IsPressing m_savedInput;
     IsPressing m_currentStayKey;
     IsPressed  m_currentOnceKey;
-
-    Stance    m_stance;
-    Attacking m_attacking;
 
     IsJumping m_Jump;
 
@@ -237,7 +236,7 @@ private:
     void handleInput(IsPressed* OutIsPressed);
     
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
-    void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
+    void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
     void rifleShooting();
 
@@ -278,16 +277,16 @@ private:
     void renderTotalInventory();
 
     //for Character_Input.cpp
-    void setStance();
-    void setAttacking();
+    void setStance(OUT State* OutState);
+    void setAttacking(OUT State* OutState);
     void setReload();
 
-    void setRifleOnHand(TAG_RIFLE tagRifle);
-    void setRifleOnBody(TAG_RIFLE tagRifle);
+    void setRifleOnHand(TAG_RIFLE tagRifle, OUT State* OutState);
+    void setRifleOnBody(TAG_RIFLE tagRifle, OUT State* OutState);
 
-    void setStandTo(Stance stance);
-    void setCrouchTo(Stance stance);
-    void setProneTo(Stance stance);
+    void setStandTo(Stance stance, OUT State* OutState);
+    void setCrouchTo(Stance stance, OUT State* OutState);
+    void setProneTo(Stance stance, OUT State* OutState);
 
     void onKar98kReloadEnd();
     void onKar98kReload();
@@ -327,7 +326,7 @@ public:
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
     string ForDebugGetAttacking(Attacking attcking);
     string ForDebugGetStance(Stance stance);
-    void ForDebug();
+    //void ForDebug();
 
           CharacterAnimation*        GetCharacterAnimation();
     const std::vector<BoundingBox*>& GetBoundingBoxes() override;
