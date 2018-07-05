@@ -207,6 +207,24 @@ TAG_CAMERA ICamera::GetTagCamera() const
     return m_tagCamera;
 }
 
+D3DXVECTOR4 ICamera::GetFrustumArea()
+{
+    float minX = FLT_MAX; float minZ = FLT_MAX;
+    float maxX = FLT_MIN; float maxZ = FLT_MIN;
+    for (int i = 0; i < 8; i++)
+    {
+        if (m_vecWorld[i].x < minX)
+            minX = m_vecWorld[i].x;
+        if (m_vecWorld[i].z < minZ)
+            minZ = m_vecWorld[i].z;
+        if (m_vecWorld[i].x > maxX)
+            maxX = m_vecWorld[i].x;
+        if (m_vecWorld[i].z > maxZ)
+            maxZ = m_vecWorld[i].z;
+    }
+    return D3DXVECTOR4(minX, minZ, maxX, maxZ);
+}
+
 bool ICamera::CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY)
 {
     Ray ray = Ray::RayAtWorldSpace(screenX, screenY);

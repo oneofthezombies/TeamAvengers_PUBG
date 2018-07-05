@@ -59,20 +59,20 @@ void SkinnedMeshController::drawMeshContainer(
     //******************************************************
 
 
-    //sphere around player
-    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-    Shader::Draw(
-        Resource()()->GetEffect("./Resource/", "Color.fx"),
-        nullptr,
-        m_testmeshSphere,
-        0,
-        [this, &world](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(Shader::World, &world);
-        D3DXCOLOR Green(0.0f, 1.0f, 0.0f, 1.0f);
-        pEffect->SetValue("Color", &Green, sizeof Green);
-    });
-    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+    ////sphere around player
+    //Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+    //Shader::Draw(
+    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
+    //    nullptr,
+    //    m_testmeshSphere,
+    //    0,
+    //    [this, &world](LPD3DXEFFECT pEffect)
+    //{
+    //    pEffect->SetMatrix(Shader::World, &world);
+    //    D3DXCOLOR Green(0.0f, 1.0f, 0.0f, 1.0f);
+    //    pEffect->SetValue("Color", &Green, sizeof Green);
+    //});
+    //Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 
 
@@ -709,4 +709,37 @@ void SkinnedMeshController::GetSubTrackDescription(
         !FAILED(hr) &&
         "SkinnedMeshController::GetSubTrackDescription(), \
          ID3DXAnimationController::GetTrackDesc() failed.");
+}
+
+void SkinnedMeshController::findBoundingSphere(
+    LPD3DXFRAME pFrame, 
+    std::vector<BoundingSphere>* OutBoundingSpheres)
+{
+    if (!pFrame) return;
+  
+    findBoundingSphere(pFrame->pMeshContainer, OutBoundingSpheres);
+
+    findBoundingSphere(pFrame->pFrameSibling, OutBoundingSpheres);
+    findBoundingSphere(pFrame->pFrameFirstChild, OutBoundingSpheres);
+}
+
+void SkinnedMeshController::findBoundingSphere(
+    LPD3DXMESHCONTAINER pMeshContainer, 
+    std::vector<BoundingSphere>* OutBoundingSpheres)
+{
+    if (!pMeshContainer) return;
+
+    MeshContainer* pMC = static_cast<MeshContainer*>(pMeshContainer);
+    BoundingSphere bs;
+    bs.center = pMC->pEffectMesh->m_center;
+    bs.radius = pMC->pEffectMesh->m_radius;
+    OutBoundingSpheres->emplace_back(bs);
+}
+
+std::vector<BoundingSphere> SkinnedMeshController::GetBoundingSpheres()
+{
+    std::vector<BoundingSphere> boundingSpheres;
+    findBoundingSphere(m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame, &boundingSpheres);
+    findBoundingSphere(m_pSkinnedMeshInstance->pSkinnedMesh->m_pSubRootFrame, &boundingSpheres);
+    return boundingSpheres;
 }

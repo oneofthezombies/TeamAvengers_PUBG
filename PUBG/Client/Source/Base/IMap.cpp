@@ -2,7 +2,7 @@
 #include "IMap.h"
 
 IMap::IMap()
-    : IObject()
+    : IObject(TAG_OBJECT::Idle)
 {
 }
 

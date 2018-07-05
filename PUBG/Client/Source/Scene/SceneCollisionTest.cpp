@@ -6,7 +6,7 @@
 SampleCollisionBox::SampleCollisionBox(
     const int instanceID,
     const TAG_COLLISION tagCollision, const D3DXMATRIX& transformationMatrix)
-    : IObject()
+    : IObject(TAG_OBJECT::Idle)
     , m_instanceID(instanceID)
     , pTransform(nullptr)
     , pBoxCollider(nullptr)

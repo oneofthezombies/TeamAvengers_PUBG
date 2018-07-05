@@ -9,7 +9,7 @@ TerrainFeature::TerrainFeature(
     const D3DXVECTOR3& position,
     const D3DXVECTOR3& rotation,
     const D3DXVECTOR3& scale)
-    : IObject()
+    : IObject(TAG_OBJECT::TerrainFeature)
     , pEffectMeshRenderer(nullptr)
 {
     pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
@@ -20,12 +20,14 @@ TerrainFeature::TerrainFeature(
     tr->SetRotation(rotation);
     tr->SetScale(scale);
     tr->Update();
+
+    // setup bounding sphere
+    m_boundingSphereTerrainFeature = pEffectMeshRenderer->GetBoundingSphere();
+    m_boundingSphereTerrainFeature.center += position;
 }
 
 TerrainFeature::~TerrainFeature()
 {
-    for (auto c : m_colliders)
-        SAFE_DELETE(c);
 }
 
 void TerrainFeature::OnUpdate()
@@ -47,15 +49,35 @@ void TerrainFeature::OnRender()
         pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
     });
 
-    for (auto c : m_colliders)
-        c->Render();
+    m_boundingSphereTerrainFeature.Render();
+    for (auto bb : m_boundingBoxes)
+        bb->Render();
+}
+
+BoundingSphere* TerrainFeature::GetBoundingSphere()
+{
+    return &m_boundingSphereTerrainFeature;
 }
 
 void TerrainFeature::AddBoxCollider(const D3DXMATRIX& transformationMatrix)
 {
-    BoxCollider* pBoxCollider = new BoxCollider(this);
-    pBoxCollider->Init(transformationMatrix);
-    pBoxCollider->SetTagCollision(TAG_COLLISION::Impassable);
+    BoundingBox* bb = new BoundingBox;
+    D3DXVECTOR3 extent(Vector3::ONE * 0.5f);
+    D3DXVECTOR3 vS;
+    D3DXQUATERNION qR;
+    Matrix::GetScaleAndRotation(transformationMatrix, &vS, &qR);
+    D3DXVECTOR3 vT = Matrix::GetTranslation(transformationMatrix);
 
-    m_colliders.emplace_back(pBoxCollider);
+    D3DXMATRIX mS;
+    D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
+    D3DXVec3TransformCoord(&extent, &extent, &mS);
+
+    bb->center = Vector3::ZERO;
+    bb->extent = extent;
+
+    D3DXMATRIX invS;
+    D3DXMatrixInverse(&invS, nullptr, &mS);
+    bb->Update(invS * transformationMatrix);
+
+    m_boundingBoxes.emplace_back(bb);
 }

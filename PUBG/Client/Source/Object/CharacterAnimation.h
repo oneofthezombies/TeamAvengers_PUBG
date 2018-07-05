@@ -79,4 +79,6 @@ public:
     void GetLowerTrackDescription(
         const std::size_t index,
         D3DXTRACK_DESC* OutDesc);
+
+    std::vector<BoundingSphere> GetBoundingSpheres();
 };

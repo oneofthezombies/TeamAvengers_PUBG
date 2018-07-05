@@ -9,7 +9,7 @@ const float CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME = 0.0f;
 const float CharacterAnimation::DEFAULT_POSITION = 0.0f;
 
 CharacterAnimation::CharacterAnimation()
-    : IObject()
+    : IObject(TAG_OBJECT::Idle)
 {
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
     pSkinnedMeshController->SetSkinnedMesh(ResourceInfo::GetCharacterPathFileName());
@@ -310,4 +310,9 @@ void CharacterAnimation::GetLowerTrackDescription(
     D3DXTRACK_DESC* OutDesc)
 {
     pSkinnedMeshController->GetTrackDescription(index, OutDesc);
+}
+
+std::vector<BoundingSphere> CharacterAnimation::GetBoundingSpheres()
+{
+    return pSkinnedMeshController->GetBoundingSpheres();
 }

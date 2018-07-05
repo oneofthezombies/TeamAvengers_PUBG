@@ -7,11 +7,10 @@
 
 CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
     Character* pCharacter)
-    : IObject()
+    : IObject(TAG_OBJECT::Idle)
     , m_tagColliderCharacterPart(tag)
 
     , pCharacter(pCharacter)
-    , pBoxCollider(nullptr)
 {
     assert(pCharacter && 
         "CharacterPart::Constructor(), character is null.");
@@ -19,15 +18,15 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
     CharacterAnimation* pAnimation = 
         pCharacter->GetCharacterAnimation();
 
-    pBoxCollider = AddComponent<BoxCollider>();
-    pBoxCollider->SetTagCollision(
-        pCharacter->GetTagCollisionBody(pCharacter->GetIndex()));
-    pBoxCollider->AddOnCollisionEnterCallback(
-        std::bind(&Character::OnCollisionEnter, pCharacter, _1, _2));
-    pBoxCollider->AddOnCollisionStayCallback(
-        std::bind(&Character::OnCollisionStay, pCharacter, _1, _2));
-    pBoxCollider->AddOnCollisionExitCallback(
-        std::bind(&Character::OnCollisionExit, pCharacter, _1, _2));
+    //pBoxCollider = AddComponent<BoxCollider>();
+    //pBoxCollider->SetTagCollision(
+    //    pCharacter->GetTagCollisionBody(pCharacter->GetIndex()));
+    //pBoxCollider->AddOnCollisionEnterCallback(
+    //    std::bind(&Character::OnCollisionEnter, pCharacter, _1, _2));
+    //pBoxCollider->AddOnCollisionStayCallback(
+    //    std::bind(&Character::OnCollisionStay, pCharacter, _1, _2));
+    //pBoxCollider->AddOnCollisionExitCallback(
+    //    std::bind(&Character::OnCollisionExit, pCharacter, _1, _2));
 
     switch (tag)
     {
@@ -60,7 +59,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             //max.y *= 0.5f;
 
             //pBoxCollider->Init(min, max);
-            pBoxCollider->Init(Vector3::ONE * -10.0, Vector3::ONE * 10.0f);
+            //pBoxCollider->Init(Vector3::ONE * -10.0, Vector3::ONE * 10.0f);
+            m_boundingBox = BoundingBox::Create(Vector3::ONE * -10.0f, Vector3::ONE * 10.0f);
         }
         break;
     case TAG_COLLIDER_CHARACTER_PART::Neck:
@@ -72,8 +72,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             addChild(TAG_COLLIDER_CHARACTER_PART::Clavicle_Left);
             addChild(TAG_COLLIDER_CHARACTER_PART::Clavicle_Right);
 
-            pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
-                D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+            //pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
+            //    D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(Vector3::ONE * -5.0f, Vector3::ONE * 5.0f);
         }
         break;
     case TAG_COLLIDER_CHARACTER_PART::Breast:
@@ -83,8 +84,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Stomach_Upper);
 
-            pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
-                D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+            //pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
+            //    D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+            m_boundingBox = BoundingBox::Create(Vector3::ONE * -10.0f, Vector3::ONE * 10.0f);
         }
         break;
     case TAG_COLLIDER_CHARACTER_PART::Stomach_Upper:
@@ -94,8 +96,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Stomach_Lower);
 
-            pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
-                D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+            //pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
+            //    D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+            m_boundingBox = BoundingBox::Create(Vector3::ONE * -10.0f, Vector3::ONE * 10.0f);
         }
         break;
     case TAG_COLLIDER_CHARACTER_PART::Stomach_Lower:
@@ -105,8 +108,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Waist);
 
-            pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
-                D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+            //pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
+            //    D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+            m_boundingBox = BoundingBox::Create(Vector3::ONE * -10.0f, Vector3::ONE * 10.0f);
         }
         break;
     case TAG_COLLIDER_CHARACTER_PART::Waist:
@@ -117,8 +121,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             addChild(TAG_COLLIDER_CHARACTER_PART::Leg_Left_Upper);
             addChild(TAG_COLLIDER_CHARACTER_PART::Leg_Right_Upper);
 
-            pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
-                D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+            //pBoxCollider->Init(D3DXVECTOR3(-10.0f, -10.0f, -10.0f), 
+            //    D3DXVECTOR3(10.0f, 10.0f, 10.0f));
+            m_boundingBox = BoundingBox::Create(Vector3::ONE * -10.0f, Vector3::ONE * 10.0f);
         }
         break;
     case TAG_COLLIDER_CHARACTER_PART::Clavicle_Left:
@@ -128,7 +133,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Arm_Left_Upper);
 
-            pBoxCollider->Init(D3DXVECTOR3(-6.0f, -7.0f, -5.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-6.0f, -7.0f, -5.0f), 
+            //    D3DXVECTOR3(6.0f, 7.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-6.0f, -7.0f, -5.0f),
                 D3DXVECTOR3(6.0f, 7.0f, 5.0f));
         }
         break;
@@ -139,7 +146,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Arm_Right_Upper);
 
-            pBoxCollider->Init(D3DXVECTOR3(-6.0f, -7.0f, -5.0f),
+            //pBoxCollider->Init(D3DXVECTOR3(-6.0f, -7.0f, -5.0f),
+            //    D3DXVECTOR3(6.0f, 7.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-6.0f, -7.0f, -5.0f),
                 D3DXVECTOR3(6.0f, 7.0f, 5.0f));
         }
         break;
@@ -150,7 +159,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Arm_Left_Lower);
 
-            pBoxCollider->Init(D3DXVECTOR3(-10.0f, -5.0f, -5.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-10.0f, -5.0f, -5.0f), 
+            //    D3DXVECTOR3(10.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-10.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(10.0f, 5.0f, 5.0f));
         }
         break;
@@ -161,7 +172,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Hand_Left);
 
-            pBoxCollider->Init(D3DXVECTOR3(-12.0f, -5.0f, -5.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-12.0f, -5.0f, -5.0f), 
+            //    D3DXVECTOR3(12.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-12.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(12.0f, 5.0f, 5.0f));
         }
         break;
@@ -172,7 +185,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Arm_Right_Lower);
 
-            pBoxCollider->Init(D3DXVECTOR3(-10.0f, -5.0f, -5.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-10.0f, -5.0f, -5.0f), 
+            //    D3DXVECTOR3(10.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-10.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(10.0f, 5.0f, 5.0f));
         }
         break;
@@ -183,7 +198,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Hand_Right);
 
-            pBoxCollider->Init(D3DXVECTOR3(-12.0f, -5.0f, -5.0f),
+            //pBoxCollider->Init(D3DXVECTOR3(-12.0f, -5.0f, -5.0f),
+            //    D3DXVECTOR3(12.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-12.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(12.0f, 5.0f, 5.0f));
         }
         break;
@@ -192,7 +209,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             addFrame("hand_l", pAnimation);
             addFrame("middle_01_l", pAnimation);
 
-            pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
+            //    D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-5.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
         }
         break;
@@ -201,7 +220,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             addFrame("hand_r", pAnimation);
             addFrame("middle_01_r", pAnimation);
 
-            pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
+            //    D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-5.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
         }
         break;
@@ -212,7 +233,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Leg_Left_Lower);
 
-            pBoxCollider->Init(D3DXVECTOR3(-23.0f, -7.0f, -7.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-23.0f, -7.0f, -7.0f), 
+            //    D3DXVECTOR3(23.0f, 7.0f, 7.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-23.0f, -7.0f, -7.0f),
                 D3DXVECTOR3(23.0f, 7.0f, 7.0f));
         }
         break;
@@ -223,7 +246,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Foot_Left);
 
-            pBoxCollider->Init(D3DXVECTOR3(-23.0f, -5.0f, -5.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-23.0f, -5.0f, -5.0f), 
+            //    D3DXVECTOR3(23.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-23.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(23.0f, 5.0f, 5.0f));
         }
         break;
@@ -234,7 +259,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Leg_Right_Lower);
 
-            pBoxCollider->Init(D3DXVECTOR3(-23.0f, -7.0f, -7.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-23.0f, -7.0f, -7.0f), 
+            //    D3DXVECTOR3(23.0f, 7.0f, 7.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-23.0f, -7.0f, -7.0f),
                 D3DXVECTOR3(23.0f, 7.0f, 7.0f));
         }
         break;
@@ -245,7 +272,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
 
             addChild(TAG_COLLIDER_CHARACTER_PART::Foot_Right);
 
-            pBoxCollider->Init(D3DXVECTOR3(-23.0f, -5.0f, -5.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-23.0f, -5.0f, -5.0f), 
+            //    D3DXVECTOR3(23.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-23.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(23.0f, 5.0f, 5.0f));
         }
         break;
@@ -254,7 +283,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             addFrame("foot_l", pAnimation);
             addFrame("ball_l", pAnimation);
 
-            pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
+            //    D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-5.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
         }
         break;
@@ -263,7 +294,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
             addFrame("foot_r", pAnimation);
             addFrame("ball_r", pAnimation);
 
-            pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
+            //pBoxCollider->Init(D3DXVECTOR3(-5.0f, -5.0f, -5.0f), 
+            //    D3DXVECTOR3(5.0f, 5.0f, 5.0f));
+            m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-5.0f, -5.0f, -5.0f),
                 D3DXVECTOR3(5.0f, 5.0f, 5.0f));
         }
         break;
@@ -316,15 +349,17 @@ void CharacterPart::OnUpdate()
                    / static_cast<float>(m_frames.size());
     }
 
-    pBoxCollider->Update(model *
+    m_boundingBox.Update(model *
         pCharacter->GetTransform()->GetTransformationMatrix());
+    //pBoxCollider->Update(model *
+    //    pCharacter->GetTransform()->GetTransformationMatrix());
 
     //updateUI();
 }
 
 void CharacterPart::OnRender()
 {
-    pBoxCollider->Render();
+    m_boundingBox.Render();
 }
 
 TAG_COLLIDER_CHARACTER_PART CharacterPart::GetTagColliderCharacterPart() const
@@ -332,10 +367,15 @@ TAG_COLLIDER_CHARACTER_PART CharacterPart::GetTagColliderCharacterPart() const
     return m_tagColliderCharacterPart;
 }
 
-void CharacterPart::addFrame(
-    const string& name, CharacterAnimation* pSkiCon)
+BoundingBox* CharacterPart::GetBoundingBox()
 {
-    auto pFrame = pSkiCon->FindFrame(name);
+    return &m_boundingBox;
+}
+
+void CharacterPart::addFrame(
+    const string& name, CharacterAnimation* pCharacterAnimation)
+{
+    Frame* pFrame = pCharacterAnimation->FindFrame(name);
     if (!pFrame)
     {
         string str(name + "is null.");
@@ -372,5 +412,5 @@ void CharacterPart::updateUI()
 
 void CharacterPart::addChild(const TAG_COLLIDER_CHARACTER_PART tag)
 {
-    AddChild(new CharacterPart(tag, pCharacter));
+    pCharacter->AddPart(new CharacterPart(tag, pCharacter));
 }

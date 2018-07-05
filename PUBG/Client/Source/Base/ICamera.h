@@ -56,11 +56,29 @@ public:
     const D3DXMATRIX& GetProjectionMatrix() const;
           TAG_CAMERA  GetTagCamera()        const;
 
-    bool CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY);
-    //D3DXVECTOR3* GetBulletDestination()
+    D3DXVECTOR4 GetFrustumArea();
+    //Area CalculateFrustumAndArea(D3DXVECTOR3& destPos)
     //{
-    //    return &m_vBulletDestination;
+    //    UpdateFrustumCulling();
+    //    D3DXVECTOR4 MinMax = GetFrustumArea();
+    //    D3DXVECTOR3 min = D3DXVECTOR3(MinMax.x, 0, MinMax.y);
+    //    D3DXVECTOR3 max = D3DXVECTOR3(MinMax.z, 0, MinMax.w);
+
+    //    Area area;
+    //    size_t index = CurrentScene()()->GetCellIndex(min);
+    //    size_t index2 = CurrentScene()()->GetCellIndex(max);
+
+    //    for (size_t i = 0; i < CellSpace::DIMENSION; i++)
+    //    {
+    //        
+
+    //    }
+
+    //    return area;
     //}
+
+    bool CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY);
+
 };
  
 

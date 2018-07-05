@@ -2,10 +2,12 @@
 #include "IObject.h"
 #include "ComponentTransform.h"
 
-IObject::IObject()
+IObject::IObject(const TAG_OBJECT tagObject)
     : MemoryAllocator()
     , pTransform(nullptr)
     , pParent(nullptr)
+    , m_tagObject(tagObject)
+    , m_pBoundingSphere(nullptr)
 
 {
 	pTransform = AddComponent<Transform>();
@@ -18,6 +20,11 @@ IObject::~IObject()
 
     for (auto c : m_components)
         SAFE_DELETE(c.second);
+
+    SAFE_DELETE(m_pBoundingSphere);
+
+    for (auto bb : m_boundingBoxes)
+        SAFE_DELETE(bb);
 }
 
 void IObject::Update()
@@ -62,4 +69,14 @@ void IObject::AddChild(IObject* pChild)
 Transform* IObject::GetTransform()
 {
 	return pTransform;
+}
+
+BoundingSphere* IObject::GetBoundingSphere()
+{
+    return m_pBoundingSphere;
+}
+
+const std::vector<BoundingBox*>& IObject::GetBoundingBoxes()
+{
+    return m_boundingBoxes;
 }

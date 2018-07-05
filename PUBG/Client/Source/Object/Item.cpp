@@ -12,7 +12,7 @@ Item::Item(
     const D3DXVECTOR3&   position, 
     const D3DXVECTOR3&   rotation, 
     const D3DXVECTOR3&   scale)
-    : IObject()
+    : IObject(TAG_OBJECT::Item)
 
     , m_tagResStatic(tag)
     , m_durability(0.0f)
@@ -37,6 +37,11 @@ Item::Item(
     pTr->Update();
 
     setup(tag);
+
+    m_pBoundingSphere = new BoundingSphere;
+    BoundingSphere bs = pEffectMeshRenderer->GetBoundingSphere();
+    m_pBoundingSphere->center = bs.center;
+    m_pBoundingSphere->radius = bs.radius;
 }
 
 Item::~Item()
@@ -60,6 +65,8 @@ void Item::OnRender()
         
     if (m_isRenderSkinnedMesh)
         pSkinnedMeshController->Render(GetTransform()->GetTransformationMatrix(), std::bind(&Item::setGlobalVariable, this, _1));
+
+    m_pBoundingSphere->CopyTo(GetTransform()->GetPosition()).Render();
 }
 
 void Item::setup(const TAG_RES_STATIC tag)

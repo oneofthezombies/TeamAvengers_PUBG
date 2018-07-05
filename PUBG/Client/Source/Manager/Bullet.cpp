@@ -3,7 +3,7 @@
 #include "Collider.h"
 
 Bullet::Bullet()
-    : IObject()
+    : IObject(TAG_OBJECT::Bullet)
     , m_Speed(0.0f)
     , m_Damage(0.0f)
     , m_IsActive(false)
