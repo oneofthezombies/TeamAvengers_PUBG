@@ -258,8 +258,8 @@ float ItemInfo::GetBulletFireCoolTime(const TAG_RES_STATIC tag)
     //´ÜÀ§´Â sec
     switch (tag)
     {
-    case TAG_RES_STATIC::QBZ: return /*0.92f;*/0.092f;
-    case TAG_RES_STATIC::Kar98k: return 19.0f;/*1.900f;*/
+    case TAG_RES_STATIC::QBZ: return 0.092f;
+    case TAG_RES_STATIC::Kar98k: return 1.900f;
 
     default: return 0.0f;
     }

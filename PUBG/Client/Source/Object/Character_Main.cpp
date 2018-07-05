@@ -108,6 +108,10 @@ void Character::updateMine()
     setStance();
     setAttacking();
     setReload();
+    setPunch();
+    setInteraction();
+    setJump();
+
     ForDebug();
 
     //setting animation and movements
@@ -127,6 +131,8 @@ void Character::updateMine()
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH, 
                 m_lowerAnimState);
+
+            // set current with same position with finish event m_lowerAnimState
 
             m_savedInput = m_currentStayKey;
         }
@@ -195,7 +201,7 @@ void Character::updateMine()
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
     if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton)
     {
-        if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_hand->GetNumBullet() > 0)
+        if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_pHand->GetNumBullet() > 0)
         {
             rifleShooting();
             //pistolShooting();?? 이란것도 나중에는 만들겠지요?

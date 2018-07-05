@@ -19,48 +19,46 @@ void SceneLoading::Load()
 
     // load effect meshs
     load(TAG_RES_STATIC::Ammo_5_56mm);
-    //load(TAG_RES_STATIC::Ammo_7_62mm);
+    load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::QBZ);
-    //load(TAG_RES_STATIC::Kar98k);
+    load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
 
-    //// load skined meshs
+    // load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    //load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
-    // load character
-    /*
-    ForTest는 아래 4개의 X파일들을 합친 것
-    Lobby.X
-    Unarmed_Idle.X
-    Unarmed_Jump.X
-    Unarmed_Locomotion_Stand.X
-    */
-    load(TAG_RES_ANIM_CHARACTER::ForTest);
+    // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
+    load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load animation
-    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Transition);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined);
 
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
-
-    // has bug
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
-
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
-
-    // has bug
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_PrimarySlot_OnHand);
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_SecondarySlot_OnHand);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+
+    /*
+    Unarmed_Combined.X 는 하단의 X파일들을 합친 것
+    - Lobby.X
+    - Unarmed_Idle.X
+    - Unarmed_Transition.X
+    - Unarmed_Attack.X
+    - Unarmed_DoorOpen_And_Pickup.X
+    - Unarmed_Landing.X
+
+    Rifle_Combined.X 는 하단의 X파일들을 합친 것
+    - Rifle_Idling.X
+    - Rifle_Transition.X
+    - Rifle_DoorOpen_And_Pickup.X
+    - Rifle_Landing.X
+    - Rifle_Jump.X
+    - Rifle_OnBody.X
+    - Rifle_OnHand.X
+    */
 }
 
 void SceneLoading::load(const TAG_RES_STATIC tag)

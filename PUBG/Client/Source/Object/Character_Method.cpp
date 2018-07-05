@@ -62,6 +62,7 @@ Character::IsPressed::IsPressed()
     , _X(false)
     , _C(false)
     , _R(false)
+    , _F(false)
     , _Space(false)
     , _Num1(false)
     , _Num2(false)
@@ -90,8 +91,8 @@ Character::FramePtr::FramePtr()
 Character::IsJumping::IsJumping()
     : isJumping(false)
     
-    , jumpPower(15.0f)
-    , gravity(0.5f)
+    , jumpPower(12.0f)
+    , gravity(0.3f)
     , currGravity(0.0f)
     , maxStepHeight(5.f)
 {
@@ -163,6 +164,7 @@ void Character::handleInput(IsPressed* OutIsPressed)
     OutIsPressed->_X            = pInput->IsOnceKeyDown('X');
     OutIsPressed->_C            = pInput->IsOnceKeyDown('C');
     OutIsPressed->_R            = pInput->IsOnceKeyDown('R');
+    OutIsPressed->_F            = pInput->IsOnceKeyDown('F');
     OutIsPressed->_Space        = pInput->IsOnceKeyDown(VK_SPACE);
     OutIsPressed->_Num1         = pInput->IsOnceKeyDown('1');
     OutIsPressed->_Num2         = pInput->IsOnceKeyDown('2');
@@ -242,11 +244,17 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
     Moving    moving;
 
     float movingFactor;
+
+    //점프
     if (m_currentOnceKey._Space)
         m_Jump.isJumping = true;
 
     //Moving 3개 -----------------------------------------------------
-    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl)
+    /*
+    Prone의 경우 Sprint가 없고
+    Stand, Crouch의 경우 BR, B, BL일 때 Sprint가 없다
+    */
+    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl) 
     {
         moving = Moving::Sprint;
         movingFactor = 2.0f;
@@ -312,12 +320,7 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
 
     if (OutTag) //if null, no changes in animation
     {
-        if (m_Jump.isJumping&&m_currentStayKey._W)
-            *OutTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F;
-        else if (m_Jump.isJumping)
-            *OutTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary;
-        else
-            *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
+        *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
     }
 }
 
@@ -327,12 +330,10 @@ bool Character::isMine() const
 }
 
 void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
-{
-    
+{  
     HeightMap* pCurrentScene = CurrentScene()()->GetHeightMap();
     if (!pCurrentScene)
         return; //assert(false && "No CurrentScene");
-
 
     D3DXVECTOR3 targetPos = *pOut;
     float height = 0;
@@ -340,7 +341,6 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 
     if (m_Jump.isJumping)
     {
-
         targetPos.y += m_Jump.jumpPower - m_Jump.currGravity;
         m_Jump.currGravity += m_Jump.gravity;
         
@@ -374,25 +374,23 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         {
             targetPos.y = height;
         }
-
     }
-
     *pOut = targetPos;
 }
 
 void Character::rifleShooting()
 {
     auto& inven = m_totalInventory;
-    inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_hand->GetTagResStatic());
+    inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_pHand->GetTagResStatic());
 
-    int numBullet = inven.m_hand->GetNumBullet();
-    inven.m_hand->SetNumBullet(--numBullet);
-    cout << "총에 남아있는 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
+    int numBullet = inven.m_pHand->GetNumBullet();
+    inven.m_pHand->SetNumBullet(--numBullet);
+    cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
 
     //Goal : get Fire starting position , get fire direction
-    inven.m_hand->UpdateModel(); //update to get position of frame "gun_bolt" 
+    inven.m_pHand->UpdateModel(); //update to get position of frame "gun_bolt" 
     D3DXMATRIX mat =
-        inven.m_hand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
+        inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
         * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
         * GetTransform()->GetTransformationMatrix();    //character world matrix
     
@@ -405,7 +403,7 @@ void Character::rifleShooting()
     //-------------------------
 
 
-    switch (inven.m_hand->GetTagResStatic())
+    switch (inven.m_pHand->GetTagResStatic())
     {
     case TAG_RES_STATIC::QBZ:
         BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_COLLISION::Impassable);

@@ -48,7 +48,8 @@ string Character::ForDebugGetStance(Stance stance)
 
 void Character::ForDebug()
 {
-    Item* hand = m_totalInventory.m_hand;
+    Item* hand = m_totalInventory.m_pHand;
+    Item* saveWeapon = m_totalInventory.pTempSaveWeaponForX;
     if (hand)
     {
         TAG_RES_STATIC tagDebug = hand->GetTagResStatic();
@@ -59,6 +60,18 @@ void Character::ForDebug()
     {
         Debug << "On hand Weapon: NONE" << "\n";
     }
+
+    if (saveWeapon)
+    {
+        TAG_RES_STATIC tagDebug = saveWeapon->GetTagResStatic();
+        Debug << "Temp save Weapon for X: ";
+        Debug << ItemInfo::GetName(tagDebug) << "\n";   
+    }
+    else
+    {
+        Debug << "Temp save Weapon for X: NONE" << "\n";
+    }
+
     Debug << "Attacking: " << ForDebugGetAttacking(m_attacking) << "\n";
     Debug << "Stance: " << ForDebugGetStance(m_stance) << "\n";
 }
