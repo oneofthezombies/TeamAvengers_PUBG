@@ -102,9 +102,14 @@ void Character::updateMine()
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
 
+    //save pos를 저장해 놓고
+    //dest pos 로 계 산
+
     setStance();
     setAttacking();
     setReload();
+
+   
 
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
     if (m_savedInput != m_currentStayKey)
@@ -129,8 +134,39 @@ void Character::updateMine()
         animationMovementControl(&pos, NULL); // NULL means not changing animation
     }
 
+    //dest pos,rot 결정
+
+    //dest를 갖고 업데이트 
     // 카메라 프러스텀 업데이트 
     CurrentCamera()()->UpdateFrustumCulling();
+    //dest로 업데이트된 frustum의 min max 사각형을 결정한다(함수) >> x z float 총 4개가 나와서 area 결정
+    //(결정된 사각형에서 한셀씩 더 크게)
+
+
+    //bounding sphere(destpos + center, radius)를 구해서(새로운 변수에 넣어놓는다)
+
+    //for 문
+    //area 내에 있는 모든 terrain feature 와  내꺼 bounding sphere랑 collision이 있는것을 찾아낸다
+    /*{
+    
+        
+        //if has sphere collision 
+        {
+            dest tm을 계산, dest bounding box 계산
+
+            this의(캐릭터의 box colliders 들) 과 terrain feature 가 갖고 있는 box collider 들을 계산 
+            if(하나라도 충돌하면 빠져 나온다 -> 플레이어가 움직이지 못하도록)
+
+            else 하나라도 충돌하지 않는다면
+            this를 업데이트 pos = destpos
+            
+        }
+
+    }*/
+    
+    // character update 끝남
+
+
 
     // 이동가능한치 체크해서 업데이트 하거나 y만되거나 등등
     //CurrentScene()()->Get
