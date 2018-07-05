@@ -47,11 +47,15 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
+
+    // has bug
     //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
+
+    // has bug
     //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_PrimarySlot_OnHand);
     //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_SecondarySlot_OnHand);
 
