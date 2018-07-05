@@ -314,12 +314,7 @@ void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHAR
 
     if (OutTag) //if null, no changes in animation
     {
-        if (m_Jump.isJumping&&m_currentStayKey._W)
-            *OutTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F;
-        else if (m_Jump.isJumping)
-            *OutTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary;
-        else
-            *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
+        *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
     }
 }
 

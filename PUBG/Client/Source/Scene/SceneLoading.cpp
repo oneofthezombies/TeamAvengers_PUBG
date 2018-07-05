@@ -28,7 +28,7 @@ void SceneLoading::Load()
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
     load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
-    // load character
+    // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
     load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load animation
@@ -40,6 +40,25 @@ void SceneLoading::Load()
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+
+    /*
+    Unarmed_Combined.X 는 하단의 X파일들을 합친 것
+    - Lobby.X
+    - Unarmed_Idle.X
+    - Unarmed_Transition.X
+    - Unarmed_Attack.X
+    - Unarmed_DoorOpen_And_Pickup.X
+    - Unarmed_Landing.X
+
+    Rifle_Combined.X 는 하단의 X파일들을 합친 것
+    - Rifle_Idling.X
+    - Rifle_Transition.X
+    - Rifle_DoorOpen_And_Pickup.X
+    - Rifle_Landing.X
+    - Rifle_Jump.X
+    - Rifle_OnBody.X
+    - Rifle_OnHand.X
+    */
 }
 
 void SceneLoading::load(const TAG_RES_STATIC tag)

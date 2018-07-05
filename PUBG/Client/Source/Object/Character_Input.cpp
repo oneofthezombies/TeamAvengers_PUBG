@@ -439,43 +439,155 @@ void Character::setInteraction()
     //F키를 누르면 문열기, 아이템줍기
     if (m_currentOnceKey._F)
     {
-        //문열기
+        //TODO: TAG_OBJECT에 따라 문열기나, 아이템 줍기 애니메이션이 실행되어야한다
+        bool isDoor = true;
+        if (isDoor)
+        {
+            //문열기
+            TAG_ANIM_CHARACTER animTag = TAG_ANIM_CHARACTER::COUNT;
+            if (m_attacking == Attacking::Unarmed)
+            {
+                if (m_stance == Stance::Stand)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_DoorOpen;
+                }
+                else if (m_stance == Stance::Crouch)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_DoorOpen;
+                }
+                else if (m_stance == Stance::Prone)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_DoorOpen;
+                }
+            }
+            else if (m_attacking == Attacking::Rifle)
+            {
+                if (m_stance == Stance::Stand)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_DoorOpen;
+                }
+                else if (m_stance == Stance::Crouch)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_DoorOpen;
+                }
+                else if (m_stance == Stance::Prone)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_DoorOpen;
+                }
+            }
+            assert((animTag != TAG_ANIM_CHARACTER::COUNT) && "Character::setInteraction(), Door open animTag is COUNT");
+
+            //애니메이션 적용
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::UPPER,
+                animTag,
+                false,
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                CharacterAnimation::DEFAULT_POSITION,
+                [this]()
+            {
+                pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    m_lowerAnimState,
+                    false);
+            });
+        }
+        else
+        {
+            //아이템 줍기
+            TAG_ANIM_CHARACTER animTag = TAG_ANIM_CHARACTER::COUNT;
+            if (m_attacking == Attacking::Unarmed)
+            {
+                if (m_stance == Stance::Stand)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Pickup_Low;
+                }
+                else if (m_stance == Stance::Crouch)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Pickup_Low;
+                }
+                else if (m_stance == Stance::Prone)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Pickup_Low;
+                }
+            }
+            else if (m_attacking == Attacking::Rifle)
+            {
+                if (m_stance == Stance::Stand)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Pickup_Low;
+                }
+                else if (m_stance == Stance::Crouch)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Pickup_Low;
+                }
+                else if (m_stance == Stance::Prone)
+                {
+                    animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Pickup_Low;
+                }
+            }
+            assert((animTag != TAG_ANIM_CHARACTER::COUNT) && "Character::setInteraction(), Pick up animTag is COUNT");
+
+            //애니메이션 적용
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::UPPER,
+                animTag,
+                false,
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                CharacterAnimation::DEFAULT_POSITION,
+                [this]()
+            {
+                pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    m_lowerAnimState,
+                    false);
+            });
+        }
+    }
+}
+
+void Character::setJump()
+{
+    if (m_currentOnceKey._Space && m_currentStayKey._W)
+    {
         TAG_ANIM_CHARACTER animTag = TAG_ANIM_CHARACTER::COUNT;
         if (m_attacking == Attacking::Unarmed)
-        {
-            if (m_stance == Stance::Stand)
-            {
-                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_DoorOpen;
-            }
-            else if (m_stance == Stance::Crouch)
-            {
-                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_DoorOpen;
-            }
-            else if (m_stance == Stance::Prone)
-            {
-                animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_DoorOpen;
-            }
-        }
+            animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F;
         else if (m_attacking == Attacking::Rifle)
-        {
-            if (m_stance == Stance::Stand)
-            {
-                animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_DoorOpen;
-            }
-            else if (m_stance == Stance::Crouch)
-            {
-                animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_DoorOpen;
-            }
-            else if (m_stance == Stance::Prone)
-            {
-                animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_DoorOpen;
-            }      
-        }
-        assert((animTag != TAG_ANIM_CHARACTER::COUNT) && "Character::setInteraction(), animTag is COUNT");
+            animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Jump_F;
 
         //애니메이션 적용
         pAnimation->Set(
-            CharacterAnimation::BodyPart::UPPER,
+            CharacterAnimation::BodyPart::BOTH,
+            animTag,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            CharacterAnimation::DEFAULT_POSITION,
+            [this]()
+        {
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                false);
+        });
+    }
+    else if (m_currentOnceKey._Space)
+    {
+        TAG_ANIM_CHARACTER animTag = TAG_ANIM_CHARACTER::COUNT;
+        if(m_attacking == Attacking::Unarmed)
+            animTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary;
+        else if(m_attacking == Attacking::Rifle)
+            animTag = TAG_ANIM_CHARACTER::Rifle_Combat_Jump_Stationary_Full_001;
+    
+        //애니메이션 적용
+        pAnimation->Set(
+            CharacterAnimation::BodyPart::BOTH,
             animTag,
             false,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
@@ -491,6 +603,7 @@ void Character::setInteraction()
         });
     }
 }
+
 /*
 무기 장착 및 해제 애니메이션
 */

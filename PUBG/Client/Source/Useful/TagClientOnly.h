@@ -3,6 +3,12 @@
 enum class TAG_OBJECT
 {
     Idle,
+    TerrainFeature,
+    Bullet,
+    Character,
+    Door,
+    Window,
+    Item,
 };
 
 enum class TAG_COLLISION
