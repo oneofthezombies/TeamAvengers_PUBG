@@ -12,7 +12,6 @@ BoundingSphere::BoundingSphere()
     : BoundingShape()
     , radius(0.0f)
 {
-    center = Vector3::ZERO;
 }
 
 BoundingSphere BoundingSphere::CopyTo(const D3DXVECTOR3& position)

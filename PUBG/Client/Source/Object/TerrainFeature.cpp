@@ -24,6 +24,8 @@ TerrainFeature::TerrainFeature(
     // setup bounding sphere
     m_boundingSphereTerrainFeature = pEffectMeshRenderer->GetBoundingSphere();
     m_boundingSphereTerrainFeature.center += position;
+
+    CurrentScene()()->InsertObjIntoCellSpace(TAG_OBJECT::TerrainFeature, CurrentScene()()->GetCellIndex(position), this);
 }
 
 TerrainFeature::~TerrainFeature()
@@ -59,7 +61,7 @@ BoundingSphere* TerrainFeature::GetBoundingSphere()
     return &m_boundingSphereTerrainFeature;
 }
 
-void TerrainFeature::AddBoxCollider(const D3DXMATRIX& transformationMatrix)
+void TerrainFeature::AddBoundingBox(const D3DXMATRIX& transformationMatrix)
 {
     BoundingBox* bb = new BoundingBox;
     D3DXVECTOR3 extent(Vector3::ONE * 0.5f);

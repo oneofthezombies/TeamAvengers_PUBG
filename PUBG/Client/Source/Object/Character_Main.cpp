@@ -208,11 +208,13 @@ void Character::updateMine()
     // 카메라 프러스텀 업데이트 (왜냐하면 캐릭터0 업데이트, 렌더, 캐릭터1 업데이트, 렌더, ... 순서대로 실행되기 떄문에)
     CurrentCamera()()->UpdateFrustumCulling();
     
+    D3DXVECTOR3 pos = tm->GetPosition();
+    D3DXQUATERNION rot = tm->GetRotation();
 
-    cameraCharacterRotation(dt, &destState.rotation);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
-    applyTarget_Y_Position(&destState.position); //apply height and control jumping
-    //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
-    
+    cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
+    applyTarget_Y_Position(&pos); //apply height and control jumping
+    tm->SetPosition(pos);
+    tm->SetRotation(rot);
 
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
@@ -256,7 +258,6 @@ void Character::updateMine()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-    D3DXVECTOR3 pos = tm->GetPosition();
     Sound()()->Listen(pos, getForward());
 
     if (Input()()->IsOnceKeyDown(VK_UP))

@@ -23,6 +23,7 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
+    load(TAG_RES_STATIC::Rock_1);
 
     // load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);

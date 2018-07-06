@@ -137,7 +137,7 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
                 o.m_scale);
 
             for (auto b : o.m_boxColliders)
-                pTerrainFeature->AddBoxCollider(b.m_transform);
+                pTerrainFeature->AddBoundingBox(b.m_transform);
 
             AddObject(pTerrainFeature);
         }

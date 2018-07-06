@@ -25,5 +25,5 @@ public:
     virtual void OnRender() override;
     virtual BoundingSphere* GetBoundingSphere() override;
 
-    void AddBoxCollider(const D3DXMATRIX&  transformationMatrix);
+    void AddBoundingBox(const D3DXMATRIX& transformationMatrix);
 };

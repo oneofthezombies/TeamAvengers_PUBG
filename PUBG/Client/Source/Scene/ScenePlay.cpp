@@ -13,6 +13,12 @@ void ScenePlay::setAloneMode()
     Character* character0 = new Character(0);
     AddObject(character0);
 
+    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(-100.0f, 100.0f, -100.0f), Vector3::ZERO, Vector3::ONE * 0.1f);
+    D3DXMATRIX m;
+    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 100.0f), nullptr, &Quaternion::IDENTITY, &D3DXVECTOR3(-100.0f, 100.0f, -100.0f));
+    tf->AddBoundingBox(m);
+    AddObject(tf);
+
     ////For inventory Test
     Item* item = nullptr;
     D3DXVECTOR3 p(10, 0, 10);
