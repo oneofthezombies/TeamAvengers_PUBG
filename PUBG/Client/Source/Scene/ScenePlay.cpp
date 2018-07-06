@@ -113,8 +113,15 @@ void ScenePlay::setAloneMode()
 
 void ScenePlay::setWithOthersMode()
 {
+    const int myID = Communication()()->m_MyInfo.m_ID;
+
+    AddObject(new Character(myID));
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    {
+        if (i == myID) continue;
+
         AddObject(new Character(i));
+    }
 }
 
 ScenePlay::ScenePlay()

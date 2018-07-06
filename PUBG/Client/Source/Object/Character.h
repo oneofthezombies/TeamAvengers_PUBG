@@ -136,16 +136,11 @@ public:
 
     struct State
     {
-        D3DXVECTOR3 position;
-        D3DXQUATERNION rotation;
-        D3DXMATRIX transformationMatrix;
-        Stance stance;
-        Attacking attacking;
-        Moving moving;
-        TAG_ANIM_CHARACTER upperAnimState;
-        TAG_ANIM_CHARACTER lowerAnimState;
-        std::size_t cellIndex;
+        D3DXVECTOR3              position;
+        D3DXQUATERNION           rotation;
+        D3DXMATRIX               transformationMatrix;
         std::vector<BoundingBox> boundingBoxes;
+        bool                     isHeadBump;
 
         State();
     };
@@ -180,11 +175,9 @@ private:
 
     // id
     int m_index;
-    State m_currentState;
+    std::size_t m_cellIndex;
 
-    //Transform*          pTransform;
     CharacterAnimation* pAnimation;
-    //CharacterPart*      m_pRootCharacterPart;
     vector<CharacterPart*> m_characterParts;
 
     //
@@ -192,23 +185,19 @@ private:
     RootTransform m_rootTransform;
     WaistRotation m_waistRotation;
 
-    // collision part
-
-
     // for camera
-    D3DXMATRIX m_prevRootModel;
+    D3DXMATRIX  m_prevRootModel;
     D3DXVECTOR3 m_rotationForCamera;
-    Info m_info;
+    Info        m_info;
 
     // for inventory
     TotalInventory m_totalInventory;
     
-
     // state
-    //TAG_ANIM_CHARACTER m_upperAnimState;
-    //TAG_ANIM_CHARACTER m_lowerAnimState;
-    //Stance    m_stance;
-    //Attacking m_attacking;
+    TAG_ANIM_CHARACTER m_upperAnimState;
+    TAG_ANIM_CHARACTER m_lowerAnimState;
+    Stance    m_stance;
+    Attacking m_attacking;
 
     IsPressing m_savedInput;
     IsPressing m_currentStayKey;
@@ -216,7 +205,7 @@ private:
 
     IsJumping m_Jump;
 
-    //std::vector<BoundingSphere> m_boundingSphereCharacter;
+
 
 /**************************** end member variable ****************************/
 
@@ -240,6 +229,8 @@ private:
     void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
     void rifleShooting();
+    void movementControl(OUT State* OutState);
+    void animationControl();
 
     void updateMine();
     void updateOther();
@@ -278,19 +269,19 @@ private:
     void renderTotalInventory();
 
     //for Character_Input.cpp
-    void setStance(OUT State* OutState);
-    void setAttacking(OUT State* OutState);
+    void setStance();
+    void setAttacking();
     void setReload();
     void setPunch();
     void setInteraction();
     void setJump();
 
-    void setRifleOnHand(TAG_RIFLE tagRifle, OUT State* OutState);
-    void setRifleOnBody(TAG_RIFLE tagRifle, OUT State* OutState);
+    void setRifleOnHand(TAG_RIFLE tagRifle);
+    void setRifleOnBody(TAG_RIFLE tagRifle);
 
-    void setStandTo(Stance stance, OUT State* OutState);
-    void setCrouchTo(Stance stance, OUT State* OutState);
-    void setProneTo(Stance stance, OUT State* OutState);
+    void setStandTo();
+    void setCrouchTo();
+    void setProneTo();
 
     void onKar98kReloadEnd();
     void onKar98kReload();
@@ -330,7 +321,7 @@ public:
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
     string ForDebugGetAttacking(Attacking attcking);
     string ForDebugGetStance(Stance stance);
-    //void ForDebug();
+    void   ForDebug();
 
           CharacterAnimation*        GetCharacterAnimation();
     const std::vector<BoundingBox*>& GetBoundingBoxes() override;

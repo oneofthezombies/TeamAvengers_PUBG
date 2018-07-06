@@ -101,12 +101,7 @@ Character::IsJumping::IsJumping()
 Character::State::State()
     : position(Vector3::ZERO)
     , rotation(Vector3::ZERO)
-    , stance(Stance::Stand)
-    , attacking(Attacking::Unarmed)
-    , moving(Moving::Walk)
-    , upperAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
-    , lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
-    , cellIndex(0)
+    , isHeadBump(false)
 {
     D3DXMatrixIdentity(&transformationMatrix);
 }
@@ -425,6 +420,133 @@ void Character::rifleShooting()
         BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_COLLISION::Impassable);
         break;
     }
+}
+
+void Character::movementControl(OUT State* OutState)
+{
+    float movingFactor;
+
+    //점프
+    if (m_currentOnceKey._Space)
+        m_Jump.isJumping = true;
+
+    //Moving 3개 -----------------------------------------------------
+    /*
+    Prone의 경우 Sprint가 없고
+    Stand, Crouch의 경우 BR, B, BL일 때 Sprint가 없다
+    */
+    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl)
+    {
+        movingFactor = 2.0f;
+    }
+    else if (m_currentStayKey._LCtrl && !m_currentStayKey._LShift)
+    {
+        movingFactor = 0.5f;
+    }
+    else
+    {
+        movingFactor = 1.0f;
+    }
+
+    //Direction 8개 -----------------------------------------------------
+    if (m_currentStayKey._W&&m_currentStayKey._D)
+    {
+        OutState->position += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+    }
+    else if (m_currentStayKey._D&&m_currentStayKey._S)
+    {
+        OutState->position += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+    }
+    else if (m_currentStayKey._S&&m_currentStayKey._A)
+    {
+        OutState->position += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+    }
+    else if (m_currentStayKey._A&&m_currentStayKey._W)
+    {
+        OutState->position += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+    }
+    else if (m_currentStayKey._W)
+    {
+        OutState->position += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
+
+    }
+    else if (m_currentStayKey._D)
+    {
+        OutState->position += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+    }
+    else if (m_currentStayKey._S)
+    {
+        OutState->position += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
+    }
+    else if (m_currentStayKey._A)
+    {
+        OutState->position += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+    }
+}
+
+void Character::animationControl()
+{
+    Direction direction;
+    Moving    moving;
+
+    //Moving 3개 -----------------------------------------------------
+    /*
+    Prone의 경우 Sprint가 없고
+    Stand, Crouch의 경우 BR, B, BL일 때 Sprint가 없다
+    */
+    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl)
+    {
+        moving = Moving::Sprint;
+    }
+    else if (m_currentStayKey._LCtrl && !m_currentStayKey._LShift)
+    {
+        moving = Moving::Walk;
+    }
+    else
+    {
+        moving = Moving::Run;
+    }
+
+    //Direction 8개 -----------------------------------------------------
+    if (m_currentStayKey._W&&m_currentStayKey._D)
+    {
+        direction = Direction::FrontRight;
+    }
+    else if (m_currentStayKey._D&&m_currentStayKey._S)
+    {
+        direction = Direction::BackRight;
+    }
+    else if (m_currentStayKey._S&&m_currentStayKey._A)
+    {
+        direction = Direction::BackLeft;
+    }
+    else if (m_currentStayKey._A&&m_currentStayKey._W)
+    {
+        direction = Direction::FrontLeft;
+    }
+    else if (m_currentStayKey._W)
+    {
+        direction = Direction::Front;
+
+    }
+    else if (m_currentStayKey._D)
+    {
+        direction = Direction::Right;
+    }
+    else if (m_currentStayKey._S)
+    {
+        direction = Direction::Back;
+    }
+    else if (m_currentStayKey._A)
+    {
+        direction = Direction::Left;
+    }
+    else
+    {
+        direction = Direction::StandStill;
+    }
+
+    m_lowerAnimState = AnimationState::Get(m_attacking, m_stance, moving, direction);
 }
 
 void Character::setInfo()

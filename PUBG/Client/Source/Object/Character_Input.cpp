@@ -157,17 +157,17 @@ void Character::setStance() //C, Z
         if (m_stance == Stance::Stand)
         {
             m_stance = Stance::Crouch;
-            setStandTo(m_stance);
+            setStandTo();
         }
         else if (m_stance == Stance::Crouch)
         {
             m_stance = Stance::Stand;
-            setCrouchTo(m_stance);
+            setCrouchTo();
         }
         else if (m_stance == Stance::Prone)
         {
             m_stance = Stance::Crouch;
-            setProneTo(m_stance);
+            setProneTo();
         }
     }
     
@@ -179,17 +179,17 @@ void Character::setStance() //C, Z
         if (m_stance == Stance::Stand)
         {
             m_stance = Stance::Prone;
-            setStandTo(m_stance);
+            setStandTo();
         }
         else if (m_stance == Stance::Crouch)
         {
             m_stance = Stance::Prone;
-            setCrouchTo(m_stance);
+            setCrouchTo();
         }
         else if (m_stance == Stance::Prone)
         {
             m_stance = Stance::Stand;
-            setProneTo(m_stance);
+            setProneTo();
         }
     }
 }
@@ -820,11 +820,11 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 
 ¼­ÀÖ´Ù°¡ ¾É´Ù°¡ ¼¶ -> ¾É¾ÆÀÖ´Ù°¡ ¼¶ÀÇ À§Ä¡ = ¾É¾ÆÀÖ´Ù°¡ ¼¶ ÁÖ±â(¶Ç´Â ¼­ÀÖ´Ù°¡ ¾ÉÀ½) - ¼­ÀÖ´Ù°¡ ¾ÉÀ½ÀÇ À§Ä¡ 
 */
-void Character::setStandTo(Stance stance)
+void Character::setStandTo()
 {
     if (m_attacking == Attacking::Unarmed)
     {
-        if (stance == Stance::Crouch)
+        if (m_stance == Stance::Crouch)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -844,7 +844,7 @@ void Character::setStandTo(Stance stance)
                     CharacterAnimation::DEFAULT_NEXT_WEIGHT);
             });
         }
-        else if (stance == Stance::Prone)
+        else if (m_stance == Stance::Prone)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -865,7 +865,7 @@ void Character::setStandTo(Stance stance)
     }
     else if (m_attacking == Attacking::Rifle)
     {
-        if (stance == Stance::Crouch)
+        if (m_stance == Stance::Crouch)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -883,7 +883,7 @@ void Character::setStandTo(Stance stance)
                     false);
             });
         }
-        else if (stance == Stance::Prone)
+        else if (m_stance == Stance::Prone)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -905,11 +905,11 @@ void Character::setStandTo(Stance stance)
     }
 }
 
-void Character::setCrouchTo(Stance stance)
+void Character::setCrouchTo()
 {
     if (m_attacking == Attacking::Unarmed)
     {
-        if (stance == Stance::Stand)
+        if (m_stance == Stance::Stand)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -927,7 +927,7 @@ void Character::setCrouchTo(Stance stance)
                     false);
             });
         }
-        else if (stance == Stance::Prone)
+        else if (m_stance == Stance::Prone)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -948,7 +948,7 @@ void Character::setCrouchTo(Stance stance)
     }
     else if (m_attacking == Attacking::Rifle)
     {
-        if (stance == Stance::Stand)
+        if (m_stance == Stance::Stand)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -966,7 +966,7 @@ void Character::setCrouchTo(Stance stance)
                     false);
             });
         }
-        else if (stance == Stance::Prone)
+        else if (m_stance == Stance::Prone)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -987,11 +987,11 @@ void Character::setCrouchTo(Stance stance)
     }
 }
 
-void Character::setProneTo(Stance stance)
+void Character::setProneTo()
 {
     if (m_attacking == Attacking::Unarmed)
     {
-        if (stance == Stance::Stand)
+        if (m_stance == Stance::Stand)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -1009,7 +1009,7 @@ void Character::setProneTo(Stance stance)
                     false);
             });
         }
-        else if (stance == Stance::Crouch)
+        else if (m_stance == Stance::Crouch)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -1030,7 +1030,7 @@ void Character::setProneTo(Stance stance)
     }
     else if (m_attacking == Attacking::Rifle)
     {
-        if (stance == Stance::Stand)
+        if (m_stance == Stance::Stand)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -1048,7 +1048,7 @@ void Character::setProneTo(Stance stance)
                     false);
             });
         }
-        else if (stance == Stance::Crouch)
+        else if (m_stance == Stance::Crouch)
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
