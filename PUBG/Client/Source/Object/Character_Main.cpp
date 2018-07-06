@@ -40,9 +40,12 @@ Character::Character(const int index)
     pTransform->SetPosition(D3DXVECTOR3(factor, 0.0f, factor));
     pTransform->SetRotation(OFFSET_ROTATION);
 
-    m_cellIndex = CurrentScene()()->GetCellIndex(pTransform->GetPosition());
-    CurrentScene()()->InsertObjIntoCellSpace(TAG_OBJECT::Character, m_cellIndex, this);
-    
+    //putting character into TotalCellSpace
+    IScene* CS = CurrentScene()();
+    m_cellIndex = CS->GetCellIndex(pTransform->GetPosition());                   //캐릭터의 pos에 따라 알맞은 area에 넣어주기
+    CS->InsertObjIntoTotalCellSpace(TAG_OBJECT::Character, m_cellIndex, this);   //Object 를 TotalCellSpace(Area)에 넣기
+    CS->m_NearArea.Create(m_cellIndex);                                          //Near Area 계산
+
     pAnimation = new CharacterAnimation;
     AddChild(pAnimation);
     pAnimation->Set(
@@ -116,13 +119,12 @@ void Character::updateMine()
 
     movementControl(&destState);
 
-    // 충첵
-    /////////////////// 
-    std::size_t destCellIndex = CurrentScene()()->GetCellIndex(destState.position);
-    if (destCellIndex != m_cellIndex)
-        pCurrentScene->m_NearArea.Create(destCellIndex);
-    ////////////////////////////
+    
+     
 
+    
+    
+    // 충돌체크////////////////////////////
     bool hasCollision = false;
     BoundingSphere pMyBoundingSphere = GetBoundingSphere()->CopyTo(destState.position);
     for (auto tf : pCurrentScene->m_NearArea.GetTerrainFeatures())
@@ -154,7 +156,7 @@ void Character::updateMine()
             }
         }
     }
-    // end collision
+    // end collision /////////////////////////
 
     // 셋 커런트
     if (hasCollision)
@@ -171,9 +173,11 @@ void Character::updateMine()
         tm->SetPosition(destState.position);
         tm->SetRotation(destState.rotation);
 
-        // 이사하기
+        // 이사하기 //NearArea(cell space)를 다시 구하기!
+        std::size_t destCellIndex = pCurrentScene->GetCellIndex(destState.position);
         if (destCellIndex != m_cellIndex)
         {
+            pCurrentScene->m_NearArea.Create(destCellIndex);
             pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
         }
     }

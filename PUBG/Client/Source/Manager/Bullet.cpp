@@ -117,7 +117,7 @@ void Bullet::Set(const D3DXVECTOR3 & startPos, const D3DXVECTOR3 & dir,
 
     pCurrentScene->AddObject(this);
     m_CellSpaceIndex = pCurrentScene->GetCellIndex(pTr->GetPosition());
-    pCurrentScene->InsertObjIntoCellSpace(TAG_OBJECT::Bullet, m_CellSpaceIndex, this);
+    pCurrentScene->InsertObjIntoTotalCellSpace(TAG_OBJECT::Bullet, m_CellSpaceIndex, this);
 }
 
 

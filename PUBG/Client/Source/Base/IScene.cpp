@@ -311,7 +311,7 @@ bool IScene::isOutOfBoundaryBox(const D3DXVECTOR3& pos)
 //------------------ Cell Space Partitioning--------------------
 
 
-void IScene::InsertObjIntoCellSpace(TAG_OBJECT tag, size_t index, IN IObject * obj)
+void IScene::InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObject * obj)
 {
     switch (tag)
     {
@@ -354,21 +354,21 @@ std::size_t IScene::GetCellIndex(const D3DXVECTOR3 & position)
 
 void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject * obj)
 {
-    auto itr = m_TotalCellSpaces[*currentCellIndex];
-    auto itrDest = m_TotalCellSpaces[destCellIndex];
+    auto& itr = m_TotalCellSpaces[*currentCellIndex];
+    auto& itrDest = m_TotalCellSpaces[destCellIndex];
 
     switch (tag)
     {
     case TAG_OBJECT::Bullet:
     {
         //object를 찾는다.
-        auto ptr = *itr.pBullets.find(static_cast<Bullet*>(obj));
-        if (!ptr)
-            assert(false && "movecall() cannot find bullet obj");
+        //auto ptr = *itr.pBullets.find(static_cast<Bullet*>(obj));
+        //if (!ptr)
+        //    assert(false && "movecall() cannot find bullet obj");
         //찾고 원래 장소에서 지운다
-        itr.pBullets.erase(ptr);
+        itr.pBullets.erase(static_cast<Bullet*>(obj));
         //새 장소에 넣어준다
-        itrDest.pBullets.emplace(ptr);
+        itrDest.pBullets.emplace(static_cast<Bullet*>(obj));
         //현재 인덱스를 바꾸어준다
         *currentCellIndex = destCellIndex;
     }
@@ -377,13 +377,13 @@ void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIn
     case TAG_OBJECT::Character:
     {
         //object를 찾는다.
-        auto ptr = *itr.pCharacters.find(static_cast<Character*>(obj));
-        if (!ptr)
-            assert(false && "movecall() cannot find bullet obj");
+        //auto ptr = *itr.pCharacters.find(static_cast<Character*>(obj));
+        //if (!ptr)
+        //    assert(false && "movecall() cannot find bullet obj");
         //찾고 원래 장소에서 지운다
-        itr.pCharacters.erase(ptr);
+        itr.pCharacters.erase(static_cast<Character*>(obj));
         //새 장소에 넣어준다
-        itrDest.pCharacters.emplace(ptr);
+        itrDest.pCharacters.emplace(static_cast<Character*>(obj));
         //현재 인덱스를 바꾸어준다
         *currentCellIndex = destCellIndex;
     }

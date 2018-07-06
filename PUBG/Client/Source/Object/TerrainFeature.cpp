@@ -25,7 +25,7 @@ TerrainFeature::TerrainFeature(
     m_boundingSphereTerrainFeature = pEffectMeshRenderer->GetBoundingSphere();
     m_boundingSphereTerrainFeature.center += position;
 
-    CurrentScene()()->InsertObjIntoCellSpace(TAG_OBJECT::TerrainFeature, CurrentScene()()->GetCellIndex(position), this);
+    CurrentScene()()->InsertObjIntoTotalCellSpace(TAG_OBJECT::TerrainFeature, CurrentScene()()->GetCellIndex(position), this);
 }
 
 TerrainFeature::~TerrainFeature()
