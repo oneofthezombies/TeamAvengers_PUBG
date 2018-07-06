@@ -57,6 +57,7 @@
     <ClCompile Include="Source\Scene\SceneCollisionTest.cpp" />
     <ClCompile Include="Source\Manager\Resource.cpp" />
     <ClCompile Include="Area.cpp" />
+    <ClCompile Include="Source\Useful\Ballistics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -115,5 +116,6 @@
     <ClInclude Include="Source\Scene\SceneCollisionTest.h" />
     <ClInclude Include="Source\Manager\Resource.h" />
     <ClInclude Include="Area.h" />
+    <ClInclude Include="Source\Useful\Ballistics.h" />
   </ItemGroup>
 </Project>
