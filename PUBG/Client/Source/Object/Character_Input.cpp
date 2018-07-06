@@ -423,7 +423,7 @@ void Character::setPunch()
         pAnimation->Set(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
-            false,
+            true,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
@@ -444,7 +444,8 @@ void Character::setInteraction()
     if (m_currentOnceKey._F)
     {
         //TODO: TAG_OBJECT에 따라 문열기나, 아이템 줍기 애니메이션이 실행되어야한다
-        bool isDoor = true;
+        //TODO: 문열때는 멈춰서야함
+        bool isDoor = false;
         if (isDoor)
         {
             //문열기
@@ -483,19 +484,19 @@ void Character::setInteraction()
 
             //애니메이션 적용
             pAnimation->Set(
-                CharacterAnimation::BodyPart::UPPER,
+                CharacterAnimation::BodyPart::BOTH,
                 tagAnim,
-                false,
+                true,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
                 [this]()
             {
-                pAnimation->Set(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
+                    pAnimation->Set(
+                        CharacterAnimation::BodyPart::BOTH,
+                        m_lowerAnimState,
+                        false);
             });
         }
         else
@@ -536,19 +537,21 @@ void Character::setInteraction()
 
             //애니메이션 적용
             pAnimation->Set(
-                CharacterAnimation::BodyPart::UPPER,
+                CharacterAnimation::BodyPart::BOTH,
                 tagAnim,
-                false,
+                true,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                CharacterAnimation::DEFAULT_POSITION,
+                0.3f,
+                0.3f,
                 [this]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
-                    false);
+                    true,
+                    0.3f,
+                    CharacterAnimation::DEFAULT_NEXT_WEIGHT);
             });
         }
     }
@@ -583,11 +586,11 @@ void Character::setJump()
         pAnimation->Set(
             CharacterAnimation::BodyPart::BOTH,
             tagAnim,
-            false,
+            true,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_POSITION,
             0.3f,
+            CharacterAnimation::DEFAULT_POSITION,
             [this]()
         {
             pAnimation->Set(
@@ -610,7 +613,7 @@ void Character::setJump()
         //pAnimation->Set(
         //    CharacterAnimation::BodyPart::BOTH,
         //    tagAnim,
-        //    false,
+        //    true,
         //    CharacterAnimation::DEFAULT_BLENDING_TIME,
         //    CharacterAnimation::DEFAULT_NEXT_WEIGHT,
         //    CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
@@ -625,18 +628,18 @@ void Character::setJump()
         pAnimation->Set(
             CharacterAnimation::BodyPart::BOTH,
             tagAnim,
-            false,
+            true,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            0.1f,
             CharacterAnimation::DEFAULT_POSITION,
-            1.0f,
             [this]()
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
-                1.0f,
+                0.1f,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT);
         });
     }
@@ -690,14 +693,14 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
         CharacterAnimation::DEFAULT_BLENDING_TIME,
         CharacterAnimation::DEFAULT_NEXT_WEIGHT,
         CharacterAnimation::DEFAULT_POSITION,
-        0.8f,
+        0.3f,
         [this]()
     {
         pAnimation->Set(
             CharacterAnimation::BodyPart::BOTH,
             m_lowerAnimState,
             true,
-            0.8f,
+            0.3f,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT);
     });
 }
@@ -744,7 +747,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_POSITION,
-            0.8f,
+            0.3f,
             [this, &inven]()
         {
             inven.m_pWeaponPrimary = inven.m_pHand;
@@ -753,7 +756,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
-                0.8f,
+                0.3f,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT);
         });
     }
@@ -795,7 +798,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_POSITION,
-            0.8f,
+            0.3f,
             [this, &inven]()
         {
             inven.m_pWeaponSecondary = inven.m_pHand;
@@ -804,7 +807,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
-                0.8f,
+                0.3f,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT);
         });
     }
@@ -832,15 +835,15 @@ void Character::setStandTo()
                 false,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_POSITION,
-                1.0f,
+                0.4f,//CharacterAnimation::DEFAULT_POSITION,
+                1.2f,
                 [this]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState, 
                     true,
-                    1.0f,
+                    1.2f,
                     CharacterAnimation::DEFAULT_NEXT_WEIGHT);
             });
         }
@@ -852,7 +855,7 @@ void Character::setStandTo()
                 false,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_POSITION,
+                0.4f,//CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
@@ -917,14 +920,16 @@ void Character::setCrouchTo()
                 false,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_POSITION,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                0.6f,//CharacterAnimation::DEFAULT_POSITION,
+                1.0f,
                 [this]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
-                    false);
+                    true,
+                    1.0f,
+                    CharacterAnimation::DEFAULT_NEXT_WEIGHT);
             });
         }
         else if (m_stance == Stance::Prone)
@@ -1000,13 +1005,15 @@ void Character::setProneTo()
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                1.0f,
                 [this]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
-                    false);
+                    true,
+                    1.0f,
+                    CharacterAnimation::DEFAULT_NEXT_WEIGHT);
             });
         }
         else if (m_stance == Stance::Crouch)

@@ -92,7 +92,7 @@ Character::IsJumping::IsJumping()
     : isJumping(false)
     
     , jumpPower(12.0f)
-    , gravity(0.3f)
+    , gravity(0.25f)
     , currGravity(0.0f)
     , maxStepHeight(5.f)
 {
@@ -365,7 +365,32 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         //}
 
         if (targetPos.y <= height && m_Jump.jumpPower < m_Jump.currGravity)
-        {
+        {            
+            //점프 후 착지애니메이션
+            //TODO: 높이에 따라서 다른 착지애니메이션
+            //TODO: 착지 애니메이션이 끝날때까지 움직이면 안됨
+            TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+            if (m_attacking == Attacking::Unarmed)
+                tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Fall_Landing_Additive;
+            else if (m_attacking == Attacking::Rifle)
+                tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard;
+      
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                tagAnim,
+                true,
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                CharacterAnimation::DEFAULT_POSITION,
+                [this]()
+            {
+                pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    m_lowerAnimState,
+                    false);
+            });
+
             targetPos.y = height;
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;

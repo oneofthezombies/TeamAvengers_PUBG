@@ -125,6 +125,8 @@ public:
         const std::size_t index, 
         D3DXTRACK_DESC* OutDesc);
 
+    float GetTrackPeriod(const std::size_t index);
+    float GetSubTrackPeriod(const std::size_t index);
 
     std::vector<BoundingSphere> GetBoundingSpheres();
 };

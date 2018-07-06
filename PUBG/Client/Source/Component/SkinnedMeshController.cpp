@@ -711,6 +711,24 @@ void SkinnedMeshController::GetSubTrackDescription(
          ID3DXAnimationController::GetTrackDesc() failed.");
 }
 
+float SkinnedMeshController::GetTrackPeriod(const std::size_t index)
+{
+    LPD3DXANIMATIONSET pSet = nullptr;
+    m_pSkinnedMeshInstance->m_pAnimController->GetTrackAnimationSet(index, &pSet);
+    float period = static_cast<float>(pSet->GetPeriod());
+    pSet->Release();
+    return period;
+}
+
+float SkinnedMeshController::GetSubTrackPeriod(const std::size_t index)
+{
+    LPD3DXANIMATIONSET pSet = nullptr;
+    m_pSkinnedMeshInstance->m_pSubAnimController->GetTrackAnimationSet(index, &pSet);
+    float period = static_cast<float>(pSet->GetPeriod());
+    pSet->Release();
+    return period;
+}
+
 void SkinnedMeshController::findBoundingSphere(
     LPD3DXFRAME pFrame, 
     std::vector<BoundingSphere>* OutBoundingSpheres)

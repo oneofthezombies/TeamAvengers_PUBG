@@ -312,6 +312,16 @@ void CharacterAnimation::GetLowerTrackDescription(
     pSkinnedMeshController->GetTrackDescription(index, OutDesc);
 }
 
+float CharacterAnimation::GetUpperTrackPeriod(const std::size_t index)
+{
+    return pSkinnedMeshController->GetSubTrackPeriod(index);
+}
+
+float CharacterAnimation::GetLowerTrackPeriod(const std::size_t index)
+{
+    return pSkinnedMeshController->GetTrackPeriod(index);
+}
+
 std::vector<BoundingSphere> CharacterAnimation::GetBoundingSpheres()
 {
     return pSkinnedMeshController->GetBoundingSpheres();

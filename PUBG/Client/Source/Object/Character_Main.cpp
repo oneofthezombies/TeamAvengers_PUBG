@@ -184,6 +184,7 @@ void Character::updateMine()
     setPunch();
     setInteraction();
     setJump();
+    TAG_ANIM_CHARACTER currentAnim = m_lowerAnimState;
     animationControl();
 
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
@@ -196,10 +197,31 @@ void Character::updateMine()
         else
         {
             pAnimation->Set(
-                CharacterAnimation::BodyPart::BOTH, 
-                m_lowerAnimState);
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState, true, 0.3f, 0.0f, 0.0f);
 
-            // set current with same position with finish event m_lowerAnimState
+            //하단 참고할 만한 것
+            ////set current with same position with finish event m_lowerAnimState
+            //D3DXTRACK_DESC lowerDesc;
+            //pAnimation->GetLowerTrackDescription(0, &lowerDesc);
+            //const float period = pAnimation->GetLowerTrackPeriod(0);
+            //pAnimation->Set(
+            //    CharacterAnimation::BodyPart::BOTH,
+            //    currentAnim,
+            //    true,
+            //    0.3f,
+            //    CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            //    lowerDesc.Position,
+            //    period - lowerDesc.Position - 0.1f,
+            //    [this]()
+            //{
+            //    pAnimation->Set(
+            //        CharacterAnimation::BodyPart::BOTH,
+            //        m_lowerAnimState,
+            //        true,
+            //        0.3f,
+            //        CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+            //});
 
             m_savedInput = m_currentStayKey;
         }
