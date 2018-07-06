@@ -120,10 +120,7 @@ void Character::updateMine()
     movementControl(&destState);
 
     
-     
 
-    
-    
     // 충돌체크////////////////////////////
     bool hasCollision = false;
     BoundingSphere pMyBoundingSphere = GetBoundingSphere()->CopyTo(destState.position);

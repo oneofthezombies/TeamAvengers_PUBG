@@ -57,8 +57,8 @@ protected:
     std::vector<CellSpace>  m_TotalCellSpaces;
 public:
     Area                    m_NearArea;
-    Area                    m_FrustumArea;
-    
+
+
     IScene();
 
 	void updateToDeleteObjects();
