@@ -42,6 +42,7 @@ Character::Character(const int index)
 
     m_cellIndex = CurrentScene()()->GetCellIndex(pTransform->GetPosition());
     CurrentScene()()->InsertObjIntoCellSpace(TAG_OBJECT::Character, m_cellIndex, this);
+    CurrentScene()()->m_NearArea.Create(m_cellIndex);
     
     pAnimation = new CharacterAnimation;
     AddChild(pAnimation);
@@ -118,9 +119,7 @@ void Character::updateMine()
 
     // 충첵
     /////////////////// 
-    std::size_t destCellIndex = CurrentScene()()->GetCellIndex(destState.position);
-    if (destCellIndex != m_cellIndex)
-        pCurrentScene->m_NearArea.Create(destCellIndex);
+
     ////////////////////////////
 
     bool hasCollision = false;
@@ -146,7 +145,8 @@ void Character::updateMine()
         {
             if (hasCollision) break;
 
-            for (auto& others : tf->GetBoundingBoxes())
+            auto a = tf->GetBoundingBoxes();
+            for (auto& others : a)
             {
                 if (hasCollision) break;
 
@@ -172,8 +172,10 @@ void Character::updateMine()
         tm->SetRotation(destState.rotation);
 
         // 이사하기
+        std::size_t destCellIndex = CurrentScene()()->GetCellIndex(destState.position);
         if (destCellIndex != m_cellIndex)
         {
+            pCurrentScene->m_NearArea.Create(destCellIndex);
             pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
         }
     }

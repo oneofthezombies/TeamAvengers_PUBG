@@ -10,7 +10,7 @@ void SceneLoading::Load()
     // set policy 
     // sync  -> on main thread
     // async -> multi threading
-    setPolicy(Resource::Policy::SYNC); //ASYNC
+    setPolicy(Resource::Policy::ASYNC); //ASYNC
 
     // set play mode
     // alone       -> no network
