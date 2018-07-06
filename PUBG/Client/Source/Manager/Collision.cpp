@@ -57,7 +57,7 @@ BoundingBox::BoundingBox()
 void BoundingBox::Update(const D3DXMATRIX& transformationMatrix)
 {
     D3DXMATRIX invCurrent, variance;
-    D3DXMatrixInverse(&invCurrent, nullptr, &transformationMatrix);
+    D3DXMatrixInverse(&invCurrent, nullptr, &this->transformationMatrix);
 
     variance = invCurrent * transformationMatrix;
     D3DXVec3TransformCoord(&center, &center, &variance);
@@ -69,6 +69,7 @@ BoundingBox BoundingBox::CopyTo(const D3DXMATRIX& transformationMatrix)
     BoundingBox bb;
     bb.extent = extent;
     bb.center = center;
+    bb.transformationMatrix = this->transformationMatrix;
     bb.Update(transformationMatrix);
     return bb;
 }
