@@ -23,6 +23,14 @@ private:    //fustum Culling
     D3DXPLANE	        m_vecPlane[6];
     D3DXVECTOR3         m_vecWorld[8];
     D3DXVECTOR3	        m_vecProj[8];
+    std::vector<WORD>   FRUSTUM_INDICES =
+    {
+        6, 2, 2, 3, 3, 7, 7, 6,
+        2, 0, 0, 1, 1, 3,
+        1, 5, 5, 7,
+        0, 4, 4, 6,
+        5, 4
+    };
 
 protected:  //Camera Position Rotation Fov
     D3DXVECTOR3         m_position;
@@ -32,7 +40,7 @@ protected:  //Camera Position Rotation Fov
 protected:
     //D3DXVECTOR3         m_vBulletDestination;
     vector<D3DXVECTOR3> drawRay;
-    bool                temp = false;
+    //bool                temp = false;  //ÃÑ½î¸é ³ª¿À´Â »¡°£»ö ray¸¦ À§ÇØ
 protected:
     Character::Info*    GetTargetInfo();
 
@@ -57,26 +65,6 @@ public:
           TAG_CAMERA  GetTagCamera()        const;
 
     D3DXVECTOR4 GetFrustumArea();
-    //Area CalculateFrustumAndArea(D3DXVECTOR3& destPos)
-    //{
-    //    UpdateFrustumCulling();
-    //    D3DXVECTOR4 MinMax = GetFrustumArea();
-    //    D3DXVECTOR3 min = D3DXVECTOR3(MinMax.x, 0, MinMax.y);
-    //    D3DXVECTOR3 max = D3DXVECTOR3(MinMax.z, 0, MinMax.w);
-
-    //    Area area;
-    //    size_t index = CurrentScene()()->GetCellIndex(min);
-    //    size_t index2 = CurrentScene()()->GetCellIndex(max);
-
-    //    for (size_t i = 0; i < CellSpace::DIMENSION; i++)
-    //    {
-    //        
-
-    //    }
-
-    //    return area;
-    //}
-
     bool CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY);
 
 };
@@ -108,8 +96,6 @@ public:
 
 class CameraThirdPerson : public ICamera
 {
-protected:
-    bool bAltKeyPressed;
 public:
     CameraThirdPerson(const TAG_CAMERA tag = TAG_CAMERA::Third_Person);
     virtual ~CameraThirdPerson();

@@ -57,6 +57,7 @@
     <ClCompile Include="Source\Scene\SceneCollisionTest.cpp" />
     <ClCompile Include="Source\Manager\Resource.cpp" />
     <ClCompile Include="Area.cpp" />
+    <ClCompile Include="CameraWorkSpace.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />

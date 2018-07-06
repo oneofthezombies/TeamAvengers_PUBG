@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Area.cpp" />
+    <ClCompile Include="CameraWorkSpace.cpp" />
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
