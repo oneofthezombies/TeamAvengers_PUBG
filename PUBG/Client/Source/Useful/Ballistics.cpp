@@ -2,7 +2,7 @@
 #include "Ballistics.h"
 #include "ItemInfo.h"   
 
-D3DXVECTOR3 Ballistics::GetPosition(TAG_RES_STATIC tag, D3DXVECTOR3 distance)
+float Ballistics::GetVarianceY(const TAG_RES_STATIC tag, const float distance)
 {
-    return distance;
+    return 0.0f;
 }

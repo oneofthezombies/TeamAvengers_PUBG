@@ -2,5 +2,5 @@
 
 struct Ballistics
 {
-    D3DXVECTOR3 GetPosition(TAG_RES_STATIC tag, D3DXVECTOR3 distance);
+    static float GetVarianceY(const TAG_RES_STATIC tag, const float distance);
 };

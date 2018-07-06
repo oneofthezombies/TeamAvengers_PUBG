@@ -217,6 +217,7 @@ void Character::updateMine()
     tm->SetPosition(pos);
     tm->SetRotation(rot);
 
+
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
     if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton)

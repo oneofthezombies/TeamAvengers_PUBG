@@ -8,6 +8,8 @@
 #include "ItemInfo.h"
 #include "ComponentTransform.h"
 #include "HeightMap.h"
+#include "ScenePlay.h"
+#include "Ballistics.h"
 
 Character::WaistRotation::WaistRotation(const float limit, const float factor)
     : LIMIT_OF_ANGLE(limit)
@@ -402,7 +404,7 @@ void Character::rifleShooting()
         * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
         * GetTransform()->GetTransformationMatrix();    //character world matrix
     
-    D3DXVECTOR3 bulletFirePos = D3DXVECTOR3(mat._41, mat._42, mat._43); 
+    D3DXVECTOR3 bulletFirePos = Matrix::GetTranslation(mat);
     
     D3DXVECTOR3 bulletDir;
     CurrentCamera()()->CalcPickedPosition(&bulletDir, 1280 / 2, 720 / 2);
@@ -410,6 +412,94 @@ void Character::rifleShooting()
     D3DXVec3Normalize(&bulletDir, &bulletDir);
     //-------------------------
 
+    //// ----------------------수정중-------------
+    //// 나 말고 다른 캐릭터들을 순회하며 충돌여부를 검사한다.
+    //const auto& others = static_cast<ScenePlay*>(CurrentScene()())->GetOthers();
+    //for (auto o : others)
+    //{
+    //    Transform* oTr = o->GetTransform();
+    //    const D3DXVECTOR3 oPos = oTr->GetPosition();
+
+    //    // 먼저 캐릭터의 바운딩스피어와 충돌을 검사한다.
+    //    BoundingSphere bs = o->GetBoundingSphere()->CopyTo(oPos);
+    //    if (!D3DXSphereBoundProbe(&bs.center, bs.radius, &bulletFirePos, &bulletDir)) continue;
+
+    //    const float distance = D3DXVec3Length(&(oPos - bulletFirePos));
+
+    //    // 탄도학에 의한 예측 낙차 높이를 계산한다.
+    //    const float varY = Ballistics::GetVarianceY(inven.m_pHand->GetTagResStatic(), distance);
+    //    D3DXVECTOR3 estimatedDest = bulletDir * distance;
+    //    estimatedDest.y += varY;
+    //    
+    //    // 낙차 높이를 계산한 곳으로 레이를 쏜다.
+    //    bulletDir = estimatedDest - bulletFirePos;
+    //    D3DXVec3Normalize(&bulletDir, &bulletDir);
+
+    //    // 캐릭터의 바운딩박스들과 충돌을 검사한다.
+    //    std::vector<BoundingBox> bbs;
+    //    BoundingBox hitBox;
+    //    float hitBoxDist = std::numeric_limits<float>::max();
+    //    for (auto obb : o->GetBoundingBoxes())
+    //    {
+    //        BoundingBox bb = obb->CopyTo(oTr->GetTransformationMatrix());
+    //        
+    //        D3DXVECTOR3 min(-Vector3::ONE);
+    //        D3DXVECTOR3 max(Vector3::ONE);
+    //        std::vector<D3DXVECTOR3> vertices(8);
+    //        vertices[0] = D3DXVECTOR3(min.x, min.y, min.z);
+    //        vertices[1] = D3DXVECTOR3(min.x, max.y, min.z);
+    //        vertices[2] = D3DXVECTOR3(max.x, max.y, min.z);
+    //        vertices[3] = D3DXVECTOR3(max.x, min.y, min.z);
+    //        vertices[4] = D3DXVECTOR3(min.x, min.y, max.z);
+    //        vertices[5] = D3DXVECTOR3(min.x, max.y, max.z);
+    //        vertices[6] = D3DXVECTOR3(max.x, max.y, max.z);
+    //        vertices[7] = D3DXVECTOR3(max.x, min.y, max.z);
+
+    //        D3DXMATRIX s, m;
+    //        D3DXMatrixScaling(&s, bb.extent.x, bb.extent.y, bb.extent.z);
+    //        m = s * bb.transformationMatrix;
+
+    //        for (auto& v : vertices)
+    //            D3DXVec3TransformCoord(&v, &v, &m);
+
+    //        std::vector<D3DXPLANE> planes(6);
+    //        //근평면//좌상전//우상전//좌하전
+    //        D3DXPlaneFromPoints(&planes[0], &vertices[0], &vertices[1], &vertices[2]);
+    //        //원평면//우상후//좌상후//우하후
+    //        D3DXPlaneFromPoints(&planes[1], &vertices[7], &vertices[6], &vertices[5]);
+    //        //좌평면//좌상후//좌상전//좌하후
+    //        D3DXPlaneFromPoints(&planes[2], &vertices[4], &vertices[5], &vertices[1]);
+    //        //우평면//우상전//우상후//우하전
+    //        D3DXPlaneFromPoints(&planes[3], &vertices[3], &vertices[2], &vertices[6]);
+    //        //상평면//좌상후//우상후//좌상전
+    //        D3DXPlaneFromPoints(&planes[4], &vertices[1], &vertices[5], &vertices[6]);
+    //        //하평면//좌하전//우하전//좌하후
+    //        D3DXPlaneFromPoints(&planes[5], &vertices[4], &vertices[0], &vertices[3]);
+
+    //        D3DXVECTOR3 point;
+    //        for (auto p : planes)
+    //        {
+    //            if (D3DXPlaneIntersectLine(&point, &p, &bulletFirePos, &estimatedDest))
+    //            {
+    //                // hit
+    //                const float bbDist = D3DXVec3Length(&(bb.center - bulletFirePos));
+    //                if (bbDist < hitBoxDist)
+    //                {
+    //                    hitBoxDist = bbDist;
+    //                    hitBox = bb;
+    //                }
+    //                break;
+    //            }
+    //        }
+    //    }
+
+    //    if (hitBoxDist != std::numeric_limits<float>::max())
+    //    {
+    //        // 제일 작은 히트한 놈
+
+    //    }
+    //}
+    //// ----------------------수정중-------------
 
     switch (inven.m_pHand->GetTagResStatic())
     {
@@ -764,4 +854,9 @@ const std::vector<BoundingBox*>& Character::GetBoundingBoxes()
 void Character::AddPart(CharacterPart* pPart)
 {
     m_characterParts[static_cast<std::size_t>(pPart->GetTagColliderCharacterPart())] = pPart;
+}
+
+D3DXVECTOR3 Character::GetWaistPosition()
+{
+    return Matrix::GetTranslation(m_framePtr.pWaist->CombinedTransformationMatrix * GetTransform()->GetTransformationMatrix());
 }

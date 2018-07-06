@@ -327,6 +327,7 @@ public:
     const std::vector<BoundingBox*>& GetBoundingBoxes() override;
 
     void AddPart(CharacterPart* pPart);
+    D3DXVECTOR3 GetWaistPosition();
 /**************************** end public method ******************************/
 
 
