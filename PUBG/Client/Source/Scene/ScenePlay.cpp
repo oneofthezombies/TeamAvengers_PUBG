@@ -108,7 +108,7 @@ void ScenePlay::setAloneMode()
     p = D3DXVECTOR3(100, 0, 10);
     item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
     AddObject(item);
-    character0->PutItemInTotalInventory(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(110, 0, 10);
     //item = new Item(TAG_RES_STATIC::RedDot, p, r, s);

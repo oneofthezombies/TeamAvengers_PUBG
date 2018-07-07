@@ -10,7 +10,7 @@ void SceneLoading::Load()
     // set policy 
     // sync  -> on main thread
     // async -> multi threading
-    setPolicy(Resource::Policy::ASYNC); //ASYNC
+    setPolicy(Resource::Policy::SYNC); //ASYNC
 
     // set play mode
     // alone       -> no network
@@ -21,13 +21,13 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::Ammo_5_56mm);
     //load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::QBZ);
-    //load(TAG_RES_STATIC::Kar98k);
+    load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
     load(TAG_RES_STATIC::Rock_1);
 
     //// load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    //load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
     load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
