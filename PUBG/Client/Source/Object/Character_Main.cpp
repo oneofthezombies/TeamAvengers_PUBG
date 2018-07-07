@@ -31,13 +31,14 @@ Character::Character(const int index)
     , m_stance(Stance::Stand)
     , m_upperAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
+    , m_isFire(false)
 
     , pAnimation(nullptr)
 {
     const float factor(static_cast<float>(m_index + 1) * 100.0f);
 
     Transform* pTransform = GetTransform();
-    pTransform->SetPosition(D3DXVECTOR3(factor, 0.0f, factor));
+    pTransform->SetPosition(D3DXVECTOR3(factor, 200.0f, factor));
     pTransform->SetRotation(OFFSET_ROTATION);
 
     //putting character into TotalCellSpace
@@ -88,7 +89,52 @@ void Character::OnUpdate()
 {
     updateMine();
     updateOther();
-    updateDependency();
+
+    // update
+    GetTransform()->Update();
+    pAnimation->UpdateAnimation();
+    updateBone();
+    pAnimation->UpdateModel();
+    updateTotalInventory();
+
+    for (auto pPart : m_characterParts)
+        pPart->Update();
+
+    // render
+    pAnimation->Render(
+        /*m_framePtr.pWaist->CombinedTransformationMatrix
+        **/ GetTransform()->GetTransformationMatrix(),
+        [this](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(
+            Shader::World,
+            &GetTransform()->GetTransformationMatrix());
+
+        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
+        D3DXVECTOR3 lightDir = light->GetDirection();
+        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
+    });
+    renderTotalInventory();
+
+    for (auto pPart : m_characterParts)
+        pPart->Render();
+
+    m_pBoundingSphere->CopyTo(GetTransform()->GetPosition()).Render();
+
+    Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr, pOtherHitPointMesh, 0,
+        [this](LPD3DXEFFECT pEffect)
+    {
+        D3DXVECTOR3& center = m_otherHitedBox.center;
+        D3DXMATRIX s, t, m;
+        const float scale = 10.0f;
+        D3DXMatrixScaling(&s, scale, scale, scale);
+        D3DXMatrixTranslation(&t, center.x, center.y, center.z);
+        m = s * t;
+
+        pEffect->SetMatrix(Shader::World, &m);
+    });
+    
+    // communication
     communicate();
 }
 
@@ -219,13 +265,16 @@ void Character::updateMine()
     tm->SetPosition(pos);
     tm->SetRotation(rot);
 
+    // shoot!
+    m_isFire = false;
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
     if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton)
     {
         if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_pHand->GetNumBullet() > 0)
         {
-            rifleShooting();
+            m_isFire = true;
+            //rifleShooting();
             //pistolShooting();?? 이란것도 나중에는 만들겠지요?
         }
     }

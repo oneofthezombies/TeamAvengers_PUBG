@@ -204,6 +204,10 @@ void ScenePlay::OnUpdate()
     검출 방법
     레이,
     */
+
+    if (pPlayer->IsFire())
+        pPlayer->RifleShooting();
+
 }
 
 const std::vector<Character*> ScenePlay::GetOthers() const

@@ -208,6 +208,7 @@ private:
     // for debug
     LPD3DXMESH pOtherHitPointMesh;
     BoundingBox m_otherHitedBox;
+    bool m_isFire;
 
 /**************************** end member variable ****************************/
 
@@ -230,14 +231,12 @@ private:
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
     void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
-    void rifleShooting();
     void movementControl(OUT State* OutState);
     void animationControl();
 
     void updateMine();
     void updateOther();
     void updateBone();
-    void updateDependency();
     void communicate();
 
     void rotateWaist(const float quantity);
@@ -330,6 +329,9 @@ public:
 
     void AddPart(CharacterPart* pPart);
     D3DXVECTOR3 GetWaistPosition();
+    bool IsFire() const;
+    void RifleShooting();
+
 /**************************** end public method ******************************/
 
 
