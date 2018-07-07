@@ -80,5 +80,8 @@ public:
         const std::size_t index,
         D3DXTRACK_DESC* OutDesc);
 
+    float GetUpperTrackPeriod(const std::size_t index);
+    float GetLowerTrackPeriod(const std::size_t index);
+
     std::vector<BoundingSphere> GetBoundingSpheres();
 };

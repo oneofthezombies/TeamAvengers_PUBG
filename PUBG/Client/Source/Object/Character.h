@@ -37,6 +37,7 @@ public:
     struct TotalInventory
     {
         Item* m_pHand; //손에 든 무기
+        bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
 
         static const float DEFAULT_CAPACITY;
 
@@ -229,7 +230,7 @@ private:
     void handleInput(IsPressed* OutIsPressed);
     
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
-    void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
+    //void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
     void movementControl(OUT State* OutState);
     void animationControl();
