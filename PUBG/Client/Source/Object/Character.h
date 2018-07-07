@@ -205,7 +205,9 @@ private:
 
     IsJumping m_Jump;
 
-
+    // for debug
+    LPD3DXMESH pOtherHitPointMesh;
+    BoundingBox m_otherHitedBox;
 
 /**************************** end member variable ****************************/
 

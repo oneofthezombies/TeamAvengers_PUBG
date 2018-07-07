@@ -76,6 +76,8 @@ Character::Character(const int index)
         Camera()()->SetTarget(&m_info);
         m_rotationForCamera = Vector3::ZERO;
     }
+
+    pOtherHitPointMesh = Resource()()->GetBoundingSphereMesh();
 }
 
 Character::~Character()
@@ -216,7 +218,6 @@ void Character::updateMine()
     applyTarget_Y_Position(&pos); //apply height and control jumping
     tm->SetPosition(pos);
     tm->SetRotation(rot);
-
 
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;

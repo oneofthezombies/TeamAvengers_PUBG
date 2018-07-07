@@ -155,8 +155,6 @@ ScenePlay::~ScenePlay()
 
 void ScenePlay::OnInit()
 {
-    m_others.resize(GameInfo::NUM_PLAYERS);
-
     // set mouse point to center
     POINT center;
     center.x = 1280 / 2;

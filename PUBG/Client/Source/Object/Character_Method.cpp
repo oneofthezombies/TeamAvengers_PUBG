@@ -437,7 +437,7 @@ void Character::rifleShooting()
 
     //    // 캐릭터의 바운딩박스들과 충돌을 검사한다.
     //    std::vector<BoundingBox> bbs;
-    //    BoundingBox hitBox;
+    //    //BoundingBox hitBox;
     //    float hitBoxDist = std::numeric_limits<float>::max();
     //    for (auto obb : o->GetBoundingBoxes())
     //    {
@@ -486,7 +486,8 @@ void Character::rifleShooting()
     //                if (bbDist < hitBoxDist)
     //                {
     //                    hitBoxDist = bbDist;
-    //                    hitBox = bb;
+    //                    //hitBox = bb;
+    //                    m_otherHitedBox = bb;
     //                }
     //                break;
     //            }
@@ -496,7 +497,7 @@ void Character::rifleShooting()
     //    if (hitBoxDist != std::numeric_limits<float>::max())
     //    {
     //        // 제일 작은 히트한 놈
-
+    //        
     //    }
     //}
     //// ----------------------수정중-------------
@@ -743,7 +744,6 @@ void Character::updateDependency()
 {
     // update
     GetTransform()->Update();
-    //pTransform->Update();
     pAnimation->UpdateAnimation();
     updateBone();
     pAnimation->UpdateModel();
@@ -772,6 +772,13 @@ void Character::updateDependency()
         pPart->Render();
 
     m_pBoundingSphere->CopyTo(GetTransform()->GetPosition()).Render();
+
+    Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr, pOtherHitPointMesh, 0, 
+        [this](LPD3DXEFFECT pEffect) 
+    {
+        pEffect->SetMatrix(
+            Shader::World, &Matrix::IDENTITY);
+    });
 }
 
 void Character::communicate()
