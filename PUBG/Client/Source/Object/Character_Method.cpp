@@ -246,91 +246,93 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
 
 }
 
-void Character::animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag)
-{
-    Direction direction;
-    Moving    moving;
-
-    float movingFactor;
-
-    //점프
-    if (m_currentOnceKey._Space)
-        m_Jump.isJumping = true;
-
-    //Moving 3개 -----------------------------------------------------
-    /*
-    Prone의 경우 Sprint가 없고
-    Stand, Crouch의 경우 BR, B, BL일 때 Sprint가 없다
-    */
-    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl) 
-    {
-        moving = Moving::Sprint;
-        movingFactor = 2.0f;
-    }
-    else if (m_currentStayKey._LCtrl && !m_currentStayKey._LShift)
-    {
-        moving = Moving::Walk;
-        movingFactor = 0.5f;
-    }
-    else
-    {
-        moving = Moving::Run;
-        movingFactor = 1.0f;
-    }
-
-    //Direction 8개 -----------------------------------------------------
-    if (m_currentStayKey._W&&m_currentStayKey._D)
-    {
-        direction = Direction::FrontRight;
-        OutState->position += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._D&&m_currentStayKey._S)
-    {
-        direction = Direction::BackRight;
-        OutState->position += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._S&&m_currentStayKey._A)
-    {
-        direction = Direction::BackLeft;
-        OutState->position += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._A&&m_currentStayKey._W)
-    {
-        direction = Direction::FrontLeft;
-        OutState->position += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._W)
-    {
-        direction = Direction::Front;
-        OutState->position += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
-
-    }
-    else if (m_currentStayKey._D)
-    {
-        direction = Direction::Right;
-        OutState->position += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._S)
-    {
-        direction = Direction::Back;
-        //*pOut += getForward() * -1.0f;
-        OutState->position += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._A)
-    {
-        direction = Direction::Left;
-        OutState->position += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else
-    {
-        direction = Direction::StandStill;
-    }
-
-    if (OutTag) //if null, no changes in animation
-    {
-        *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
-    }
-}
+//void Character::animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag)
+//{   
+//    //점프
+//    if (m_currentOnceKey._Space)
+//        m_Jump.isJumping = true;
+//
+//
+//    Direction direction;
+//    Moving    moving;
+//
+//    float movingFactor;
+//
+//    //Moving 3개 -----------------------------------------------------
+//    /*
+//    Prone의 경우 Sprint가 없고
+//    Stand, Crouch의 경우 BR, B, BL일 때 Sprint가 없다
+//    */
+//    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl)
+//    {
+//        moving = Moving::Sprint;
+//        movingFactor = 2.0f;
+//    }
+//    else if (m_currentStayKey._LCtrl && !m_currentStayKey._LShift)
+//    {
+//        moving = Moving::Walk;
+//        movingFactor = 0.5f;
+//    }
+//    else
+//    {
+//        moving = Moving::Run;
+//        movingFactor = 1.0f;
+//    }
+//
+//    //Direction 8개 -----------------------------------------------------
+//    if (m_currentStayKey._W&&m_currentStayKey._D)
+//    {
+//        direction = Direction::FrontRight;
+//        OutState->position += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+//    }
+//    else if (m_currentStayKey._D&&m_currentStayKey._S)
+//    {
+//        direction = Direction::BackRight;
+//        OutState->position += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+//    }
+//    else if (m_currentStayKey._S&&m_currentStayKey._A)
+//    {
+//        direction = Direction::BackLeft;
+//        OutState->position += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+//    }
+//    else if (m_currentStayKey._A&&m_currentStayKey._W)
+//    {
+//        direction = Direction::FrontLeft;
+//        OutState->position += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+//    }
+//    else if (m_currentStayKey._W)
+//    {
+//        direction = Direction::Front;
+//        OutState->position += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
+//
+//    }
+//    else if (m_currentStayKey._D)
+//    {
+//        direction = Direction::Right;
+//        OutState->position += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+//    }
+//    else if (m_currentStayKey._S)
+//    {
+//        direction = Direction::Back;
+//        //*pOut += getForward() * -1.0f;
+//        OutState->position += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
+//    }
+//    else if (m_currentStayKey._A)
+//    {
+//        direction = Direction::Left;
+//        OutState->position += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+//    }
+//    else
+//    {
+//        direction = Direction::StandStill;
+//    }
+//
+//    if (OutTag) //if null, no changes in animation
+//    {
+//        *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
+//    }
+//    
+//}
 
 bool Character::isMine() const
 {
@@ -379,7 +381,7 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
                 CharacterAnimation::BodyPart::BOTH,
                 tagAnim,
                 true,
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                0.1f,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
@@ -391,9 +393,9 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
                     false);
             });
 
-            targetPos.y = height;
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;
+            targetPos.y = height;
         }
     }
     else //when no jump
@@ -449,11 +451,14 @@ void Character::rifleShooting()
 
 void Character::movementControl(OUT State* OutState)
 {
-    float movingFactor;
-
     //점프
     if (m_currentOnceKey._Space)
+    {
         m_Jump.isJumping = true;
+    }
+
+
+    float movingFactor;
 
     //Moving 3개 -----------------------------------------------------
     /*
@@ -507,10 +512,12 @@ void Character::movementControl(OUT State* OutState)
     {
         OutState->position += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
     }
+    
 }
 
 void Character::animationControl()
 {
+
     Direction direction;
     Moving    moving;
 
@@ -572,6 +579,8 @@ void Character::animationControl()
     }
 
     m_lowerAnimState = AnimationState::Get(m_attacking, m_stance, moving, direction);
+
+    
 }
 
 void Character::setInfo()

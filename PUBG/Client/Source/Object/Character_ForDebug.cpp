@@ -74,4 +74,9 @@ void Character::ForDebug()
 
     Debug << "Attacking: " << ForDebugGetAttacking(m_attacking) << "\n";
     Debug << "Stance: " << ForDebugGetStance(m_stance) << "\n";
+
+    if (m_Jump.isJumping)
+        Debug << "IsJump: TRUE" << "\n";
+    else
+        Debug << "IsJump: FALSE" << "\n";
 }
