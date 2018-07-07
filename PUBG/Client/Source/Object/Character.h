@@ -18,10 +18,7 @@ class Character : public IObject
 /*****************************************************************************/
 
 public:
-    struct NeckRotation
-    {
 
-    };
     struct WaistRotation
     {
         const float LIMIT_OF_ANGLE;
@@ -30,6 +27,22 @@ public:
 
         WaistRotation(const float limit, const float factor);
     };
+    struct HeadRotation
+    {
+        const float LIMIT_OF_ANGLE;
+        const float QUANTITY_FACTOR;
+        float       m_angle;
+
+        HeadRotation(const float limit, const float factor);
+    };
+    //struct ArmRotation
+    //{
+    //    const float LIMIT_OF_ANGLE;
+    //    const float QUANTITY_FACTOR;
+    //    float       m_angle;
+
+    //    ArmRotation(const float limit, const float factor);
+    //};
 
     struct RootTransform
     {
@@ -121,7 +134,6 @@ public:
             : yaw(0.0f)
             , pitch(0.0f)
         {
-
         }
     };
 
@@ -130,6 +142,8 @@ public:
     {
         Frame* pRoot;
         Frame* pHead;
+        Frame* pLeftUpperArm;
+        Frame* pRightUpperArm;
         Frame* pWaist;
         Frame* pHandGun;
         Frame* pTPP;
@@ -203,6 +217,8 @@ private:
     FramePtr      m_framePtr;
     RootTransform m_rootTransform;
     WaistRotation m_waistRotation;
+    HeadRotation  m_headRotation;
+    //ArmRotation   m_armRotation;
 
     // for camera
     D3DXMATRIX  m_prevRootModel;
@@ -246,7 +262,7 @@ private:
     void handleInput(IsPressed* OutIsPressed);
     void handleMouse(const float dt, MouseInput* mouseInput);
 
-    void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput& mouseInput);
+    void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput);
     void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
     void rifleShooting();
@@ -260,6 +276,8 @@ private:
     void communicate();
 
     void rotateWaist(const float quantity);
+    void rotateHead(const float quantity);
+    void rotateArm(const float quantity);
 
 
     bool isMine() const;
