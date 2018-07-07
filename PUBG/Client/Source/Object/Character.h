@@ -18,6 +18,10 @@ class Character : public IObject
 /*****************************************************************************/
 
 public:
+    struct NeckRotation
+    {
+
+    };
     struct WaistRotation
     {
         const float LIMIT_OF_ANGLE;
@@ -108,10 +112,25 @@ public:
         IsPressed();
     };
 
+    struct MouseInput
+    {
+        float yaw;
+        float pitch;
+
+        MouseInput()
+            : yaw(0.0f)
+            , pitch(0.0f)
+        {
+
+        }
+    };
+
+
     struct FramePtr
     {
-        Frame* pWaist;
         Frame* pRoot;
+        Frame* pHead;
+        Frame* pWaist;
         Frame* pHandGun;
         Frame* pTPP;
         Frame* pFPP;
@@ -202,6 +221,7 @@ private:
     IsPressing m_savedInput;
     IsPressing m_currentStayKey;
     IsPressed  m_currentOnceKey;
+    MouseInput m_mouseInput;
 
     IsJumping m_Jump;
 
@@ -224,8 +244,9 @@ private:
 
     void handleInput(IsPressing* OutIsPressing);
     void handleInput(IsPressed* OutIsPressed);
-    
-    void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
+    void handleMouse(const float dt, MouseInput* mouseInput);
+
+    void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput& mouseInput);
     void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
     void rifleShooting();

@@ -19,7 +19,7 @@ Character::Character(const int index)
     // id
     , m_index(index)
     , m_cellIndex(0)
-    
+    , m_mouseInput()
     , m_rootTransform(1.0f)
     , m_waistRotation(0.8f, 0.1f)
     , m_framePtr()
@@ -106,6 +106,7 @@ void Character::updateMine()
     //이곳에서 Input을 넣습니다 그리고 m_currentStayKey으로 사용
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
+    handleMouse(dt, &m_mouseInput);
 
 
     //m_currentState를 저장해 놓고 //dest pos 로 계 산
@@ -212,10 +213,15 @@ void Character::updateMine()
     D3DXVECTOR3 pos = tm->GetPosition();
     D3DXQUATERNION rot = tm->GetRotation();
 
-    cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
+    cameraCharacterRotation(dt, &rot, m_mouseInput);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
+    
+    
     tm->SetPosition(pos);
     tm->SetRotation(rot);
+
+
+
 
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
@@ -227,6 +233,10 @@ void Character::updateMine()
             //pistolShooting();?? 이란것도 나중에는 만들겠지요?
         }
     }
+
+
+
+
 
     //sh tset
     if (Input()()->IsOnceKeyDown('B'))
@@ -243,18 +253,6 @@ void Character::updateMine()
         Sound()()->addPlay(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)), 5.0f, FMOD_3D);
     }
     
-    //float test_distance = 777;
-    //float ddd = test_distance / 340;
-    //
-    //float lastTime_2 = Time()()->GetDeltaTime();
-    //float ingTime = Time()()->GetDeltaTime() - lastTime_2;
-    //if (ddd <= ingTime)
-    //{
-    //    Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
-    //}
-
-
-
 
 
 ///////////////////////////////////////////////////////////////////////////////

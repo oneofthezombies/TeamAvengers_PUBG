@@ -77,6 +77,7 @@ Character::IsPressed::IsPressed()
 
 Character::FramePtr::FramePtr()
     : pRoot(nullptr)
+    , pHead(nullptr)
     , pWaist(nullptr)
     , pHandGun(nullptr)
     , pTPP(nullptr)
@@ -110,6 +111,7 @@ void Character::setFramePtr()
 {
     m_framePtr.pWaist         = pAnimation->FindFrame("spine_01");
     m_framePtr.pRoot          = pAnimation->FindFrame("root");
+    m_framePtr.pHead          = pAnimation->FindFrame("head");
     m_framePtr.pHandGun       = pAnimation->FindFrame("ik_hand_gun");
     m_framePtr.pTPP           = pAnimation->FindFrame("camera_tpp");
     m_framePtr.pFPP           = pAnimation->FindFrame("camera_fpp");
@@ -122,6 +124,7 @@ void Character::setFramePtr()
     assert(
         p.pWaist &&
         p.pRoot &&
+        p.pHead &&
         p.pHandGun &&
         p.pTPP &&
         p.pFPP &&
@@ -183,10 +186,8 @@ void Character::handleInput(IsPressed* OutIsPressed)
     OutIsPressed->_RButton      = pInput->IsOnceKeyDown(VK_RBUTTON);
 }
 
-void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation)
+void Character::handleMouse(const float dt, MouseInput* mouseInput)
 {
-    ICamera* pCurrentCamera = CurrentCamera()();
-
     // get mouse pos
     POINT mouse;
     GetCursorPos(&mouse);
@@ -197,55 +198,12 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     diff.y = mouse.y - 720 / 2;
     if (diff.x < 2 && diff.x > -2) diff.x = 0;
     if (diff.y < 2 && diff.y > -2) diff.y = 0;
-    const float yaw = diff.x * 0.2f * dt;
-    const float pitch = diff.y * 0.2f * dt;
 
-
-    //케릭터 weist 위 아래로 변경
-    rotateWaist(-pitch);
-
-
-
+    mouseInput->yaw = diff.x * 0.2f * dt;
+    mouseInput->pitch = diff.y * 0.2f * dt;
 
 
     
-
-
-    static bool tempBool = false;
-    if (m_currentStayKey._LAlt)
-    {
-        if (pCurrentCamera)
-        {
-            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person || pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
-            {
-                m_rotationForCamera.x += -pitch;
-                m_rotationForCamera.y += yaw;
-                tempBool = true;
-            }
-        }
-    }
-    else // isPressing_LAlt == false
-    {
-        D3DXQUATERNION q;
-        D3DXQuaternionRotationYawPitchRoll(&q, yaw, 0.0f, 0.0f);
-        *OutRotation *= q;
-        m_rotationForCamera.x += -pitch;
-        // reset rotFotCameraTP
-        if (tempBool)
-        {
-            m_rotationForCamera = Vector3::ZERO;
-            tempBool = false;
-        }
-    }
-
-    //Limiting camera Pitch 
-    if (m_rotationForCamera.x < -0.8f)
-        m_rotationForCamera.x = -0.8f;
-    else if (m_rotationForCamera.x > 0.8f)
-        m_rotationForCamera.x = 0.8f;
-
-    Debug << "m_rotationForCamera.x : " << m_rotationForCamera.x << endl << endl << endl;
-
     static bool test_sound = true;
 
     if (Input()()->IsOnceKeyDown(VK_LEFT))
@@ -262,6 +220,52 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
         ClientToScreen(g_hWnd, &center);
         SetCursorPos(center.x, center.y);
     }
+}
+
+void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput& mouseInput)
+{
+
+    ////케릭터 weist 위 아래로 변경
+    //rotateWaist(-mouseInput.pitch);
+
+    ICamera* pCurrentCamera = CurrentCamera()();
+
+    static bool tempBool = false;
+    if (m_currentStayKey._LAlt)
+    {
+        if (pCurrentCamera)
+        {
+            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person || pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
+            {
+                m_rotationForCamera.x += -mouseInput.pitch;
+                m_rotationForCamera.y += mouseInput.yaw;
+                tempBool = true;
+            }
+        }
+    }
+    else // isPressing_LAlt == false
+    {
+        D3DXQUATERNION q;
+        D3DXQuaternionRotationYawPitchRoll(&q, mouseInput.yaw, 0.0f, 0.0f);
+        *OutRotation *= q;
+        m_rotationForCamera.x += -mouseInput.pitch;
+        // reset rotFotCameraTP
+        if (tempBool)
+        {
+            m_rotationForCamera = Vector3::ZERO;
+            tempBool = false;
+        }
+    }
+
+    //Limiting camera Pitch 
+    if (m_rotationForCamera.x < -0.8f)
+        m_rotationForCamera.x = -0.8f;
+    else if (m_rotationForCamera.x > 0.8f)
+        m_rotationForCamera.x = 0.8f;
+
+    Debug << "m_rotationForCamera.x : " << m_rotationForCamera.x << endl << endl << endl;
+
+
 
 }
 
