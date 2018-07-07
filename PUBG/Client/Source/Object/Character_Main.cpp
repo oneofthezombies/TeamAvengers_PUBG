@@ -21,7 +21,7 @@ Character::Character(const int index)
     , m_cellIndex(0)
     
     , m_rootTransform(1.0f)
-    , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
+    , m_waistRotation(0.8f, 0.1f)
     , m_framePtr()
     , m_info()
     , m_savedInput()

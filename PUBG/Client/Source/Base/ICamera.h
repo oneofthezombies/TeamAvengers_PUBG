@@ -2,10 +2,6 @@
 #include "TagClientOnly.h"
 #include "Character.h" //ÈÆÈ¸Çü! struct °¡ ¾È¸ÔÇô¼­ ÀÌ·¸°Ô ³Ö¾ú´Âµ¥ ±¦Âú³ª¿ä?
 
-#define FP_DISTANCE -30.0f
-#define FP_BASEPOSX 0.0f
-#define FP_BASEPOSY 155.0f
-
 #define TP_DISTANCE -30.0f
 #define TP_BASEPOSX -50.0f
 #define TP_BASEPOSY 45.0f
@@ -15,7 +11,6 @@ class ICamera : public MemoryAllocator
 {
 private:
     const TAG_CAMERA    m_tagCamera;
-          D3DXMATRIX    m_worldMatrix;
           D3DXMATRIX    m_viewMatrix;
           D3DXMATRIX    m_projectionMatrix;
 
@@ -35,6 +30,7 @@ private:    //fustum Culling
 protected:  //Camera Position Rotation Fov
     D3DXVECTOR3         m_position;
     D3DXQUATERNION      m_quarernion;
+    D3DXMATRIX          m_worldMatrix;
     float               m_fovY;
 
 protected:

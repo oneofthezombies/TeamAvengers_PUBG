@@ -200,6 +200,17 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     const float yaw = diff.x * 0.2f * dt;
     const float pitch = diff.y * 0.2f * dt;
 
+
+    //케릭터 weist 위 아래로 변경
+    rotateWaist(-pitch);
+
+
+
+
+
+    
+
+
     static bool tempBool = false;
     if (m_currentStayKey._LAlt)
     {
@@ -226,6 +237,14 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
             tempBool = false;
         }
     }
+
+    //Limiting camera Pitch 
+    if (m_rotationForCamera.x < -0.8f)
+        m_rotationForCamera.x = -0.8f;
+    else if (m_rotationForCamera.x > 0.8f)
+        m_rotationForCamera.x = 0.8f;
+
+    Debug << "m_rotationForCamera.x : " << m_rotationForCamera.x << endl << endl << endl;
 
     static bool test_sound = true;
 
@@ -641,9 +660,12 @@ D3DXVECTOR3 Character::getBackwardLeft()
 void Character::updateBone()
 {
     // modify local bones
-    D3DXMATRIX rx;
-    D3DXMatrixRotationX(&rx, m_waistRotation.m_angle);
-    m_framePtr.pWaist->TransformationMatrix *= rx;
+    D3DXMATRIX r;
+    D3DXMatrixRotationY(&r, m_waistRotation.m_angle);
+
+   
+
+    m_framePtr.pWaist->TransformationMatrix *= r;
 
     // for root motion animation
     m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
@@ -715,6 +737,7 @@ void Character::rotateWaist(const float quantity)
     else if (wr.m_angle > wr.LIMIT_OF_ANGLE)
         wr.m_angle = wr.LIMIT_OF_ANGLE;
 }
+
 
 int Character::GetIndex() const
 {
