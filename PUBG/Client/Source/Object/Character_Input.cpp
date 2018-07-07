@@ -264,8 +264,8 @@ void Character::setReload()
                             false,
                             CharacterAnimation::DEFAULT_BLENDING_TIME,
                             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                             CharacterAnimation::DEFAULT_POSITION,
+                            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                             [this]()
                         {
                             pAnimation->Set(
@@ -282,8 +282,8 @@ void Character::setReload()
                             false,
                             CharacterAnimation::DEFAULT_BLENDING_TIME,
                             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                             CharacterAnimation::DEFAULT_POSITION,
+                            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                             [this]()
                         {
                             pAnimation->Set(
@@ -306,8 +306,8 @@ void Character::setReload()
                                 false,
                                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                                 CharacterAnimation::DEFAULT_POSITION,
+                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                                 [this]()
                             {
                                 pAnimation->Set(
@@ -324,8 +324,8 @@ void Character::setReload()
                                 false,
                                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                                 CharacterAnimation::DEFAULT_POSITION,
+                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                                 [this]()
                             {
                                 pAnimation->Set(
@@ -345,8 +345,8 @@ void Character::setReload()
                                 false,
                                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                                 CharacterAnimation::DEFAULT_POSITION,
+                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                                 std::bind(&Character::onKar98kReload, this));
                         }
                         else if (m_stance == Stance::Prone)
@@ -357,8 +357,8 @@ void Character::setReload()
                                 false,
                                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                                 CharacterAnimation::DEFAULT_POSITION,
+                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                                 std::bind(&Character::onKar98kReload, this));                       
                         }
                     }
@@ -426,8 +426,8 @@ void Character::setPunch()
             true,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
             CharacterAnimation::DEFAULT_POSITION,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
             [this]()
         {
             pAnimation->Set(
@@ -489,8 +489,8 @@ void Character::setInteraction()
                 true,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 CharacterAnimation::DEFAULT_POSITION,
+                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
                     pAnimation->Set(
@@ -573,8 +573,8 @@ void Character::setJump()
             true,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            0.3f,
             CharacterAnimation::DEFAULT_POSITION,
+            0.3f,
             [this]()
         {
             pAnimation->Set(
@@ -600,8 +600,8 @@ void Character::setJump()
             true,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
             CharacterAnimation::DEFAULT_POSITION,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
             [this]()
         {
             pAnimation->Set(
@@ -639,11 +639,11 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
     pAnimation->Set(
         CharacterAnimation::BodyPart::UPPER,
         tagAnim,
-        false,
+        false, //손에 들때 보간하면 총이 들리는 느낌이 나서 false
         CharacterAnimation::DEFAULT_BLENDING_TIME,
         CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-        CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
         CharacterAnimation::DEFAULT_POSITION,
+        CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
         [this]()
     {
         pAnimation->Set(
@@ -655,6 +655,10 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
 
 void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 {
+    /*
+    - 몸에 장착하는 애니메이션 - Idling 애니메이션 0.3f 보간, Prone상태에서 깜빡거리는 문제 해결
+    */
+
     TotalInventory& inven = m_totalInventory;
 
     if (tagRifle == TAG_RIFLE::Primary) //주무기를 다시 몸에 장착
@@ -675,16 +679,19 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             false,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
             CharacterAnimation::DEFAULT_POSITION,
+            0.3f,
             [this, &inven]()
         {
             inven.m_pWeaponPrimary = inven.m_pHand;
             inven.m_pHand = nullptr;
+
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
-                false);
+                true,
+                0.3f,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
         });
     }
     else if (tagRifle == TAG_RIFLE::Secondary) //보조무기를 다시 몸에 장착
@@ -705,16 +712,19 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             false,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
             CharacterAnimation::DEFAULT_POSITION,
+            0.3f,
             [this, &inven]()
         {
             inven.m_pWeaponSecondary = inven.m_pHand;
             inven.m_pHand = nullptr;
+
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
-                false);
+                true,
+                0.3f,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
         });
     }
 }
@@ -741,7 +751,7 @@ void Character::setStandTo()
                 false,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                0.4f,//CharacterAnimation::DEFAULT_POSITION,
+                0.4f,
                 1.2f,
                 [this]()
             {
@@ -761,7 +771,7 @@ void Character::setStandTo()
                 false,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                0.4f,//CharacterAnimation::DEFAULT_POSITION,
+                0.4f,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
@@ -826,7 +836,7 @@ void Character::setCrouchTo()
                 false,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                0.6f,//CharacterAnimation::DEFAULT_POSITION,
+                0.6f,
                 1.0f,
                 [this]()
             {

@@ -259,11 +259,11 @@ TAG_ANIM_CHARACTER AnimationState::get_Rifle_Stand_Sprint(const Direction d)
     switch (d) {
     case Direction::Front:      return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_F_WeaponInView;
     case Direction::FrontRight: return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_FR_BigGun;
-    case Direction::Right:      return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_R_WeaponDown;
+    case Direction::Right:      return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_R;//Rifle_Combat_Stand_Sprint_R_WeaponDown;
     case Direction::BackRight:  return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_BR;
     case Direction::Back:       return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_B;
     case Direction::BackLeft:   return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_BL;
-    case Direction::Left:       return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_L_WeaponDown;
+    case Direction::Left:       return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_L;//Rifle_Combat_Stand_Sprint_L_WeaponDown;
     case Direction::FrontLeft:  return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_FL_BigGun;
     case Direction::StandStill: return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Low_Idle_Still_Very;
     default:                    return TAG_ANIM_CHARACTER::COUNT;

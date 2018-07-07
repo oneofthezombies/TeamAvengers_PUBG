@@ -5,8 +5,8 @@
 
 const float CharacterAnimation::DEFAULT_BLENDING_TIME = 0.3f;
 const float CharacterAnimation::DEFAULT_NEXT_WEIGHT = 0.0f;
-const float CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME = 0.0f;
 const float CharacterAnimation::DEFAULT_POSITION = 0.0f;
+const float CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME = 0.0f;
 
 CharacterAnimation::CharacterAnimation()
     : IObject(TAG_OBJECT::Idle)
