@@ -1031,8 +1031,7 @@ void Character::onKar98kReloadEnd()
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 false);
-        });
-    
+        });  
     }
 }
 

@@ -199,6 +199,8 @@ private:
     TAG_ANIM_CHARACTER m_lowerAnimState;
     Stance    m_stance;
     Attacking m_attacking;
+    Moving    m_moving;
+    Direction m_direction;
 
     IsPressing m_savedInput;
     IsPressing m_currentStayKey;
@@ -323,6 +325,7 @@ public:
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
     string ForDebugGetAttacking(Attacking attcking);
     string ForDebugGetStance(Stance stance);
+    string ForDebugGetMoving(Moving moving);
     void   ForDebug();
 
           CharacterAnimation*        GetCharacterAnimation();

@@ -19,7 +19,7 @@ Character::Character(const int index)
     // id
     , m_index(index)
     , m_cellIndex(0)
-    
+
     , m_rootTransform(1.0f)
     , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
     , m_framePtr()
@@ -29,6 +29,8 @@ Character::Character(const int index)
     , m_totalInventory()
     , m_attacking(Attacking::Unarmed)
     , m_stance(Stance::Stand)
+    , m_moving(Moving::Run)
+    , m_direction(Direction::Front)
     , m_upperAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_isFire(false)
@@ -252,25 +254,27 @@ void Character::updateMine()
                 m_lowerAnimState, true, 0.3f, 0.0f, 0.0f);
        
             //하단 참고할 만한 것
-            ////set current with same position with finish event m_lowerAnimState
+            //set current with same position with finish event m_lowerAnimState
             //D3DXTRACK_DESC lowerDesc;
             //pAnimation->GetLowerTrackDescription(0, &lowerDesc);
             //const float period = pAnimation->GetLowerTrackPeriod(0);
+            //float tempNum = period - lowerDesc.Position;
+            //cout << tempNum << endl;
             //pAnimation->Set(
             //    CharacterAnimation::BodyPart::BOTH,
             //    currentAnim,
             //    true,
-            //    0.3f,
+            //    0.5f,
             //    CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             //    lowerDesc.Position,
-            //    period - lowerDesc.Position - 0.1f,
+            //    period - lowerDesc.Position,
             //    [this]()
             //{
             //    pAnimation->Set(
             //        CharacterAnimation::BodyPart::BOTH,
             //        m_lowerAnimState,
             //        true,
-            //        0.3f,
+            //        0.5f,
             //        CharacterAnimation::DEFAULT_NEXT_WEIGHT);
             //});
 
