@@ -4,11 +4,9 @@
 
 IObject::IObject(const TAG_OBJECT tagObject)
     : MemoryAllocator()
+    , m_tagObject(tagObject)
     , pTransform(nullptr)
     , pParent(nullptr)
-    , m_tagObject(tagObject)
-    , m_pBoundingSphere(nullptr)
-
 {
 	pTransform = AddComponent<Transform>();
 }
@@ -20,11 +18,6 @@ IObject::~IObject()
 
     for (auto c : m_components)
         SAFE_DELETE(c.second);
-
-    SAFE_DELETE(m_pBoundingSphere);
-
-    for (auto bb : m_boundingBoxes)
-        SAFE_DELETE(bb);
 }
 
 void IObject::Update()
@@ -71,12 +64,12 @@ Transform* IObject::GetTransform()
 	return pTransform;
 }
 
-BoundingSphere* IObject::GetBoundingSphere()
+const BoundingSphere& IObject::GetBoundingSphere()
 {
-    return m_pBoundingSphere;
+    return m_boundingSphere;
 }
 
-const std::vector<BoundingBox*>& IObject::GetBoundingBoxes()
+const std::vector<BoundingBox>& IObject::GetBoundingBoxes()
 {
     return m_boundingBoxes;
 }

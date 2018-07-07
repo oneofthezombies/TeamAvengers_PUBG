@@ -3,33 +3,39 @@
 #include "Collider.h"
 
 BoundingShape::BoundingShape()
-    : MemoryAllocator()
-    , center(Vector3::ZERO)
+    : /*MemoryAllocator()
+    ,*/ center(Vector3::ZERO)
+    , position(Vector3::ZERO)
+{
+}
+
+BoundingShape::~BoundingShape()
 {
 }
 
 BoundingSphere::BoundingSphere()
     : BoundingShape()
     , radius(0.0f)
+
 {
 }
 
-BoundingSphere BoundingSphere::CopyTo(const D3DXVECTOR3& position)
+BoundingSphere::~BoundingSphere()
 {
-    BoundingSphere bs;
-    bs.center = center + position;
-    bs.radius = radius;
-    return bs;
 }
 
 void BoundingSphere::Render()
 {
     if (!Collision()()->IsRender()) return;
 
-    D3DXMATRIX s, t, m;
-    D3DXMatrixScaling(&s, radius, radius, radius);
-    D3DXMatrixTranslation(&t, center.x, center.y, center.z);
-    m = s * t;
+    D3DXMATRIX m;
+    D3DXMatrixTransformation(
+        &m, 
+        nullptr, 
+        nullptr, 
+        &D3DXVECTOR3(radius, radius, radius), 
+        nullptr, nullptr, 
+        &(center + position));
 
     Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
     Shader::Draw(
@@ -50,28 +56,12 @@ void BoundingSphere::Render()
 BoundingBox::BoundingBox()
     : BoundingShape()
     , extent(Vector3::ZERO)
-    , transformationMatrix(Matrix::IDENTITY)
+    , rotation(Quaternion::IDENTITY)
 {
 }
 
-void BoundingBox::Update(const D3DXMATRIX& transformationMatrix)
+BoundingBox::~BoundingBox()
 {
-    D3DXMATRIX invCurrent, variance;
-    D3DXMatrixInverse(&invCurrent, nullptr, &this->transformationMatrix);
-
-    variance = invCurrent * transformationMatrix;
-    D3DXVec3TransformCoord(&center, &center, &variance);
-    this->transformationMatrix = transformationMatrix;
-}
-
-BoundingBox BoundingBox::CopyTo(const D3DXMATRIX& transformationMatrix)
-{
-    BoundingBox bb;
-    bb.extent = extent;
-    bb.center = center;
-    bb.transformationMatrix = this->transformationMatrix;
-    bb.Update(transformationMatrix);
-    return bb;
 }
 
 void BoundingBox::Render()
@@ -80,10 +70,13 @@ void BoundingBox::Render()
 
     auto& vertices = Resource()()->GetBoundingBoxVertices();
     auto& indices  = Resource()()->GetBoundingBoxIndices();
-
-    D3DXMATRIX s, m;
-    D3DXMatrixScaling(&s, extent.x, extent.y, extent.z);
-    m = s * transformationMatrix;
+    
+    D3DXMATRIX e, c, r, p, m;
+    D3DXMatrixScaling(&e, extent.x, extent.y, extent.z);
+    D3DXMatrixTranslation(&c, center.x, center.y, center.z);
+    D3DXMatrixRotationQuaternion(&r, &rotation);
+    D3DXMatrixTranslation(&p, position.x, position.y, position.z);
+    m = e * c * r * p;
 
     Shader::Draw(
         Resource()()->GetEffect("./Resource/", "Color.fx"),
@@ -129,10 +122,8 @@ BoundingBox BoundingBox::Create(const D3DXMATRIX& transformationMatrix)
     D3DXVec3TransformCoord(&extent, &extent, &mS);
 
     BoundingBox bb = Create(-extent, extent);
-
-    D3DXMATRIX invS;
-    D3DXMatrixInverse(&invS, nullptr, &mS);
-    bb.Update(invS * transformationMatrix);
+    bb.rotation = qR;
+    bb.position = vT;
     return bb;
 }
 
@@ -491,13 +482,17 @@ bool Collision::HasCollision(
 
 bool Collision::HasCollision(const BoundingBox& lhs, const BoundingBox& rhs)
 {
-    const D3DXMATRIX& A_transform = lhs.transformationMatrix;
-    const D3DXMATRIX& B_transform = rhs.transformationMatrix;
+    //const D3DXMATRIX& A_transform = lhs.transformationMatrix;
+    //const D3DXMATRIX& B_transform = rhs.transformationMatrix;
+    D3DXMATRIX A_transform, B_transform;
+    D3DXMatrixRotationQuaternion(&A_transform, &lhs.rotation);
+    D3DXMatrixRotationQuaternion(&B_transform, &rhs.rotation);
 
     const D3DXVECTOR3& A_extent = lhs.extent;
     const D3DXVECTOR3& B_extent = rhs.extent;
 
-    const D3DXVECTOR3 distance = lhs.center - rhs.center;
+    //const D3DXVECTOR3 distance = lhs.center - rhs.center;
+    const D3DXVECTOR3 distance = (lhs.center + lhs.position) - (rhs.center + rhs.position);
 
     vector<D3DXVECTOR3> A_axises(3);
     vector<D3DXVECTOR3> B_axises(3);
@@ -689,5 +684,115 @@ bool Collision::HasCollision(const BoundingBox& lhs, const BoundingBox& rhs)
     if (r > r01)
         return false;
 
+    return true;
+}
+
+bool Collision::HasCollision(
+    const Ray& ray, 
+    const BoundingBox& box, 
+    float* OutDistance)
+{
+    float tMin = std::numeric_limits<float>::lowest();
+    float tMax = std::numeric_limits<float>::max();
+
+    const D3DXVECTOR3 diff = (box.center + box.position) - ray.m_pos;
+
+    D3DXMATRIX m;
+    D3DXMatrixRotationQuaternion(&m, &box.rotation);
+
+    const D3DXVECTOR3 xAxis(m._11, m._12, m._13);
+    float e = D3DXVec3Dot(&xAxis, &diff);
+    float f = D3DXVec3Dot(&ray.m_dir, &xAxis);
+
+    if (std::abs(f) > D3DX_16F_EPSILON)
+    {
+        float t1 = (e - box.extent.x) / f;
+        float t2 = (e + box.extent.x) / f;
+
+        if (t1 > t2)
+        {
+            float temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+
+        if (t2 < tMax)
+            tMax = t2;
+
+        if (t1 > tMin)
+            tMin = t1;
+
+        if (tMax < tMin)
+            return false;
+    }
+    else
+    {
+        if (-e - box.extent.x > 0.0f || -e + box.extent.x < 0.0f)
+            return false;
+    }
+
+    const D3DXVECTOR3 yAxis(m._21, m._22, m._23);
+    e = D3DXVec3Dot(&yAxis, &diff);
+    f = D3DXVec3Dot(&ray.m_dir, &yAxis);
+
+    if (std::abs(f) > D3DX_16F_EPSILON)
+    {
+        float t1 = (e - box.extent.y) / f;
+        float t2 = (e + box.extent.y) / f;
+
+        if (t1 > t2)
+        {
+            float temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+
+        if (t2 < tMax)
+            tMax = t2;
+
+        if (t1 > tMin)
+            tMin = t1;
+
+        if (tMax < tMin)
+            return false;
+    }
+    else
+    {
+        if (-e - box.extent.y > 0.0f || -e + box.extent.y < 0.0f)
+            return false;
+    }
+
+    const D3DXVECTOR3 zAxis(m._31, m._32, m._33);
+    e = D3DXVec3Dot(&zAxis, &diff);
+    f = D3DXVec3Dot(&ray.m_dir, &zAxis);
+
+    if (std::abs(f) > D3DX_16F_EPSILON)
+    {
+        float t1 = (e - box.extent.z) / f;
+        float t2 = (e + box.extent.z) / f;
+
+        if (t1 > t2)
+        {
+            float temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+
+        if (t2 < tMax)
+            tMax = t2;
+
+        if (t1 > tMin)
+            tMin = t1;
+
+        if (tMax < tMin)
+            return false;
+    }
+    else
+    {
+        if (-e - box.extent.z > 0.0f || -e + box.extent.z < 0.0f)
+            return false;
+    }
+
+    *OutDistance = tMin;
     return true;
 }

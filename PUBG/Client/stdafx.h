@@ -20,6 +20,9 @@
 // end debug
 
 // math and usefuls
+#include "Ray.h"
+#include "Collision.h"        // has Collision    ()()
+
 #include "Structure.h"
 #include "Shader.h"
 // end math and usefuls
@@ -29,7 +32,6 @@
 #include "Application.h"      // has App          ()()
 #include "DeviceManager.h"    // has Device       ()()
 #include "Resource.h"         // has Resource     ()()
-#include "Collision.h"        // has Collision    ()()
 #include "UIManager.h"        // has UI           ()()
 #include "SoundManager.h"     // has Sound        ()()
 #include "TimeManager.h"      // has Time         ()()

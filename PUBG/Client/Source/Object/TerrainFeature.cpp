@@ -22,8 +22,8 @@ TerrainFeature::TerrainFeature(
     tr->Update();
 
     // setup bounding sphere
-    m_boundingSphereTerrainFeature = pEffectMeshRenderer->GetBoundingSphere();
-    m_boundingSphereTerrainFeature.center += position;
+    m_boundingSphere = pEffectMeshRenderer->GetBoundingSphere();
+    m_boundingSphere.position = position;
 
     CurrentScene()()->InsertObjIntoTotalCellSpace(TAG_OBJECT::TerrainFeature, CurrentScene()()->GetCellIndex(position), this);
 }
@@ -51,35 +51,13 @@ void TerrainFeature::OnRender()
         pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
     });
 
-    m_boundingSphereTerrainFeature.Render();
-    for (auto bb : m_boundingBoxes)
-        bb->Render();
-}
+    for (auto& bb : m_boundingBoxes)
+        bb.Render();
 
-BoundingSphere* TerrainFeature::GetBoundingSphere()
-{
-    return &m_boundingSphereTerrainFeature;
+    m_boundingSphere.Render();
 }
 
 void TerrainFeature::AddBoundingBox(const D3DXMATRIX& transformationMatrix)
 {
-    BoundingBox* bb = new BoundingBox;
-    D3DXVECTOR3 extent(Vector3::ONE * 0.5f);
-    D3DXVECTOR3 vS;
-    D3DXQUATERNION qR;
-    Matrix::GetScaleAndRotation(transformationMatrix, &vS, &qR);
-    D3DXVECTOR3 vT = Matrix::GetTranslation(transformationMatrix);
-
-    D3DXMATRIX mS;
-    D3DXMatrixScaling(&mS, vS.x, vS.y, vS.z);
-    D3DXVec3TransformCoord(&extent, &extent, &mS);
-
-    bb->center = Vector3::ZERO;
-    bb->extent = extent;
-
-    D3DXMATRIX invS;
-    D3DXMatrixInverse(&invS, nullptr, &mS);
-    bb->Update(invS * transformationMatrix);
-
-    m_boundingBoxes.emplace_back(bb);
+    m_boundingBoxes.emplace_back(BoundingBox::Create(transformationMatrix));
 }

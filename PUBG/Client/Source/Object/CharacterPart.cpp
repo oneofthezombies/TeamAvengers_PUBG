@@ -28,6 +28,9 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
     //pBoxCollider->AddOnCollisionExitCallback(
     //    std::bind(&Character::OnCollisionExit, pCharacter, _1, _2));
 
+    m_boundingBoxes.resize(1);
+    BoundingBox& m_boundingBox = m_boundingBoxes.front();
+
     switch (tag)
     {
     case TAG_COLLIDER_CHARACTER_PART::Head:
@@ -349,27 +352,27 @@ void CharacterPart::OnUpdate()
                    / static_cast<float>(m_frames.size());
     }
 
-    m_boundingBox.Update(model *
-        pCharacter->GetTransform()->GetTransformationMatrix());
-    //pBoxCollider->Update(model *
-    //    pCharacter->GetTransform()->GetTransformationMatrix());
+    D3DXMATRIX world 
+        = model 
+        * pCharacter->GetTransform()->GetTransformationMatrix();
+    D3DXQUATERNION r;
+    Matrix::GetScaleAndRotation(world, nullptr, &r);
+    D3DXVECTOR3 t = Matrix::GetTranslation(world);
+    BoundingBox& m_boundingBox = m_boundingBoxes.front();
+    m_boundingBox.rotation = r;
+    m_boundingBox.position = t;
 
     //updateUI();
 }
 
 void CharacterPart::OnRender()
 {
-    m_boundingBox.Render();
+    m_boundingBoxes.front().Render();
 }
 
 TAG_COLLIDER_CHARACTER_PART CharacterPart::GetTagColliderCharacterPart() const
 {
     return m_tagColliderCharacterPart;
-}
-
-BoundingBox* CharacterPart::GetBoundingBox()
-{
-    return &m_boundingBox;
 }
 
 void CharacterPart::addFrame(

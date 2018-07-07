@@ -10,13 +10,13 @@ private:
 	unordered_map<type_index, Component*> m_components;
     deque<IObject*>                       m_children;
     TAG_OBJECT                            m_tagObject;
-	
+
     Transform* pTransform;
     IObject*   pParent;
 
 protected:
-    BoundingSphere*           m_pBoundingSphere;
-    std::vector<BoundingBox*> m_boundingBoxes;
+    BoundingSphere           m_boundingSphere;
+    std::vector<BoundingBox> m_boundingBoxes;
 
     IObject(const TAG_OBJECT tagObject);
 
@@ -32,10 +32,9 @@ public:
 	void SetParent(IObject* pParent);
 	void AddChild(IObject* pChild);
 
-	Transform* GetTransform();
-
-    virtual       BoundingSphere*            GetBoundingSphere();
-    virtual const std::vector<BoundingBox*>& GetBoundingBoxes();
+	              Transform*                GetTransform();
+            const BoundingSphere&           GetBoundingSphere();
+    virtual const std::vector<BoundingBox>& GetBoundingBoxes();
 
     virtual void OnUpdate() = 0;
     virtual void OnRender() = 0;

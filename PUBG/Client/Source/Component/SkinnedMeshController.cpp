@@ -53,8 +53,8 @@ void SkinnedMeshController::drawMeshContainer(
 
     //**************frustum culling ************************
     D3DXVECTOR3 center = Vector3::ZERO;
-    D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_center, &world);
-    if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_radius))
+    D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_boundingSphere.center, &world);
+    if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_boundingSphere.radius))
         return;
     //******************************************************
 
@@ -749,8 +749,8 @@ void SkinnedMeshController::findBoundingSphere(
 
     MeshContainer* pMC = static_cast<MeshContainer*>(pMeshContainer);
     BoundingSphere bs;
-    bs.center = pMC->pEffectMesh->m_center;
-    bs.radius = pMC->pEffectMesh->m_radius;
+    bs.center = pMC->pEffectMesh->m_boundingSphere.center;
+    bs.radius = pMC->pEffectMesh->m_boundingSphere.radius;
     OutBoundingSpheres->emplace_back(bs);
 }
 

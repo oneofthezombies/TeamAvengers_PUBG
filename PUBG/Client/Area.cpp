@@ -52,7 +52,7 @@ bool Area::checkValid(int v)
 std::vector<IObject*> Area::GetBullets()
 {
     std::vector<IObject*> vBullets;
-    for (int i = 0; i < m_cellspaces.size(); i++)
+    for (std::size_t i = 0; i < m_cellspaces.size(); i++)
     {
         auto& set = m_cellspaces[i]->pBullets;
         vBullets.insert(vBullets.end(), set.begin(), set.end());
@@ -63,7 +63,7 @@ std::vector<IObject*> Area::GetBullets()
 std::vector<TerrainFeature*> Area::GetTerrainFeatures()
 {
     std::vector<TerrainFeature*> vTerrainFeatures;
-    for (int i = 0; i < m_cellspaces.size(); i++)
+    for (std::size_t i = 0; i < m_cellspaces.size(); i++)
     {
         auto& set = m_cellspaces[i]->pTerrainFeatures;
         vTerrainFeatures.insert(vTerrainFeatures.end(), set.begin(), set.end());

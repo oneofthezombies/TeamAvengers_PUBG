@@ -139,7 +139,6 @@ public:
     {
         D3DXVECTOR3              position;
         D3DXQUATERNION           rotation;
-        D3DXMATRIX               transformationMatrix;
         std::vector<BoundingBox> boundingBoxes;
         bool                     isHeadBump;
 
@@ -207,8 +206,10 @@ private:
     IsJumping m_Jump;
 
     // for debug
-    LPD3DXMESH pOtherHitPointMesh;
-    BoundingBox m_otherHitedBox;
+    LPD3DXMESH  pOtherHitPositionMesh;
+    std::size_t m_otherHitPart;
+    BoundingBox m_otherHitBox;
+
     bool m_isFire;
 
 /**************************** end member variable ****************************/
@@ -325,13 +326,14 @@ public:
     string ForDebugGetStance(Stance stance);
     void   ForDebug();
 
-          CharacterAnimation*        GetCharacterAnimation();
-    const std::vector<BoundingBox*>& GetBoundingBoxes() override;
+    CharacterAnimation* GetCharacterAnimation();
 
     void AddPart(CharacterPart* pPart);
     D3DXVECTOR3 GetWaistPosition();
     bool IsFire() const;
     void RifleShooting();
+
+    virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
 
 /**************************** end public method ******************************/
 

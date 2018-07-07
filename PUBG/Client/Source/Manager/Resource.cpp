@@ -153,8 +153,8 @@ HRESULT Resource::Async::CreateEffectMesh(
         (D3DXVECTOR3*)pData,
         pEffectMesh->m_pMesh->GetNumVertices(),
         pEffectMesh->m_pMesh->GetNumBytesPerVertex(),
-        &pEffectMesh->m_center,
-        &pEffectMesh->m_radius);
+        &pEffectMesh->m_boundingSphere.center,
+        &pEffectMesh->m_boundingSphere.radius);
     pEffectMesh->m_pMesh->UnlockVertexBuffer();
     // END TODO JOHN HAN
 
@@ -578,6 +578,7 @@ void Resource::Manager::Init()
 void Resource::Manager::Destroy()
 {
     SAFE_RELEASE(m_pEffectPool);
+    SAFE_RELEASE(m_pBoundingSphereMesh);
 
     for (auto e : m_effects)
         SAFE_RELEASE(e.second);

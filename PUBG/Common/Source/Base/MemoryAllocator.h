@@ -6,11 +6,11 @@ private:
     static std::unordered_set<void*> s_memoryAllocators;
 
 public:
-    MemoryAllocator();
+             MemoryAllocator();
     virtual ~MemoryAllocator();
 
     void* operator new(std::size_t count);
-    void operator delete(void* p);
+    void  operator delete(void* p);
 
 public:
     static void CheckMemoryAllocators();

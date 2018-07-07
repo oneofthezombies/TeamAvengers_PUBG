@@ -205,8 +205,6 @@ void ScenePlay::OnUpdate()
     ·¹ÀÌ,
     */
 
-    if (pPlayer->IsFire())
-        pPlayer->RifleShooting();
 
 }
 

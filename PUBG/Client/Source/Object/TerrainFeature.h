@@ -10,7 +10,6 @@ class TerrainFeature : public IObject
 {
 private:
     EffectMeshRenderer*  pEffectMeshRenderer;
-    BoundingSphere       m_boundingSphereTerrainFeature;
 
 public:
              TerrainFeature(
@@ -23,7 +22,6 @@ public:
 
     virtual void OnUpdate() override;
     virtual void OnRender() override;
-    virtual BoundingSphere* GetBoundingSphere() override;
 
     void AddBoundingBox(const D3DXMATRIX& transformationMatrix);
 };

@@ -35,6 +35,8 @@ Character::Character(const int index)
 
     , pAnimation(nullptr)
 
+    , m_otherHitPart(0)
+
 {
     const float factor(static_cast<float>(m_index + 1) * 100.0f);
 
@@ -62,12 +64,11 @@ Character::Character(const int index)
     AddPart(new CharacterPart(TAG_COLLIDER_CHARACTER_PART::Head, this));
 
     for (auto pPart : m_characterParts)
-        m_boundingBoxes.emplace_back(pPart->GetBoundingBox());
+        m_boundingBoxes.emplace_back(pPart->GetBoundingBoxes().front());
 
-    auto a = pAnimation->GetBoundingSpheres();
-    m_pBoundingSphere = new BoundingSphere;
-    m_pBoundingSphere->center = a.front().center;
-    m_pBoundingSphere->radius = a.front().radius;
+    const std::vector<BoundingSphere>& bss = pAnimation->GetBoundingSpheres();
+    m_boundingSphere = bss.front();
+    m_boundingSphere.position = pTransform->GetPosition();
     // end boundingShapes
 
     subscribeCollisionEvent();
@@ -79,11 +80,15 @@ Character::Character(const int index)
         m_rotationForCamera = Vector3::ZERO;
     }
 
-    pOtherHitPointMesh = Resource()()->GetBoundingSphereMesh();
+    pOtherHitPositionMesh = Resource()()->GetBoundingSphereMesh();
 }
 
 Character::~Character()
 {
+    for (auto p : m_characterParts)
+    {
+        SAFE_DELETE(p);
+    }
 }
 
 void Character::OnUpdate()
@@ -98,8 +103,14 @@ void Character::OnUpdate()
     pAnimation->UpdateModel();
     updateTotalInventory();
 
+    // bounding sphere move to character position
+    m_boundingSphere.position = GetTransform()->GetPosition();
+
     for (auto pPart : m_characterParts)
         pPart->Update();
+
+    if (IsFire())
+        RifleShooting();
 
     // render
     pAnimation->Render(
@@ -120,19 +131,52 @@ void Character::OnUpdate()
     for (auto pPart : m_characterParts)
         pPart->Render();
 
-    m_pBoundingSphere->CopyTo(GetTransform()->GetPosition()).Render();
+    m_boundingSphere.Render();
 
-    Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr, pOtherHitPointMesh, 0,
-        [this](LPD3DXEFFECT pEffect)
+    //Shader::Draw(
+    //    Resource()()->GetEffect("./Resource/", "Color.fx"), 
+    //    nullptr, 
+    //    pOtherHitPositionMesh, 
+    //    0,
+    //    [this](LPD3DXEFFECT pEffect)
+    //{
+    //    const D3DXVECTOR3& pos = m_otherHitPosition;
+    //    D3DXMATRIX s, t, m;
+    //    const float scale = 10.0f;
+    //    D3DXMatrixScaling(&s, scale, scale, scale);
+    //    D3DXMatrixTranslation(&t, pos.x, pos.y, pos.z);
+    //    m = s * t;
+
+    //    pEffect->SetMatrix(Shader::World, &m);
+    //});
+
+    auto& b = m_otherHitBox;
+    D3DXMATRIX e, c, r, p, m;
+    D3DXMatrixScaling(&e, b.extent.x, b.extent.y, b.extent.z);
+    D3DXMatrixTranslation(&c, b.center.x, b.center.y, b.center.z);
+    D3DXMatrixRotationQuaternion(&r, &b.rotation);
+    D3DXMatrixTranslation(&p, b.position.x, b.position.y, b.position.z);
+    m = e * c * r * p;
+    const auto& vertices = Resource()()->GetBoundingBoxVertices();
+    const auto& indices = Resource()()->GetBoundingBoxIndices();
+    Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr, 
+        [&m](LPD3DXEFFECT pEffect)
     {
-        D3DXVECTOR3& center = m_otherHitedBox.center;
-        D3DXMATRIX s, t, m;
-        const float scale = 10.0f;
-        D3DXMatrixScaling(&s, scale, scale, scale);
-        D3DXMatrixTranslation(&t, center.x, center.y, center.z);
-        m = s * t;
 
         pEffect->SetMatrix(Shader::World, &m);
+        D3DXCOLOR magenta(1.0f, 0.0f, 1.0f, 1.0f);
+        pEffect->SetValue("Color", &magenta, sizeof magenta);
+    }, [&vertices, &indices]()
+    {
+        Device()()->DrawIndexedPrimitiveUP(
+            D3DPT_LINELIST,
+            0,
+            vertices.size(),
+            indices.size() / 2,
+            indices.data(),
+            D3DFMT_INDEX16,
+            vertices.data(),
+            sizeof vertices.front());
     });
     
     // communication
@@ -161,7 +205,6 @@ void Character::updateMine()
     State destState;
     destState.position = tm->GetPosition();
     destState.rotation = tm->GetRotation();
-    destState.transformationMatrix = tm->GetTransformationMatrix();
 
     //*********************************
 
@@ -172,21 +215,21 @@ void Character::updateMine()
 
     // 충돌체크////////////////////////////
     bool hasCollision = false;
-    BoundingSphere pMyBoundingSphere = GetBoundingSphere()->CopyTo(destState.position);
     for (auto tf : pCurrentScene->m_NearArea.GetTerrainFeatures())
     {
         if (hasCollision) break;
 
         // 바운딩스피어가 충돌되지 않으면 다음 터레인피처와 충돌을 검사한다.
-        if (!Collision::HasCollision(pMyBoundingSphere, *(tf->GetBoundingSphere()))) continue;
+        if (!Collision::HasCollision(m_boundingSphere, tf->GetBoundingSphere())) continue;
 
         if (destState.boundingBoxes.empty())
         {
-            D3DXMatrixTransformation(&destState.transformationMatrix, nullptr, nullptr, nullptr, nullptr, &destState.rotation, &destState.position);
-
-            for (auto bb : GetBoundingBoxes())
+            for (auto& bb : GetBoundingBoxes())
             {
-                destState.boundingBoxes.emplace_back(bb->CopyTo(destState.transformationMatrix));
+                BoundingBox destBB = bb;
+                destBB.rotation = destState.rotation;
+                destBB.position = destState.position;
+                destState.boundingBoxes.emplace_back(destBB);
             }
         }
 
@@ -198,7 +241,7 @@ void Character::updateMine()
             {
                 if (hasCollision) break;
 
-                hasCollision = Collision::HasCollision(mine, *others);
+                hasCollision = Collision::HasCollision(mine, others);
             }
         }
     }

@@ -38,10 +38,7 @@ Item::Item(
 
     setup(tag);
 
-    m_pBoundingSphere = new BoundingSphere;
-    BoundingSphere bs = pEffectMeshRenderer->GetBoundingSphere();
-    m_pBoundingSphere->center = bs.center;
-    m_pBoundingSphere->radius = bs.radius;
+    m_boundingSphere = pEffectMeshRenderer->GetBoundingSphere();
 }
 
 Item::~Item()
@@ -58,15 +55,16 @@ void Item::OnRender()
     {
         EffectMesh* pEM = pEffectMeshRenderer->GetEffectMesh();
         D3DXVECTOR3 center = Vector3::ZERO;
-        D3DXVec3TransformCoord(&center, &pEM->m_center, &GetTransform()->GetTransformationMatrix());
-        if(CurrentCamera()()->IsObjectInsideFrustum(center, pEM->m_radius))
+        D3DXVec3TransformCoord(&center, &pEM->m_boundingSphere.center, &GetTransform()->GetTransformationMatrix());
+        if(CurrentCamera()()->IsObjectInsideFrustum(center, pEM->m_boundingSphere.radius))
             pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
     }
         
     if (m_isRenderSkinnedMesh)
         pSkinnedMeshController->Render(GetTransform()->GetTransformationMatrix(), std::bind(&Item::setGlobalVariable, this, _1));
 
-    m_pBoundingSphere->CopyTo(GetTransform()->GetPosition()).Render();
+    m_boundingSphere.position = GetTransform()->GetPosition();
+    m_boundingSphere.Render();
 }
 
 void Item::setup(const TAG_RES_STATIC tag)
