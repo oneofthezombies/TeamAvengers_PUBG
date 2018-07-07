@@ -461,66 +461,68 @@ void Character::movementControl(OUT State* OutState)
         m_Jump.isJumping = true;
     }
 
-    float movingFactor;
+    float movingFactor = 0.0f;
 
     //Moving 3°³ -----------------------------------------------------
    if(m_moving == Moving::Run)
     {
        if(m_attacking == Attacking::Unarmed)
-            movingFactor = 1.8f;
+            movingFactor = 180.f;
        else 
-            movingFactor = 1.2f;
+            movingFactor = 120.f;
     }
    else if (m_moving == Moving::Sprint)
    {
        if (m_attacking == Attacking::Unarmed)
-            movingFactor = 2.6f;
+            movingFactor = 260.f;
        else
-            movingFactor = 2.0f;
+            movingFactor = 200.f;
    }
    else if (m_moving == Moving::Walk)
    {
        if (m_attacking == Attacking::Unarmed)
-           movingFactor = 1.2f;
+           movingFactor = 120.f;
        else
-           movingFactor = 1.0f;
+           movingFactor = 100.f;
    }
+
+   float dt = Time()()->GetDeltaTime();
+   float dist = movingFactor * m_rootTransform.MOVE_SPEED * dt;
 
     //Direction 8°³ -----------------------------------------------------
     if (m_currentStayKey._W&&m_currentStayKey._D)
     {
-        OutState->position += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getForwardRight() * dist;
     }
     else if (m_currentStayKey._D&&m_currentStayKey._S)
     {
-        OutState->position += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getBackwardRight() * dist;
     }
     else if (m_currentStayKey._S&&m_currentStayKey._A)
     {
-        OutState->position += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getBackwardLeft() * dist;
     }
     else if (m_currentStayKey._A&&m_currentStayKey._W)
     {
-        OutState->position += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getForwardLeft() * dist;
     }
     else if (m_currentStayKey._W)
     {
-        OutState->position += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getForward() * dist;
 
     }
     else if (m_currentStayKey._D)
     {
-        OutState->position += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getRight() * dist;
     }
     else if (m_currentStayKey._S)
     {
-        OutState->position += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getBackward() * dist;
     }
     else if (m_currentStayKey._A)
     {
-        OutState->position += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
+        OutState->position += getLeft() * dist;
     }
-    
 }
 
 void Character::animationControl()
