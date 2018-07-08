@@ -103,6 +103,8 @@ Character::FramePtr::FramePtr()
     , pSlotSecondary(nullptr)
     , pSlotMelee(nullptr)
     , pSlotThrowable(nullptr)
+    , pLeftClavicle(nullptr)
+    , pRightClavicle(nullptr)
 {
 }
 
@@ -128,10 +130,12 @@ void Character::setFramePtr()
     m_framePtr.pWaist         = pAnimation->FindFrame("spine_01");
     m_framePtr.pRoot          = pAnimation->FindFrame("root");
     m_framePtr.pHead          = pAnimation->FindFrame("head");
-    m_framePtr.pLeftUpperArm  = pAnimation->FindFrame("upperarm_l");
-    m_framePtr.pRightUpperArm = pAnimation->FindFrame("upperarm_r");
+    m_framePtr.pLeftClavicle = pAnimation->FindFrame("clavicle_l");
+    m_framePtr.pRightClavicle = pAnimation->FindFrame("clavicle_r");
+
     //m_framePtr.pHandGun       = pAnimation->FindFrame("ik_hand_gun");
     m_framePtr.pHandGun = pAnimation->FindFrame("item_r");
+
     m_framePtr.pTPP           = pAnimation->FindFrame("camera_tpp");
     m_framePtr.pFPP           = pAnimation->FindFrame("camera_fpp");
     m_framePtr.pSlotPrimary   = pAnimation->FindFrame("slot_primary");
@@ -144,8 +148,8 @@ void Character::setFramePtr()
         p.pWaist &&
         p.pRoot &&
         p.pHead &&
-        p.pLeftUpperArm &&
-        p.pRightUpperArm &&
+        p.pLeftClavicle &&
+        p.pRightClavicle &&
         p.pHandGun &&
         p.pTPP &&
         p.pFPP &&
@@ -716,7 +720,9 @@ D3DXVECTOR3 Character::getBackwardLeft()
 void Character::updateBone()
 {
     // modify local bones
-    D3DXMATRIX rHead,rArmL,rArmR;
+
+    // head, clavles
+    D3DXMATRIX rHead;
 
     //머리 Rotaion
     D3DXMatrixRotationY(&rHead, m_headRotation.m_angle);
@@ -724,10 +730,8 @@ void Character::updateBone()
 
     if (m_totalInventory.m_pHand)//총을 들었을때 손 Rotation
     {
-        D3DXMatrixRotationX(&rArmL, m_headRotation.m_angle);
-        m_framePtr.pLeftUpperArm->TransformationMatrix *= rArmL;    //왼쪽 손
-        D3DXMatrixRotationX(&rArmR, -m_headRotation.m_angle);
-        m_framePtr.pRightUpperArm->TransformationMatrix *= rArmR;   //오른쪽 손
+        m_framePtr.pLeftClavicle->TransformationMatrix *= rHead;    //왼쪽 손
+        m_framePtr.pRightClavicle->TransformationMatrix *= rHead;   //오른쪽 손
     }
     
 
