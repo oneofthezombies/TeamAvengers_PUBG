@@ -29,9 +29,6 @@ void ScenePlay::setAloneMode()
     //m_others.emplace_back(pOther);
     //AddObject(pOther);
 
-
-
-
     TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(500.0f, 100.0f, 500.0f), Vector3::ZERO, Vector3::ONE);
     D3DXMATRIX m;
     D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &Quaternion::IDENTITY, &D3DXVECTOR3(500.0f, 100.0f, 500.0f));
@@ -151,6 +148,37 @@ void ScenePlay::setWithOthersMode()
         characters.emplace_back(pOther);
         AddObject(pOther);
     }
+
+    ////For inventory Test
+    Item* item = nullptr;
+    D3DXVECTOR3 p(10, 0, 10);
+    D3DXVECTOR3 r(0, 0, 0);
+    D3DXVECTOR3 s(1, 1, 1);
+
+    p = D3DXVECTOR3(70, 0, 10);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
+
+    p = D3DXVECTOR3(70, 0, 10);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
+
+    p = D3DXVECTOR3(80, 0, 10);
+    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
+
+    p = D3DXVECTOR3(90, 0, 10);
+    item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
+
+    p = D3DXVECTOR3(100, 0, 10);
+    item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 }
 
 ScenePlay::ScenePlay()

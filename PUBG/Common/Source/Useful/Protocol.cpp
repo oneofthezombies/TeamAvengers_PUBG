@@ -114,6 +114,7 @@ GameInfo::PlayerInfo::PlayerInfo()
     , rotation(Quaternion::IDENTITY)
     , upperAnimState(135)
     , lowerAnimState(135)
+    , health(100.0f)
 {
 }
 

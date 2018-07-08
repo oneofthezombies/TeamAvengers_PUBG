@@ -52,6 +52,7 @@ struct GameInfo
         D3DXQUATERNION rotation;
         int            upperAnimState;
         int            lowerAnimState;
+        float          health;
 
         PlayerInfo();
     };

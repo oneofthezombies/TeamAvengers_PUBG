@@ -72,6 +72,7 @@ public:
 
     void SendEventFireBullet(Bullet* pBullet);
     void SendEventSound(const TAG_SOUND tag, const D3DXVECTOR3& p);
+    void SendEventMinusDamage(const int id, const float damage);
 
     friend Singleton<CommunicationManager>;
 };

@@ -248,7 +248,6 @@ void CommunicationManager::ReceiveMessage(
         break;
     case TAG_REQUEST::SEND_EVENT_SOUND:
         {
-            
             auto parsedDesc = Message::ParseDescription(description);
             auto& id = parsedDesc.first;
             auto& eventSoundStr = parsedDesc.second;
@@ -258,8 +257,22 @@ void CommunicationManager::ReceiveMessage(
             D3DXVECTOR3 pos;
 
             ss >> pos.x >> pos.y >> pos.z
-                >> tagSound;
+               >> tagSound;
             Sound()()->Play(static_cast<TAG_SOUND>(tagSound), pos, 0.3f, FMOD_3D);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MINUS_DAMAGE:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& eventMinusDamageStr = parsedDesc.second;
+
+            std::stringstream ss(eventMinusDamageStr);
+            int id;
+            float damage;
+            
+            ss >> id >> damage;
+            m_roomInfo.playerInfos[id].health -= damage;
         }
         break;
     }
@@ -364,4 +377,17 @@ void CommunicationManager::SendEventSound(
     ss << m_myInfo.ID << p.x << ' ' << p.y << ' ' << p.z << ' ' << tagSound;
 
     m_pClient->Write(Message::Create(TAG_REQUEST::SEND_EVENT_SOUND, ss.str()));
+}
+
+void CommunicationManager::SendEventMinusDamage(
+    const int id, 
+    const float damage)
+{
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << damage;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MINUS_DAMAGE, 
+            ss.str()));
 }

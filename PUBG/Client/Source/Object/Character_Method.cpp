@@ -112,9 +112,9 @@ Character::IsJumping::IsJumping()
     : isJumping(false)
     
     , jumpPower(12.0f)
-    , gravity(0.25f)
+    , gravity(0.6f)
     , currGravity(0.0f)
-    , maxStepHeight(5.f)
+    , maxStepHeight(5.0f)
 {
 }
 
@@ -394,8 +394,8 @@ void Character::RifleShooting()
 
     //Goal : get Fire starting position , get fire direction
     inven.m_pHand->UpdateModel(); //update to get position of frame "gun_bolt" 
-    D3DXMATRIX mat =
-        inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
+    D3DXMATRIX mat 
+        = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
         * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
         * GetTransform()->GetTransformationMatrix();    //character world matrix
     
