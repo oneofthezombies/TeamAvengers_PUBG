@@ -6,8 +6,8 @@ DebugManager::DebugManager()
     , m_pFont(nullptr)
     , m_isRender(true)
 {
-	D3DXCreateFontA(Device()(), 16, 8, FW_NORMAL, 1, false, HANGEUL_CHARSET,
-		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_DONTCARE, "¸¼Àº °íµñ", &m_pFont);
+	D3DXCreateFontA(Device()(), 12, 6, FW_NORMAL, 1, false, HANGEUL_CHARSET,
+        OUT_OUTLINE_PRECIS, DEFAULT_QUALITY, FF_DONTCARE, "±¼¸²Ã¼", &m_pFont);
 }
 
 DebugManager::~DebugManager()
@@ -37,7 +37,7 @@ void DebugManager::Render()
         if (str[i] == '\n')
             ++numNewLine;
 
-        if (numNewLine == 45)
+        if (numNewLine == 50)
         {
             newLinedStrs.emplace_back(newLinedStr);
             newLinedStr = "";
@@ -50,15 +50,15 @@ void DebugManager::Render()
     for (std::size_t i = 0; i < newLinedStrs.size(); ++i)
     {
         const int x = static_cast<int>(i * 630) + 8;
-        SetRect(&rc, x, 8, x, 8);
 
+        SetRect(&rc, x, 8, x, 8);
         m_pFont->DrawTextA(
             nullptr, 
             newLinedStrs[i].c_str(), 
             newLinedStrs[i].size(), 
             &rc,
             DT_LEFT | DT_TOP | DT_NOCLIP, 
-            D3DCOLOR_XRGB(0, 255, 255));
+            D3DCOLOR_XRGB(255, 0, 255));
     }
 }
 

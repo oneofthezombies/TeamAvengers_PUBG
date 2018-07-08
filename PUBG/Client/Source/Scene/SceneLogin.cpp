@@ -27,6 +27,7 @@ void SceneLogin::OnInit()
         D3DXVECTOR3(100.0f, 100.0f, 0.0f), 
         "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
         TAG_FONT::Default, D3DCOLOR_XRGB(0, 0, 0), root);
+    inputField->SetText("127.0.0.1 ");
 
     UIButton* button = new UIButton(D3DXVECTOR3(100.0f, 200.0f, 0.0f), 
         "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
@@ -70,8 +71,9 @@ void LoginButtonListener::OnMouseUp(const int key)
 
     stringstream ss(text);
 
-    string host, port, nickname;
-    ss >> host >> port >> nickname;
+    std::string host, port, nickname;
+    ss >> host /*>> port*/ >> nickname;
+    port = "8253";
 
     const auto c = Communication()();
     c->Connect(host, port, nickname);
