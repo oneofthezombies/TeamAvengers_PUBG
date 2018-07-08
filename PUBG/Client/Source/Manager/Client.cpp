@@ -268,11 +268,11 @@ void CommunicationManager::ReceiveMessage(
             auto& eventMinusDamageStr = parsedDesc.second;
 
             std::stringstream ss(eventMinusDamageStr);
-            int id;
+            int damageID;
             float damage;
             
-            ss >> id >> damage;
-            m_roomInfo.playerInfos[id].health -= damage;
+            ss >> damageID >> damage;
+            m_roomInfo.playerInfos[damageID].health -= damage;
         }
         break;
     }
