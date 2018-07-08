@@ -52,6 +52,11 @@ void IObject::SetParent(IObject* pParent)
 	this->pParent = pParent;
 }
 
+IObject* IObject::GetParent() const
+{
+    return pParent;
+}
+
 void IObject::AddChild(IObject* pChild)
 {
     assert(pChild && "IObject::AddChild(), pointer is null.");

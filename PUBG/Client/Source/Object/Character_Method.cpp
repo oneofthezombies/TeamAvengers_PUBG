@@ -305,7 +305,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
 
 bool Character::isMine() const
 {
-    return m_index == Communication()()->m_MyInfo.m_ID;
+    return m_index == Communication()()->m_myInfo.ID;
 }
 
 void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
@@ -380,11 +380,6 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         }
     }
     *pOut = targetPos;
-
-    //잠시 temporary로 각 플래이어 들의 health를 출력했습니다. 꼭 지워주삼
-    const auto& others = static_cast<ScenePlay*>(CurrentScene()())->GetOthers();
-    for (auto o : others)
-        Debug << " Other Player's Health : " << o->GetCharacterHealth()<<endl;
 }
 
 void Character::RifleShooting()

@@ -2,35 +2,35 @@
 #include "Server.h"
 
 Room::Room()
-    : m_ParticipantID(0)
+    : m_participantID(0)
 {
 }
 
-void Room::Join(shared_ptr<Participant> participant)
+void Room::Join(std::shared_ptr<Participant> participant)
 {
-    m_Participants.emplace(participant);
+    m_participants.emplace(participant);
 }
 
-void Room::Leave(shared_ptr<Participant> participant)
+void Room::Leave(std::shared_ptr<Participant> participant)
 {
-    m_Participants.erase(participant);
+    m_participants.erase(participant);
 }
 
-int Room::GetID(const string& nickname)
+int Room::GetID(const std::string& nickname)
 {
-    const auto search = m_NicknameIDs.find(nickname);
-    if (search == m_NicknameIDs.end())
+    const auto search = m_nicknameIDs.find(nickname);
+    if (search == m_nicknameIDs.end())
     {
-        m_NicknameIDs.emplace(nickname, m_ParticipantID);
-        ++m_ParticipantID;
+        m_nicknameIDs.emplace(nickname, m_participantID);
+        ++m_participantID;
     }
-    return m_NicknameIDs[nickname];
+    return m_nicknameIDs[nickname];
 }
 
-vector<int> Room::GetOthersID(const int myID)
+std::vector<int> Room::GetOthersID(const int myID)
 {
-    vector<int> ids;
-    for (auto& ni : m_NicknameIDs)
+    std::vector<int> ids;
+    for (auto& ni : m_nicknameIDs)
     {
         if (ni.second == myID) continue;
 
@@ -41,17 +41,17 @@ vector<int> Room::GetOthersID(const int myID)
 
 void Room::Echo(const int id, const Message& msg)
 {
-    for (auto& p : m_Participants)
+    for (auto& p : m_participants)
     {
-        if (id == p->m_MyInfo.m_ID) continue;
+        if (id == p->m_myInfo.ID) continue;
 
         p->Write(msg);
     }
 }
 
 Participant::Participant(tcp::socket socket, Room* pRoom)
-    : m_Socket(std::move(socket))
-    , m_MyInfo()
+    : m_socket(std::move(socket))
+    , m_myInfo()
 
     , pRoom(pRoom)
 {
@@ -68,17 +68,17 @@ void Participant::Start()
 
 void Participant::Write(const Message& msg)
 {
-    m_WriteMsg = msg;
+    m_writeMsg = msg;
     Write();
 }
 
 void Participant::ReadHeader()
 {
-    boost::asio::async_read(m_Socket, 
-        boost::asio::buffer(m_ReadMsg.GetData(), Message::HEADER_LENGTH), 
+    boost::asio::async_read(m_socket, 
+        boost::asio::buffer(m_readMsg.GetData(), Message::HEADER_LENGTH), 
         [this](auto ec, auto) 
     {
-        if (!ec && m_ReadMsg.DecodeHeader())
+        if (!ec && m_readMsg.DecodeHeader())
         {
             ReadBody();
         }
@@ -92,13 +92,13 @@ void Participant::ReadHeader()
 
 void Participant::ReadBody()
 {
-    boost::asio::async_read(m_Socket, boost::asio::buffer(
-        m_ReadMsg.GetBodyData(), m_ReadMsg.GetBodyLength()), 
+    boost::asio::async_read(m_socket, boost::asio::buffer(
+        m_readMsg.GetBodyData(), m_readMsg.GetBodyLength()), 
         [this](auto ec, auto) 
     {
         if (!ec)
         {
-            ReceiveMessage(m_ReadMsg.GetRequest(), m_ReadMsg.GetDescription());
+            ReceiveMessage(m_readMsg.GetRequest(), m_readMsg.GetDescription());
 
             ReadHeader();
         }
@@ -112,8 +112,8 @@ void Participant::ReadBody()
 
 void Participant::Write()
 {
-    boost::asio::async_write(m_Socket, boost::asio::buffer(
-        m_WriteMsg.GetData(), m_WriteMsg.GetLength()), 
+    boost::asio::async_write(m_socket, boost::asio::buffer(
+        m_writeMsg.GetData(), m_writeMsg.GetLength()), 
         [this](auto ec, auto) 
     {
         if (!ec)
@@ -129,19 +129,22 @@ void Participant::Write()
 }
 
 void Participant::ReceiveMessage(const TAG_REQUEST tag, 
-    const string& description)
+    const std::string& description)
 {
     switch (tag)
     {
     case TAG_REQUEST::RECEIVE_MY_ID:
         {
-            const string nickname(m_ReadMsg.GetDescription());
+            const std::string nickname(m_readMsg.GetDescription());
             const int id(pRoom->GetID(nickname));
 
-            m_MyInfo.m_nickname = nickname;
-            m_MyInfo.m_ID = id;
+            m_myInfo.nickname = nickname;
+            m_myInfo.ID = id;
 
-            Write(Message::Create(TAG_REQUEST::RECEIVE_MY_ID, to_string(id)));
+            Write(
+                Message::Create(
+                    TAG_REQUEST::RECEIVE_MY_ID, 
+                    std::to_string(id)));
 
             cout << "nickname : " << nickname << " -> id : " << id << '\n';
         }
@@ -151,10 +154,13 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto parsedDesc = Message::ParseDescription(description);
             auto& id = parsedDesc.first;
 
-            pRoom->m_RoomInfo.m_PlayerInfos[id].m_ID = id;
+            pRoom->m_roomInfo.playerInfos[id].ID = id;
 
-            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_ID, 
-                description));
+            pRoom->Echo(
+                id, 
+                Message::Create(
+                    TAG_REQUEST::SEND_ID, 
+                    description));
         }
         break;
     case TAG_REQUEST::SEND_NICKNAME:
@@ -163,38 +169,65 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto& id = parsedDesc.first;
             auto& nickname = parsedDesc.second;
 
-            pRoom->m_RoomInfo.m_PlayerInfos[id].m_nickname = nickname;
+            pRoom->m_roomInfo.playerInfos[id].nickname = nickname;
 
-            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_NICKNAME, 
-                description));
+            pRoom->Echo(
+                id, 
+                Message::Create(
+                    TAG_REQUEST::SEND_NICKNAME, 
+                    description));
         }
         break;
-    case TAG_REQUEST::SEND_POSITION:
+    case TAG_REQUEST::SEND_POSITION_AND_ROTATION:
         {
             auto parsedDesc = Message::ParseDescription(description);
             auto& id = parsedDesc.first;
             auto& positionStr = parsedDesc.second;
 
-            stringstream ss(positionStr);
+            std::stringstream ss(positionStr);
             D3DXVECTOR3 pos;
-            ss >> pos.x >> pos.y >> pos.z;
-            pRoom->m_RoomInfo.m_PlayerInfos[id].m_position = pos;
+            D3DXQUATERNION rot;
+            ss >> pos.x >> pos.y >> pos.z >> rot.x >> rot.y >> rot.z >> rot.w;
+            pRoom->m_roomInfo.playerInfos[id].position = pos;
+            pRoom->m_roomInfo.playerInfos[id].rotation = rot;
 
-            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_POSITION, 
-                description));
+            pRoom->Echo(
+                id, 
+                Message::Create(
+                    TAG_REQUEST::SEND_POSITION_AND_ROTATION,
+                    description));
         }
         break;
-    case TAG_REQUEST::SEND_ANIMATION_INDEX:
+    case TAG_REQUEST::SEND_UPPER_ANIMATION_INDEX:
         {
             auto parsedDesc = Message::ParseDescription(description);
             auto& id = parsedDesc.first;
-            auto& animationIndexStr = parsedDesc.second;
+            auto& upperIndexStr = parsedDesc.second;
 
-            pRoom->m_RoomInfo.m_PlayerInfos[id].m_upperAnimState = 
-                std::stoi(animationIndexStr);
+            pRoom->m_roomInfo.playerInfos[id].upperAnimState = 
+                std::stoi(upperIndexStr);
 
-            pRoom->Echo(id, Message::Create(
-                TAG_REQUEST::SEND_ANIMATION_INDEX, description));
+            pRoom->Echo(
+                id, 
+                Message::Create(
+                    TAG_REQUEST::SEND_UPPER_ANIMATION_INDEX, 
+                    description));
+        }
+        break;
+    case TAG_REQUEST::SEND_LOWER_ANIMATION_INDEX:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& lowerIndexStr = parsedDesc.second;
+
+            pRoom->m_roomInfo.playerInfos[id].lowerAnimState = 
+                std::stoi(lowerIndexStr);
+
+            pRoom->Echo(
+                id, 
+                Message::Create(
+                    TAG_REQUEST::SEND_LOWER_ANIMATION_INDEX, 
+                    description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_FIRE_BULLET:
@@ -207,21 +240,21 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
                 TAG_REQUEST::SEND_EVENT_FIRE_BULLET, description));
         }
     case TAG_REQUEST::SEND_EVENT_SOUND:
-    {
-        auto parsedDesc = Message::ParseDescription(description);
-        auto& id = parsedDesc.first;
-        auto& eventSoundStr = parsedDesc.second;
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& eventSoundStr = parsedDesc.second;
 
-        pRoom->Echo(id, Message::Create(
-            TAG_REQUEST::SEND_EVENT_SOUND, description));
-    }
+            pRoom->Echo(id, Message::Create(
+                TAG_REQUEST::SEND_EVENT_SOUND, description));
+        }
         break;
     }
 }
 
 Server::Server(boost::asio::io_context* pIOContext, 
     const tcp::endpoint& endpoint)
-    : m_Acceptor(*pIOContext, endpoint)
+    : m_acceptor(*pIOContext, endpoint)
 {
     assert(pIOContext && "Server::Constructor() failed. io context is null.");
     cout << "Server is Running...\n";
@@ -236,12 +269,12 @@ Server::~Server()
 
 void Server::Accept()
 {
-    m_Acceptor.async_accept(
+    m_acceptor.async_accept(
         [this](boost::system::error_code ec, tcp::socket socket) 
     {
         if (!ec)
         {
-            make_shared<Participant>(move(socket), &m_Room)->Start();
+            make_shared<Participant>(move(socket), &m_room)->Start();
         }
 
         Accept();

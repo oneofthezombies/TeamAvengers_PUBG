@@ -6,12 +6,12 @@ class Room;
 class Participant : public enable_shared_from_this<Participant>
 {
 public:
-    GameInfo::MyInfo m_MyInfo;
+    GameInfo::MyInfo m_myInfo;
 
 private:
-    tcp::socket m_Socket;
-    Message     m_ReadMsg;
-    Message     m_WriteMsg;
+    tcp::socket m_socket;
+    Message     m_readMsg;
+    Message     m_writeMsg;
     
     Room*       pRoom;
 
@@ -19,10 +19,10 @@ private:
     void ReadBody();
     void Write();
 
-    void ReceiveMessage(const TAG_REQUEST tag, const string& description);
+    void ReceiveMessage(const TAG_REQUEST tag, const std::string& description);
 
 public:
-    Participant(tcp::socket socket, Room* pRoom);
+     Participant(tcp::socket socket, Room* pRoom);
     ~Participant() = default;
 
     void Start();
@@ -32,30 +32,29 @@ public:
 class Room
 {
 public:
-    GameInfo::RoomInfo m_RoomInfo;
+    GameInfo::RoomInfo m_roomInfo;
 
 private:
-    unordered_set<shared_ptr<Participant>> m_Participants;
-    int m_ParticipantID;
-
-    unordered_map<string, int> m_NicknameIDs;
+    std::set<std::shared_ptr<Participant>> m_participants;
+    int                                    m_participantID;
+    std::map<std::string, int>             m_nicknameIDs;
 
 public:
     Room();
     ~Room() = default;
 
-    void Join(shared_ptr<Participant> participant);
-    void Leave(shared_ptr<Participant> participant);
-    int GetID(const string& nickname);
-    vector<int> GetOthersID(const int myID);
+    void Join(std::shared_ptr<Participant> participant);
+    void Leave(std::shared_ptr<Participant> participant);
+    int GetID(const std::string& nickname);
+    std::vector<int> GetOthersID(const int myID);
     void Echo(const int id, const Message& msg);
 };
 
 class Server
 {
 private:
-    tcp::acceptor m_Acceptor;
-    Room m_Room;
+    tcp::acceptor m_acceptor;
+    Room          m_room;
 
     void Accept();
 

@@ -10,17 +10,19 @@
 
 void ScenePlay::setAloneMode()
 {
-    Communication()()->m_MyInfo.m_ID = 0;
+    Communication()()->m_myInfo.ID = 0;
 
-    const int myID = Communication()()->m_MyInfo.m_ID;
+    const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
+    characters.emplace_back(pPlayer);
     AddObject(pPlayer);
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
         if (i == myID) continue;
 
         Character* pOther = new Character(i);
-        m_others.emplace_back(pOther);
+        others.emplace_back(pOther);
+        characters.emplace_back(pOther);
         AddObject(pOther);
     }
     //Character* pOther = new Character(1);
@@ -136,15 +138,17 @@ void ScenePlay::setAloneMode()
 
 void ScenePlay::setWithOthersMode()
 {
-    const int myID = Communication()()->m_MyInfo.m_ID;
+    const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
+    characters.emplace_back(pPlayer);
     AddObject(pPlayer);
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
         if (i == myID) continue;
 
         Character* pOther = new Character(i);
-        m_others.emplace_back(pOther);
+        others.emplace_back(pOther);
+        characters.emplace_back(pOther);
         AddObject(pOther);
     }
 }
@@ -184,13 +188,13 @@ void ScenePlay::OnInit()
     LoadObjectsFromFile("./Resource/save.txt");
 
     // No id received
-    if (Communication()()->m_MyInfo.m_ID == -1)
+    if (Communication()()->m_myInfo.ID == -1)
     {
         setAloneMode();
     }
 
     // Yes id received
-    else if (Communication()()->m_MyInfo.m_ID > -1)
+    else if (Communication()()->m_myInfo.ID > -1)
     {
         setWithOthersMode();
     }
@@ -211,10 +215,13 @@ void ScenePlay::OnUpdate()
     ∑π¿Ã,
     */
 
-
+    for (auto c : characters)
+    {
+        Debug << "Character " << c->GetIndex() << " hp : " << c->GetCharacterHealth() << '\n';
+    }
 }
 
 const std::vector<Character*> ScenePlay::GetOthers() const
 {
-    return m_others;
+    return others;
 }

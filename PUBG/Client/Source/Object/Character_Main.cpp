@@ -213,7 +213,6 @@ void Character::updateMine()
 
     //*********************************
 
-
     movementControl(&destState);
 
     
@@ -394,8 +393,7 @@ void Character::updateMine()
         << "current lower animation : "
         << pAnimation->GetLowerAnimationName() << "\n\n";
 
-    //Communication()()->SendPosition(pos);
-
+    Communication()()->SendPositionAndRotation(pos, rot);
 }
 
 void Character::updateOther()
@@ -403,20 +401,24 @@ void Character::updateOther()
     if (isMine()) return;
 
     auto pInput = Input()();
-    auto pCom = Communication()();
-    D3DXVECTOR3 pos = GetTransform()->GetPosition();
+    auto pCom   = Communication()();
+    auto pTr    = GetTransform();
 
-    auto& pi = pCom->m_RoomInfo.m_PlayerInfos[m_index];
-    pos = pi.m_position;
+    auto& pi = pCom->m_roomInfo.playerInfos[m_index];
+    pTr->SetPosition(pi.position);
+    pTr->SetRotation(pi.rotation);
 
-    
+    const auto upperAnim = static_cast<TAG_ANIM_CHARACTER>(pi.upperAnimState);
+    const auto lowerAnim = static_cast<TAG_ANIM_CHARACTER>(pi.lowerAnimState);
+    if (upperAnim != m_upperAnimState)
+    {
+        m_upperAnimState = upperAnim;
+        pAnimation->Set(CharacterAnimation::BodyPart::UPPER, upperAnim, true);
+    }
 
-    //const auto uAnimState = static_cast<unsigned int>(m_animState);
-    //if (uAnimState != pi.m_AnimationIndex)
-    //{
-    //    m_animState = static_cast<TAG_ANIM_CHARACTER>(pi.m_AnimationIndex);
-    //    pAnimation->SetAnimationIndex(pi.m_AnimationIndex, true);
-    //}
-
-    //tr->SetPosition(pos);
+    if (lowerAnim != m_lowerAnimState)
+    {
+        m_lowerAnimState = lowerAnim;
+        pAnimation->Set(CharacterAnimation::BodyPart::LOWER, lowerAnim, true);
+    }
 }

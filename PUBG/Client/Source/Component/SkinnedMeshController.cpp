@@ -165,13 +165,18 @@ void SkinnedMeshController::notifyAnimationEvent(
     double periodicPosition = pSet->GetPeriodicPosition(currentPosition);
     pSet->Release();
 
-    if (static_cast<Character*>(GetOwner())->GetIndex() == Communication()()->m_MyInfo.m_ID)
+    IObject* pParent = GetOwner()->GetParent();
+    if (pParent)
     {
-        Debug << "track 0\n"
-            << "animation name    : " << name << '\n'
-            << "current  position : " << currentPosition << '\n'
-            << "periodic position : " << periodicPosition << '\n'
-            << "period            : " << period << '\n';
+        if (static_cast<Character*>(pParent)->GetIndex() == 
+            Communication()()->m_myInfo.ID)
+        {
+            Debug << "track 0\n"
+                << "animation name    : " << name << '\n'
+                << "current  position : " << currentPosition << '\n'
+                << "periodic position : " << periodicPosition << '\n'
+                << "period            : " << period << '\n';
+        }
     }
 
     pController->GetTrackDesc(1, &desc);
@@ -188,24 +193,35 @@ void SkinnedMeshController::notifyAnimationEvent(
         track1Period = pSet->GetPeriod();
         pSet->Release();
 
-        if (static_cast<Character*>(GetOwner())->GetIndex() == Communication()()->m_MyInfo.m_ID)
+        IObject* pParent = GetOwner()->GetParent();
+        if (pParent)
         {
-            Debug << "track 1\n"
-                << "animation name    : " << track1Name << '\n'
-                << "current  position : " << track1CurrentPosition << '\n'
-                << "periodic position : " << track1PeriodicPosition << '\n'
-                << "period            : " << track1Period << "\n\n";
+            if (static_cast<Character*>(pParent)->GetIndex() == 
+                Communication()()->m_myInfo.ID)
+            {
+                Debug << "track 1\n"
+                    << "animation name    : " << track1Name << '\n'
+                    << "current  position : " << track1CurrentPosition << '\n'
+                    << "periodic position : " << track1PeriodicPosition << '\n'
+                    << "period            : " << track1Period << "\n\n";
+            }
         }
+
     }
     else
     {
-        if (static_cast<Character*>(GetOwner())->GetIndex() == Communication()()->m_MyInfo.m_ID)
+        IObject* pParent = GetOwner()->GetParent();
+        if (pParent)
         {
-            Debug << "track 1\n"
-                << "animation name    : " << '\n'
-                << "current  position : " << '\n'
-                << "periodic position : " << '\n'
-                << "period            : " << "\n\n";
+            if (static_cast<Character*>(pParent)->GetIndex() == 
+                Communication()()->m_myInfo.ID)
+            {
+                Debug << "track 1\n"
+                    << "animation name    : " << '\n'
+                    << "current  position : " << '\n'
+                    << "periodic position : " << '\n'
+                    << "period            : " << "\n\n";
+            }
         }
     }
 

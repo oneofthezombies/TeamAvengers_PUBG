@@ -6,7 +6,8 @@ class ScenePlay : public IScene
 {
 private:
     Character* pPlayer;
-    std::vector<Character*> m_others;
+    std::vector<Character*> others;
+    std::vector<Character*> characters;
 
     void setAloneMode();
     void setWithOthersMode();
