@@ -23,7 +23,7 @@ Character::Character(const int index)
     , m_rootTransform(1.0f)
     , m_waistRotation(0.8f, 0.1f)
     , m_headRotation(0.8f, 0.1f)
-    //, m_armRotation(0.8f,0.1f)
+
     , m_framePtr()
     , m_info()
     , m_savedInput()
@@ -52,8 +52,7 @@ Character::Character(const int index)
     AddChild(pAnimation);
     pAnimation->Set(
         CharacterAnimation::BodyPart::BOTH, 
-        TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, 
-        false);
+        TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
     setFramePtr();
 
@@ -215,7 +214,7 @@ void Character::updateMine()
     D3DXVECTOR3 pos = tm->GetPosition();
     D3DXQUATERNION rot = tm->GetRotation();
 
-
+    headNArmRotation(&m_mouseInput); //마우스 위아래 -> 케릭터 머리와 팔 위 아래로 움직임
     cameraCharacterRotation(dt, &rot, &m_mouseInput);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
     

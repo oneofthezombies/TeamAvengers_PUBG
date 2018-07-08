@@ -26,8 +26,8 @@ void CameraFirstPerson::Reset()
 void CameraFirstPerson::Update()
 {
     //RBUTTON Up 하면 다시 TP 로 돌아가기
-    if (Input()()->IsOnceKeyUp(VK_RBUTTON))
-        Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
+    //if (Input()()->IsOnceKeyUp(VK_RBUTTON))
+    //    Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
 
 
     Character::Info* pTarInfo = GetTargetInfo();
@@ -40,6 +40,7 @@ void CameraFirstPerson::Update()
         //*Important!          (model space)                                            (char transformation )
         m_worldMatrix = pTarInfo->pFPP->CombinedTransformationMatrix * pTarInfo->pTransform->GetTransformationMatrix();
     }
+
 
 
 }
@@ -79,14 +80,22 @@ void CameraThirdPerson::Update()
     {
         D3DXMATRIX tarR, baseT;
         D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
-        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
+        Debug << "*pTarInfo->pRotationForCamera : " << *pTarInfo->pRotationForCamera << endl << endl;
+        D3DXMatrixRotationYawPitchRoll(&tarR, 0.0f, vRot.x, 0.0f);
 
-        D3DXMatrixTranslation(&baseT, m_position.x, m_position.y, m_position.z);
-        baseT *= pTarInfo->pTransform->GetTransformationMatrix();
+        D3DXMatrixTranslation(&baseT, 0.0f, 30.0f, 0.0f);
+        
 
 
         //*Important!  (model space)                      (rotation get from character)    (char transformation + height up till head)
-        m_worldMatrix = pTarInfo->pTPP->CombinedTransformationMatrix    *   tarR  * baseT;
+        m_worldMatrix = 
+            baseT
+            * tarR
+            * pTarInfo->pHead->CombinedTransformationMatrix
+            * pTarInfo->pTransform->GetTransformationMatrix()
+
+            
+            ;//baseT;
 
     }
     
@@ -100,7 +109,7 @@ void ICamera::UpdateViewProjMatrix()
 {
 
     D3DXVECTOR3 eye = Vector3::ZERO;
-    D3DXVECTOR3 look = eye + -(D3DXVECTOR3(0, -1, 0));
+    D3DXVECTOR3 look = eye + -(D3DXVECTOR3(0, -2, 0));
     ////-------------------------------------------------
     //Character::Info* pTarInfo = GetTargetInfo();
     //if (!pTarInfo)

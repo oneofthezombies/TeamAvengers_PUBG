@@ -35,14 +35,6 @@ public:
 
         HeadRotation(const float limit, const float factor);
     };
-    //struct ArmRotation
-    //{
-    //    const float LIMIT_OF_ANGLE;
-    //    const float QUANTITY_FACTOR;
-    //    float       m_angle;
-
-    //    ArmRotation(const float limit, const float factor);
-    //};
 
     struct RootTransform
     {
@@ -85,6 +77,7 @@ public:
     {
         Transform*   pTransform;
         D3DXVECTOR3* pRotationForCamera;
+        Frame*       pHead;
         Frame*       pFPP;
         Frame*       pTPP;
 
@@ -262,6 +255,7 @@ private:
     void handleInput(IsPressed* OutIsPressed);
     void handleMouse(const float dt, MouseInput* mouseInput);
 
+    void headNArmRotation(MouseInput* mouseinput);
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput);
     void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);

@@ -37,6 +37,7 @@ Character::RootTransform::RootTransform(const float moveSpeed)
 Character::Info::Info()
     : pTransform(nullptr)
     , pRotationForCamera(nullptr)
+    , pHead(nullptr)
     , pFPP(nullptr)
     , pTPP(nullptr)
 {
@@ -240,6 +241,13 @@ void Character::handleMouse(const float dt, MouseInput* mouseInput)
     }
 }
 
+void Character::headNArmRotation(MouseInput* mouseInput)
+{
+    ////케릭터 머리 Frame 움직이기
+    //rotateWaist(-mouseInput.pitch);
+    rotateHead(-mouseInput->pitch);
+}
+
 void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput)
 {
 
@@ -280,10 +288,8 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     else if (m_rotationForCamera.x > 0.8f)
         m_rotationForCamera.x = 0.8f;
 
-    ////케릭터 특정 Frame 움직이기
-    //rotateWaist(-mouseInput.pitch);
-    rotateHead(-mouseInput->pitch);
-    //rotateArm(-mouseInput->pitch);
+
+
 
     Debug << "m_rotationForCamera.x : " << m_rotationForCamera.x << endl << endl << endl;
 
@@ -598,6 +604,7 @@ void Character::setInfo()
 {
     m_info.pTransform = GetTransform();
     m_info.pRotationForCamera = &m_rotationForCamera;
+    m_info.pHead = m_framePtr.pHead;
     m_info.pTPP = m_framePtr.pTPP;
     m_info.pFPP = m_framePtr.pFPP;
 }
@@ -687,23 +694,24 @@ void Character::updateBone()
 {
     // modify local bones
     D3DXMATRIX rHead,rArmL,rArmR;
-    //D3DXMatrixRotationY(&r, m_waistRotation.m_angle);
-    //m_framePtr.pWaist->TransformationMatrix *= r;
 
     //머리 Rotaion
     D3DXMatrixRotationY(&rHead, m_headRotation.m_angle);
     m_framePtr.pHead->TransformationMatrix *= rHead;
 
-    //총을 들었을때 손 Rotation
-    if (m_totalInventory.m_pHand)
+    if (m_totalInventory.m_pHand)//총을 들었을때 손 Rotation
     {
         D3DXMatrixRotationX(&rArmL, m_headRotation.m_angle);
-        m_framePtr.pLeftUpperArm->TransformationMatrix *= rArmL;
+        m_framePtr.pLeftUpperArm->TransformationMatrix *= rArmL;    //왼쪽 손
         D3DXMatrixRotationX(&rArmR, -m_headRotation.m_angle);
-        m_framePtr.pRightUpperArm->TransformationMatrix *= rArmR;
+        m_framePtr.pRightUpperArm->TransformationMatrix *= rArmR;   //오른쪽 손
     }
     
 
+
+
+    //D3DXMatrixRotationY(&r, m_waistRotation.m_angle);
+    //m_framePtr.pWaist->TransformationMatrix *= r;
 
     // for root motion animation
     m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
@@ -788,15 +796,7 @@ void Character::rotateHead(const float quantity)
         hr.m_angle = hr.LIMIT_OF_ANGLE;
 }
 
-//void Character::rotateArm(const float quantity)
-//{
-//    auto& ar = m_armRotation;
-//
-//    if (ar.m_angle < -ar.LIMIT_OF_ANGLE)
-//        ar.m_angle = -ar.LIMIT_OF_ANGLE;
-//    else if (ar.m_angle > ar.LIMIT_OF_ANGLE)
-//        ar.m_angle = ar.LIMIT_OF_ANGLE;
-//}
+
 
 
 
