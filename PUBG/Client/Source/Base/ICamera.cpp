@@ -395,7 +395,7 @@ void Camera2xScope::Update()
 
         RECT rc;
         GetClientRect(g_hWnd, &rc);
-        D3DXMatrixPerspectiveFovLH(&proj, m_deltaFovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom), 1, 1000);
+        D3DXMatrixPerspectiveFovLH(&proj, m_deltaFovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom), 1, 10000);
         SetProjectionMatrix(&proj);
         g_pDevice->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
     }

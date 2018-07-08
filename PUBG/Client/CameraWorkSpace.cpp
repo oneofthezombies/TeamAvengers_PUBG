@@ -149,7 +149,7 @@ void ICamera::UpdateViewProjMatrix()
         GetClientRect(g_hWnd, &rc);
         D3DXMatrixPerspectiveFovLH(&m_projectionMatrix,
             m_fovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom),
-            1.0f, 5000.0f);
+            1.0f, 100000.0f);
         pD->SetTransform(D3DTS_PROJECTION, &m_projectionMatrix);
     }
 

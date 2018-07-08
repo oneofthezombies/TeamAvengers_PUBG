@@ -18,6 +18,7 @@ void SceneLoading::Load()
     setPlayMode(PlayMode::WITH_OTHERS);
 
     //// load effect meshs
+    load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::QBZ);

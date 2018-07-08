@@ -149,6 +149,8 @@ void ScenePlay::setWithOthersMode()
         AddObject(pOther);
     }
 
+    AddObject(new SkySphere);
+
     TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(500.0f, 100.0f, 500.0f), Vector3::ZERO, Vector3::ONE);
     D3DXMATRIX m;
     D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &Quaternion::IDENTITY, &D3DXVECTOR3(500.0f, 100.0f, 500.0f));
@@ -207,8 +209,6 @@ void ScenePlay::OnInit()
     SetCursorPos(center.x, center.y);
 
     SetDirectionalLight(new DirectionalLight);
-    
-    //AddObject(new TerrainFeature(TAG_RES_STATIC::SkySphere, Vector3::ZERO, Vector3::ZERO, Vector3::ONE* 0.18f));
 
     //AddObject(new SkySphere);
     AddObject(new Grid);
