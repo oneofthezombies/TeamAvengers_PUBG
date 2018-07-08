@@ -185,6 +185,7 @@ public:
 
 public:
     static const D3DXQUATERNION OFFSET_ROTATION;
+    static const float          RADIUS;
 
 /******************************* end constant ********************************/
 

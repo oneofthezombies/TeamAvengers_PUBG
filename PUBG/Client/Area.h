@@ -15,9 +15,9 @@ public:
 
     void Create(const std::size_t index);
 
-    std::vector<IObject*> GetBullets();
-    std::vector<IObject*> GetTerrainFeatures();
-    std::vector<IObject*> GetCharacters();
+    std::vector<Bullet*>         GetBullets();
+    std::vector<TerrainFeature*> GetTerrainFeatures();
+    std::vector<Character*>      GetCharacters();
     bool checkValid(int v);
 };
 

@@ -311,20 +311,20 @@ bool IScene::isOutOfBoundaryBox(const D3DXVECTOR3& pos)
 //------------------ Cell Space Partitioning--------------------
 
 
-void IScene::InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObject * obj)
+void IScene::InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObject* obj)
 {
     switch (tag)
     {
     case TAG_OBJECT::Idle:
         break;
     case TAG_OBJECT::TerrainFeature:
-        m_TotalCellSpaces[index].pTerrainFeatures.emplace(obj);
+        m_TotalCellSpaces[index].pTerrainFeatures.emplace(static_cast<TerrainFeature*>(obj));
         break;
     case TAG_OBJECT::Bullet:
-        m_TotalCellSpaces[index].pBullets.emplace(obj);
+        m_TotalCellSpaces[index].pBullets.emplace(static_cast<Bullet*>(obj));
         break;
     case TAG_OBJECT::Character:
-        m_TotalCellSpaces[index].pCharacters.emplace(obj);
+        m_TotalCellSpaces[index].pCharacters.emplace(static_cast<Character*>(obj));
         break;
     case TAG_OBJECT::Door:
         m_TotalCellSpaces[index].pDoors.emplace(obj);
@@ -333,7 +333,7 @@ void IScene::InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObjec
         m_TotalCellSpaces[index].pWindows.emplace(obj);
         break;
     case TAG_OBJECT::Item:
-        m_TotalCellSpaces[index].pItems.emplace(obj);
+        m_TotalCellSpaces[index].pItems.emplace(static_cast<Item*>(obj));
         break;
     }
 
@@ -352,7 +352,7 @@ std::size_t IScene::GetCellIndex(const D3DXVECTOR3 & position)
     return Zindex * CellSpace::DIMENSION + Xindex;
 }
 
-void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject * obj)
+void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject* obj)
 {
     auto& itr = m_TotalCellSpaces[*currentCellIndex];
     auto& itrDest = m_TotalCellSpaces[destCellIndex];
@@ -366,9 +366,9 @@ void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIn
         //if (!ptr)
         //    assert(false && "movecall() cannot find bullet obj");
         //찾고 원래 장소에서 지운다
-        itr.pBullets.erase(obj);
-        //새 장소에 넣어준다
-        itrDest.pBullets.emplace(obj);
+        Bullet* pBullet = static_cast<Bullet*>(obj);
+        itr.pBullets.erase(pBullet);
+        itrDest.pBullets.emplace(pBullet);
         //현재 인덱스를 바꾸어준다
         *currentCellIndex = destCellIndex;
     }
@@ -381,9 +381,10 @@ void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIn
         //if (!ptr)
         //    assert(false && "movecall() cannot find bullet obj");
         //찾고 원래 장소에서 지운다
-        itr.pCharacters.erase(obj);
+        Character* pCharacter = static_cast<Character*>(obj);
+        itr.pCharacters.erase(pCharacter);
         //새 장소에 넣어준다
-        itrDest.pCharacters.emplace(obj);
+        itrDest.pCharacters.emplace(pCharacter);
         //현재 인덱스를 바꾸어준다
         *currentCellIndex = destCellIndex;
     }

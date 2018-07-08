@@ -49,9 +49,9 @@ bool Area::checkValid(int v)
     return-1 < v&&v < CellSpace::DIMENSION;
 }
 
-std::vector<IObject*> Area::GetBullets()
+std::vector<Bullet*> Area::GetBullets()
 {
-    std::vector<IObject*> vBullets;
+    std::vector<Bullet*> vBullets;
     for (std::size_t i = 0; i < m_cellspaces.size(); i++)
     {
         auto& set = m_cellspaces[i]->pBullets;
@@ -60,9 +60,9 @@ std::vector<IObject*> Area::GetBullets()
     return vBullets;
 }
 
-std::vector<IObject*> Area::GetTerrainFeatures()
+std::vector<TerrainFeature*> Area::GetTerrainFeatures()
 {
-    std::vector<IObject*> vTerrainFeatures;
+    std::vector<TerrainFeature*> vTerrainFeatures;
     for (std::size_t i = 0; i < m_cellspaces.size(); i++)
     {
         auto& set = m_cellspaces[i]->pTerrainFeatures;
@@ -71,9 +71,9 @@ std::vector<IObject*> Area::GetTerrainFeatures()
     return vTerrainFeatures;
 }
 
-std::vector<IObject*> Area::GetCharacters()
+std::vector<Character*> Area::GetCharacters()
 {
-    std::vector<IObject*> characters;
+    std::vector<Character*> characters;
     for (auto& cs : m_cellspaces)
     {
         auto& set = cs->pCharacters;

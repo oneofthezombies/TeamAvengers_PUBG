@@ -13,6 +13,8 @@
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
 
+const float Character::RADIUS = 30.0f;
+
 Character::Character(const int index)
     : IObject(TAG_OBJECT::Character)
 
@@ -221,12 +223,6 @@ void Character::updateMine()
     // 충돌체크////////////////////////////
     bool hasCollision = false;
     auto tfs(pCurrentScene->m_NearArea.GetTerrainFeatures());
-    auto chs(pCurrentScene->m_NearArea.GetCharacters());
-    for (auto c : chs)
-    {
-        if (static_cast<Character*>(c)->GetIndex() == m_index) continue;
-        tfs.emplace_back(c);
-    }
     for (auto tf : tfs)
     {
         if (hasCollision) break;
@@ -256,6 +252,17 @@ void Character::updateMine()
                 hasCollision = Collision::HasCollision(mine, others);
             }
         }
+    }
+    for (auto o : pCurrentScene->m_NearArea.GetCharacters())
+    {
+        if (hasCollision) break;
+
+        if (o->GetIndex() == m_index) continue;
+
+        const D3DXVECTOR3 dist = destState.position - o->GetTransform()->GetPosition();
+        const float distLen = D3DXVec3Length(&dist);
+        if (distLen < RADIUS * 2.0f)
+            hasCollision = true;
     }
     // end collision /////////////////////////
 
