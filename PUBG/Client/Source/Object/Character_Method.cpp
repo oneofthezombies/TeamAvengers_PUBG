@@ -485,51 +485,6 @@ void Character::RifleShooting()
                     m_otherHitBox = obb;
                 }
             }
-
-            //std::vector<D3DXVECTOR3> vertices = 
-            //    Resource()()->GetBoundingBoxVertices();
-
-            //D3DXMATRIX e, c, r, p, m;
-            //D3DXMatrixScaling(&e, obb.extent.x, obb.extent.y, obb.extent.z);
-            //D3DXMatrixTranslation(&c, obb.center.x, obb.center.y, obb.center.z);
-            //D3DXMatrixRotationQuaternion(&r, &obb.rotation);
-            //D3DXMatrixTranslation(&p, obb.position.x, obb.position.y, obb.position.z);
-            //m = e * c * r * p;
-
-            //for (auto& v : vertices)
-            //    D3DXVec3TransformCoord(&v, &v, &m);
-
-            //std::vector<D3DXPLANE> planes(6);
-            ////±ÙÆò¸é//ÁÂ»óÀü//¿ì»óÀü//ÁÂÇÏÀü
-            //D3DXPlaneFromPoints(&planes[0], &vertices[0], &vertices[1], &vertices[2]);
-            ////¿øÆò¸é//¿ì»óÈÄ//ÁÂ»óÈÄ//¿ìÇÏÈÄ
-            //D3DXPlaneFromPoints(&planes[1], &vertices[7], &vertices[6], &vertices[5]);
-            ////ÁÂÆò¸é//ÁÂ»óÈÄ//ÁÂ»óÀü//ÁÂÇÏÈÄ
-            //D3DXPlaneFromPoints(&planes[2], &vertices[4], &vertices[5], &vertices[1]);
-            ////¿ìÆò¸é//¿ì»óÀü//¿ì»óÈÄ//¿ìÇÏÀü
-            //D3DXPlaneFromPoints(&planes[3], &vertices[3], &vertices[2], &vertices[6]);
-            ////»óÆò¸é//ÁÂ»óÈÄ//¿ì»óÈÄ//ÁÂ»óÀü
-            //D3DXPlaneFromPoints(&planes[4], &vertices[1], &vertices[5], &vertices[6]);
-            ////ÇÏÆò¸é//ÁÂÇÏÀü//¿ìÇÏÀü//ÁÂÇÏÈÄ
-            //D3DXPlaneFromPoints(&planes[5], &vertices[4], &vertices[0], &vertices[3]);
-
-            //D3DXVECTOR3 point;
-            //for (auto p : planes)
-            //{
-            //    if (D3DXPlaneIntersectLine(&point, &p, &bulletFirePos, &estimatedDest))
-            //    {
-            //        // hit
-            //        const float bbDist = D3DXVec3Length(&((obb.center + obb.position) - bulletFirePos));
-            //        if (bbDist < hitBoxDist)
-            //        {
-            //            hitBoxDist = bbDist;
-            //            //hitBox = bb;
-            //            m_otherHitPosition = point;
-            //            m_otherHitPart = i;
-            //            m_otherHitPartVertices = vertices;
-            //        }
-            //    }
-            //}
         }
 
         if (minDist != std::numeric_limits<float>::max())
