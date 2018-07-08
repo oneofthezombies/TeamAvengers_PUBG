@@ -105,6 +105,8 @@ void CharacterAnimation::Set(
             blendingTime, 
             nextWeight,
             position);
+
+        Communication()()->SendUpperAnimationIndex(tag);
     }
     else if (part == BodyPart::LOWER)
     {
@@ -116,6 +118,8 @@ void CharacterAnimation::Set(
             blendingTime, 
             nextWeight,
             position);
+
+        Communication()()->SendLowerAnimationIndex(tag);
     }
     else if (part == BodyPart::BOTH)
     {
@@ -136,6 +140,9 @@ void CharacterAnimation::Set(
             blendingTime, 
             nextWeight,
             position);
+
+        Communication()()->SendUpperAnimationIndex(tag);
+        Communication()()->SendLowerAnimationIndex(tag);
     }
 }
 
@@ -161,6 +168,8 @@ void CharacterAnimation::Set(
             position,
             finishEventAgoTime,
             finishEvent);
+
+        Communication()()->SendUpperAnimationIndex(tag);
     }
     else if (part == BodyPart::LOWER)
     {
@@ -174,6 +183,8 @@ void CharacterAnimation::Set(
             position,
             finishEventAgoTime,
             finishEvent);
+
+        Communication()()->SendLowerAnimationIndex(tag);
     }
     else if (part == BodyPart::BOTH)
     {
@@ -198,6 +209,9 @@ void CharacterAnimation::Set(
             position,
             finishEventAgoTime,
             finishEvent);
+
+        Communication()()->SendUpperAnimationIndex(tag);
+        Communication()()->SendLowerAnimationIndex(tag);
     }
 }
 
@@ -227,6 +241,8 @@ void CharacterAnimation::Set(
             loopEvent,
             finishEventAgoTime,
             finishEvent);
+
+        Communication()()->SendUpperAnimationIndex(tag);
     }
     else if (part == BodyPart::LOWER)
     {
@@ -242,6 +258,8 @@ void CharacterAnimation::Set(
             loopEvent,
             finishEventAgoTime,
             finishEvent);
+
+        Communication()()->SendLowerAnimationIndex(tag);
     }
     else if (part == BodyPart::BOTH)
     {
@@ -270,6 +288,9 @@ void CharacterAnimation::Set(
             loopEvent,
             finishEventAgoTime,
             finishEvent);
+
+        Communication()()->SendUpperAnimationIndex(tag);
+        Communication()()->SendLowerAnimationIndex(tag);
     }
 }
 

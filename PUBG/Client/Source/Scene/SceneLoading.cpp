@@ -15,7 +15,7 @@ void SceneLoading::Load()
     // set play mode
     // alone       -> no network
     // with others -> login to network
-    setPlayMode(PlayMode::ALONE);
+    setPlayMode(PlayMode::WITH_OTHERS);
 
     //// load effect meshs
     load(TAG_RES_STATIC::Ammo_5_56mm);
