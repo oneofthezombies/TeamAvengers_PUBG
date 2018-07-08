@@ -380,6 +380,11 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         }
     }
     *pOut = targetPos;
+
+    //잠시 temporary로 각 플래이어 들의 health를 출력했습니다. 꼭 지워주삼
+    const auto& others = static_cast<ScenePlay*>(CurrentScene()())->GetOthers();
+    for (auto o : others)
+        Debug << " Other Player's Health : " << o->GetCharacterHealth()<<endl;
 }
 
 void Character::RifleShooting()
@@ -411,6 +416,7 @@ void Character::RifleShooting()
     gunRay.m_pos = bulletFirePos;
     gunRay.m_dir = bulletDir;
     // 나 말고 다른 캐릭터들을 순회하며 충돌여부를 검사한다.
+
     const auto& others = static_cast<ScenePlay*>(CurrentScene()())->GetOthers();
     for (auto o : others)
     {
@@ -459,10 +465,21 @@ void Character::RifleShooting()
         {
             // 제일 작은 히트한 놈
             cout << "hited part : " << m_otherHitPart << '\n';
+            o->minusDamage
+            (
+                  ItemInfo::GetBaseDamage(inven.m_pHand->GetTagResStatic())//Base Weapon Damage
+                * ItemInfo::GetDropOffByDistance(minDist, inven.m_pHand->GetTagResStatic())//Damage drop-off by Distance
+                * CharacterInfo::GetHitAreaDamage(static_cast<TAG_COLLIDER_CHARACTER_PART>(m_otherHitPart)) //Hit Area Damage
+                * CharacterInfo::GetWeaponClassDamageByHitZone(static_cast<TAG_COLLIDER_CHARACTER_PART>(m_otherHitPart)) //Weapon Class Damage By Hit Zone
+            );
         }
     }
+
+
     // ----------------------수정중-------------
 
+
+    // =====총알 객체가 나가는 부분 ===========
     switch (inven.m_pHand->GetTagResStatic())
     {
     case TAG_RES_STATIC::QBZ:
@@ -636,6 +653,11 @@ void Character::setInfo()
     m_info.pFPP = m_framePtr.pFPP;
 }
 
+void Character::minusDamage(const float damage)
+{
+    m_health -= damage;
+}
+
 D3DXVECTOR3 Character::getUp()
 {
     auto rot = GetTransform()->GetRotation();
@@ -789,14 +811,16 @@ void Character::rotateHead(const float quantity)
 }
 
 
-
-
-
-
 int Character::GetIndex() const
 {
     return m_index;
 }
+
+float Character::GetCharacterHealth()
+{
+    return m_health;
+}
+
 
 TAG_COLLISION Character::GetTagCollisionBody(const int index)
 {

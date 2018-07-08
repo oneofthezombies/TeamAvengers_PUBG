@@ -23,6 +23,12 @@ void ScenePlay::setAloneMode()
         m_others.emplace_back(pOther);
         AddObject(pOther);
     }
+    //Character* pOther = new Character(1);
+    //m_others.emplace_back(pOther);
+    //AddObject(pOther);
+
+
+
 
     TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(500.0f, 100.0f, 500.0f), Vector3::ZERO, Vector3::ONE);
     D3DXMATRIX m;

@@ -19,6 +19,7 @@ Character::Character(const int index)
     // id
     , m_index(index)
     , m_cellIndex(0)
+    , m_health(100.0f)
     , m_mouseInput()
     , m_rootTransform(1.0f)
     , m_waistRotation(0.8f, 0.1f)
@@ -394,6 +395,7 @@ void Character::updateMine()
         << pAnimation->GetLowerAnimationName() << "\n\n";
 
     //Communication()()->SendPosition(pos);
+
 }
 
 void Character::updateOther()
@@ -406,6 +408,8 @@ void Character::updateOther()
 
     auto& pi = pCom->m_RoomInfo.m_PlayerInfos[m_index];
     pos = pi.m_position;
+
+    
 
     //const auto uAnimState = static_cast<unsigned int>(m_animState);
     //if (uAnimState != pi.m_AnimationIndex)

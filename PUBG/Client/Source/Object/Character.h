@@ -202,6 +202,7 @@ private:
     // id
     int m_index;
     std::size_t m_cellIndex;
+    float m_health;
 
     CharacterAnimation* pAnimation;
     vector<CharacterPart*> m_characterParts;
@@ -279,6 +280,7 @@ private:
     bool isMine() const;
 
     void setInfo();
+    void minusDamage(const float damage);
 
     D3DXVECTOR3 getUp();
     //D3DXVECTOR3 getDown();
@@ -346,6 +348,8 @@ public:
     void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
     int GetIndex() const;
+    float GetCharacterHealth();
+
     TAG_COLLISION GetTagCollisionBody(const int index);
     TAG_COLLISION GetTagCollisionDamage(const int index);
 
