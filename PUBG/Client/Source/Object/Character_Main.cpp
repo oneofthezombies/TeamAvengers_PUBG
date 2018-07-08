@@ -418,6 +418,7 @@ void Character::updateMine()
         << pAnimation->GetLowerAnimationName() << "\n\n";
 
     Communication()()->SendPositionAndRotation(pos, rot);
+    Communication()()->SendHeadAngle(m_headRotation.m_angle);
 }
 
 void Character::updateOther()
