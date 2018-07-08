@@ -28,8 +28,8 @@ private:    //fustum Culling
     };
 
 protected:  //Camera Position Rotation Fov
-    D3DXVECTOR3         m_position;
-    D3DXQUATERNION      m_quarernion;
+    
+    //D3DXQUATERNION      m_quarernion;
     D3DXMATRIX          m_worldMatrix;
     float               m_fovY;
     D3DXVECTOR3         m_eye;
@@ -72,6 +72,7 @@ public:
 class CameraFree : public ICamera
 {
 private:
+    D3DXVECTOR3    m_position;
     D3DXVECTOR3    m_rotation;
 public:
     CameraFree();

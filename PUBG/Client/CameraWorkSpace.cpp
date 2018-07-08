@@ -62,7 +62,7 @@ CameraThirdPerson::~CameraThirdPerson()
 
 void CameraThirdPerson::Reset()
 {
-    m_position = D3DXVECTOR3(TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
+    //m_position = D3DXVECTOR3(TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
 
     //80 Degrees TP sight
     m_fovY = D3DX_PI * (80.0f / 180.0f);
@@ -75,9 +75,9 @@ void CameraThirdPerson::Reset()
 
 void CameraThirdPerson::Update()
 {
-    //견착하는 부분은 3인칭에서만 있기에
-    if (Input()()->IsOnceKeyDown(VK_RBUTTON))
-        Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
+    ////견착하는 부분은 3인칭에서만 있기에
+    //if (Input()()->IsOnceKeyDown(VK_RBUTTON))
+    //    Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
 
     
     Character::Info* pTarInfo = GetTargetInfo();
