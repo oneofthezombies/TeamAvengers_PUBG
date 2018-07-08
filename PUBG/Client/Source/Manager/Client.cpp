@@ -205,6 +205,19 @@ void CommunicationManager::ReceiveMessage(
             m_roomInfo.playerInfos[id].rotation = rot;
         }
         break;
+    case TAG_REQUEST::SEND_HEAD_ANGLE:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& headAngleStr = parsedDesc.second;
+
+            std::stringstream ss(headAngleStr);
+            float headAngle = 0.0f;
+            ss >> headAngle;
+
+            m_roomInfo.playerInfos[id].headAngle = headAngle;
+        }
+        break;
     case TAG_REQUEST::SEND_UPPER_ANIMATION_INDEX:
         {
             auto parsedDesc = Message::ParseDescription(description);
@@ -315,6 +328,20 @@ void CommunicationManager::SendPositionAndRotation(
     m_pClient->Write(
         Message::Create(
             TAG_REQUEST::SEND_POSITION_AND_ROTATION, 
+            ss.str()));
+}
+
+void CommunicationManager::SendHeadAngle(const float angle)
+{
+    m_roomInfo.playerInfos[m_myInfo.ID].headAngle = angle;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID
+       << angle;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_HEAD_ANGLE, 
             ss.str()));
 }
 

@@ -50,6 +50,7 @@ struct GameInfo
         std::string    nickname;
         D3DXVECTOR3    position;
         D3DXQUATERNION rotation;
+        float          headAngle;
         int            upperAnimState;
         int            lowerAnimState;
         float          health;

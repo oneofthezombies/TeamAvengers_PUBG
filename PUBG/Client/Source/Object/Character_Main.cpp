@@ -253,16 +253,19 @@ void Character::updateMine()
             }
         }
     }
-    for (auto o : pCurrentScene->m_NearArea.GetCharacters())
+    if (!hasCollision)
     {
-        if (hasCollision) break;
+        for (auto o : pCurrentScene->m_NearArea.GetCharacters())
+        {
+            if (hasCollision) break;
 
-        if (o->GetIndex() == m_index) continue;
+            if (o->GetIndex() == m_index) continue;
 
-        const D3DXVECTOR3 dist = destState.position - o->GetTransform()->GetPosition();
-        const float distLen = D3DXVec3Length(&dist);
-        if (distLen < RADIUS * 2.0f)
-            hasCollision = true;
+            const D3DXVECTOR3 dist = destState.position - o->GetTransform()->GetPosition();
+            const float distLen = D3DXVec3Length(&dist);
+            if (distLen < RADIUS * 2.0f)
+                hasCollision = true;
+        }
     }
     // end collision /////////////////////////
 
@@ -428,6 +431,8 @@ void Character::updateOther()
     auto& pi = pCom->m_roomInfo.playerInfos[m_index];
     pTr->SetPosition(pi.position);
     pTr->SetRotation(pi.rotation);
+
+    m_headRotation.m_angle = pi.headAngle;
 
     const auto upperAnim = static_cast<TAG_ANIM_CHARACTER>(pi.upperAnimState);
     const auto lowerAnim = static_cast<TAG_ANIM_CHARACTER>(pi.lowerAnimState);

@@ -198,6 +198,25 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
                     description));
         }
         break;
+    case TAG_REQUEST::SEND_HEAD_ANGLE:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& headAngleStr = parsedDesc.second;
+
+            std::stringstream ss(headAngleStr);
+            float headAngle = 0.0f;
+            ss >> headAngle;
+
+            pRoom->m_roomInfo.playerInfos[id].headAngle = headAngle;
+
+            pRoom->Echo(
+                id,
+                Message::Create(
+                    TAG_REQUEST::SEND_HEAD_ANGLE,
+                    description));
+        }
+        break;
     case TAG_REQUEST::SEND_UPPER_ANIMATION_INDEX:
         {
             auto parsedDesc = Message::ParseDescription(description);

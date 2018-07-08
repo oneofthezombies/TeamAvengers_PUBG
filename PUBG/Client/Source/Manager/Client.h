@@ -67,6 +67,7 @@ public:
     void SendPositionAndRotation(
         const D3DXVECTOR3& p, 
         const D3DXQUATERNION& r);
+    void SendHeadAngle(const float angle);
     void SendUpperAnimationIndex(const TAG_ANIM_CHARACTER tag);
     void SendLowerAnimationIndex(const TAG_ANIM_CHARACTER tag);
 
