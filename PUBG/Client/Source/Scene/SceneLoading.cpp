@@ -19,7 +19,7 @@ void SceneLoading::Load()
 
     //// load effect meshs
     load(TAG_RES_STATIC::Ammo_5_56mm);
-    //load(TAG_RES_STATIC::Ammo_7_62mm);
+    load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
@@ -39,7 +39,7 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
 
     /*
