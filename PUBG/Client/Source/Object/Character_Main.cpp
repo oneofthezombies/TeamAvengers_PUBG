@@ -19,9 +19,11 @@ Character::Character(const int index)
     // id
     , m_index(index)
     , m_cellIndex(0)
-    
+    , m_mouseInput()
     , m_rootTransform(1.0f)
-    , m_waistRotation(D3DX_PI * 0.5f, 0.1f)
+    , m_waistRotation(0.8f, 0.1f)
+    , m_headRotation(0.8f, 0.1f)
+
     , m_framePtr()
     , m_info()
     , m_savedInput()
@@ -54,8 +56,7 @@ Character::Character(const int index)
     AddChild(pAnimation);
     pAnimation->Set(
         CharacterAnimation::BodyPart::BOTH, 
-        TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, 
-        false);
+        TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
     setFramePtr();
 
@@ -199,6 +200,7 @@ void Character::updateMine()
     //이곳에서 Input을 넣습니다 그리고 m_currentStayKey으로 사용
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
+    handleMouse(dt, &m_mouseInput);
 
 
     //m_currentState를 저장해 놓고 //dest pos 로 계 산
@@ -327,8 +329,11 @@ void Character::updateMine()
     D3DXVECTOR3 pos = tm->GetPosition();
     D3DXQUATERNION rot = tm->GetRotation();
 
-    cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
+    headNArmRotation(&m_mouseInput); //마우스 위아래 -> 케릭터 머리와 팔 위 아래로 움직임
+    cameraCharacterRotation(dt, &rot, &m_mouseInput);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
+    
+    
     tm->SetPosition(pos);
     tm->SetRotation(rot);
 
@@ -346,6 +351,10 @@ void Character::updateMine()
         }
     }
 
+
+
+
+
     //sh tset
     if (Input()()->IsOnceKeyDown('B'))
     {
@@ -361,18 +370,6 @@ void Character::updateMine()
         Sound()()->addPlay(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)), 5.0f, FMOD_3D);
     }
     
-    //float test_distance = 777;
-    //float ddd = test_distance / 340;
-    //
-    //float lastTime_2 = Time()()->GetDeltaTime();
-    //float ingTime = Time()()->GetDeltaTime() - lastTime_2;
-    //if (ddd <= ingTime)
-    //{
-    //    Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
-    //}
-
-
-
 
 
 ///////////////////////////////////////////////////////////////////////////////

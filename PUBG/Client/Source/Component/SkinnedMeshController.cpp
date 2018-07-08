@@ -144,16 +144,16 @@ void SkinnedMeshController::updateAnimation(
 }
 
 void SkinnedMeshController::notifyAnimationEvent(
-    const float dt, 
+    const float dt,
     const std::string& name,
-    LPD3DXANIMATIONCONTROLLER pController, 
-    animation_events_t* OutLoopEvents, 
+    LPD3DXANIMATIONCONTROLLER pController,
+    animation_events_t* OutLoopEvents,
     animation_events_t* OutFinishEvents)
 {
     assert(
-        pController && 
-        OutLoopEvents && 
-        OutFinishEvents && 
+        pController &&
+        OutLoopEvents &&
+        OutFinishEvents &&
         "SkinnedMeshController::notifyAnimationEvent(), argument is null.");
 
     D3DXTRACK_DESC desc;
@@ -165,11 +165,14 @@ void SkinnedMeshController::notifyAnimationEvent(
     double periodicPosition = pSet->GetPeriodicPosition(currentPosition);
     pSet->Release();
 
-    Debug << "track 0\n"
-          << "animation name    : " << name             << '\n'
-          << "current  position : " << currentPosition  << '\n'
-          << "periodic position : " << periodicPosition << '\n'
-          << "period            : " << period           << '\n';
+    if (static_cast<Character*>(GetOwner())->GetIndex() == Communication()()->m_MyInfo.m_ID)
+    {
+        Debug << "track 0\n"
+            << "animation name    : " << name << '\n'
+            << "current  position : " << currentPosition << '\n'
+            << "periodic position : " << periodicPosition << '\n'
+            << "period            : " << period << '\n';
+    }
 
     pController->GetTrackDesc(1, &desc);
     if (desc.Enable)
@@ -185,19 +188,25 @@ void SkinnedMeshController::notifyAnimationEvent(
         track1Period = pSet->GetPeriod();
         pSet->Release();
 
-        Debug << "track 1\n"
-              << "animation name    : " << track1Name << '\n'
-              << "current  position : " << track1CurrentPosition << '\n'
-              << "periodic position : " << track1PeriodicPosition << '\n'
-              << "period            : " << track1Period << "\n\n";
+        if (static_cast<Character*>(GetOwner())->GetIndex() == Communication()()->m_MyInfo.m_ID)
+        {
+            Debug << "track 1\n"
+                << "animation name    : " << track1Name << '\n'
+                << "current  position : " << track1CurrentPosition << '\n'
+                << "periodic position : " << track1PeriodicPosition << '\n'
+                << "period            : " << track1Period << "\n\n";
+        }
     }
     else
     {
-        Debug << "track 1\n"
-              << "animation name    : " << '\n'
-              << "current  position : " << '\n'
-              << "periodic position : " << '\n'
-              << "period            : " << "\n\n";
+        if (static_cast<Character*>(GetOwner())->GetIndex() == Communication()()->m_MyInfo.m_ID)
+        {
+            Debug << "track 1\n"
+                << "animation name    : " << '\n'
+                << "current  position : " << '\n'
+                << "periodic position : " << '\n'
+                << "period            : " << "\n\n";
+        }
     }
 
     const double dDT = static_cast<double>(dt);

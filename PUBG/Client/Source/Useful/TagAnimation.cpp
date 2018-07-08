@@ -497,6 +497,10 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard:
         return 0.7f;
 
+    //case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Low_Idle_Still_Very:
+    //case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Aim:
+    //    return 0.1f;
+
     default:
         return 1.0f;
     }

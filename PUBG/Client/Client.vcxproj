@@ -126,9 +126,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Area.cpp" />
+    <ClCompile Include="CameraWorkSpace.cpp" />
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
+    <ClCompile Include="Source\Object\Character.cpp" />
     <ClCompile Include="Source\Object\CharacterAnimation.cpp" />
     <ClCompile Include="Source\HeightMap.cpp" />
     <ClCompile Include="Source\Object\Character_ForDebug.cpp" />

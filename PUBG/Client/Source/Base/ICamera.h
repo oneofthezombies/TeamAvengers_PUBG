@@ -2,10 +2,6 @@
 #include "TagClientOnly.h"
 #include "Character.h" //ÈÆÈ¸Çü! struct °¡ ¾È¸ÔÇô¼­ ÀÌ·¸°Ô ³Ö¾ú´Âµ¥ ±¦Âú³ª¿ä?
 
-#define FP_DISTANCE -30.0f
-#define FP_BASEPOSX 0.0f
-#define FP_BASEPOSY 155.0f
-
 #define TP_DISTANCE -30.0f
 #define TP_BASEPOSX -50.0f
 #define TP_BASEPOSY 45.0f
@@ -15,7 +11,6 @@ class ICamera : public MemoryAllocator
 {
 private:
     const TAG_CAMERA    m_tagCamera;
-          D3DXMATRIX    m_worldMatrix;
           D3DXMATRIX    m_viewMatrix;
           D3DXMATRIX    m_projectionMatrix;
 
@@ -23,16 +18,25 @@ private:    //fustum Culling
     D3DXPLANE	        m_vecPlane[6];
     D3DXVECTOR3         m_vecWorld[8];
     D3DXVECTOR3	        m_vecProj[8];
+    std::vector<WORD>   FRUSTUM_INDICES =
+    {
+        6, 2, 2, 3, 3, 7, 7, 6,
+        2, 0, 0, 1, 1, 3,
+        1, 5, 5, 7,
+        0, 4, 4, 6,
+        5, 4
+    };
 
 protected:  //Camera Position Rotation Fov
     D3DXVECTOR3         m_position;
     D3DXQUATERNION      m_quarernion;
+    D3DXMATRIX          m_worldMatrix;
     float               m_fovY;
 
 protected:
     //D3DXVECTOR3         m_vBulletDestination;
     vector<D3DXVECTOR3> drawRay;
-    bool                temp = false;
+    //bool                temp = false;  //ÃÑ½î¸é ³ª¿À´Â »¡°£»ö ray¸¦ À§ÇØ
 protected:
     Character::Info*    GetTargetInfo();
 
@@ -57,26 +61,6 @@ public:
           TAG_CAMERA  GetTagCamera()        const;
 
     D3DXVECTOR4 GetFrustumArea();
-    //Area CalculateFrustumAndArea(D3DXVECTOR3& destPos)
-    //{
-    //    UpdateFrustumCulling();
-    //    D3DXVECTOR4 MinMax = GetFrustumArea();
-    //    D3DXVECTOR3 min = D3DXVECTOR3(MinMax.x, 0, MinMax.y);
-    //    D3DXVECTOR3 max = D3DXVECTOR3(MinMax.z, 0, MinMax.w);
-
-    //    Area area;
-    //    size_t index = CurrentScene()()->GetCellIndex(min);
-    //    size_t index2 = CurrentScene()()->GetCellIndex(max);
-
-    //    for (size_t i = 0; i < CellSpace::DIMENSION; i++)
-    //    {
-    //        
-
-    //    }
-
-    //    return area;
-    //}
-
     bool CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY);
 
 };
@@ -108,8 +92,6 @@ public:
 
 class CameraThirdPerson : public ICamera
 {
-protected:
-    bool bAltKeyPressed;
 public:
     CameraThirdPerson(const TAG_CAMERA tag = TAG_CAMERA::Third_Person);
     virtual ~CameraThirdPerson();

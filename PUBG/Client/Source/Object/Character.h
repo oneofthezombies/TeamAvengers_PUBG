@@ -18,6 +18,7 @@ class Character : public IObject
 /*****************************************************************************/
 
 public:
+
     struct WaistRotation
     {
         const float LIMIT_OF_ANGLE;
@@ -25,6 +26,14 @@ public:
         float       m_angle;
 
         WaistRotation(const float limit, const float factor);
+    };
+    struct HeadRotation
+    {
+        const float LIMIT_OF_ANGLE;
+        const float QUANTITY_FACTOR;
+        float       m_angle;
+
+        HeadRotation(const float limit, const float factor);
     };
 
     struct RootTransform
@@ -69,6 +78,7 @@ public:
     {
         Transform*   pTransform;
         D3DXVECTOR3* pRotationForCamera;
+        Frame*       pHead;
         Frame*       pFPP;
         Frame*       pTPP;
 
@@ -109,10 +119,26 @@ public:
         IsPressed();
     };
 
+    struct MouseInput
+    {
+        float yaw;
+        float pitch;
+
+        MouseInput()
+            : yaw(0.0f)
+            , pitch(0.0f)
+        {
+        }
+    };
+
+
     struct FramePtr
     {
-        Frame* pWaist;
         Frame* pRoot;
+        Frame* pHead;
+        Frame* pLeftUpperArm;
+        Frame* pRightUpperArm;
+        Frame* pWaist;
         Frame* pHandGun;
         Frame* pTPP;
         Frame* pFPP;
@@ -184,6 +210,8 @@ private:
     FramePtr      m_framePtr;
     RootTransform m_rootTransform;
     WaistRotation m_waistRotation;
+    HeadRotation  m_headRotation;
+    //ArmRotation   m_armRotation;
 
     // for camera
     D3DXMATRIX  m_prevRootModel;
@@ -202,6 +230,7 @@ private:
     IsPressing m_savedInput;
     IsPressing m_currentStayKey;
     IsPressed  m_currentOnceKey;
+    MouseInput m_mouseInput;
 
     IsJumping m_Jump;
 
@@ -229,9 +258,11 @@ private:
 
     void handleInput(IsPressing* OutIsPressing);
     void handleInput(IsPressed* OutIsPressed);
-    
-    void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
-    //void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
+    void handleMouse(const float dt, MouseInput* mouseInput);
+
+    void headNArmRotation(MouseInput* mouseinput);
+    void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput);
+    void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
     void movementControl(OUT State* OutState);
     void animationControl();
@@ -242,6 +273,9 @@ private:
     void communicate();
 
     void rotateWaist(const float quantity);
+    void rotateHead(const float quantity);
+    void rotateArm(const float quantity);
+
 
     bool isMine() const;
 

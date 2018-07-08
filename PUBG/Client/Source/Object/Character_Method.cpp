@@ -18,6 +18,20 @@ Character::WaistRotation::WaistRotation(const float limit, const float factor)
 {
 }
 
+Character::HeadRotation::HeadRotation(const float limit, const float factor)
+    : LIMIT_OF_ANGLE(limit)
+    , QUANTITY_FACTOR(factor)
+    , m_angle(0.0f)
+{
+}
+
+//Character::ArmRotation::ArmRotation(const float limit, const float factor)
+//    :LIMIT_OF_ANGLE(limit)
+//    , QUANTITY_FACTOR(factor)
+//    , m_angle(0.0f)
+//{
+//}
+
 Character::RootTransform::RootTransform(const float moveSpeed)
     : MOVE_SPEED(moveSpeed)
 {
@@ -25,6 +39,7 @@ Character::RootTransform::RootTransform(const float moveSpeed)
 Character::Info::Info()
     : pTransform(nullptr)
     , pRotationForCamera(nullptr)
+    , pHead(nullptr)
     , pFPP(nullptr)
     , pTPP(nullptr)
 {
@@ -79,6 +94,7 @@ Character::IsPressed::IsPressed()
 
 Character::FramePtr::FramePtr()
     : pRoot(nullptr)
+    , pHead(nullptr)
     , pWaist(nullptr)
     , pHandGun(nullptr)
     , pTPP(nullptr)
@@ -111,6 +127,9 @@ void Character::setFramePtr()
 {
     m_framePtr.pWaist         = pAnimation->FindFrame("spine_01");
     m_framePtr.pRoot          = pAnimation->FindFrame("root");
+    m_framePtr.pHead          = pAnimation->FindFrame("head");
+    m_framePtr.pLeftUpperArm  = pAnimation->FindFrame("upperarm_l");
+    m_framePtr.pRightUpperArm = pAnimation->FindFrame("upperarm_r");
     m_framePtr.pHandGun       = pAnimation->FindFrame("ik_hand_gun");
     m_framePtr.pTPP           = pAnimation->FindFrame("camera_tpp");
     m_framePtr.pFPP           = pAnimation->FindFrame("camera_fpp");
@@ -123,6 +142,9 @@ void Character::setFramePtr()
     assert(
         p.pWaist &&
         p.pRoot &&
+        p.pHead &&
+        p.pLeftUpperArm &&
+        p.pRightUpperArm &&
         p.pHandGun &&
         p.pTPP &&
         p.pFPP &&
@@ -184,10 +206,8 @@ void Character::handleInput(IsPressed* OutIsPressed)
     OutIsPressed->_RButton      = pInput->IsOnceKeyDown(VK_RBUTTON);
 }
 
-void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation)
+void Character::handleMouse(const float dt, MouseInput* mouseInput)
 {
-    ICamera* pCurrentCamera = CurrentCamera()();
-
     // get mouse pos
     POINT mouse;
     GetCursorPos(&mouse);
@@ -198,36 +218,12 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     diff.y = mouse.y - 720 / 2;
     if (diff.x < 2 && diff.x > -2) diff.x = 0;
     if (diff.y < 2 && diff.y > -2) diff.y = 0;
-    const float yaw = diff.x * 0.2f * dt;
-    const float pitch = diff.y * 0.2f * dt;
 
-    static bool tempBool = false;
-    if (m_currentStayKey._LAlt)
-    {
-        if (pCurrentCamera)
-        {
-            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person || pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
-            {
-                m_rotationForCamera.x += -pitch;
-                m_rotationForCamera.y += yaw;
-                tempBool = true;
-            }
-        }
-    }
-    else // isPressing_LAlt == false
-    {
-        D3DXQUATERNION q;
-        D3DXQuaternionRotationYawPitchRoll(&q, yaw, 0.0f, 0.0f);
-        *OutRotation *= q;
-        m_rotationForCamera.x += -pitch;
-        // reset rotFotCameraTP
-        if (tempBool)
-        {
-            m_rotationForCamera = Vector3::ZERO;
-            tempBool = false;
-        }
-    }
+    mouseInput->yaw = diff.x * 0.2f * dt;
+    mouseInput->pitch = diff.y * 0.2f * dt;
 
+
+    
     static bool test_sound = true;
 
     if (Input()()->IsOnceKeyDown(VK_LEFT))
@@ -244,6 +240,61 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
         ClientToScreen(g_hWnd, &center);
         SetCursorPos(center.x, center.y);
     }
+}
+
+void Character::headNArmRotation(MouseInput* mouseInput)
+{
+    ////케릭터 머리 Frame 움직이기
+    //rotateWaist(-mouseInput.pitch);
+    rotateHead(-mouseInput->pitch);
+}
+
+void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput)
+{
+
+    ICamera* pCurrentCamera = CurrentCamera()();
+
+    static bool tempBool = false;
+    if (m_currentStayKey._LAlt)
+    {
+        if (pCurrentCamera)
+        {
+            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person || pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
+            {
+                m_rotationForCamera.x += -mouseInput->pitch;
+                m_rotationForCamera.y += mouseInput->yaw;
+                tempBool = true;
+            }
+        }
+    }
+    else // isPressing_LAlt == false
+    {
+        D3DXQUATERNION q;
+        D3DXQuaternionRotationYawPitchRoll(&q, mouseInput->yaw, 0.0f, 0.0f);
+        *OutRotation *= q;
+        m_rotationForCamera.x += -mouseInput->pitch;
+        // reset rotFotCameraTP
+        if (tempBool)
+        {
+            m_rotationForCamera = Vector3::ZERO;
+            tempBool = false;
+        }
+    }
+
+
+
+    //Limiting camera Pitch 
+    if (m_rotationForCamera.x < -0.8f)
+        m_rotationForCamera.x = -0.8f;
+    else if (m_rotationForCamera.x > 0.8f)
+        m_rotationForCamera.x = 0.8f;
+
+
+
+
+    Debug << "m_rotationForCamera.x : " << m_rotationForCamera.x << endl << endl << endl;
+
+
 
 }
 
@@ -654,6 +705,7 @@ void Character::setInfo()
 {
     m_info.pTransform = GetTransform();
     m_info.pRotationForCamera = &m_rotationForCamera;
+    m_info.pHead = m_framePtr.pHead;
     m_info.pTPP = m_framePtr.pTPP;
     m_info.pFPP = m_framePtr.pFPP;
 }
@@ -742,9 +794,25 @@ D3DXVECTOR3 Character::getBackwardLeft()
 void Character::updateBone()
 {
     // modify local bones
-    D3DXMATRIX rx;
-    D3DXMatrixRotationX(&rx, m_waistRotation.m_angle);
-    m_framePtr.pWaist->TransformationMatrix *= rx;
+    D3DXMATRIX rHead,rArmL,rArmR;
+
+    //머리 Rotaion
+    D3DXMatrixRotationY(&rHead, m_headRotation.m_angle);
+    m_framePtr.pHead->TransformationMatrix *= rHead;
+
+    if (m_totalInventory.m_pHand)//총을 들었을때 손 Rotation
+    {
+        D3DXMatrixRotationX(&rArmL, m_headRotation.m_angle);
+        m_framePtr.pLeftUpperArm->TransformationMatrix *= rArmL;    //왼쪽 손
+        D3DXMatrixRotationX(&rArmR, -m_headRotation.m_angle);
+        m_framePtr.pRightUpperArm->TransformationMatrix *= rArmR;   //오른쪽 손
+    }
+    
+
+
+
+    //D3DXMatrixRotationY(&r, m_waistRotation.m_angle);
+    //m_framePtr.pWaist->TransformationMatrix *= r;
 
     // for root motion animation
     m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
@@ -781,6 +849,23 @@ void Character::rotateWaist(const float quantity)
     else if (wr.m_angle > wr.LIMIT_OF_ANGLE)
         wr.m_angle = wr.LIMIT_OF_ANGLE;
 }
+
+void Character::rotateHead(const float quantity)
+{
+    auto& hr = m_headRotation;
+
+    hr.m_angle += quantity;
+
+    if (hr.m_angle < -hr.LIMIT_OF_ANGLE)
+        hr.m_angle = -hr.LIMIT_OF_ANGLE;
+    else if (hr.m_angle > hr.LIMIT_OF_ANGLE)
+        hr.m_angle = hr.LIMIT_OF_ANGLE;
+}
+
+
+
+
+
 
 int Character::GetIndex() const
 {

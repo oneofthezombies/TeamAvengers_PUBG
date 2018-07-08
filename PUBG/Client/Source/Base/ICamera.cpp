@@ -2,7 +2,6 @@
 #include "ICamera.h"
 #include "ComponentTransform.h"
 #include "Character.h"
-#include "Collider.h"
 #include "Ray.h"
 #include "HeightMap.h"
 
@@ -19,11 +18,6 @@ ICamera::ICamera(const TAG_CAMERA tag)
 {
     //지금 각 카메라 마다 8개의 projection과 world, 6개 plane 을 갖고 있다. 하나만 만들어서 나누어 쓰도록 하자!
     
-    //for (int i = 0; i < 8; i++)   //초기화!
-    //{
-    //    m_vecWorld[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    //}
-
     m_vecProj[0]=(D3DXVECTOR3(-1, 1, 1));	//좌상후
     m_vecProj[1]=(D3DXVECTOR3(1, 1, 1));	//우상후
     m_vecProj[2]=(D3DXVECTOR3(-1, 1, 0));	//좌상전
@@ -55,10 +49,10 @@ void ICamera::CameraRender()
         matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
     }
 
-    drawIndices(BoxCollider::FRUSTUM_INDICES, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+    drawIndices(FRUSTUM_INDICES, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
     
-    if (temp)
-        draw(drawRay, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+    //if (temp)
+    //    draw(drawRay, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 }
 void ICamera::draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color)
 {
@@ -107,50 +101,7 @@ void ICamera::drawIndices(const vector<WORD>& indices, const D3DXCOLOR & color)
     });
 
 }
-void ICamera::UpdateViewProjMatrix()
-{
-    D3DXVECTOR3 eye = Vector3::ZERO;
-    D3DXVECTOR3 look = eye + -(D3DXVECTOR3(0,-1,0));
 
-
-    Character::Info* pTarInfo = GetTargetInfo();
-    if (!pTarInfo)
-    {
-        D3DXMatrixIdentity(&m_worldMatrix);
-    }
-    else
-    {
-        D3DXMATRIX tarR,baseT;
-        D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
-        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
-        
-        D3DXMatrixTranslation(&baseT, m_position.x, m_position.y, m_position.z);
-        baseT *= pTarInfo->pTransform->GetTransformationMatrix();
-
-
-        //*Important!  (model space)                      (rotation get from character)    (char transformation + height up till head)
-        m_worldMatrix = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      baseT;
-
-    }
-
-    D3DXVec3TransformCoord(&eye, &eye, &m_worldMatrix);
-    D3DXVec3TransformCoord(&look, &look, &m_worldMatrix);
-
-    D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &look, &Vector3::UP);
-    
-    auto pD = Device()();
-    pD->SetTransform(D3DTS_VIEW, &m_viewMatrix);
-    if (m_tagCamera != TAG_CAMERA::Scope2X)
-    {
-        RECT rc;
-        GetClientRect(g_hWnd, &rc);
-        D3DXMatrixPerspectiveFovLH(&m_projectionMatrix,
-            m_fovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom),
-            1.0f, 5000.0f);
-        pD->SetTransform(D3DTS_PROJECTION, &m_projectionMatrix);
-    }
-
-}
 
 void ICamera::UpdateFrustumCulling()
 {
@@ -242,12 +193,12 @@ bool ICamera::CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD scre
             *vOut = ray.m_pos + ray.m_dir * intersectionDist;
 
 
-            //rendering 을 위해
-            temp = true;
-            drawRay.push_back(ray.m_pos);
-            drawRay.push_back(*vOut);
-            //--------------------------
-            
+            ////총쏘면 나오는 빨간색 ray를 rendering 을 위해
+            //temp = true;
+            //drawRay.push_back(ray.m_pos);
+            //drawRay.push_back(*vOut);
+            ////--------------------------
+
             return bIntersect;
         }
     }
@@ -321,52 +272,7 @@ void CameraFree::Update()
     pD->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
 }
 
-//-----------------------------------------------------------------
-CameraThirdPerson::CameraThirdPerson(const TAG_CAMERA tag)
-    : ICamera(tag)
-{
-}
 
-CameraThirdPerson::~CameraThirdPerson()
-{
-}
-
-void CameraThirdPerson::Reset()
-{
-    m_position = D3DXVECTOR3(TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
-
-    //80 Degrees TP sight
-    m_fovY = D3DX_PI * (80.0f / 180.0f);
-
-    bAltKeyPressed = false;
-}
-
-void CameraThirdPerson::Update()
-{
-    //TargetTransform* pTarget = GetTarget();
-    //if (pTarget && pTarget->pRotForCameraTP)
-    //{
-    //    const D3DXVECTOR3 rotForTP = *(pTarget->pRotForCameraTP);
-
-    //    D3DXQuaternionRotationYawPitchRoll(&m_quarernion, rotForTP.y, rotForTP.x, rotForTP.z);
-    //    m_quarernion *= pTarget->pTransform->GetRotation();
-    //}
-    //견착하는 부분은 3인칭에서만 있기에
-    if (Input()()->IsOnceKeyDown(VK_RBUTTON))
-        Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
-
-    //D3DXVECTOR3 v;
-    //if (Input()()->IsOnceKeyDown(VK_LBUTTON))
-    //{
-    //    if (CalcPickedPosition(&v, 1280 / 2, 720 / 2))
-    //    {
-    //    }
-    //}
-
-
-
-
-}
 //-----------------------------------------------------------------------
 CameraKyunChak::CameraKyunChak()
     : CameraThirdPerson(TAG_CAMERA::KyunChak)
@@ -443,32 +349,14 @@ void CameraKyunChak::Update()
 }
 
 
-//-----------------------------------------------------------------
-CameraFirstPerson::CameraFirstPerson(const TAG_CAMERA tag)
-    : ICamera(tag)
-{
 
-}
 
-CameraFirstPerson::~CameraFirstPerson()
-{
-}
 
-void CameraFirstPerson::Reset()
-{
-    m_position = D3DXVECTOR3(FP_BASEPOSX, FP_BASEPOSY, FP_DISTANCE);
-    //70 Degrees FP sight
-    m_fovY = D3DX_PI * (70.0f / 180.0f);
 
-    //D3DXQuaternionRotationYawPitchRoll(&m_quarernion, m_rotation.y, m_rotation.x, m_rotation.z);
-}
 
-void CameraFirstPerson::Update()
-{
-    //RBUTTON Up 하면 다시 TP 로 돌아가기
-    if (Input()()->IsOnceKeyUp(VK_RBUTTON))
-        Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
-}
+
+
+
 
 //---------------------------------------------------xx
 
