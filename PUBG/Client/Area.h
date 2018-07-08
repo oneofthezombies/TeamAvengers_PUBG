@@ -2,6 +2,7 @@
 
 struct CellSpace;
 class TerrainFeature;
+class Character;
 
 class Area : public MemoryAllocator
 {
@@ -15,7 +16,8 @@ public:
     void Create(const std::size_t index);
 
     std::vector<IObject*> GetBullets();
-    std::vector<TerrainFeature*> GetTerrainFeatures();
+    std::vector<IObject*> GetTerrainFeatures();
+    std::vector<IObject*> GetCharacters();
     bool checkValid(int v);
 };
 

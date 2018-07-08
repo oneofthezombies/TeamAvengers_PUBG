@@ -60,13 +60,24 @@ std::vector<IObject*> Area::GetBullets()
     return vBullets;
 }
 
-std::vector<TerrainFeature*> Area::GetTerrainFeatures()
+std::vector<IObject*> Area::GetTerrainFeatures()
 {
-    std::vector<TerrainFeature*> vTerrainFeatures;
+    std::vector<IObject*> vTerrainFeatures;
     for (std::size_t i = 0; i < m_cellspaces.size(); i++)
     {
         auto& set = m_cellspaces[i]->pTerrainFeatures;
         vTerrainFeatures.insert(vTerrainFeatures.end(), set.begin(), set.end());
     }
     return vTerrainFeatures;
+}
+
+std::vector<IObject*> Area::GetCharacters()
+{
+    std::vector<IObject*> characters;
+    for (auto& cs : m_cellspaces)
+    {
+        auto& set = cs->pCharacters;
+        characters.insert(characters.end(), set.begin(), set.end());
+    }
+    return characters;
 }

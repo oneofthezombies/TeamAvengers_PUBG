@@ -33,13 +33,13 @@ struct ObjectInFile
 
 struct CellSpace
 {
-    size_t                    pIndex;
-    std::set<TerrainFeature*> pTerrainFeatures;
-    std::set<Bullet*>         pBullets;
-    std::set<Character*>      pCharacters;
-    std::set<IObject*>        pDoors;
-    std::set<IObject*>        pWindows;
-    std::set<Item*>           pItems;
+    size_t             pIndex;
+    std::set<IObject*> pTerrainFeatures;
+    std::set<IObject*> pBullets;
+    std::set<IObject*> pCharacters;
+    std::set<IObject*> pDoors;
+    std::set<IObject*> pWindows;
+    std::set<IObject*> pItems;
 
     static const int DIMENSION = 4;
 };

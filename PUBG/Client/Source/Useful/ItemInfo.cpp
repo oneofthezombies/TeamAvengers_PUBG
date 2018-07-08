@@ -316,8 +316,8 @@ float CharacterInfo::GetWeaponClassDamageByHitZone(const TAG_COLLIDER_CHARACTER_
         return 0.9f;
     default:
         assert(false && "GetWeaponClassDamageByHitZone(), default case.");
+        return 1.0f;
     }
-    
 }
 
 float CharacterInfo::GetHitAreaDamage(const TAG_COLLIDER_CHARACTER_PART tag)
@@ -359,7 +359,7 @@ float CharacterInfo::GetHitAreaDamage(const TAG_COLLIDER_CHARACTER_PART tag)
         return 0.3f;
     default:
         assert(false && "CharacterInfo::GetHitAreaDamage, default case.");
-
+        return 1.0f;
     }
 
 }

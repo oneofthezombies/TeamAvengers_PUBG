@@ -196,7 +196,6 @@ void Character::OnRender()
 {
 }
 
-
 void Character::updateMine()
 {
     if (!isMine()) return;
@@ -221,7 +220,14 @@ void Character::updateMine()
 
     // 충돌체크////////////////////////////
     bool hasCollision = false;
-    for (auto tf : pCurrentScene->m_NearArea.GetTerrainFeatures())
+    auto tfs(pCurrentScene->m_NearArea.GetTerrainFeatures());
+    auto chs(pCurrentScene->m_NearArea.GetCharacters());
+    for (auto c : chs)
+    {
+        if (static_cast<Character*>(c)->GetIndex() == m_index) continue;
+        tfs.emplace_back(c);
+    }
+    for (auto tf : tfs)
     {
         if (hasCollision) break;
 
