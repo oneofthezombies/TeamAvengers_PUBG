@@ -430,10 +430,18 @@ void Character::updateOther()
     auto pTr    = GetTransform();
 
     auto& pi = pCom->m_roomInfo.playerInfos[m_index];
-    pTr->SetPosition(pi.position);
-    pTr->SetRotation(pi.rotation);
 
-    m_headRotation.m_angle = pi.headAngle;
+    D3DXVECTOR3 pos;
+    D3DXVec3Lerp(&pos, &pTr->GetPosition(), &pi.position, 1.0f);
+    pTr->SetPosition(pos);
+
+    D3DXQUATERNION rot;
+    D3DXQuaternionSlerp(&rot, &pTr->GetRotation(), &pi.rotation, 1.0f);
+    pTr->SetRotation(rot);
+
+    D3DXVECTOR2 headAngle;
+    D3DXVec2Lerp(&headAngle, &D3DXVECTOR2(m_headRotation.m_angle, 0.0f), &D3DXVECTOR2(pi.headAngle, 0.0f), 1.0f);
+    m_headRotation.m_angle = headAngle.x;
 
     const auto upperAnim = static_cast<TAG_ANIM_CHARACTER>(pi.upperAnimState);
     const auto lowerAnim = static_cast<TAG_ANIM_CHARACTER>(pi.lowerAnimState);
