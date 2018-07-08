@@ -339,28 +339,29 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         {            
             //점프 후 착지애니메이션
             //TODO: 높이에 따라서 다른 착지애니메이션
-            //TODO: 착지 애니메이션이 끝날때까지 움직이면 안됨
             TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
             if (m_attacking == Attacking::Unarmed)
-                tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Fall_Landing_Additive;
-            else if (m_attacking == Attacking::Rifle)
-                tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard;
-      
-            pAnimation->Set(
-                CharacterAnimation::BodyPart::BOTH,
-                tagAnim,
-                true,
-                0.1f,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                CharacterAnimation::DEFAULT_POSITION,
-                [this]()
             {
+                tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Fall_Landing_Additive;
+                //else if (m_attacking == Attacking::Rifle)
+                //    tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard;
+
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
-            });
+                    tagAnim,
+                    true,
+                    0.1f,
+                    CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                    CharacterAnimation::DEFAULT_POSITION,
+                    CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                    [this]()
+                {
+                    pAnimation->Set(
+                        CharacterAnimation::BodyPart::BOTH,
+                        m_lowerAnimState,
+                        false);
+                });
+            }
 
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;
@@ -507,30 +508,38 @@ void Character::movementControl(OUT State* OutState)
     float movingFactor = 0.0f;
 
     //Moving 3개 -----------------------------------------------------
-   if(m_moving == Moving::Run)
+    if(m_moving == Moving::Run)
+     {
+        if(m_attacking == Attacking::Unarmed)
+             movingFactor = 180.f;
+        else 
+             movingFactor = 120.f;
+     }
+    else if (m_moving == Moving::Sprint)
     {
-       if(m_attacking == Attacking::Unarmed)
-            movingFactor = 180.f;
-       else 
-            movingFactor = 120.f;
+        if (m_attacking == Attacking::Unarmed)
+             movingFactor = 260.f;
+        else
+             movingFactor = 200.f;
     }
-   else if (m_moving == Moving::Sprint)
-   {
-       if (m_attacking == Attacking::Unarmed)
-            movingFactor = 260.f;
-       else
-            movingFactor = 200.f;
-   }
-   else if (m_moving == Moving::Walk)
-   {
-       if (m_attacking == Attacking::Unarmed)
-           movingFactor = 120.f;
-       else
-           movingFactor = 100.f;
-   }
+    else if (m_moving == Moving::Walk)
+    {
+        if (m_attacking == Attacking::Unarmed)
+            movingFactor = 120.f;
+        else
+            movingFactor = 100.f;
+    }
+    
+    float dt = Time()()->GetDeltaTime();
+    float dist = movingFactor * m_rootTransform.MOVE_SPEED * dt;
 
-   float dt = Time()()->GetDeltaTime();
-   float dist = movingFactor * m_rootTransform.MOVE_SPEED * dt;
+    //점프 직후 이동 금지
+    const string& animName = pAnimation->GetLowerAnimationName();
+    if (animName == TagAnimation::GetString(TAG_ANIM_CHARACTER::Unarmed_Combat_Fall_Landing_Additive) ||
+        animName == TagAnimation::GetString(TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard))
+    {
+        return;
+    }
 
     //Direction 8개 -----------------------------------------------------
     if (m_currentStayKey._W&&m_currentStayKey._D)
@@ -552,7 +561,6 @@ void Character::movementControl(OUT State* OutState)
     else if (m_currentStayKey._W)
     {
         OutState->position += getForward() * dist;
-
     }
     else if (m_currentStayKey._D)
     {
@@ -610,7 +618,7 @@ void Character::animationControl()
     }
 
     //Moving 3개 -----------------------------------------------------
-    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl)
+    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl && m_stance != Stance::Prone)
     {
         switch (m_direction)
         {

@@ -37,6 +37,7 @@ Character::Character(const int index)
     , m_upperAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_isFire(false)
+    , m_hasChangingState(false)
 
     , pAnimation(nullptr)
 
@@ -205,7 +206,6 @@ void Character::updateMine()
     handleInput(&m_currentOnceKey);
     handleMouse(dt, &m_mouseInput);
 
-
     //m_currentState를 저장해 놓고 //dest pos 로 계 산
     State destState;
     destState.position = tm->GetPosition();
@@ -214,8 +214,6 @@ void Character::updateMine()
     //*********************************
 
     movementControl(&destState);
-
-    
 
     // 충돌체크////////////////////////////
     bool hasCollision = false;
@@ -294,8 +292,18 @@ void Character::updateMine()
         }
         else
         {
+            CharacterAnimation::BodyPart bodyPart;
+            if (m_hasChangingState)
+            {
+                bodyPart = CharacterAnimation::BodyPart::LOWER;
+            }
+            else
+            {
+                bodyPart = CharacterAnimation::BodyPart::BOTH;
+            }
+
             pAnimation->Set(
-                CharacterAnimation::BodyPart::BOTH,
+                bodyPart,
                 m_lowerAnimState, true, 0.3f, 0.0f, 0.0f);
        
             //하단 참고할 만한 것

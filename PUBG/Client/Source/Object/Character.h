@@ -243,6 +243,7 @@ private:
     BoundingBox m_otherHitBox;
 
     bool m_isFire;
+    bool m_hasChangingState;
 
 /**************************** end member variable ****************************/
 

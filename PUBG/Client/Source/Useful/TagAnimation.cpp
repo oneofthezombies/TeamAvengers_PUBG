@@ -483,6 +483,7 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
 {
     switch (tag)
     {
+        //무기없이 서서 달림
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F:
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_FR:
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_R:
@@ -493,6 +494,7 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_FL:
         return 1.8f;
 
+        //무기없이 서서 질주함
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F:
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_FL:
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_FR:
@@ -500,6 +502,7 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_R: //안씀
         return 1.4f;
         
+        //무기 들고 서서 달림
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_F:
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_FR:
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_R:
@@ -510,15 +513,30 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_FL:
         return 0.5f;
 
+        //무기 없이 쭈그리고 달림
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Run_FL:
         return 0.5f;
 
+        //무기 들고 착지
     case TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard:
-        return 0.7f;
+        return 1.5f; //속도 올리면 애니메이션이 처음을 가리키는 문제점
 
-    //case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Low_Idle_Still_Very:
-    //case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Aim:
-    //    return 0.1f;
+        //서다 -> 엎드리다
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Prone:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_Prone:
+
+        //엎드리다 -> 서다
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Stand:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Base_Stand:
+    
+        //엎드리다 -> 쭈그리다
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Crouch:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Base_Crouch:
+
+        //쭈그리다 -> 엎드리다
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Prone:
+    case TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Prone:
+        return 1.0f; //속도 올리면 애니메이션이 처음을 가리키는 문제점
 
     default:
         return 1.0f;

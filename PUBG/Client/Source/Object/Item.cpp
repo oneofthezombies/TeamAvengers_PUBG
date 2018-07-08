@@ -242,7 +242,6 @@ Frame * Item::GetGunBolt() const
     return pGunBolt;
 }
 
-
 void Item::UpdateModel()
 {
     if (pSkinnedMeshController)
