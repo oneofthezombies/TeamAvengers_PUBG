@@ -46,6 +46,19 @@ string Character::ForDebugGetStance(Stance stance)
     }
 }
 
+string Character::ForDebugGetMoving(Moving moving)
+{
+    switch (moving)
+    {
+    case Moving::Run: return "Run";
+    case Moving::Sprint: return "Sprint";
+    case Moving::Walk: return "Walk";
+    default:
+        assert(false && "Character::ForDebugGetMoving(), default case.");
+        return "";
+    }
+}
+
 void Character::ForDebug()
 {
     Item* hand = m_totalInventory.m_pHand;
@@ -73,10 +86,11 @@ void Character::ForDebug()
     }
 
     Debug << "Attacking: " << ForDebugGetAttacking(m_attacking) << "\n";
-    Debug << "Stance: " << ForDebugGetStance(m_stance) << "\n";
+    Debug << "Stance: "    << ForDebugGetStance(m_stance)       << "\n";
+    Debug << "Moving: "    << ForDebugGetMoving(m_moving)       << "\n";
 
     if (m_Jump.isJumping)
-        Debug << "IsJump: TRUE" << "\n";
+        Debug << "IsJump: TRUE"  << "\n";
     else
         Debug << "IsJump: FALSE" << "\n";
 }
