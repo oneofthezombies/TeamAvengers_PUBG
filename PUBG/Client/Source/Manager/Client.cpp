@@ -383,6 +383,8 @@ void CommunicationManager::SendEventMinusDamage(
     const int id, 
     const float damage)
 {
+    m_roomInfo.playerInfos[id].health -= damage;
+
     std::stringstream ss;
     ss << m_myInfo.ID << id << ' ' << damage;
 

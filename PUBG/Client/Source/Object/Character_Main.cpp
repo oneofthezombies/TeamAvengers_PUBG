@@ -429,4 +429,6 @@ void Character::updateOther()
         m_lowerAnimState = lowerAnim;
         pAnimation->Set(CharacterAnimation::BodyPart::LOWER, lowerAnim, true);
     }
+
+    m_health = pi.health;
 }

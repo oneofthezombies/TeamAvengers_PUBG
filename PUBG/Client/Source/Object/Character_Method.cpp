@@ -461,13 +461,17 @@ void Character::RifleShooting()
         {
             // 제일 작은 히트한 놈
             cout << "hited part : " << m_otherHitPart << '\n';
-            o->minusDamage
-            (
-                  ItemInfo::GetBaseDamage(inven.m_pHand->GetTagResStatic())//Base Weapon Damage
-                * ItemInfo::GetDropOffByDistance(minDist, inven.m_pHand->GetTagResStatic())//Damage drop-off by Distance
-                * CharacterInfo::GetHitAreaDamage(static_cast<TAG_COLLIDER_CHARACTER_PART>(m_otherHitPart)) //Hit Area Damage
-                * CharacterInfo::GetWeaponClassDamageByHitZone(static_cast<TAG_COLLIDER_CHARACTER_PART>(m_otherHitPart)) //Weapon Class Damage By Hit Zone
-            );
+
+            const auto tagWeapon = inven.m_pHand->GetTagResStatic();
+            const auto tagPart = static_cast<TAG_COLLIDER_CHARACTER_PART>(m_otherHitPart);
+            const float damage
+                = ItemInfo::GetBaseDamage(tagWeapon)//Base Weapon Damage
+                * ItemInfo::GetDropOffByDistance(minDist, tagWeapon)//Damage drop-off by Distance
+                * CharacterInfo::GetHitAreaDamage(tagPart) //Hit Area Damage
+                * CharacterInfo::GetWeaponClassDamageByHitZone(tagPart); //Weapon Class Damage By Hit Zone
+
+            o->minusDamage(damage);
+            Communication()()->SendEventMinusDamage(o->GetIndex(), damage);
         }
     }
 

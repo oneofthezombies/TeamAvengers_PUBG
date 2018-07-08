@@ -249,6 +249,22 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
                 TAG_REQUEST::SEND_EVENT_SOUND, description));
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_MINUS_DAMAGE:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& eventMinusDamageStr = parsedDesc.second;
+
+            std::stringstream ss(eventMinusDamageStr);
+            int damageID;
+            float damage;
+            ss >> damageID >> damage;
+
+            pRoom->m_roomInfo.playerInfos[damageID].health -= damage;
+
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MINUS_DAMAGE, description));
+        }
+        break;
     }
 }
 
