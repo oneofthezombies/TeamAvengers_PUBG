@@ -32,6 +32,8 @@ protected:  //Camera Position Rotation Fov
     D3DXQUATERNION      m_quarernion;
     D3DXMATRIX          m_worldMatrix;
     float               m_fovY;
+    D3DXVECTOR3         m_eye;
+    D3DXVECTOR3         m_look;
 
 protected:
     //D3DXVECTOR3         m_vBulletDestination;
@@ -46,6 +48,7 @@ public:
 
     virtual void Reset() = 0;
     virtual void Update() = 0;
+    virtual void Render() {}
     void CameraRender();
     void draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color);
     void drawIndices(const vector<WORD>& indices, const D3DXCOLOR& color);
@@ -98,6 +101,7 @@ public:
     // Inherited via ICamera
     virtual void Reset() override;
     virtual void Update() override;
+    virtual void Render() override;
 };
 
 

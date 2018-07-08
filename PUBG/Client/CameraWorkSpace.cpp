@@ -20,6 +20,9 @@ void CameraFirstPerson::Reset()
 {
     //70 Degrees FP sight
     m_fovY = D3DX_PI * (70.0f / 180.0f);
+    m_eye = Vector3::ZERO;
+    //D3DXVECTOR3 eye 
+    m_look = m_eye + (D3DXVECTOR3(0, 1, 0));
 
 }
 
@@ -41,7 +44,9 @@ void CameraFirstPerson::Update()
         m_worldMatrix = pTarInfo->pFPP->CombinedTransformationMatrix * pTarInfo->pTransform->GetTransformationMatrix();
     }
 
-
+    m_eye = Vector3::ZERO;
+    //D3DXVECTOR3 eye 
+    m_look = m_eye + D3DXVECTOR3(0, 1, 0);
 
 }
 
@@ -61,6 +66,10 @@ void CameraThirdPerson::Reset()
 
     //80 Degrees TP sight
     m_fovY = D3DX_PI * (80.0f / 180.0f);
+    m_eye = Vector3::ZERO;
+    //D3DXVECTOR3 eye 
+    m_look = m_eye + (D3DXVECTOR3(0, 1, 0));
+
 
 }
 
@@ -75,61 +84,62 @@ void CameraThirdPerson::Update()
     if (!pTarInfo)
     {
         D3DXMatrixIdentity(&m_worldMatrix);
+        
     }
     else
     {
         D3DXMATRIX tarR, baseT;
         D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
         Debug << "*pTarInfo->pRotationForCamera : " << *pTarInfo->pRotationForCamera << endl << endl;
-        D3DXMatrixRotationYawPitchRoll(&tarR, 0.0f, vRot.x, 0.0f);
+        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, 0.0f);
 
-        D3DXMatrixTranslation(&baseT, 0.0f, 30.0f, 0.0f);
-        
-
-
-        //*Important!  (model space)                      (rotation get from character)    (char transformation + height up till head)
-        m_worldMatrix = 
-            baseT
+        D3DXMATRIX baseY, baseZ;
+        D3DXMatrixTranslation(&baseY, -20.0f, 180.0f, 0.0f);
+        D3DXMatrixTranslation(&baseZ, 0.0f, 0.0f, 75.0f);
+        m_worldMatrix 
+            = baseZ 
             * tarR
-            * pTarInfo->pHead->CombinedTransformationMatrix
-            * pTarInfo->pTransform->GetTransformationMatrix()
+            * baseY
+            * pTarInfo->pTransform->GetTransformationMatrix();
 
-            
-            ;//baseT;
 
+
+        
     }
+
+    m_eye = Vector3::ZERO;
+    m_look = m_eye - Vector3::FORWARD;
     
+    
+    int i = 0;
+}
 
+void CameraThirdPerson::Render()
+{
+    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr, 
+        Resource()()->GetBoundingSphereMesh(), 
+        0, 
+        [this](LPD3DXEFFECT pEffect) 
+    {
+        D3DXMATRIX s, m;
+        D3DXMatrixScaling(&s, 10.0f, 10.0f, 10.0f);
+        m = s * m_worldMatrix;
+        pEffect->SetMatrix(Shader::World, &m);
 
-
-
+        D3DXCOLOR red(1.0f, 0.0f, 0.0f, 1.0f);
+        pEffect->SetValue("Color", &red, sizeof red);
+    });
 }
 
 void ICamera::UpdateViewProjMatrix()
 {
 
-    D3DXVECTOR3 eye = Vector3::ZERO;
-    D3DXVECTOR3 look = eye + -(D3DXVECTOR3(0, -2, 0));
-    ////-------------------------------------------------
-    //Character::Info* pTarInfo = GetTargetInfo();
-    //if (!pTarInfo)
-    //{
-    //    D3DXMatrixIdentity(&m_worldMatrix);
-    //}
-    //else
-    //{
-    //    D3DXMATRIX tarR, baseT;
-    //    D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
-    //    D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
-    //    D3DXMatrixTranslation(&baseT, m_position.x, m_position.y, m_position.z);
-    //    baseT *= pTarInfo->pTransform->GetTransformationMatrix();
-    //    //*Important!  (model space)                      (rotation get from character)    (char transformation + height up till head)
-    //    m_worldMatrix = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      baseT;
-    //}
-    ////-------------------------------------------------
-    D3DXVec3TransformCoord(&eye, &eye, &m_worldMatrix);
-    D3DXVec3TransformCoord(&look, &look, &m_worldMatrix);
-    D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &look, &Vector3::UP);
+    D3DXVec3TransformCoord(&m_eye, &m_eye, &m_worldMatrix);
+    D3DXVec3TransformCoord(&m_look, &m_look, &m_worldMatrix);
+    D3DXMatrixLookAtLH(&m_viewMatrix, &m_eye, &m_look, &Vector3::UP);
 
     auto pD = Device()();
     pD->SetTransform(D3DTS_VIEW, &m_viewMatrix);

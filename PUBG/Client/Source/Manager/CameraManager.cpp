@@ -54,6 +54,8 @@ void CameraManager::Update()
 
     if (pCurrentCamera)
     {
+        m_cameras[TAG_CAMERA::Third_Person]->Update();
+
         pCurrentCamera->Update();
 
         if(pCurrentCamera->GetTagCamera()!=TAG_CAMERA::Default)//디버그 카메라는 player의 이동에 영향이 없도록
@@ -63,6 +65,9 @@ void CameraManager::Update()
         //    pCurrentCamera->UpdateFrustumCulling();
         //}
         //pCurrentCamera->CameraRender();
+
+
+        m_cameras[TAG_CAMERA::Third_Person]->Render();
     }
 }
 
