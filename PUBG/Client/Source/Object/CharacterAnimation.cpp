@@ -14,7 +14,7 @@ CharacterAnimation::CharacterAnimation()
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
     pSkinnedMeshController->SetSkinnedMesh(ResourceInfo::GetCharacterPathFileName());
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("root"));
-    //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("pelvis"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("pelvis"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_hand_root"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_aim_root"));
     pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_root"));

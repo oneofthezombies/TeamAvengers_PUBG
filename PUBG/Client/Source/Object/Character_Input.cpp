@@ -643,13 +643,15 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
         CharacterAnimation::DEFAULT_BLENDING_TIME,
         CharacterAnimation::DEFAULT_NEXT_WEIGHT,
         CharacterAnimation::DEFAULT_POSITION,
-        CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+        0.5f,
         [this]()
     {
         pAnimation->Set(
             CharacterAnimation::BodyPart::BOTH,
             m_lowerAnimState,
-            false);
+            true,
+            0.5f,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT);
     });
 }
 
@@ -819,8 +821,7 @@ void Character::setStandTo()
                     m_lowerAnimState,
                     false);
             });
-        }
-    
+        }    
     }
 }
 
@@ -917,19 +918,17 @@ void Character::setProneTo()
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Stand,
-                false,
+                true,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
-                1.0f,
+                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
                 pAnimation->Set(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
-                    true,
-                    1.0f,
-                    CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+                    false);
             });
         }
         else if (m_stance == Stance::Crouch)

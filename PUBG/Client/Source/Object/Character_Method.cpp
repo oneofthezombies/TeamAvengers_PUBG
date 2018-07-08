@@ -112,7 +112,8 @@ void Character::setFramePtr()
 {
     m_framePtr.pWaist         = pAnimation->FindFrame("spine_01");
     m_framePtr.pRoot          = pAnimation->FindFrame("root");
-    m_framePtr.pHandGun       = pAnimation->FindFrame("ik_hand_gun");
+    //m_framePtr.pHandGun       = pAnimation->FindFrame("ik_hand_gun");
+    m_framePtr.pHandGun = pAnimation->FindFrame("item_r");
     m_framePtr.pTPP           = pAnimation->FindFrame("camera_tpp");
     m_framePtr.pFPP           = pAnimation->FindFrame("camera_fpp");
     m_framePtr.pSlotPrimary   = pAnimation->FindFrame("slot_primary");
