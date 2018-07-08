@@ -98,6 +98,10 @@ Character::~Character()
 
 void Character::OnUpdate()
 {
+    const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
+    if (receivedHealth < m_health)
+        m_health = receivedHealth;
+
     updateMine();
     updateOther();
 
@@ -363,10 +367,6 @@ void Character::updateMine()
         }
     }
 
-    const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
-    if (m_health < receivedHealth)
-        m_health = receivedHealth;
-
     //sh tset
     if (Input()()->IsOnceKeyDown('B'))
     {
@@ -429,7 +429,4 @@ void Character::updateOther()
         m_lowerAnimState = lowerAnim;
         pAnimation->Set(CharacterAnimation::BodyPart::LOWER, lowerAnim, true);
     }
-
-    if (m_health > pi.health)
-        m_health = pi.health;
 }
