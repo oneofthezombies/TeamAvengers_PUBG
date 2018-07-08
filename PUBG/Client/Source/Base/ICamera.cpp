@@ -14,8 +14,9 @@ ICamera::ICamera(const TAG_CAMERA tag)
     : MemoryAllocator()
     , m_tagCamera(tag)
     , m_position(Vector3::ZERO)
-
+    , m_eye(Vector3::ZERO)
 {
+    m_look = m_eye + D3DXVECTOR3(0, 1, 0);
     //지금 각 카메라 마다 8개의 projection과 world, 6개 plane 을 갖고 있다. 하나만 만들어서 나누어 쓰도록 하자!
     
     m_vecProj[0]=(D3DXVECTOR3(-1, 1, 1));	//좌상후
