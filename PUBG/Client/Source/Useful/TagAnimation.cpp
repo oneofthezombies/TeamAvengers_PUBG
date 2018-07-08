@@ -483,6 +483,23 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
 {
     switch (tag)
     {
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_F:
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_FR:
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_R:
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_BR:
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_B:
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_BL:
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_L:
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Run_FL:
+        return 1.8f;
+
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F:
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_FL:
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_FR:
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_L: //¾È¾¸
+    case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_R: //¾È¾¸
+        return 1.4f;
+        
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_F:
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_FR:
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_R:
@@ -491,9 +508,11 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_BL:
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_L:
     case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Run_FL:
+        return 0.5f;
 
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Run_FL:
         return 0.5f;
+
     case TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard:
         return 0.7f;
 

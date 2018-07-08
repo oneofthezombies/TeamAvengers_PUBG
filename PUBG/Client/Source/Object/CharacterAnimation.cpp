@@ -5,8 +5,8 @@
 
 const float CharacterAnimation::DEFAULT_BLENDING_TIME = 0.3f;
 const float CharacterAnimation::DEFAULT_NEXT_WEIGHT = 0.0f;
-const float CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME = 0.0f;
 const float CharacterAnimation::DEFAULT_POSITION = 0.0f;
+const float CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME = 0.0f;
 
 CharacterAnimation::CharacterAnimation()
     : IObject(TAG_OBJECT::Idle)
@@ -14,16 +14,16 @@ CharacterAnimation::CharacterAnimation()
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
     pSkinnedMeshController->SetSkinnedMesh(ResourceInfo::GetCharacterPathFileName());
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("root"));
-    //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("pelvis"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("pelvis"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_hand_root"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_aim_root"));
-    //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_root"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_root"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("camera_tpp"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_target_root"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_target_l"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_target_r"));
-    //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_l"));
-    //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_r"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_l"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_r"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_aim_l"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_aim_r"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_hand_gun"));

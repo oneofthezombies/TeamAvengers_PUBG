@@ -136,8 +136,8 @@ public:
     {
         Frame* pRoot;
         Frame* pHead;
-        Frame* pLeftUpperArm;
-        Frame* pRightUpperArm;
+        Frame* pLeftClavicle;
+        Frame* pRightClavicle;
         Frame* pWaist;
         Frame* pHandGun;
         Frame* pTPP;
@@ -226,6 +226,8 @@ private:
     TAG_ANIM_CHARACTER m_lowerAnimState;
     Stance    m_stance;
     Attacking m_attacking;
+    Moving    m_moving;
+    Direction m_direction;
 
     IsPressing m_savedInput;
     IsPressing m_currentStayKey;
@@ -262,7 +264,6 @@ private:
 
     void headNArmRotation(MouseInput* mouseinput);
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput);
-    void animationMovementControl(OUT State* OutState, TAG_ANIM_CHARACTER* OutTag);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
     void movementControl(OUT State* OutState);
     void animationControl();
@@ -274,8 +275,6 @@ private:
 
     void rotateWaist(const float quantity);
     void rotateHead(const float quantity);
-    void rotateArm(const float quantity);
-
 
     bool isMine() const;
 
@@ -358,6 +357,7 @@ public:
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
     string ForDebugGetAttacking(Attacking attcking);
     string ForDebugGetStance(Stance stance);
+    string ForDebugGetMoving(Moving moving);
     void   ForDebug();
 
     CharacterAnimation* GetCharacterAnimation();
