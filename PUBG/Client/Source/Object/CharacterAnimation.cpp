@@ -106,7 +106,8 @@ void CharacterAnimation::Set(
             nextWeight,
             position);
 
-        Communication()()->SendUpperAnimationIndex(tag);
+        if (static_cast<Character*>(GetParent())->GetIndex() == Communication()()->m_myInfo.ID)
+            Communication()()->SendUpperAnimationIndex(tag);
     }
     else if (part == BodyPart::LOWER)
     {
@@ -119,7 +120,8 @@ void CharacterAnimation::Set(
             nextWeight,
             position);
 
-        Communication()()->SendLowerAnimationIndex(tag);
+        if (static_cast<Character*>(GetParent())->GetIndex() == Communication()()->m_myInfo.ID)
+            Communication()()->SendLowerAnimationIndex(tag);
     }
     else if (part == BodyPart::BOTH)
     {
@@ -141,8 +143,11 @@ void CharacterAnimation::Set(
             nextWeight,
             position);
 
-        Communication()()->SendUpperAnimationIndex(tag);
-        Communication()()->SendLowerAnimationIndex(tag);
+        if (static_cast<Character*>(GetParent())->GetIndex() == Communication()()->m_myInfo.ID)
+        {
+            Communication()()->SendUpperAnimationIndex(tag);
+            Communication()()->SendLowerAnimationIndex(tag);
+        }
     }
 }
 
@@ -169,7 +174,8 @@ void CharacterAnimation::Set(
             finishEventAgoTime,
             finishEvent);
 
-        Communication()()->SendUpperAnimationIndex(tag);
+        if (static_cast<Character*>(GetParent())->GetIndex() == Communication()()->m_myInfo.ID)
+            Communication()()->SendUpperAnimationIndex(tag);
     }
     else if (part == BodyPart::LOWER)
     {
@@ -183,8 +189,8 @@ void CharacterAnimation::Set(
             position,
             finishEventAgoTime,
             finishEvent);
-
-        Communication()()->SendLowerAnimationIndex(tag);
+        if (static_cast<Character*>(GetParent())->GetIndex() == Communication()()->m_myInfo.ID)
+            Communication()()->SendLowerAnimationIndex(tag);
     }
     else if (part == BodyPart::BOTH)
     {
@@ -210,8 +216,11 @@ void CharacterAnimation::Set(
             finishEventAgoTime,
             finishEvent);
 
-        Communication()()->SendUpperAnimationIndex(tag);
-        Communication()()->SendLowerAnimationIndex(tag);
+        if (static_cast<Character*>(GetParent())->GetIndex() == Communication()()->m_myInfo.ID)
+        {
+            Communication()()->SendUpperAnimationIndex(tag);
+            Communication()()->SendLowerAnimationIndex(tag);
+        }
     }
 }
 
@@ -242,7 +251,8 @@ void CharacterAnimation::Set(
             finishEventAgoTime,
             finishEvent);
 
-        Communication()()->SendUpperAnimationIndex(tag);
+        if (static_cast<Character*>(GetParent())->GetIndex() == Communication()()->m_myInfo.ID)
+            Communication()()->SendUpperAnimationIndex(tag);
     }
     else if (part == BodyPart::LOWER)
     {
@@ -259,7 +269,8 @@ void CharacterAnimation::Set(
             finishEventAgoTime,
             finishEvent);
 
-        Communication()()->SendLowerAnimationIndex(tag);
+        if (static_cast<Character*>(GetParent())->GetIndex() == Communication()()->m_myInfo.ID)
+            Communication()()->SendLowerAnimationIndex(tag);
     }
     else if (part == BodyPart::BOTH)
     {
@@ -289,8 +300,11 @@ void CharacterAnimation::Set(
             finishEventAgoTime,
             finishEvent);
 
-        Communication()()->SendUpperAnimationIndex(tag);
-        Communication()()->SendLowerAnimationIndex(tag);
+        if (static_cast<Character*>(GetParent())->GetIndex() == Communication()()->m_myInfo.ID)
+        {
+            Communication()()->SendUpperAnimationIndex(tag);
+            Communication()()->SendLowerAnimationIndex(tag);
+        }
     }
 }
 

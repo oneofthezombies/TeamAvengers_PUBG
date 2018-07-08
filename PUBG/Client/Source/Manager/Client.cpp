@@ -149,7 +149,7 @@ void CommunicationManager::Connect(
     m_pClient = new Client(&m_IOContext, endpoints, this);
     m_pThread = new std::thread([this]() { m_IOContext.run(); });
 
-    Sleep(500);
+    Sleep(1000);
 
     m_myInfo.nickname = nickname;
 
