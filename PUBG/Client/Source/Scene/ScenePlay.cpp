@@ -149,6 +149,12 @@ void ScenePlay::setWithOthersMode()
         AddObject(pOther);
     }
 
+    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(500.0f, 100.0f, 500.0f), Vector3::ZERO, Vector3::ONE);
+    D3DXMATRIX m;
+    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &Quaternion::IDENTITY, &D3DXVECTOR3(500.0f, 100.0f, 500.0f));
+    tf->AddBoundingBox(m);
+    AddObject(tf);
+
     ////For inventory Test
     Item* item = nullptr;
     D3DXVECTOR3 p(10, 0, 10);
