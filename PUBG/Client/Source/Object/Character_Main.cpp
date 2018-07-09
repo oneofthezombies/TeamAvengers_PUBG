@@ -22,8 +22,8 @@ Character::Character(const int index)
     , m_health(100.0f)
     , m_mouseInput()
     , m_rootTransform(1.0f)
-    , m_waistRotation(0.8f, 0.1f)
-    , m_headRotation(0.8f, 0.1f)
+    , m_waistRotation(0.5f/*, 1.0f*/)
+    , m_headRotation(1.0f/*, 0.1f*/)
 
     , m_framePtr()
     , m_info()
@@ -200,7 +200,7 @@ void Character::updateMine()
     IScene*        pCurrentScene = CurrentScene()();
     Transform* tm = GetTransform();
 
-    //이곳에서 Input을 넣습니다 그리고 m_currentStayKey으로 사용
+    //INPUT CONTROL // m_currentStayKey으로 사용
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
     handleMouse(dt, &m_mouseInput);
@@ -334,7 +334,7 @@ void Character::updateMine()
     D3DXVECTOR3 pos = tm->GetPosition();
     D3DXQUATERNION rot = tm->GetRotation();
 
-    headNArmRotation(&m_mouseInput); //마우스 위아래 -> 케릭터 머리와 팔 위 아래로 움직임
+    characterRotation(&m_mouseInput); //마우스 위아래 -> 케릭터 머리와 팔 위 아래로 움직임
     cameraCharacterRotation(dt, &rot, &m_mouseInput);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
     

@@ -22,18 +22,19 @@ public:
     struct WaistRotation
     {
         const float LIMIT_OF_ANGLE;
-        const float QUANTITY_FACTOR;
+        //const float QUANTITY_FACTOR;
         float       m_angle;
+        bool        m_limit;
 
-        WaistRotation(const float limit, const float factor);
+        WaistRotation(const float limit/*, const float factor*/);
     };
     struct HeadRotation
     {
         const float LIMIT_OF_ANGLE;
-        const float QUANTITY_FACTOR;
+        /*const float QUANTITY_FACTOR;*/
         float       m_angle;
 
-        HeadRotation(const float limit, const float factor);
+        HeadRotation(const float limit/*, const float factor*/);
     };
 
     struct RootTransform
@@ -212,7 +213,7 @@ private:
     RootTransform m_rootTransform;
     WaistRotation m_waistRotation;
     HeadRotation  m_headRotation;
-    //ArmRotation   m_armRotation;
+    
 
     // for camera
     D3DXMATRIX  m_prevRootModel;
@@ -263,7 +264,7 @@ private:
     void handleInput(IsPressed* OutIsPressed);
     void handleMouse(const float dt, MouseInput* mouseInput);
 
-    void headNArmRotation(MouseInput* mouseinput);
+    void characterRotation(MouseInput* mouseinput);
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
     void movementControl(OUT State* OutState);

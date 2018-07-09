@@ -15,14 +15,14 @@ void ScenePlay::setAloneMode()
     const int myID = Communication()()->m_MyInfo.m_ID;
     pPlayer = new Character(myID);
     AddObject(pPlayer);
-    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
-    {
-        if (i == myID) continue;
+    //for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    //{
+    //    if (i == myID) continue;
 
-        Character* pOther = new Character(i);
-        m_others.emplace_back(pOther);
-        AddObject(pOther);
-    }
+    //    Character* pOther = new Character(i);
+    //    m_others.emplace_back(pOther);
+    //    AddObject(pOther);
+    //}
     //Character* pOther = new Character(1);
     //m_others.emplace_back(pOther);
     //AddObject(pOther);
@@ -111,10 +111,10 @@ void ScenePlay::setAloneMode()
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(100, 0, 10);
-    item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(100, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(110, 0, 10);
     //item = new Item(TAG_RES_STATIC::RedDot, p, r, s);
@@ -179,9 +179,8 @@ void ScenePlay::OnInit()
 
     //cell space partitioning
     m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
-    //m_NearArea.Create(3);
 
-    LoadObjectsFromFile("./Resource/save.txt");
+    //LoadObjectsFromFile("./Resource/save.txt");
 
     // No id received
     if (Communication()()->m_MyInfo.m_ID == -1)
