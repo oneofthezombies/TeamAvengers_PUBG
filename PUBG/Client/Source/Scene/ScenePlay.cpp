@@ -7,6 +7,7 @@
 #include "Item.h"
 #include "HeightMap.h"
 #include "ComponentTransform.h"
+#include "Head.h"
 //#include "UIImage.h"
 
 void ScenePlay::setAloneMode()
@@ -194,6 +195,8 @@ void ScenePlay::setWithOthersMode()
     item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
+
+
 }
 
 ScenePlay::ScenePlay()

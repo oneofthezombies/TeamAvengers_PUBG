@@ -59,6 +59,7 @@ private:
     bool m_isDoneCharacters;
     bool m_isDoneEffectMeshs;
     bool m_isDoneSkinnedMeshs;
+    bool m_isDoneEquipments;
     bool m_isFinished;
 
     Resource::Policy m_policy;
@@ -69,6 +70,7 @@ private:
     void addAnimationsToCharacter();
     void addEffectMeshs();
     void addSkinnedMeshs();
+    void addAnimationsToEquipment();
 
     void addHeightmapResource();
 
