@@ -280,7 +280,7 @@ void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizo
     m_backAction.valX = virtical_result;
 }
     //cout << virtical_result << "=============" << horizontal_result << endl;
-void Character::headNArmRotation(MouseInput* mouseInput)
+void Character::characterRotation(MouseInput* mouseInput)
 {
     ////케릭터 머리 Frame 움직이기
     rotateHead(-mouseInput->pitch);
