@@ -74,8 +74,6 @@ void SkinnedMeshController::drawMeshContainer(
     //});
     //Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
-
-
     auto numBones = pMeshContainer->pSkinInfo->GetNumBones();
     for (auto i = 0u; i < numBones; ++i)
     {
@@ -118,6 +116,8 @@ void SkinnedMeshController::updateAnimation(
     LPD3DXANIMATIONCONTROLLER pController, 
     float* OutPassedBlendingTime)
 {
+    if (!pController) return;
+
     assert(
         pController && 
         OutPassedBlendingTime &&
@@ -150,6 +150,8 @@ void SkinnedMeshController::notifyAnimationEvent(
     animation_events_t* OutLoopEvents,
     animation_events_t* OutFinishEvents)
 {
+    if (!pController) return;
+
     assert(
         pController &&
         OutLoopEvents &&

@@ -42,6 +42,7 @@ Character::Character(const int index)
     , m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_isFire(false)
     , m_hasChangingState(false)
+    , m_isNeedRifleAnim(false)
 
     , pAnimation(nullptr)
 
@@ -113,10 +114,12 @@ void Character::OnUpdate()
 
 
     // update
-    GetTransform()->Update();
-    pAnimation->UpdateAnimation();
-    updateBone();
-    pAnimation->UpdateModel();
+    GetTransform()->Update();      // set characters world
+    pAnimation->UpdateAnimation(); // set characters local
+    updateBone();                  // modified characters local
+    pAnimation->UpdateModel();     // set characters model
+
+    // set item animation, item model here
     updateTotalInventory();
 
     // bounding sphere move to character position
@@ -449,9 +452,8 @@ void Character::updateMine()
     {
         if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_pHand->GetNumBullet() > 0)
         {
-            m_isFire = true;
-            backAction(&rot);
-
+            if(m_hasChangingState == false) //장전 중일 때는 쏘지못하게
+                m_isFire = true;
             //rifleShooting();
             //pistolShooting();?? 이란것도 나중에는 만들겠지요?
         }

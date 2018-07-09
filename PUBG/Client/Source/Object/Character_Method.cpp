@@ -134,7 +134,6 @@ void Character::setFramePtr()
     m_framePtr.pLeftClavicle = pAnimation->FindFrame("clavicle_l");
     m_framePtr.pRightClavicle = pAnimation->FindFrame("clavicle_r");
 
-    //m_framePtr.pHandGun       = pAnimation->FindFrame("ik_hand_gun");
     m_framePtr.pHandGun = pAnimation->FindFrame("item_r");
 
     m_framePtr.pTPP           = pAnimation->FindFrame("camera_tpp");
@@ -485,7 +484,10 @@ void Character::RifleShooting()
     cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
 
     //Goal : get Fire starting position , get fire direction
-    inven.m_pHand->UpdateModel(); //update to get position of frame "gun_bolt" 
+    
+    //Update in Character::updateTotalInventory()
+    //inven.m_pHand->UpdateModel(); //update to get position of frame "gun_bolt" 
+
     D3DXMATRIX mat 
         = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
         * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
@@ -578,7 +580,56 @@ void Character::RifleShooting()
         BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_COLLISION::Impassable);
         break;
     case TAG_RES_STATIC::Kar98k:
-        BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_COLLISION::Impassable);
+        {
+            BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_COLLISION::Impassable);
+            
+            //Kar98k BoltAction Animation
+            TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+            if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
+                tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Base;
+            else if (m_stance == Stance::Prone)
+                tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone;
+
+            assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::RifleShooting(), tagAnim is COUNT");
+
+            m_hasChangingState = true;
+
+            //총 자체 애니메이션
+            m_isNeedRifleAnim = true;
+            inven.m_pHand->Set
+            (
+                TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_1,
+                false,
+                Item::DEFAULT_BLENDING_TIME,
+                Item::DEFAULT_NEXT_WEIGHT,
+                Item::DEFAULT_POSITION,
+                Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+                [this, &inven]() {
+                inven.m_pHand->Set(
+                    TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
+                    false);
+                m_isNeedRifleAnim = false;
+            });
+
+            //캐릭터의 애니메이션
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::UPPER,
+                tagAnim,
+                true, //ok
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_POSITION,
+                0.3f, //ok
+                [this]()
+            {
+                m_hasChangingState = false;
+                pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    m_lowerAnimState,
+                    true,
+                    0.3f);
+            });
+        }
         break;
     }
 }

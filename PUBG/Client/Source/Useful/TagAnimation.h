@@ -6,20 +6,22 @@
 enum class TAG_ANIM_WEAPON
 {
 //√— - √— ¿⁄√º¿« æ÷¥œ∏ﬁ¿Ãº«
-//OBZ(5)
+//OBZ(6)
 Weapon_QBZ_Fire,
 Weapon_QBZ_Firemode_Auto,
 Weapon_QBZ_Firemode_Semi,
 Weapon_QBZ_Reload_Charge_FPP,
 Weapon_QBZ_Reload_FPP,
+Weapon_QBZ_Idle,
 
-//Kar98k(6)
+//Kar98k(7)
+Weapon_Kar98k_Reload_Start,
+Weapon_Kar98k_Reload_Loop,
+Weapon_Kar98k_Reload_End,
 Weapon_Kar98k_BoltAction_1,
-Weapon_Kar98k_BoltAction_2,
-Weapon_Kar98k_BoltAction_3,
-Weapon_Kar98k_Reload_StartLoopEnd,
 Weapon_Kar98k_Reload_Fast,
 Weapon_Kar98k_Reload_Fast_FPP,
+Weapon_Kar98k_Idle,
 
 COUNT
 };
@@ -461,4 +463,5 @@ struct TagAnimation
     static std::string GetString(const TAG_ANIM_CHARACTER tag);
 
     static float GetSpeed(const TAG_ANIM_CHARACTER tag);
+    static float GetSpeed(const TAG_ANIM_WEAPON tag);
 };

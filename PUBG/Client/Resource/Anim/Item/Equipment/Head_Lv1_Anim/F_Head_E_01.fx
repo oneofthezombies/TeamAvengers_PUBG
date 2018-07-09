@@ -20,12 +20,12 @@ float  SpecularPower = 10.000000f;
 float4 SpecularColor = { 0.000000f, 0.000000f, 0.000000f, 1.000000f }; 
 float4 EmissiveColor = { 0.000000f, 0.000000f, 0.000000f, 1.000000f }; 
 
-texture C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_D_tga; 
-texture C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_N_tga; 
+texture C__Users_user_Desktop_umodel_win32_UmodelExport_Assets_Character_Female_Head_Textures__F_Head_E_01_D_tga; 
+texture C__Users_user_Desktop_umodel_win32_UmodelExport_Assets_Character_Female_Head_Textures__F_Head_E_01_N_tga; 
 
-sampler2D C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_D_tgaSampler = sampler_state  // TexCoord0 
+sampler2D C__Users_user_Desktop_umodel_win32_UmodelExport_Assets_Character_Female_Head_Textures__F_Head_E_01_D_tgaSampler = sampler_state  // TexCoord0 
 { 
-   Texture = <C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_D_tga>; 
+   Texture = <C__Users_user_Desktop_umodel_win32_UmodelExport_Assets_Character_Female_Head_Textures__F_Head_E_01_D_tga>; 
    MinFilter = Linear; 
    MagFilter = Linear; 
    MipFilter = Linear; 
@@ -33,9 +33,9 @@ sampler2D C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_D_tgaSampler = sa
    AddressV  = Wrap;     
 }; 
 
-sampler2D C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_N_tgaSampler = sampler_state  // TexCoord0 
+sampler2D C__Users_user_Desktop_umodel_win32_UmodelExport_Assets_Character_Female_Head_Textures__F_Head_E_01_N_tgaSampler = sampler_state  // TexCoord0 
 { 
-   Texture = <C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_N_tga>; 
+   Texture = <C__Users_user_Desktop_umodel_win32_UmodelExport_Assets_Character_Female_Head_Textures__F_Head_E_01_N_tga>; 
    MinFilter = Linear; 
    MagFilter = Linear; 
    MipFilter = Linear; 
@@ -74,10 +74,10 @@ VS_OUTPUT VS( VS_INPUT IN )
 float4  PS( VS_OUTPUT vout ) : COLOR 
 { 
    //TODO: Modify the folowing code: 
-   float4 color = tex2D( C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_D_tgaSampler, vout.TexCoord0 ); 
+   float4 color = tex2D( C__Users_user_Desktop_umodel_win32_UmodelExport_Assets_Character_Female_Head_Textures__F_Head_E_01_D_tgaSampler, vout.TexCoord0 ); 
    if(bLight) 
    { 
-     float3 bumpNormal =  2 * tex2D( C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_N_tgaSampler, vout.TexCoord0 ) - 1 ;
+     float3 bumpNormal =  2 * tex2D( C__Users_user_Desktop_umodel_win32_UmodelExport_Assets_Character_Female_Head_Textures__F_Head_E_01_N_tgaSampler, vout.TexCoord0 ) - 1 ;
      float3 LightVector1 = normalize(vout.LightTangentSpace);
      float bump = max(0, dot( bumpNormal, LightVector1 ));
      color.rgb = color.rgb * bump;

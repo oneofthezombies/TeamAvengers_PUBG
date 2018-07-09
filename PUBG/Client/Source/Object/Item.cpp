@@ -7,6 +7,11 @@
 #include "UIImage.h"
 #include "ResourceInfo.h"
 
+const float Item::DEFAULT_BLENDING_TIME = 0.3f;
+const float Item::DEFAULT_NEXT_WEIGHT = 0.0f;
+const float Item::DEFAULT_POSITION = 0.0f;
+const float Item::DEFAULT_FINISH_EVENT_AGO_TIME = 0.0f;
+
 Item::Item(
     const TAG_RES_STATIC tag,
     const D3DXVECTOR3&   position,
@@ -135,6 +140,9 @@ void Item::setup(const TAG_RES_STATIC tag)
             else if (m_tagResStatic == TAG_RES_STATIC::Kar98k)
             {
                 pGunBolt = pSkinnedMeshController->FindFrame("Gun_bolt_02");
+                Set(TAG_ANIM_WEAPON::Weapon_Kar98k_Idle);
+                UpdateAnimation();
+                UpdateModel();
             }
             assert(pGunBolt && "Item::setup(), pGunBolt is null.");
         }
@@ -258,11 +266,79 @@ Frame * Item::GetGunBolt() const
     return pGunBolt;
 }
 
+void Item::UpdateAnimation()
+{
+    if (pSkinnedMeshController)
+    {
+        pSkinnedMeshController->UpdateAnimation();
+    }
+}
+
 void Item::UpdateModel()
 {
     if (pSkinnedMeshController)
     {
         pSkinnedMeshController->UpdateModel();
     }
+}
+
+//for 아이템 자체 애니메이션
+void Item::Set(
+    const TAG_ANIM_WEAPON tag,
+    const bool isBlend, 
+    const float blendingTime,
+    const float nextWeight, 
+    const float position)
+{
+    pSkinnedMeshController->SetAnimation(
+        false,
+        TagAnimation::GetString(tag),
+        TagAnimation::GetSpeed(tag),
+        isBlend,
+        blendingTime,
+        nextWeight,
+        position);
+}
+
+void Item::Set(
+    const TAG_ANIM_WEAPON tag,
+    const bool isBlend,
+    const float blendingTime,
+    const float nextWeight,
+    const float position,
+    const float finishEventAgoTime,
+    const std::function<void()>& finishEvent)
+{
+    pSkinnedMeshController->SetAnimation(
+        false,
+        TagAnimation::GetString(tag),
+        TagAnimation::GetSpeed(tag),
+        isBlend,
+        blendingTime,
+        nextWeight,
+        position,
+        finishEventAgoTime,
+        finishEvent);
+}
+
+void Item::Set(const TAG_ANIM_WEAPON tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float loopEventPeriod, const std::function<void()>& loopEvent, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+{
+    pSkinnedMeshController->SetAnimation(
+        false,
+        TagAnimation::GetString(tag),
+        TagAnimation::GetSpeed(tag),
+        isBlend,
+        blendingTime,
+        nextWeight,
+        position,
+        loopEventPeriod,
+        loopEvent,
+        finishEventAgoTime,
+        finishEvent);
+}
+
+bool Item::HasFinishEvent() const
+{
+    return pSkinnedMeshController->HasFinishEvent();
 }
 

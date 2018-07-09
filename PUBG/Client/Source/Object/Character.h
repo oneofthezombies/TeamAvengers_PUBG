@@ -278,6 +278,7 @@ private:
 
     bool m_isFire;
     bool m_hasChangingState;
+    bool m_isNeedRifleAnim;
 
     WaitBackAction m_backAction;
 

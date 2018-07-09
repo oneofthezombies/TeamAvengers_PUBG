@@ -30,6 +30,7 @@ void SceneLoading::Load()
     //// load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
     load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
     load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
@@ -118,7 +119,7 @@ void SceneLoading::load(const TAG_RES_ANIM_WEAPON tag)
     }
 }
 
-void SceneLoading::load(const TAG_RES_EQUIPMENT tag)
+void SceneLoading::load(const TAG_RES_ANIM_EQUIPMENT tag)
 {
     std::pair<std::string, std::string> pathFilename =
         ResourceInfo::GetPathFileName(tag);
@@ -548,7 +549,7 @@ void SceneLoading::addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks)
     ++m_numTotalTasks;
 }
 
-void SceneLoading::addTask(const TAG_RES_EQUIPMENT tag, tasks_t* OutTasks)
+void SceneLoading::addTask(const TAG_RES_ANIM_EQUIPMENT tag, tasks_t* OutTasks)
 {
     assert(OutTasks && "SceneLoading::addTask(), tasks is null.");
 

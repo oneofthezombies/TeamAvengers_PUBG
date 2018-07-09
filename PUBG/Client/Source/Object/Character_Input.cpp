@@ -264,19 +264,22 @@ void Character::setReload()
                         pAnimation->Set(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Base,
-                            false,
+                            true, //ok
                             CharacterAnimation::DEFAULT_BLENDING_TIME,
                             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                             CharacterAnimation::DEFAULT_POSITION,
-                            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                            0.3f, //ok
                             [this]()
                         {
                             m_hasChangingState = false;
                             pAnimation->Set(
                                 CharacterAnimation::BodyPart::BOTH,
                                 m_lowerAnimState,
-                                false);
+                                true,
+                                0.3f);
                         });
+
+
                     }
                     else if (m_stance == Stance::Prone)
                     {
@@ -284,18 +287,19 @@ void Character::setReload()
                         pAnimation->Set(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Prone,
-                            false,
+                            true, //ok
                             CharacterAnimation::DEFAULT_BLENDING_TIME,
                             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                             CharacterAnimation::DEFAULT_POSITION,
-                            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                            0.3f, //ok
                             [this]()
                         {
                             m_hasChangingState = false;
                             pAnimation->Set(
                                 CharacterAnimation::BodyPart::BOTH,
                                 m_lowerAnimState,
-                                false);
+                                true,
+                                0.3f);
                         });                    
                     }
                 }
@@ -303,45 +307,68 @@ void Character::setReload()
                 {
                     if (inven.m_numReload == 5)
                     {
+                        //총 자체 애니메이션
+                        m_isNeedRifleAnim = true;
+                        inven.m_pHand->Set
+                        (
+                            TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast,
+                            false,
+                            Item::DEFAULT_BLENDING_TIME,
+                            Item::DEFAULT_NEXT_WEIGHT,
+                            Item::DEFAULT_POSITION,
+                            Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+                            [this, &inven]() {
+                            inven.m_pHand->Set(
+                                TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
+                                false);
+                            m_isNeedRifleAnim = false;
+                        });
+
                         // fast reload
                         if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                         {
                             m_hasChangingState = true;
+
+                            //캐릭터 애니메이션
                             pAnimation->Set(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Base,
-                                false,
+                                true,
                                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                                 CharacterAnimation::DEFAULT_POSITION,
-                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                                [this]()
+                                0.3f,
+                                [this, &inven]()
                             {
                                 m_hasChangingState = false;
                                 pAnimation->Set(
                                     CharacterAnimation::BodyPart::BOTH,
                                     m_lowerAnimState,
-                                    false);
+                                    true,
+                                    0.3f);
                             });
                         }
                         else if (m_stance == Stance::Prone)
                         {
                             m_hasChangingState = true;
+                           
+                            //캐릭터 애니메이션
                             pAnimation->Set(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Prone,
-                                false,
+                                true,
                                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                                 CharacterAnimation::DEFAULT_POSITION,
-                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                                0.3f,
                                 [this]()
                             {
                                 m_hasChangingState = false;
                                 pAnimation->Set(
                                     CharacterAnimation::BodyPart::BOTH,
                                     m_lowerAnimState,
-                                    false);
+                                    true, 
+                                    0.3f);
                             });
                         }
                     }
@@ -349,11 +376,11 @@ void Character::setReload()
                     {
                         if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                         {
-                            m_hasChangingState = true;
+                            m_hasChangingState = true;                   
                             pAnimation->Set(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Base,
-                                false,
+                                true,
                                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                                 CharacterAnimation::DEFAULT_POSITION,
@@ -366,11 +393,11 @@ void Character::setReload()
                             pAnimation->Set(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Prone,
-                                false,
+                                true, //ok
                                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                                 CharacterAnimation::DEFAULT_POSITION,
-                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                                0.3f, //ok
                                 std::bind(&Character::onKar98kReload, this));                       
                         }
                     }
@@ -1016,23 +1043,25 @@ Kar98k 재장전 애니메이션 관련
 */
 void Character::onKar98kReloadEnd()
 {
+    //캐릭터의 애니메이션
     if (m_stance == Stance::Stand)
     {
         pAnimation->Set(
             CharacterAnimation::BodyPart::UPPER,
             TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Base,
-            false,
+            false, //ok
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_POSITION,
-            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            0.3f, //ok
             [this]()
         {
             m_hasChangingState = false;
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
-                false);
+                true,
+                0.3f);
         });
     }
     else if (m_stance == Stance::Prone)
@@ -1040,11 +1069,11 @@ void Character::onKar98kReloadEnd()
         pAnimation->Set(
             CharacterAnimation::BodyPart::UPPER,
             TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Prone,
-            false,
+            false, //ok
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_POSITION,
-            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME, //ok
             [this]()
         {
             m_hasChangingState = false;
@@ -1064,6 +1093,7 @@ void Character::onKar98kReload()
     }
     else
     {
+        //캐릭터의 애니메이션
         if (m_stance == Stance::Stand)
         {
             pAnimation->Set(
@@ -1081,11 +1111,11 @@ void Character::onKar98kReload()
             pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Prone,
-                false,
+                true, //ok
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                0.3f, //ok
                 std::bind(&Character::onKar98kReload, this));        
         }
     }
