@@ -658,6 +658,12 @@ void Resource::Manager::AddResource(XContainer* pXContainer)
     SAFE_DELETE(pXContainer);
 }
 
+void Resource::Manager::AddTexture(const const TAG_RES_STATIC tag, const D3DCOLOR colorKey)
+{
+    const auto p = ResourceInfo::GetUIPathFileName(tag);
+    AddTexture(p.first, p.second, colorKey);
+}
+
 void Resource::Manager::AddTexture(const string& path, const string& xFilename, const D3DCOLOR colorKey)
 {
     const string key(path + xFilename);

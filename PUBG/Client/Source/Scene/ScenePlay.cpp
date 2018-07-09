@@ -180,7 +180,6 @@ void ScenePlay::setWithOthersMode()
         pPlayer->PutItemInTotalInventory(item);
     }
 
-
     p = D3DXVECTOR3(80, 0, 10);
     item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
     AddObject(item);

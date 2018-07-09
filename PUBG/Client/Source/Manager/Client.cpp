@@ -79,7 +79,7 @@ void Client::Write()
 Client::Client(
           boost::asio::io_context* pIOContext, 
     const tcp::resolver::results_type& endpoints, 
-          CommunicationManager* pCommunicationManager)
+          Communication::Manager* pCommunicationManager)
     : m_socket(*pIOContext)
     , pIOContext(pIOContext)
     , pCommunicationManager(pCommunicationManager)
@@ -101,20 +101,21 @@ void Client::Close()
     boost::asio::post(*pIOContext, [this]() { m_socket.close(); });
 }
 
-CommunicationManager::CommunicationManager()
-    : Singleton<CommunicationManager>()
+Communication::Manager::Manager()
+    : Singleton<Communication::Manager>()
     , m_pClient(nullptr)
     , m_pThread(nullptr)
     , m_IOContext()
     , m_resolver(m_IOContext)
+    , m_playMode(PlayMode::WITH_OTHERS)
 {
 }
 
-CommunicationManager::~CommunicationManager()
+Communication::Manager::~Manager()
 {
 }
 
-void CommunicationManager::CheckConnection()
+void Communication::Manager::CheckConnection()
 {
     assert(m_pClient && m_pThread && "client or thread is null.");
     assert(
@@ -123,7 +124,7 @@ void CommunicationManager::CheckConnection()
         "my ID is wrong.");
 }
 
-void CommunicationManager::Destroy()
+void Communication::Manager::Destroy()
 {
     if (m_pClient)
         m_pClient->Close();
@@ -135,15 +136,27 @@ void CommunicationManager::Destroy()
     SAFE_DELETE(m_pThread);
 }
 
-void CommunicationManager::Print()
+void Communication::Manager::Print()
 {
 }
 
-void CommunicationManager::Connect(
+void Communication::Manager::SetPlayMode(const PlayMode playMode)
+{
+    m_playMode = playMode;
+}
+
+Communication::PlayMode Communication::Manager::GetPlayMode() const
+{
+    return m_playMode;
+}
+
+void Communication::Manager::Connect(
     const std::string& host, 
     const std::string& port,
     const std::string& nickname)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     auto endpoints = m_resolver.resolve(host, port);
 
     m_pClient = new Client(&m_IOContext, endpoints, this);
@@ -156,10 +169,12 @@ void CommunicationManager::Connect(
     m_pClient->Write(Message::Create(TAG_REQUEST::RECEIVE_MY_ID, nickname));
 }
 
-void CommunicationManager::ReceiveMessage(
+void Communication::Manager::ReceiveMessage(
     const TAG_REQUEST tag, 
     const string& description)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     switch (tag)
     {
     case TAG_REQUEST::RECEIVE_MY_ID:
@@ -305,21 +320,27 @@ void CommunicationManager::ReceiveMessage(
     }
 }
 
-void CommunicationManager::ReceiveID(const int id)
+void Communication::Manager::ReceiveID(const int id)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     m_myInfo.ID = id;
     cout << "Received ID : " << id << '\n';
 }
 
-void CommunicationManager::SendID(const int id)
+void Communication::Manager::SendID(const int id)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     m_roomInfo.playerInfos[id].ID = id;
 
     m_pClient->Write(Message::Create(TAG_REQUEST::SEND_ID, to_string(id)));
 }
 
-void CommunicationManager::SendNickname(const string& nickname)
+void Communication::Manager::SendNickname(const string& nickname)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     m_roomInfo.playerInfos[m_myInfo.ID].nickname = nickname;
 
     stringstream ss;
@@ -327,10 +348,12 @@ void CommunicationManager::SendNickname(const string& nickname)
     m_pClient->Write(Message::Create(TAG_REQUEST::SEND_NICKNAME, ss.str()));
 }
 
-void CommunicationManager::SendPositionAndRotation(
+void Communication::Manager::SendPositionAndRotation(
     const D3DXVECTOR3& p, 
     const D3DXQUATERNION& r)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     m_roomInfo.playerInfos[m_myInfo.ID].position = p;
     m_roomInfo.playerInfos[m_myInfo.ID].rotation = r;
 
@@ -345,8 +368,10 @@ void CommunicationManager::SendPositionAndRotation(
             ss.str()));
 }
 
-void CommunicationManager::SendHeadAngle(const float angle)
+void Communication::Manager::SendHeadAngle(const float angle)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     m_roomInfo.playerInfos[m_myInfo.ID].headAngle = angle;
 
     std::stringstream ss;
@@ -359,9 +384,11 @@ void CommunicationManager::SendHeadAngle(const float angle)
             ss.str()));
 }
 
-void CommunicationManager::SendUpperAnimationIndex(
+void Communication::Manager::SendUpperAnimationIndex(
     const TAG_ANIM_CHARACTER tag)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     const int index = static_cast<int>(tag);
     m_roomInfo.playerInfos[m_myInfo.ID].upperAnimState = index;
 
@@ -374,9 +401,11 @@ void CommunicationManager::SendUpperAnimationIndex(
             ss.str()));
 }
 
-void CommunicationManager::SendLowerAnimationIndex(
+void Communication::Manager::SendLowerAnimationIndex(
     const TAG_ANIM_CHARACTER tag)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     const int index = static_cast<int>(tag);
     m_roomInfo.playerInfos[m_myInfo.ID].lowerAnimState = index;
 
@@ -389,8 +418,10 @@ void CommunicationManager::SendLowerAnimationIndex(
             ss.str()));
 }
 
-void CommunicationManager::SendEventFireBullet(Bullet* pBullet)
+void Communication::Manager::SendEventFireBullet(Bullet* pBullet)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     assert(pBullet && 
         "Communicator::SendEventFireBullet() failed. bullet is null.");
 
@@ -409,10 +440,12 @@ void CommunicationManager::SendEventFireBullet(Bullet* pBullet)
         Message::Create(TAG_REQUEST::SEND_EVENT_FIRE_BULLET, ss.str()));
 }
 
-void CommunicationManager::SendEventSound(
+void Communication::Manager::SendEventSound(
     const TAG_SOUND tag, 
     const D3DXVECTOR3& p)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     const int tagSound = static_cast<int>(tag);
     stringstream ss;
     ss << m_myInfo.ID << p.x << ' ' << p.y << ' ' << p.z << ' ' << tagSound;
@@ -420,10 +453,12 @@ void CommunicationManager::SendEventSound(
     m_pClient->Write(Message::Create(TAG_REQUEST::SEND_EVENT_SOUND, ss.str()));
 }
 
-void CommunicationManager::SendEventMinusDamage(
+void Communication::Manager::SendEventMinusDamage(
     const int id, 
     const float damage)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     m_roomInfo.playerInfos[id].health -= damage;
 
     std::stringstream ss;
@@ -448,4 +483,9 @@ void CommunicationManager::SendIsDead(
         Message::Create(
             TAG_REQUEST::SEND_IS_DEAD,
             ss.str()));
+}
+
+Communication::Manager* Communication::operator()()
+{
+    return Manager::GetInstance();
 }

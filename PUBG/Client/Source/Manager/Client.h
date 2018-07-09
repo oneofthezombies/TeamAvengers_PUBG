@@ -4,65 +4,55 @@
 
 #define g_pCommunication Communication()()
 
-class CommunicationManager;
 class Bullet;
+class Client;
 
-class Client
+struct Communication
 {
-private:
-    tcp::socket m_socket;
-    Message     m_readMsg;
-    Message     m_writeMsg;
+    enum class PlayMode
+    {
+        // for local test
+        ALONE,
 
-    boost::asio::io_context* pIOContext;
-    CommunicationManager*    pCommunicationManager;
+        WITH_OTHERS
+    };
 
-    void Connect(const tcp::resolver::results_type& endpoints);
-    void ReadHeader();
-    void ReadBody();
-    void Write();
+    class Manager : public Singleton<Manager>
+    {
+    public:
+        GameInfo::RoomInfo m_roomInfo;
+        GameInfo::MyInfo   m_myInfo;
 
-public:
-    Client(
-        boost::asio::io_context* pIOContext, 
-        const tcp::resolver::results_type& endpoints, 
-        CommunicationManager* pCommunicationManager);
+    private:
+        boost::asio::io_context m_IOContext;
+        tcp::resolver           m_resolver;
+        Client*                 m_pClient;
+        std::thread*            m_pThread;
+        PlayMode                m_playMode;
 
-    void Write(const Message& msg);
-    void Close();
-};
+    private:
+                 Manager();
+        virtual ~Manager();
 
-class CommunicationManager : public Singleton<CommunicationManager>
-{
-public:
-    GameInfo::RoomInfo m_roomInfo;
-    GameInfo::MyInfo   m_myInfo;
+        void CheckConnection();
 
-private:
-    boost::asio::io_context m_IOContext;
-    tcp::resolver           m_resolver;
-    Client*                 m_pClient;
-    std::thread*            m_pThread;
+    public:
+        void Destroy();
+        void Print();
 
-             CommunicationManager();
-    virtual ~CommunicationManager();
+        void     SetPlayMode(const PlayMode playMode);
+        PlayMode GetPlayMode() const;
 
-    void CheckConnection();
+        void Connect(
+            const std::string& host,
+            const std::string& port,
+            const std::string& nickname);
 
-public:
-    void Destroy();
-    void Print();
+        void ReceiveMessage(const TAG_REQUEST tag, const std::string& description);
 
-    void Connect(
-        const std::string& host, 
-        const std::string& port, 
-        const std::string& nickname);
-
-    void ReceiveMessage(const TAG_REQUEST tag, const std::string& description);
-    
-    void ReceiveID(const int id);
-    void SendID(const int id);
-    void SendNickname(const std::string& nickname);
+        void ReceiveID(const int id);
+        void SendID(const int id);
+        void SendNickname(const std::string& nickname);
 
     void SendPositionAndRotation(
         const D3DXVECTOR3& p, 
@@ -78,10 +68,27 @@ public:
     friend Singleton<CommunicationManager>;
 };
 
-struct Communication
+class Client
 {
-    CommunicationManager* operator()()
-    {
-        return CommunicationManager::GetInstance();
-    }
+private:
+    tcp::socket m_socket;
+    Message     m_readMsg;
+    Message     m_writeMsg;
+
+    boost::asio::io_context* pIOContext;
+    Communication::Manager*  pCommunicationManager;
+
+    void Connect(const tcp::resolver::results_type& endpoints);
+    void ReadHeader();
+    void ReadBody();
+    void Write();
+
+public:
+    Client(
+        boost::asio::io_context* pIOContext,
+        const tcp::resolver::results_type& endpoints,
+        Communication::Manager* pCommunicationManager);
+
+    void Write(const Message& msg);
+    void Close();
 };

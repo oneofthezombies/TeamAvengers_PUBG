@@ -111,7 +111,8 @@ struct Resource
         void Destroy();
 
         void AddResource(XContainer* pXContainer);
-        void AddTexture(const string& path, const string& xFilename, const D3DCOLOR colorKey);
+        void AddTexture(const string& path, const string& xFilename, const D3DCOLOR colorKey = 0);
+        void AddTexture(const const TAG_RES_STATIC tag, const D3DCOLOR colorKey = 0);
 
         LPD3DXFONT GetFont(const TAG_FONT tag);
 
