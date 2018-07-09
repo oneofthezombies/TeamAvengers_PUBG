@@ -486,7 +486,37 @@ void Character::RifleShooting()
         BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_COLLISION::Impassable);
         break;
     case TAG_RES_STATIC::Kar98k:
-        BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_COLLISION::Impassable);
+        {
+            BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_COLLISION::Impassable);
+            
+            //Kar98k BoltAction Animation
+            TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+            if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
+                tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Base;
+            else if (m_stance == Stance::Prone)
+                tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone;
+
+            assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::RifleShooting(), tagAnim is COUNT");
+
+            m_hasChangingState = true;
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::UPPER,
+                tagAnim,
+                true, //ok
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_POSITION,
+                0.3f, //ok
+                [this]()
+            {
+                m_hasChangingState = false;
+                pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    m_lowerAnimState,
+                    true,
+                    0.3f);
+            });
+        }
         break;
     }
 }
