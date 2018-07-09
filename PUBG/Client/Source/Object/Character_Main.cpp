@@ -377,7 +377,8 @@ void Character::updateMine()
     {
         if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_pHand->GetNumBullet() > 0)
         {
-            m_isFire = true;
+            if(m_hasChangingState == false) //장전 중일 때는 쏘지못하게
+                m_isFire = true;
             //rifleShooting();
             //pistolShooting();?? 이란것도 나중에는 만들겠지요?
         }
