@@ -238,6 +238,20 @@ void CommunicationManager::ReceiveMessage(
                 std::stoi(lowerIndexStr);
         }
         break;
+    case TAG_REQUEST::SEND_IS_DEAD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& isDeadStr = parsedDesc.second;
+
+            std::stringstream ss(isDeadStr);
+            int isDeadID;
+            int isDeadInt;
+
+            ss >> isDeadID >> isDeadInt;
+            m_roomInfo.playerInfos[isDeadID].isDead = isDeadInt ? true : false;
+        }
+        break;
     case TAG_REQUEST::SEND_EVENT_FIRE_BULLET:
         {
             auto parsedDesc = Message::ParseDescription(description);
@@ -418,5 +432,20 @@ void CommunicationManager::SendEventMinusDamage(
     m_pClient->Write(
         Message::Create(
             TAG_REQUEST::SEND_EVENT_MINUS_DAMAGE, 
+            ss.str()));
+}
+
+void CommunicationManager::SendIsDead(
+    const int id, 
+    bool isDead)
+{
+    m_roomInfo.playerInfos[id].isDead = isDead;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << isDead;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_IS_DEAD,
             ss.str()));
 }

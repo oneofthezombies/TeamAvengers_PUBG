@@ -22,6 +22,8 @@ Character::Character(const int index)
     , m_index(index)
     , m_cellIndex(0)
     , m_health(100.0f)
+    , m_isDead(false)
+
     , m_mouseInput()
     , m_rootTransform(1.0f)
     , m_waistRotation(0.5f/*, 1.0f*/)
@@ -103,6 +105,8 @@ void Character::OnUpdate()
     const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
     if (receivedHealth < m_health)
         m_health = receivedHealth;
+
+    m_isDead = Communication()()->m_roomInfo.playerInfos[m_index].isDead;
 
     updateMine();
     updateOther();
@@ -202,6 +206,43 @@ void Character::OnRender()
 void Character::updateMine()
 {
     if (!isMine()) return;
+
+    //Dead logic
+    if (m_isDead) return;
+
+    if (m_health <= 0.0f)
+    {
+        TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+        if (m_stance == Stance::Stand)
+            tagAnim = TAG_ANIM_CHARACTER::DBNO_Enter;
+        else if (m_stance == Stance::Crouch)
+            tagAnim = TAG_ANIM_CHARACTER::DBNO_Enter_From_Crouch;
+        else if (m_stance == Stance::Prone)
+            tagAnim = TAG_ANIM_CHARACTER::DBNO_Enter_From_Prone;
+
+        assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::updateMine(), tagAnim is COUNT");
+
+        pAnimation->Set(
+        CharacterAnimation::BodyPart::BOTH,
+        tagAnim,
+            true,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION,
+            0.3f,
+            [this]() {
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::DBNO_Idle,
+                true,
+                0.3f);
+        });
+
+        Communication()()->SendIsDead(m_index, true);
+        m_isDead = true;
+    }
+
+
 
     const float    dt = Time()()->GetDeltaTime();
     IScene*        pCurrentScene = CurrentScene()();

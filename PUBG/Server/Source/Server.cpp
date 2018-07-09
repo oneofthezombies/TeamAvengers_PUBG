@@ -284,6 +284,22 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MINUS_DAMAGE, description));
         }
         break;
+    case TAG_REQUEST::SEND_IS_DEAD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& isDeadStr = parsedDesc.second;
+
+            std::stringstream ss(isDeadStr);
+            int isDeadID;
+            int isDeadInt;
+
+            ss >> isDeadID >> isDeadInt;
+            pRoom->m_roomInfo.playerInfos[isDeadID].isDead = isDeadInt ? true : false;
+
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_IS_DEAD, description));
+        }
+        break;
     }
 }
 

@@ -233,11 +233,12 @@ public:
 private:
 
     // id
-    int m_index;
-    std::size_t m_cellIndex;
-    float m_health;
+    int                 m_index;
+    std::size_t         m_cellIndex;
+    float               m_health;
+    bool                m_isDead;
 
-    CharacterAnimation* pAnimation;
+    CharacterAnimation*    pAnimation;
     vector<CharacterPart*> m_characterParts;
 
     //
