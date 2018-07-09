@@ -30,9 +30,9 @@ void ScenePlay::setAloneMode()
 
 
 
-    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(500.0f, 100.0f, 500.0f), Vector3::ZERO, Vector3::ONE);
+    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(2000.0f, 100.0f, 2000.0f), Vector3::ZERO, Vector3::ONE);
     D3DXMATRIX m;
-    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &Quaternion::IDENTITY, &D3DXVECTOR3(500.0f, 100.0f, 500.0f));
+    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &Quaternion::IDENTITY, &D3DXVECTOR3(2000.0f, 100.0f, 2000.0f));
     tf->AddBoundingBox(m);
     AddObject(tf);
 
@@ -180,7 +180,7 @@ void ScenePlay::OnInit()
     //cell space partitioning
     m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
 
-    //LoadObjectsFromFile("./Resource/save.txt");
+    LoadObjectsFromFile("./Resource/save.txt");
 
     // No id received
     if (Communication()()->m_MyInfo.m_ID == -1)

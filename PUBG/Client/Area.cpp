@@ -70,3 +70,14 @@ std::vector<TerrainFeature*> Area::GetTerrainFeatures()
     }
     return vTerrainFeatures;
 }
+
+std::vector<Item*> Area::GetItems()
+{
+    std::vector<Item*> vItems;
+    for (std::size_t i = 0; i < m_cellspaces.size(); i++)
+    {
+        auto& set = m_cellspaces[i]->pItems;
+        vItems.insert(vItems.end(), set.begin(), set.end());
+    }
+    return vItems;
+}
