@@ -91,10 +91,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //character0->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(70, 0, 10);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(70, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(80, 0, 10);
     //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);

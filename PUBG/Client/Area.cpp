@@ -81,3 +81,13 @@ std::vector<Item*> Area::GetItems()
     }
     return vItems;
 }
+
+//void Area::ItemIntoInventory(size_t index, Item * obj)
+//{
+//    auto search = m_cellspaces[index]->pItems.find(obj);
+//    if (search != m_cellspaces[index]->pItems.end())
+//        assert(false && "Area::ItemIntoInventory(), cannot find Item ");
+//
+//    // Cell Space 에서 item을 빼서 inventory에 넣는다.
+//    m_cellspaces[index]->pItems.erase(obj); 
+//}

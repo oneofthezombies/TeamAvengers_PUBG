@@ -17,6 +17,7 @@ public:
     std::vector<IObject*> GetBullets();
     std::vector<TerrainFeature*> GetTerrainFeatures();
     std::vector<Item*> GetItems();
+    //void ItemIntoInventory(size_t index, Item* obj);
     bool checkValid(int v);
 };
 

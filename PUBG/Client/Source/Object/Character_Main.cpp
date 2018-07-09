@@ -201,7 +201,7 @@ void Character::updateMine()
     IScene*        pCurrentScene = CurrentScene()();
     Transform* tm = GetTransform();
 
-    //INPUT CONTROL // m_currentStayKey으로 사용
+    //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
     handleMouse(dt, &m_mouseInput);
@@ -282,15 +282,23 @@ void Character::updateMine()
 
 
 
-    //Item 과의 sphere 충돌 체크
+    //Item Spher와 character sphere 충돌 체크
     auto itms(pCurrentScene->m_NearArea.GetItems());    //이 auto를 copy가 아닌 reference로 받는 방법은???
     for (auto itm : itms)
     {
-        //Debug << "Item !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
         if (!Collision::HasCollision(m_boundingSphere, itm->GetBoundingSphere())) continue;
+        //캐릭터와 Item의 spehre 가 충돌이 났다
+        
+        
+        // UI로 F key가 나오게 하기 
 
-
-        int i = 0;
+        
+        if (m_currentOnceKey._F)
+        {
+            PutItemInTotalInventory(itm); //inventory에 넣기
+            //current scene 에서 지우기
+            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
+        }
     }
 
 

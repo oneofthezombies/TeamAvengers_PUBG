@@ -395,10 +395,19 @@ void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIn
     }
 }
 
-bool IScene::IsMovable(const D3DXVECTOR3 * targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject * obj)// 갈 수 있는지
+void IScene::ItemIntoInventory(size_t index, Item * obj)
 {
-
-
-
-    return false;
+    auto search = m_TotalCellSpaces[index].pItems.find(obj);
+    if (search == m_TotalCellSpaces[index].pItems.end())
+        assert(false && "Area::ItemIntoInventory(), cannot find Item ");
+    // Total Cell Space 에서 item을 빼서 inventory에 넣는다.
+    m_TotalCellSpaces[index].pItems.erase(obj);
 }
+
+//bool IScene::IsMovable(const D3DXVECTOR3 * targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject * obj)// 갈 수 있는지
+//{
+//
+//
+//
+//    return false;
+//}
