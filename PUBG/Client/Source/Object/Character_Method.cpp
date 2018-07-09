@@ -284,11 +284,12 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
             D3DXQUATERNION q;
             D3DXQuaternionRotationYawPitchRoll(&q, mouseInput->yaw, 0.0f, 0.0f);
             *OutRotation *= q;
+
+            //D3DXQUATERNION q;
+            //D3DXQuaternionRotationYawPitchRoll(&q, m_rotationForCamera.y, 0, 0);
+            //*OutRotation = q;
+            //m_waistRotation.m_angle = 0;
             
-            //m_rotationForCamera.y;
-            //D3DXQuaternionRotationAxis()
-            
-            //*OutRotation = Character::OFFSET_ROTATION;
         }
         else
         {
