@@ -33,7 +33,7 @@ void ScenePlay::setAloneMode()
 
 
 
-    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(2000.0f, 100.0f, 2000.0f), Vector3::ZERO, Vector3::ONE);
+    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(2000.0f, 100.0f, 2000.0f), Vector3::UP, Vector3::ONE * 0.7f);
     D3DXMATRIX m;
     D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &Quaternion::IDENTITY, &D3DXVECTOR3(2000.0f, 100.0f, 2000.0f));
     tf->AddBoundingBox(m);
