@@ -134,6 +134,9 @@ void Item::setup(const TAG_RES_STATIC tag)
             else if (m_tagResStatic == TAG_RES_STATIC::Kar98k)
             {
                 pGunBolt = pSkinnedMeshController->FindFrame("Gun_bolt_02");
+                Set(TAG_ANIM_WEAPON::Weapon_Kar98k_Idle);
+                UpdateAnimation();
+                UpdateModel();
             }
             assert(pGunBolt && "Item::setup(), pGunBolt is null.");
         }

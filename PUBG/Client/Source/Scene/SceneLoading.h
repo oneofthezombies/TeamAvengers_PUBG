@@ -85,12 +85,12 @@ private:
 
     void addTask(const TAG_RES_STATIC         tag, tasks_t* OutTasks);
     void addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks);
-    void addTask(const TAG_RES_EQUIPMENT      tag, tasks_t* OutTasks);
+    void addTask(const TAG_RES_ANIM_EQUIPMENT      tag, tasks_t* OutTasks);
     void addTask(const TAG_RES_ANIM_WEAPON    tag, tasks_t* OutTasks);
 
     void load(const TAG_RES_STATIC         tag);
     void load(const TAG_RES_ANIM_WEAPON    tag);
-    void load(const TAG_RES_EQUIPMENT      tag);
+    void load(const TAG_RES_ANIM_EQUIPMENT tag);
     void load(const TAG_RES_ANIM_CHARACTER tag);
     void addAnimation(const TAG_RES_ANIM_CHARACTER tag);
 

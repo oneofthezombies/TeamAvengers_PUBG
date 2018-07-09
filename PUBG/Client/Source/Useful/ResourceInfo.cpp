@@ -618,14 +618,14 @@ pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_CHARACTER 
     return make_pair("./Resource/Anim/Character/", fileName + ".X");
 }
 
-pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_EQUIPMENT tag)
+pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_EQUIPMENT tag)
 {
     string path("");
     string filename("");
 
     switch (tag)
     {
-    case TAG_RES_EQUIPMENT::Head_Lv1_Anim: 
+    case TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim: 
         path = getPath(tag); 
         filename = getFilename(tag); 
         break;
@@ -748,12 +748,12 @@ TAG_RES_ANIM_WEAPON ResourceInfo::GetTagResAnimWeapon(const TAG_RES_STATIC tag)
     }
 }
 
-string ResourceInfo::getPath(const TAG_RES_EQUIPMENT tag)
+string ResourceInfo::getPath(const TAG_RES_ANIM_EQUIPMENT tag)
 {
     string base("./Resource/Anim/Item/Equipment/");
     switch (tag) 
     {
-    case TAG_RES_EQUIPMENT::Head_Lv1_Anim: return base + "Head_Lv1_Anim/";
+    case TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim: return base + "Head_Lv1_Anim/";
     default: 
     {
         assert(false && "ResourceInfo::getPath(), default case.");
@@ -762,11 +762,11 @@ string ResourceInfo::getPath(const TAG_RES_EQUIPMENT tag)
     }
 }
 
-string ResourceInfo::getFilename(const TAG_RES_EQUIPMENT tag)
+string ResourceInfo::getFilename(const TAG_RES_ANIM_EQUIPMENT tag)
 {
     switch (tag)
     {
-    case TAG_RES_EQUIPMENT::Head_Lv1_Anim: return "Head_Lv1_Anim.X";
+    case TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim: return "Head_Lv1_Anim.X";
     default:
     {
         assert(false && "ResourceInfo::getFilename(), default case.");
