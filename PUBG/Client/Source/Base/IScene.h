@@ -99,7 +99,8 @@ public:
     void InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObject* obj);
     std::size_t GetCellIndex(const D3DXVECTOR3& position);
     void MoveCell(OUT std::size_t* currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject* obj);
-    bool IsMovable(const D3DXVECTOR3* targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject* obj);
+    void ItemIntoInventory(size_t index, Item* obj);
+    //bool IsMovable(const D3DXVECTOR3* targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject* obj);
 
     virtual void OnInit() = 0;
 	virtual void OnUpdate() = 0;

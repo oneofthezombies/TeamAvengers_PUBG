@@ -30,9 +30,12 @@ void ScenePlay::setAloneMode()
     //m_others.emplace_back(pOther);
     //AddObject(pOther);
 
-    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(500.0f, 100.0f, 500.0f), Vector3::ZERO, Vector3::ONE);
+
+
+
+    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(2000.0f, 100.0f, 2000.0f), Vector3::ZERO, Vector3::ONE);
     D3DXMATRIX m;
-    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &Quaternion::IDENTITY, &D3DXVECTOR3(500.0f, 100.0f, 500.0f));
+    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &Quaternion::IDENTITY, &D3DXVECTOR3(2000.0f, 100.0f, 2000.0f));
     tf->AddBoundingBox(m);
     AddObject(tf);
 
@@ -86,10 +89,10 @@ void ScenePlay::setAloneMode()
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(70, 0, 10);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(70, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(70, 0, 30);
     item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
@@ -111,10 +114,10 @@ void ScenePlay::setAloneMode()
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(100, 0, 10);
-    item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(100, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(110, 0, 10);
     //item = new Item(TAG_RES_STATIC::RedDot, p, r, s);
@@ -222,7 +225,6 @@ void ScenePlay::OnInit()
 
     //cell space partitioning
     m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
-    //m_NearArea.Create(3);
 
     LoadObjectsFromFile("./Resource/save.txt");
 

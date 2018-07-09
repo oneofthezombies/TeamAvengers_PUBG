@@ -13,7 +13,6 @@ Character::Info* ICamera::GetTargetInfo()//(전)TargetTransform* GetTarget()
 ICamera::ICamera(const TAG_CAMERA tag)
     : MemoryAllocator()
     , m_tagCamera(tag)
-    //, m_position(Vector3::ZERO)
     , m_eye(Vector3::ZERO)
 {
     m_look = m_eye + D3DXVECTOR3(0, 1, 0);
@@ -25,7 +24,7 @@ ICamera::ICamera(const TAG_CAMERA tag)
     m_vecProj[3]=(D3DXVECTOR3(1, 1, 0));	//우상전
     m_vecProj[4]=(D3DXVECTOR3(-1, -1, 1));	//좌하후
     m_vecProj[5]=(D3DXVECTOR3(1, -1, 1));	//우하후
-    m_vecProj[6]=(D3DXVECTOR3(-1, -1, 0));	//좌하전
+    m_vecProj[6]=(D3DXVECTOR3(-1, -1, 0));	//좌하전 
     m_vecProj[7]=(D3DXVECTOR3(1, -1, 0));	//우하전
 }
 

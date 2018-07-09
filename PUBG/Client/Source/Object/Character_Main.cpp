@@ -24,8 +24,8 @@ Character::Character(const int index)
     , m_health(100.0f)
     , m_mouseInput()
     , m_rootTransform(1.0f)
-    , m_waistRotation(0.8f, 0.1f)
-    , m_headRotation(0.8f, 0.1f)
+    , m_waistRotation(0.5f/*, 1.0f*/)
+    , m_headRotation(1.0f/*, 0.1f*/)
 
     , m_framePtr()
     , m_info()
@@ -106,6 +106,7 @@ void Character::OnUpdate()
 
     updateMine();
     updateOther();
+
 
     // update
     GetTransform()->Update();
@@ -206,7 +207,7 @@ void Character::updateMine()
     IScene*        pCurrentScene = CurrentScene()();
     Transform* tm = GetTransform();
 
-    //이곳에서 Input을 넣습니다 그리고 m_currentStayKey으로 사용
+    //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
     handleMouse(dt, &m_mouseInput);
@@ -220,7 +221,10 @@ void Character::updateMine()
 
     movementControl(&destState);
 
-    // 충돌체크////////////////////////////
+    
+    //////////////////////////////////////////////////
+    /////////////// Terrain과의 충돌체크///////////////
+    //////////////////////////////////////////////////
     bool hasCollision = false;
     auto tfs(pCurrentScene->m_NearArea.GetTerrainFeatures());
     for (auto tf : tfs)
@@ -292,6 +296,33 @@ void Character::updateMine()
             pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
         }
     }
+    //////////////////////////////////////////////////
+
+
+
+    //////////////////////////////////////////////////
+    /////////////// Item 과의 충돌체크/////////////////
+    //////////////////////////////////////////////////
+    //Item Spher와 character sphere 충돌 체크
+    auto itms(pCurrentScene->m_NearArea.GetItems());    //이 auto를 copy가 아닌 reference로 받는 방법은???
+    for (auto itm : itms)
+    {
+        if (!Collision::HasCollision(m_boundingSphere, itm->GetBoundingSphere())) continue;
+        //캐릭터와 Item의 spehre 가 충돌이 났다
+        
+        
+        // UI로 F key가 나오게 하기 
+
+        
+        if (m_currentOnceKey._F)
+        {
+            PutItemInTotalInventory(itm); //inventory에 넣기
+            //current scene 에서 지우기
+            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
+        }
+    }
+    //////////////////////////////////////////////////
+
 
     setStance();
     setAttacking();
@@ -361,7 +392,7 @@ void Character::updateMine()
     D3DXVECTOR3 pos = tm->GetPosition();
     D3DXQUATERNION rot = tm->GetRotation();
 
-    headNArmRotation(&m_mouseInput); //마우스 위아래 -> 케릭터 머리와 팔 위 아래로 움직임
+    characterRotation(&m_mouseInput); //마우스 위아래 -> 케릭터 머리와 팔 위 아래로 움직임
     cameraCharacterRotation(dt, &rot, &m_mouseInput);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
     
