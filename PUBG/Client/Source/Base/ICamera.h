@@ -28,8 +28,7 @@ private:    //fustum Culling
     };
 
 protected:  //Camera Position Rotation Fov
-    
-    //D3DXQUATERNION      m_quarernion;
+
     D3DXMATRIX          m_worldMatrix;
     float               m_fovY;
     D3DXVECTOR3         m_eye;

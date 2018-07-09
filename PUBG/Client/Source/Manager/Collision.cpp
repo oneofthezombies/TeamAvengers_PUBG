@@ -476,7 +476,7 @@ bool Collision::HasCollision(
     const BoundingSphere& lhs,
     const BoundingSphere& rhs)
 {
-    return D3DXVec3Length(&(lhs.center - rhs.center)) <=
+    return D3DXVec3Length(&((lhs.center+lhs.position) - (rhs.center+rhs.position))) <=
         lhs.radius + rhs.radius;
 }
 

@@ -11,16 +11,17 @@
 #include "ScenePlay.h"
 #include "Ballistics.h"
 
-Character::WaistRotation::WaistRotation(const float limit, const float factor)
+Character::WaistRotation::WaistRotation(const float limit/*, const float factor*/)
     : LIMIT_OF_ANGLE(limit)
-    , QUANTITY_FACTOR(factor)
+    //, QUANTITY_FACTOR(factor)
     , m_angle(0.0f)
+    , m_limit(false)
 {
 }
 
-Character::HeadRotation::HeadRotation(const float limit, const float factor)
+Character::HeadRotation::HeadRotation(const float limit/*, const float factor*/)
     : LIMIT_OF_ANGLE(limit)
-    , QUANTITY_FACTOR(factor)
+    //, QUANTITY_FACTOR(factor)
     , m_angle(0.0f)
 {
 }
@@ -282,8 +283,10 @@ void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizo
 void Character::headNArmRotation(MouseInput* mouseInput)
 {
     ////케릭터 머리 Frame 움직이기
-    //rotateWaist(-mouseInput.pitch);
     rotateHead(-mouseInput->pitch);
+    //캐릭터 허리 움직이기
+    if (!m_currentStayKey._LAlt)
+        rotateWaist(mouseInput->yaw);
 }
 
 void Character::backActionFrame()
@@ -340,10 +343,28 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     }
     else // isPressing_LAlt == false
     {
-        D3DXQUATERNION q;
-        D3DXQuaternionRotationYawPitchRoll(&q, mouseInput->yaw, 0.0f, 0.0f);
-        *OutRotation *= q;
+        if (m_waistRotation.m_limit)
+        {
+            D3DXQUATERNION q;
+            D3DXQuaternionRotationYawPitchRoll(&q, mouseInput->yaw, 0.0f, 0.0f);
+            *OutRotation *= q;
+
+            //D3DXQUATERNION q;
+            //D3DXQuaternionRotationYawPitchRoll(&q, m_rotationForCamera.y, 0, 0);
+            //*OutRotation = q;
+            //m_waistRotation.m_angle = 0;
+            
+        }
+        else
+        {
+            m_rotationForCamera.y += mouseInput->yaw;
+        }
+
         m_rotationForCamera.x += -mouseInput->pitch;
+
+
+        Debug << "OutRotation : " << *OutRotation << endl;
+        Debug << "m_RotationForCamrera" << m_rotationForCamera << endl;
         // reset rotFotCameraTP
         if (tempBool)
         {
@@ -355,10 +376,15 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
 
 
     //Limiting camera Pitch 
-    if (m_rotationForCamera.x < -0.8f)
-        m_rotationForCamera.x = -0.8f;
-    else if (m_rotationForCamera.x > 0.8f)
-        m_rotationForCamera.x = 0.8f;
+    if (m_rotationForCamera.x < -1.0f)
+        m_rotationForCamera.x = -1.0f;
+    else if (m_rotationForCamera.x > 1.0f)
+        m_rotationForCamera.x = 1.0f;
+
+    //if (m_rotationForCamera.x < -0.8f)
+    //    m_rotationForCamera.x = -0.8f;
+    //else if (m_rotationForCamera.x > 0.8f)
+    //    m_rotationForCamera.x = 0.8f;
 
 
 
@@ -830,10 +856,10 @@ void Character::updateBone()
     }
     
 
-
-
-    //D3DXMatrixRotationY(&r, m_waistRotation.m_angle);
-    //m_framePtr.pWaist->TransformationMatrix *= r;
+    //허리 rotation 돌리는것
+    D3DXMATRIX rWaist;
+    D3DXMatrixRotationX(&rWaist, m_waistRotation.m_angle);
+    m_framePtr.pWaist->TransformationMatrix *= rWaist;
 
     // for root motion animation
     m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
@@ -862,13 +888,24 @@ void Character::communicate()
 void Character::rotateWaist(const float quantity)
 {
     auto& wr = m_waistRotation;
+    wr.m_limit = false;
 
-    wr.m_angle += quantity;
+    wr.m_angle += quantity/** m_waistRotation.QUANTITY_FACTOR*/;
 
     if (wr.m_angle < -wr.LIMIT_OF_ANGLE)
+    {
         wr.m_angle = -wr.LIMIT_OF_ANGLE;
+        wr.m_limit = true;
+        //wr.m_angle = 0;
+    }
+        
     else if (wr.m_angle > wr.LIMIT_OF_ANGLE)
+    {
         wr.m_angle = wr.LIMIT_OF_ANGLE;
+        wr.m_limit = true;
+        //wr.m_angle = 0;
+    }
+        
 }
 
 void Character::rotateHead(const float quantity)

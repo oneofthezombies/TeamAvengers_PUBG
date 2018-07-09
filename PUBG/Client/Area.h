@@ -18,6 +18,8 @@ public:
     std::vector<Bullet*>         GetBullets();
     std::vector<TerrainFeature*> GetTerrainFeatures();
     std::vector<Character*>      GetCharacters();
+    std::vector<Item*> GetItems();
+    //void ItemIntoInventory(size_t index, Item* obj);
     bool checkValid(int v);
 };
 

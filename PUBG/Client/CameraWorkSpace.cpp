@@ -95,7 +95,7 @@ void CameraThirdPerson::Update()
 
         D3DXMATRIX baseY, baseZ;
         D3DXMatrixTranslation(&baseY, -20.0f, 180.0f, 0.0f);
-        D3DXMatrixTranslation(&baseZ, 0.0f, 0.0f, 75.0f);
+        D3DXMatrixTranslation(&baseZ, 0.0f, 0.0f, 85.0f);
         m_worldMatrix 
             = baseZ 
             * tarR
