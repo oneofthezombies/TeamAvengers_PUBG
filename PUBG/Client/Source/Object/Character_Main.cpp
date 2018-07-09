@@ -373,34 +373,23 @@ void Character::updateMine()
     m_isFire = false;
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
-    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton)
+    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton && !m_currentStayKey._LAlt 
+        || (m_attacking == Attacking::Rifle && m_totalInventory.m_pHand->GetAuto()
+        && TAG_RES_STATIC::QBZ == m_totalInventory.m_pHand->GetTagResStatic() && m_currentStayKey._LButton && !m_currentStayKey._LAlt))
     {
         if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_pHand->GetNumBullet() > 0)
         {
             m_isFire = true;
+            backAction(&rot);
+
             //rifleShooting();
             //pistolShooting();?? 이란것도 나중에는 만들겠지요?
         }
     }
-
-    //sh tset
-    if (Input()()->IsOnceKeyDown('B'))
+    if (m_backAction.Ing)
     {
-        Sound()()->SetPosition(D3DXVECTOR3(0, 0, 100));
-        Sound()()->SetVolume(0.8f);
-        Sound()()->Play(TAG_SOUND::Kar98_NormalShoot);
+        backActionFrame();
     }
-    
-    if (Input()()->IsOnceKeyDown('N'))
-    {
-        //Sound()()->Play(TAG_SOUND::Kar98_BoltMove0, (D3DXVECTOR3(0, 0, -100)), 0.5f, FMOD_3D);
-        //Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)));
-        Sound()()->addPlay(TAG_SOUND::Kar98_NormalShoot, (D3DXVECTOR3(0, 0, -100)), 5.0f, FMOD_3D);
-    }
-
-    //cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
-    //applyTarget_Y_Position(&pos); //apply height and control jumping
-    ////케릭터와 카메라의 rotation을 계산해서 넣게 된다.
 
     //인벤토리 UI 활성화
     if (m_currentOnceKey._Tab)
@@ -418,29 +407,29 @@ void Character::updateMine()
     m_totalInventory.Update();
     m_totalInventory.Render();
 
-    if (m_currentOnceKey._B && m_totalInventory.m_hand!=NULL)
+    if (m_currentOnceKey._B && m_totalInventory.m_pHand !=NULL)
     {
-        m_totalInventory.m_hand->ChangeAuto();
+        m_totalInventory.m_pHand->ChangeAuto();
     }
 
-    m_totalInventory.m_bulletFireCoolDown -= dt;
-    if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
-    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton && !m_currentStayKey._LAlt
-        || (m_attacking == Attacking::Rifle && m_totalInventory.m_hand->GetAuto()
-            && TAG_RES_STATIC::QBZ == m_totalInventory.m_hand->GetTagResStatic() && m_currentStayKey._LButton && !m_currentStayKey._LAlt))
-    {
-        if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_hand->GetNumBullet() > 0)
-        {
-            rifleShooting();
-            backAction(&rot);
-            //pistolShooting();?? 이란것도 나중에는 만들겠지요?
-        }
-    }
+    //m_totalInventory.m_bulletFireCoolDown -= dt;
+    //if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
+    //if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton && !m_currentStayKey._LAlt
+    //    || (m_attacking == Attacking::Rifle && m_totalInventory.m_pHand->GetAuto()
+    //        && TAG_RES_STATIC::QBZ == m_totalInventory.m_pHand->GetTagResStatic() && m_currentStayKey._LButton && !m_currentStayKey._LAlt))
+    //{
+    //    if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_pHand->GetNumBullet() > 0)
+    //    {
+    //        RifleShooting();
+    //        backAction(&rot);
+    //        //pistolShooting();?? 이란것도 나중에는 만들겠지요?
+    //    }
+    //}
 
-    if (m_backAction.Ing)
-    {
-        backActionFrame();
-    }
+    //if (m_backAction.Ing)
+    //{
+    //    backActionFrame();
+    //}
 
     Sound()()->Listen(pos, getForward());
 

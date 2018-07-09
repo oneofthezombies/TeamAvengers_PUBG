@@ -48,7 +48,7 @@ public:
         UIImage* m_Border;
         UIText*  m_Text;
 
-        Item* m_hand; //손에 든 무기
+        Item* m_pHand; //손에 든 무기
         bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
 
         static const float DEFAULT_CAPACITY;

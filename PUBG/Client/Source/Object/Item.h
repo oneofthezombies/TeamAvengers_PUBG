@@ -75,10 +75,10 @@ public:
     void ChangeAuto();
     bool GetAuto();
 
-    Frame* GetGunBolt() const
-    {
-        return pGunBolt;
-    }
+    //Frame* GetGunBolt() const
+    //{
+    //    return pGunBolt;
+    //}
 
     void UpdateModel();
 };
