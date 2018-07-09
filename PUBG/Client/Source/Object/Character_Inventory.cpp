@@ -216,6 +216,7 @@ void Character::TotalInventory::Render()
 void Character::PutItemInTotalInventory(Item* item)
 {
     assert(item && "Character::PutItemInTotalInventory(), item is null.");
+    ShowTotalInventory();
 
     TAG_RES_STATIC tag = item->GetTagResStatic();
     TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(tag);

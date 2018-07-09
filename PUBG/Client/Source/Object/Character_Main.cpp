@@ -365,9 +365,7 @@ void Character::updateMine()
     cameraCharacterRotation(dt, &rot, &m_mouseInput);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
     
-    
-    tm->SetPosition(pos);
-    tm->SetRotation(rot);
+
 
     // shoot!
     m_isFire = false;
@@ -391,6 +389,8 @@ void Character::updateMine()
         backActionFrame();
     }
 
+    tm->SetPosition(pos);
+    tm->SetRotation(rot);
     //인벤토리 UI 활성화
     if (m_currentOnceKey._Tab)
     {
