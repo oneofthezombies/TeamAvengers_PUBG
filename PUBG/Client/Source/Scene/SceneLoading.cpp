@@ -16,6 +16,7 @@ void SceneLoading::Load()
     // alone       -> no network
     // with others -> login to network
     setPlayMode(PlayMode::WITH_OTHERS);
+    //setPlayMode(PlayMode::ALONE);
 
     //// load effect meshs
     load(TAG_RES_STATIC::SkySphere);
