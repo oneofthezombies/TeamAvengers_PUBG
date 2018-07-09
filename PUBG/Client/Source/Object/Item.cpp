@@ -263,7 +263,7 @@ void Item::UpdateModel()
     }
 }
 
-//for animation test 
+//for 아이템 자체 애니메이션
 void Item::Set(
     const TAG_ANIM_WEAPON tag,
     const bool isBlend, 
@@ -298,6 +298,22 @@ void Item::Set(
         blendingTime,
         nextWeight,
         position,
+        finishEventAgoTime,
+        finishEvent);
+}
+
+void Item::Set(const TAG_ANIM_WEAPON tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float loopEventPeriod, const std::function<void()>& loopEvent, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+{
+    pSkinnedMeshController->SetAnimation(
+        false,
+        TagAnimation::GetString(tag),
+        TagAnimation::GetSpeed(tag),
+        isBlend,
+        blendingTime,
+        nextWeight,
+        position,
+        loopEventPeriod,
+        loopEvent,
         finishEventAgoTime,
         finishEvent);
 }

@@ -307,27 +307,28 @@ void Character::setReload()
                 {
                     if (inven.m_numReload == 5)
                     {
+                        //총 자체 애니메이션
+                        m_isNeedRifleAnim = true;
+                        inven.m_pHand->Set
+                        (
+                            TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast,
+                            false,
+                            Item::DEFAULT_BLENDING_TIME,
+                            Item::DEFAULT_NEXT_WEIGHT,
+                            Item::DEFAULT_POSITION,
+                            Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+                            [this, &inven]() {
+                            inven.m_pHand->Set(
+                                TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
+                                false);
+                            m_isNeedRifleAnim = false;
+                        });
+
                         // fast reload
                         if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                         {
-                            //총 자체 애니메이션
                             m_hasChangingState = true;
-                            m_isNeedRifleAnim = true;
-                            inven.m_pHand->Set
-                            (
-                                TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast,
-                                false,
-                                Item::DEFAULT_BLENDING_TIME,
-                                Item::DEFAULT_NEXT_WEIGHT,
-                                Item::DEFAULT_POSITION,
-                                Item::DEFAULT_FINISH_EVENT_AGO_TIME,
-                                [this, &inven]() {
-                                inven.m_pHand->Set(
-                                    TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
-                                    false);
-                                m_isNeedRifleAnim = false;
-                            });
-                            
+
                             //캐릭터 애니메이션
                             pAnimation->Set(
                                 CharacterAnimation::BodyPart::UPPER,
@@ -350,6 +351,8 @@ void Character::setReload()
                         else if (m_stance == Stance::Prone)
                         {
                             m_hasChangingState = true;
+                           
+                            //캐릭터 애니메이션
                             pAnimation->Set(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Prone,
@@ -373,7 +376,7 @@ void Character::setReload()
                     {
                         if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                         {
-                            m_hasChangingState = true;
+                            m_hasChangingState = true;                   
                             pAnimation->Set(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Base,
@@ -1040,6 +1043,7 @@ Kar98k 재장전 애니메이션 관련
 */
 void Character::onKar98kReloadEnd()
 {
+    //캐릭터의 애니메이션
     if (m_stance == Stance::Stand)
     {
         pAnimation->Set(
@@ -1089,6 +1093,7 @@ void Character::onKar98kReload()
     }
     else
     {
+        //캐릭터의 애니메이션
         if (m_stance == Stance::Stand)
         {
             pAnimation->Set(

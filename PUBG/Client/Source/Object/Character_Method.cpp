@@ -501,6 +501,25 @@ void Character::RifleShooting()
             assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::RifleShooting(), tagAnim is COUNT");
 
             m_hasChangingState = true;
+
+            //총 자체 애니메이션
+            m_isNeedRifleAnim = true;
+            inven.m_pHand->Set
+            (
+                TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_1,
+                false,
+                Item::DEFAULT_BLENDING_TIME,
+                Item::DEFAULT_NEXT_WEIGHT,
+                Item::DEFAULT_POSITION,
+                Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+                [this, &inven]() {
+                inven.m_pHand->Set(
+                    TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
+                    false);
+                m_isNeedRifleAnim = false;
+            });
+
+            //캐릭터의 애니메이션
             pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 tagAnim,

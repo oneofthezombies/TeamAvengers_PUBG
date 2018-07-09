@@ -5,4 +5,3 @@
 - Weapon_Kar98k_BoltAction_1
 - Weapon_Kar98k_Reload_Fast
 - Weapon_Kar98k_Reload_Fast_FPP
-- Weapon_Kar98k_Idle

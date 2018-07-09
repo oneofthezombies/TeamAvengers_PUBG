@@ -79,7 +79,7 @@ public:
     void UpdateAnimation();
     void UpdateModel();
 
-    //for animation test 
+    //for 아이템 자체 애니메이션
     void Set(
         const TAG_ANIM_WEAPON tag,
         const bool  isBlend = true,
@@ -93,6 +93,17 @@ public:
         const float blendingTime,
         const float nextWeight,
         const float position,
+        const float finishEventAgoTime,
+        const std::function<void()>& finishEvent);
+
+    void Set(
+        const TAG_ANIM_WEAPON tag,
+        const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float loopEventPeriod,
+        const std::function<void()>& loopEvent,
         const float finishEventAgoTime,
         const std::function<void()>& finishEvent);
 

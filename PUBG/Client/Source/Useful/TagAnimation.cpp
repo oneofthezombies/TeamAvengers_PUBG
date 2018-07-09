@@ -6,12 +6,13 @@ std::string TagAnimation::GetString(const TAG_ANIM_WEAPON tag)
     switch (tag)
     {
     //√— - √— ¿⁄√º¿« æ÷¥œ∏ﬁ¿Ãº«
-    //OBZ(5)
+    //OBZ(6)
     case TAG_ANIM_WEAPON::Weapon_QBZ_Fire:              return "Weapon_QBZ_Fire";
     case TAG_ANIM_WEAPON::Weapon_QBZ_Firemode_Auto:     return "Weapon_QBZ_Firemode_Auto";
     case TAG_ANIM_WEAPON::Weapon_QBZ_Firemode_Semi:     return "Weapon_QBZ_Firemode_Semi";
     case TAG_ANIM_WEAPON::Weapon_QBZ_Reload_Charge_FPP: return "Weapon_QBZ_Reload_Charge_FPP";
     case TAG_ANIM_WEAPON::Weapon_QBZ_Reload_FPP:        return "Weapon_QBZ_Reload_FPP";
+    case TAG_ANIM_WEAPON::Weapon_QBZ_Idle:              return "Weapon_QBZ_Idle";
 
     //Kar98k(7)
     case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Start:        return "Weapon_Kar98k_Reload_Start";
@@ -548,7 +549,10 @@ float TagAnimation::GetSpeed(const TAG_ANIM_WEAPON tag)
 {
     switch (tag)
     {
-    
+    //case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Start:
+    //case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Loop:
+    //case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_End:
+    //    return 0.7f;
     default:
         return 1.0f;
     }
