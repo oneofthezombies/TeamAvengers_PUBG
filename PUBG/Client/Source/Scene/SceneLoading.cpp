@@ -34,6 +34,8 @@ void SceneLoading::Load()
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
     load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
+    // load equipment
+
     // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined);
