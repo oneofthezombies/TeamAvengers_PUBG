@@ -5,6 +5,10 @@
 class ScenePlay : public IScene
 {
 private:
+    Character* pPlayer;
+    std::vector<Character*> others;
+    std::vector<Character*> characters;
+
     void setAloneMode();
     void setWithOthersMode();
 
@@ -14,4 +18,6 @@ public:
 
     virtual void OnInit() override;
     virtual void OnUpdate() override;
+
+    const std::vector<Character*> GetOthers() const;
 };

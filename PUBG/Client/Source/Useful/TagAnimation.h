@@ -267,10 +267,10 @@ enum class TAG_ANIM_CHARACTER
     Rifle_Combat_Stand_Sprint_F_Prone,
 
     //Rifle_OnHand(4)
-    Rifle_Combat_Prone_PrimarySlot_OnHand,         //엎드린채 주무기를 손에 든다
-    Rifle_Combat_Prone_SecondarySlot_OnHand,       //엎드린채 보조무기를 손에 든다
     Rifle_Combat_Stand_PrimarySlot_OnHand,         //서서 주무기를 손에 든다
     Rifle_Combat_Stand_SecondarySlot_OnHand,       //서서 보조무기를 손에 든다
+    Rifle_Combat_Prone_PrimarySlot_OnHand,         //엎드린채 주무기를 손에 든다
+    Rifle_Combat_Prone_SecondarySlot_OnHand,       //엎드린채 보조무기를 손에 든다
 
     //Rifle_OnBody(4)
     Rifle_Combat_Prone_PrimarySlot,          //엎드려 주무기를 등에 맨다

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ItemInfo.h"
+#include "TagClientOnly.h"
 
 TAG_ITEM_CATEGORY ItemInfo::GetItemCategory(const TAG_RES_STATIC tag)
 {
@@ -246,11 +247,32 @@ float ItemInfo::GetInitialBulletSpeed(const TAG_RES_STATIC tag)
     //단위는 m/s
     switch (tag)
     {
-    case TAG_RES_STATIC::QBZ: return 50.0f;/*870.0f;*/
-    case TAG_RES_STATIC::Kar98k: return 760.0f;
+    case TAG_RES_STATIC::QBZ: return 50.0f;/*87000.0f;*/
+    case TAG_RES_STATIC::Kar98k: return 76000.0f;
 
     default: return 0.0f;
     }
+}
+
+float ItemInfo::GetDropOffByDistance(const float distance, const TAG_RES_STATIC tag)
+{
+    //CM
+    float maxDist = std::numeric_limits<float>::max();
+    switch (tag)
+    {
+    case TAG_RES_STATIC::QBZ:    maxDist = 20000.0f; break;
+    case TAG_RES_STATIC::Kar98k: maxDist = 40000.0f; break;
+    default:
+        {
+            assert(false && "ItemInfo::GetDropOffByDistance(), default case.");
+            break;
+        }
+    }
+    
+    float dropOffPercentage = 1.0f - 0.25f * distance / maxDist;
+    if (dropOffPercentage < 0.0f)
+        dropOffPercentage = 0.0f;
+    return dropOffPercentage;
 }
 
 float ItemInfo::GetBulletFireCoolTime(const TAG_RES_STATIC tag)
@@ -258,9 +280,86 @@ float ItemInfo::GetBulletFireCoolTime(const TAG_RES_STATIC tag)
     //단위는 sec
     switch (tag)
     {
-    case TAG_RES_STATIC::QBZ: return /*0.92f;*/0.092f;
-    case TAG_RES_STATIC::Kar98k: return 19.0f;/*1.900f;*/
+    case TAG_RES_STATIC::QBZ: return 0.092f;
+    case TAG_RES_STATIC::Kar98k: return 1.900f;
 
     default: return 0.0f;
     }
+}
+
+float CharacterInfo::GetWeaponClassDamageByHitZone(const TAG_COLLIDER_CHARACTER_PART tag)
+{
+    switch (tag)
+    {
+    case TAG_COLLIDER_CHARACTER_PART::Head:
+    case TAG_COLLIDER_CHARACTER_PART::Neck:
+        return 2.30f;
+    case TAG_COLLIDER_CHARACTER_PART::Breast:
+    case TAG_COLLIDER_CHARACTER_PART::Stomach_Upper:
+    case TAG_COLLIDER_CHARACTER_PART::Stomach_Lower:
+    case TAG_COLLIDER_CHARACTER_PART::Waist:
+        return 1.0f;
+    case TAG_COLLIDER_CHARACTER_PART::Clavicle_Left:
+    case TAG_COLLIDER_CHARACTER_PART::Clavicle_Right:
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Left_Upper:
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Left_Lower:
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Right_Upper:
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Right_Lower:
+    case TAG_COLLIDER_CHARACTER_PART::Hand_Left:
+    case TAG_COLLIDER_CHARACTER_PART::Hand_Right:
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Left_Upper:
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Left_Lower:
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Right_Upper:
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Right_Lower:
+    case TAG_COLLIDER_CHARACTER_PART::Foot_Left:
+    case TAG_COLLIDER_CHARACTER_PART::Foot_Right:
+        return 0.9f;
+    default:
+        assert(false && "GetWeaponClassDamageByHitZone(), default case.");
+        return 1.0f;
+    }
+}
+
+float CharacterInfo::GetHitAreaDamage(const TAG_COLLIDER_CHARACTER_PART tag)
+{
+    switch (tag)
+    {
+    case TAG_COLLIDER_CHARACTER_PART::Head:
+        return 1.0f;
+    case TAG_COLLIDER_CHARACTER_PART::Neck:
+        return 0.75f;
+    case TAG_COLLIDER_CHARACTER_PART::Breast:
+        return 1.1f;
+    case TAG_COLLIDER_CHARACTER_PART::Stomach_Upper:
+        return 1.0f;
+    case TAG_COLLIDER_CHARACTER_PART::Stomach_Lower:
+        return 0.9f;
+    case TAG_COLLIDER_CHARACTER_PART::Waist:
+        return 1.0f;
+    case TAG_COLLIDER_CHARACTER_PART::Clavicle_Left:
+    case TAG_COLLIDER_CHARACTER_PART::Clavicle_Right:
+        return 1.0f;
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Left_Upper:
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Right_Upper:
+        return 0.6f;
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Left_Lower:
+    case TAG_COLLIDER_CHARACTER_PART::Arm_Right_Lower:
+        return 0.5f;
+    case TAG_COLLIDER_CHARACTER_PART::Hand_Left:
+    case TAG_COLLIDER_CHARACTER_PART::Hand_Right:
+        return 0.3f;
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Left_Upper:
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Right_Upper:
+        return 0.5f;
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Left_Lower:
+    case TAG_COLLIDER_CHARACTER_PART::Leg_Right_Lower:
+        return 0.5f;
+    case TAG_COLLIDER_CHARACTER_PART::Foot_Left:
+    case TAG_COLLIDER_CHARACTER_PART::Foot_Right:
+        return 0.3f;
+    default:
+        assert(false && "CharacterInfo::GetHitAreaDamage, default case.");
+        return 1.0f;
+    }
+
 }

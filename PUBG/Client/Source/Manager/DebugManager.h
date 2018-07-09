@@ -7,8 +7,9 @@
 class DebugManager : public Singleton<DebugManager>
 {
 private:
-	LPD3DXFONT	 m_pFont;
-	stringstream m_stringstream;
+	LPD3DXFONT	      m_pFont;
+	std::stringstream m_stringstream;
+    bool              m_isRender;
 
              DebugManager();
 	virtual ~DebugManager();

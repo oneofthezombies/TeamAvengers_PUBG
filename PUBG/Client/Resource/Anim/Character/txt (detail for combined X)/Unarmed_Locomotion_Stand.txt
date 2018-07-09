@@ -1,0 +1,24 @@
+/// Unarmed_Locomotion_Stand.X (무기없이 이동하는 애니메이션)
+0. (0     ~ 75)[76] - Unarmed_Combat_Stand_Run_B
+1. (76  ~ 151)[76] - Unarmed_Combat_Stand_Run_BL
+2. (152 ~ 227)[76] - Unarmed_Combat_Stand_Run_BR
+3. (228 ~ 315)[88] - Unarmed_Combat_Stand_Run_F
+4. (316 ~ 403)[88] - Unarmed_Combat_Stand_Run_FL
+5. (404 ~ 490)[87] - Unarmed_Combat_Stand_Run_FR
+6. (491 ~ 565)[75] - Unarmed_Combat_Stand_Run_L
+7. (566 ~ 650)[85] - Unarmed_Combat_Stand_Run_R
+
+8. (651  ~ 707)[57] - Unarmed_Combat_Stand_Sprint_F
+9. (708  ~ 764)[57] - Unarmed_Combat_Stand_Sprint_FL
+10. (765 ~ 821)[57] - Unarmed_Combat_Stand_Sprint_FR
+11. (822 ~ 879)[58] - Unarmed_Combat_Stand_Sprint_L
+12. (880 ~ 936)[57] - Unarmed_Combat_Stand_Sprint_R 
+
+13. (937 ~ 1053)[117] - Unarmed_Combat_Stand_Walk_B
+14. (1054 ~ 1170)[117] - Unarmed_Combat_Stand_Walk_BL
+15. (1171 ~ 1287)[117] - Unarmed_Combat_Stand_Walk_BR
+16. (1288 ~ 1412)[125] - Unarmed_Combat_Stand_Walk_F
+17. (1413 ~ 1537)[125] - Unarmed_Combat_Stand_Walk_FL
+18. (1538 ~ 1662)[125] - Unarmed_Combat_Stand_Walk_FR
+19. (1663 ~ 1775)[113] - Unarmed_Combat_Stand_Walk_L
+20. (1776 ~ 1896)[121] - Unarmed_Combat_Stand_Walk_R

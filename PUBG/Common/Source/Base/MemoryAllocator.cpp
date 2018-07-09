@@ -19,6 +19,7 @@ void* MemoryAllocator::operator new(std::size_t count)
     return p;
 }
 
+
 void MemoryAllocator::operator delete(void* p)
 {
     assert(p && "MemoryAllocator::operator delete(), pointer is null.");

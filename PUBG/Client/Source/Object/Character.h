@@ -7,13 +7,10 @@
 class CharacterAnimation;
 class CharacterPart;
 class Item;
+class Area;
 
 class Character : public IObject
 {
-
-
-
-
 /*****************************************************************************/
 /*                                                                           */
 /*                              nested structure                             */
@@ -21,6 +18,7 @@ class Character : public IObject
 /*****************************************************************************/
 
 public:
+
     struct WaistRotation
     {
         const float LIMIT_OF_ANGLE;
@@ -28,6 +26,14 @@ public:
         float       m_angle;
 
         WaistRotation(const float limit, const float factor);
+    };
+    struct HeadRotation
+    {
+        const float LIMIT_OF_ANGLE;
+        const float QUANTITY_FACTOR;
+        float       m_angle;
+
+        HeadRotation(const float limit, const float factor);
     };
 
     struct RootTransform
@@ -43,28 +49,29 @@ public:
         UIText*  m_Text;
 
         Item* m_hand; //손에 든 무기
+        bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
 
         static const float DEFAULT_CAPACITY;
 
         map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
 
         //헬멧, 가방, 방탄조끼용
-        Item* m_equipArmor;
-        Item* m_equipBack;
-        Item* m_equipHead;
+        Item* m_pEquipArmor;
+        Item* m_pEquipBack;
+        Item* m_pEquipHead;
 
         //무기용
-        Item* m_weaponPrimary;
-        Item* m_weaponSecondary;
-        //Weapon* m_weaponPistol;
-        //Weapon* m_weaponMelee;
-        //Weapon* m_weaponThrowable;
+        Item* m_pWeaponPrimary;
+        Item* m_pWeaponSecondary;
+        //Weapon* m_pWeaponPistol;
+        //Weapon* m_pWeaponMelee;
+        //Weapon* m_pWeaponThrowable;
         
         float m_bulletFireCoolDown; //총알 발사는 지정된 쿨타임 시간이 지나야 다시 발사가능
         float m_capacity;
         int   m_numReload;
 
-        Item* m_tempSaveWeaponForX;
+        Item* pTempSaveWeaponForX;
         
         bool isOpened;
         std::deque<Item*> droppedItems;
@@ -83,6 +90,7 @@ public:
     {
         Transform*   pTransform;
         D3DXVECTOR3* pRotationForCamera;
+        Frame*       pHead;
         Frame*       pFPP;
         Frame*       pTPP;
 
@@ -113,7 +121,7 @@ public:
         bool _C;
         bool _R;
         bool _B;
-
+        bool _F;
         bool _Space;
         bool _Num1; 
         bool _Num2; 
@@ -127,10 +135,26 @@ public:
         IsPressed();
     };
 
+    struct MouseInput
+    {
+        float yaw;
+        float pitch;
+
+        MouseInput()
+            : yaw(0.0f)
+            , pitch(0.0f)
+        {
+        }
+    };
+
+
     struct FramePtr
     {
-        Frame* pWaist;
         Frame* pRoot;
+        Frame* pHead;
+        Frame* pLeftClavicle;
+        Frame* pRightClavicle;
+        Frame* pWaist;
         Frame* pHandGun;
         Frame* pTPP;
         Frame* pFPP;
@@ -151,6 +175,16 @@ public:
         float			maxStepHeight;
 
         IsJumping();
+    };
+
+    struct State
+    {
+        D3DXVECTOR3              position;
+        D3DXQUATERNION           rotation;
+        std::vector<BoundingBox> boundingBoxes;
+        bool                     isHeadBump;
+
+        State();
     };
 
     //반동 스트럭트
@@ -182,6 +216,7 @@ public:
 
 public:
     static const D3DXQUATERNION OFFSET_ROTATION;
+    static const float          RADIUS;
 
 /******************************* end constant ********************************/
 
@@ -198,41 +233,49 @@ private:
 
     // id
     int m_index;
-    size_t m_cellSpaceIndex;
+    std::size_t m_cellIndex;
+    float m_health;
 
-    Transform*          pTransform;
     CharacterAnimation* pAnimation;
-    CharacterPart*      m_pRootCharacterPart;
+    vector<CharacterPart*> m_characterParts;
 
     //
     FramePtr      m_framePtr;
     RootTransform m_rootTransform;
     WaistRotation m_waistRotation;
-
-    // collision part
-
+    HeadRotation  m_headRotation;
+    //ArmRotation   m_armRotation;
 
     // for camera
-    D3DXMATRIX m_prevRootModel;
+    D3DXMATRIX  m_prevRootModel;
     D3DXVECTOR3 m_rotationForCamera;
-    Info m_info;
+    Info        m_info;
 
     // for inventory
     TotalInventory m_totalInventory;
     
-
     // state
     TAG_ANIM_CHARACTER m_upperAnimState;
     TAG_ANIM_CHARACTER m_lowerAnimState;
+    Stance    m_stance;
+    Attacking m_attacking;
+    Moving    m_moving;
+    Direction m_direction;
 
     IsPressing m_savedInput;
     IsPressing m_currentStayKey;
     IsPressed  m_currentOnceKey;
-
-    Stance    m_stance;
-    Attacking m_attacking;
+    MouseInput m_mouseInput;
 
     IsJumping m_Jump;
+
+    // for debug
+    LPD3DXMESH  pOtherHitPositionMesh;
+    std::size_t m_otherHitPart;
+    BoundingBox m_otherHitBox;
+
+    bool m_isFire;
+    bool m_hasChangingState;
 
     WaitBackAction m_backAction;
 
@@ -253,11 +296,13 @@ private:
 
     void handleInput(IsPressing* OutIsPressing);
     void handleInput(IsPressed* OutIsPressed);
-    
-    void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation);
-    void animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag);
+    void handleMouse(const float dt, MouseInput* mouseInput);
+
+    void headNArmRotation(MouseInput* mouseinput);
+    void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
-    void rifleShooting();
+    void movementControl(OUT State* OutState);
+    void animationControl();
 
     //총 반동 관련
     void backAction(D3DXQUATERNION* OutRotation ,int virtical = 100 , int horizontal = 50);
@@ -267,14 +312,15 @@ private:
     void updateMine();
     void updateOther();
     void updateBone();
-    void updateDependency();
     void communicate();
 
     void rotateWaist(const float quantity);
+    void rotateHead(const float quantity);
 
     bool isMine() const;
 
     void setInfo();
+    void minusDamage(const float damage);
 
     D3DXVECTOR3 getUp();
     //D3DXVECTOR3 getDown();
@@ -304,13 +350,16 @@ private:
     void setStance();
     void setAttacking();
     void setReload();
+    void setPunch();
+    void setInteraction();
+    void setJump();
 
     void setRifleOnHand(TAG_RIFLE tagRifle);
     void setRifleOnBody(TAG_RIFLE tagRifle);
 
-    void setStandTo(Stance stance);
-    void setCrouchTo(Stance stance);
-    void setProneTo(Stance stance);
+    void setStandTo();
+    void setCrouchTo();
+    void setProneTo();
 
     void onKar98kReloadEnd();
     void onKar98kReload();
@@ -339,6 +388,8 @@ public:
     void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
     int GetIndex() const;
+    float GetCharacterHealth();
+
     TAG_COLLISION GetTagCollisionBody(const int index);
     TAG_COLLISION GetTagCollisionDamage(const int index);
 
@@ -350,9 +401,17 @@ public:
     string ForDebugGetItemCategory(TAG_ITEM_CATEGORY category);
     string ForDebugGetAttacking(Attacking attcking);
     string ForDebugGetStance(Stance stance);
-    void ForDebug();
+    string ForDebugGetMoving(Moving moving);
+    void   ForDebug();
 
     CharacterAnimation* GetCharacterAnimation();
+
+    void AddPart(CharacterPart* pPart);
+    D3DXVECTOR3 GetWaistPosition();
+    bool IsFire() const;
+    void RifleShooting();
+
+    virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
 
 /**************************** end public method ******************************/
 

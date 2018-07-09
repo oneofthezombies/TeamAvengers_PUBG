@@ -2,11 +2,11 @@
 #include "IObject.h"
 #include "ComponentTransform.h"
 
-IObject::IObject()
+IObject::IObject(const TAG_OBJECT tagObject)
     : MemoryAllocator()
+    , m_tagObject(tagObject)
     , pTransform(nullptr)
     , pParent(nullptr)
-
 {
 	pTransform = AddComponent<Transform>();
 }
@@ -52,6 +52,11 @@ void IObject::SetParent(IObject* pParent)
 	this->pParent = pParent;
 }
 
+IObject* IObject::GetParent() const
+{
+    return pParent;
+}
+
 void IObject::AddChild(IObject* pChild)
 {
     assert(pChild && "IObject::AddChild(), pointer is null.");
@@ -62,4 +67,14 @@ void IObject::AddChild(IObject* pChild)
 Transform* IObject::GetTransform()
 {
 	return pTransform;
+}
+
+const BoundingSphere& IObject::GetBoundingSphere()
+{
+    return m_boundingSphere;
+}
+
+const std::vector<BoundingBox>& IObject::GetBoundingBoxes()
+{
+    return m_boundingBoxes;
 }

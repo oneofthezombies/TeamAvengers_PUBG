@@ -57,6 +57,7 @@ enum class TAG_COLLIDER_CHARACTER_PART
     Leg_Right_Lower, // 다리_우하
     Foot_Left,       // 발_좌
     Foot_Right,      // 발_우
+    COUNT
 };
 
 enum class TAG_SCENE

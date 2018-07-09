@@ -9,54 +9,59 @@ public:
     static const int REQUEST_LENGTH = 2;
 
 private:
-    char   m_Data[HEADER_LENGTH + MAX_BODY_LENGTH];
-    size_t m_BodyLength;
+    char        m_data[HEADER_LENGTH + MAX_BODY_LENGTH];
+    std::size_t m_bodyLength;
 
 public:
-    Message();
+     Message();
     ~Message() = default;
 
     char*       GetData();
     const char* GetData() const;
 
-    size_t GetLength() const;
+    std::size_t GetLength() const;
 
     char*       GetBodyData();
     const char* GetBodyData() const;
 
-    void   SetBodyLength(size_t length);
-    size_t GetBodyLength() const;
+    void        SetBodyLength(const std::size_t length);
+    std::size_t GetBodyLength() const;
 
     bool DecodeHeader();
     void EncodeHeader();
 
     TAG_REQUEST GetRequest();
-    string      GetDescription();
+    std::string GetDescription();
 
-    static Message Create(const TAG_REQUEST request, const string& description);
-    static pair<int, string> ParseDescription(const string& description);
+    static Message Create(
+        const TAG_REQUEST request, 
+        const std::string& description);
+    static std::pair<int, std::string> 
+        ParseDescription(const string& description);
 };
 
-ostream& operator<<(ostream& os, const Message& msg);
+std::ostream& operator<<(std::ostream& os, const Message& msg);
 
 struct GameInfo
 {
     struct PlayerInfo
     {
-        int            m_ID;
-        string         m_nickname;
-        D3DXVECTOR3    m_position;
-        D3DXQUATERNION m_rotation;
-        int            m_upperAnimState;
-        int            m_lowerAnimState;
+        int            ID;
+        std::string    nickname;
+        D3DXVECTOR3    position;
+        D3DXQUATERNION rotation;
+        float          headAngle;
+        int            upperAnimState;
+        int            lowerAnimState;
+        float          health;
 
         PlayerInfo();
     };
 
     struct MyInfo
     {
-        int m_ID;
-        string m_nickname;
+        int         ID;
+        std::string nickname;
 
         MyInfo();
     };
@@ -65,7 +70,7 @@ struct GameInfo
 
     struct RoomInfo
     {
-        array<PlayerInfo, NUM_PLAYERS> m_PlayerInfos;
+        std::array<PlayerInfo, NUM_PLAYERS> playerInfos;
 
         RoomInfo();
     };

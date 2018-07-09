@@ -41,6 +41,15 @@ private:
     tasks_t     m_characterAnimationTasks;
     resources_t m_characterAnimationResources;
 
+    std::deque<
+        std::tuple<
+            resources_t*, 
+            std::function<Resource::XContainer*(const std::string, const std::string)>,
+            std::string,
+            std::string
+        >
+    > m_tasksForSingleThread;
+
     std::chrono::system_clock::time_point m_start;
     std::chrono::system_clock::time_point m_finish;
     std::chrono::duration<float>          m_elapsed;

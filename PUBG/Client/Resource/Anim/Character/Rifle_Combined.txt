@@ -1,0 +1,8 @@
+Rifle_Combined.X (아래의 X파일들을 합친 것) (총 애니메이션 set: 40 개)
+- Rifle_Idling.X (10)
+- Rifle_Transition.X (10)
+- Rifle_DoorOpen_And_Pickup.X (6)
+- Rifle_Landing.X (2)
+- Rifle_Jump.X (4)
+- Rifle_OnBody.X (4)
+- Rifle_OnHand.X (4)

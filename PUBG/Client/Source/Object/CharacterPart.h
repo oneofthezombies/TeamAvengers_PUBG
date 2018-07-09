@@ -16,9 +16,8 @@ private:
     vector<UIText*> m_UITexts;
 
     Character*   pCharacter;
-    BoxCollider* pBoxCollider;
 
-    void addFrame(const string& name, CharacterAnimation* pSkiCon);
+    void addFrame(const string& name, CharacterAnimation* pCharacterAnimation);
     void updateUI();
     void addChild(const TAG_COLLIDER_CHARACTER_PART tag);
 

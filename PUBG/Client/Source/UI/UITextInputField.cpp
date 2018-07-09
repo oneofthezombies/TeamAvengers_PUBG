@@ -39,7 +39,7 @@ UITextInputField::UITextInputField(
     UIText* pText = new UIText(Resource()()->GetFont(font), GetSize(), &m_text, textColor, this);
     pText->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
 
-    m_text = string("127.0.0.1 8253 ");
+    //m_text = string("127.0.0.1 8253 ");
 }
 
 UITextInputField::~UITextInputField()
@@ -84,6 +84,11 @@ void UITextInputField::SetIsSelected(const bool val)
 bool UITextInputField::IsSelected() const
 {
     return false;
+}
+
+void UITextInputField::SetText(const std::string& text)
+{
+    m_text = text;
 }
 
 string UITextInputField::GetText() const

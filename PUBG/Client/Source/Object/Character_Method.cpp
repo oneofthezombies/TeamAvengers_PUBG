@@ -8,6 +8,8 @@
 #include "ItemInfo.h"
 #include "ComponentTransform.h"
 #include "HeightMap.h"
+#include "ScenePlay.h"
+#include "Ballistics.h"
 
 Character::WaistRotation::WaistRotation(const float limit, const float factor)
     : LIMIT_OF_ANGLE(limit)
@@ -16,6 +18,20 @@ Character::WaistRotation::WaistRotation(const float limit, const float factor)
 {
 }
 
+Character::HeadRotation::HeadRotation(const float limit, const float factor)
+    : LIMIT_OF_ANGLE(limit)
+    , QUANTITY_FACTOR(factor)
+    , m_angle(0.0f)
+{
+}
+
+//Character::ArmRotation::ArmRotation(const float limit, const float factor)
+//    :LIMIT_OF_ANGLE(limit)
+//    , QUANTITY_FACTOR(factor)
+//    , m_angle(0.0f)
+//{
+//}
+
 Character::RootTransform::RootTransform(const float moveSpeed)
     : MOVE_SPEED(moveSpeed)
 {
@@ -23,6 +39,7 @@ Character::RootTransform::RootTransform(const float moveSpeed)
 Character::Info::Info()
     : pTransform(nullptr)
     , pRotationForCamera(nullptr)
+    , pHead(nullptr)
     , pFPP(nullptr)
     , pTPP(nullptr)
 {
@@ -62,6 +79,7 @@ Character::IsPressed::IsPressed()
     , _X(false)
     , _C(false)
     , _R(false)
+    , _F(false)
     , _Space(false)
     , _Num1(false)
     , _Num2(false)
@@ -76,6 +94,7 @@ Character::IsPressed::IsPressed()
 
 Character::FramePtr::FramePtr()
     : pRoot(nullptr)
+    , pHead(nullptr)
     , pWaist(nullptr)
     , pHandGun(nullptr)
     , pTPP(nullptr)
@@ -84,16 +103,25 @@ Character::FramePtr::FramePtr()
     , pSlotSecondary(nullptr)
     , pSlotMelee(nullptr)
     , pSlotThrowable(nullptr)
+    , pLeftClavicle(nullptr)
+    , pRightClavicle(nullptr)
 {
 }
 
 Character::IsJumping::IsJumping()
     : isJumping(false)
     
-    , jumpPower(15.0f)
-    , gravity(0.5f)
+    , jumpPower(12.0f)
+    , gravity(0.6f)
     , currGravity(0.0f)
-    , maxStepHeight(5.f)
+    , maxStepHeight(5.0f)
+{
+}
+
+Character::State::State()
+    : position(Vector3::ZERO)
+    , rotation(Vector3::ZERO)
+    , isHeadBump(false)
 {
 }
 
@@ -101,7 +129,13 @@ void Character::setFramePtr()
 {
     m_framePtr.pWaist         = pAnimation->FindFrame("spine_01");
     m_framePtr.pRoot          = pAnimation->FindFrame("root");
-    m_framePtr.pHandGun       = pAnimation->FindFrame("ik_hand_gun");
+    m_framePtr.pHead          = pAnimation->FindFrame("head");
+    m_framePtr.pLeftClavicle = pAnimation->FindFrame("clavicle_l");
+    m_framePtr.pRightClavicle = pAnimation->FindFrame("clavicle_r");
+
+    //m_framePtr.pHandGun       = pAnimation->FindFrame("ik_hand_gun");
+    m_framePtr.pHandGun = pAnimation->FindFrame("item_r");
+
     m_framePtr.pTPP           = pAnimation->FindFrame("camera_tpp");
     m_framePtr.pFPP           = pAnimation->FindFrame("camera_fpp");
     m_framePtr.pSlotPrimary   = pAnimation->FindFrame("slot_primary");
@@ -113,6 +147,9 @@ void Character::setFramePtr()
     assert(
         p.pWaist &&
         p.pRoot &&
+        p.pHead &&
+        p.pLeftClavicle &&
+        p.pRightClavicle &&
         p.pHandGun &&
         p.pTPP &&
         p.pFPP &&
@@ -164,6 +201,7 @@ void Character::handleInput(IsPressed* OutIsPressed)
     OutIsPressed->_X            = pInput->IsOnceKeyDown('X');
     OutIsPressed->_C            = pInput->IsOnceKeyDown('C');
     OutIsPressed->_R            = pInput->IsOnceKeyDown('R');
+    OutIsPressed->_F            = pInput->IsOnceKeyDown('F');
     OutIsPressed->_B            = pInput->IsOnceKeyDown('B');
     OutIsPressed->_Space        = pInput->IsOnceKeyDown(VK_SPACE);
     OutIsPressed->_Num1         = pInput->IsOnceKeyDown('1');
@@ -176,10 +214,8 @@ void Character::handleInput(IsPressed* OutIsPressed)
     OutIsPressed->_Tab          = pInput->IsOnceKeyDown(VK_TAB);
 }
 
-void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation)
+void Character::handleMouse(const float dt, MouseInput* mouseInput)
 {
-    ICamera* pCurrentCamera = CurrentCamera()();
-
     // get mouse pos
     POINT mouse;
     GetCursorPos(&mouse);
@@ -190,36 +226,12 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     diff.y = mouse.y - 720 / 2;
     if (diff.x < 2 && diff.x > -2) diff.x = 0;
     if (diff.y < 2 && diff.y > -2) diff.y = 0;
-    const float yaw = diff.x * 0.2f * dt;
-    const float pitch = diff.y * 0.2f * dt;
 
-    static bool tempBool = false;
-    if (m_currentStayKey._LAlt)
-    {
-        if (pCurrentCamera)
-        {
-            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person || pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
-            {
-                m_rotationForCamera.x += -pitch;
-                m_rotationForCamera.y += yaw;
-                tempBool = true;
-            }
-        }
-    }
-    else // isPressing_LAlt == false
-    {
-        D3DXQUATERNION q;
-        D3DXQuaternionRotationYawPitchRoll(&q, yaw, 0.0f, 0.0f);
-        *OutRotation *= q;
-        m_rotationForCamera.x += -pitch;
-        // reset rotFotCameraTP
-        if (tempBool)
-        {
-            m_rotationForCamera = Vector3::ZERO;
-            tempBool = false;
-        }
-    }
+    mouseInput->yaw = diff.x * 0.2f * dt;
+    mouseInput->pitch = diff.y * 0.2f * dt;
 
+
+    
     static bool test_sound = true;
 
     if (Input()()->IsOnceKeyDown(VK_LEFT))
@@ -258,15 +270,20 @@ void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizo
     //m_backAction.afterY = *OutRotation *q;
     //m_backAction.afterX = m_rotationForCamera.x + virtical_result;
     //나중에 값 바꾸면 디버그 확인용
-    
+
     m_backAction.Ing = true;
     m_backAction.Rot = OutRotation;
     m_backAction.curValY = horizontal_result;
     m_backAction.valY = horizontal_result;
-    m_backAction.curValX = virtical_result ;
+    m_backAction.curValX = virtical_result;
     m_backAction.valX = virtical_result;
-
+}
     //cout << virtical_result << "=============" << horizontal_result << endl;
+void Character::headNArmRotation(MouseInput* mouseInput)
+{
+    ////케릭터 머리 Frame 움직이기
+    //rotateWaist(-mouseInput.pitch);
+    rotateHead(-mouseInput->pitch);
 }
 
 void Character::backActionFrame()
@@ -302,103 +319,66 @@ void Character::backActionFrame()
     }
 }
 
-void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag)
+//void Character::animationMovementControl(D3DXVECTOR3* OutPosition, TAG_ANIM_CHARACTER* OutTag)
+void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput)
 {
-    Direction direction;
-    Moving    moving;
 
-    float movingFactor;
-    if (m_currentOnceKey._Space)
-        m_Jump.isJumping = true;
+    ICamera* pCurrentCamera = CurrentCamera()();
 
-    //Moving 3개 -----------------------------------------------------
-    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl)
+    static bool tempBool = false;
+    if (m_currentStayKey._LAlt)
     {
-        moving = Moving::Sprint;
-        movingFactor = 2.0f;
+        if (pCurrentCamera)
+        {
+            if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::Third_Person || pCurrentCamera->GetTagCamera() == TAG_CAMERA::Default)
+            {
+                m_rotationForCamera.x += -mouseInput->pitch;
+                m_rotationForCamera.y += mouseInput->yaw;
+                tempBool = true;
+            }
+        }
     }
-    else if (m_currentStayKey._LCtrl && !m_currentStayKey._LShift)
+    else // isPressing_LAlt == false
     {
-        moving = Moving::Walk;
-        movingFactor = 0.5f;
-    }
-    else
-    {
-        moving = Moving::Run;
-        movingFactor = 1.0f;
-    }
-
-    //Direction 8개 -----------------------------------------------------
-    if (m_currentStayKey._W&&m_currentStayKey._D)
-    {
-        direction = Direction::FrontRight;
-        *OutPosition += getForwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._D&&m_currentStayKey._S)
-    {
-        direction = Direction::BackRight;
-        *OutPosition += getBackwardRight() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._S&&m_currentStayKey._A)
-    {
-        direction = Direction::BackLeft;
-        *OutPosition += getBackwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._A&&m_currentStayKey._W)
-    {
-        direction = Direction::FrontLeft;
-        *OutPosition += getForwardLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._W)
-    {
-        direction = Direction::Front;
-        *OutPosition += getForward() * movingFactor * m_rootTransform.MOVE_SPEED;
-
-    }
-    else if (m_currentStayKey._D)
-    {
-        direction = Direction::Right;
-        *OutPosition += getRight() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._S)
-    {
-        direction = Direction::Back;
-        //*pOut += getForward() * -1.0f;
-        *OutPosition += getBackward() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else if (m_currentStayKey._A)
-    {
-        direction = Direction::Left;
-        *OutPosition += getLeft() * movingFactor * m_rootTransform.MOVE_SPEED;
-    }
-    else
-    {
-        direction = Direction::StandStill;
+        D3DXQUATERNION q;
+        D3DXQuaternionRotationYawPitchRoll(&q, mouseInput->yaw, 0.0f, 0.0f);
+        *OutRotation *= q;
+        m_rotationForCamera.x += -mouseInput->pitch;
+        // reset rotFotCameraTP
+        if (tempBool)
+        {
+            m_rotationForCamera = Vector3::ZERO;
+            tempBool = false;
+        }
     }
 
-    if (OutTag) //if null, no changes in animation
-    {
-        if (m_Jump.isJumping&&m_currentStayKey._W)
-            *OutTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F;
-        else if (m_Jump.isJumping)
-            *OutTag = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary;
-        else
-            *OutTag = AnimationState::Get(m_attacking, m_stance, moving, direction);
-    }
+
+
+    //Limiting camera Pitch 
+    if (m_rotationForCamera.x < -0.8f)
+        m_rotationForCamera.x = -0.8f;
+    else if (m_rotationForCamera.x > 0.8f)
+        m_rotationForCamera.x = 0.8f;
+
+
+
+
+    Debug << "m_rotationForCamera.x : " << m_rotationForCamera.x << endl << endl << endl;
+
+
+
 }
 
 bool Character::isMine() const
 {
-    return m_index == Communication()()->m_MyInfo.m_ID;
+    return m_index == Communication()()->m_myInfo.ID;
 }
 
 void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
-{
-    
+{  
     HeightMap* pCurrentScene = CurrentScene()()->GetHeightMap();
     if (!pCurrentScene)
         return; //assert(false && "No CurrentScene");
-
 
     D3DXVECTOR3 targetPos = *pOut;
     float height = 0;
@@ -406,7 +386,6 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 
     if (m_Jump.isJumping)
     {
-
         targetPos.y += m_Jump.jumpPower - m_Jump.currGravity;
         m_Jump.currGravity += m_Jump.gravity;
         
@@ -423,10 +402,36 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         //}
 
         if (targetPos.y <= height && m_Jump.jumpPower < m_Jump.currGravity)
-        {
-            targetPos.y = height;
+        {            
+            //점프 후 착지애니메이션
+            //TODO: 높이에 따라서 다른 착지애니메이션
+            TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+            if (m_attacking == Attacking::Unarmed)
+            {
+                tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Fall_Landing_Additive;
+                //else if (m_attacking == Attacking::Rifle)
+                //    tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard;
+
+                pAnimation->Set(
+                    CharacterAnimation::BodyPart::BOTH,
+                    tagAnim,
+                    true,
+                    0.1f,
+                    CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                    CharacterAnimation::DEFAULT_POSITION,
+                    CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                    [this]()
+                {
+                    pAnimation->Set(
+                        CharacterAnimation::BodyPart::BOTH,
+                        m_lowerAnimState,
+                        false);
+                });
+            }
+
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;
+            targetPos.y = height;
         }
     }
     else //when no jump
@@ -440,29 +445,27 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         {
             targetPos.y = height;
         }
-
     }
-
     *pOut = targetPos;
 }
 
-void Character::rifleShooting()
+void Character::RifleShooting()
 {
     auto& inven = m_totalInventory;
-    inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_hand->GetTagResStatic());
+    inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_pHand->GetTagResStatic());
 
-    int numBullet = inven.m_hand->GetNumBullet();
-    inven.m_hand->SetNumBullet(--numBullet);
-    cout << "총에 남아있는 총알 개수: " << inven.m_hand->GetNumBullet() << "\n";
+    int numBullet = inven.m_pHand->GetNumBullet();
+    inven.m_pHand->SetNumBullet(--numBullet);
+    cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
 
     //Goal : get Fire starting position , get fire direction
-    inven.m_hand->UpdateModel(); //update to get position of frame "gun_bolt" 
-    D3DXMATRIX mat =
-        inven.m_hand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
+    inven.m_pHand->UpdateModel(); //update to get position of frame "gun_bolt" 
+    D3DXMATRIX mat 
+        = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
         * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
         * GetTransform()->GetTransformationMatrix();    //character world matrix
     
-    D3DXVECTOR3 bulletFirePos = D3DXVECTOR3(mat._41, mat._42, mat._43); 
+    D3DXVECTOR3 bulletFirePos = Matrix::GetTranslation(mat);
     
     D3DXVECTOR3 bulletDir;
     CurrentCamera()()->CalcPickedPosition(&bulletDir, 1280 / 2, 720 / 2);
@@ -470,8 +473,80 @@ void Character::rifleShooting()
     D3DXVec3Normalize(&bulletDir, &bulletDir);
     //-------------------------
 
+    // ----------------------수정중-------------
+    Ray gunRay;
+    gunRay.m_pos = bulletFirePos;
+    gunRay.m_dir = bulletDir;
+    // 나 말고 다른 캐릭터들을 순회하며 충돌여부를 검사한다.
 
-    switch (inven.m_hand->GetTagResStatic())
+    const auto& others = static_cast<ScenePlay*>(CurrentScene()())->GetOthers();
+    for (auto o : others)
+    {
+        // 먼저 캐릭터의 바운딩스피어와 충돌을 검사한다.
+        BoundingSphere bs = o->GetBoundingSphere();
+
+        if (!D3DXSphereBoundProbe(
+            &(bs.center + bs.position), 
+            bs.radius, 
+            &bulletFirePos, 
+            &bulletDir)) continue;
+
+        //const float distance = D3DXVec3Length(&(oPos - bulletFirePos));
+
+        //// 탄도학에 의한 예측 낙차 높이를 계산한다.
+        //const float varY = Ballistics::GetVarianceY(inven.m_pHand->GetTagResStatic(), distance);
+        //D3DXVECTOR3 estimatedDest = bulletDir * distance;
+        ////estimatedDest.y += varY;
+        //estimatedDest = bulletDir * 10000.0f;
+        //
+        //// 낙차 높이를 계산한 곳으로 레이를 쏜다.
+        //bulletDir = estimatedDest - bulletFirePos;
+        //D3DXVec3Normalize(&bulletDir, &bulletDir);
+
+        // 캐릭터의 바운딩박스들과 충돌을 검사한다.
+        float minDist = std::numeric_limits<float>::max();
+        float dist = std::numeric_limits<float>::max();
+        const auto& obbs = o->GetBoundingBoxes();
+        for (std::size_t i = 0; i < obbs.size(); i++)
+        {
+            auto& obb = obbs[i];
+
+            if (Collision::HasCollision(gunRay, obb, &dist))
+            {
+                // hit
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    m_otherHitPart = i;
+                    m_otherHitBox = obb;
+                }
+            }
+        }
+
+        if (minDist != std::numeric_limits<float>::max())
+        {
+            // 제일 작은 히트한 놈
+            cout << "hited part : " << m_otherHitPart << '\n';
+
+            const auto tagWeapon = inven.m_pHand->GetTagResStatic();
+            const auto tagPart = static_cast<TAG_COLLIDER_CHARACTER_PART>(m_otherHitPart);
+            const float damage
+                = ItemInfo::GetBaseDamage(tagWeapon)//Base Weapon Damage
+                * ItemInfo::GetDropOffByDistance(minDist, tagWeapon)//Damage drop-off by Distance
+                * CharacterInfo::GetHitAreaDamage(tagPart) //Hit Area Damage
+                * CharacterInfo::GetWeaponClassDamageByHitZone(tagPart); //Weapon Class Damage By Hit Zone
+
+            o->minusDamage(damage);
+            Communication()()->SendEventMinusDamage(o->GetIndex(), damage);
+        }
+    }
+
+
+    // ----------------------수정중-------------
+
+
+    // =====총알 객체가 나가는 부분 ===========
+    switch (inven.m_pHand->GetTagResStatic())
     {
     case TAG_RES_STATIC::QBZ:
         BulletPool()()->Fire(bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_COLLISION::Impassable);
@@ -482,12 +557,178 @@ void Character::rifleShooting()
     }
 }
 
+const std::vector<BoundingBox>& Character::GetBoundingBoxes()
+{
+    m_boundingBoxes.resize(m_characterParts.size());
+
+    for (std::size_t i = 0; i < m_characterParts.size(); i++)
+        m_boundingBoxes[i] = m_characterParts[i]->GetBoundingBoxes().front();
+
+    return IObject::GetBoundingBoxes();
+}
+
+void Character::movementControl(OUT State* OutState)
+{
+    //점프
+    if (m_currentOnceKey._Space)
+    {
+        m_Jump.isJumping = true;
+    }
+
+    float movingFactor = 0.0f;
+
+    //Moving 3개 -----------------------------------------------------
+    if(m_moving == Moving::Run)
+     {
+        if(m_attacking == Attacking::Unarmed)
+             movingFactor = 180.f;
+        else 
+             movingFactor = 120.f;
+     }
+    else if (m_moving == Moving::Sprint)
+    {
+        if (m_attacking == Attacking::Unarmed)
+             movingFactor = 260.f;
+        else
+             movingFactor = 200.f;
+    }
+    else if (m_moving == Moving::Walk)
+    {
+        if (m_attacking == Attacking::Unarmed)
+            movingFactor = 120.f;
+        else
+            movingFactor = 100.f;
+    }
+    
+    float dt = Time()()->GetDeltaTime();
+    float dist = movingFactor * m_rootTransform.MOVE_SPEED * dt;
+
+    //점프 직후 이동 금지
+    const string& animName = pAnimation->GetLowerAnimationName();
+    if (animName == TagAnimation::GetString(TAG_ANIM_CHARACTER::Unarmed_Combat_Fall_Landing_Additive) ||
+        animName == TagAnimation::GetString(TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard))
+    {
+        return;
+    }
+
+    //Direction 8개 -----------------------------------------------------
+    if (m_currentStayKey._W&&m_currentStayKey._D)
+    {
+        OutState->position += getForwardRight() * dist;
+    }
+    else if (m_currentStayKey._D&&m_currentStayKey._S)
+    {
+        OutState->position += getBackwardRight() * dist;
+    }
+    else if (m_currentStayKey._S&&m_currentStayKey._A)
+    {
+        OutState->position += getBackwardLeft() * dist;
+    }
+    else if (m_currentStayKey._A&&m_currentStayKey._W)
+    {
+        OutState->position += getForwardLeft() * dist;
+    }
+    else if (m_currentStayKey._W)
+    {
+        OutState->position += getForward() * dist;
+    }
+    else if (m_currentStayKey._D)
+    {
+        OutState->position += getRight() * dist;
+    }
+    else if (m_currentStayKey._S)
+    {
+        OutState->position += getBackward() * dist;
+    }
+    else if (m_currentStayKey._A)
+    {
+        OutState->position += getLeft() * dist;
+    }
+}
+
+void Character::animationControl()
+{
+    //Direction 8개 -----------------------------------------------------
+    if (m_currentStayKey._W&&m_currentStayKey._D)
+    {
+        m_direction = Direction::FrontRight;
+    }
+    else if (m_currentStayKey._D&&m_currentStayKey._S)
+    {
+        m_direction = Direction::BackRight;
+    }
+    else if (m_currentStayKey._S&&m_currentStayKey._A)
+    {
+        m_direction = Direction::BackLeft;
+    }
+    else if (m_currentStayKey._A&&m_currentStayKey._W)
+    {
+        m_direction = Direction::FrontLeft;
+    }
+    else if (m_currentStayKey._W)
+    {
+        m_direction = Direction::Front;
+
+    }
+    else if (m_currentStayKey._D)
+    {
+        m_direction = Direction::Right;
+    }
+    else if (m_currentStayKey._S)
+    {
+        m_direction = Direction::Back;
+    }
+    else if (m_currentStayKey._A)
+    {
+        m_direction = Direction::Left;
+    }
+    else
+    {
+        m_direction = Direction::StandStill;
+    }
+
+    //Moving 3개 -----------------------------------------------------
+    if (m_currentStayKey._LShift && !m_currentStayKey._LCtrl && m_stance != Stance::Prone)
+    {
+        switch (m_direction)
+        {
+        case Direction::Back:
+        case Direction::BackLeft:
+        case Direction::BackRight:
+        case Direction::Left:
+        case Direction::Right:
+            m_moving = Moving::Run;
+            break;
+
+        default:
+            m_moving = Moving::Sprint;
+            break;
+        }
+    }
+    else if (m_currentStayKey._LCtrl && !m_currentStayKey._LShift)
+    {
+        m_moving = Moving::Walk;
+    }
+    else
+    {
+        m_moving = Moving::Run;
+    }
+
+    m_lowerAnimState = AnimationState::Get(m_attacking, m_stance, m_moving, m_direction);
+}
+
 void Character::setInfo()
 {
     m_info.pTransform = GetTransform();
     m_info.pRotationForCamera = &m_rotationForCamera;
+    m_info.pHead = m_framePtr.pHead;
     m_info.pTPP = m_framePtr.pTPP;
     m_info.pFPP = m_framePtr.pFPP;
+}
+
+void Character::minusDamage(const float damage)
+{
+    m_health -= damage;
 }
 
 D3DXVECTOR3 Character::getUp()
@@ -574,41 +815,28 @@ D3DXVECTOR3 Character::getBackwardLeft()
 void Character::updateBone()
 {
     // modify local bones
-    D3DXMATRIX rx;
-    D3DXMatrixRotationX(&rx, m_waistRotation.m_angle);
-    m_framePtr.pWaist->TransformationMatrix *= rx;
+
+    // head, clavles
+    D3DXMATRIX rHead;
+
+    //머리 Rotaion
+    D3DXMatrixRotationY(&rHead, m_headRotation.m_angle);
+    m_framePtr.pHead->TransformationMatrix *= rHead;
+
+    if (m_totalInventory.m_pHand)//총을 들었을때 손 Rotation
+    {
+        m_framePtr.pLeftClavicle->TransformationMatrix *= rHead;    //왼쪽 손
+        m_framePtr.pRightClavicle->TransformationMatrix *= rHead;   //오른쪽 손
+    }
+    
+
+
+
+    //D3DXMatrixRotationY(&r, m_waistRotation.m_angle);
+    //m_framePtr.pWaist->TransformationMatrix *= r;
 
     // for root motion animation
     m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
-}
-
-void Character::updateDependency()
-{
-    // update
-    pTransform->Update();
-    pAnimation->UpdateAnimation();
-    updateBone();
-    pAnimation->UpdateModel();
-    updateTotalInventory();
-   
-    if (m_pRootCharacterPart) m_pRootCharacterPart->Update();
-
-    // render
-    pAnimation->Render(
-        /*m_framePtr.pWaist->CombinedTransformationMatrix 
-        **/ GetTransform()->GetTransformationMatrix(), 
-        [this](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(
-            Shader::World, 
-            &pTransform->GetTransformationMatrix());
-
-        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-        D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
-    });
-    renderTotalInventory();
-    if (m_pRootCharacterPart) m_pRootCharacterPart->Render();
 }
 
 void Character::communicate()
@@ -643,10 +871,29 @@ void Character::rotateWaist(const float quantity)
         wr.m_angle = wr.LIMIT_OF_ANGLE;
 }
 
+void Character::rotateHead(const float quantity)
+{
+    auto& hr = m_headRotation;
+
+    hr.m_angle += quantity;
+
+    if (hr.m_angle < -hr.LIMIT_OF_ANGLE)
+        hr.m_angle = -hr.LIMIT_OF_ANGLE;
+    else if (hr.m_angle > hr.LIMIT_OF_ANGLE)
+        hr.m_angle = hr.LIMIT_OF_ANGLE;
+}
+
+
 int Character::GetIndex() const
 {
     return m_index;
 }
+
+float Character::GetCharacterHealth()
+{
+    return m_health;
+}
+
 
 TAG_COLLISION Character::GetTagCollisionBody(const int index)
 {
@@ -681,4 +928,19 @@ TAG_COLLISION Character::GetTagCollisionDamage(const int index)
 CharacterAnimation* Character::GetCharacterAnimation()
 {
     return pAnimation;
+}
+
+void Character::AddPart(CharacterPart* pPart)
+{
+    m_characterParts[static_cast<std::size_t>(pPart->GetTagColliderCharacterPart())] = pPart;
+}
+
+D3DXVECTOR3 Character::GetWaistPosition()
+{
+    return Matrix::GetTranslation(m_framePtr.pWaist->CombinedTransformationMatrix * GetTransform()->GetTransformationMatrix());
+}
+
+bool Character::IsFire() const
+{
+    return m_isFire;
 }

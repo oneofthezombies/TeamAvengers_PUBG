@@ -9,7 +9,7 @@ TerrainFeature::TerrainFeature(
     const D3DXVECTOR3& position,
     const D3DXVECTOR3& rotation,
     const D3DXVECTOR3& scale)
-    : IObject()
+    : IObject(TAG_OBJECT::TerrainFeature)
     , pEffectMeshRenderer(nullptr)
 {
     pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
@@ -20,12 +20,16 @@ TerrainFeature::TerrainFeature(
     tr->SetRotation(rotation);
     tr->SetScale(scale);
     tr->Update();
+
+    // setup bounding sphere
+    m_boundingSphere = pEffectMeshRenderer->GetBoundingSphere();
+    m_boundingSphere.position = position;
+
+    CurrentScene()()->InsertObjIntoTotalCellSpace(TAG_OBJECT::TerrainFeature, CurrentScene()()->GetCellIndex(position), this);
 }
 
 TerrainFeature::~TerrainFeature()
 {
-    for (auto c : m_colliders)
-        SAFE_DELETE(c);
 }
 
 void TerrainFeature::OnUpdate()
@@ -47,15 +51,13 @@ void TerrainFeature::OnRender()
         pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
     });
 
-    for (auto c : m_colliders)
-        c->Render();
+    for (auto& bb : m_boundingBoxes)
+        bb.Render();
+
+    m_boundingSphere.Render();
 }
 
-void TerrainFeature::AddBoxCollider(const D3DXMATRIX& transformationMatrix)
+void TerrainFeature::AddBoundingBox(const D3DXMATRIX& transformationMatrix)
 {
-    BoxCollider* pBoxCollider = new BoxCollider(this);
-    pBoxCollider->Init(transformationMatrix);
-    pBoxCollider->SetTagCollision(TAG_COLLISION::Impassable);
-
-    m_colliders.emplace_back(pBoxCollider);
+    m_boundingBoxes.emplace_back(BoundingBox::Create(transformationMatrix));
 }

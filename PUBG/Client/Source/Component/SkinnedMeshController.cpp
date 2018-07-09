@@ -53,26 +53,26 @@ void SkinnedMeshController::drawMeshContainer(
 
     //**************frustum culling ************************
     D3DXVECTOR3 center = Vector3::ZERO;
-    D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_center, &world);
-    if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_radius))
+    D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_boundingSphere.center, &world);
+    if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_boundingSphere.radius))
         return;
     //******************************************************
 
 
-    //sphere around player
-    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-    Shader::Draw(
-        Resource()()->GetEffect("./Resource/", "Color.fx"),
-        nullptr,
-        m_testmeshSphere,
-        0,
-        [this, &world](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(Shader::World, &world);
-        D3DXCOLOR Green(0.0f, 1.0f, 0.0f, 1.0f);
-        pEffect->SetValue("Color", &Green, sizeof Green);
-    });
-    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+    ////sphere around player
+    //Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+    //Shader::Draw(
+    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
+    //    nullptr,
+    //    m_testmeshSphere,
+    //    0,
+    //    [this, &world](LPD3DXEFFECT pEffect)
+    //{
+    //    pEffect->SetMatrix(Shader::World, &world);
+    //    D3DXCOLOR Green(0.0f, 1.0f, 0.0f, 1.0f);
+    //    pEffect->SetValue("Color", &Green, sizeof Green);
+    //});
+    //Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 
 
 
@@ -144,16 +144,16 @@ void SkinnedMeshController::updateAnimation(
 }
 
 void SkinnedMeshController::notifyAnimationEvent(
-    const float dt, 
+    const float dt,
     const std::string& name,
-    LPD3DXANIMATIONCONTROLLER pController, 
-    animation_events_t* OutLoopEvents, 
+    LPD3DXANIMATIONCONTROLLER pController,
+    animation_events_t* OutLoopEvents,
     animation_events_t* OutFinishEvents)
 {
     assert(
-        pController && 
-        OutLoopEvents && 
-        OutFinishEvents && 
+        pController &&
+        OutLoopEvents &&
+        OutFinishEvents &&
         "SkinnedMeshController::notifyAnimationEvent(), argument is null.");
 
     D3DXTRACK_DESC desc;
@@ -165,11 +165,19 @@ void SkinnedMeshController::notifyAnimationEvent(
     double periodicPosition = pSet->GetPeriodicPosition(currentPosition);
     pSet->Release();
 
-    Debug << "track 0\n"
-          << "animation name    : " << name             << '\n'
-          << "current  position : " << currentPosition  << '\n'
-          << "periodic position : " << periodicPosition << '\n'
-          << "period            : " << period           << '\n';
+    IObject* pParent = GetOwner()->GetParent();
+    if (pParent)
+    {
+        if (static_cast<Character*>(pParent)->GetIndex() == 
+            Communication()()->m_myInfo.ID)
+        {
+            Debug << "track 0\n"
+                << "animation name    : " << name << '\n'
+                << "current  position : " << currentPosition << '\n'
+                << "periodic position : " << periodicPosition << '\n'
+                << "period            : " << period << '\n';
+        }
+    }
 
     pController->GetTrackDesc(1, &desc);
     if (desc.Enable)
@@ -185,19 +193,36 @@ void SkinnedMeshController::notifyAnimationEvent(
         track1Period = pSet->GetPeriod();
         pSet->Release();
 
-        Debug << "track 1\n"
-              << "animation name    : " << track1Name << '\n'
-              << "current  position : " << track1CurrentPosition << '\n'
-              << "periodic position : " << track1PeriodicPosition << '\n'
-              << "period            : " << track1Period << "\n\n";
+        IObject* pParent = GetOwner()->GetParent();
+        if (pParent)
+        {
+            if (static_cast<Character*>(pParent)->GetIndex() == 
+                Communication()()->m_myInfo.ID)
+            {
+                Debug << "track 1\n"
+                    << "animation name    : " << track1Name << '\n'
+                    << "current  position : " << track1CurrentPosition << '\n'
+                    << "periodic position : " << track1PeriodicPosition << '\n'
+                    << "period            : " << track1Period << "\n\n";
+            }
+        }
+
     }
     else
     {
-        Debug << "track 1\n"
-              << "animation name    : " << '\n'
-              << "current  position : " << '\n'
-              << "periodic position : " << '\n'
-              << "period            : " << "\n\n";
+        IObject* pParent = GetOwner()->GetParent();
+        if (pParent)
+        {
+            if (static_cast<Character*>(pParent)->GetIndex() == 
+                Communication()()->m_myInfo.ID)
+            {
+                Debug << "track 1\n"
+                    << "animation name    : " << '\n'
+                    << "current  position : " << '\n'
+                    << "periodic position : " << '\n'
+                    << "period            : " << "\n\n";
+            }
+        }
     }
 
     const double dDT = static_cast<double>(dt);
@@ -709,4 +734,55 @@ void SkinnedMeshController::GetSubTrackDescription(
         !FAILED(hr) &&
         "SkinnedMeshController::GetSubTrackDescription(), \
          ID3DXAnimationController::GetTrackDesc() failed.");
+}
+
+float SkinnedMeshController::GetTrackPeriod(const std::size_t index)
+{
+    LPD3DXANIMATIONSET pSet = nullptr;
+    m_pSkinnedMeshInstance->m_pAnimController->GetTrackAnimationSet(index, &pSet);
+    float period = static_cast<float>(pSet->GetPeriod());
+    pSet->Release();
+    return period;
+}
+
+float SkinnedMeshController::GetSubTrackPeriod(const std::size_t index)
+{
+    LPD3DXANIMATIONSET pSet = nullptr;
+    m_pSkinnedMeshInstance->m_pSubAnimController->GetTrackAnimationSet(index, &pSet);
+    float period = static_cast<float>(pSet->GetPeriod());
+    pSet->Release();
+    return period;
+}
+
+void SkinnedMeshController::findBoundingSphere(
+    LPD3DXFRAME pFrame, 
+    std::vector<BoundingSphere>* OutBoundingSpheres)
+{
+    if (!pFrame) return;
+  
+    findBoundingSphere(pFrame->pMeshContainer, OutBoundingSpheres);
+
+    findBoundingSphere(pFrame->pFrameSibling, OutBoundingSpheres);
+    findBoundingSphere(pFrame->pFrameFirstChild, OutBoundingSpheres);
+}
+
+void SkinnedMeshController::findBoundingSphere(
+    LPD3DXMESHCONTAINER pMeshContainer, 
+    std::vector<BoundingSphere>* OutBoundingSpheres)
+{
+    if (!pMeshContainer) return;
+
+    MeshContainer* pMC = static_cast<MeshContainer*>(pMeshContainer);
+    BoundingSphere bs;
+    bs.center = pMC->pEffectMesh->m_boundingSphere.center;
+    bs.radius = pMC->pEffectMesh->m_boundingSphere.radius;
+    OutBoundingSpheres->emplace_back(bs);
+}
+
+std::vector<BoundingSphere> SkinnedMeshController::GetBoundingSpheres()
+{
+    std::vector<BoundingSphere> boundingSpheres;
+    findBoundingSphere(m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame, &boundingSpheres);
+    findBoundingSphere(m_pSkinnedMeshInstance->pSkinnedMesh->m_pSubRootFrame, &boundingSpheres);
+    return boundingSpheres;
 }

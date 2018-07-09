@@ -33,8 +33,7 @@ struct EffectMesh
 {
     LPD3DXMESH               m_pMesh;
     std::vector<EffectParam> m_effectParams;
-    float                    m_radius;
-    D3DXVECTOR3              m_center;
+    BoundingSphere           m_boundingSphere;
 
     EffectMesh();
     ~EffectMesh();

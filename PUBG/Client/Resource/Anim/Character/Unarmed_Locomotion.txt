@@ -1,0 +1,4 @@
+Unarmed_Locomotion.X (하단의 3개 X파일을 합친 것) (총 애니메이션 set: 58개)
+- Unarmed_Locomotion_Stand.X (21)
+- Unarmed_Locomotion_Crouch.X (21)
+- Unarmed_Locomotion_Prone.X (16)

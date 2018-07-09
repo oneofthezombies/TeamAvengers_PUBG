@@ -71,6 +71,7 @@ public:
     void SetNumBullet(const int numBullet);
     int GetNumBullet() const;
 
+    Frame* GetGunBolt() const;
     void ChangeAuto();
     bool GetAuto();
 

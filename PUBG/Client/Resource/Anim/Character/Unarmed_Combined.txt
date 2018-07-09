@@ -1,0 +1,7 @@
+Unarmed_Combined.X (하단의 X파일을 합친것) (총 애니메이션 set: 29개)
+- Lobby.X (4)
+- Unarmed_Idle.X (3)
+- Unarmed_Transition.X (6)
+- Unarmed_Attack.X (7)
+- Unarmed_DoorOpen_And_Pickup.X (6)
+- Unarmed_Landing.X (3)

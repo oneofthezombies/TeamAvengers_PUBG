@@ -15,52 +15,52 @@ void SceneLoading::Load()
     // set play mode
     // alone       -> no network
     // with others -> login to network
-    setPlayMode(PlayMode::ALONE);
+    setPlayMode(PlayMode::WITH_OTHERS);
 
-    // load effect meshs
+    //// load effect meshs
+    load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::QBZ);
-    //load(TAG_RES_STATIC::Kar98k);
+    load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
+    load(TAG_RES_STATIC::Rock_1);
 
     //// load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    //load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
-    // load character
-    /*
-    ForTest는 아래 4개의 X파일들을 합친 것
-    Lobby.X
-    Unarmed_Idle.X
-    Unarmed_Jump.X
-    Unarmed_Locomotion_Stand.X
-    */
-    load(TAG_RES_ANIM_CHARACTER::ForTest);
+    // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
+    load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load animation
-    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Crouch);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_Prone);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Transition);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined);
 
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Idling);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Stand);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Crouch);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_Prone);
-
-    // has bug
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Transition);
-
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_OnBody);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_PrimarySlot_OnHand);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Stand_SecondarySlot_OnHand);
-
-    // has bug
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_PrimarySlot_OnHand);
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Prone_SecondarySlot_OnHand);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+
+    /*
+    Unarmed_Combined.X 는 하단의 X파일들을 합친 것
+    - Lobby.X
+    - Unarmed_Idle.X
+    - Unarmed_Transition.X
+    - Unarmed_Attack.X
+    - Unarmed_DoorOpen_And_Pickup.X
+    - Unarmed_Landing.X
+
+    Rifle_Combined.X 는 하단의 X파일들을 합친 것
+    - Rifle_Idling.X
+    - Rifle_Transition.X
+    - Rifle_DoorOpen_And_Pickup.X
+    - Rifle_Landing.X
+    - Rifle_Jump.X
+    - Rifle_OnBody.X
+    - Rifle_OnHand.X
+    */
 }
 
 void SceneLoading::load(const TAG_RES_STATIC tag)
@@ -70,11 +70,17 @@ void SceneLoading::load(const TAG_RES_STATIC tag)
 
     if (m_policy == Resource::Policy::SYNC)
     {
-        m_effectMeshResources.emplace(
-            m_effectMeshResources.size(), 
-            Resource::Async::OnLoadEffectMesh(
+        m_tasksForSingleThread.emplace_back(
+            std::make_tuple(
+                &m_effectMeshResources, 
+                std::bind(
+                    &Resource::Async::OnLoadEffectMesh, 
+                    std::placeholders::_1, 
+                    std::placeholders::_2), 
                 pathFilename.first, 
                 pathFilename.second));
+
+        ++m_numTotalTasks;
     }
     else if (m_policy == Resource::Policy::ASYNC)
     {
@@ -89,11 +95,17 @@ void SceneLoading::load(const TAG_RES_ANIM_WEAPON tag)
 
     if (m_policy == Resource::Policy::SYNC)
     {
-        m_skinnedMeshResources.emplace(
-            m_skinnedMeshResources.size(),
-            Resource::Async::OnLoadSkinnedMesh(
+        m_tasksForSingleThread.emplace_back(
+            std::make_tuple(
+                &m_skinnedMeshResources,
+                std::bind(
+                    &Resource::Async::OnLoadSkinnedMesh,
+                    std::placeholders::_1,
+                    std::placeholders::_2),
                 pathFilename.first,
                 pathFilename.second));
+
+        ++m_numTotalTasks;
     }
     else if (m_policy == Resource::Policy::ASYNC)
     {
@@ -108,11 +120,17 @@ void SceneLoading::load(const TAG_RES_EQUIPMENT tag)
 
     if (m_policy == Resource::Policy::SYNC)
     {
-        m_equipmentSkinnedMeshResources.emplace(
-            m_equipmentSkinnedMeshResources.size(),
-            Resource::Async::OnLoadSkinnedMesh(
+        m_tasksForSingleThread.emplace_back(
+            std::make_tuple(
+                &m_equipmentSkinnedMeshResources,
+                std::bind(
+                    &Resource::Async::OnLoadSkinnedMesh,
+                    std::placeholders::_1,
+                    std::placeholders::_2),
                 pathFilename.first,
                 pathFilename.second));
+
+        ++m_numTotalTasks;
     }
     else if (m_policy == Resource::Policy::ASYNC)
     {
@@ -127,11 +145,17 @@ void SceneLoading::load(const TAG_RES_ANIM_CHARACTER tag)
 
     if (m_policy == Resource::Policy::SYNC)
     {
-        m_characterSkinnedMeshResources.emplace(
-            m_characterSkinnedMeshResources.size(),
-            Resource::Async::OnLoadSkinnedMesh(
+        m_tasksForSingleThread.emplace_back(
+            std::make_tuple(
+                &m_characterSkinnedMeshResources,
+                std::bind(
+                    &Resource::Async::OnLoadSkinnedMesh,
+                    std::placeholders::_1,
+                    std::placeholders::_2),
                 pathFilename.first,
                 pathFilename.second));
+
+        ++m_numTotalTasks;
     }
     else if (m_policy == Resource::Policy::ASYNC)
     {
@@ -146,11 +170,17 @@ void SceneLoading::addAnimation(const TAG_RES_ANIM_CHARACTER tag)
 
     if (m_policy == Resource::Policy::SYNC)
     {
-        m_characterAnimationResources.emplace(
-            m_characterAnimationResources.size(),
-            Resource::Async::OnLoadSkinnedMesh(
+        m_tasksForSingleThread.emplace_back(
+            std::make_tuple(
+                &m_characterAnimationResources,
+                std::bind(
+                    &Resource::Async::OnLoadSkinnedMesh,
+                    std::placeholders::_1,
+                    std::placeholders::_2),
                 pathFilename.first,
                 pathFilename.second));
+
+        ++m_numTotalTasks;
     }
     else if (m_policy == Resource::Policy::ASYNC)
     {
@@ -193,6 +223,14 @@ SceneLoading::~SceneLoading()
 void SceneLoading::OnInit()
 {
     Resource::XContainer* pXContainer = new Resource::XContainer;
+    Resource::Async::CreateTexture("./Resource/", "input_field.png", pXContainer);
+    Resource()()->AddResource(pXContainer);
+
+    pXContainer = new Resource::XContainer;
+    Resource::Async::CreateTexture("./Resource/", "LoadingScreen.tga", pXContainer);
+    Resource()()->AddResource(pXContainer);
+
+    pXContainer = new Resource::XContainer;
     HRESULT hr = Resource::Async::CreateTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png", pXContainer);
     Resource()()->AddResource(pXContainer);
 
@@ -227,8 +265,8 @@ void SceneLoading::OnInit()
     m_pBackground =
         new UIImage(
             "./Resource/",
-            "dedenne.png",
-            D3DXVECTOR3(-600.0f, -200.0f, 0.0f),
+            "LoadingScreen.tga",
+            Vector3::ZERO,
             nullptr,
             nullptr);
 
@@ -239,7 +277,7 @@ void SceneLoading::OnInit()
             &m_percentage, 
             D3DCOLOR_XRGB(0, 255, 0), 
             m_pBackground);
-    m_pPercentageImage->SetPosition(D3DXVECTOR3(1000.0f, 300.0f, 0.0f));
+    m_pPercentageImage->SetPosition(D3DXVECTOR3(450.0f, 450.0f, 0.0f));
     m_pPercentageImage->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
 
     m_start = std::chrono::system_clock::now();
@@ -273,41 +311,63 @@ void SceneLoading::OnUpdate()
     }
     else
     {
-        if (!m_isDoneEffectMeshs)
+        if (m_policy == Resource::Policy::ASYNC)
         {
-            if (verifyTasks(&m_effectMeshTasks, &m_effectMeshResources))
+            if (!m_isDoneEffectMeshs)
+            {
+                if (verifyTasks(&m_effectMeshTasks, &m_effectMeshResources))
+                {
+                    addEffectMeshs();
+                }
+            }
+
+            if (!m_isDoneSkinnedMeshs)
+            {
+                if (verifyTasks(&m_skinnedMeshTasks, &m_skinnedMeshResources))
+                {
+                    addSkinnedMeshs();
+                }
+            }
+
+            if (!m_isDoneCharacters)
+            {
+                if (verifyTasks(
+                    &m_characterSkinnedMeshTasks,
+                    &m_characterSkinnedMeshResources) &&
+                    //verifyTasks(
+                    //    &m_equipmentSkinnedMeshTasks,
+                    //    &m_equipmentSkinnedMeshResources) &&
+                    verifyTasks(
+                        &m_characterAnimationTasks,
+                        &m_characterAnimationResources))
+                {
+                    addAnimationsToCharacter();
+                }
+            }
+        }
+        else if (m_policy == Resource::Policy::SYNC)
+        {
+            if (!m_tasksForSingleThread.empty())
+            {
+                auto begin = m_tasksForSingleThread.begin();
+                resources_t* pResources = std::get<0>(*begin);
+                auto&        task = std::get<1>(*begin);
+                std::string& path = std::get<2>(*begin);
+                std::string& xFilename = std::get<3>(*begin);
+
+                Resource::XContainer* pXContainer = task(path, xFilename);
+                m_lastFinishedTaskName = pXContainer->m_filename;
+                ++m_numFinishedTasks;
+
+                pResources->emplace(pResources->size(), pXContainer);
+
+                m_tasksForSingleThread.erase(begin);
+            }
+            else
             {
                 addEffectMeshs();
-
-                m_isDoneEffectMeshs = true;
-            }
-        }
-
-        if (!m_isDoneSkinnedMeshs)
-        {
-            if (verifyTasks(&m_skinnedMeshTasks, &m_skinnedMeshResources))
-            {
                 addSkinnedMeshs();
-
-                m_isDoneSkinnedMeshs = true;
-            }
-        }
-
-        if (!m_isDoneCharacters)
-        {
-            if (verifyTasks(
-                &m_characterSkinnedMeshTasks,
-                &m_characterSkinnedMeshResources) &&
-                //verifyTasks(
-                //    &m_equipmentSkinnedMeshTasks,
-                //    &m_equipmentSkinnedMeshResources) &&
-                verifyTasks(
-                    &m_characterAnimationTasks,
-                    &m_characterAnimationResources))
-            {
                 addAnimationsToCharacter();
-
-                m_isDoneCharacters = true;
             }
         }
     }
@@ -330,7 +390,8 @@ void SceneLoading::OnUpdate()
     m_percentage += '\n';
     for (int i = 0; i < static_cast<int>(percentage * 0.1f); ++i)
         m_percentage += "@";
-
+    m_percentage += '\n';
+    m_percentage += "Loading on single thread...\n";
 }
 
 void SceneLoading::addAnimationsToCharacter()
@@ -398,26 +459,28 @@ void SceneLoading::addAnimationsToCharacter()
 
         SAFE_DELETE(pR.second);
     }
+
+    m_isDoneCharacters = true;
 }
 
 void SceneLoading::addEffectMeshs()
 {
-    Resource::Manager* pRM = Resource()();
+    for (auto r : m_effectMeshResources)
+    {
+        Resource()()->AddResource(r.second);
+    }
 
-    for (auto pR : m_effectMeshResources)
-        pRM->AddResource(pR.second);
-
-    m_effectMeshResources.clear();
+    m_isDoneEffectMeshs = true;
 }
 
 void SceneLoading::addSkinnedMeshs()
 {
-    Resource::Manager* pRM = Resource()();
+    for (auto r : m_skinnedMeshResources)
+    {
+        Resource()()->AddResource(r.second);
+    }
 
-    for (auto pR : m_skinnedMeshResources)
-        pRM->AddResource(pR.second);
-
-    m_skinnedMeshResources.clear();
+    m_isDoneSkinnedMeshs = true;
 }
 
 void SceneLoading::addHeightmapResource()

@@ -1,7 +1,0 @@
-/// Unarmed_DoorOpen_And_Pickup.X (무기없을 때 문을 열거나, 줍는 애니메이션)
-0. (0    ~ 104)[105] - Unarmed_Combat_Crouch_DoorOpen
-1. (105 ~ 209)[105] - Unarmed_Combat_Prone_DoorOpen
-2. (210 ~ 314)[105] - Unarmed_Combat_Stand_DoorOpen
-3. (315 ~ 475)[161] - Unarmed_Combat_Crouch_Pickup_Low
-4. (476 ~ 636)[161] - Unarmed_Combat_Prone_Pickup_Low
-5. (637 ~ 797)[161] - Unarmed_Combat_Stand_Pickup_Low
