@@ -7,6 +7,8 @@
 #include "UIImage.h"
 #include "ResourceInfo.h"
 
+using BodyPart = CharacterAnimation::BodyPart;
+
 const float Item::DEFAULT_BLENDING_TIME = 0.3f;
 const float Item::DEFAULT_NEXT_WEIGHT = 0.0f;
 const float Item::DEFAULT_POSITION = 0.0f;
@@ -35,6 +37,8 @@ Item::Item(
 
     , pGunBolt(nullptr)
 
+    , m_pFramePtr(nullptr)
+
 {
     Transform* pTr = GetTransform();
     pTr->SetPosition(position);
@@ -49,6 +53,7 @@ Item::Item(
 
 Item::~Item()
 {
+    SAFE_DELETE(m_pFramePtr);
 }
 
 void Item::OnUpdate()
@@ -67,7 +72,12 @@ void Item::OnRender()
     }
         
     if (m_isRenderSkinnedMesh)
-        pSkinnedMeshController->Render(GetTransform()->GetTransformationMatrix(), std::bind(&Item::setGlobalVariable, this, _1));
+    {
+        pSkinnedMeshController->Render(
+            GetTransform()->GetTransformationMatrix(), 
+            std::bind(&Item::setGlobalVariable, 
+            this, _1));
+    }
 
     m_boundingSphere.position = GetTransform()->GetPosition();
     m_boundingSphere.Render();
@@ -104,24 +114,41 @@ void Item::setup(const TAG_RES_STATIC tag)
     case TAG_ITEM_CATEGORY::Ammo:
     case TAG_ITEM_CATEGORY::Attach:
     case TAG_ITEM_CATEGORY::Consumable:
-    {
-        const auto pathName = ResourceInfo::GetUIPathFileName(tag);
-        pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
-        pUIImage->SetIsRender(false);
-        D3DXMATRIX s;
-        //아이콘 이미지 size 조절
-        D3DXMatrixScaling(&s, 0.2f, 0.2f, 0.0f);
-        pUIImage->SetTransform(s);
-    }
+        {
+            const auto pathName = ResourceInfo::GetUIPathFileName(tag);
+            pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
+            pUIImage->SetIsRender(false);
+            D3DXMATRIX s;
+            //아이콘 이미지 size 조절
+            D3DXMatrixScaling(&s, 0.2f, 0.2f, 0.0f);
+            pUIImage->SetTransform(s);
+        }
         break;
 
     case TAG_ITEM_CATEGORY::Armor:
+        {
+    
+    
+        }
+        break;
     case TAG_ITEM_CATEGORY::Back:
+        {
+    
+        }
+        break;
     case TAG_ITEM_CATEGORY::Head:
         {
             pSkinnedMeshController = AddComponent<SkinnedMeshController>();
-            const auto pathName = ResourceInfo::GetUIPathFileName(tag);
-            pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
+            const auto pathFileName = ResourceInfo::GetPathFileName(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
+            pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathFileName.first, pathFileName.second));
+            m_pFramePtr = new FramePtr;
+            setFramePtr();
+            addAnimationBackupFrameForEquip();
+
+            Set(BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+            const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
+            pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
         }
         break;
     
@@ -140,6 +167,8 @@ void Item::setup(const TAG_RES_STATIC tag)
             else if (m_tagResStatic == TAG_RES_STATIC::Kar98k)
             {
                 pGunBolt = pSkinnedMeshController->FindFrame("Gun_bolt_02");
+
+                //가장 처음은 idle로 셋해줌
                 Set(TAG_ANIM_WEAPON::Weapon_Kar98k_Idle);
                 UpdateAnimation();
                 UpdateModel();
@@ -167,6 +196,49 @@ void Item::setGlobalVariable(LPD3DXEFFECT pEffect)
     DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
     D3DXVECTOR3 lightDir = light->GetDirection();
     pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
+}
+
+void Item::addAnimationBackupFrameForEquip()
+{
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("pelvis"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("thigh_l"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("thigh_r"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("calf_r"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("thigh_twist_01_r"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("foot_r"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("calf_twist_01_r"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ball_r"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("calf_l"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("thigh_twist_01_l"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("foot_l"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("calf_twist_01_l"));
+    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ball_l"));
+}
+
+void Item::setFramePtr()
+{
+    m_pFramePtr->pWaist         = pSkinnedMeshController->FindFrame("spine_01");
+    m_pFramePtr->pRoot          = pSkinnedMeshController->FindFrame("root");
+    m_pFramePtr->pHead          = pSkinnedMeshController->FindFrame("head");
+    m_pFramePtr->pLeftClavicle  = pSkinnedMeshController->FindFrame("clavicle_l");
+    m_pFramePtr->pRightClavicle = pSkinnedMeshController->FindFrame("clavicle_r");
+
+    m_pFramePtr->pHandGun       = pSkinnedMeshController->FindFrame("item_r");
+
+    m_pFramePtr->pTPP           = pSkinnedMeshController->FindFrame("camera_tpp");
+    m_pFramePtr->pFPP           = pSkinnedMeshController->FindFrame("camera_fpp");
+
+    FramePtr*& p = m_pFramePtr;
+    assert(
+        p->pWaist &&
+        p->pRoot &&
+        p->pHead &&
+        p->pLeftClavicle &&
+        p->pRightClavicle &&
+        p->pHandGun &&
+        p->pTPP &&
+        p->pFPP &&
+        "Item::setFramePtr(), pointer is null.");
 }
 
 TAG_RES_STATIC Item::GetTagResStatic() const
@@ -282,6 +354,27 @@ void Item::UpdateModel()
     }
 }
 
+void Item::UpdateBone(Item* pHand, const float headRot, const float waistRot)
+{
+    //Character::updateBone()가 수정되면 이곳도 같도록 변경해야함
+    D3DXMATRIX rHead;
+
+    D3DXMatrixRotationY(&rHead, headRot);
+    m_pFramePtr->pHead->TransformationMatrix *= rHead;
+
+    if (pHand)
+    {
+        m_pFramePtr->pLeftClavicle->TransformationMatrix *= rHead;
+        m_pFramePtr->pRightClavicle->TransformationMatrix *= rHead;
+    }
+
+    D3DXMATRIX rWaist;
+    D3DXMatrixRotationX(&rWaist, waistRot);
+    m_pFramePtr->pWaist->TransformationMatrix *= rWaist;
+
+    m_pFramePtr->pRoot->TransformationMatrix = Matrix::IDENTITY;
+}
+
 //for 아이템 자체 애니메이션
 void Item::Set(
     const TAG_ANIM_WEAPON tag,
@@ -321,7 +414,16 @@ void Item::Set(
         finishEvent);
 }
 
-void Item::Set(const TAG_ANIM_WEAPON tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float loopEventPeriod, const std::function<void()>& loopEvent, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+void Item::Set(
+    const TAG_ANIM_WEAPON tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight, 
+    const float position, 
+    const float loopEventPeriod,
+    const std::function<void()>& loopEvent,
+    const float finishEventAgoTime, 
+    const std::function<void()>& finishEvent)
 {
     pSkinnedMeshController->SetAnimation(
         false,
@@ -342,3 +444,189 @@ bool Item::HasFinishEvent() const
     return pSkinnedMeshController->HasFinishEvent();
 }
 
+//for 장비 애니메이션
+void Item::Set(
+    const BodyPart part,
+    const TAG_ANIM_CHARACTER tag,
+    const bool isBlend,
+    const float blendingTime,
+    const float nextWeight,
+    const float position)
+{
+    if (part == BodyPart::UPPER)
+    {
+        pSkinnedMeshController->SetAnimation(
+            true,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+    else if (part == BodyPart::LOWER)
+    {
+        pSkinnedMeshController->SetAnimation(
+            false,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+    else if (part == BodyPart::BOTH)
+    {
+        pSkinnedMeshController->SetAnimation(
+            true,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+
+        pSkinnedMeshController->SetAnimation(
+            false,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+}
+
+void Item::Set(
+    const BodyPart part,
+    const TAG_ANIM_CHARACTER tag,
+    const bool isBlend,
+    const float blendingTime,
+    const float nextWeight,
+    const float position,
+    const float finishEventAgoTime,
+    const std::function<void()>& finishEvent)
+{
+    if (part == BodyPart::UPPER)
+    {
+        pSkinnedMeshController->SetAnimation(
+            true,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+    else if (part == BodyPart::LOWER)
+    {
+        pSkinnedMeshController->SetAnimation(
+            false,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+    else if (part == BodyPart::BOTH)
+    {
+        pSkinnedMeshController->SetAnimation(
+            true,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+
+        pSkinnedMeshController->SetAnimation(
+            false,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+}
+
+void Item::Set(
+    const BodyPart part,
+    const TAG_ANIM_CHARACTER tag,
+    const bool isBlend,
+    const float blendingTime,
+    const float nextWeight,
+    const float position,
+    const float loopEventPeriod,
+    const std::function<void()>& loopEvent,
+    const float finishEventAgoTime,
+    const std::function<void()>& finishEvent)
+{
+    if (part == BodyPart::UPPER)
+    {
+        pSkinnedMeshController->SetAnimation(
+            true,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            loopEventPeriod,
+            loopEvent,
+            finishEventAgoTime,
+            finishEvent);
+    }
+    else if (part == BodyPart::LOWER)
+    {
+        pSkinnedMeshController->SetAnimation(
+            false,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            loopEventPeriod,
+            loopEvent,
+            finishEventAgoTime,
+            finishEvent);
+    }
+    else if (part == BodyPart::BOTH)
+    {
+        pSkinnedMeshController->SetAnimation(
+            true,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            loopEventPeriod,
+            loopEvent,
+            finishEventAgoTime,
+            finishEvent);
+
+        pSkinnedMeshController->SetAnimation(
+            false,
+            TagAnimation::GetString(tag),
+            TagAnimation::GetSpeed(tag),
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            loopEventPeriod,
+            loopEvent,
+            finishEventAgoTime,
+            finishEvent);
+    }
+}

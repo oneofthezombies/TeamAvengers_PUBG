@@ -93,7 +93,7 @@ Character::IsPressed::IsPressed()
 
 }
 
-Character::FramePtr::FramePtr()
+FramePtr::FramePtr()
     : pRoot(nullptr)
     , pHead(nullptr)
     , pWaist(nullptr)
@@ -248,9 +248,7 @@ void Character::handleMouse(const float dt, MouseInput* mouseInput)
         ClientToScreen(g_hWnd, &center);
         SetCursorPos(center.x, center.y);
     }
-
 }
-
 
 void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizontal)
 {
@@ -372,8 +370,6 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
         }
     }
 
-
-
     //Limiting camera Pitch 
     if (m_rotationForCamera.x < -1.0f)
         m_rotationForCamera.x = -1.0f;
@@ -385,13 +381,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     //else if (m_rotationForCamera.x > 0.8f)
     //    m_rotationForCamera.x = 0.8f;
 
-
-
-
     Debug << "m_rotationForCamera.x : " << m_rotationForCamera.x << endl << endl << endl;
-
-
-
 }
 
 bool Character::isMine() const
@@ -437,7 +427,7 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
                 //else if (m_attacking == Attacking::Rifle)
                 //    tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard;
 
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     tagAnim,
                     true,
@@ -447,7 +437,7 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
                     CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                     [this]()
                 {
-                    pAnimation->Set(
+                    setAnimation(
                         CharacterAnimation::BodyPart::BOTH,
                         m_lowerAnimState,
                         false);
@@ -612,7 +602,7 @@ void Character::RifleShooting()
             });
 
             //캐릭터의 애니메이션
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::UPPER,
                 tagAnim,
                 true, //ok
@@ -623,7 +613,7 @@ void Character::RifleShooting()
                 [this]()
             {
                 m_hasChangingState = false;
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     true,
@@ -891,6 +881,7 @@ D3DXVECTOR3 Character::getBackwardLeft()
 
 void Character::updateBone()
 {
+    //*****여기 변경되면 반드시 Item::updateBone()도 변경시켜주길 바람!!!
     // modify local bones
 
     // head, clavles

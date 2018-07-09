@@ -22,6 +22,7 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
+    load(TAG_RES_STATIC::Head_Lv1);
     load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);

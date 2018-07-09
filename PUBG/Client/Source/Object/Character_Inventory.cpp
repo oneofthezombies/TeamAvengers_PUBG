@@ -216,9 +216,8 @@ void Character::TotalInventory::Render()
 void Character::PutItemInTotalInventory(Item* item)
 {
     assert(item && "Character::PutItemInTotalInventory(), item is null.");
-    ShowTotalInventory();
 
-    TAG_RES_STATIC tag = item->GetTagResStatic();
+    TAG_RES_STATIC    tag      = item->GetTagResStatic();
     TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(tag);
 
     switch (category)
@@ -260,23 +259,26 @@ void Character::PutItemInTotalInventory(Item* item)
     case TAG_ITEM_CATEGORY::Rifle:
         //TODO: 무기창의 어느부분에 넣느냐에 따라서 달라짐
         //지금은 임시로 QBZ를 주무기, Kar98k를 보조무기로
-    {
-        //if (주무기 창이면)
-        if(tag == TAG_RES_STATIC::QBZ)
         {
-            checkOriginItem((Item**)&m_totalInventory.m_pWeaponPrimary, item);
+            //if (주무기 창이면)
+            if(tag == TAG_RES_STATIC::QBZ)
+            {
+                checkOriginItem((Item**)&m_totalInventory.m_pWeaponPrimary, item);
+            }
+            else if(tag == TAG_RES_STATIC::Kar98k)
+            {
+                checkOriginItem((Item**)&m_totalInventory.m_pWeaponSecondary, item);
+            }
         }
-        else if(tag == TAG_RES_STATIC::Kar98k)
-        {
-            checkOriginItem((Item**)&m_totalInventory.m_pWeaponSecondary, item);
-        }
-    }
         break;
 
     default:
         assert(false && "PutItemInTotalInventory(), default case.");
         break;
     }
+
+    //For Debug
+    //ShowTotalInventory();
 }
 
 void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item)
@@ -297,7 +299,7 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
     }
     else
     {
-        //이미 인벤토리에 붕대가 있는 경우, 기존 붕대 개수와 합친다
+        //이미 인벤토리에 있는 경우, 기존 개수와 합친다
         auto origin_item = it->second.back();
         origin_item->SetCount(origin_item->GetCount() + count);
         CurrentScene()()->Destroy(item);
@@ -347,9 +349,8 @@ void Character::updateTotalInventory()
 
         //총 자체 애니메이션을 업데이트한다
         if (m_isNeedRifleAnim)
-        {
             pHand->UpdateAnimation();
-        }
+
         pHand->UpdateModel();
     }
 
@@ -367,7 +368,20 @@ void Character::updateTotalInventory()
     Item* pHead = m_totalInventory.m_pEquipHead;
     if (pHead)
     {
+        Transform* pHeadTr = pHead->GetTransform();
+        D3DXMATRIX headWorld = pTr->GetTransformationMatrix();
 
+        pHeadTr->SetTransformationMatrix(headWorld);
+        pHeadTr->Update();
+
+        pHead->UpdateAnimation();
+
+        pHead->UpdateBone(
+            m_totalInventory.m_pHand, 
+            m_headRotation.m_angle, 
+            m_waistRotation.m_angle);
+
+        pHead->UpdateModel();
     }
 
     //주무기

@@ -63,7 +63,7 @@ Character::Character(const int index)
 
     pAnimation = new CharacterAnimation;
     AddChild(pAnimation);
-    pAnimation->Set(
+    setAnimation(
         CharacterAnimation::BodyPart::BOTH, 
         TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
@@ -215,6 +215,7 @@ void Character::updateMine()
 
     if (m_health <= 0.0f)
     {
+        //기절 애니메이션
         TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
         if (m_stance == Stance::Stand)
             tagAnim = TAG_ANIM_CHARACTER::DBNO_Enter;
@@ -225,7 +226,7 @@ void Character::updateMine()
 
         assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::updateMine(), tagAnim is COUNT");
 
-        pAnimation->Set(
+        setAnimation(
         CharacterAnimation::BodyPart::BOTH,
         tagAnim,
             true,
@@ -234,7 +235,7 @@ void Character::updateMine()
             CharacterAnimation::DEFAULT_POSITION,
             0.3f,
             [this]() {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::DBNO_Idle,
                 true,
@@ -374,8 +375,6 @@ void Character::updateMine()
     setPunch();
     setInteraction();
     setJump();
-    TAG_ANIM_CHARACTER currentAnim = m_lowerAnimState;
-
     animationControl();
 
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
@@ -397,34 +396,9 @@ void Character::updateMine()
                 bodyPart = CharacterAnimation::BodyPart::BOTH;
             }
 
-            pAnimation->Set(
+            setAnimation(
                 bodyPart,
                 m_lowerAnimState, true, 0.3f, 0.0f, 0.0f);
-       
-            //하단 참고할 만한 것
-            //set current with same position with finish event m_lowerAnimState
-            //D3DXTRACK_DESC lowerDesc;
-            //pAnimation->GetLowerTrackDescription(0, &lowerDesc);
-            //const float period = pAnimation->GetLowerTrackPeriod(0);
-            //float tempNum = period - lowerDesc.Position;
-            //cout << tempNum << endl;
-            //pAnimation->Set(
-            //    CharacterAnimation::BodyPart::BOTH,
-            //    currentAnim,
-            //    true,
-            //    0.5f,
-            //    CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            //    lowerDesc.Position,
-            //    period - lowerDesc.Position,
-            //    [this]()
-            //{
-            //    pAnimation->Set(
-            //        CharacterAnimation::BodyPart::BOTH,
-            //        m_lowerAnimState,
-            //        true,
-            //        0.5f,
-            //        CharacterAnimation::DEFAULT_NEXT_WEIGHT);
-            //});
 
             m_savedInput = m_currentStayKey;
         }
@@ -440,8 +414,6 @@ void Character::updateMine()
     cameraCharacterRotation(dt, &rot, &m_mouseInput);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
     
-
-
     // shoot!
     m_isFire = false;
     m_totalInventory.m_bulletFireCoolDown -= dt;
@@ -465,6 +437,7 @@ void Character::updateMine()
 
     tm->SetPosition(pos);
     tm->SetRotation(rot);
+
     //인벤토리 UI 활성화
     if (m_currentOnceKey._Tab)
     {
@@ -551,12 +524,12 @@ void Character::updateOther()
     if (upperAnim != m_upperAnimState)
     {
         m_upperAnimState = upperAnim;
-        pAnimation->Set(CharacterAnimation::BodyPart::UPPER, upperAnim, true);
+        setAnimation(CharacterAnimation::BodyPart::UPPER, upperAnim, true);
     }
 
     if (lowerAnim != m_lowerAnimState)
     {
         m_lowerAnimState = lowerAnim;
-        pAnimation->Set(CharacterAnimation::BodyPart::LOWER, lowerAnim, true);
+        setAnimation(CharacterAnimation::BodyPart::LOWER, lowerAnim, true);
     }
 }
