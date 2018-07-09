@@ -7,7 +7,6 @@
 #include "Item.h"
 #include "HeightMap.h"
 #include "ComponentTransform.h"
-#include "Head.h"
 //#include "UIImage.h"
 
 void ScenePlay::setAloneMode()
@@ -47,15 +46,15 @@ void ScenePlay::setAloneMode()
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
     
-    //p = D3DXVECTOR3(20, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
-    //AddObject(item);
-    //character0->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(20, 0, 10);
+    item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(30, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
-    //AddObject(item);
-    //character0->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(30, 0, 10);
+    item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(40, 0, 10);
     //item = new Item(TAG_RES_STATIC::Bandage, p, r, s);

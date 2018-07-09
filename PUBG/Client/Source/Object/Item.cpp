@@ -127,15 +127,35 @@ void Item::setup(const TAG_RES_STATIC tag)
 
     case TAG_ITEM_CATEGORY::Armor:
         {
-    
-    
+            pSkinnedMeshController = AddComponent<SkinnedMeshController>();
+            const auto pathFileName = ResourceInfo::GetPathFileName(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
+            pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathFileName.first, pathFileName.second));
+            m_pFramePtr = new FramePtr;
+            setFramePtr();
+            addAnimationBackupFrameForEquip();
+
+            Set(BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+            //const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
+            //pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
         }
         break;
     case TAG_ITEM_CATEGORY::Back:
         {
-    
+            pSkinnedMeshController = AddComponent<SkinnedMeshController>();
+            const auto pathFileName = ResourceInfo::GetPathFileName(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
+            pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathFileName.first, pathFileName.second));
+            m_pFramePtr = new FramePtr;
+            setFramePtr();
+            addAnimationBackupFrameForEquip();
+
+            Set(BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+            //const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
+            //pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
         }
         break;
+
     case TAG_ITEM_CATEGORY::Head:
         {
             pSkinnedMeshController = AddComponent<SkinnedMeshController>();
@@ -147,8 +167,8 @@ void Item::setup(const TAG_RES_STATIC tag)
 
             Set(BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-            const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
-            pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
+            //const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
+            //pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
         }
         break;
     

@@ -255,7 +255,7 @@ void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizo
     //기본 수직 수평 반동 값
     float virtical_result;
     float horizontal_result;
-    int Min = virtical * 0.5f;
+    int Min = static_cast<int>(virtical * 0.5f);
     float Weight = 0.0005f;
 
     virtical_result = (virtical - (rand() % Min)) * Weight;                     //최소 값이 총의 수직반동의 반
@@ -291,8 +291,8 @@ void Character::backActionFrame()
     D3DXQUATERNION q;
     if (m_backAction.Up)
     {
-        m_backAction.curValX = m_backAction.curValX * 0.5;
-        m_backAction.curValY = m_backAction.curValY * 0.5;
+        m_backAction.curValX = m_backAction.curValX * 0.5f;
+        m_backAction.curValY = m_backAction.curValY * 0.5f;
         if (m_backAction.curValX < 0.0001f)
         {
             m_backAction.Up = false;
@@ -305,8 +305,8 @@ void Character::backActionFrame()
     }
     else
     {
-        m_backAction.curValX = m_backAction.curValX / 0.5;
-        m_backAction.curValY = m_backAction.curValY / 0.5;
+        m_backAction.curValX = m_backAction.curValX / 0.5f;
+        m_backAction.curValY = m_backAction.curValY / 0.5f;
         if (m_backAction.curValX >= m_backAction.valX-0.001f)
         {
             m_backAction.Up = true;

@@ -357,12 +357,39 @@ void Character::updateTotalInventory()
     Item* pArmor = m_totalInventory.m_pEquipArmor;
     if (pArmor)
     {
+        Transform* pArmorTr = pArmor->GetTransform();
+        D3DXMATRIX armorWorld = pTr->GetTransformationMatrix();
+
+        pArmorTr->SetTransformationMatrix(armorWorld);
+        pArmorTr->Update();
+
+        pArmor->UpdateAnimation();
+
+        pArmor->UpdateBone(
+            m_totalInventory.m_pHand,
+            m_headRotation.m_angle,
+            m_waistRotation.m_angle);
+
+        pArmor->UpdateModel();
     }
 
     Item* pBack = m_totalInventory.m_pEquipBack;
     if (pBack)
     {
+        Transform* pBackTr = pBack->GetTransform();
+        D3DXMATRIX backWorld = pTr->GetTransformationMatrix();
 
+        pBackTr->SetTransformationMatrix(backWorld);
+        pBackTr->Update();
+
+        pBack->UpdateAnimation();
+
+        pBack->UpdateBone(
+            m_totalInventory.m_pHand,
+            m_headRotation.m_angle,
+            m_waistRotation.m_angle);
+
+        pBack->UpdateModel();
     }
 
     Item* pHead = m_totalInventory.m_pEquipHead;

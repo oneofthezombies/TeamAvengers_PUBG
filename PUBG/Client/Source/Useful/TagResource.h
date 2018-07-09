@@ -192,5 +192,7 @@ enum class TAG_RES_ANIM_CHARACTER
 
 enum class TAG_RES_ANIM_EQUIPMENT
 {
-    Head_Lv1_Anim,
+    Armor_Lv1_Anim,
+    Back_Lv1_Anim,
+    Head_Lv1_Anim
 };
