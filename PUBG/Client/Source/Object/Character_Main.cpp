@@ -242,8 +242,6 @@ void Character::updateMine()
         m_isDead = true;
     }
 
-
-
     const float    dt = Time()()->GetDeltaTime();
     IScene*        pCurrentScene = CurrentScene()();
     Transform* tm = GetTransform();
@@ -262,7 +260,6 @@ void Character::updateMine()
 
     movementControl(&destState);
 
-    
     //////////////////////////////////////////////////
     /////////////// Terrain과의 충돌체크///////////////
     //////////////////////////////////////////////////
@@ -295,9 +292,54 @@ void Character::updateMine()
                 if (hasCollision) break;
 
                 hasCollision = Collision::HasCollision(mine, others);
+
+                if (hasCollision)
+                {
+                    const D3DXVECTOR3 currPos = GetTransform()->GetPosition();
+                    const D3DXVECTOR3 destPos = destState.position;
+                    D3DXVECTOR3 to(destPos.x - currPos.x, 0.0f, destPos.z - currPos.z);
+                    D3DXVECTOR3 dir;
+                    D3DXVec3Normalize(&dir, &to);
+
+                    D3DXVECTOR3 diff((others.center + others.position) - currPos);
+                    D3DXVec3Normalize(&diff, &diff);
+
+                    D3DXVECTOR3 right, forward;
+                    D3DXMATRIX r;
+                    D3DXMatrixRotationQuaternion(&r, &others.rotation);
+                    D3DXVec3TransformNormal(&right, &Vector3::RIGHT, &r);
+                    D3DXVec3Normalize(&right, &right);
+                    D3DXVec3TransformNormal(&forward, &Vector3::FORWARD, &r);
+                    D3DXVec3Normalize(&forward, &forward);
+
+                    float dotX = D3DXVec3Dot(&right, &diff);
+                    if (dotX < 0.0f)
+                        dotX *= -1.0f;
+
+                    float dotZ = D3DXVec3Dot(&forward, &diff);
+                    if (dotZ < 0.0f)
+                        dotZ *= -1.0f;
+
+                    D3DXVECTOR3 dist(Vector3::ZERO);
+                    float len(0.0f);
+                    if (dotX > dotZ)
+                    {
+                        len = D3DXVec3Dot(&to, &forward);
+                        dist = len * forward;
+                    }
+                    else
+                    {
+                        len = D3DXVec3Dot(&to, &right);
+                        dist = len * right;
+                    }
+
+                    destState.position = currPos + dist;
+                }
             }
         }
     }
+
+    // collision with other characters
     if (!hasCollision)
     {
         for (auto o : pCurrentScene->m_NearArea.GetCharacters())
@@ -322,6 +364,8 @@ void Character::updateMine()
         {
             // TODO : impl
         }
+
+        tm->SetPosition(destState.position);
     }
     else
     {

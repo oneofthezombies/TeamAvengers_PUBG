@@ -109,6 +109,11 @@ Communication::Manager::Manager()
     , m_resolver(m_IOContext)
     , m_playMode(PlayMode::WITH_OTHERS)
 {
+    for (auto c : m_roomInfo.playerInfos)
+    {
+        c.upperAnimState = 140;
+        c.lowerAnimState = 140;
+    }
 }
 
 Communication::Manager::~Manager()

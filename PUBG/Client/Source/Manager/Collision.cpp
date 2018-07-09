@@ -476,14 +476,14 @@ bool Collision::HasCollision(
     const BoundingSphere& lhs,
     const BoundingSphere& rhs)
 {
-    return D3DXVec3Length(&((lhs.center+lhs.position) - (rhs.center+rhs.position))) <=
-        lhs.radius + rhs.radius;
+    return 
+        D3DXVec3Length(&(
+        (lhs.center + lhs.position) - (rhs.center + rhs.position))) 
+        <= lhs.radius + rhs.radius;
 }
 
 bool Collision::HasCollision(const BoundingBox& lhs, const BoundingBox& rhs)
 {
-    //const D3DXMATRIX& A_transform = lhs.transformationMatrix;
-    //const D3DXMATRIX& B_transform = rhs.transformationMatrix;
     D3DXMATRIX A_transform, B_transform;
     D3DXMatrixRotationQuaternion(&A_transform, &lhs.rotation);
     D3DXMatrixRotationQuaternion(&B_transform, &rhs.rotation);
@@ -491,8 +491,8 @@ bool Collision::HasCollision(const BoundingBox& lhs, const BoundingBox& rhs)
     const D3DXVECTOR3& A_extent = lhs.extent;
     const D3DXVECTOR3& B_extent = rhs.extent;
 
-    //const D3DXVECTOR3 distance = lhs.center - rhs.center;
-    const D3DXVECTOR3 distance = (lhs.center + lhs.position) - (rhs.center + rhs.position);
+    const D3DXVECTOR3 distance = 
+        (lhs.center + lhs.position) - (rhs.center + rhs.position);
 
     vector<D3DXVECTOR3> A_axises(3);
     vector<D3DXVECTOR3> B_axises(3);
