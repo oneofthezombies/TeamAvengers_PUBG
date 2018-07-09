@@ -12,6 +12,8 @@ UIObject::UIObject(UIObject* pParent)
     , m_size()
     , m_pAttachedObject(nullptr)
 {
+    D3DXMatrixIdentity(&m_transform);
+
     if (pParent)
     {
         pParent->AddChild(this);
@@ -83,6 +85,8 @@ void UIObject::Update(const D3DXVECTOR3& parentViewportPos, const D3DXMATRIX& tr
 
 void UIObject::Render()
 {
+    Sprite()()->SetTransform(&m_transform);
+
     DrawBorder();
     RenderChildren();
 }
@@ -169,4 +173,9 @@ void UIObject::AttachToObject(IObject* p)
 IObject* UIObject::GetAttachedObject() const
 {
     return m_pAttachedObject;
+}
+
+void UIObject::SetTransform(const D3DXMATRIX& transform)
+{
+    m_transform = transform;
 }

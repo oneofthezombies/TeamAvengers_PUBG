@@ -113,7 +113,7 @@ void Character::updateMine()
     //setting animation and movements
     animationMovementControl(&pos, &m_lowerAnimState);
 
-   
+
 
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
     if (m_savedInput != m_currentStayKey)
@@ -125,7 +125,7 @@ void Character::updateMine()
         else
         {
             pAnimation->Set(
-                CharacterAnimation::BodyPart::BOTH, 
+                CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState);
 
             m_savedInput = m_currentStayKey;
@@ -150,22 +150,22 @@ void Character::updateMine()
     //for 문
     //area 내에 있는 모든 terrain feature 와  내꺼 bounding sphere랑 collision이 있는것을 찾아낸다
     /*{
-    
-        
-        //if has sphere collision 
+
+
+        //if has sphere collision
         {
             dest tm을 계산, dest bounding box 계산
 
-            this의(캐릭터의 box colliders 들) 과 terrain feature 가 갖고 있는 box collider 들을 계산 
+            this의(캐릭터의 box colliders 들) 과 terrain feature 가 갖고 있는 box collider 들을 계산
             if(하나라도 충돌하면 빠져 나온다 -> 플레이어가 움직이지 못하도록)
 
             else 하나라도 충돌하지 않는다면
             this를 업데이트 pos = destpos
-            
+
         }
 
     }*/
-    
+
     // character update 끝남
 
 
@@ -177,30 +177,45 @@ void Character::updateMine()
     {
         //이곳을 해야 한다
     }
-    
+
     // 이동가능하다면 cellIndex = CurrentScene()()->GetCellIndex(pos);
     // if (m_cellIndex != cellIndex) 이사하기
     size_t nextCellSpace = pCurrScene->GetCellIndex(pos);
     if (m_cellSpaceIndex != nextCellSpace)
     {
-        pCurrScene->MoveCell(&m_cellSpaceIndex, nextCellSpace,TAG_OBJECT::Character,this);
+        pCurrScene->MoveCell(&m_cellSpaceIndex, nextCellSpace, TAG_OBJECT::Character, this);
     }
 
     cameraCharacterRotation(dt, &rot);//케릭터와 카메라의 rotation을 계산해서 넣게 된다.
     applyTarget_Y_Position(&pos); //apply height and control jumping
     //케릭터와 카메라의 rotation을 계산해서 넣게 된다.
-    
 
-    if (m_currentOnceKey._B)
+    //인벤토리 UI 활성화
+    if (m_currentOnceKey._Tab)
+    {
+        if (!m_totalInventory.isOpened)
+        {
+            m_totalInventory.Open();
+        }
+        else
+        {
+            m_totalInventory.Close();
+        }
+    }
+    
+    m_totalInventory.Update();
+    m_totalInventory.Render();
+
+    if (m_currentOnceKey._B && m_totalInventory.m_hand!=NULL)
     {
         m_totalInventory.m_hand->ChangeAuto();
     }
 
     m_totalInventory.m_bulletFireCoolDown -= dt;
     if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
-    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton
+    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton && !m_currentStayKey._LAlt
         || (m_attacking == Attacking::Rifle && m_totalInventory.m_hand->GetAuto()
-            && TAG_RES_STATIC::QBZ == m_totalInventory.m_hand->GetTagResStatic() && m_currentStayKey._LButton))
+            && TAG_RES_STATIC::QBZ == m_totalInventory.m_hand->GetTagResStatic() && m_currentStayKey._LButton && !m_currentStayKey._LAlt))
     {
         if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_hand->GetNumBullet() > 0)
         {

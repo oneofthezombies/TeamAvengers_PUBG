@@ -19,7 +19,7 @@ void SceneLoading::Load()
 
     // load effect meshs
     load(TAG_RES_STATIC::Ammo_5_56mm);
-    //load(TAG_RES_STATIC::Ammo_7_62mm);
+    load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::QBZ);
     //load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
@@ -193,8 +193,37 @@ SceneLoading::~SceneLoading()
 void SceneLoading::OnInit()
 {
     Resource::XContainer* pXContainer = new Resource::XContainer;
+    HRESULT hr = Resource::Async::CreateTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png", pXContainer);
+    Resource()()->AddResource(pXContainer);
+
+    pXContainer = new Resource::XContainer;
     Resource::Async::CreateTexture("./Resource/", "dedenne.png", pXContainer);
     Resource()()->AddResource(pXContainer);
+
+    pXContainer = new Resource::XContainer;
+    hr = Resource::Async::CreateTexture("./Resource/UI/Inventory/Character/", "female.tga", pXContainer);
+    Resource()()->AddResource(pXContainer);
+
+    //assert(hr && "SceneLoading Onit");
+
+    //인벤토리 라인
+    pXContainer = new Resource::XContainer;
+    Resource::Async::CreateTexture("./Resource/UI/Inventory/Basic/", "line.png", pXContainer);
+    Resource()()->AddResource(pXContainer);
+
+    //Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "Female.tga", D3DCOLOR_XRGB(188, 188, 188));
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.tga", D3DCOLOR_XRGB(0, 0, 0));
+
+
+
+    pair<string, string> p;
+    p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
+    Resource()()->AddTexture(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
+
+    p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
+    Resource()()->AddTexture(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
+
     m_pBackground =
         new UIImage(
             "./Resource/",

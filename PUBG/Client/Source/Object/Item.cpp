@@ -97,6 +97,11 @@ void Item::setup(const TAG_RES_STATIC tag)
     {
         const auto pathName = ResourceInfo::GetUIPathFileName(tag);
         pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
+        pUIImage->SetIsRender(false);
+        D3DXMATRIX s;
+        //아이콘 이미지 size 조절
+        D3DXMatrixScaling(&s, 0.2f, 0.2f, 0.0f);
+        pUIImage->SetTransform(s);
     }
         break;
 
@@ -107,6 +112,7 @@ void Item::setup(const TAG_RES_STATIC tag)
         pSkinnedMeshController = AddComponent<SkinnedMeshController>();
         const auto pathName = ResourceInfo::GetUIPathFileName(tag);
         pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
+
     }
         break;
     

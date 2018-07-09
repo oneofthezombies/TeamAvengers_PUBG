@@ -70,6 +70,8 @@ enum class TAG_SCENE
 enum class TAG_FONT
 {
     Default,
+    Invetory_Ground,
+    Invetory_28,
 };
 
 enum class TAG_SOUND
