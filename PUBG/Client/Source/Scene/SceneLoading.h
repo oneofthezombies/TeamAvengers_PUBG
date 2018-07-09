@@ -9,14 +9,6 @@ using tasks_t = std::deque<
 >;
 using resources_t = std::map<std::size_t, Resource::XContainer*>;
 
-enum class PlayMode
-{
-    // for local test
-    ALONE,
-
-    WITH_OTHERS
-};
-
 class UIText;
 class UIImage;
 
@@ -70,7 +62,6 @@ private:
     bool m_isFinished;
 
     Resource::Policy m_policy;
-    PlayMode         m_playMode;
 
     std::thread t;
 
@@ -95,7 +86,7 @@ private:
     void addAnimation(const TAG_RES_ANIM_CHARACTER tag);
 
     void setPolicy(const Resource::Policy policy);
-    void setPlayMode(const PlayMode mode);
+    void setPlayMode(const Communication::PlayMode mode);
     bool isFinished() const;
 
 public:

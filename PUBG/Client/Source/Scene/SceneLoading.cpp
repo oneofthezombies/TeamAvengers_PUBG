@@ -15,7 +15,7 @@ void SceneLoading::Load()
     // set play mode
     // alone       -> no network
     // with others -> login to network
-    setPlayMode(PlayMode::WITH_OTHERS);
+    setPlayMode(Communication::PlayMode::ALONE);
     //setPlayMode(PlayMode::ALONE);
 
     //// load effect meshs
@@ -194,9 +194,9 @@ void SceneLoading::setPolicy(const Resource::Policy policy)
     m_policy = policy;
 }
 
-void SceneLoading::setPlayMode(const PlayMode mode)
+void SceneLoading::setPlayMode(const Communication::PlayMode mode)
 {
-    m_playMode = mode;
+    Communication()()->SetPlayMode(mode);
 }
 
 bool SceneLoading::isFinished() const
@@ -223,45 +223,15 @@ SceneLoading::~SceneLoading()
 
 void SceneLoading::OnInit()
 {
-    Resource::XContainer* pXContainer = new Resource::XContainer;
-    Resource::Async::CreateTexture("./Resource/", "input_field.png", pXContainer);
-    Resource()()->AddResource(pXContainer);
-
-    pXContainer = new Resource::XContainer;
-    Resource::Async::CreateTexture("./Resource/", "LoadingScreen.tga", pXContainer);
-    Resource()()->AddResource(pXContainer);
-
-    pXContainer = new Resource::XContainer;
-    HRESULT hr = Resource::Async::CreateTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png", pXContainer);
-    Resource()()->AddResource(pXContainer);
-
-    pXContainer = new Resource::XContainer;
-    Resource::Async::CreateTexture("./Resource/", "dedenne.png", pXContainer);
-    Resource()()->AddResource(pXContainer);
-
-    pXContainer = new Resource::XContainer;
-    hr = Resource::Async::CreateTexture("./Resource/UI/Inventory/Character/", "female.tga", pXContainer);
-    Resource()()->AddResource(pXContainer);
-
-    //assert(hr && "SceneLoading Onit");
-
-    //인벤토리 라인
-    pXContainer = new Resource::XContainer;
-    Resource::Async::CreateTexture("./Resource/UI/Inventory/Basic/", "line.png", pXContainer);
-    Resource()()->AddResource(pXContainer);
-
-    //Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "Female.tga", D3DCOLOR_XRGB(188, 188, 188));
-
-    Resource()()->AddTexture("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.tga", D3DCOLOR_XRGB(0, 0, 0));
-
-
-
-    pair<string, string> p;
-    p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
-    Resource()()->AddTexture(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
-
-    p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
-    Resource()()->AddTexture(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
+    Resource()()->AddTexture("./Resource/", "input_field.png");
+    Resource()()->AddTexture("./Resource/", "LoadingScreen.tga");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
+    Resource()()->AddTexture("./Resource/", "dedenne.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "female.tga", D3DCOLOR_XRGB(188, 188, 188));
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "line.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.tga");
+    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_5_56mm);
+    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_7_62mm);
 
     m_pBackground =
         new UIImage(
@@ -301,11 +271,11 @@ void SceneLoading::OnUpdate()
 
         UI()()->Destroy(m_pBackground);
 
-        if (m_playMode == PlayMode::ALONE)
+        if (Communication()()->GetPlayMode() == Communication::PlayMode::ALONE)
         {
             Scene()()->SetCurrentScene(TAG_SCENE::Play);
         }
-        else if (m_playMode == PlayMode::WITH_OTHERS)
+        else if (Communication()()->GetPlayMode() == Communication::PlayMode::WITH_OTHERS)
         {
             Scene()()->SetCurrentScene(TAG_SCENE::Login);
         }
