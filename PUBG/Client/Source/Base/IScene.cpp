@@ -126,7 +126,10 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
 
         if (ResourceInfo::IsItem(o.m_tagResStatic))
         {
-            AddObject(new Item(o.m_tagResStatic, o.m_position, o.m_rotation, o.m_scale));
+            Item* pItem = new Item(o.m_tagResStatic, o.m_position, o.m_rotation, o.m_scale);
+            // Total Space ¿¡ Item ³Ö±â
+            InsertObjIntoTotalCellSpace(pItem->GetTagObject(), GetCellIndex(o.m_position), pItem);
+            AddObject(pItem);
         }
         else
         {
@@ -141,6 +144,7 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
 
             AddObject(pTerrainFeature);
         }
+
     }
 }
 

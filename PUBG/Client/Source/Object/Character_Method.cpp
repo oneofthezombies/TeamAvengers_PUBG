@@ -277,8 +277,6 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     }
     else // isPressing_LAlt == false
     {
-
-        m_rotationForCamera.x += -mouseInput->pitch;
         if (m_waistRotation.m_limit)
         {
             D3DXQUATERNION q;
@@ -295,6 +293,9 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
         {
             m_rotationForCamera.y += mouseInput->yaw;
         }
+
+        m_rotationForCamera.x += -mouseInput->pitch;
+
 
         Debug << "OutRotation : " << *OutRotation << endl;
         Debug << "m_RotationForCamrera" << m_rotationForCamera << endl;
