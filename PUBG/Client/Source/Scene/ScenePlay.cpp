@@ -6,6 +6,7 @@
 #include "Grid.h"
 #include "Item.h"
 #include "HeightMap.h"
+#include "UIImage.h"
 
 void ScenePlay::setAloneMode()
 {
@@ -48,35 +49,28 @@ void ScenePlay::setAloneMode()
     ////AddObject(item);
     ////character0->PutItemInTotalInventory(item);
 
-    ////p = D3DXVECTOR3(50, 0, 10);
-    ////item = new Item(TAG_RES_STATIC::FirstAidKit, p, r, s);
-    ////AddObject(item);
-    ////character0->PutItemInTotalInventory(item);
-
-    ////p = D3DXVECTOR3(60, 0, 10);
-    ////item = new Item(TAG_RES_STATIC::MedKit, p, r, s);
-    ////AddObject(item);
-    ////character0->PutItemInTotalInventory(item);
-
-    p = D3DXVECTOR3(70, 0, 10);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    AddObject(item);
-    character0->PutItemInTotalInventory(item);
-
-    p = D3DXVECTOR3(70, 0, 10);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    AddObject(item);
-    character0->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(70, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    //p = D3DXVECTOR3(50, 0, 10);
+    //item = new Item(TAG_RES_STATIC::FirstAidKit, p, r, s);
     //AddObject(item);
     //character0->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(80, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
+    //p = D3DXVECTOR3(60, 0, 10);
+    //item = new Item(TAG_RES_STATIC::MedKit, p, r, s);
     //AddObject(item);
     //character0->PutItemInTotalInventory(item);
+
+    for (int i = 0; i < 6; i++)
+    {
+        p = D3DXVECTOR3(70, 0, 10);
+        item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+        AddObject(item);
+        character0->PutItemInTotalInventory(item);
+    }
+
+    p = D3DXVECTOR3(80, 0, 10);
+    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
+    AddObject(item);
+    character0->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(80, 0, 10);
     //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);

@@ -1188,6 +1188,32 @@ void Resource::Manager::AddResource(XContainer* pXContainer)
     SAFE_DELETE(pXContainer);
 }
 
+void Resource::Manager::AddTexture(const string& path, const string& xFilename, const D3DCOLOR colorKey)
+{
+    const string key(path + xFilename);
+
+    LPDIRECT3DTEXTURE9 pTexture = nullptr;
+    HRESULT hr = D3DXCreateTextureFromFileExA(
+        Device()(),
+        key.c_str(),
+        D3DX_DEFAULT_NONPOW2,
+        D3DX_DEFAULT_NONPOW2,
+        D3DX_DEFAULT,
+        0,
+        D3DFMT_UNKNOWN,
+        D3DPOOL_MANAGED,
+        D3DX_DEFAULT,
+        D3DX_DEFAULT,
+        colorKey,
+        nullptr,
+        nullptr,
+        &pTexture);
+
+    assert(!FAILED(hr) && "Resource::Manager::AddTexture(), D3DXCreateTextureFromFileExA() failed.");
+
+    m_textures[key] = pTexture;
+}
+
 LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
 {
     const auto search = m_fonts.find(tag);
@@ -1212,6 +1238,28 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                     "맑은 고딕", 
                     &m_fonts[tag]);
             }
+            break;
+        case TAG_FONT::Invetory_Ground:
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                14, 7, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET, 
+                OUT_DEFAULT_PRECIS, 
+                DEFAULT_QUALITY, 
+                FF_DONTCARE,
+                "08서울남산체 M", &m_fonts[tag]);
+            break;
+        case TAG_FONT::Invetory_28:
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                18, 9, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M", &m_fonts[tag]);
             break;
         default:
             {

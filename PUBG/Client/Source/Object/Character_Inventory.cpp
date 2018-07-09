@@ -3,6 +3,9 @@
 #include "Item.h"
 #include "ItemInfo.h"
 #include "ComponentTransform.h"
+///////추가한거 UI
+#include "UIImage.h"
+#include "UIText.h"
 
 const float Character::TotalInventory::DEFAULT_CAPACITY = 70.0f;
 
@@ -18,6 +21,74 @@ Character::TotalInventory::TotalInventory()
     , m_bulletFireCoolDown(0)
     , m_tempSaveWeaponForX(nullptr)
 {
+    m_Border = new UIImage(
+        "./Resource/UI/Inventory/Basic/",
+        "black_1280_720_70.png",
+        Vector3::ZERO,
+        nullptr,
+        nullptr);
+
+    auto a = new UIText(
+        Resource()()->GetFont(TAG_FONT::Invetory_28),
+        D3DXVECTOR2(100.0f, 20.0f),
+        //D3DXVECTOR2(260.0f, 70.0f),
+        string("VICINITY"),
+        D3DCOLOR_XRGB(200, 200, 200),
+        m_Border);
+    a->SetDrawTextFormat(DT_LEFT);
+    a->SetPosition(D3DXVECTOR3(73.0f, 35.0f, 0.0f));
+
+
+    a = new UIText(
+        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        D3DXVECTOR2(100.0f, 20.0f),
+        string("Ground"),
+        D3DCOLOR_XRGB(200, 200, 200),
+        m_Border);
+    a->SetDrawTextFormat(DT_LEFT);
+    a->SetPosition(D3DXVECTOR3(73.0f, 75.0f, 0.0f));
+
+    a = new UIText(
+        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        D3DXVECTOR2(100.0f, 20.0f),
+        string("Sortby Type"),
+        D3DCOLOR_XRGB(200, 200, 200),
+        m_Border);
+    a->SetDrawTextFormat(DT_LEFT);
+    a->SetPosition(D3DXVECTOR3(243.0f, 75.0f, 0.0f));
+
+    new UIImage(
+        "./Resource/UI/Inventory/Basic/",
+        "line.png",
+        D3DXVECTOR3(233.0f, 93.0f, 0.0f),
+        nullptr,
+        m_Border);
+
+    float miniPer = 0.67f; //miniPersentage
+    auto b = new UIImage(
+        "./Resource/UI/Inventory/Character/",
+        "female.tga",
+        D3DXVECTOR3(410.0f / miniPer, 85.0f / miniPer, 0.0f),
+        nullptr,
+        m_Border);
+
+    //아이콘 이미지 size 조절
+    D3DXMATRIX s;
+    D3DXMatrixScaling(&s, miniPer, miniPer, 0.0f);
+    b->SetTransform(s);
+    
+
+
+    //Text
+    m_Text = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        D3DXVECTOR2(0.0f, 0.0f),
+        string("WTF"),
+        D3DCOLOR_XRGB(200, 200, 200),
+        m_Border);
+
+
+    //m_Border->AddChild(m_Text);
+    m_Border->SetIsRender(false);
 }
 
 Character::TotalInventory::~TotalInventory()
@@ -36,6 +107,112 @@ Character::TotalInventory::~TotalInventory()
     SAFE_DELETE(m_weaponSecondary);
 
     SAFE_DELETE(m_tempSaveWeaponForX);
+}
+
+
+void Character::TotalInventory::Open()
+{
+    isOpened = true;
+    // move ui to in screen
+
+    m_Border->SetIsRender(isOpened);
+    
+    for (auto it = m_mapInventory.begin(); it != m_mapInventory.end(); it++)
+    {
+        (*it).second.back()->SetInRenderUIImage(isOpened);
+    }
+
+    if (m_Text->GetChild(0)==nullptr)
+    {
+
+        vector<RECT> rects;
+        int i = 0;
+        for (auto it = m_mapInventory.begin(); it != m_mapInventory.end(); it++)
+        {
+            (*it).second.back()->SetUIPosition(D3DXVECTOR2(250.0f / 0.2f, (100.0f + 50.0f * static_cast<float>(i)) / 0.2f));
+            auto c = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+                D3DXVECTOR2(100.0f, 50.0f),
+                string(ItemInfo::GetName((*it).first))
+                + "  " + to_string((*it).second.back()->GetCount()),
+                D3DCOLOR_XRGB(200, 200, 200),
+                m_Text);
+            c->SetDrawTextFormat(DT_LEFT);
+            c->SetPosition(D3DXVECTOR3(310.0f, 120.0f + 50.0f * static_cast<float>(i), 0.0f));
+            //Gun* g = it->second;
+            //UIText::Create(Font::kInteractionMessageDescription, g->GetName(), D3DXVECTOR3(600.0f, 100.0f + 50.0f * static_cast<float>(i), 0.0f), D3DXVECTOR2(200.0f, 50.0f), this);
+            rects.emplace_back(RECT{});
+            SetRect(&rects.back(), 350, 100 + 50 * i, 550, 150 + 50 * i);
+            ++i;
+        }
+    }
+}
+
+void Character::TotalInventory::Close()
+{
+    isOpened = false;
+    // move ui to out screen
+    m_Border->SetIsRender(isOpened);
+    for (auto it = m_mapInventory.begin(); it != m_mapInventory.end(); it++)
+    {
+        (*it).second.back()->SetInRenderUIImage(isOpened);
+    }
+    //UI()()->Destroy(m_Border);
+    //POINT center;
+    //center.x = 1280 / 2;
+    //center.y = 720 / 2;
+    //ClientToScreen(g_hWnd, &center);
+    //SetCursorPos(center.x, center.y);
+}
+
+void Character::TotalInventory::Update()
+{
+    if (isOpened)
+    {
+        droppedItems.resize(0);
+
+        ////Character player = Scene.GetPlayer();
+        //BoundingSphere bs = player.GetBoundingSphere().Move(/* position */);
+        //for (item : Camera.GetNearArea(player.GetCellIndex()).GetItems())
+        //{
+        //    if (Collision::HasCollision(bs, item.GetBoundingSphere()))
+        //    {
+        //        droppedItems.emplace_back(item);
+        //    }
+        //}
+        
+        //vector<RECT> rects;
+        int i = 0;
+        for (auto it = m_mapInventory.begin(); it != m_mapInventory.end(); it++)
+        {
+            (*it).second.back()->SetUIPosition(D3DXVECTOR2(250.0f / 0.2f, (100.0f + 50.0f * static_cast<float>(i)) / 0.2f));
+            UIText test = *(static_cast<UIText*>(m_Text->GetChild(i)));
+            static_cast<UIText*>(m_Text->GetChild(i))->SetText(string(ItemInfo::GetName((*it).first))
+                + "  " + to_string((*it).second.back()->GetCount()));
+           /* a = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+                D3DXVECTOR2(100.0f, 50.0f),
+                string(ItemInfo::GetName((*it).first))
+                + "  " + to_string((*it).second.back()->GetCount()),
+                D3DCOLOR_XRGB(200, 200, 200),
+                m_Border);
+            a->SetDrawTextFormat(DT_LEFT);
+            a->SetPosition(D3DXVECTOR3(310.0f, 120.0f + 50.0f * static_cast<float>(i), 0.0f));*/
+            //Gun* g = it->second;
+            //UIText::Create(Font::kInteractionMessageDescription, g->GetName(), D3DXVECTOR3(600.0f, 100.0f + 50.0f * static_cast<float>(i), 0.0f), D3DXVECTOR2(200.0f, 50.0f), this);
+            //rects.emplace_back(RECT{});
+            //SetRect(&rects.back(), 350, 100 + 50 * i, 550, 150 + 50 * i);
+            ++i;
+        }
+    }
+
+
+}
+
+void Character::TotalInventory::Render()
+{
+    if (isOpened)
+    {
+        // draw
+    }
 }
 
 void Character::PutItemInTotalInventory(Item* item)

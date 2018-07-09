@@ -173,6 +173,7 @@ void Character::handleInput(IsPressed* OutIsPressed)
     OutIsPressed->_Num5         = pInput->IsOnceKeyDown('5');
     OutIsPressed->_LButton      = pInput->IsOnceKeyDown(VK_LBUTTON);
     OutIsPressed->_RButton      = pInput->IsOnceKeyDown(VK_RBUTTON);
+    OutIsPressed->_Tab          = pInput->IsOnceKeyDown(VK_TAB);
 }
 
 void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation)
@@ -589,6 +590,7 @@ void Character::updateDependency()
     updateBone();
     pAnimation->UpdateModel();
     updateTotalInventory();
+   
     if (m_pRootCharacterPart) m_pRootCharacterPart->Update();
 
     // render

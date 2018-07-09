@@ -155,6 +155,7 @@ struct Resource
         void Destroy();
 
         void AddResource(XContainer* pXContainer);
+        void AddTexture(const string& path, const string& xFilename, const D3DCOLOR colorKey);
 
         LPD3DXFONT GetFont(const TAG_FONT tag);
 

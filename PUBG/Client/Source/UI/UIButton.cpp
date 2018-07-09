@@ -44,6 +44,8 @@ void UIButton::Render()
 {
 	if (m_textures[m_state])
 	{
+        Sprite()()->SetTransform(&m_transform);
+
         RECT rect { 0, 0, static_cast<int>(m_size.x), static_cast<int>(m_size.y) };
         Sprite()()->Draw(m_textures[m_state], &rect, &m_center, &m_viewportPosition, m_color);
 	}

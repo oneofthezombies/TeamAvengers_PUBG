@@ -36,14 +36,14 @@ void UIManager::Destroy()
 
 void UIManager::Update()
 {
-    //RECT rect;
-    //GetClientRect(g_hWnd, &rect);
-    //const int width = rect.right - rect.left;
-    //const int height = rect.bottom - rect.top;
+    RECT rect;
+    GetClientRect(g_hWnd, &rect);
+    const int width = rect.right - rect.left;
+    const int height = rect.bottom - rect.top;
 
-    //D3DXMATRIX transform;
-    //D3DXMatrixScaling(&transform, static_cast<float>(width) / 1280.0f, static_cast<float>(height) / 720.0f, 0.0f);
-    //m_pSprite->SetTransform(&transform);
+    D3DXMATRIX transform;
+    D3DXMatrixScaling(&transform, static_cast<float>(width) /  1280.0f, static_cast<float>(height) /  720.0f, 0.0f);
+    m_pSprite->SetTransform(&transform);
 
     D3DXMATRIX identity;
     D3DXMatrixIdentity(&identity);

@@ -39,6 +39,9 @@ public:
 
     struct TotalInventory
     {
+        UIImage* m_Border;
+        UIText*  m_Text;
+
         Item* m_hand; //손에 든 무기
 
         static const float DEFAULT_CAPACITY;
@@ -62,6 +65,15 @@ public:
         int   m_numReload;
 
         Item* m_tempSaveWeaponForX;
+        
+        bool isOpened;
+        std::deque<Item*> droppedItems;
+
+        ////////////함수
+        void Open();
+        void Close();
+        void Update();
+        void Render();
 
          TotalInventory();
         ~TotalInventory();
@@ -110,6 +122,7 @@ public:
         bool _Num5; 
         bool _LButton;
         bool _RButton;
+        bool _Tab;
 
         IsPressed();
     };
@@ -156,8 +169,6 @@ public:
         bool            Ing = false;
         bool            Up = true;
     };
-
-
 /**************************** end nested structure ***************************/
  
 

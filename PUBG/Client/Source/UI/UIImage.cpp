@@ -11,6 +11,7 @@ UIImage::UIImage(UIObject* pParent)
 
 UIImage::UIImage(const string& path, const string& filename, const D3DXVECTOR3& position, IObject* pAttach, UIObject* pParent)
     : UIObject(pParent)
+    , m_isRender(true)
 {
     SetTexture(path + filename);
     SetPosition(position);
@@ -25,8 +26,12 @@ UIImage::~UIImage()
 
 void UIImage::Render()
 {
+    if (!m_isRender) return;
+
 	if (m_pTex)
 	{
+        Sprite()()->SetTransform(&m_transform);
+
 		RECT rect;
 		::SetRect(&rect, 0, 0, static_cast<int>(m_size.x), static_cast<int>(m_size.y));
 		Sprite()()->Draw(m_pTex, &rect, &m_center, &m_viewportPosition, m_color);
