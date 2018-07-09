@@ -219,8 +219,9 @@ void Character::updateMine()
     movementControl(&destState);
 
     
-
-    // Terrain과의 충돌체크////////////////////////////
+    //////////////////////////////////////////////////
+    /////////////// Terrain과의 충돌체크///////////////
+    //////////////////////////////////////////////////
     bool hasCollision = false;
     auto tfs(pCurrentScene->m_NearArea.GetTerrainFeatures());
     for (auto tf : tfs)
@@ -278,10 +279,13 @@ void Character::updateMine()
             pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
         }
     }
+    //////////////////////////////////////////////////
 
 
 
-
+    //////////////////////////////////////////////////
+    /////////////// Item 과의 충돌체크/////////////////
+    //////////////////////////////////////////////////
     //Item Spher와 character sphere 충돌 체크
     auto itms(pCurrentScene->m_NearArea.GetItems());    //이 auto를 copy가 아닌 reference로 받는 방법은???
     for (auto itm : itms)
@@ -300,7 +304,7 @@ void Character::updateMine()
             pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
         }
     }
-
+    //////////////////////////////////////////////////
 
 
     setStance();
