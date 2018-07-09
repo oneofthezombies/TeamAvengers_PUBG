@@ -470,7 +470,7 @@ void Communication::Manager::SendEventMinusDamage(
             ss.str()));
 }
 
-void CommunicationManager::SendIsDead(
+void Communication::Manager::SendIsDead(
     const int id, 
     bool isDead)
 {

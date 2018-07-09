@@ -31,7 +31,7 @@ struct Communication
         PlayMode                m_playMode;
 
     private:
-                 Manager();
+        Manager();
         virtual ~Manager();
 
         void CheckConnection();
@@ -54,18 +54,22 @@ struct Communication
         void SendID(const int id);
         void SendNickname(const std::string& nickname);
 
-    void SendPositionAndRotation(
-        const D3DXVECTOR3& p, 
-        const D3DXQUATERNION& r);
-    void SendHeadAngle(const float angle);
-    void SendUpperAnimationIndex(const TAG_ANIM_CHARACTER tag);
-    void SendLowerAnimationIndex(const TAG_ANIM_CHARACTER tag);
-    void SendIsDead(const int id, bool isDead);
+        void SendPositionAndRotation(
+            const D3DXVECTOR3& p,
+            const D3DXQUATERNION& r);
+        void SendHeadAngle(const float angle);
+        void SendUpperAnimationIndex(const TAG_ANIM_CHARACTER tag);
+        void SendLowerAnimationIndex(const TAG_ANIM_CHARACTER tag);
+        void SendIsDead(const int id, bool isDead);
 
-    void SendEventFireBullet(Bullet* pBullet);
-    void SendEventSound(const TAG_SOUND tag, const D3DXVECTOR3& p);
-    void SendEventMinusDamage(const int id, const float damage);
-    friend Singleton<CommunicationManager>;
+        void SendEventFireBullet(Bullet* pBullet);
+        void SendEventSound(const TAG_SOUND tag, const D3DXVECTOR3& p);
+        void SendEventMinusDamage(const int id, const float damage);
+
+        friend Singleton<Manager>;
+    };
+
+    Manager* operator()();
 };
 
 class Client
