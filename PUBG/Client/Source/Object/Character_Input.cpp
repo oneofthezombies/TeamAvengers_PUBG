@@ -278,6 +278,8 @@ void Character::setReload()
                                 true,
                                 0.3f);
                         });
+
+
                     }
                     else if (m_stance == Stance::Prone)
                     {
@@ -308,7 +310,25 @@ void Character::setReload()
                         // fast reload
                         if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                         {
+                            //총 자체 애니메이션
                             m_hasChangingState = true;
+                            m_isNeedRifleAnim = true;
+                            inven.m_pHand->Set
+                            (
+                                TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast,
+                                false,
+                                Item::DEFAULT_BLENDING_TIME,
+                                Item::DEFAULT_NEXT_WEIGHT,
+                                Item::DEFAULT_POSITION,
+                                Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+                                [this, &inven]() {
+                                inven.m_pHand->Set(
+                                    TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
+                                    false);
+                                m_isNeedRifleAnim = false;
+                            });
+                            
+                            //캐릭터 애니메이션
                             pAnimation->Set(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Base,
@@ -317,7 +337,7 @@ void Character::setReload()
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                                 CharacterAnimation::DEFAULT_POSITION,
                                 0.3f,
-                                [this]()
+                                [this, &inven]()
                             {
                                 m_hasChangingState = false;
                                 pAnimation->Set(

@@ -11,6 +11,10 @@ public:
     static const int DEFAULT_NUM_BULLET  = 30;
     static const int DEFAULT_NUM_BANDAGE = 5;
 
+    static const float DEFAULT_BLENDING_TIME;
+    static const float DEFAULT_NEXT_WEIGHT;
+    static const float DEFAULT_FINISH_EVENT_AGO_TIME;
+    static const float DEFAULT_POSITION;
 private:
     const TAG_RES_STATIC m_tagResStatic;
     
@@ -72,5 +76,25 @@ public:
 
     Frame* GetGunBolt() const;
 
+    void UpdateAnimation();
     void UpdateModel();
+
+    //for animation test 
+    void Set(
+        const TAG_ANIM_WEAPON tag,
+        const bool  isBlend = true,
+        const float blendingTime = 0.3f,
+        const float nextWeight = 0.0f,
+        const float position = 0.0f);
+
+    void Set(
+        const TAG_ANIM_WEAPON tag,
+        const bool  isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float finishEventAgoTime,
+        const std::function<void()>& finishEvent);
+
+    bool HasFinishEvent() const;
 };

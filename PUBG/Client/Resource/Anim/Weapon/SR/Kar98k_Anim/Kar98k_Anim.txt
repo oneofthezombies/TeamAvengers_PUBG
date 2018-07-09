@@ -1,7 +1,8 @@
 /// Kar98k_Anim.X (Kar98k의 애니메이션)
-0. (0    ~ 102)[103] - Weapon_Kar98k_BoltAction_1
-1. (103 ~ 205)[103] - Weapon_Kar98k_BoltAction_2
-2. (206 ~ 308)[103] - Weapon_Kar98k_BoltAction_3
-3. (309 ~ 561)[253] - Weapon_Kar98k_Reload_StartLoopEnd
-4. (562 ~ 802)[241] - Weapon_Kar98k_Reload_Fast
-5. (803 ~ 1043)[241] - Weapon_Kar98k_Reload_Fast_FPP
+- Weapon_Kar98k_Reload_Start
+- Weapon_Kar98k_Reload_Loop
+- Weapon_Kar98k_Reload_End
+- Weapon_Kar98k_BoltAction_1
+- Weapon_Kar98k_Reload_Fast
+- Weapon_Kar98k_Reload_Fast_FPP
+- Weapon_Kar98k_Idle

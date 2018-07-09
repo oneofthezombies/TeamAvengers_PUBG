@@ -133,7 +133,6 @@ void Character::setFramePtr()
     m_framePtr.pLeftClavicle = pAnimation->FindFrame("clavicle_l");
     m_framePtr.pRightClavicle = pAnimation->FindFrame("clavicle_r");
 
-    //m_framePtr.pHandGun       = pAnimation->FindFrame("ik_hand_gun");
     m_framePtr.pHandGun = pAnimation->FindFrame("item_r");
 
     m_framePtr.pTPP           = pAnimation->FindFrame("camera_tpp");
@@ -393,7 +392,10 @@ void Character::RifleShooting()
     cout << "ÃÑ¿¡ ³²¾ÆÀÖ´Â ÃÑ¾Ë °³¼ö: " << inven.m_pHand->GetNumBullet() << "\n";
 
     //Goal : get Fire starting position , get fire direction
-    inven.m_pHand->UpdateModel(); //update to get position of frame "gun_bolt" 
+    
+    //Update in Character::updateTotalInventory()
+    //inven.m_pHand->UpdateModel(); //update to get position of frame "gun_bolt" 
+
     D3DXMATRIX mat 
         = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
         * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix

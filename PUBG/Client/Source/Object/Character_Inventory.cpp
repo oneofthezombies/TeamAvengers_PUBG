@@ -39,6 +39,7 @@ Character::TotalInventory::~TotalInventory()
 void Character::PutItemInTotalInventory(Item* item)
 {
     assert(item && "Character::PutItemInTotalInventory(), item is null.");
+    ShowTotalInventory();
 
     TAG_RES_STATIC tag = item->GetTagResStatic();
     TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(tag);
@@ -88,7 +89,7 @@ void Character::PutItemInTotalInventory(Item* item)
         {
             checkOriginItem((Item**)&m_totalInventory.m_pWeaponPrimary, item);
         }
-        else
+        else if(tag == TAG_RES_STATIC::Kar98k)
         {
             checkOriginItem((Item**)&m_totalInventory.m_pWeaponSecondary, item);
         }
@@ -166,6 +167,13 @@ void Character::updateTotalInventory()
 
         pHandTr->SetTransformationMatrix(weaponWorld);
         pHandTr->Update();
+
+        //총 자체 애니메이션을 업데이트한다
+        if (m_isNeedRifleAnim)
+        {
+            pHand->UpdateAnimation();
+        }
+        pHand->UpdateModel();
     }
 
     Item* pArmor = m_totalInventory.m_pEquipArmor;

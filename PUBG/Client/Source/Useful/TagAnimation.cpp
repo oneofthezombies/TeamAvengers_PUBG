@@ -13,13 +13,14 @@ std::string TagAnimation::GetString(const TAG_ANIM_WEAPON tag)
     case TAG_ANIM_WEAPON::Weapon_QBZ_Reload_Charge_FPP: return "Weapon_QBZ_Reload_Charge_FPP";
     case TAG_ANIM_WEAPON::Weapon_QBZ_Reload_FPP:        return "Weapon_QBZ_Reload_FPP";
 
-    //Kar98k(6)
+    //Kar98k(7)
+    case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Start:        return "Weapon_Kar98k_Reload_Start";
+    case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Loop:         return "Weapon_Kar98k_Reload_Loop";
+    case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_End:          return "Weapon_Kar98k_Reload_End";
     case TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_1:        return "Weapon_Kar98k_BoltAction_1";
-    case TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_2:        return "Weapon_Kar98k_BoltAction_2";
-    case TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_3:        return "Weapon_Kar98k_BoltAction_3";
-    case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_StartLoopEnd: return "Weapon_Kar98k_Reload_StartLoopEnd";
     case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast:         return "Weapon_Kar98k_Reload_Fast";
     case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast_FPP:     return "Weapon_Kar98k_Reload_Fast_FPP";
+    case TAG_ANIM_WEAPON::Weapon_Kar98k_Idle:                return "Weapon_Kar98k_Idle";
 
     case TAG_ANIM_WEAPON::COUNT: return "COUNT";
     default:
@@ -538,6 +539,16 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Prone:
         return 1.0f; //속도 올리면 애니메이션이 처음을 가리키는 문제점
 
+    default:
+        return 1.0f;
+    }
+}
+
+float TagAnimation::GetSpeed(const TAG_ANIM_WEAPON tag)
+{
+    switch (tag)
+    {
+    
     default:
         return 1.0f;
     }

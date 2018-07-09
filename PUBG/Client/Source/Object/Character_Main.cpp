@@ -40,6 +40,7 @@ Character::Character(const int index)
     , m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_isFire(false)
     , m_hasChangingState(false)
+    , m_isNeedRifleAnim(false)
 
     , pAnimation(nullptr)
 
@@ -108,10 +109,12 @@ void Character::OnUpdate()
     updateOther();
 
     // update
-    GetTransform()->Update();
-    pAnimation->UpdateAnimation();
-    updateBone();
-    pAnimation->UpdateModel();
+    GetTransform()->Update();      // set characters world
+    pAnimation->UpdateAnimation(); // set characters local
+    updateBone();                  // modified characters local
+    pAnimation->UpdateModel();     // set characters model
+
+    // set item animation, item model here
     updateTotalInventory();
 
     // bounding sphere move to character position

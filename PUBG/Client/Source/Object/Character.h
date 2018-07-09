@@ -245,6 +245,7 @@ private:
 
     bool m_isFire;
     bool m_hasChangingState;
+    bool m_isNeedRifleAnim;
 
 /**************************** end member variable ****************************/
 
