@@ -474,37 +474,33 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 
 void Character::RifleShooting()
 {
+    //bullet cool down 시간
     auto& inven = m_totalInventory;
     inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_pHand->GetTagResStatic());
-
+    //bullet 갯수 만큼 조정
     int numBullet = inven.m_pHand->GetNumBullet();
     inven.m_pHand->SetNumBullet(--numBullet);
     cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
 
-    //Goal : get Fire starting position , get fire direction
-    
-    //Update in Character::updateTotalInventory()
-    //inven.m_pHand->UpdateModel(); //update to get position of frame "gun_bolt" 
-
+    //bullet이 나가는 포지션 구하기
     D3DXMATRIX mat 
         = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
         * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
         * GetTransform()->GetTransformationMatrix();    //character world matrix
-    
     D3DXVECTOR3 bulletFirePos = Matrix::GetTranslation(mat);
-    
+
+    //bullet의 direction 구하기
     D3DXVECTOR3 bulletDir;
     CurrentCamera()()->CalcPickedPosition(&bulletDir, 1280 / 2, 720 / 2);
+    D3DXVECTOR3 ppp;
+    float ddd;
+    CurrentCamera()()->PickedDistancePosition(&ppp, &ddd, 1280 / 2, 720 / 2);
     bulletDir = bulletDir - bulletFirePos;
     D3DXVec3Normalize(&bulletDir, &bulletDir);
-    //-------------------------
 
-    // ----------------------수정중-------------
-    Ray gunRay;
-    gunRay.m_pos = bulletFirePos;
-    gunRay.m_dir = bulletDir;
+
+
     // 나 말고 다른 캐릭터들을 순회하며 충돌여부를 검사한다.
-
     const auto& others = static_cast<ScenePlay*>(CurrentScene()())->GetOthers();
     for (auto o : others)
     {
@@ -529,6 +525,10 @@ void Character::RifleShooting()
         //bulletDir = estimatedDest - bulletFirePos;
         //D3DXVec3Normalize(&bulletDir, &bulletDir);
 
+        Ray gunRay;
+        gunRay.m_pos = bulletFirePos;
+        gunRay.m_dir = bulletDir;
+
         // 캐릭터의 바운딩박스들과 충돌을 검사한다.
         float minDist = std::numeric_limits<float>::max();
         float dist = std::numeric_limits<float>::max();
@@ -545,6 +545,7 @@ void Character::RifleShooting()
                     minDist = dist;
                     m_otherHitPart = i;
                     m_otherHitBox = obb;
+                    //마젠타 박스가 생성되는 곳
                 }
             }
         }
@@ -566,9 +567,6 @@ void Character::RifleShooting()
             Communication()()->SendEventMinusDamage(o->GetIndex(), damage);
         }
     }
-
-
-    // ----------------------수정중-------------
 
 
     // =====총알 객체가 나가는 부분 ===========
@@ -630,6 +628,26 @@ void Character::RifleShooting()
         }
         break;
     }
+}
+
+void Character::RifleShootingTest()
+{
+    //bullet이 나가는 포지션 구하기
+    D3DXMATRIX mat
+        = m_totalInventory.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
+        * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
+        * GetTransform()->GetTransformationMatrix();    //character world matrix
+    D3DXVECTOR3 bulletFirePos = Matrix::GetTranslation(mat);
+
+
+    //bullet의 direction 구하기
+    D3DXVECTOR3 bulletDir;
+    CurrentCamera()()->CalcPickedPosition(&bulletDir, 1280 / 2, 720 / 2);
+    bulletDir = bulletDir - bulletFirePos;
+    D3DXVec3Normalize(&bulletDir, &bulletDir);
+
+
+
 }
 
 const std::vector<BoundingBox>& Character::GetBoundingBoxes()

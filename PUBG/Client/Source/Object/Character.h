@@ -444,6 +444,7 @@ public:
     D3DXVECTOR3 GetWaistPosition();
     bool IsFire() const;
     void RifleShooting();
+    void RifleShootingTest();
 
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
 

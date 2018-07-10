@@ -182,7 +182,7 @@ bool ICamera::CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD scre
     float intersectionDist;
     bool bIntersect = false;
 
-    vector<D3DXVECTOR3>& rayBox = CurrentScene()()->GetHeightMap()->GetBoundaryBox(); //이건 data가 copy 되나요? referance 되나요?
+    vector<D3DXVECTOR3>& rayBox = CurrentScene()()->GetHeightMap()->GetBoundaryBox(); 
     
     
     for (size_t i = 0u; i < rayBox.size(); i += 3)
@@ -203,6 +203,27 @@ bool ICamera::CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD scre
         }
     }
 
+    return bIntersect;
+}
+
+bool ICamera::PickedDistancePosition(OUT D3DXVECTOR3 * vOut, OUT float* distance, WORD screenX, WORD screenY)
+{
+    Ray ray = Ray::RayAtWorldSpace(screenX, screenY);
+    bool bIntersect = false;
+
+    vector<D3DXVECTOR3>& rayBox = CurrentScene()()->GetHeightMap()->GetBoundaryBox(); 
+
+    for (size_t i = 0u; i < rayBox.size(); i += 3)
+    {
+        if (ray.CalcIntersectTri(&rayBox[i], distance))
+        {
+            bIntersect = true;
+            *vOut = ray.m_pos + ray.m_dir * (*distance);
+
+
+            return bIntersect;
+        }
+    }
     return bIntersect;
 }
 

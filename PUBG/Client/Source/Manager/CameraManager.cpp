@@ -54,6 +54,7 @@ void CameraManager::Update()
 
     if (pCurrentCamera)
     {
+        //for debug
         if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::Third_Person)
             m_cameras[TAG_CAMERA::Third_Person]->Update();
 
@@ -67,7 +68,7 @@ void CameraManager::Update()
         //}
         //pCurrentCamera->CameraRender();
 
-
+        //for debug
         m_cameras[TAG_CAMERA::Third_Person]->Render();
     }
 }

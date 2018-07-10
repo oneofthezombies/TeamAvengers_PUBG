@@ -30,7 +30,8 @@ void ScenePlay::setAloneMode()
     others.emplace_back(pOther);
     characters.emplace_back(pOther);
     AddObject(pOther);
-
+    
+    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(500.0f, 200.0f, 500.0f);
 
 
 
