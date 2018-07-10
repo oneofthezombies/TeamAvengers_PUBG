@@ -633,7 +633,20 @@ void Character::RifleShootingTest()
     float dist;
     Ray ray = CurrentCamera()()->PickedRayDistancePosition(&v,&dist, 1280 / 2, 720 / 2);
     
+    BoundingRect rect;
+    rect.center.x = rect.center.y = CurrentScene()()->GetCellSpaceLength()/2;
+    rect.extent = rect.center;
+    rect.position = D3DXVECTOR2(0, 0);
+
     
+
+    if (Collision::HasCollision(ray, rect))
+        int i = 0;
+
+
+
+   
+    //Collision::HasCollision(&ray,)
     
     
     ////bullet이 나가는 포지션 구하기

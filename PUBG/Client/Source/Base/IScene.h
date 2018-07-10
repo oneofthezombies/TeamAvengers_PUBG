@@ -92,12 +92,10 @@ public:
 
     //Cell - Space  Partitioning function
 
-    std::vector<CellSpace>* GetTotalCellSpace()
-    {
-        return &m_TotalCellSpaces;
-    }
+    std::vector<CellSpace>* GetTotalCellSpace();
     void InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObject* obj);
     std::size_t GetCellIndex(const D3DXVECTOR3& position);
+    const float GetCellSpaceLength();
     void MoveCell(OUT std::size_t* currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject* obj);
     void ItemIntoInventory(size_t index, Item* obj);
     //bool IsMovable(const D3DXVECTOR3* targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject* obj);

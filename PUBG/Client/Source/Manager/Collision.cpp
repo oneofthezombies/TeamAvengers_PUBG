@@ -692,8 +692,8 @@ bool Collision::HasCollision(
     const BoundingBox& box, 
     float* OutDistance)
 {
-    float tMin = std::numeric_limits<float>::lowest();
-    float tMax = std::numeric_limits<float>::max();
+    float tMin = 0.0f;
+    float tMax = ICamera::VISUAL_RANGE;
 
     const D3DXVECTOR3 diff = (box.center + box.position) - ray.m_pos;
 
@@ -799,8 +799,8 @@ bool Collision::HasCollision(
 
 bool Collision::HasCollision(const Ray& ray, const BoundingRect& rect)
 {
-    float tMin = std::numeric_limits<float>::lowest();
-    float tMax = std::numeric_limits<float>::max();
+    float tMin = 0.0f;
+    float tMax = ICamera::VISUAL_RANGE;
 
     const D3DXVECTOR2 rayPos(ray.m_pos.x, ray.m_pos.z);
     D3DXVECTOR2 rayDir(ray.m_dir.x, ray.m_dir.z);

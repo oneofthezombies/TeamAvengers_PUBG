@@ -130,8 +130,7 @@ void Character::OnUpdate()
 
     if (IsFire())
     {
-        //RifleShooting();
-        RifleShootingTest();
+        RifleShooting();
     }
         
 
@@ -453,6 +452,9 @@ void Character::updateMine()
             m_savedInput = m_currentStayKey;
         }
     }
+
+    if (m_currentOnceKey._LButton)
+        RifleShootingTest();
 
     // 카메라 프러스텀 업데이트 (왜냐하면 캐릭터0 업데이트, 렌더, 캐릭터1 업데이트, 렌더, ... 순서대로 실행되기 떄문에)
     CurrentCamera()()->UpdateFrustumCulling();

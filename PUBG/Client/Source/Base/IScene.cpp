@@ -315,6 +315,11 @@ bool IScene::isOutOfBoundaryBox(const D3DXVECTOR3& pos)
 //------------------ Cell Space Partitioning--------------------
 
 
+std::vector<CellSpace>* IScene::GetTotalCellSpace()
+{
+    return &m_TotalCellSpaces;
+}
+
 void IScene::InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObject* obj)
 {
     switch (tag)
@@ -354,6 +359,12 @@ std::size_t IScene::GetCellIndex(const D3DXVECTOR3 & position)
     int Zindex = static_cast<int>(position.z / Zspace);
     
     return Zindex * CellSpace::DIMENSION + Xindex;
+}
+
+const float IScene::GetCellSpaceLength()
+{
+    D3DXVECTOR4 MinMax = GetHeightMap()->GetMinMax();
+    return (MinMax.z - MinMax.x) / CellSpace::DIMENSION;
 }
 
 void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject* obj)

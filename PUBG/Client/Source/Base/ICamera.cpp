@@ -5,6 +5,8 @@
 #include "Ray.h"
 #include "HeightMap.h"
 
+const float ICamera::VISUAL_RANGE = 100000.0f;
+
 Character::Info* ICamera::GetTargetInfo()//(Àü)TargetTransform* GetTarget()
 {
     return Camera()()->GetTargetInfo();
@@ -283,7 +285,7 @@ void CameraFree::Update()
     GetClientRect(g_hWnd, &rc);
     D3DXMatrixPerspectiveFovLH(&proj,
         m_fovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom),
-        1.0f, 5000.0f);
+        1.0f, ICamera::VISUAL_RANGE);
     SetProjectionMatrix(&proj);
     pD->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
 }
@@ -410,7 +412,7 @@ void Camera2xScope::Update()
 
         RECT rc;
         GetClientRect(g_hWnd, &rc);
-        D3DXMatrixPerspectiveFovLH(&proj, m_deltaFovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom), 1, 10000);
+        D3DXMatrixPerspectiveFovLH(&proj, m_deltaFovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom), 1, ICamera::VISUAL_RANGE);
         SetProjectionMatrix(&proj);
         g_pDevice->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
     }

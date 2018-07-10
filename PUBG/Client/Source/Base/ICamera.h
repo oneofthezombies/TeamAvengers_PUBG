@@ -9,6 +9,9 @@
 
 class ICamera : public MemoryAllocator
 {
+public:
+    static const float VISUAL_RANGE;
+
 private:
     const TAG_CAMERA    m_tagCamera;
           D3DXMATRIX    m_viewMatrix;
