@@ -167,13 +167,13 @@ void Communication::Manager::Connect(
     m_pClient = new Client(&m_IOContext, endpoints, this);
     m_pThread = new std::thread([this]() { m_IOContext.run(); });
 
-    Sleep(1000);
+    Sleep(2000);
 
     m_myInfo.nickname = nickname;
 
     m_pClient->Write(Message::Create(TAG_REQUEST::RECEIVE_MY_ID, nickname));
 
-    Sleep(1000);
+    Sleep(2000);
 }
 
 void Communication::Manager::ReceiveMessage(
