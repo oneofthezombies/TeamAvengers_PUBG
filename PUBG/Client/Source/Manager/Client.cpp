@@ -303,7 +303,7 @@ void Communication::Manager::ReceiveMessage(
                >> rot.x >> rot.y >> rot.z /*>> rot.w*/
                >> speed >> damage >> tag;
 
-            BulletPool()()->Fire(pos, rot, speed, damage, 
+            BulletPool()()->Fire(Communication()()->m_myInfo,pos, rot, speed, damage,
                 static_cast<TAG_COLLISION>(tag));
         }
         break;

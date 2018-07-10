@@ -46,12 +46,12 @@ void Area::CreateNearArea(const std::size_t index)
     m_cellspaces.emplace_back(&CS->at(row + col * CellSpace::DIMENSION));
 }
 
-Ray Area::CreateRayArea()
+Ray Area::CreateRayArea(Ray* ray, const float rayLength)
 {
     m_cellspaces.clear();
     vector<CellSpace>* CS = CurrentScene()()->GetTotalCellSpace();
 
-    Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
+    //Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
 
     const float cellLength = CurrentScene()()->GetCellSpaceLength();
     BoundingRect rect;
@@ -62,7 +62,7 @@ Ray Area::CreateRayArea()
         for (int j = 0; j < CellSpace::DIMENSION; j++)
         {
             rect.position = D3DXVECTOR2(j*cellLength, i*cellLength);
-            if (Collision::HasCollision(ray, rect))
+            if (Collision::HasCollision(*ray, rect, rayLength))
             {
                 m_cellspaces.emplace_back(&CS->at(j + i * CellSpace::DIMENSION));
 
@@ -70,7 +70,7 @@ Ray Area::CreateRayArea()
         }
     }
 
-    return ray;
+    return *ray;
 }
 
 bool Area::checkValid(int v)

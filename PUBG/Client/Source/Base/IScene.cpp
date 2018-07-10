@@ -361,6 +361,11 @@ std::size_t IScene::GetCellIndex(const D3DXVECTOR3 & position)
     return Zindex * CellSpace::DIMENSION + Xindex;
 }
 
+CellSpace * IScene::GetCellSpaceByPosition(const D3DXVECTOR3 & position)
+{
+    return &m_TotalCellSpaces[GetCellIndex(position)];
+}
+
 const float IScene::GetCellSpaceLength()
 {
     D3DXVECTOR4 MinMax = GetHeightMap()->GetMinMax();

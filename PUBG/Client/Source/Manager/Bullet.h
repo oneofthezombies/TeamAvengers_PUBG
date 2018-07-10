@@ -11,6 +11,11 @@ private:
     size_t      m_CellSpaceIndex;
     IScene*     pCurrentScene;
 
+    GameInfo::MyInfo m_myInfo;
+
+    D3DXVECTOR3 m_curPos;
+    D3DXVECTOR3 m_nextPos;
+
     D3DXVECTOR3 m_dir;
     float       m_Speed;
     float       m_Damage;
@@ -31,12 +36,13 @@ public:
     //void Set(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
     //    const float speed, const float damage, const TAG_COLLISION tag);
     void Set(GameInfo::MyInfo m_myInfo, const D3DXVECTOR3& startPos, const D3DXVECTOR3& dir,
-        const float speed, const float damage, const TAG_COLLISION tag);
+        const float speed, const float damage, TAG_COLLISION tag);
     void Reset();
 
     bool IsActive() const;
     float GetSpeed() const;
     float GetDamage() const;
+    bool CheckCollision();
     TAG_COLLISION GetTagCollision() const;
 };
 
@@ -56,12 +62,11 @@ public:
     //Bullet* Fire(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
     //    const float speed, const float damage, const TAG_COLLISION tag);
 
-    Bullet* Fire(GameInfo::MyInfo m_myInfo,
+    Bullet* Fire(GameInfo::MyInfo myInfo,
         const D3DXVECTOR3& startPos, 
         const D3DXVECTOR3& dir,
         const float speed, 
-        const float damage, 
-        const TAG_COLLISION tag);
+        const float damage, TAG_COLLISION tag);
 
     LPD3DXMESH GetCylinder() const;
 

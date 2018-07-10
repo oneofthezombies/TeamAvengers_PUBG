@@ -531,7 +531,7 @@ void Character::updateMine()
 
     if (Input()()->IsOnceKeyDown(VK_UP))
     {
-        BulletPool()()->Fire(pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_COLLISION::Player_1_Damage);
+        BulletPool()()->Fire(Communication()()->m_myInfo,pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_COLLISION::Player_1_Damage);
 
     }
 

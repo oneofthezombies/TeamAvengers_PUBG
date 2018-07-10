@@ -153,5 +153,6 @@ struct Collision
         const BoundingBox& box, 
         float* OutDistance);
     static bool HasCollision(const Ray& ray, const BoundingRect& rect);
+    static bool HasCollision(const Ray& ray, const BoundingRect& rect,const float end);
 };
 
