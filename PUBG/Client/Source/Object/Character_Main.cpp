@@ -49,6 +49,8 @@ Character::Character(const int index)
     , m_otherHitPart(0)
 
 {
+    m_totalInventory.pCharacter = this;
+
     const float factor(static_cast<float>(m_index + 1) * 100.0f);
 
     Transform* pTransform = GetTransform();

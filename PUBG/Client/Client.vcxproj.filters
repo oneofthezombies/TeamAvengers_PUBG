@@ -59,7 +59,6 @@
     <ClCompile Include="Area.cpp" />
     <ClCompile Include="Source\Useful\Ballistics.cpp" />
     <ClCompile Include="CameraWorkSpace.cpp" />
-    <ClCompile Include="Source\Object\Character.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />

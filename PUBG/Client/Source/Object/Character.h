@@ -9,6 +9,7 @@ class CharacterAnimation;
 class CharacterPart;
 class Item;
 class Area;
+class UiButtonListener;
 
 struct FramePtr
 {
@@ -65,6 +66,8 @@ public:
 
     struct TotalInventory
     {
+        Character* pCharacter;
+
         UIImage* m_Border;
         UIText*  m_Text;
 
@@ -96,11 +99,13 @@ public:
         bool isOpened;
         std::deque<Item*> droppedItems;
 
+
         ////////////ÇÔ¼ö
         void Open();
         void Close();
         void Update();
         void Render();
+        void SetEquipUI();
 
          TotalInventory();
         ~TotalInventory();
@@ -204,6 +209,8 @@ public:
         bool            Ing = false;
         bool            Up = true;
     };
+
+
 /**************************** end nested structure ***************************/
  
 
@@ -281,6 +288,7 @@ private:
     bool m_isNeedRifleAnim;
 
     WaitBackAction m_backAction;
+
 
 /**************************** end member variable ****************************/
 
@@ -397,6 +405,10 @@ private:
         const float finishEventAgoTime,
         const std::function<void()>& finishEvent);
 
+    void onMouse(
+        const UIButtonWithItem::Event event, 
+        const UIButtonWithItem::MouseButton button, 
+        UIButtonWithItem* pUIButtonWithItem);
 
 
 /**************************** end member method ******************************/

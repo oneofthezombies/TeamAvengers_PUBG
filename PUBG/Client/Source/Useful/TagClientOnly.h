@@ -171,3 +171,15 @@ enum class TAG_CHARACTER_PART
     UpperBody,
     LowerBody
 };
+
+enum class TAG_UI_POSITION
+{
+    A,
+    b,
+    c, 
+    d,
+    e,
+    f,
+    floor_0,
+    floor_1,
+};

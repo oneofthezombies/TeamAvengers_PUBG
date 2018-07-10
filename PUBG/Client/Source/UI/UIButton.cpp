@@ -249,3 +249,179 @@ void IUIButtonOnMouseListener::SetHandle(UIObject* p)
 
     m_pHandle = p;
 }
+
+UIButtonWithItem::UIButtonWithItem(
+    const D3DXVECTOR3& pos, 
+
+    const string& textureDir, 
+    const string& idleTex, 
+    const string& mouseOverTex, 
+    const string& selectTex, 
+
+          UIObject* pParent, 
+
+    const LPD3DXFONT font,
+    const string& text, 
+    const D3DCOLOR textColor, 
+
+          Item* pItem,
+    const TAG_UI_POSITION tagUIPosition,
+    const std::function<void(const Event, const MouseButton, UIButtonWithItem*)>& onMouseCallback)
+    : UIButton(pos, textureDir, idleTex, mouseOverTex, selectTex, nullptr, pParent, font, text, textColor)
+    , pItem(pItem)
+    , m_onMouseCallback(onMouseCallback)
+    , m_tagUIPosition(tagUIPosition)
+{
+}
+
+UIButtonWithItem::~UIButtonWithItem()
+{
+}
+
+void UIButtonWithItem::UpdateOnMouse()
+{
+    const auto input = Input()();
+    if (!input) return;
+
+    m_prevIsMouseOn = m_isMouseOn;
+    m_isMouseOn = PtInRect(&m_rect, input->GetCurrentMousePos());
+
+    if (!m_prevIsMouseOn && m_isMouseOn)
+    {
+        if (m_onMouseCallback) 
+            m_onMouseCallback(
+                Event::ENTER, 
+                MouseButton::IDLE, 
+                this);
+    }
+
+    if (m_prevIsMouseOn && !m_isMouseOn)
+    {
+        if (m_onMouseCallback)
+            m_onMouseCallback(
+                Event::EXIT, 
+                MouseButton::IDLE, 
+                this);
+    }
+
+    switch (m_state)
+    {
+    case STATE::IDLE:
+    {
+        if (m_isMouseOn)
+            m_state = STATE::MOUSE_OVER;
+    }
+    break;
+    case STATE::MOUSE_OVER:
+    {
+        if (input->IsKeyDownMouseL())
+        {
+            m_state = STATE::SELECT;
+
+            if (m_onMouseCallback)
+                m_onMouseCallback(
+                    Event::DOWN,
+                    MouseButton::LEFT,
+                    this);
+        }
+        else if (input->IsKeyDownMouseR())
+        {
+            m_state = STATE::SELECT;
+
+            if (m_onMouseCallback)
+                m_onMouseCallback(
+                    Event::DOWN,
+                    MouseButton::RIGHT,
+                    this);
+        }
+        else if (!m_isMouseOn)
+        {
+            m_state = STATE::IDLE;
+        }
+    }
+    break;
+    case STATE::SELECT:
+    {
+        if (input->IsKeyDownMouseL() &&
+            input->GetPrevIsKeyDownMouseL())
+        {
+            if (m_isMouseOn &&
+                m_prevIsMouseOn)
+            {
+                if (m_onMouseCallback)
+                    m_onMouseCallback(
+                        Event::DRAG,
+                        MouseButton::LEFT,
+                        this);
+            }
+        }
+        else if (input->IsKeyDownMouseR() &&
+            input->GetPrevIsKeyDownMouseR())
+        {
+            if (m_isMouseOn &&
+                m_prevIsMouseOn)
+            {
+                if (m_onMouseCallback)
+                {
+                    m_onMouseCallback(
+                        Event::DRAG,
+                        MouseButton::RIGHT,
+                        this);
+                }
+            }
+        }
+        else
+        {
+            if (m_isMouseOn)
+            {
+                m_state = STATE::MOUSE_OVER;
+
+                if (input->GetPrevIsKeyDownMouseL())
+                {
+                    if (m_onMouseCallback)
+                    {
+                        m_onMouseCallback(
+                            Event::UP,
+                            MouseButton::LEFT,
+                            this);
+                    }
+                }
+            }
+            else
+            {
+                m_state = STATE::IDLE;
+            }
+        }
+    
+
+        
+        /*else
+        {
+            if (m_isMouseOn)
+            {
+                m_state = STATE::MOUSE_OVER;
+
+                if (input->GetPrevIsKeyDownMouseR())
+                {
+                    if (m_onMouseCallback)
+                    {
+                        m_onMouseCallback(
+                            Event::UP,
+                            MouseButton::RIGHT,
+                            this);
+                    }
+                }
+            }
+            else
+            {
+                m_state = STATE::IDLE;
+            }
+        }*/
+    }
+    break;
+    default:
+    {
+    }
+    break;
+    }
+}

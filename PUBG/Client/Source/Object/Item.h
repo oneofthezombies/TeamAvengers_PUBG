@@ -34,6 +34,7 @@ private:
     bool                   m_isRenderSkinnedMesh;
 
     UIImage* pUIImage;
+    UIText * pUIText;
  
     //총알이 나갈 위치
     Frame* pGunBolt;
@@ -76,6 +77,9 @@ public:
 
     void SetPosition(const D3DXVECTOR3& position);
     void SetUIPosition(const D3DXVECTOR2& position);
+
+    //ui text
+    UIText* GetUIText();
 
     //for Rifle
     void SetNumBullet(const int numBullet);
