@@ -645,7 +645,7 @@ const std::vector<BoundingBox>& Character::GetBoundingBoxes()
 void Character::movementControl(OUT State* OutState)
 {
     //มกวม
-    if (m_currentOnceKey._Space)
+    if (m_currentOnceKey._Space && m_stance != Stance::Prone)
     {
         m_Jump.isJumping = true;
     }

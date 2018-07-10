@@ -159,17 +159,17 @@ void Character::setStance() //C, Z
         if (m_stance == Stance::Stand)
         {
             m_stance = Stance::Crouch;
-            setStandTo();
+            setStandTo(m_stance);
         }
         else if (m_stance == Stance::Crouch)
         {
             m_stance = Stance::Stand;
-            setCrouchTo();
+            setCrouchTo(m_stance);
         }
         else if (m_stance == Stance::Prone)
         {
             m_stance = Stance::Crouch;
-            setProneTo();
+            setProneTo(m_stance);
         }
     }
     
@@ -181,17 +181,17 @@ void Character::setStance() //C, Z
         if (m_stance == Stance::Stand)
         {
             m_stance = Stance::Prone;
-            setStandTo();
+            setStandTo(m_stance);
         }
         else if (m_stance == Stance::Crouch)
         {
             m_stance = Stance::Prone;
-            setCrouchTo();
+            setCrouchTo(m_stance);
         }
         else if (m_stance == Stance::Prone)
         {
             m_stance = Stance::Stand;
-            setProneTo();
+            setProneTo(m_stance);
         }
     }
 }
@@ -600,54 +600,70 @@ void Character::setJump()
 {
     if (m_currentOnceKey._Space && m_currentStayKey._W)
     {
-        TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
-        if (m_attacking == Attacking::Unarmed)
-            tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F;
-        else if (m_attacking == Attacking::Rifle)
-            tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Jump_F;
-
-        setAnimation(
-            CharacterAnimation::BodyPart::BOTH,
-            tagAnim,
-            true,
-            CharacterAnimation::DEFAULT_BLENDING_TIME,
-            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_POSITION,
-            0.3f,
-            [this]()
+        if (m_stance == Stance::Prone)
         {
+            m_stance = Stance::Stand;
+            setProneTo(m_stance);
+        }
+        else
+        {
+            TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+            if (m_attacking == Attacking::Unarmed)
+                tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F;
+            else if (m_attacking == Attacking::Rifle)
+                tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Jump_F;
+
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
-                m_lowerAnimState,
+                tagAnim,
                 true,
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_POSITION,
                 0.3f,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
-        });
+                [this]()
+            {
+                setAnimation(
+                    CharacterAnimation::BodyPart::BOTH,
+                    m_lowerAnimState,
+                    true,
+                    0.3f,
+                    CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+            });
+        }
     }
     else if (m_currentOnceKey._Space)
     {
-        TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
-        if(m_attacking == Attacking::Unarmed)
-            tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary;
-        else if(m_attacking == Attacking::Rifle)
-            tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Jump_Stationary_Full_001;
-    
-        //애니메이션 적용
-        setAnimation(
-            CharacterAnimation::BodyPart::BOTH,
-            tagAnim,
-            true,
-            CharacterAnimation::DEFAULT_BLENDING_TIME,
-            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_POSITION,
-            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-            [this]()
+        if (m_stance == Stance::Prone)
         {
+            m_stance = Stance::Stand;
+            setProneTo(m_stance);
+        }
+        else
+        {
+            TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+            if (m_attacking == Attacking::Unarmed)
+                tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary;
+            else if (m_attacking == Attacking::Rifle)
+                tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Jump_Stationary_Full_001;
+
+            //애니메이션 적용
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
-                m_lowerAnimState,
-                false);
-        });
+                tagAnim,
+                true,
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_POSITION,
+                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                [this]()
+            {
+                setAnimation(
+                    CharacterAnimation::BodyPart::BOTH,
+                    m_lowerAnimState,
+                    false);
+            });
+        }
     }
 }
 
@@ -786,11 +802,11 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 
 서있다가 앉다가 섬 -> 앉아있다가 섬의 위치 = 앉아있다가 섬 주기(또는 서있다가 앉음) - 서있다가 앉음의 위치 
 */
-void Character::setStandTo()
+void Character::setStandTo(Stance stance)
 {
     if (m_attacking == Attacking::Unarmed)
     {
-        if (m_stance == Stance::Crouch)
+        if (stance == Stance::Crouch)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -810,7 +826,7 @@ void Character::setStandTo()
                     CharacterAnimation::DEFAULT_NEXT_WEIGHT);
             });
         }
-        else if (m_stance == Stance::Prone)
+        else if (stance == Stance::Prone)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -831,7 +847,7 @@ void Character::setStandTo()
     }
     else if (m_attacking == Attacking::Rifle)
     {
-        if (m_stance == Stance::Crouch)
+        if (stance == Stance::Crouch)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -849,7 +865,7 @@ void Character::setStandTo()
                     false);
             });
         }
-        else if (m_stance == Stance::Prone)
+        else if (stance == Stance::Prone)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -870,11 +886,11 @@ void Character::setStandTo()
     }
 }
 
-void Character::setCrouchTo()
+void Character::setCrouchTo(Stance stance)
 {
     if (m_attacking == Attacking::Unarmed)
     {
-        if (m_stance == Stance::Stand)
+        if (stance == Stance::Stand)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -894,7 +910,7 @@ void Character::setCrouchTo()
                     CharacterAnimation::DEFAULT_NEXT_WEIGHT);
             });
         }
-        else if (m_stance == Stance::Prone)
+        else if (stance == Stance::Prone)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -915,7 +931,7 @@ void Character::setCrouchTo()
     }
     else if (m_attacking == Attacking::Rifle)
     {
-        if (m_stance == Stance::Stand)
+        if (stance == Stance::Stand)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -933,7 +949,7 @@ void Character::setCrouchTo()
                     false);
             });
         }
-        else if (m_stance == Stance::Prone)
+        else if (stance == Stance::Prone)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -954,11 +970,11 @@ void Character::setCrouchTo()
     }
 }
 
-void Character::setProneTo()
+void Character::setProneTo(Stance stance)
 {
     if (m_attacking == Attacking::Unarmed)
     {
-        if (m_stance == Stance::Stand)
+        if (stance == Stance::Stand)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -976,7 +992,7 @@ void Character::setProneTo()
                     false);
             });
         }
-        else if (m_stance == Stance::Crouch)
+        else if (stance == Stance::Crouch)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -999,7 +1015,7 @@ void Character::setProneTo()
     }
     else if (m_attacking == Attacking::Rifle)
     {
-        if (m_stance == Stance::Stand)
+        if (stance == Stance::Stand)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -1017,7 +1033,7 @@ void Character::setProneTo()
                     false);
             });
         }
-        else if (m_stance == Stance::Crouch)
+        else if (stance == Stance::Crouch)
         {
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,

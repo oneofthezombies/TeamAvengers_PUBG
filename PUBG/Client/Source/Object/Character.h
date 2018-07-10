@@ -360,9 +360,9 @@ private:
     void setRifleOnHand(TAG_RIFLE tagRifle);
     void setRifleOnBody(TAG_RIFLE tagRifle);
 
-    void setStandTo();
-    void setCrouchTo();
-    void setProneTo();
+    void setStandTo(Stance stance);
+    void setCrouchTo(Stance stance);
+    void setProneTo(Stance stance);
 
     void onKar98kReloadEnd();
     void onKar98kReload();
