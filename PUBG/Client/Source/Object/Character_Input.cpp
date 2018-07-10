@@ -605,6 +605,11 @@ void Character::setJump()
             m_stance = Stance::Stand;
             setProneTo(m_stance);
         }
+        else if (m_stance == Stance::Crouch)
+        {
+            m_stance = Stance::Stand;
+            setCrouchTo(m_stance);
+        }
         else
         {
             TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
@@ -638,6 +643,11 @@ void Character::setJump()
         {
             m_stance = Stance::Stand;
             setProneTo(m_stance);
+        }
+        else if (m_stance == Stance::Crouch)
+        {
+            m_stance = Stance::Stand;
+            setCrouchTo(m_stance);
         }
         else
         {
@@ -796,7 +806,6 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 자세 전이 관련
 */
 /*
-
 서있다가 앉음 주기 2.8
 앉아있다가 섬 주기 2.9
 
