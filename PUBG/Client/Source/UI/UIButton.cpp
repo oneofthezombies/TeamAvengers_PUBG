@@ -2,6 +2,7 @@
 #include "UIButton.h"
 #include "UIManager.h"
 #include "UIText.h"
+#include "UIImage.h"
 
 UIButton::UIButton(const D3DXVECTOR3& pos, 
     const string& textureDir, const string& idleTex, const string& mouseOverTex, const string& selectTex, 
@@ -15,6 +16,7 @@ UIButton::UIButton(const D3DXVECTOR3& pos,
     , m_prevIsMouseOn(false)
     , m_isMouseOn(false)
     , m_isClicked(false)
+    , m_isActive(true)
 {
     for (auto& t : m_textures)
         t = nullptr;
@@ -35,6 +37,8 @@ UIButton::~UIButton()
 
 void UIButton::Update(const D3DXVECTOR3& parentViewportPos, const D3DXMATRIX& transform)
 {
+    if (!m_isActive) return;
+
     SetViewportPosRect(parentViewportPos, m_position, m_size, transform);
     UpdateOnMouse();
     UpdateChildren(m_viewportPosition, transform);
@@ -42,6 +46,8 @@ void UIButton::Update(const D3DXVECTOR3& parentViewportPos, const D3DXMATRIX& tr
 
 void UIButton::Render()
 {
+    if (!m_isActive) return;
+
 	if (m_textures[m_state])
 	{
         Sprite()()->SetTransform(&m_transform);
@@ -89,6 +95,16 @@ void UIButton::SetListener(IUIButtonOnMouseListener* p)
     if (!p) return;
 
     m_pListener = p;
+}
+
+void UIButton::SetIsActive(const bool val)
+{
+    m_isActive = val;
+}
+
+bool UIButton::IsActive() const
+{
+    return m_isActive;
 }
 
 void UIButton::UpdateOnMouseEnterExit()
@@ -269,6 +285,7 @@ UIButtonWithItem::UIButtonWithItem(
     const std::function<void(const Event, const MouseButton, UIButtonWithItem*)>& onMouseCallback)
     : UIButton(pos, textureDir, idleTex, mouseOverTex, selectTex, nullptr, pParent, font, text, textColor)
     , pItem(pItem)
+    , pUIImage(nullptr)
     , m_onMouseCallback(onMouseCallback)
     , m_tagUIPosition(tagUIPosition)
 {
@@ -424,4 +441,20 @@ void UIButtonWithItem::UpdateOnMouse()
     }
     break;
     }
+}
+
+void UIButtonWithItem::Update(
+    const D3DXVECTOR3& parentViewportPos, 
+    const D3DXMATRIX& transform)
+{
+    UIButton::Update(parentViewportPos, transform);
+    if (pUIImage && m_isActive) 
+        pUIImage->Update(m_viewportPosition, transform);
+}
+
+void UIButtonWithItem::Render()
+{
+    UIButton::Render();
+    if (pUIImage && m_isActive) 
+        pUIImage->Render();
 }

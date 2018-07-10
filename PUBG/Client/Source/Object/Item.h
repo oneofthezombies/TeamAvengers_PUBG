@@ -33,7 +33,7 @@ private:
     SkinnedMeshController* pSkinnedMeshController;
     bool                   m_isRenderSkinnedMesh;
 
-    UIImage* pUIImage;
+    UIImage* m_pUIImage;
     UIText * pUIText;
  
     //총알이 나갈 위치
@@ -72,7 +72,7 @@ public:
     void SetIsRenderSkinnedMesh(const bool isRenderSkinnedMesh);
     bool IsRenderSkinnedMesh() const;
 
-    void SetInRenderUIImage(const bool isRenderUIImage);
+    void SetIsRenderUIImage(const bool isRenderUIImage);
     bool IsRenderUIImage() const;
 
     void SetPosition(const D3DXVECTOR3& position);
@@ -80,6 +80,7 @@ public:
 
     //ui text
     UIText* GetUIText();
+    UIImage* GetUIImage();
 
     //for Rifle
     void SetNumBullet(const int numBullet);

@@ -66,15 +66,19 @@ public:
 
     struct TotalInventory
     {
+        static const float DEFAULT_CAPACITY;
+        static const int NUM_UI_DROPPED = 12;
+
         Character* pCharacter;
 
         UIImage* m_Border;
         UIText*  m_Text;
+        std::vector<UIButtonWithItem*> m_uiDroped;
 
         Item* m_pHand; //손에 든 무기
         bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
 
-        static const float DEFAULT_CAPACITY;
+
 
         map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
 

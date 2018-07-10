@@ -395,22 +395,29 @@ void Character::updateMine()
     /////////////// Item 과의 충돌체크/////////////////
     //////////////////////////////////////////////////
     //Item Spher와 character sphere 충돌 체크
+
+    // clear dropped items
+    auto& di = m_totalInventory.droppedItems;
+    di.resize(0);
+
     auto itms(pCurrentScene->m_NearArea.GetItems());    //이 auto를 copy가 아닌 reference로 받는 방법은???
     for (auto itm : itms)
     {
         if (!Collision::HasCollision(m_boundingSphere, itm->GetBoundingSphere())) continue;
         //캐릭터와 Item의 spehre 가 충돌이 났다
         
+        di.emplace_back(itm);
         
         // UI로 F key가 나오게 하기 
 
-        
-        if (m_currentOnceKey._F)
-        {
-            PutItemInTotalInventory(itm); //inventory에 넣기
-            //current scene 에서 지우기
-            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
-        }
+
+        // 잠시 주석, 인벤토리에서 보기 위해서
+        //if (m_currentOnceKey._F)
+        //{
+        //    PutItemInTotalInventory(itm); //inventory에 넣기
+        //    //current scene 에서 지우기
+        //    pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
+        //}
     }
     //////////////////////////////////////////////////
 
@@ -498,7 +505,6 @@ void Character::updateMine()
     }
     
     m_totalInventory.Update();
-    m_totalInventory.Render();
 
     if (m_currentOnceKey._B && m_totalInventory.m_pHand !=NULL)
     {

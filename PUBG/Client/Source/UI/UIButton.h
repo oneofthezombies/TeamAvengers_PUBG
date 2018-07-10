@@ -3,6 +3,7 @@
 
 class IUIButtonOnMouseListener;
 class Item;
+class UIImage;
 
 class UIButton : public UIObject
 {
@@ -26,6 +27,7 @@ protected:
     bool        m_isMouseOn;
     bool        m_isClicked;
     textures_t  m_textures;
+    bool        m_isActive;
 
     void UpdateOnMouseEnterExit();
     void UpdateOnMouseDownUpDrag();
@@ -46,6 +48,9 @@ public:
 	void SetText(const LPD3DXFONT font, const string& text, const D3DCOLOR textColor);
     void SetKeyToRespond(const int key);
     void SetListener(IUIButtonOnMouseListener* p);
+
+    void SetIsActive(const bool val);
+    bool IsActive() const;
 };
 
 class IUIButtonOnMouseListener
@@ -100,6 +105,7 @@ private:
 
 public:
     Item* pItem;
+    UIImage* pUIImage;
     TAG_UI_POSITION m_tagUIPosition;
 
 public:
@@ -123,5 +129,9 @@ public:
                     void(const Event, const MouseButton, UIButtonWithItem*)>& onMouseCallback);
     virtual ~UIButtonWithItem();
 
+    virtual void Update(
+        const D3DXVECTOR3& parentViewportPos, 
+        const D3DXMATRIX& transform) override;
+    virtual void Render() override;
     virtual void UpdateOnMouse() override;
 };
