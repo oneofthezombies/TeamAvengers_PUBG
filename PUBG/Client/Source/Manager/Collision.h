@@ -4,7 +4,7 @@
 
 #define g_pCollision Collision()()
 
-struct BoundingShape// : public MemoryAllocator
+struct BoundingShape
 {
     D3DXVECTOR3 center;
     D3DXVECTOR3 position;
@@ -35,6 +35,17 @@ struct BoundingBox : public BoundingShape
 
     static BoundingBox Create(const D3DXVECTOR3& min, const D3DXVECTOR3& max);
     static BoundingBox Create(const D3DXMATRIX& transformationMatrix);
+};
+
+struct BoundingRect
+{
+    D3DXVECTOR2 center;
+    D3DXVECTOR2 position;
+    D3DXVECTOR2 extent;
+    //D3DXVECTOR2 rotation;
+
+             BoundingRect();
+    virtual ~BoundingRect();
 };
 
 class Collider;
@@ -141,5 +152,6 @@ struct Collision
         const Ray& ray, 
         const BoundingBox& box, 
         float* OutDistance);
+    static bool HasCollision(const Ray& ray, const BoundingRect& rect);
 };
 

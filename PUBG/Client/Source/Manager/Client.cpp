@@ -209,7 +209,8 @@ void Communication::Manager::ReceiveMessage(
             auto& id = parsedDesc.first;
             auto& nickname = parsedDesc.second;
 
-            m_roomInfo.playerInfos[id].nickname = nickname;
+            GameInfo::PlayerInfo& pi = m_roomInfo.playerInfos[id];
+            pi.nickname = nickname;
         }
         break;
     case TAG_REQUEST::SEND_POSITION_AND_ROTATION:
@@ -223,8 +224,10 @@ void Communication::Manager::ReceiveMessage(
             D3DXQUATERNION rot;
             ss >> pos.x >> pos.y >> pos.z >> rot.x >> rot.y >> rot.z >> rot.w;
 
-            m_roomInfo.playerInfos[id].position = pos;
-            m_roomInfo.playerInfos[id].rotation = rot;
+            GameInfo::PlayerInfo& pi = m_roomInfo.playerInfos[id];
+            pi.position = pos;
+            pi.rotation = rot;
+            //pi.isApplied = false;
         }
         break;
     case TAG_REQUEST::SEND_HEAD_ANGLE:

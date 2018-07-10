@@ -13,6 +13,18 @@ void ScenePlay::setAloneMode()
 {
     Communication()()->m_myInfo.ID = 0;
 
+    // 
+    Communication()()->m_roomInfo.playerInfos[1].position       = D3DXVECTOR3(300.0f, 150.0f, 300.0f);
+    Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[2].position       = D3DXVECTOR3(500.0f, 150.0f, 300.0f);
+    Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[3].position       = D3DXVECTOR3(700.0f, 150.0f, 300.0f);
+    Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    // ..
+
     const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);
@@ -29,9 +41,6 @@ void ScenePlay::setAloneMode()
     //Character* pOther = new Character(1);
     //m_others.emplace_back(pOther);
     //AddObject(pOther);
-
-
-
 
     TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(2000.0f, 100.0f, 2000.0f), Vector3::UP, Vector3::ONE * 0.7f);
     D3DXMATRIX m;
