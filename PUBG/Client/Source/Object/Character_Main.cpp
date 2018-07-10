@@ -129,7 +129,11 @@ void Character::OnUpdate()
         pPart->Update();
 
     if (IsFire())
-        RifleShooting();
+    {
+        //RifleShooting();
+        RifleShootingTest();
+    }
+        
 
     // render
     pAnimation->Render(

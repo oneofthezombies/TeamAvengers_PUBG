@@ -492,9 +492,6 @@ void Character::RifleShooting()
     //bullet의 direction 구하기
     D3DXVECTOR3 bulletDir;
     CurrentCamera()()->CalcPickedPosition(&bulletDir, 1280 / 2, 720 / 2);
-    D3DXVECTOR3 ppp;
-    float ddd;
-    CurrentCamera()()->PickedDistancePosition(&ppp, &ddd, 1280 / 2, 720 / 2);
     bulletDir = bulletDir - bulletFirePos;
     D3DXVec3Normalize(&bulletDir, &bulletDir);
 
@@ -632,19 +629,26 @@ void Character::RifleShooting()
 
 void Character::RifleShootingTest()
 {
-    //bullet이 나가는 포지션 구하기
-    D3DXMATRIX mat
-        = m_totalInventory.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
-        * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
-        * GetTransform()->GetTransformationMatrix();    //character world matrix
-    D3DXVECTOR3 bulletFirePos = Matrix::GetTranslation(mat);
+    D3DXVECTOR3 v;
+    float dist;
+    Ray ray = CurrentCamera()()->PickedRayDistancePosition(&v,&dist, 1280 / 2, 720 / 2);
+    
+    
+    
+    
+    ////bullet이 나가는 포지션 구하기
+    //D3DXMATRIX mat
+    //    = m_totalInventory.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
+    //    * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
+    //    * GetTransform()->GetTransformationMatrix();    //character world matrix
+    //D3DXVECTOR3 bulletFirePos = Matrix::GetTranslation(mat);
 
 
-    //bullet의 direction 구하기
-    D3DXVECTOR3 bulletDir;
-    CurrentCamera()()->CalcPickedPosition(&bulletDir, 1280 / 2, 720 / 2);
-    bulletDir = bulletDir - bulletFirePos;
-    D3DXVec3Normalize(&bulletDir, &bulletDir);
+    ////bullet의 direction 구하기
+    //D3DXVECTOR3 bulletDir;
+    //CurrentCamera()()->CalcPickedPosition(&bulletDir, 1280 / 2, 720 / 2);
+    //bulletDir = bulletDir - bulletFirePos;
+    //D3DXVec3Normalize(&bulletDir, &bulletDir);
 
 
 

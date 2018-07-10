@@ -64,7 +64,7 @@ public:
 
     D3DXVECTOR4 GetFrustumArea();
     bool CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY);
-    bool PickedDistancePosition(OUT D3DXVECTOR3* vOut, OUT float* distance, WORD screenX, WORD screenY);
+    Ray PickedRayDistancePosition(OUT D3DXVECTOR3* vOut, OUT float* distance, WORD screenX, WORD screenY);
 };
  
 

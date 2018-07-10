@@ -206,10 +206,9 @@ bool ICamera::CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD scre
     return bIntersect;
 }
 
-bool ICamera::PickedDistancePosition(OUT D3DXVECTOR3 * vOut, OUT float* distance, WORD screenX, WORD screenY)
+Ray ICamera::PickedRayDistancePosition(OUT D3DXVECTOR3 * vOut, OUT float* distance, WORD screenX, WORD screenY)
 {
     Ray ray = Ray::RayAtWorldSpace(screenX, screenY);
-    bool bIntersect = false;
 
     vector<D3DXVECTOR3>& rayBox = CurrentScene()()->GetHeightMap()->GetBoundaryBox(); 
 
@@ -217,14 +216,10 @@ bool ICamera::PickedDistancePosition(OUT D3DXVECTOR3 * vOut, OUT float* distance
     {
         if (ray.CalcIntersectTri(&rayBox[i], distance))
         {
-            bIntersect = true;
             *vOut = ray.m_pos + ray.m_dir * (*distance);
-
-
-            return bIntersect;
         }
     }
-    return bIntersect;
+    return ray;
 }
 
 
