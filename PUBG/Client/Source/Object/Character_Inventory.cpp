@@ -236,15 +236,24 @@ void Character::PutItemInTotalInventory(Item* item)
         }
         else
         {
-            (m_totalInventory.m_mapInventory)[tag].push_back(item);
-            (m_totalInventory.m_capacity) += ItemInfo::GetCapacity(tag);
-            CurrentScene()()->RemoveObject(item);
+            if (m_totalInventory.m_capacity - ItemInfo::GetCapacity(tag) >= 0)
+            {
+                (m_totalInventory.m_mapInventory)[tag].push_back(item);
+                CurrentScene()()->RemoveObject(item);
+                m_totalInventory.m_capacity -= ItemInfo::GetCapacity(tag);
+            }
+            else
+            {
+                //TODO: 용량 부족 UI 띄우기
+                cout << "용량이 부족합니다!!" << endl;
+            }
             // TODO : send "delete item on field" to server
         }
     }
         break;
 
     case TAG_ITEM_CATEGORY::Armor:
+        //TODO: 피해감소량 적용
         checkOriginItem(&m_totalInventory.m_pEquipArmor, item);
         break;
 
@@ -253,6 +262,7 @@ void Character::PutItemInTotalInventory(Item* item)
         break;
 
     case TAG_ITEM_CATEGORY::Head:
+        //TODO: 피해감소량 적용
         checkOriginItem(&m_totalInventory.m_pEquipHead, item);
         break;
 
@@ -278,43 +288,63 @@ void Character::PutItemInTotalInventory(Item* item)
     }
 
     //For Debug
-    //ShowTotalInventory();
+    ShowTotalInventory();
 }
 
 void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item)
 {
+    /*
+        - 자신의 용량만큼 캐릭터의 소지용량에서 제외된다
+        - 소모품, 부착물, 탄약
+    */
     assert(map && item && "Character::CreateOrMergeItem(), argument is null.");
 
     TAG_RES_STATIC tag = item->GetTagResStatic();
     auto it = map->find(tag);
     int count = item->GetCount();
 
-    if (it == map->end())
+    if (m_totalInventory.m_capacity - count * ItemInfo::GetCapacity(tag) >= 0)
     {
-       //아이템이 없는 경우는 새로 생성한다
-        (*map)[tag].push_back(item);
-        item->SetCount(count);
-        CurrentScene()()->RemoveObject(item);
-        // TODO : send "delete item on field" to server
+        if (it == map->end())
+        {
+            //아이템이 없는 경우는 새로 생성한다
+            (*map)[tag].push_back(item);
+            item->SetCount(count);
+            CurrentScene()()->RemoveObject(item);
+            // TODO : send "delete item on field" to server
+        }
+        else
+        {
+            //이미 인벤토리에 있는 경우, 기존 개수와 합친다
+            auto origin_item = it->second.back();
+            origin_item->SetCount(origin_item->GetCount() + count);
+            CurrentScene()()->Destroy(item);
+            // TODO : send "delete item on field" to server
+        }
+        m_totalInventory.m_capacity -= count * ItemInfo::GetCapacity(tag);
     }
     else
     {
-        //이미 인벤토리에 있는 경우, 기존 개수와 합친다
-        auto origin_item = it->second.back();
-        origin_item->SetCount(origin_item->GetCount() + count);
-        CurrentScene()()->Destroy(item);
-        // TODO : send "delete item on field" to server
+        //TODO: 용량 부족 UI 띄우기
+        cout << "용량이 부족합니다!!" << endl;
     }
-    m_totalInventory.m_capacity += count * ItemInfo::GetCapacity(tag);
+
 }
 
 void Character::checkOriginItem(Item** originItem, Item* newItem)
 {
+    /*
+        - 장비, 무기
+        - 소지용량에 영향을 끼치지 않으면서, 템에따라 용량을 늘린다(조끼, 배낭)
+    */
     assert(newItem && "Character::checkOriginItem(), argument is null.");
     if (*originItem)
     {
         (*originItem)->SetIsRenderEffectMesh(true);
-        //TODO: 바닥에 떨군다 & 소지용량 변경
+        //TODO: 바닥에 떨군다
+        //용량을 줄인다
+        m_totalInventory.m_capacity -= ItemInfo::GetCapacityExtension(newItem->GetTagResStatic());
+
         //아래는 임시코드
         CurrentScene()()->Destroy(*originItem);
         checkOriginItem(originItem, newItem);
@@ -322,7 +352,9 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
     else
     {
         *originItem = newItem;
-        m_totalInventory.m_capacity += ItemInfo::GetCapacity(newItem->GetTagResStatic());
+        //m_totalInventory.m_capacity += ItemInfo::GetCapacity(newItem->GetTagResStatic());
+        //용량을 늘린다
+        m_totalInventory.m_capacity += ItemInfo::GetCapacityExtension(newItem->GetTagResStatic());
         CurrentScene()()->RemoveObject(newItem);
 
         // eqiup
@@ -472,7 +504,8 @@ void Character::ShowTotalInventory()
 {
     TAG_RES_STATIC tag;
 
-    cout << "용량: " << m_totalInventory.m_capacity << endl;
+    cout << "기본용량: " << Character::TotalInventory::DEFAULT_CAPACITY << endl;
+    cout << "남은용량: " << m_totalInventory.m_capacity << endl;
     cout << "<인벤토리>" << endl;
     for (auto items : m_totalInventory.m_mapInventory)
     {

@@ -429,28 +429,27 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
             //점프 후 착지애니메이션
             //TODO: 높이에 따라서 다른 착지애니메이션
             TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
-            if (m_attacking == Attacking::Unarmed)
-            {
+            if(m_attacking == Attacking::Unarmed)
                 tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Fall_Landing_Additive;
-                //else if (m_attacking == Attacking::Rifle)
-                //    tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard;
+            else if (m_attacking == Attacking::Rifle)
+                tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard;
 
+            setAnimation(
+                CharacterAnimation::BodyPart::BOTH,
+                tagAnim,
+                true,
+                0.1f,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_POSITION,
+                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                [this]()
+            {
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
-                    tagAnim,
-                    true,
-                    0.1f,
-                    CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                    CharacterAnimation::DEFAULT_POSITION,
-                    CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                    [this]()
-                {
-                    setAnimation(
-                        CharacterAnimation::BodyPart::BOTH,
-                        m_lowerAnimState,
-                        false);
-                });
-            }
+                    m_lowerAnimState,
+                    false);
+            });
+            
 
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;

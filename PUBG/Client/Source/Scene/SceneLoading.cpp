@@ -20,14 +20,25 @@ void SceneLoading::Load()
 
     //// load effect meshs
     load(TAG_RES_STATIC::SkySphere);
+
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
+
     load(TAG_RES_STATIC::Armor_Lv1);
     load(TAG_RES_STATIC::Back_Lv1);
     load(TAG_RES_STATIC::Head_Lv1);
-    load(TAG_RES_STATIC::QBZ);
-    load(TAG_RES_STATIC::Kar98k);
+
+    //load(TAG_RES_STATIC::QBZ);
+    //load(TAG_RES_STATIC::Kar98k);
+
     load(TAG_RES_STATIC::Bandage);
+    load(TAG_RES_STATIC::FirstAidKit);
+    load(TAG_RES_STATIC::MedKit);
+
+    //load(TAG_RES_STATIC::RedDot);
+    //load(TAG_RES_STATIC::Aimpoint2X);
+    //load(TAG_RES_STATIC::ACOG);
+
     load(TAG_RES_STATIC::Rock_1);
 
     //// load skined meshs
