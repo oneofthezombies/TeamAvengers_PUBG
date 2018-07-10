@@ -445,6 +445,7 @@ public:
     bool IsFire() const;
     void RifleShooting();
     void RifleShootingTest();
+    D3DXVECTOR3 FindShootingTargetPos();
 
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
 

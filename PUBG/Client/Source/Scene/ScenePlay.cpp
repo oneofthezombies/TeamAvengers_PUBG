@@ -32,22 +32,28 @@ void ScenePlay::setAloneMode()
     //}
 
 
-    Character* pOther = new Character(1);
-    others.emplace_back(pOther);
-    characters.emplace_back(pOther);
-    AddObject(pOther);
-    
-    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(500.0f, 200.0f, 500.0f);
+    //Character* pOther = new Character(1);
+    //others.emplace_back(pOther);
+    //characters.emplace_back(pOther);
+    //AddObject(pOther);
+    //
+    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(500.0f, 200.0f, 500.0f);
 
 
 
-    //TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(2000.0f, 100.0f, 2000.0f), Vector3::UP, Vector3::ONE * 0.7f);
-    //D3DXMATRIX m;
-    //D3DXQUATERNION qR;
-    //D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
-    //D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(2000.0f, 100.0f, 2000.0f));
-    //tf->AddBoundingBox(m);
-    //AddObject(tf);
+    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 2000.0f), Vector3::UP, Vector3::ONE * 0.7f);
+    D3DXMATRIX m;
+    D3DXQUATERNION qR;
+    D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
+    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 2000.0f));
+    tf->AddBoundingBox(m);
+    AddObject(tf);
+
+    tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 1000.0f), Vector3::UP, Vector3::ONE * 0.7f);
+    D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
+    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 1000.0f));
+    tf->AddBoundingBox(m);
+    AddObject(tf);
 
     //For inventory Test
     Item* item = nullptr;

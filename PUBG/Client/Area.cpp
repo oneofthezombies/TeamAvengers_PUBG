@@ -11,6 +11,8 @@ Area::~Area()
 
 void Area::CreateNearArea(const std::size_t index)
 {
+    m_cellspaces.clear();
+
     vector<CellSpace>* CS = CurrentScene()()->GetTotalCellSpace();
 
     vector<D3DXVECTOR2> p;
@@ -28,7 +30,7 @@ void Area::CreateNearArea(const std::size_t index)
     int col = index / CellSpace::DIMENSION;
     int row = index % CellSpace::DIMENSION;
 
-    m_cellspaces.clear();
+
     int nRow = 0;
     int nCol = 0;
     for (auto& n : p)
@@ -46,6 +48,7 @@ void Area::CreateNearArea(const std::size_t index)
 
 Ray Area::CreateRayArea()
 {
+    m_cellspaces.clear();
     vector<CellSpace>* CS = CurrentScene()()->GetTotalCellSpace();
 
     Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
