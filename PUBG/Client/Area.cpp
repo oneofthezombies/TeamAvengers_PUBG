@@ -9,7 +9,7 @@ Area::~Area()
 {
 }
 
-void Area::Create(const std::size_t index)
+void Area::CreateNearArea(const std::size_t index)
 {
     vector<CellSpace>* CS = CurrentScene()()->GetTotalCellSpace();
 
@@ -42,6 +42,32 @@ void Area::Create(const std::size_t index)
     }
 
     m_cellspaces.emplace_back(&CS->at(row + col * CellSpace::DIMENSION));
+}
+
+Ray Area::CreateRayArea()
+{
+    vector<CellSpace>* CS = CurrentScene()()->GetTotalCellSpace();
+
+    Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
+
+    const float cellLength = CurrentScene()()->GetCellSpaceLength();
+    BoundingRect rect;
+    rect.center.x = rect.center.y = cellLength / 2;
+    rect.extent = rect.center;
+    for (int i = 0; i <CellSpace::DIMENSION; i++)
+    {
+        for (int j = 0; j < CellSpace::DIMENSION; j++)
+        {
+            rect.position = D3DXVECTOR2(j*cellLength, i*cellLength);
+            if (Collision::HasCollision(ray, rect))
+            {
+                m_cellspaces.emplace_back(&CS->at(j + i * CellSpace::DIMENSION));
+
+            }
+        }
+    }
+
+    return ray;
 }
 
 bool Area::checkValid(int v)

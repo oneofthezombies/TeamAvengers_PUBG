@@ -32,12 +32,12 @@ void ScenePlay::setAloneMode()
     //}
 
 
-    //Character* pOther = new Character(1);
-    //others.emplace_back(pOther);
-    //characters.emplace_back(pOther);
-    //AddObject(pOther);
-    //
-    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(500.0f, 200.0f, 500.0f);
+    Character* pOther = new Character(1);
+    others.emplace_back(pOther);
+    characters.emplace_back(pOther);
+    AddObject(pOther);
+    
+    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(500.0f, 200.0f, 500.0f);
 
 
 

@@ -59,7 +59,7 @@ Character::Character(const int index)
     IScene* CS = CurrentScene()();
     m_cellIndex = CS->GetCellIndex(pTransform->GetPosition());                   //캐릭터의 pos에 따라 알맞은 area에 넣어주기
     CS->InsertObjIntoTotalCellSpace(TAG_OBJECT::Character, m_cellIndex, this);   //Object 를 TotalCellSpace(Area)에 넣기
-    CS->m_NearArea.Create(m_cellIndex);                                          //Near Area 계산
+    CS->m_NearArea.CreateNearArea(m_cellIndex);                                          //Near Area 계산
 
     pAnimation = new CharacterAnimation;
     AddChild(pAnimation);
@@ -372,8 +372,6 @@ void Character::updateMine()
             // TODO : impl
         }
 
-
-
         tm->SetPosition(destState.position);
     }
     else
@@ -386,7 +384,7 @@ void Character::updateMine()
         std::size_t destCellIndex = pCurrentScene->GetCellIndex(destState.position);
         if (destCellIndex != m_cellIndex)
         {
-            pCurrentScene->m_NearArea.Create(destCellIndex);
+            pCurrentScene->m_NearArea.CreateNearArea(destCellIndex);
             pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
         }
     }
