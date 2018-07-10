@@ -369,6 +369,8 @@ void Character::updateMine()
             // TODO : impl
         }
 
+
+
         tm->SetPosition(destState.position);
     }
     else
