@@ -284,8 +284,8 @@ void Character::characterRotation(MouseInput* mouseInput)
     ////케릭터 머리 Frame 움직이기
     rotateHead(-mouseInput->pitch);
     //캐릭터 허리 움직이기
-    if (!m_currentStayKey._LAlt)
-        rotateWaist(mouseInput->yaw);
+    //if (!m_currentStayKey._LAlt)
+    //    rotateWaist(mouseInput->yaw);
 }
 
 void Character::backActionFrame()
@@ -342,22 +342,30 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     }
     else // isPressing_LAlt == false
     {
-        if (m_waistRotation.m_limit)
-        {
-            D3DXQUATERNION q;
-            D3DXQuaternionRotationYawPitchRoll(&q, mouseInput->yaw, 0.0f, 0.0f);
-            *OutRotation *= q;
+        //JOHN HAN 허리 로테이션 코드 
+        //if (m_waistRotation.m_limit)
+        //{
+        //    D3DXQUATERNION q;
+        //    D3DXQuaternionRotationYawPitchRoll(&q, mouseInput->yaw, 0.0f, 0.0f);
+        //    *OutRotation *= q;
 
-            //D3DXQUATERNION q;
-            //D3DXQuaternionRotationYawPitchRoll(&q, m_rotationForCamera.y, 0, 0);
-            //*OutRotation = q;
-            //m_waistRotation.m_angle = 0;
-            
-        }
-        else
-        {
-            m_rotationForCamera.y += mouseInput->yaw;
-        }
+        //    //D3DXQUATERNION q;
+        //    //D3DXQuaternionRotationYawPitchRoll(&q, m_rotationForCamera.y, 0, 0);
+        //    //*OutRotation = q;
+        //    //m_waistRotation.m_angle = 0;
+        //    
+        //}
+        //else
+        //{
+        //    m_rotationForCamera.y += mouseInput->yaw;
+        //}
+
+        ////이거 지워 -----
+        D3DXQUATERNION q;
+        D3DXQuaternionRotationYawPitchRoll(&q, mouseInput->yaw, 0.0f, 0.0f);
+        *OutRotation *= q;
+        //--------
+
 
         m_rotationForCamera.x += -mouseInput->pitch;
 
