@@ -103,7 +103,7 @@ TAG_COLLISION Bullet::GetTagCollision() const
     return pBoxCollider->GetTagCollision();
 }
 
-void Bullet::Set(const D3DXVECTOR3 & startPos, const D3DXVECTOR3 & dir, 
+void Bullet::Set(GameInfo::MyInfo m_myInfo, const D3DXVECTOR3 & startPos, const D3DXVECTOR3 & dir,
     const float speed, const float damage, const TAG_COLLISION tag)
 {
     pTr = GetTransform();
@@ -153,22 +153,26 @@ void _BulletPool::PrintNumBullet()
     Debug << "Current number of active bullets : " << count << '\n';
 }
 
-Bullet* _BulletPool::Fire(const D3DXVECTOR3& startPos,
-    const D3DXVECTOR3& dir, const float speed, const float damage,
+Bullet* _BulletPool::Fire(
+    GameInfo::MyInfo m_myInfo, 
+    const D3DXVECTOR3& startPos,
+    const D3DXVECTOR3& dir, 
+    const float speed, 
+    const float damage,
     const TAG_COLLISION tag)
 {
     for (auto& b : m_Bullets)
     {
         if (!b->IsActive())
         {
-            b->Set(startPos, dir, speed, damage, tag);
+            b->Set(m_myInfo, startPos, dir, speed, damage, tag);
             return b;
         }
     }
 
     Bullet* b = new Bullet;
     m_Bullets.emplace_back(b);
-    b->Set(startPos, dir, speed, damage, tag);
+    b->Set(m_myInfo, startPos, dir, speed, damage, tag);
     return b;
 }
 

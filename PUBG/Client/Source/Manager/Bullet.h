@@ -30,7 +30,7 @@ public:
 
     //void Set(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
     //    const float speed, const float damage, const TAG_COLLISION tag);
-    void Set(const D3DXVECTOR3& startPos, const D3DXVECTOR3& dir,
+    void Set(GameInfo::MyInfo m_myInfo, const D3DXVECTOR3& startPos, const D3DXVECTOR3& dir,
         const float speed, const float damage, const TAG_COLLISION tag);
     void Reset();
 
@@ -56,8 +56,12 @@ public:
     //Bullet* Fire(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
     //    const float speed, const float damage, const TAG_COLLISION tag);
 
-    Bullet* Fire(const D3DXVECTOR3& startPos, const D3DXVECTOR3& dir,
-        const float speed, const float damage, const TAG_COLLISION tag);
+    Bullet* Fire(GameInfo::MyInfo m_myInfo,
+        const D3DXVECTOR3& startPos, 
+        const D3DXVECTOR3& dir,
+        const float speed, 
+        const float damage, 
+        const TAG_COLLISION tag);
 
     LPD3DXMESH GetCylinder() const;
 
