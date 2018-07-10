@@ -51,7 +51,7 @@ void Bullet::OnUpdate()
 
      vector<D3DXVECTOR3> vecTargetPos;
 
-     //Terrain features 
+     //1. Terrain features와의 충돌
      auto tfs(CS->m_RayArea.GetTerrainFeatures());
      for (auto tf : tfs)
      {
@@ -87,26 +87,47 @@ void Bullet::OnUpdate()
          if (minDist != std::numeric_limits<float>::max())
          {
              vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);
-             
          }
      }
 
-     ////2. character와의 충돌
-     //auto chrs(CS->m_RayArea.GetCharacters());
-     //for (auto chr : chrs)
-     //{
-     //    // 먼저 캐릭터의 바운딩스피어와 충돌을 검사한다.
-     //    BoundingSphere bs = chr->GetBoundingSphere();
 
-     //    if (!D3DXSphereBoundProbe(
-     //        &(bs.center + bs.position),
-     //        bs.radius,
-     //        &ray.m_pos,
-     //        &ray.m_dir)) continue;
+     //2. character와의 충돌
+     auto chrs(CS->m_RayArea.GetCharacters());
+     for (auto chr : chrs)
+     {
+         // 먼저 캐릭터의 바운딩스피어와 충돌을 검사한다.
+         BoundingSphere bs = chr->GetBoundingSphere();
 
-     //    
+         if (!D3DXSphereBoundProbe(
+             &(bs.center + bs.position),
+             bs.radius,
+             &ray.m_pos,
+             &ray.m_dir)) continue;
 
-     //}
+         // 캐릭터와 바운딩박스들과 충돌을 검사한다.
+         float minDist = std::numeric_limits<float>::max();
+         float dist = std::numeric_limits<float>::max();
+
+         const auto& obbs = chr->GetBoundingBoxes();
+         for (std::size_t i = 0; i < obbs.size(); i++)
+         {
+             auto& obb = obbs[i];
+
+             if (Collision::HasCollision(ray, obb, &dist))
+             {
+                 // hit
+                 if (dist < minDist)
+                 {
+                     minDist = dist;
+
+                 }
+             }
+         }
+         if (minDist != std::numeric_limits<float>::max())
+         {
+             vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);
+         }
+     }
 
      float shortestLength = FLT_MAX;
      D3DXVECTOR3 targetPos;
@@ -122,39 +143,36 @@ void Bullet::OnUpdate()
      targetPos; //<<이곳이 바로 가장 까까운 맞은 부분
      if (shortestLength != FLT_MAX)
      {
+
          m_IsActive = false;
          return;
      }
      
-     
+     //deactivating bullet when it is out of boundary
+     if (pCurrentScene->isOutOfBoundaryBox(m_curPos))
+     {
+         m_IsActive = false;
+         return;
+     }
+         
 
 
-
+     //맞은 총이 없다면 계속 업데이트
      m_curPos = m_nextPos;
      pTr->SetPosition(m_curPos);
      pTr->Update();
 
-     //deactivating bullet when it is out of boundary
-     if (pCurrentScene->isOutOfBoundaryBox(m_curPos))
-         m_IsActive = false;
-
-     //change cell space while moving
-     size_t nextCellSpace = pCurrentScene->GetCellIndex(m_curPos);
-     if (m_CellSpaceIndex != nextCellSpace&&m_IsActive)
-     {
-         pCurrentScene->MoveCell(&m_CellSpaceIndex, nextCellSpace, TAG_OBJECT::Bullet, this);
-     }
-
-
-
+     ////change cell space while moving
+     //size_t nextCellSpace = pCurrentScene->GetCellIndex(m_curPos);
+     //if (m_CellSpaceIndex != nextCellSpace&&m_IsActive)
+     //{
+     //    pCurrentScene->MoveCell(&m_CellSpaceIndex, nextCellSpace, TAG_OBJECT::Bullet, this);
+     //}
     //auto pos = pTr->GetPosition();
     //pos += m_dir * m_Speed;
     //pTr->SetPosition(pos);
     //pTr->Update();
     ////pBoxCollider->Update(pTr->GetTransformationMatrix());
-
-
-
 
 }
 
@@ -235,8 +253,8 @@ void Bullet::Set(GameInfo::MyInfo myInfo, const D3DXVECTOR3 & startPos, const D3
 
     pCurrentScene->AddObject(this);
 
-    m_CellSpaceIndex = pCurrentScene->GetCellIndex(pTr->GetPosition());
-    pCurrentScene->InsertObjIntoTotalCellSpace(TAG_OBJECT::Bullet, m_CellSpaceIndex, this);
+    //m_CellSpaceIndex = pCurrentScene->GetCellIndex(pTr->GetPosition());
+    //pCurrentScene->InsertObjIntoTotalCellSpace(TAG_OBJECT::Bullet, m_CellSpaceIndex, this);
 }
 
 

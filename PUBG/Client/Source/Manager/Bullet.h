@@ -8,7 +8,7 @@ class BoxCollider;
 class Bullet : public IObject
 {
 private:
-    size_t      m_CellSpaceIndex;
+    //size_t      m_CellSpaceIndex;
     IScene*     pCurrentScene;
 
     GameInfo::MyInfo m_myInfo;
