@@ -550,11 +550,14 @@ void Character::updateOther()
     auto pInput = Input()();
     auto pCom   = Communication()();
     auto pTr    = GetTransform();
+    auto pTime  = Time()();
 
-    auto& pi = pCom->m_roomInfo.playerInfos[m_index];
+    GameInfo::PlayerInfo& pi = pCom->m_roomInfo.playerInfos[m_index];
+
+    pi.dt += pTime->GetDeltaTime();
 
     D3DXVECTOR3 pos;
-    D3DXVec3Lerp(&pos, &pTr->GetPosition(), &pi.position, 1.0f);
+    D3DXVec3Lerp(&pos, &pi.prevPosition, &pi.position, pi.dt / pi.delay);
     pTr->SetPosition(pos);
 
     D3DXQUATERNION rot;

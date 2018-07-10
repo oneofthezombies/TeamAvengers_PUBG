@@ -13,6 +13,10 @@ void ScenePlay::setAloneMode()
 {
     Communication()()->m_myInfo.ID = 0;
 
+    // 
+    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(300.0f, 100.0f, 300.0f);
+    // ..
+
     const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);
