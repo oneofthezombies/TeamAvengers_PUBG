@@ -299,7 +299,32 @@ void _BulletPool::PrintNumBullet()
 
 void _BulletPool::Render()
 {
-    m_targetHitSphere.Render();
+//    if (!Collision()()->IsRender()) return;
+
+    //hit 된 position에 구체 그리기
+    D3DXMATRIX m;
+    D3DXMatrixTransformation(
+        &m,
+        nullptr,
+        nullptr,
+        &D3DXVECTOR3(m_targetHitSphere.radius, m_targetHitSphere.radius, m_targetHitSphere.radius),
+        nullptr, nullptr,
+        &(m_targetHitSphere.center + m_targetHitSphere.position));
+
+    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        Resource()()->GetBoundingSphereMesh(),
+        0,
+        [&m](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &m);
+
+        D3DXCOLOR Red(1.0f, 0.f, 0.0f, 1.0f);
+        pEffect->SetValue("Color", &Red, sizeof Red);
+    });
+
 }
 
 Bullet* _BulletPool::Fire(
