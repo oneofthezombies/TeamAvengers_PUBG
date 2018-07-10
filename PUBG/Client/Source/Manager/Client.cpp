@@ -172,6 +172,8 @@ void Communication::Manager::Connect(
     m_myInfo.nickname = nickname;
 
     m_pClient->Write(Message::Create(TAG_REQUEST::RECEIVE_MY_ID, nickname));
+
+    Sleep(1000);
 }
 
 void Communication::Manager::ReceiveMessage(
