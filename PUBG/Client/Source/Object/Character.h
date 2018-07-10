@@ -288,8 +288,9 @@ private:
     BoundingBox m_otherHitBox;
 
     bool m_isFire;
-    bool m_hasChangingState;
+    bool m_hasChangingState; //true일 때는 lower만 변화한다
     bool m_isNeedRifleAnim;
+    bool m_isTransitioning;  //전이 중일 때는 움직이지 않는다
 
     WaitBackAction m_backAction;
 

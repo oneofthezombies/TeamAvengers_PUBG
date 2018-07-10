@@ -690,6 +690,10 @@ void Character::movementControl(OUT State* OutState)
         return;
     }
 
+    //자세 전이 중이면 이동금지
+    if (m_isTransitioning)
+        return;
+    
     //Direction 8개 -----------------------------------------------------
     if (m_currentStayKey._W&&m_currentStayKey._D)
     {

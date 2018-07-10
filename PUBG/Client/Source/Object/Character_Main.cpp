@@ -44,6 +44,7 @@ Character::Character(const int index)
     , m_isFire(false)
     , m_hasChangingState(false)
     , m_isNeedRifleAnim(false)
+    , m_isTransitioning(false)
 
     , pAnimation(nullptr)
 
@@ -114,7 +115,6 @@ void Character::OnUpdate()
 
     updateMine();
     updateOther();
-
 
     // update
     GetTransform()->Update();      // set characters world
@@ -390,9 +390,7 @@ void Character::updateMine()
         //캐릭터와 Item의 spehre 가 충돌이 났다
         
         
-        // UI로 F key가 나오게 하기 
-
-        
+        // UI로 F key가 나오게 하기         
         if (m_currentOnceKey._F)
         {
             PutItemInTotalInventory(itm); //inventory에 넣기

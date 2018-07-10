@@ -28,8 +28,8 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::Back_Lv1);
     load(TAG_RES_STATIC::Head_Lv1);
 
-    //load(TAG_RES_STATIC::QBZ);
-    //load(TAG_RES_STATIC::Kar98k);
+    load(TAG_RES_STATIC::QBZ);
+    load(TAG_RES_STATIC::Kar98k);
 
     load(TAG_RES_STATIC::Bandage);
     load(TAG_RES_STATIC::FirstAidKit);
