@@ -37,6 +37,17 @@ struct BoundingBox : public BoundingShape
     static BoundingBox Create(const D3DXMATRIX& transformationMatrix);
 };
 
+struct BoundingRect
+{
+    D3DXVECTOR2 center;
+    D3DXVECTOR2 position;
+    D3DXVECTOR2 extent;
+    //D3DXVECTOR2 rotation;
+
+             BoundingRect();
+    virtual ~BoundingRect();
+};
+
 class Collider;
 class BoxCollider;
 class SphereCollider;
@@ -141,5 +152,6 @@ struct Collision
         const Ray& ray, 
         const BoundingBox& box, 
         float* OutDistance);
+    static bool HasCollision(const Ray& ray, const BoundingRect& rect);
 };
 
