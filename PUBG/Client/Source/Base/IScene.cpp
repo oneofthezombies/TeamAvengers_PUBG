@@ -329,9 +329,9 @@ void IScene::InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObjec
     case TAG_OBJECT::TerrainFeature:
         m_TotalCellSpaces[index].pTerrainFeatures.emplace(static_cast<TerrainFeature*>(obj));
         break;
-    case TAG_OBJECT::Bullet:
-        m_TotalCellSpaces[index].pBullets.emplace(static_cast<Bullet*>(obj));
-        break;
+    //case TAG_OBJECT::Bullet:
+    //    m_TotalCellSpaces[index].pBullets.emplace(static_cast<Bullet*>(obj));
+    //    break;
     case TAG_OBJECT::Character:
         m_TotalCellSpaces[index].pCharacters.emplace(static_cast<Character*>(obj));
         break;
@@ -379,20 +379,20 @@ void IScene::MoveCell(OUT std::size_t * currentCellIndex, std::size_t destCellIn
 
     switch (tag)
     {
-    case TAG_OBJECT::Bullet:
-    {
-        //object를 찾는다.
-        //auto ptr = *itr.pBullets.find(static_cast<Bullet*>(obj));
-        //if (!ptr)
-        //    assert(false && "movecall() cannot find bullet obj");
-        //찾고 원래 장소에서 지운다
-        Bullet* pBullet = static_cast<Bullet*>(obj);
-        itr.pBullets.erase(pBullet);
-        itrDest.pBullets.emplace(pBullet);
-        //현재 인덱스를 바꾸어준다
-        *currentCellIndex = destCellIndex;
-    }
-        break;
+    //case TAG_OBJECT::Bullet:
+    //{
+    //    //object를 찾는다.
+    //    //auto ptr = *itr.pBullets.find(static_cast<Bullet*>(obj));
+    //    //if (!ptr)
+    //    //    assert(false && "movecall() cannot find bullet obj");
+    //    //찾고 원래 장소에서 지운다
+    //    Bullet* pBullet = static_cast<Bullet*>(obj);
+    //    itr.pBullets.erase(pBullet);
+    //    itrDest.pBullets.emplace(pBullet);
+    //    //현재 인덱스를 바꾸어준다
+    //    *currentCellIndex = destCellIndex;
+    //}
+    //    break;
 
     case TAG_OBJECT::Character:
     {

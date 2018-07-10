@@ -78,16 +78,16 @@ bool Area::checkValid(int v)
     return-1 < v&&v < CellSpace::DIMENSION;
 }
 
-std::vector<Bullet*> Area::GetBullets()
-{
-    std::vector<Bullet*> vBullets;
-    for (std::size_t i = 0; i < m_cellspaces.size(); i++)
-    {
-        auto& set = m_cellspaces[i]->pBullets;
-        vBullets.insert(vBullets.end(), set.begin(), set.end());
-    }
-    return vBullets;
-}
+//std::vector<Bullet*> Area::GetBullets()
+//{
+//    std::vector<Bullet*> vBullets;
+//    for (std::size_t i = 0; i < m_cellspaces.size(); i++)
+//    {
+//        auto& set = m_cellspaces[i]->pBullets;
+//        vBullets.insert(vBullets.end(), set.begin(), set.end());
+//    }
+//    return vBullets;
+//}
 
 std::vector<TerrainFeature*> Area::GetTerrainFeatures()
 {

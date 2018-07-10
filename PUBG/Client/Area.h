@@ -16,7 +16,7 @@ public:
     void CreateNearArea(const std::size_t index);
     Ray CreateRayArea(Ray* ray,const float rayLength);
 
-    std::vector<Bullet*>         GetBullets();
+    //std::vector<Bullet*>         GetBullets();
     std::vector<TerrainFeature*> GetTerrainFeatures();
     std::vector<Character*>      GetCharacters();
     std::vector<Item*> GetItems();
