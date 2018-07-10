@@ -17,18 +17,19 @@ void ScenePlay::setAloneMode()
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
-    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
-    {
-        if (i == myID) continue;
+    //for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    //{
+    //    if (i == myID) continue;
 
-        Character* pOther = new Character(i);
-        others.emplace_back(pOther);
-        characters.emplace_back(pOther);
-        AddObject(pOther);
-    }
-    //Character* pOther = new Character(1);
-    //m_others.emplace_back(pOther);
-    //AddObject(pOther);
+    //    Character* pOther = new Character(i);
+    //    others.emplace_back(pOther);
+    //    characters.emplace_back(pOther);
+    //    AddObject(pOther);
+    //}
+    Character* pOther = new Character(1);
+    others.emplace_back(pOther);
+    characters.emplace_back(pOther);
+    AddObject(pOther);
 
 
 
@@ -47,19 +48,19 @@ void ScenePlay::setAloneMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    item = new Item(TAG_RES_STATIC::Head_Lv1, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
-    
-    p = D3DXVECTOR3(20, 0, 10);
-    item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //item = new Item(TAG_RES_STATIC::Head_Lv1, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
+    //
+    //p = D3DXVECTOR3(20, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(30, 0, 10);
-    item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(30, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(40, 0, 10);
     //item = new Item(TAG_RES_STATIC::Bandage, p, r, s);
@@ -106,10 +107,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(90, 0, 10);
-    //item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(90, 0, 10);
+    item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(100, 0, 10);
     //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);

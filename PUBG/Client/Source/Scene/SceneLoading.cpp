@@ -15,32 +15,32 @@ void SceneLoading::Load()
     // set play mode
     // alone       -> no network
     // with others -> login to network
-    setPlayMode(Communication::PlayMode::WITH_OTHERS);
-    //setPlayMode(PlayMode::ALONE);
+    //setPlayMode(Communication::PlayMode::WITH_OTHERS);
+    setPlayMode(Communication::PlayMode::ALONE);
 
     //// load effect meshs
-    load(TAG_RES_STATIC::SkySphere);
+    //load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
-    load(TAG_RES_STATIC::Ammo_7_62mm);
-    load(TAG_RES_STATIC::Armor_Lv1);
-    load(TAG_RES_STATIC::Back_Lv1);
-    load(TAG_RES_STATIC::Head_Lv1);
+    //load(TAG_RES_STATIC::Ammo_7_62mm);
+    //load(TAG_RES_STATIC::Armor_Lv1);
+    //load(TAG_RES_STATIC::Back_Lv1);
+    //load(TAG_RES_STATIC::Head_Lv1);
     load(TAG_RES_STATIC::QBZ);
-    load(TAG_RES_STATIC::Kar98k);
-    load(TAG_RES_STATIC::Bandage);
+    //load(TAG_RES_STATIC::Kar98k);
+    //load(TAG_RES_STATIC::Bandage);
     load(TAG_RES_STATIC::Rock_1);
 
     //// load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    //load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
     load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load equipment
-    load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
-    load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
-    load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
+    //load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
+    //load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
+    //load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
@@ -51,7 +51,7 @@ void SceneLoading::Load()
 
     addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
-    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
 
     /*
