@@ -632,6 +632,11 @@ void Character::RifleShooting()
     }
 }
 
+const BoundingBox& Character::GetBoundingBox()
+{
+    return m_boundingBox;
+}
+
 const std::vector<BoundingBox>& Character::GetBoundingBoxes()
 {
     m_boundingBoxes.resize(m_characterParts.size());
@@ -656,23 +661,23 @@ void Character::movementControl(OUT State* OutState)
     if(m_moving == Moving::Run)
      {
         if(m_attacking == Attacking::Unarmed)
-             movingFactor = 180.f;
+             movingFactor = MovingFactor::UNARMED_RUN;
         else 
-             movingFactor = 120.f;
+             movingFactor = MovingFactor::RIFLE_RUN;
      }
     else if (m_moving == Moving::Sprint)
     {
         if (m_attacking == Attacking::Unarmed)
-             movingFactor = 260.f;
+             movingFactor = MovingFactor::UNARMED_SPRINT;
         else
-             movingFactor = 200.f;
+             movingFactor = MovingFactor::RIFLE_SPRINT;
     }
     else if (m_moving == Moving::Walk)
     {
         if (m_attacking == Attacking::Unarmed)
-            movingFactor = 120.f;
+            movingFactor = MovingFactor::UNARMED_WALK;
         else
-            movingFactor = 100.f;
+            movingFactor = MovingFactor::RIFLE_WALK;
     }
     
     float dt = Time()()->GetDeltaTime();
@@ -917,22 +922,6 @@ void Character::updateBone()
 
 void Character::communicate()
 {
-    //if (isMine())
-    //{
-    //    if (isFired)
-    //    {
-    //        D3DXQUATERNION rot;
-    //        D3DXQuaternionRotationAxis(&rot, &Vector3::UP, D3DX_PI * 0.5f);
-    //        auto bullet = BulletPool()()->Fire(Matrix::GetTranslation(
-    //            m_framePtr.pHandGun->CombinedTransformationMatrix
-    //            * tr->GetTransformationMatrix()),
-    //            rot, 0.1f, 10.0f, GetTagCollisionDamage(m_index));
-    //        pCom->SendEventFireBullet(bullet);
-    //    }
-
-    //    if (isUpdated)
-    //        pCom->SendPosition(pos);
-    //}
 }
 
 void Character::rotateWaist(const float quantity)

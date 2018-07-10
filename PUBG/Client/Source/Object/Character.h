@@ -28,6 +28,16 @@ struct FramePtr
     FramePtr();
 };
 
+struct MovingFactor
+{
+    static const float UNARMED_RUN;
+    static const float UNARMED_SPRINT;
+    static const float UNARMED_WALK;
+    static const float RIFLE_RUN;
+    static const float RIFLE_SPRINT;
+    static const float RIFLE_WALK;
+};
+
 class Character : public IObject
 {
 /*****************************************************************************/
@@ -47,6 +57,7 @@ public:
 
         WaistRotation(const float limit/*, const float factor*/);
     };
+
     struct HeadRotation
     {
         const float LIMIT_OF_ANGLE;
@@ -282,6 +293,10 @@ private:
 
     WaitBackAction m_backAction;
 
+    // for character x character collision
+    BoundingBox m_boundingBox;
+
+
 /**************************** end member variable ****************************/
 
 
@@ -445,6 +460,7 @@ public:
     bool IsFire() const;
     void RifleShooting();
 
+            const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
 
 /**************************** end public method ******************************/

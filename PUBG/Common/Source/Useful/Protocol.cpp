@@ -117,10 +117,8 @@ GameInfo::PlayerInfo::PlayerInfo()
     , lowerAnimState(135)
     , health(100.0f)
     , isDead(false)
-    , prevTime(std::chrono::system_clock::now())
-    , prevPosition(Vector3::ZERO)
-    , delay(0.0f)
-    , dt(0.0f)
+
+    , isApplied(false)
 {
 }
 
