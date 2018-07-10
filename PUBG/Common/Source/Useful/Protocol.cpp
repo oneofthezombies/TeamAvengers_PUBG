@@ -117,6 +117,8 @@ GameInfo::PlayerInfo::PlayerInfo()
     , lowerAnimState(135)
     , health(100.0f)
     , isDead(false)
+
+    , isApplied(false)
 {
 }
 

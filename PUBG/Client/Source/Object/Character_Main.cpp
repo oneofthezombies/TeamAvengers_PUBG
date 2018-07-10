@@ -9,6 +9,7 @@
 #include "ResourceInfo.h"
 #include "ComponentTransform.h"
 #include "TerrainFeature.h"
+#include "Interpolation.h"
 
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
@@ -542,11 +543,22 @@ void Character::updateOther()
     GameInfo::PlayerInfo& pi = pCom->m_roomInfo.playerInfos[m_index];
 
     D3DXVECTOR3 pos;
-    D3DXVec3Lerp(&pos, &pTr->GetPosition(), &pi.position, 1.0f);
-    pTr->SetPosition(pos);
-
     D3DXQUATERNION rot;
-    D3DXQuaternionSlerp(&rot, &pTr->GetRotation(), &pi.rotation, 1.0f);
+    if (!pi.isApplied)
+    {
+        D3DXVec3Lerp(&pos, &pTr->GetPosition(), &pi.position, 1.0f);
+        D3DXQuaternionSlerp(&rot, &pTr->GetRotation(), &pi.rotation, 1.0f);
+        pi.isApplied = true;
+    }
+    else
+    {
+        pos
+            += getForward()
+            * Interpolation::GetMovingFactor(m_lowerAnimState)
+            * pTime->GetDeltaTime();
+    }
+
+    pTr->SetPosition(pos);
     pTr->SetRotation(rot);
 
     D3DXVECTOR2 headAngle;

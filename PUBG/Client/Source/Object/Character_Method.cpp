@@ -661,23 +661,23 @@ void Character::movementControl(OUT State* OutState)
     if(m_moving == Moving::Run)
      {
         if(m_attacking == Attacking::Unarmed)
-             movingFactor = 180.f;
+             movingFactor = MovingFactor::UNARMED_RUN;
         else 
-             movingFactor = 120.f;
+             movingFactor = MovingFactor::RIFLE_RUN;
      }
     else if (m_moving == Moving::Sprint)
     {
         if (m_attacking == Attacking::Unarmed)
-             movingFactor = 260.f;
+             movingFactor = MovingFactor::UNARMED_SPRINT;
         else
-             movingFactor = 200.f;
+             movingFactor = MovingFactor::RIFLE_SPRINT;
     }
     else if (m_moving == Moving::Walk)
     {
         if (m_attacking == Attacking::Unarmed)
-            movingFactor = 120.f;
+            movingFactor = MovingFactor::UNARMED_WALK;
         else
-            movingFactor = 100.f;
+            movingFactor = MovingFactor::RIFLE_WALK;
     }
     
     float dt = Time()()->GetDeltaTime();

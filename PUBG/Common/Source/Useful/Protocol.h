@@ -56,6 +56,10 @@ struct GameInfo
         float          health;
         bool           isDead;
 
+
+        // this is not sending.
+        bool isApplied;
+
         PlayerInfo();
     };
 
