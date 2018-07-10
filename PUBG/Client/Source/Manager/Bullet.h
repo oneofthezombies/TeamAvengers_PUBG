@@ -51,6 +51,7 @@ class _BulletPool : public Singleton<_BulletPool>
 private:
     deque<Bullet*> m_Bullets;
     LPD3DXMESH    m_pCylinder;
+    BoundingSphere m_targetHitSphere;
 
     _BulletPool();
     ~_BulletPool();
@@ -58,6 +59,7 @@ private:
 public:
     void Destroy();
     void PrintNumBullet();
+    void Render();
 
     //Bullet* Fire(const D3DXVECTOR3& position, const D3DXQUATERNION& rotation,
     //    const float speed, const float damage, const TAG_COLLISION tag);
@@ -69,6 +71,8 @@ public:
         const float damage, TAG_COLLISION tag);
 
     LPD3DXMESH GetCylinder() const;
+
+    void SetTargetHitSphere(const D3DXVECTOR3& pos);
 
     friend Singleton<_BulletPool>;
 };

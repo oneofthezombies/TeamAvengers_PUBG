@@ -2,7 +2,7 @@
 #include "Bullet.h"
 #include "Collider.h"
 #include "TerrainFeature.h"
-
+#include "Character.h"
 
 Bullet::Bullet()
     : IObject(TAG_OBJECT::Bullet)
@@ -95,6 +95,8 @@ void Bullet::OnUpdate()
      auto chrs(CS->m_RayArea.GetCharacters());
      for (auto chr : chrs)
      {
+         if (m_myInfo.ID == chr->GetIndex()) continue;
+
          // 먼저 캐릭터의 바운딩스피어와 충돌을 검사한다.
          BoundingSphere bs = chr->GetBoundingSphere();
 
@@ -140,10 +142,12 @@ void Bullet::OnUpdate()
          }
      }
 
-     targetPos; //<<이곳이 바로 가장 까까운 맞은 부분
+     //<<이곳이 바로 가장 까까운 맞은 부분
+
+     
      if (shortestLength != FLT_MAX)
      {
-
+         BulletPool()()->SetTargetHitSphere(targetPos);
          m_IsActive = false;
          return;
      }
@@ -263,6 +267,9 @@ _BulletPool::_BulletPool()
 {
     D3DXCreateCylinder(Device()(), 3.0f, 3.0f, 3.0f, 10, 10, &m_pCylinder, 
         nullptr);
+
+
+    m_targetHitSphere.radius = 10.0f;
 }
 
 _BulletPool::~_BulletPool()
@@ -288,6 +295,11 @@ void _BulletPool::PrintNumBullet()
             ++count;
     }
     Debug << "Current number of active bullets : " << count << '\n';
+}
+
+void _BulletPool::Render()
+{
+    m_targetHitSphere.Render();
 }
 
 Bullet* _BulletPool::Fire(
@@ -316,4 +328,9 @@ Bullet* _BulletPool::Fire(
 LPD3DXMESH _BulletPool::GetCylinder() const
 {
     return m_pCylinder;
+}
+
+void _BulletPool::SetTargetHitSphere(const D3DXVECTOR3& pos)
+{
+    m_targetHitSphere.position = pos;
 }
