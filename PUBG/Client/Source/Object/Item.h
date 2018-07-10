@@ -4,6 +4,7 @@
 class EffectMeshRenderer;
 class SkinnedMeshController;
 class UIImage;
+struct FramePtr;
 
 class Item : public IObject
 {
@@ -15,30 +16,35 @@ public:
     static const float DEFAULT_NEXT_WEIGHT;
     static const float DEFAULT_FINISH_EVENT_AGO_TIME;
     static const float DEFAULT_POSITION;
+
 private:
     const TAG_RES_STATIC m_tagResStatic;
     
     float m_durability; //내구성
     int   m_count;      //아이템의 개수
+    
     //for Rifle
     int   m_numBullet;  //장전된 총알의 개수
     bool  m_auto;
 
-    EffectMeshRenderer* pEffectMeshRenderer;
-    bool                m_isRenderEffectMesh;
+    EffectMeshRenderer*    pEffectMeshRenderer;
+    bool                   m_isRenderEffectMesh;
 
     SkinnedMeshController* pSkinnedMeshController;
     bool                   m_isRenderSkinnedMesh;
 
     UIImage* pUIImage;
  
-    //총알이 나갈 위치 테스트
+    //총알이 나갈 위치
     Frame* pGunBolt;
-    
 
+    FramePtr* m_pFramePtr;
+    
 private:
     void setup(const TAG_RES_STATIC tag);
     void setGlobalVariable(LPD3DXEFFECT pEffect);
+    void addAnimationBackupFrameForEquip();
+    void setFramePtr();
 
 public:
              Item(
@@ -79,13 +85,10 @@ public:
     void ChangeAuto();
     bool GetAuto();
 
-    //Frame* GetGunBolt() const
-    //{
-    //    return pGunBolt;
-    //}
-
     void UpdateAnimation();
     void UpdateModel();
+
+    void UpdateBone(Item* pHand, const float headRot, const float waistRot);
 
     //for 아이템 자체 애니메이션
     void Set(
@@ -116,4 +119,35 @@ public:
         const std::function<void()>& finishEvent);
 
     bool HasFinishEvent() const;
+
+    //for 장비 애니메이션
+    void Set(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend = true,
+        const float blendingTime = 0.3f,
+        const float nextWeight = 0.0f,
+        const float position = 0.0f);
+
+    void Set(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float finishEventAgoTime,
+        const std::function<void()>& finishEvent);
+
+    void Set(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float loopEventPeriod,
+        const std::function<void()>& loopEvent,
+        const float finishEventAgoTime,
+        const std::function<void()>& finishEvent);
 };

@@ -3,11 +3,30 @@
 #include "TagClientOnly.h"
 #include "TagAnimation.h"
 #include "AnimationState.h"
+#include "CharacterAnimation.h"
 
 class CharacterAnimation;
 class CharacterPart;
 class Item;
 class Area;
+
+struct FramePtr
+{
+    Frame* pRoot;
+    Frame* pHead;
+    Frame* pLeftClavicle;
+    Frame* pRightClavicle;
+    Frame* pWaist;
+    Frame* pHandGun;
+    Frame* pTPP;
+    Frame* pFPP;
+    Frame* pSlotPrimary;
+    Frame* pSlotSecondary;
+    Frame* pSlotMelee;
+    Frame* pSlotThrowable;
+
+    FramePtr();
+};
 
 class Character : public IObject
 {
@@ -146,25 +165,6 @@ public:
             , pitch(0.0f)
         {
         }
-    };
-
-
-    struct FramePtr
-    {
-        Frame* pRoot;
-        Frame* pHead;
-        Frame* pLeftClavicle;
-        Frame* pRightClavicle;
-        Frame* pWaist;
-        Frame* pHandGun;
-        Frame* pTPP;
-        Frame* pFPP;
-        Frame* pSlotPrimary;
-        Frame* pSlotSecondary;
-        Frame* pSlotMelee;
-        Frame* pSlotThrowable;
-
-        FramePtr();
     };
 
     struct IsJumping
@@ -366,6 +366,37 @@ private:
 
     void onKar98kReloadEnd();
     void onKar98kReload();
+
+    void setAnimation(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend = true,
+        const float blendingTime = 0.3f,
+        const float nextWeight = 0.0f,
+        const float position = 0.0f);
+
+    void setAnimation(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float finishEventAgoTime,
+        const std::function<void()>& finishEvent);
+
+    void setAnimation(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float loopEventPeriod,
+        const std::function<void()>& loopEvent,
+        const float finishEventAgoTime,
+        const std::function<void()>& finishEvent);
+
 
 
 /**************************** end member method ******************************/

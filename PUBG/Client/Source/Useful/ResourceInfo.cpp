@@ -625,10 +625,21 @@ pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_EQUIPMENT 
 
     switch (tag)
     {
-    case TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim: 
+    case TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim:
+        path = getPath(tag);
+        filename = getFilename(tag);
+        break;
+
+    case TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim: 
         path = getPath(tag); 
         filename = getFilename(tag); 
         break;
+
+    case TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim:
+        path = getPath(tag);
+        filename = getFilename(tag);
+        break;
+
     default:
     {
         assert(false &&
@@ -705,7 +716,7 @@ pair<string, string> ResourceInfo::GetUIPathFileName(const TAG_RES_STATIC tag)
 
 pair<string, string> ResourceInfo::GetCharacterPathFileName()
 {
-    return make_pair("Character/", "Female");
+    return std::make_pair("Character/", "Female");
 }
 
 bool ResourceInfo::IsItem(const TAG_RES_STATIC tag)
@@ -753,7 +764,10 @@ string ResourceInfo::getPath(const TAG_RES_ANIM_EQUIPMENT tag)
     string base("./Resource/Anim/Item/Equipment/");
     switch (tag) 
     {
+    case TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim: return base + "Armor_Lv1_Anim/";
+    case TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim: return base + "Back_Lv1_Anim/";
     case TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim: return base + "Head_Lv1_Anim/";
+
     default: 
     {
         assert(false && "ResourceInfo::getPath(), default case.");
@@ -766,6 +780,8 @@ string ResourceInfo::getFilename(const TAG_RES_ANIM_EQUIPMENT tag)
 {
     switch (tag)
     {
+    case TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim: return "Armor_Lv1_Anim.X";
+    case TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim: return "Back_Lv1_Anim.X";
     case TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim: return "Head_Lv1_Anim.X";
     default:
     {

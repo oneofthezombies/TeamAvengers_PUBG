@@ -36,7 +36,7 @@ void Character::setAttacking() //Num1, Num2, X
                 assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setAttacking(), tagAnim is COUNT");
 
                 m_hasChangingState = true;
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::UPPER,
                     tagAnim,
                     false, 
@@ -84,7 +84,7 @@ void Character::setAttacking() //Num1, Num2, X
                     tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot;
 
                 m_hasChangingState = true;
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::UPPER,
                     tagAnim,
                     false, 
@@ -261,7 +261,7 @@ void Character::setReload()
                     if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                     {
                         m_hasChangingState = true;
-                        pAnimation->Set(
+                        setAnimation(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Base,
                             true, //ok
@@ -272,7 +272,7 @@ void Character::setReload()
                             [this]()
                         {
                             m_hasChangingState = false;
-                            pAnimation->Set(
+                            setAnimation(
                                 CharacterAnimation::BodyPart::BOTH,
                                 m_lowerAnimState,
                                 true,
@@ -284,7 +284,7 @@ void Character::setReload()
                     else if (m_stance == Stance::Prone)
                     {
                         m_hasChangingState = true;
-                        pAnimation->Set(
+                        setAnimation(
                             CharacterAnimation::BodyPart::UPPER,
                             TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Prone,
                             true, //ok
@@ -295,7 +295,7 @@ void Character::setReload()
                             [this]()
                         {
                             m_hasChangingState = false;
-                            pAnimation->Set(
+                            setAnimation(
                                 CharacterAnimation::BodyPart::BOTH,
                                 m_lowerAnimState,
                                 true,
@@ -330,7 +330,7 @@ void Character::setReload()
                             m_hasChangingState = true;
 
                             //캐릭터 애니메이션
-                            pAnimation->Set(
+                            setAnimation(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Base,
                                 true,
@@ -341,7 +341,7 @@ void Character::setReload()
                                 [this, &inven]()
                             {
                                 m_hasChangingState = false;
-                                pAnimation->Set(
+                                setAnimation(
                                     CharacterAnimation::BodyPart::BOTH,
                                     m_lowerAnimState,
                                     true,
@@ -353,7 +353,7 @@ void Character::setReload()
                             m_hasChangingState = true;
                            
                             //캐릭터 애니메이션
-                            pAnimation->Set(
+                            setAnimation(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Prone,
                                 true,
@@ -364,7 +364,7 @@ void Character::setReload()
                                 [this]()
                             {
                                 m_hasChangingState = false;
-                                pAnimation->Set(
+                                setAnimation(
                                     CharacterAnimation::BodyPart::BOTH,
                                     m_lowerAnimState,
                                     true, 
@@ -377,7 +377,7 @@ void Character::setReload()
                         if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                         {
                             m_hasChangingState = true;                   
-                            pAnimation->Set(
+                            setAnimation(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Base,
                                 true,
@@ -390,7 +390,7 @@ void Character::setReload()
                         else if (m_stance == Stance::Prone)
                         {
                             m_hasChangingState = true;
-                            pAnimation->Set(
+                            setAnimation(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Prone,
                                 true, //ok
@@ -459,7 +459,7 @@ void Character::setPunch()
         assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && " Character::setPunch(), tagAnim is COUNT");
 
         //애니메이션 적용
-        pAnimation->Set(
+        setAnimation(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
             true,
@@ -469,7 +469,7 @@ void Character::setPunch()
             CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
             [this]()
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 false);
@@ -522,7 +522,7 @@ void Character::setInteraction()
             assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setInteraction(), Door open tagAnim is COUNT");
 
             //애니메이션 적용
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 tagAnim,
                 true,
@@ -532,7 +532,7 @@ void Character::setInteraction()
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                    pAnimation->Set(
+                    setAnimation(
                         CharacterAnimation::BodyPart::BOTH,
                         m_lowerAnimState,
                         false);
@@ -575,7 +575,7 @@ void Character::setInteraction()
             assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setInteraction(), Pick up tagAnim is COUNT");
 
             //애니메이션 적용
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 tagAnim,
                 true,
@@ -585,7 +585,7 @@ void Character::setInteraction()
                 0.3f,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     true,
@@ -606,7 +606,7 @@ void Character::setJump()
         else if (m_attacking == Attacking::Rifle)
             tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Jump_F;
 
-        pAnimation->Set(
+        setAnimation(
             CharacterAnimation::BodyPart::BOTH,
             tagAnim,
             true,
@@ -616,7 +616,7 @@ void Character::setJump()
             0.3f,
             [this]()
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
@@ -633,7 +633,7 @@ void Character::setJump()
             tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Jump_Stationary_Full_001;
     
         //애니메이션 적용
-        pAnimation->Set(
+        setAnimation(
             CharacterAnimation::BodyPart::BOTH,
             tagAnim,
             true,
@@ -643,7 +643,7 @@ void Character::setJump()
             CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
             [this]()
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 false);
@@ -675,7 +675,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
     assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnHand(), tagAnim is COUNT");
 
     //애니메이션 적용
-    pAnimation->Set(
+    setAnimation(
         CharacterAnimation::BodyPart::UPPER,
         tagAnim,
         false, //손에 들때 보간하면 총이 들리는 느낌이 나서 false
@@ -687,7 +687,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
     {
         m_hasChangingState = false;
 
-        pAnimation->Set(
+        setAnimation(
             CharacterAnimation::BodyPart::BOTH,
             m_lowerAnimState,
             true,
@@ -717,7 +717,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 
         //애니메이션 적용
         m_hasChangingState = true;
-        pAnimation->Set(
+        setAnimation(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
             false,
@@ -731,7 +731,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             inven.m_pHand = nullptr;
             m_hasChangingState = false;
 
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
@@ -752,7 +752,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 
         //애니메이션 적용
         m_hasChangingState = true;
-        pAnimation->Set(
+        setAnimation(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
             false,
@@ -766,7 +766,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             inven.m_pHand = nullptr;
             m_hasChangingState = false;
 
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
@@ -792,7 +792,7 @@ void Character::setStandTo()
     {
         if (m_stance == Stance::Crouch)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Crouch,
                 false,
@@ -802,7 +802,7 @@ void Character::setStandTo()
                 1.2f,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState, 
                     true,
@@ -812,7 +812,7 @@ void Character::setStandTo()
         }
         else if (m_stance == Stance::Prone)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Prone,
                 false,
@@ -822,7 +822,7 @@ void Character::setStandTo()
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -833,7 +833,7 @@ void Character::setStandTo()
     {
         if (m_stance == Stance::Crouch)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_Crouch,
                 false,
@@ -843,7 +843,7 @@ void Character::setStandTo()
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -851,7 +851,7 @@ void Character::setStandTo()
         }
         else if (m_stance == Stance::Prone)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_Prone,
                 false,
@@ -861,7 +861,7 @@ void Character::setStandTo()
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -876,7 +876,7 @@ void Character::setCrouchTo()
     {
         if (m_stance == Stance::Stand)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Stand,
                 false,
@@ -886,7 +886,7 @@ void Character::setCrouchTo()
                 1.0f,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     true,
@@ -896,7 +896,7 @@ void Character::setCrouchTo()
         }
         else if (m_stance == Stance::Prone)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Prone,
                 false,
@@ -906,7 +906,7 @@ void Character::setCrouchTo()
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -917,7 +917,7 @@ void Character::setCrouchTo()
     {
         if (m_stance == Stance::Stand)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Stand,
                 false,
@@ -927,7 +927,7 @@ void Character::setCrouchTo()
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -935,7 +935,7 @@ void Character::setCrouchTo()
         }
         else if (m_stance == Stance::Prone)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Prone,
                 false,
@@ -945,7 +945,7 @@ void Character::setCrouchTo()
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -960,7 +960,7 @@ void Character::setProneTo()
     {
         if (m_stance == Stance::Stand)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Stand,
                 false,
@@ -970,7 +970,7 @@ void Character::setProneTo()
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -978,7 +978,7 @@ void Character::setProneTo()
         }
         else if (m_stance == Stance::Crouch)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Crouch,
                 false,
@@ -988,7 +988,7 @@ void Character::setProneTo()
                 0.5f, //이거 해줘야 딸깍 거리지 않음
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     true,
@@ -1001,7 +1001,7 @@ void Character::setProneTo()
     {
         if (m_stance == Stance::Stand)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Base_Stand,
                 false,
@@ -1011,7 +1011,7 @@ void Character::setProneTo()
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -1019,7 +1019,7 @@ void Character::setProneTo()
         }
         else if (m_stance == Stance::Crouch)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Base_Crouch,
                 false,
@@ -1029,7 +1029,7 @@ void Character::setProneTo()
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     false);
@@ -1046,7 +1046,7 @@ void Character::onKar98kReloadEnd()
     //캐릭터의 애니메이션
     if (m_stance == Stance::Stand)
     {
-        pAnimation->Set(
+        setAnimation(
             CharacterAnimation::BodyPart::UPPER,
             TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Base,
             false, //ok
@@ -1057,7 +1057,7 @@ void Character::onKar98kReloadEnd()
             [this]()
         {
             m_hasChangingState = false;
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
@@ -1066,7 +1066,7 @@ void Character::onKar98kReloadEnd()
     }
     else if (m_stance == Stance::Prone)
     {
-        pAnimation->Set(
+        setAnimation(
             CharacterAnimation::BodyPart::UPPER,
             TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Prone,
             false, //ok
@@ -1077,7 +1077,7 @@ void Character::onKar98kReloadEnd()
             [this]()
         {
             m_hasChangingState = false;
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 false);
@@ -1096,7 +1096,7 @@ void Character::onKar98kReload()
         //캐릭터의 애니메이션
         if (m_stance == Stance::Stand)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Base,
                 false,
@@ -1108,7 +1108,7 @@ void Character::onKar98kReload()
         }
         else if (m_stance == Stance::Prone)
         {
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Prone,
                 true, //ok
@@ -1121,4 +1121,202 @@ void Character::onKar98kReload()
     }
 
     --m_totalInventory.m_numReload;
+}
+
+//캐릭터 애니메이션 + 장비 애니메이션
+void Character::setAnimation(
+    const CharacterAnimation::BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight, 
+    const float position)
+{
+    if (pAnimation)
+    {
+        pAnimation->Set(
+            part, 
+            tag, 
+            isBlend, 
+            blendingTime, 
+            nextWeight, 
+            position);
+    }
+
+    if (m_totalInventory.m_pEquipArmor)
+    {
+        m_totalInventory.m_pEquipArmor->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+
+    if (m_totalInventory.m_pEquipBack)
+    {
+        m_totalInventory.m_pEquipBack->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+}
+
+void Character::setAnimation(
+    const CharacterAnimation::BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight, 
+    const float position, 
+    const float finishEventAgoTime, 
+    const std::function<void()>& finishEvent)
+{
+    if (pAnimation)
+    {
+        pAnimation->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent
+        );
+    }
+
+    if (m_totalInventory.m_pEquipArmor)
+    {
+        m_totalInventory.m_pEquipArmor->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent
+        );
+    }
+
+    if (m_totalInventory.m_pEquipBack)
+    {
+        m_totalInventory.m_pEquipBack->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent
+        );
+    }
+
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent
+        );
+    }
+}
+
+void Character::setAnimation(
+    const CharacterAnimation::BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight, 
+    const float position, 
+    const float loopEventPeriod, 
+    const std::function<void()>& loopEvent, 
+    const float finishEventAgoTime, 
+    const std::function<void()>& finishEvent)
+{
+    if (pAnimation)
+    {
+        pAnimation->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            loopEventPeriod,
+            loopEvent,
+            finishEventAgoTime,
+            finishEvent
+        );
+    }
+
+    if (m_totalInventory.m_pEquipArmor)
+    {
+        m_totalInventory.m_pEquipArmor->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            loopEventPeriod,
+            loopEvent,
+            finishEventAgoTime,
+            finishEvent
+        );
+    }
+
+    if (m_totalInventory.m_pEquipBack)
+    {
+        m_totalInventory.m_pEquipBack->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            loopEventPeriod,
+            loopEvent,
+            finishEventAgoTime,
+            finishEvent
+        );
+    }
+
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            loopEventPeriod,
+            loopEvent,
+            finishEventAgoTime,
+            finishEvent
+        );
+    }
 }

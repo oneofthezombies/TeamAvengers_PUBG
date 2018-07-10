@@ -93,7 +93,7 @@ Character::IsPressed::IsPressed()
 
 }
 
-Character::FramePtr::FramePtr()
+FramePtr::FramePtr()
     : pRoot(nullptr)
     , pHead(nullptr)
     , pWaist(nullptr)
@@ -248,16 +248,14 @@ void Character::handleMouse(const float dt, MouseInput* mouseInput)
         ClientToScreen(g_hWnd, &center);
         SetCursorPos(center.x, center.y);
     }
-
 }
-
 
 void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizontal)
 {
     //기본 수직 수평 반동 값
     float virtical_result;
     float horizontal_result;
-    int Min = virtical * 0.5f;
+    int Min = static_cast<int>(virtical * 0.5f);
     float Weight = 0.0005f;
 
     virtical_result = (virtical - (rand() % Min)) * Weight;                     //최소 값이 총의 수직반동의 반
@@ -293,8 +291,8 @@ void Character::backActionFrame()
     D3DXQUATERNION q;
     if (m_backAction.Up)
     {
-        m_backAction.curValX = m_backAction.curValX * 0.5;
-        m_backAction.curValY = m_backAction.curValY * 0.5;
+        m_backAction.curValX = m_backAction.curValX * 0.5f;
+        m_backAction.curValY = m_backAction.curValY * 0.5f;
         if (m_backAction.curValX < 0.0001f)
         {
             m_backAction.Up = false;
@@ -307,8 +305,8 @@ void Character::backActionFrame()
     }
     else
     {
-        m_backAction.curValX = m_backAction.curValX / 0.5;
-        m_backAction.curValY = m_backAction.curValY / 0.5;
+        m_backAction.curValX = m_backAction.curValX / 0.5f;
+        m_backAction.curValY = m_backAction.curValY / 0.5f;
         if (m_backAction.curValX >= m_backAction.valX-0.001f)
         {
             m_backAction.Up = true;
@@ -380,8 +378,6 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
         }
     }
 
-
-
     //Limiting camera Pitch 
     if (m_rotationForCamera.x < -1.0f)
         m_rotationForCamera.x = -1.0f;
@@ -393,13 +389,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     //else if (m_rotationForCamera.x > 0.8f)
     //    m_rotationForCamera.x = 0.8f;
 
-
-
-
     Debug << "m_rotationForCamera.x : " << m_rotationForCamera.x << endl << endl << endl;
-
-
-
 }
 
 bool Character::isMine() const
@@ -445,7 +435,7 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
                 //else if (m_attacking == Attacking::Rifle)
                 //    tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard;
 
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     tagAnim,
                     true,
@@ -455,7 +445,7 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
                     CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                     [this]()
                 {
-                    pAnimation->Set(
+                    setAnimation(
                         CharacterAnimation::BodyPart::BOTH,
                         m_lowerAnimState,
                         false);
@@ -620,7 +610,7 @@ void Character::RifleShooting()
             });
 
             //캐릭터의 애니메이션
-            pAnimation->Set(
+            setAnimation(
                 CharacterAnimation::BodyPart::UPPER,
                 tagAnim,
                 true, //ok
@@ -631,7 +621,7 @@ void Character::RifleShooting()
                 [this]()
             {
                 m_hasChangingState = false;
-                pAnimation->Set(
+                setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
                     true,
@@ -899,6 +889,7 @@ D3DXVECTOR3 Character::getBackwardLeft()
 
 void Character::updateBone()
 {
+    //*****여기 변경되면 반드시 Item::updateBone()도 변경시켜주길 바람!!!
     // modify local bones
 
     // head, clavles

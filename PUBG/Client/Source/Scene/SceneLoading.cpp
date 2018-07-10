@@ -22,6 +22,9 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
+    load(TAG_RES_STATIC::Armor_Lv1);
+    load(TAG_RES_STATIC::Back_Lv1);
+    load(TAG_RES_STATIC::Head_Lv1);
     load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
     load(TAG_RES_STATIC::Bandage);
@@ -30,12 +33,14 @@ void SceneLoading::Load()
     //// load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
     load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
-    load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
     load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load equipment
+    load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
+    load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
+    load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
@@ -206,11 +211,16 @@ void SceneLoading::setPlayMode(const Communication::PlayMode mode)
 
 bool SceneLoading::isFinished() const
 {
-    return m_isDoneCharacters && m_isDoneEffectMeshs && m_isDoneSkinnedMeshs;
+    return 
+        m_isDoneCharacters   && 
+        m_isDoneEffectMeshs  && 
+        m_isDoneSkinnedMeshs && 
+        m_isDoneEquipments;
 }
 
 SceneLoading::SceneLoading()
     : IScene()
+    , m_isDoneEquipments(false)
     , m_isFinished(false)
     , m_numAddedAnim(0)
     , m_numFinishedTasks(0)
@@ -327,9 +337,9 @@ void SceneLoading::OnUpdate()
             {
                 auto begin = m_tasksForSingleThread.begin();
                 resources_t* pResources = std::get<0>(*begin);
-                auto&        task = std::get<1>(*begin);
-                std::string& path = std::get<2>(*begin);
-                std::string& xFilename = std::get<3>(*begin);
+                auto&        task       = std::get<1>(*begin);
+                std::string& path       = std::get<2>(*begin);
+                std::string& xFilename  = std::get<3>(*begin);
 
                 Resource::XContainer* pXContainer = task(path, xFilename);
                 m_lastFinishedTaskName = pXContainer->m_filename;
@@ -344,6 +354,7 @@ void SceneLoading::OnUpdate()
                 addEffectMeshs();
                 addSkinnedMeshs();
                 addAnimationsToCharacter();
+                addAnimationsToEquipment();
             }
         }
     }
@@ -457,6 +468,53 @@ void SceneLoading::addSkinnedMeshs()
     }
 
     m_isDoneSkinnedMeshs = true;
+}
+
+void SceneLoading::addAnimationsToEquipment()
+{
+    const auto characterPathFilename = ResourceInfo::GetCharacterPathFileName();
+    SkinnedMesh* pCharacter =
+        Resource()()->GetSkinnedMesh(characterPathFilename.first, characterPathFilename.second);
+
+    for (auto r : this->m_equipmentSkinnedMeshResources)
+    {
+        Resource::XContainer* pResource = r.second;
+        
+        const std::string key = pResource->m_pSkinnedMesh.first;
+        Resource()()->AddResource(pResource);
+
+        SkinnedMesh* pSkinnedMesh = Resource()()->GetSkinnedMesh(key);
+        bool res = pSkinnedMesh->Seperate("spine_02");
+        assert(
+            res &&
+            "SceneLoading::addAnimationsToEquipment(), \
+             SkinnedMesh::Seperate() failed.");
+
+        LPD3DXANIMATIONCONTROLLER& pOld = pSkinnedMesh->m_pAnimController;
+        LPD3DXANIMATIONCONTROLLER  pAdd = pCharacter->m_pAnimController;
+        LPD3DXANIMATIONCONTROLLER  pNew = nullptr;
+        LPD3DXANIMATIONSET         pAddSet = nullptr;
+
+        pOld->CloneAnimationController(
+            pOld->GetMaxNumAnimationOutputs(),
+            pOld->GetMaxNumAnimationSets() + pAdd->GetMaxNumAnimationSets(),
+            pOld->GetMaxNumTracks(),
+            pOld->GetMaxNumEvents(),
+            &pNew);
+
+        UINT numAddSet = pAdd->GetNumAnimationSets();
+        for (UINT i = 0; i < numAddSet; ++i)
+        {
+            pAdd->GetAnimationSet(i, &pAddSet);
+            pNew->RegisterAnimationSet(pAddSet);
+            pAddSet->Release();
+        }
+
+        pOld->Release();
+        pOld = pNew;
+    }
+
+    m_isDoneEquipments = true;
 }
 
 void SceneLoading::addHeightmapResource()

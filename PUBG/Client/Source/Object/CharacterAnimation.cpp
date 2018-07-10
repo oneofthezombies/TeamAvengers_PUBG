@@ -17,13 +17,13 @@ CharacterAnimation::CharacterAnimation()
     pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("pelvis"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_hand_root"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_aim_root"));
-    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_root"));
+    //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_root"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("camera_tpp"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_target_root"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_target_l"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_target_r"));
-    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_l"));
-    pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_r"));
+    //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_l"));
+    //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_foot_r"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_aim_l"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_aim_r"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_hand_gun"));
