@@ -56,12 +56,6 @@ struct GameInfo
         float          health;
         bool           isDead;
 
-        // for interoplation
-        std::chrono::system_clock::time_point prevTime;
-        D3DXVECTOR3                           prevPosition;
-        float                                 delay;
-        float                                 dt;
-
         PlayerInfo();
     };
 

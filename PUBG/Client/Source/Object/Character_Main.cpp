@@ -91,6 +91,8 @@ Character::Character(const int index)
     }
 
     pOtherHitPositionMesh = Resource()()->GetBoundingSphereMesh();
+
+    m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-100.0f, 50.0f, -50.0f), D3DXVECTOR3(100.0f, 150.0f, 50.0f));
 }
 
 Character::~Character()
@@ -147,28 +149,14 @@ void Character::OnUpdate()
     });
     renderTotalInventory();
 
+    // render collision shapes
     for (auto pPart : m_characterParts)
         pPart->Render();
-
+    m_boundingBox.Render();
     m_boundingSphere.Render();
+    // end render collision shapes
 
-    //Shader::Draw(
-    //    Resource()()->GetEffect("./Resource/", "Color.fx"), 
-    //    nullptr, 
-    //    pOtherHitPositionMesh, 
-    //    0,
-    //    [this](LPD3DXEFFECT pEffect)
-    //{
-    //    const D3DXVECTOR3& pos = m_otherHitPosition;
-    //    D3DXMATRIX s, t, m;
-    //    const float scale = 10.0f;
-    //    D3DXMatrixScaling(&s, scale, scale, scale);
-    //    D3DXMatrixTranslation(&t, pos.x, pos.y, pos.z);
-    //    m = s * t;
-
-    //    pEffect->SetMatrix(Shader::World, &m);
-    //});
-
+    // render hited box
     auto& b = m_otherHitBox;
     D3DXMATRIX e, c, r, p, m;
     D3DXMatrixScaling(&e, b.extent.x, b.extent.y, b.extent.z);
@@ -181,7 +169,6 @@ void Character::OnUpdate()
     Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr, 
         [&m](LPD3DXEFFECT pEffect)
     {
-
         pEffect->SetMatrix(Shader::World, &m);
         D3DXCOLOR magenta(1.0f, 0.0f, 1.0f, 1.0f);
         pEffect->SetValue("Color", &magenta, sizeof magenta);
@@ -197,6 +184,7 @@ void Character::OnUpdate()
             vertices.data(),
             sizeof vertices.front());
     });
+    // end render hited box
     
     // communication
     communicate();
@@ -297,6 +285,7 @@ void Character::updateMine()
 
                 hasCollision = Collision::HasCollision(mine, others);
 
+                // sliding vector
                 if (hasCollision)
                 {
                     const D3DXVECTOR3 currPos = GetTransform()->GetPosition();
@@ -368,8 +357,6 @@ void Character::updateMine()
         {
             // TODO : impl
         }
-
-
 
         tm->SetPosition(destState.position);
     }
@@ -554,10 +541,8 @@ void Character::updateOther()
 
     GameInfo::PlayerInfo& pi = pCom->m_roomInfo.playerInfos[m_index];
 
-    pi.dt += pTime->GetDeltaTime();
-
     D3DXVECTOR3 pos;
-    D3DXVec3Lerp(&pos, &pi.prevPosition, &pi.position, pi.dt / pi.delay);
+    D3DXVec3Lerp(&pos, &pTr->GetPosition(), &pi.position, 1.0f);
     pTr->SetPosition(pos);
 
     D3DXQUATERNION rot;
@@ -565,7 +550,10 @@ void Character::updateOther()
     pTr->SetRotation(rot);
 
     D3DXVECTOR2 headAngle;
-    D3DXVec2Lerp(&headAngle, &D3DXVECTOR2(m_headRotation.m_angle, 0.0f), &D3DXVECTOR2(pi.headAngle, 0.0f), 1.0f);
+    D3DXVec2Lerp(
+        &headAngle, 
+        &D3DXVECTOR2(m_headRotation.m_angle, 0.0f), 
+        &D3DXVECTOR2(pi.headAngle, 0.0f), 1.0f);
     m_headRotation.m_angle = headAngle.x;
 
     const auto upperAnim = static_cast<TAG_ANIM_CHARACTER>(pi.upperAnimState);

@@ -211,8 +211,6 @@ void Communication::Manager::ReceiveMessage(
 
             GameInfo::PlayerInfo& pi = m_roomInfo.playerInfos[id];
             pi.nickname = nickname;
-
-            pi.prevTime = std::chrono::system_clock::now();
         }
         break;
     case TAG_REQUEST::SEND_POSITION_AND_ROTATION:
@@ -227,16 +225,8 @@ void Communication::Manager::ReceiveMessage(
             ss >> pos.x >> pos.y >> pos.z >> rot.x >> rot.y >> rot.z >> rot.w;
 
             GameInfo::PlayerInfo& pi = m_roomInfo.playerInfos[id];
-            pi.prevPosition = pi.position;
             pi.position = pos;
-            
             pi.rotation = rot;
-            
-            const auto currTime = std::chrono::system_clock::now();
-            std::chrono::duration<float> elapsed = currTime - pi.prevTime;
-            pi.delay = elapsed.count();
-            pi.prevTime = currTime;
-            pi.dt = 0.0f;
         }
         break;
     case TAG_REQUEST::SEND_HEAD_ANGLE:

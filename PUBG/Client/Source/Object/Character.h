@@ -282,6 +282,9 @@ private:
 
     WaitBackAction m_backAction;
 
+    // for character x character collision
+    BoundingBox m_boundingBox;
+
 /**************************** end member variable ****************************/
 
 
@@ -445,6 +448,7 @@ public:
     bool IsFire() const;
     void RifleShooting();
 
+            const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
 
 /**************************** end public method ******************************/

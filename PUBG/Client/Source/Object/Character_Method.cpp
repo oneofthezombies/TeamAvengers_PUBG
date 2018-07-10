@@ -632,6 +632,11 @@ void Character::RifleShooting()
     }
 }
 
+const BoundingBox& Character::GetBoundingBox()
+{
+    return m_boundingBox;
+}
+
 const std::vector<BoundingBox>& Character::GetBoundingBoxes()
 {
     m_boundingBoxes.resize(m_characterParts.size());
@@ -917,22 +922,6 @@ void Character::updateBone()
 
 void Character::communicate()
 {
-    //if (isMine())
-    //{
-    //    if (isFired)
-    //    {
-    //        D3DXQUATERNION rot;
-    //        D3DXQuaternionRotationAxis(&rot, &Vector3::UP, D3DX_PI * 0.5f);
-    //        auto bullet = BulletPool()()->Fire(Matrix::GetTranslation(
-    //            m_framePtr.pHandGun->CombinedTransformationMatrix
-    //            * tr->GetTransformationMatrix()),
-    //            rot, 0.1f, 10.0f, GetTagCollisionDamage(m_index));
-    //        pCom->SendEventFireBullet(bullet);
-    //    }
-
-    //    if (isUpdated)
-    //        pCom->SendPosition(pos);
-    //}
 }
 
 void Character::rotateWaist(const float quantity)
