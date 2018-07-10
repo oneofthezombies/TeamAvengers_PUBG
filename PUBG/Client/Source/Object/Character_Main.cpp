@@ -544,19 +544,9 @@ void Character::updateOther()
 
     D3DXVECTOR3 pos;
     D3DXQUATERNION rot;
-    if (!pi.isApplied)
-    {
-        D3DXVec3Lerp(&pos, &pTr->GetPosition(), &pi.position, 1.0f);
-        D3DXQuaternionSlerp(&rot, &pTr->GetRotation(), &pi.rotation, 1.0f);
-        pi.isApplied = true;
-    }
-    else
-    {
-        pos
-            += getForward()
-            * Interpolation::GetMovingFactor(m_lowerAnimState)
-            * pTime->GetDeltaTime();
-    }
+
+    D3DXVec3Lerp(&pos, &pTr->GetPosition(), &pi.position, 1.0f);
+    D3DXQuaternionSlerp(&rot, &pTr->GetRotation(), &pi.rotation, 1.0f);
 
     pTr->SetPosition(pos);
     pTr->SetRotation(rot);

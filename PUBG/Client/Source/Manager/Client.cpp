@@ -227,7 +227,7 @@ void Communication::Manager::ReceiveMessage(
             GameInfo::PlayerInfo& pi = m_roomInfo.playerInfos[id];
             pi.position = pos;
             pi.rotation = rot;
-            pi.isApplied = false;
+            //pi.isApplied = false;
         }
         break;
     case TAG_REQUEST::SEND_HEAD_ANGLE:
