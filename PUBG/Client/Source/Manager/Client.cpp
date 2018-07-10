@@ -233,7 +233,8 @@ void Communication::Manager::ReceiveMessage(
             pi.rotation = rot;
             
             const auto currTime = std::chrono::system_clock::now();
-            pi.delay = (currTime - pi.prevTime).count();
+            std::chrono::duration<float> elapsed = currTime - pi.prevTime;
+            pi.delay = elapsed.count();
             pi.prevTime = currTime;
             pi.dt = 0.0f;
         }
