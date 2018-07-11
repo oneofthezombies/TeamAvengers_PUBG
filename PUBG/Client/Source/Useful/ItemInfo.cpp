@@ -247,8 +247,8 @@ float ItemInfo::GetInitialBulletSpeed(const TAG_RES_STATIC tag)
     //´ÜÀ§´Â m/s
     switch (tag)
     {
-    case TAG_RES_STATIC::QBZ: return /*150.0f;*/87000.0f;
-    case TAG_RES_STATIC::Kar98k: return /*150.0f;*/76000.0f;
+    case TAG_RES_STATIC::QBZ: return 8700.0f;/*87000.0f;*/
+    case TAG_RES_STATIC::Kar98k: return 7600.0f;/*76000.0f;*/
 
     default: return 0.0f;
     }

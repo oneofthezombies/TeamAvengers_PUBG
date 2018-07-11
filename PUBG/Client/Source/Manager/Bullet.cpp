@@ -36,7 +36,7 @@ void Bullet::OnUpdate()
     
      m_nextPos = m_curPos = pTr->GetPosition();
      //JHTODO
-     m_nextPos += m_dir * m_Speed/**ItemInfo::GetDropOffByDistance(1.0f,GetTagObject())*/  *Time()()->GetDeltaTime();
+     m_nextPos += m_dir * m_Speed/**ItemInfo::GetDropOffByDistance(1.0f,GetTagObject())*/ * Time()()->GetDeltaTime();
      
      Ray ray;
      ray.m_pos = m_curPos;
@@ -216,23 +216,16 @@ float Bullet::GetDamage() const
     return m_Damage;
 }
 
-bool Bullet::CheckCollision()
-{
-
-
-
-    return false;
-}
-
 //TAG_COLLISION Bullet::GetTagCollision() const
 //{
 //    return pBoxCollider->GetTagCollision();
 //}
 
 void Bullet::Set(GameInfo::MyInfo myInfo, const D3DXVECTOR3 & startPos, const D3DXVECTOR3 & dir,
-    const float speed, const float damage, TAG_COLLISION tag)
+    const float speed, const float damage, TAG_RES_STATIC tag)
 {
     m_myInfo = myInfo;
+    m_tag = tag;
 
     m_curPos = startPos;
 
@@ -242,13 +235,10 @@ void Bullet::Set(GameInfo::MyInfo myInfo, const D3DXVECTOR3 & startPos, const D3
     m_dir = dir;
     m_Speed = speed;
     m_Damage = damage;
-    //pBoxCollider->SetTagCollision(tag);
     m_IsActive = true;
 
     pCurrentScene->AddObject(this);
 
-    //m_CellSpaceIndex = pCurrentScene->GetCellIndex(pTr->GetPosition());
-    //pCurrentScene->InsertObjIntoTotalCellSpace(TAG_OBJECT::Bullet, m_CellSpaceIndex, this);
 }
 
 
@@ -323,13 +313,13 @@ Bullet* _BulletPool::Fire(
     const D3DXVECTOR3& dir, 
     const float speed, 
     const float damage,
-    TAG_COLLISION tag)
+    TAG_RES_STATIC tag)
 {
     for (auto& b : m_Bullets)
     {
         if (!b->IsActive())
         {
-            b->Set(m_myInfo, startPos, dir, speed, damage,tag);
+            b->Set(m_myInfo, startPos, dir, speed, damage, tag);
             return b;
         }
     }
