@@ -526,12 +526,12 @@ void Character::updateMine()
     //    backActionFrame();
     //}
 
+    //이 아래 sound는 어디에 쓰이는 것인가요?? 찬응에게 답해 주세요
     Sound()()->Listen(pos, getForward());
 
     if (Input()()->IsOnceKeyDown(VK_UP))
     {
-        BulletPool()()->Fire(Communication()()->m_myInfo,pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_COLLISION::Player_1_Damage);
-
+        BulletPool()()->Fire(Communication()()->m_myInfo,pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_RES_STATIC::QBZ);
     }
 
     ForDebug();

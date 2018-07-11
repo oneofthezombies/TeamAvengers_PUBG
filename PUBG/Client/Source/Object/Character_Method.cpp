@@ -493,11 +493,11 @@ void Character::RifleShooting() //bullet °´Ã¼¿¡ ´ëÇÑ
     switch (inven.m_pHand->GetTagResStatic())
     {
     case TAG_RES_STATIC::QBZ:
-        BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_COLLISION::Impassable);
+        BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_RES_STATIC::QBZ);
         break;
     case TAG_RES_STATIC::Kar98k:
     {
-        BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_COLLISION::Impassable);
+        BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_RES_STATIC::Kar98k);
 
         //Kar98k BoltAction Animation
         TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
