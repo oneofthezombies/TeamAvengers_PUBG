@@ -517,24 +517,33 @@ pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_CHARACTER 
     string fileName;
     switch (tag)
     {
+        //FPP
+            case TAG_RES_ANIM_CHARACTER::Unarmed_Combined_FPP:
+                fileName = "Unarmed_Combined_FPP";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Rifle_Combined_FPP:
+                fileName = "Rifle_Combined_FPP";
+                break;
+                
+            case TAG_RES_ANIM_CHARACTER::Weapon_Combined_FPP:
+                fileName = "Weapon_Combined_FPP";
+                break;
+
+            case TAG_RES_ANIM_CHARACTER::Healing_FPP:
+                fileName = "Healing_FPP";
+                break;
+
         //Character ------------------------------------
-        {
+        {   
             //1. 해당 무기를 들고있을 때 캐릭터의 애니메이션
             {
             case TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character:
                 fileName = "Weapon_QBZ_Character";
                 break;
 
-            case TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character_FPP:
-                fileName = "Weapon_QBZ_Character_FPP";
-                break;
-
             case TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character:
                 fileName = "Weapon_Kar98k_Character";
-                break;
-
-            case TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character_FPP:
-                fileName = "Weapon_Kar98k_Character_FPP";
                 break;
             }
 
@@ -551,22 +560,6 @@ pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_CHARACTER 
             case TAG_RES_ANIM_CHARACTER::Unarmed_Jump:
                 fileName = "Unarmed_Jump";
                 break;
-
-            case TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion_FPP:
-                fileName = "Unarmed_Locomotion_FPP";
-                break;
-
-            case TAG_RES_ANIM_CHARACTER::Unarmed_Jump_FPP:
-                fileName = "Unarmed_Jump_FPP";
-                break;
-
-            case TAG_RES_ANIM_CHARACTER::Unarmed_Pickup_FPP:
-                fileName = "Unarmed_Pickup_FPP";
-                break;
-
-            case TAG_RES_ANIM_CHARACTER::Unarmed_Attack_FPP:
-                fileName = "Unarmed_Attack_FPP";
-                break;
             }
 
             //3. 무기를 들고있을 때 애니메이션
@@ -578,24 +571,12 @@ pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_CHARACTER 
             case TAG_RES_ANIM_CHARACTER::Rifle_Combined:
                 fileName = "Rifle_Combined";
                 break;
-
-            case TAG_RES_ANIM_CHARACTER::Rifle_Locomotion_FPP:
-                fileName = "Rifle_Locomotion_FPP";
-                break;
-
-            case TAG_RES_ANIM_CHARACTER::Rifle_Pickup_FPP:
-                fileName = "Rifle_Pickup_FPP";
-                break;
             }
 
             //4. 힐템을 사용할 때 애니메이션
             {
             case TAG_RES_ANIM_CHARACTER::Healing:
                 fileName = "Healing";
-                break;
-
-            case TAG_RES_ANIM_CHARACTER::Healing_FPP:
-                fileName = "Healing_FPP";
                 break;
             }
 

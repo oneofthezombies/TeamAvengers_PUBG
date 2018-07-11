@@ -24,16 +24,16 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
 
-    load(TAG_RES_STATIC::Armor_Lv1);
-    load(TAG_RES_STATIC::Back_Lv1);
-    load(TAG_RES_STATIC::Head_Lv1);
+    //load(TAG_RES_STATIC::Armor_Lv1);
+    //load(TAG_RES_STATIC::Back_Lv1);
+    //load(TAG_RES_STATIC::Head_Lv1);
 
     load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
 
-    load(TAG_RES_STATIC::Bandage);
-    load(TAG_RES_STATIC::FirstAidKit);
-    load(TAG_RES_STATIC::MedKit);
+    //load(TAG_RES_STATIC::Bandage);
+    //load(TAG_RES_STATIC::FirstAidKit);
+    //load(TAG_RES_STATIC::MedKit);
 
     //load(TAG_RES_STATIC::RedDot);
     //load(TAG_RES_STATIC::Aimpoint2X);
@@ -49,9 +49,9 @@ void SceneLoading::Load()
     load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load equipment
-    load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
-    load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
-    load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
+    //load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
+    //load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
+    //load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
@@ -60,7 +60,13 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
-    addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
+    // load animation FPP
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined_FPP);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined_FPP);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Combined_FPP);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Healing_FPP);
+
+    //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
@@ -82,6 +88,20 @@ void SceneLoading::Load()
     - Rifle_Jump.X
     - Rifle_OnBody.X
     - Rifle_OnHand.X
+
+    Unarmed_Combined_FPP.X 는 하단의 X파일들을 합친 것
+    - Unarmed_Pickup_FPP.X
+    - Unarmed_Locomotion_FPP.X
+    - Unarmed_Jump_FPP.X
+    - Unarmed_Attack_FPP.X
+
+    Rifle_Combined_FPP.X 는 하단의 X파일들을 합친 것
+    - Rifle_Pickup_FPP.X
+    - Rifle_Locomotion_FPP.X
+
+    Weapon_Combined_FPP.X 는 하단의 X파일들을 합친 것
+    - Weapon_Kar98k_Character_FPP.X
+    - Weapon_QBZ_Character_FPP.X
     */
 }
 

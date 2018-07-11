@@ -65,7 +65,7 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(30, 0, 10);
+    /*p = D3DXVECTOR3(30, 0, 10);
     item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
@@ -93,27 +93,27 @@ void ScenePlay::setAloneMode()
     p = D3DXVECTOR3(60, 0, 10);
     item = new Item(TAG_RES_STATIC::MedKit, p, r, s);
     AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);*/
+
+    p = D3DXVECTOR3(70, 0, 10);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(70, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(70, 0, 30);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(70, 0, 30);
-    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(80, 0, 10);
+    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(80, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(80, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(80, 0, 10);
+    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(90, 0, 10);
     item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
