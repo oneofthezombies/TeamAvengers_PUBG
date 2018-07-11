@@ -50,7 +50,8 @@ Character::Info::Info()
     , pHead(nullptr)
     , pFPP(nullptr)
     , pTPP(nullptr)
-    , pHand(nullptr)
+    , pHandGun(nullptr)
+    , pGunBolt(nullptr)
 {
 }
 
@@ -139,10 +140,10 @@ void Character::setFramePtr()
     m_framePtr.pWaist         = pAnimation->FindFrame("spine_01");
     m_framePtr.pRoot          = pAnimation->FindFrame("root");
     m_framePtr.pHead          = pAnimation->FindFrame("head");
-    m_framePtr.pLeftClavicle = pAnimation->FindFrame("clavicle_l");
+    m_framePtr.pLeftClavicle  = pAnimation->FindFrame("clavicle_l");
     m_framePtr.pRightClavicle = pAnimation->FindFrame("clavicle_r");
 
-    m_framePtr.pHandGun = pAnimation->FindFrame("item_r");
+    m_framePtr.pHandGun       = pAnimation->FindFrame("item_r");
 
     m_framePtr.pTPP           = pAnimation->FindFrame("camera_tpp");
     m_framePtr.pFPP           = pAnimation->FindFrame("camera_fpp");
@@ -905,7 +906,7 @@ void Character::setInfo()
     m_info.pHead = m_framePtr.pHead;
     m_info.pTPP = m_framePtr.pTPP;
     m_info.pFPP = m_framePtr.pFPP;
-    m_info.pHand = m_framePtr.pHandGun;
+    m_info.pHandGun = m_framePtr.pHandGun;
 }
 
 void Character::minusDamage(const float damage)

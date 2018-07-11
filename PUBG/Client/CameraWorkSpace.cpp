@@ -61,7 +61,7 @@ void CameraOnGun::Reset()
 {
     m_fovY = D3DX_PI * (70.0f / 180.0f);
     m_eye = Vector3::ZERO;
-    m_look = m_eye + Vector3::UP;
+    m_look = m_eye + Vector3::RIGHT;
 }
 void CameraOnGun::Update()
 {
@@ -72,11 +72,34 @@ void CameraOnGun::Update()
     }
     else
     {
-        //D3DXMATRIX m;
-        //D3DXMatrixTranslation(&m, 0.0f, 0.0f, -20.0f);
-        m_worldMatrix = /*m **/ pTarInfo->pHand->CombinedTransformationMatrix * pTarInfo->pTransform->GetTransformationMatrix();
+        D3DXMATRIX m;
+        D3DXMatrixTranslation(&m, 0.0f, 8.0f, 0.0f);
+        if (pTarInfo->pGunBolt)
+            m_worldMatrix = m * pTarInfo->pGunBolt->CombinedTransformationMatrix * pTarInfo->pHandGun->CombinedTransformationMatrix *  pTarInfo->pTransform->GetTransformationMatrix();
+        else
+            cout << "¾ø¾î!" << endl;
     }
     m_eye = Vector3::ZERO;
     //D3DXVECTOR3 eye 
-    m_look = m_eye + Vector3::UP;
+    m_look = m_eye + Vector3::RIGHT;
+}
+
+void CameraOnGun::Render()
+{
+    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        Resource()()->GetBoundingSphereMesh(),
+        0,
+        [this](LPD3DXEFFECT pEffect)
+    {
+        D3DXMATRIX s, m;
+        D3DXMatrixScaling(&s, 10.0f, 10.0f, 10.0f);
+        m = s * m_worldMatrix;
+        pEffect->SetMatrix(Shader::World, &m);
+
+        D3DXCOLOR red(1.0f, 0.0f, 0.0f, 1.0f);
+        pEffect->SetValue("Color", &red, sizeof red);
+    });
 }

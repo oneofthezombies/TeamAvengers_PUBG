@@ -139,7 +139,8 @@ public:
         Frame*       pHead;
         Frame*       pFPP;
         Frame*       pTPP;
-        Frame*       pHand;
+        Frame*       pHandGun;
+        Frame*       pGunBolt;
 
         Info();
     };

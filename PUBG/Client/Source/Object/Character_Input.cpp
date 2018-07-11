@@ -6,6 +6,26 @@
 
 void Character::setAttacking() //Num1, Num2, X
 {
+    //for test
+    if (m_currentOnceKey._Num3)
+    {
+        setAnimation(
+            CharacterAnimation::BodyPart::UPPER,
+            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Aim,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            CharacterAnimation::DEFAULT_POSITION,
+            [this]()
+        {
+            setAnimation(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Aim,
+                false);
+        });
+    }
+
     TotalInventory& inven = m_totalInventory;
 
     //if (pAnimation->HasUpperFinishEvent()) return; //애니메이션 체인 관련 
@@ -682,6 +702,9 @@ void Character::setJump()
 */
 void Character::setRifleOnHand(TAG_RIFLE tagRifle)
 {  
+    //총구 뒤쪽 카메라
+    m_info.pGunBolt = m_totalInventory.m_pHand->GetGunBolt();
+
     //애니메이션 정하기
     TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
     if (tagRifle == TAG_RIFLE::Primary)        //주무기 일 때
@@ -724,8 +747,11 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
 
 void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 {
+    //총구 뒤쪽 카메라
+    m_info.pGunBolt = nullptr;
+
     /*
-    - 몸에 장착하는 애니메이션 - Idling 애니메이션 0.3f 보간, Prone상태에서 깜빡거리는 문제 해결
+    - 몸에 ㅠ장착하는 애니메이션 - Idling 애니메이션 0.3f 보간, Prone상태에서 깜빡거리는 문제 해결
     */
 
     TotalInventory& inven = m_totalInventory;

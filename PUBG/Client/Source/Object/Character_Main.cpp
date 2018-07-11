@@ -147,6 +147,8 @@ void Character::OnUpdate()
         RifleShooting();
     }
         
+    if (isMine())
+        Camera()()->Update();
 
     // render
     pAnimation->Render(
@@ -256,7 +258,6 @@ void Character::updateMine()
     //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
-
     if (!m_totalInventory.IsOpened())
     {
         handleMouse(dt, &m_mouseInput);
@@ -425,6 +426,33 @@ void Character::updateMine()
         //    pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
         //}
     }
+
+    //캐릭터 spehre안에 아이템이 없으면 모션을 캔슬했다 (앞으로 문열기 등 interaction에서 문제가 많은 코드) (이후에 바뀔것이다)
+    if(di.size() ==0)
+        m_currentOnceKey._F = false;
+    
+    //Ray를 쏘아서 맞는 물건 먼저 먹기
+    for (auto& rayItm : di)
+    {
+        Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
+
+        // 먼저 terrain features의 바운딩스피어와 충돌을 검사한다.
+        BoundingSphere bs = rayItm->GetBoundingSphere();
+
+        if (!D3DXSphereBoundProbe(
+            &(bs.center + bs.position),
+            bs.radius,
+            &ray.m_pos,
+            &ray.m_dir)) continue;
+
+        if (m_currentOnceKey._F)
+        {
+            PutItemInTotalInventory(rayItm); //inventory에 넣기
+            //current scene 에서 지우기
+            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
+        }
+    }
+
     //////////////////////////////////////////////////
 
 

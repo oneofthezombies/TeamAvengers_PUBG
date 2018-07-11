@@ -149,4 +149,5 @@ public:
     // Inherited via ICamera
     virtual void Reset() override;
     virtual void Update() override;
+    virtual void Render() override;
 };

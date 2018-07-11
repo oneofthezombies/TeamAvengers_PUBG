@@ -50,7 +50,7 @@ void Application::Update()
     Device       ()()->BeginScene();
     Scene        ()()->Update();
     Sound        ()()->Update();
-    Camera       ()()->Update();
+    //Camera       ()()->Update();
     //Collision    ()()->Update();
     UI           ()()->Update();
 
