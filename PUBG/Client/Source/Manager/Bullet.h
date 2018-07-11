@@ -7,6 +7,19 @@ class BoxCollider;
 
 class Bullet : public IObject
 {
+    struct HitTargetInfo {
+        D3DXVECTOR3 pos;
+        TAG_RES_STATIC tag_Weapon;
+        TAG_COLLIDER_CHARACTER_PART tag_chrPart;
+        Character* chr;
+
+        HitTargetInfo();
+        HitTargetInfo(D3DXVECTOR3 _pos, 
+            TAG_RES_STATIC _tag_Weapon, 
+            TAG_COLLIDER_CHARACTER_PART _tag_chrPart,
+            Character* obj
+        );
+    };
 private:
     IScene*                 pCurrentScene;
     GameInfo::MyInfo        m_myInfo;

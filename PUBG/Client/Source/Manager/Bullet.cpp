@@ -29,6 +29,22 @@ Bullet::Bullet()
 Bullet::~Bullet()
 {
 }
+Bullet::HitTargetInfo::HitTargetInfo()
+    : pos(Vector3::ZERO)
+    , tag_Weapon(TAG_RES_STATIC::COUNT)
+    , tag_chrPart(TAG_COLLIDER_CHARACTER_PART::COUNT)
+    , chr(nullptr)
+{
+}
+
+Bullet::HitTargetInfo::HitTargetInfo(D3DXVECTOR3 _pos, TAG_RES_STATIC _tag_Weapon, TAG_COLLIDER_CHARACTER_PART _tag_chrPart, Character* obj)
+    : pos(_pos)
+    , tag_Weapon(_tag_Weapon)
+    , tag_chrPart(_tag_chrPart)
+    , chr(obj)
+{
+}
+
 
 void Bullet::OnUpdate()
 {
@@ -36,7 +52,9 @@ void Bullet::OnUpdate()
     
      m_nextPos = m_curPos = pTr->GetPosition();
      //JHTODO
-     m_nextPos += m_dir * m_Speed/**ItemInfo::GetDropOffByDistance(1.0f,GetTagObject())*/ * Time()()->GetDeltaTime();
+     m_nextPos += m_dir /** m_Speed*/*87.0f
+         /**ItemInfo::GetDropOffByDistance(1.0f,GetTagObject())*/ 
+         /** Time()()->GetDeltaTime()*/;
      
      Ray ray;
      ray.m_pos = m_curPos;
@@ -50,7 +68,7 @@ void Bullet::OnUpdate()
      CS->m_RayArea.CreateRayArea(&ray, rayLength);
 
 
-     vector<D3DXVECTOR3> vecTargetPos;
+     vector<HitTargetInfo> vecHitTargetInfo;
 
      //1. Terrain features와의 충돌
      auto tfs(CS->m_RayArea.GetTerrainFeatures());
@@ -81,13 +99,13 @@ void Bullet::OnUpdate()
                  if (dist < minDist)
                  {
                      minDist = dist;
-
                  }
              }
          }
          if (minDist != std::numeric_limits<float>::max())
          {
-             vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
+             //vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
+             vecHitTargetInfo.emplace_back(HitTargetInfo((ray.m_pos + ray.m_dir * minDist), m_tag, TAG_COLLIDER_CHARACTER_PART::COUNT,nullptr));
          }
      }
 
@@ -112,6 +130,7 @@ void Bullet::OnUpdate()
          float dist = std::numeric_limits<float>::max();
 
          const auto& obbs = chr->GetBoundingBoxes();
+         size_t otherHitPart = -1;
          for (std::size_t i = 0; i < obbs.size(); i++)
          {
              auto& obb = obbs[i];
@@ -122,34 +141,55 @@ void Bullet::OnUpdate()
                  if (dist < minDist)
                  {
                      minDist = dist;
+                     otherHitPart = i;
                  }
              }
          }
          if (minDist != std::numeric_limits<float>::max())
          {
-             vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
+             //vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
+             HitTargetInfo((ray.m_pos + ray.m_dir * minDist), m_tag, static_cast<TAG_COLLIDER_CHARACTER_PART>(otherHitPart), chr);
          }
      }
 
      float shortestLength = FLT_MAX;
-     D3DXVECTOR3 targetPos;
-     for (int i = 0; i < vecTargetPos.size(); i++)//맞은 target들 중 가장 distance가 짧은 곳을 찾아낸다.
+     HitTargetInfo targetInfo;
+     for (int i = 0; i < vecHitTargetInfo.size(); i++)//맞은 target들 중 가장 distance가 짧은 곳을 찾아낸다.
      {
-         if (shortestLength > D3DXVec3Length(&vecTargetPos[i]))
+         if (shortestLength > D3DXVec3Length(&vecHitTargetInfo[i].pos))
          {
-             shortestLength = D3DXVec3Length(&vecTargetPos[i]);
-             targetPos = vecTargetPos[i];
+             shortestLength = D3DXVec3Length(&vecHitTargetInfo[i].pos);
+             targetInfo = vecHitTargetInfo[i];
          }
      }
 
      //한곳이라도 맞은 부분이 있다면      
      if (shortestLength != FLT_MAX)
      {
-         BulletPool()()->SetTargetHitSphere(targetPos);//<<이곳이 맞은 부분, 화면에 빨간 공으로 render하기 위해 보내는 부분
+
+         BulletPool()()->SetTargetHitSphere(targetInfo.pos);//<<이곳이 맞은 부분, 화면에 빨간 공으로 render하기 위해 보내는 부분
          //Communication()()-> 네트워크로 이 포지션을 줘서 모든 사람이 이곳에 맞았다는 것이 표시 되는 것을 보이도록 하자
-         //사람에게 맞는다면 피가 나도록
-         //벽에 맞는다면 벽에 탄흔이 남도록
          
+
+         
+         if (targetInfo.tag_chrPart != TAG_COLLIDER_CHARACTER_PART::COUNT) //케릭터에 맞은 것이라면
+         {
+             //사람에게 맞는다면 피가 나도록
+             const float damage
+                 = ItemInfo::GetBaseDamage(targetInfo.tag_Weapon)//Base Weapon Damage
+                 * ItemInfo::GetDropOffByDistance(shortestLength, targetInfo.tag_Weapon)//Damage drop-off by Distance
+                 * CharacterInfo::GetHitAreaDamage(targetInfo.tag_chrPart) //Hit Area Damage
+                 * CharacterInfo::GetWeaponClassDamageByHitZone(targetInfo.tag_chrPart); //Weapon Class Damage By Hit Zone
+
+             targetInfo.chr->minusDamage(damage);
+             Communication()()->SendEventMinusDamage(targetInfo.chr->GetIndex(), damage);
+         }
+         else
+         {
+             //terrain features 에 맞은 것이라면 
+             //탄흔         //벽에 맞는다면 벽에 탄흔이 남도록
+         }
+
          m_IsActive = false;
          return;
      }
@@ -339,3 +379,4 @@ void _BulletPool::SetTargetHitSphere(const D3DXVECTOR3& pos)
 {
     m_targetHitSphere.position = pos;
 }
+

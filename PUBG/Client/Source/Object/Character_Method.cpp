@@ -552,6 +552,101 @@ void Character::RifleShooting() //bullet 객체에 대한
 }
 D3DXVECTOR3 Character::FindShootingTargetPos()
 {
+    auto& inven = m_totalInventory;
+    inven.m_bulletFireCoolDown = ItemInfo::GetBulletFireCoolTime(inven.m_pHand->GetTagResStatic());
+
+    int numBullet = inven.m_pHand->GetNumBullet();
+    inven.m_pHand->SetNumBullet(--numBullet);
+    cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
+
+    //Goal : get Fire starting position , get fire direction
+
+    //Update in Character::updateTotalInventory()
+    //inven.m_pHand->UpdateModel(); //update to get position of frame "gun_bolt" 
+
+    D3DXMATRIX mat
+        = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
+        * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
+        * GetTransform()->GetTransformationMatrix();    //character world matrix
+
+    D3DXVECTOR3 bulletFirePos = Matrix::GetTranslation(mat);
+
+    D3DXVECTOR3 bulletDir;
+    CurrentCamera()()->CalcPickedPosition(&bulletDir, 1280 / 2, 720 / 2);
+    bulletDir = bulletDir - bulletFirePos;
+    D3DXVec3Normalize(&bulletDir, &bulletDir);
+    //-------------------------
+
+    // ----------------------수정중-------------
+    Ray gunRay;
+    gunRay.m_pos = bulletFirePos;
+    gunRay.m_dir = bulletDir;
+    // 나 말고 다른 캐릭터들을 순회하며 충돌여부를 검사한다.
+
+    const auto& others = static_cast<ScenePlay*>(CurrentScene()())->GetOthers();
+    for (auto o : others)
+    {
+        // 먼저 캐릭터의 바운딩스피어와 충돌을 검사한다.
+        BoundingSphere bs = o->GetBoundingSphere();
+
+        if (!D3DXSphereBoundProbe(
+            &(bs.center + bs.position),
+            bs.radius,
+            &bulletFirePos,
+            &bulletDir)) continue;
+
+        //const float distance = D3DXVec3Length(&(oPos - bulletFirePos));
+
+        //// 탄도학에 의한 예측 낙차 높이를 계산한다.
+        //const float varY = Ballistics::GetVarianceY(inven.m_pHand->GetTagResStatic(), distance);
+        //D3DXVECTOR3 estimatedDest = bulletDir * distance;
+        ////estimatedDest.y += varY;
+        //estimatedDest = bulletDir * 10000.0f;
+        //
+        //// 낙차 높이를 계산한 곳으로 레이를 쏜다.
+        //bulletDir = estimatedDest - bulletFirePos;
+        //D3DXVec3Normalize(&bulletDir, &bulletDir);
+
+        // 캐릭터의 바운딩박스들과 충돌을 검사한다.
+        float minDist = std::numeric_limits<float>::max();
+        float dist = std::numeric_limits<float>::max();
+        const auto& obbs = o->GetBoundingBoxes();
+        for (std::size_t i = 0; i < obbs.size(); i++)
+        {
+            auto& obb = obbs[i];
+
+            if (Collision::HasCollision(gunRay, obb, &dist))
+            {
+                // hit
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    m_otherHitPart = i;
+                    m_otherHitBox = obb;
+                }
+            }
+        }
+
+        if (minDist != std::numeric_limits<float>::max())
+        {
+            // 제일 작은 히트한 놈
+            cout << "hited part : " << m_otherHitPart << '\n';
+
+            const auto tagWeapon = inven.m_pHand->GetTagResStatic();
+            const auto tagPart = static_cast<TAG_COLLIDER_CHARACTER_PART>(m_otherHitPart);
+            const float damage
+                = ItemInfo::GetBaseDamage(tagWeapon)//Base Weapon Damage
+                * ItemInfo::GetDropOffByDistance(minDist, tagWeapon)//Damage drop-off by Distance
+                * CharacterInfo::GetHitAreaDamage(tagPart) //Hit Area Damage
+                * CharacterInfo::GetWeaponClassDamageByHitZone(tagPart); //Weapon Class Damage By Hit Zone
+
+            o->minusDamage(damage);
+            Communication()()->SendEventMinusDamage(o->GetIndex(), damage);
+        }
+    }
+
+
+
     ////이 함수는 가장 가까운 Object를 찾아서 
 
     ////Screen에서 쏜 Ray 방향으로 cell들이 담긴다.
@@ -631,6 +726,7 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
     //return targetPos;
     return D3DXVECTOR3(0, 0, 0);
 }
+
 
 
 const std::vector<BoundingBox>& Character::GetBoundingBoxes()
