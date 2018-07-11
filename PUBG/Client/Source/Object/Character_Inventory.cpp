@@ -245,7 +245,7 @@ void Character::PutItemInTotalInventory(Item* item)
             else
             {
                 //TODO: 용량 부족 UI 띄우기
-                cout << "용량이 부족합니다!!" << endl;
+                cout << "공간이 충분하지 않습니다!" << endl;
             }
             // TODO : send "delete item on field" to server
         }
@@ -326,7 +326,7 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
     else
     {
         //TODO: 용량 부족 UI 띄우기
-        cout << "용량이 부족합니다!!" << endl;
+        cout << "공간이 충분하지 않습니다!" << endl;
     }
 
 }
