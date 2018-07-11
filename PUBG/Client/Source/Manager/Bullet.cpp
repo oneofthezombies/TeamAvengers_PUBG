@@ -181,7 +181,7 @@ void Bullet::OnUpdate()
                  * CharacterInfo::GetHitAreaDamage(targetInfo.tag_chrPart) //Hit Area Damage
                  * CharacterInfo::GetWeaponClassDamageByHitZone(targetInfo.tag_chrPart); //Weapon Class Damage By Hit Zone
 
-             targetInfo.chr->minusDamage(damage);
+             targetInfo.chr->MinusDamage(damage);
              Communication()()->SendEventMinusDamage(targetInfo.chr->GetIndex(), damage);
          }
          else

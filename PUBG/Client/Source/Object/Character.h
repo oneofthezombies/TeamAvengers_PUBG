@@ -331,10 +331,13 @@ private:
     void setFramePtr();
     void subscribeCollisionEvent();
 
+    void checkDead();
     void handleInput(IsPressing* OutIsPressing);
     void handleInput(IsPressed* OutIsPressed);
     void handleMouse(const float dt, MouseInput* mouseInput);
 
+    void terrainFeaturesCollisionInteraction(OUT State* OutState);
+    void itemSphereCollisionInteraction();
     void characterRotation(MouseInput* mouseinput);
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput);
     void applyTarget_Y_Position(OUT D3DXVECTOR3* pOut);
@@ -483,7 +486,7 @@ public:
     bool IsFire() const;
     void RifleShooting();
     D3DXVECTOR3 FindShootingTargetPos();
-    void minusDamage(const float damage);
+    void MinusDamage(const float damage);
 
             const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;

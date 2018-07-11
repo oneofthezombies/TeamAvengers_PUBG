@@ -10,6 +10,7 @@
 #include "HeightMap.h"
 #include "ScenePlay.h"
 #include "Ballistics.h"
+#include "TerrainFeature.h"
 
 const float MovingFactor::UNARMED_RUN = 180.0f;
 const float MovingFactor::UNARMED_SPRINT = 260.0f;
@@ -184,6 +185,42 @@ void Character::subscribeCollisionEvent()
     }
 }
 
+void Character::checkDead()
+{
+    if (m_health <= 0.0f)
+    {
+        //기절 애니메이션
+        TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+        if (m_stance == Stance::Stand)
+            tagAnim = TAG_ANIM_CHARACTER::DBNO_Enter;
+        else if (m_stance == Stance::Crouch)
+            tagAnim = TAG_ANIM_CHARACTER::DBNO_Enter_From_Crouch;
+        else if (m_stance == Stance::Prone)
+            tagAnim = TAG_ANIM_CHARACTER::DBNO_Enter_From_Prone;
+
+        assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::updateMine(), tagAnim is COUNT");
+
+        setAnimation(
+            CharacterAnimation::BodyPart::BOTH,
+            tagAnim,
+            true,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION,
+            0.3f,
+            [this]() {
+            setAnimation(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::DBNO_Idle,
+                true,
+                0.3f);
+        });
+
+        Communication()()->SendIsDead(m_index, true);
+        m_isDead = true;
+    }
+}
+
 void Character::handleInput(IsPressing* OutIsPressing)
 {
     assert(OutIsPressing && "Character::handleInput(IsPressing), argument is null.");
@@ -283,7 +320,188 @@ void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizo
     m_backAction.curValX = virtical_result;
     m_backAction.valX = virtical_result;
 }
-    //cout << virtical_result << "=============" << horizontal_result << endl;
+void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
+{
+    IScene* pCurrentScene = CurrentScene()();
+    bool hasCollision = false;
+    auto tfs(pCurrentScene->m_NearArea.GetTerrainFeatures());
+    for (auto tf : tfs)
+    {
+        if (hasCollision) break;
+
+        // 바운딩스피어가 충돌되지 않으면 다음 터레인피처와 충돌을 검사한다.
+        if (!Collision::HasCollision(m_boundingSphere, tf->GetBoundingSphere())) continue;
+
+        if (destState->boundingBoxes.empty())
+        {
+            for (auto& bb : GetBoundingBoxes())
+            {
+                BoundingBox destBB = bb;
+                destBB.rotation = destState->rotation;
+                destBB.position = destState->position;
+                destState->boundingBoxes.emplace_back(destBB);
+            }
+        }
+
+        for (auto& mine : destState->boundingBoxes)
+        {
+            if (hasCollision) break;
+
+            for (auto& others : tf->GetBoundingBoxes())
+            {
+                if (hasCollision) break;
+
+                hasCollision = Collision::HasCollision(mine, others);
+
+                // sliding vector
+                if (hasCollision)
+                {
+                    const D3DXVECTOR3 currPos = GetTransform()->GetPosition();
+                    const D3DXVECTOR3 destPos = destState->position;
+                    D3DXVECTOR3 to(destPos.x - currPos.x, 0.0f, destPos.z - currPos.z);
+                    D3DXVECTOR3 dir;
+                    D3DXVec3Normalize(&dir, &to);
+
+                    D3DXVECTOR3 diff((others.center + others.position) - currPos);
+                    D3DXVec3Normalize(&diff, &diff);
+
+                    D3DXVECTOR3 right, forward;
+                    D3DXMATRIX r;
+                    D3DXMatrixRotationQuaternion(&r, &others.rotation);
+                    D3DXVec3TransformNormal(&right, &Vector3::RIGHT, &r);
+                    D3DXVec3Normalize(&right, &right);
+                    D3DXVec3TransformNormal(&forward, &Vector3::FORWARD, &r);
+                    D3DXVec3Normalize(&forward, &forward);
+
+                    float dotX = D3DXVec3Dot(&right, &diff);
+                    if (dotX < 0.0f)
+                        dotX *= -1.0f;
+
+                    float dotZ = D3DXVec3Dot(&forward, &diff);
+                    if (dotZ < 0.0f)
+                        dotZ *= -1.0f;
+
+                    D3DXVECTOR3 dist(Vector3::ZERO);
+                    float len(0.0f);
+                    if (dotX > dotZ)
+                    {
+                        len = D3DXVec3Dot(&to, &forward);
+                        dist = len * forward;
+                    }
+                    else
+                    {
+                        len = D3DXVec3Dot(&to, &right);
+                        dist = len * right;
+                    }
+
+                    destState->position = currPos + dist;
+                }
+            }
+        }
+    }
+
+    // collision with other characters
+    if (!hasCollision)
+    {
+        for (auto o : pCurrentScene->m_NearArea.GetCharacters())
+        {
+            if (hasCollision) break;
+
+            if (o->GetIndex() == m_index) continue;
+
+            const D3DXVECTOR3 dist = destState->position - o->GetTransform()->GetPosition();
+            const float distLen = D3DXVec3Length(&dist);
+            if (distLen < RADIUS * 2.0f)
+                hasCollision = true;
+        }
+    }
+    // end collision /////////////////////////
+    Transform* tm = GetTransform();
+    // 셋 커런트
+    if (hasCollision)
+    {
+        // 만약 스프린트일 경우에는 쉬프트키 유무에 상관없이 런으로 바꾼다.
+        if (destState->isHeadBump)
+        {
+            // TODO : impl
+        }
+
+        tm->SetPosition(destState->position);
+    }
+    else
+    {
+        // update state
+        tm->SetPosition(destState->position);
+        tm->SetRotation(destState->rotation);
+
+        // 이사하기 //NearArea(cell space)를 다시 구하기!
+        std::size_t destCellIndex = pCurrentScene->GetCellIndex(destState->position);
+        if (destCellIndex != m_cellIndex)
+        {
+            pCurrentScene->m_NearArea.CreateNearArea(destCellIndex);
+            pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
+        }
+    }
+    //////////////////////////////////////////////////
+
+}
+void Character::itemSphereCollisionInteraction()
+{
+    //Item Spher와 character sphere 충돌 체크
+    IScene * pCurrentScene = CurrentScene()();
+    // clear dropped items
+    auto& di = m_totalInventory.droppedItems;
+    di.resize(0);
+
+    auto itms(pCurrentScene->m_NearArea.GetItems());    //이 auto를 copy가 아닌 reference로 받는 방법은???
+    for (auto itm : itms)
+    {
+        if (!Collision::HasCollision(m_boundingSphere, itm->GetBoundingSphere())) continue;
+        //캐릭터와 Item의 spehre 가 충돌이 났다
+
+        di.emplace_back(itm);
+
+        // UI로 F key가 나오게 하기 
+
+
+        if (m_currentOnceKey._F)
+        {
+            PutItemInTotalInventory(itm); //inventory에 넣기
+            //current scene 에서 지우기
+            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
+        }
+    }
+
+    //캐릭터 spehre안에 아이템이 없으면 모션을 캔슬했다 (앞으로 문열기 등 interaction에서 문제가 많은 코드) (이후에 바뀔것이다)
+    if (di.size() == 0)
+        m_currentOnceKey._F = false;
+
+    //Ray를 쏘아서 맞는 물건 먼저 먹기
+    for (auto& rayItm : di)
+    {
+        Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
+
+        // 먼저 terrain features의 바운딩스피어와 충돌을 검사한다.
+        BoundingSphere bs = rayItm->GetBoundingSphere();
+
+        if (!D3DXSphereBoundProbe(
+            &(bs.center + bs.position),
+            bs.radius,
+            &ray.m_pos,
+            &ray.m_dir)) continue;
+
+        if (m_currentOnceKey._F)
+        {
+            PutItemInTotalInventory(rayItm); //inventory에 넣기
+                                             //current scene 에서 지우기
+            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
+        }
+    }
+
+    //////////////////////////////////////////////////
+
+}
+//cout << virtical_result << "=============" << horizontal_result << endl;
 void Character::characterRotation(MouseInput* mouseInput)
 {
     ////케릭터 머리 Frame 움직이기
@@ -647,7 +865,7 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
                 * CharacterInfo::GetHitAreaDamage(tagPart) //Hit Area Damage
                 * CharacterInfo::GetWeaponClassDamageByHitZone(tagPart); //Weapon Class Damage By Hit Zone
 
-            o->minusDamage(damage);
+            o->MinusDamage(damage);
             Communication()()->SendEventMinusDamage(o->GetIndex(), damage);
         }
     }
@@ -909,7 +1127,7 @@ void Character::setInfo()
     m_info.pHandGun = m_framePtr.pHandGun;
 }
 
-void Character::minusDamage(const float damage)
+void Character::MinusDamage(const float damage)
 {
     m_health -= damage;
 }
