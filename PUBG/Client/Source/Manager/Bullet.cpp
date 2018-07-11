@@ -148,7 +148,7 @@ void Bullet::OnUpdate()
          if (minDist != std::numeric_limits<float>::max())
          {
              //vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
-             HitTargetInfo((ray.m_pos + ray.m_dir * minDist), m_tag, static_cast<TAG_COLLIDER_CHARACTER_PART>(otherHitPart), chr);
+             vecHitTargetInfo.emplace_back(HitTargetInfo((ray.m_pos + ray.m_dir * minDist), m_tag, static_cast<TAG_COLLIDER_CHARACTER_PART>(otherHitPart), chr));
          }
      }
 
