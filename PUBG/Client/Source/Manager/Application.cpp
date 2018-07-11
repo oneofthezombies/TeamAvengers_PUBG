@@ -15,6 +15,7 @@ void Application::Init()
     srand(GetTickCount());
 	DeviceMgr()()->Init();
     Resource ()()->Init();
+    Shader   ()()->Init();
     UI       ()()->Init();
     Input    ()()->Init();
     Sound    ()()->Init();
@@ -33,6 +34,7 @@ void Application::Destroy()
     Sound        ()()->Destroy();
     Resource     ()()->Destroy();
     DebugMgr     ()()->Destroy();
+    Shader       ()()->Destroy();
     DeviceMgr    ()()->Destroy();
 
     MemoryAllocator::CheckMemoryAllocators();
@@ -45,22 +47,30 @@ void Application::Update()
     Communication()()->Print();
     BulletPool   ()()->PrintNumBullet();
     Input        ()()->Update();
-    Device       ()()->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-                             D3DCOLOR_XRGB(50, 50, 50), 1.0f, 0);
-    Device       ()()->BeginScene();
     Scene        ()()->Update();
     Sound        ()()->Update();
     Camera       ()()->Update();
-    //Collision    ()()->Update();
     UI           ()()->Update();
+}
 
-    Scene        ()()->Render();
-    BulletPool   ()()->Render();
+void Application::Render()
+{
+    Device()()->Clear(
+        0,
+        nullptr,
+        D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+        D3DCOLOR_XRGB(50, 50, 50),
+        1.0f,
+        0);
 
-    UI           ()()->Render();
-    DebugMgr     ()()->Render();
-    Device       ()()->EndScene();
-    Device       ()()->Present(nullptr, nullptr, nullptr, nullptr);
+    Device    ()()->BeginScene();
+    Shader    ()()->CreateShadowMap();
+    Scene     ()()->Render();
+    BulletPool()()->Render();
+    UI        ()()->Render();
+    DebugMgr  ()()->Render();
+    Device    ()()->EndScene();
+    Device    ()()->Present(nullptr, nullptr, nullptr, nullptr);
 }
 
 void Application::WndProc(HWND hWnd, UINT message, WPARAM wParam,

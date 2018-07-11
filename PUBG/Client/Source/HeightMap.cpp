@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "HeightMap.h"
 #include "EffectMeshRenderer.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "Collider.h"
 
 HeightMap::HeightMap()
@@ -242,10 +242,6 @@ void HeightMap::OnRender()
             pEffect->SetMatrix(
                 Shader::World,
                 &GetTransform()->GetTransformationMatrix());
-
-            DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-            D3DXVECTOR3 lightDir = light->GetDirection();
-            pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
         });
 
     }
@@ -321,6 +317,11 @@ bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
         *OutHeight = m_vecVertex[_3].y + xY * fDeltaX + zY * fDeltaZ;
 	}
 	return true;
+}
+
+LPD3DXMESH HeightMap::GetMesh() const
+{
+    return m_pMesh;
 }
 
 

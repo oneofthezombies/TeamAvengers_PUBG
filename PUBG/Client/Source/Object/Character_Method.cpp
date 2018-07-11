@@ -2,7 +2,7 @@
 #include "Character.h"
 #include "CharacterAnimation.h"
 #include "CharacterPart.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "AnimationState.h"
 #include "Item.h"
 #include "ItemInfo.h"

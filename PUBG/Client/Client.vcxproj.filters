@@ -37,7 +37,6 @@
     <ClCompile Include="Source\Object\CharacterPart.cpp" />
     <ClCompile Include="Source\Object\TerrainFeature.cpp" />
     <ClCompile Include="Source\Useful\TagAnimation.cpp" />
-    <ClCompile Include="Source\Object\DirectionalLight.cpp" />
     <ClCompile Include="Source\Object\Item.cpp" />
     <ClCompile Include="Source\Object\Character_Inventory.cpp" />
     <ClCompile Include="Source\Useful\ItemInfo.cpp" />
@@ -59,9 +58,9 @@
     <ClCompile Include="Area.cpp" />
     <ClCompile Include="Source\Useful\Ballistics.cpp" />
     <ClCompile Include="CameraWorkSpace.cpp" />
-    <ClCompile Include="Source\Object\Character.cpp" />
     <ClCompile Include="Source\Useful\Interpolation.cpp" />
     <ClCompile Include="Source\Useful\TagUIPosition.cpp" />
+    <ClCompile Include="Source\Useful\Light.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -103,7 +102,6 @@
     <ClInclude Include="Source\Object\CharacterPart.h" />
     <ClInclude Include="Source\Object\TerrainFeature.h" />
     <ClInclude Include="Source\Useful\TagAnimation.h" />
-    <ClInclude Include="Source\Object\DirectionalLight.h" />
     <ClInclude Include="Source\Useful\StructItem.h" />
     <ClInclude Include="Source\Object\Item.h" />
     <ClInclude Include="Source\Useful\ItemInfo.h" />
@@ -123,5 +121,6 @@
     <ClInclude Include="Source\Useful\Ballistics.h" />
     <ClInclude Include="Source\Useful\Interpolation.h" />
     <ClInclude Include="Source\Useful\TagUIPosition.h" />
+    <ClInclude Include="Source\Useful\Light.h" />
   </ItemGroup>
 </Project>

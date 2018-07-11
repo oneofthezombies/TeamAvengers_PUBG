@@ -154,7 +154,7 @@ void Bullet::OnUpdate()
 
      float shortestLength = FLT_MAX;
      HitTargetInfo targetInfo;
-     for (int i = 0; i < vecHitTargetInfo.size(); i++)//맞은 target들 중 가장 distance가 짧은 곳을 찾아낸다.
+     for (std::size_t i = 0; i < vecHitTargetInfo.size(); i++)//맞은 target들 중 가장 distance가 짧은 곳을 찾아낸다.
      {
          if (shortestLength > D3DXVec3Length(&vecHitTargetInfo[i].pos))
          {

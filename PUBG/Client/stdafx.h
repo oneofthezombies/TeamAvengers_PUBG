@@ -24,7 +24,8 @@
 #include "Collision.h"        // has Collision    ()()
 
 #include "Structure.h"
-#include "Shader.h"
+#include "Shader.h"           // has Shader       ()()
+#include "Light.h"            // has Light        ()()
 // end math and usefuls
 
 // managers and interfaces for global access

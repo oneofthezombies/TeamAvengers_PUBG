@@ -11,17 +11,21 @@ float4x4 World      : WORLD <string SasBindAddress = "Sas.Skeleton.MeshToJointTo
 float4x4 View       : VIEW <string SasBindAddress = "Sas.Camera.WorldToView";>; 
 float4x4 Projection : PROJECTION <string SasBindAddress = "Sas.Camera.Projection";>; 
 
-bool bEmissiveColor = false; 
+bool bEmissiveColor = true; 
 bool bLight = true; 
 float3 lightDirection = { 0, 0, -1 }; 
 
 float4 DiffuseColor  = { 1.000000f, 1.000000f, 1.000000f, 1.000000f }; 
 float  SpecularPower = 10.000000f; 
 float4 SpecularColor = { 0.000000f, 0.000000f, 0.000000f, 1.000000f }; 
-float4 EmissiveColor = { 0.000000f, 0.000000f, 0.000000f, 1.000000f }; 
+float4 EmissiveColor = { 0.100000f, 0.100000f, 0.100000f, 1.000000f }; 
+
+float4x4 gLightViewMatrix;
+float4x4 gLightProjMatrix;
 
 texture C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_color_tga; 
 texture C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_normal_tga; 
+texture ShadowMap_Tex;
 
 sampler2D C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_color_tgaSampler = sampler_state  // TexCoord0 
 { 
@@ -43,6 +47,11 @@ sampler2D C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures
    AddressV  = Wrap;     
 }; 
 
+sampler2D ShadowSampler = sampler_state
+{
+   Texture = <ShadowMap_Tex>; 
+};
+
 struct VS_INPUT 
 { 
    float4 Position  : POSITION; 
@@ -57,17 +66,25 @@ struct VS_OUTPUT
    float4 Position  : POSITION; 
    float2 TexCoord0 : TEXCOORD0;
    float3 LightTangentSpace : COLOR1;
+   float4 ClipPosition : TEXCOORD1;
 }; 
 
 VS_OUTPUT VS( VS_INPUT IN ) 
 { 
    //TODO: Modify the folowing code: 
    VS_OUTPUT OUT;	 
-   float4 oPos = mul( mul( IN.Position, World ), View ); 
+   float4 WorldPos = mul(IN.Position, World);
+   float4 oPos = mul( WorldPos, View ); 
    OUT.Position = mul( oPos, Projection ); 
+   
    OUT.TexCoord0.xy = IN.TexCoord0.xy; 
+   
    float3x3 TBN = { IN.T, IN.B, IN.N };
    OUT.LightTangentSpace = mul( mul( TBN, (float3x3)World ), lightDirection );
+
+  OUT.ClipPosition = mul(WorldPos, gLightViewMatrix);
+  OUT.ClipPosition = mul(OUT.ClipPosition, gLightProjMatrix);
+
    return OUT;
 }; 
 
@@ -82,8 +99,22 @@ float4  PS( VS_OUTPUT vout ) : COLOR
      float bump = max(0, dot( bumpNormal, LightVector1 ));
      color.rgb = color.rgb * bump;
    } 
+
    if(bEmissiveColor)
      color.rgb += EmissiveColor.rgb;
+
+   float currentDepth = vout.ClipPosition.z / vout.ClipPosition.w;
+   float2 uv = vout.ClipPosition.xy / vout.ClipPosition.w;
+   uv.y = -uv.y;
+   uv = uv * 0.5 + 0.5;
+
+   float shadowDepth = tex2D(ShadowSampler, uv).r;
+   
+   if ( currentDepth > shadowDepth + 0.0000125f )
+   {
+      color.rgb *= 0.5f;
+   }
+
    return  color; 
 }; 
 

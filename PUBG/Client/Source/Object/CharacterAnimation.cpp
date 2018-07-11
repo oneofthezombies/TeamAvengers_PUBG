@@ -8,11 +8,12 @@ const float CharacterAnimation::DEFAULT_NEXT_WEIGHT = 0.0f;
 const float CharacterAnimation::DEFAULT_POSITION = 0.0f;
 const float CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME = 0.0f;
 
-CharacterAnimation::CharacterAnimation()
+CharacterAnimation::CharacterAnimation(const std::size_t index)
     : IObject(TAG_OBJECT::Idle)
 {
     pSkinnedMeshController = AddComponent<SkinnedMeshController>();
-    pSkinnedMeshController->SetSkinnedMesh(ResourceInfo::GetCharacterPathFileName());
+
+    pSkinnedMeshController->SetSkinnedMesh(ResourceInfo::GetCharacterPathFileName(), index);
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("root"));
     pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("pelvis"));
     //pSkinnedMeshController->AddAnimationBackupFrame(pSkinnedMeshController->FindFrame("ik_hand_root"));
@@ -360,4 +361,9 @@ float CharacterAnimation::GetLowerTrackPeriod(const std::size_t index)
 std::vector<BoundingSphere> CharacterAnimation::GetBoundingSpheres()
 {
     return pSkinnedMeshController->GetBoundingSpheres();
+}
+
+SkinnedMesh* CharacterAnimation::GetSkinnedMesh()
+{
+    return pSkinnedMeshController->GetSkinnedMesh();
 }

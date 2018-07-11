@@ -46,6 +46,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
 		else
 		{
 			App()()->Update();
+            App()()->Render();
 		}
 	}
 

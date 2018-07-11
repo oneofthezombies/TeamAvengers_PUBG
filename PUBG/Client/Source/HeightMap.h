@@ -62,4 +62,5 @@ public:
     virtual void OnRender() override;
     virtual bool GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight) override;
 
+    LPD3DXMESH GetMesh() const;
 };

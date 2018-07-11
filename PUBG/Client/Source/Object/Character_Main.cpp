@@ -3,7 +3,7 @@
 #include "CharacterAnimation.h"
 #include "CharacterPart.h"
 #include "Bullet.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "AnimationState.h"
 #include "Item.h"
 #include "ResourceInfo.h"
@@ -68,7 +68,7 @@ Character::Character(const int index)
     CS->InsertObjIntoTotalCellSpace(TAG_OBJECT::Character, m_cellIndex, this);   //Object 를 TotalCellSpace(Area)에 넣기
     CS->m_NearArea.CreateNearArea(m_cellIndex);                                          //Near Area 계산
 
-    pAnimation = new CharacterAnimation;
+    pAnimation = new CharacterAnimation(m_index);
     AddChild(pAnimation);
     setAnimation(
         CharacterAnimation::BodyPart::BOTH, 
@@ -126,7 +126,6 @@ void Character::OnUpdate()
     updateMine();
     updateOther();
 
-
     // update
     GetTransform()->Update();      // set characters world
     pAnimation->UpdateAnimation(); // set characters local
@@ -147,7 +146,16 @@ void Character::OnUpdate()
         RifleShooting();
     }
         
+    Shader()()->AddShadowSource(
+        GetTransform()->GetTransformationMatrix(), 
+        pAnimation->GetSkinnedMesh());
 
+    // communication
+    communicate();
+}
+
+void Character::OnRender()
+{
     // render
     pAnimation->Render(
         /*m_framePtr.pWaist->CombinedTransformationMatrix
@@ -157,11 +165,8 @@ void Character::OnUpdate()
         pEffect->SetMatrix(
             Shader::World,
             &GetTransform()->GetTransformationMatrix());
-
-        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-        D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
     });
+
     renderTotalInventory();
 
     // render collision shapes
@@ -181,7 +186,7 @@ void Character::OnUpdate()
     m = e * c * r * p;
     const auto& vertices = Resource()()->GetBoundingBoxVertices();
     const auto& indices = Resource()()->GetBoundingBoxIndices();
-    Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr, 
+    Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr,
         [&m](LPD3DXEFFECT pEffect)
     {
         pEffect->SetMatrix(Shader::World, &m);
@@ -200,13 +205,6 @@ void Character::OnUpdate()
             sizeof vertices.front());
     });
     // end render hited box
-    
-    // communication
-    communicate();
-}
-
-void Character::OnRender()
-{
 }
 
 void Character::updateMine()

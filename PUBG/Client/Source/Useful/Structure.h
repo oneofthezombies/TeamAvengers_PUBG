@@ -64,6 +64,9 @@ struct SkinnedMesh
     LPD3DXFRAME               pConnectFrame;
 
     LPD3DXANIMATIONCONTROLLER m_pAnimController;
+    LPD3DXANIMATIONCONTROLLER m_pSubAnimController;
+
+    std::size_t               m_index;
 
     SkinnedMesh();
     ~SkinnedMesh();
@@ -76,16 +79,6 @@ private:
 public:
     void Setup();
     bool Seperate(const string& name);
-};
-
-struct SkinnedMeshInstance
-{
-    SkinnedMesh* pSkinnedMesh;
-    LPD3DXANIMATIONCONTROLLER m_pAnimController;
-    LPD3DXANIMATIONCONTROLLER m_pSubAnimController;
-
-    SkinnedMeshInstance();
-    ~SkinnedMeshInstance();
 };
 
 ///* do NOT use! this will be deleted soon.*/

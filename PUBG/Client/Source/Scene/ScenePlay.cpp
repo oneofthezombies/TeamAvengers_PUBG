@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ScenePlay.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "TerrainFeature.h"
 #include "SkySphere.h"
 #include "Grid.h"
@@ -98,10 +98,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(170, 200, 130);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    AddObject(item);
-    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    //p = D3DXVECTOR3(170, 200, 130);
+    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    //AddObject(item);
+    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
     //pPlayer->PutItemInTotalInventory(item);
 
@@ -115,10 +115,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(90, 0, 10);
-    item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(90, 0, 10);
+    //item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(100, 0, 10);
     //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
@@ -223,8 +223,6 @@ void ScenePlay::OnInit()
     ClientToScreen(g_hWnd, &center);
     SetCursorPos(center.x, center.y);
 
-    SetDirectionalLight(new DirectionalLight);
-
     //AddObject(new SkySphere);
     AddObject(new Grid);
 
@@ -232,6 +230,8 @@ void ScenePlay::OnInit()
 
     //cell space partitioning
     m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
+
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(500.0f, 500.0f, -500.0f));
 
     //LoadObjectsFromFile("./Resource/save.txt");
 
@@ -262,6 +262,8 @@ void ScenePlay::OnUpdate()
     검출 방법
     레이,
     */
+
+    Shader()()->AddShadowSource(Matrix::IDENTITY, pHeightMap->GetMesh(), 0);
 
     for (auto c : characters)
     {
