@@ -4,8 +4,6 @@
 #include "Character.h"
 #include "Ray.h"
 #include "HeightMap.h"
-
-//-----------------------------------------------------------------
 CameraFirstPerson::CameraFirstPerson(const TAG_CAMERA tag)
     : ICamera(tag)
 {
@@ -50,107 +48,35 @@ void CameraFirstPerson::Update()
 
 }
 
-//-----------------------------------------------------------------
-CameraThirdPerson::CameraThirdPerson(const TAG_CAMERA tag)
-    : ICamera(tag)
+
+
+CameraOnGun::CameraOnGun()
+    : ICamera(TAG_CAMERA::OnGun)
 {
 }
-
-CameraThirdPerson::~CameraThirdPerson()
+CameraOnGun::~CameraOnGun()
 {
 }
-
-void CameraThirdPerson::Reset()
+void CameraOnGun::Reset()
 {
-    //m_position = D3DXVECTOR3(TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
-
-    //80 Degrees TP sight
-    m_fovY = D3DX_PI * (80.0f / 180.0f);
+    m_fovY = D3DX_PI * (70.0f / 180.0f);
     m_eye = Vector3::ZERO;
-    //D3DXVECTOR3 eye 
-    m_look = m_eye + (D3DXVECTOR3(0, 1, 0));
-
-
+    m_look = m_eye + Vector3::UP;
 }
-
-void CameraThirdPerson::Update()
+void CameraOnGun::Update()
 {
-    ////견착하는 부분은 3인칭에서만 있기에
-    //if (Input()()->IsOnceKeyDown(VK_RBUTTON))
-    //    Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
-
-    
     Character::Info* pTarInfo = GetTargetInfo();
     if (!pTarInfo)
     {
         D3DXMatrixIdentity(&m_worldMatrix);
-        
     }
     else
     {
-        D3DXMATRIX tarR, baseT;
-        D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
-        Debug << "*pTarInfo->pRotationForCamera : " << *pTarInfo->pRotationForCamera << endl << endl;
-        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, 0.0f);
-
-        D3DXMATRIX baseY, baseZ;
-        D3DXMatrixTranslation(&baseY, -20.0f, 180.0f, 0.0f);
-        D3DXMatrixTranslation(&baseZ, 0.0f, 0.0f, 85.0f);
-        m_worldMatrix 
-            = baseZ 
-            * tarR
-            * baseY
-            * pTarInfo->pTransform->GetTransformationMatrix();
-
-
-
-        
+        //D3DXMATRIX m;
+        //D3DXMatrixTranslation(&m, 0.0f, 0.0f, -20.0f);
+        m_worldMatrix = /*m **/ pTarInfo->pHand->CombinedTransformationMatrix * pTarInfo->pTransform->GetTransformationMatrix();
     }
-
     m_eye = Vector3::ZERO;
-    m_look = m_eye - Vector3::FORWARD;
-    
-    
-    int i = 0;
-}
-
-void CameraThirdPerson::Render()
-{
-    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-    Shader::Draw(
-        Resource()()->GetEffect("./Resource/", "Color.fx"),
-        nullptr, 
-        Resource()()->GetBoundingSphereMesh(), 
-        0, 
-        [this](LPD3DXEFFECT pEffect) 
-    {
-        D3DXMATRIX s, m;
-        D3DXMatrixScaling(&s, 10.0f, 10.0f, 10.0f);
-        m = s * m_worldMatrix;
-        pEffect->SetMatrix(Shader::World, &m);
-
-        D3DXCOLOR red(1.0f, 0.0f, 0.0f, 1.0f);
-        pEffect->SetValue("Color", &red, sizeof red);
-    });
-}
-
-void ICamera::UpdateViewProjMatrix()
-{
-
-    D3DXVec3TransformCoord(&m_eye, &m_eye, &m_worldMatrix);
-    D3DXVec3TransformCoord(&m_look, &m_look, &m_worldMatrix);
-    D3DXMatrixLookAtLH(&m_viewMatrix, &m_eye, &m_look, &Vector3::UP);
-
-    auto pD = Device()();
-    pD->SetTransform(D3DTS_VIEW, &m_viewMatrix);
-    if (m_tagCamera != TAG_CAMERA::Scope2X)
-    {
-        RECT rc;
-        GetClientRect(g_hWnd, &rc);
-        D3DXMatrixPerspectiveFovLH(&m_projectionMatrix,
-            m_fovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom),
-            1.0f, ICamera::VISUAL_RANGE);
-        pD->SetTransform(D3DTS_PROJECTION, &m_projectionMatrix);
-    }
-
+    //D3DXVECTOR3 eye 
+    m_look = m_eye + Vector3::UP;
 }

@@ -124,6 +124,7 @@ public:
         Frame*       pHead;
         Frame*       pFPP;
         Frame*       pTPP;
+        Frame*       pHand;
 
         Info();
     };

@@ -116,7 +116,8 @@ enum class TAG_CAMERA
     First_Person,
     Third_Person,
     KyunChak,
-    Scope2X
+    Scope2X,
+    OnGun
 };
 
 //enum class TAG_ITEM_CATEGORY

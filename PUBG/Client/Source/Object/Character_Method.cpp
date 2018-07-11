@@ -43,6 +43,7 @@ Character::Info::Info()
     , pHead(nullptr)
     , pFPP(nullptr)
     , pTPP(nullptr)
+    , pHand(nullptr)
 {
 }
 
@@ -899,6 +900,7 @@ void Character::setInfo()
     m_info.pHead = m_framePtr.pHead;
     m_info.pTPP = m_framePtr.pTPP;
     m_info.pFPP = m_framePtr.pFPP;
+    m_info.pHand = m_framePtr.pHandGun;
 }
 
 void Character::minusDamage(const float damage)

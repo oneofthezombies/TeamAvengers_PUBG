@@ -139,3 +139,14 @@ public:
     virtual void Update() override;
 
 };
+
+class CameraOnGun : public ICamera
+{
+
+public:
+    CameraOnGun();
+    virtual ~CameraOnGun();
+    // Inherited via ICamera
+    virtual void Reset() override;
+    virtual void Update() override;
+};
