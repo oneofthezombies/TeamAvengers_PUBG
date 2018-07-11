@@ -413,6 +413,36 @@ private:
         const float finishEventAgoTime,
         const std::function<void()>& finishEvent);
 
+    void setEquipAnimation(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend = true,
+        const float blendingTime = 0.3f,
+        const float nextWeight = 0.0f,
+        const float position = 0.0f);
+
+    void setEquipAnimation(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float finishEventAgoTime,
+        const std::function<void()>& finishEvent);
+
+    void setEquipAnimation(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float loopEventPeriod,
+        const std::function<void()>& loopEvent,
+        const float finishEventAgoTime,
+        const std::function<void()>& finishEvent);
+
 
 
 /**************************** end member method ******************************/

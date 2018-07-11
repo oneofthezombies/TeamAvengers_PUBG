@@ -738,8 +738,9 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
         assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnBody(), tagAnim is COUNT");
 
         //애니메이션 적용
+        //캐릭터용
         m_hasChangingState = true;
-        setAnimation(
+        pAnimation->Set(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
             false,
@@ -753,7 +754,27 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             inven.m_pHand = nullptr;
             m_hasChangingState = false;
 
-            setAnimation(
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                true,
+                0.3f,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+        });
+
+        //장비용
+        m_hasChangingState = true;
+        setEquipAnimation(
+            CharacterAnimation::BodyPart::UPPER,
+            tagAnim,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION,
+            0.3f,
+            [this, &inven]()
+        {
+            setEquipAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
@@ -773,8 +794,31 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
         assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnBody(), tagAnim is COUNT");
 
         //애니메이션 적용
+        //캐릭터용
         m_hasChangingState = true;
-        setAnimation(
+        pAnimation->Set(
+            CharacterAnimation::BodyPart::UPPER,
+            tagAnim,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            [this, &inven]()
+        {
+            inven.m_pWeaponSecondary = inven.m_pHand;
+            inven.m_pHand = nullptr;
+            m_hasChangingState = false;
+
+            setAnimation(
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                false);
+        });
+
+        //장비용
+        m_hasChangingState = true;
+        setEquipAnimation(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
             false,
@@ -784,11 +828,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             0.3f,
             [this, &inven]()
         {
-            inven.m_pWeaponSecondary = inven.m_pHand;
-            inven.m_pHand = nullptr;
-            m_hasChangingState = false;
-
-            setAnimation(
+            setEquipAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
@@ -1207,39 +1247,14 @@ void Character::setAnimation(
             nextWeight, 
             position);
     }
-
-    if (m_totalInventory.m_pEquipArmor)
-    {
-        m_totalInventory.m_pEquipArmor->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position);
-    }
-
-    if (m_totalInventory.m_pEquipBack)
-    {
-        m_totalInventory.m_pEquipBack->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position);
-    }
-
-    if (m_totalInventory.m_pEquipHead)
-    {
-        m_totalInventory.m_pEquipHead->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position);
-    }
+    
+    setEquipAnimation(
+        part,
+        tag,
+        isBlend,
+        blendingTime,
+        nextWeight,
+        position);
 }
 
 void Character::setAnimation(
@@ -1262,51 +1277,18 @@ void Character::setAnimation(
             nextWeight,
             position,
             finishEventAgoTime,
-            finishEvent
-        );
+            finishEvent);
     }
 
-    if (m_totalInventory.m_pEquipArmor)
-    {
-        m_totalInventory.m_pEquipArmor->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position,
-            finishEventAgoTime,
-            finishEvent
-        );
-    }
-
-    if (m_totalInventory.m_pEquipBack)
-    {
-        m_totalInventory.m_pEquipBack->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position,
-            finishEventAgoTime,
-            finishEvent
-        );
-    }
-
-    if (m_totalInventory.m_pEquipHead)
-    {
-        m_totalInventory.m_pEquipHead->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position,
-            finishEventAgoTime,
-            finishEvent
-        );
-    }
+    setEquipAnimation(
+        part,
+        tag,
+        isBlend,
+        blendingTime,
+        nextWeight,
+        position,
+        finishEventAgoTime,
+        finishEvent);
 }
 
 void Character::setAnimation(
@@ -1333,10 +1315,102 @@ void Character::setAnimation(
             loopEventPeriod,
             loopEvent,
             finishEventAgoTime,
-            finishEvent
-        );
+            finishEvent);
     }
 
+    setEquipAnimation(
+        part,
+        tag,
+        isBlend,
+        blendingTime,
+        nextWeight,
+        position,
+        loopEventPeriod,
+        loopEvent,
+        finishEventAgoTime,
+        finishEvent);
+}
+
+void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position)
+{
+    if (m_totalInventory.m_pEquipArmor)
+    {
+        m_totalInventory.m_pEquipArmor->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+
+    if (m_totalInventory.m_pEquipBack)
+    {
+        m_totalInventory.m_pEquipBack->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+}
+
+void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+{
+    if (m_totalInventory.m_pEquipArmor)
+    {
+        m_totalInventory.m_pEquipArmor->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+
+    if (m_totalInventory.m_pEquipBack)
+    {
+        m_totalInventory.m_pEquipBack->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+}
+
+void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float loopEventPeriod, const std::function<void()>& loopEvent, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+{
     if (m_totalInventory.m_pEquipArmor)
     {
         m_totalInventory.m_pEquipArmor->Set(
@@ -1349,8 +1423,7 @@ void Character::setAnimation(
             loopEventPeriod,
             loopEvent,
             finishEventAgoTime,
-            finishEvent
-        );
+            finishEvent);
     }
 
     if (m_totalInventory.m_pEquipBack)
@@ -1365,8 +1438,7 @@ void Character::setAnimation(
             loopEventPeriod,
             loopEvent,
             finishEventAgoTime,
-            finishEvent
-        );
+            finishEvent);
     }
 
     if (m_totalInventory.m_pEquipHead)
@@ -1381,7 +1453,6 @@ void Character::setAnimation(
             loopEventPeriod,
             loopEvent,
             finishEventAgoTime,
-            finishEvent
-        );
+            finishEvent);
     }
 }
