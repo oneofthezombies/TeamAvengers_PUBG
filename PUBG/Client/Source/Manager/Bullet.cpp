@@ -3,6 +3,7 @@
 #include "Collider.h"
 #include "TerrainFeature.h"
 #include "Character.h"
+#include "ItemInfo.h"
 
 Bullet::Bullet()
     : IObject(TAG_OBJECT::Bullet)
@@ -32,10 +33,10 @@ Bullet::~Bullet()
 void Bullet::OnUpdate()
 {
     if (!m_IsActive) return;
-
-
+    
      m_nextPos = m_curPos = pTr->GetPosition();
-     m_nextPos += m_dir * m_Speed;
+     //JHTODO
+     m_nextPos += m_dir * m_Speed/**ItemInfo::GetDropOffByDistance(1.0f,GetTagObject())*/  *Time()()->GetDeltaTime();
      
      Ray ray;
      ray.m_pos = m_curPos;
@@ -86,7 +87,7 @@ void Bullet::OnUpdate()
          }
          if (minDist != std::numeric_limits<float>::max())
          {
-             vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);
+             vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
          }
      }
 
@@ -121,19 +122,18 @@ void Bullet::OnUpdate()
                  if (dist < minDist)
                  {
                      minDist = dist;
-
                  }
              }
          }
          if (minDist != std::numeric_limits<float>::max())
          {
-             vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);
+             vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
          }
      }
 
      float shortestLength = FLT_MAX;
      D3DXVECTOR3 targetPos;
-     for (int i = 0; i < vecTargetPos.size(); i++)
+     for (int i = 0; i < vecTargetPos.size(); i++)//맞은 target들 중 가장 distance가 짧은 곳을 찾아낸다.
      {
          if (shortestLength > D3DXVec3Length(&vecTargetPos[i]))
          {
@@ -142,12 +142,14 @@ void Bullet::OnUpdate()
          }
      }
 
-     //<<이곳이 바로 가장 까까운 맞은 부분
-
-     
+     //한곳이라도 맞은 부분이 있다면      
      if (shortestLength != FLT_MAX)
      {
-         BulletPool()()->SetTargetHitSphere(targetPos);
+         BulletPool()()->SetTargetHitSphere(targetPos);//<<이곳이 맞은 부분, 화면에 빨간 공으로 render하기 위해 보내는 부분
+         //Communication()()-> 네트워크로 이 포지션을 줘서 모든 사람이 이곳에 맞았다는 것이 표시 되는 것을 보이도록 하자
+         //사람에게 맞는다면 피가 나도록
+         //벽에 맞는다면 벽에 탄흔이 남도록
+         
          m_IsActive = false;
          return;
      }
@@ -165,18 +167,6 @@ void Bullet::OnUpdate()
      m_curPos = m_nextPos;
      pTr->SetPosition(m_curPos);
      pTr->Update();
-
-     ////change cell space while moving
-     //size_t nextCellSpace = pCurrentScene->GetCellIndex(m_curPos);
-     //if (m_CellSpaceIndex != nextCellSpace&&m_IsActive)
-     //{
-     //    pCurrentScene->MoveCell(&m_CellSpaceIndex, nextCellSpace, TAG_OBJECT::Bullet, this);
-     //}
-    //auto pos = pTr->GetPosition();
-    //pos += m_dir * m_Speed;
-    //pTr->SetPosition(pos);
-    //pTr->Update();
-    ////pBoxCollider->Update(pTr->GetTransformationMatrix());
 
 }
 
@@ -205,7 +195,7 @@ void Bullet::OnRender()
 void Bullet::Reset()
 {
     pTr->SetPosition(Vector3::ZERO);
-    pBoxCollider->SetTagCollision(TAG_COLLISION::Idle);
+    //pBoxCollider->SetTagCollision(TAG_COLLISION::Idle);
     m_IsActive = false;
 
     pCurrentScene->RemoveObject(this);
@@ -234,10 +224,10 @@ bool Bullet::CheckCollision()
     return false;
 }
 
-TAG_COLLISION Bullet::GetTagCollision() const
-{
-    return pBoxCollider->GetTagCollision();
-}
+//TAG_COLLISION Bullet::GetTagCollision() const
+//{
+//    return pBoxCollider->GetTagCollision();
+//}
 
 void Bullet::Set(GameInfo::MyInfo myInfo, const D3DXVECTOR3 & startPos, const D3DXVECTOR3 & dir,
     const float speed, const float damage, TAG_COLLISION tag)

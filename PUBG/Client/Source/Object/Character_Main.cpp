@@ -130,8 +130,7 @@ void Character::OnUpdate()
 
     if (IsFire())
     {
-        //RifleShooting();
-        RifleShootingTest();
+        RifleShooting();
     }
         
 

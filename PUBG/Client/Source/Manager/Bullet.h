@@ -24,7 +24,7 @@ private:
     Transform*  pTr;
 
     LPD3DXMESH   pCylinder;
-    BoxCollider* pBoxCollider;
+    //BoxCollider* pBoxCollider;
 
 public:
     Bullet();
@@ -43,7 +43,7 @@ public:
     float GetSpeed() const;
     float GetDamage() const;
     bool CheckCollision();
-    TAG_COLLISION GetTagCollision() const;
+    //TAG_COLLISION GetTagCollision() const;
 };
 
 class _BulletPool : public Singleton<_BulletPool>

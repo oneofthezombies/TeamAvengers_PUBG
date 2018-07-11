@@ -16,20 +16,20 @@ void ScenePlay::setAloneMode()
     // 
     Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(300.0f, 100.0f, 300.0f);
     // ..
-
     const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
-    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
-    {
-        if (i == myID) continue;
 
-        Character* pOther = new Character(i);
-        others.emplace_back(pOther);
-        characters.emplace_back(pOther);
-        AddObject(pOther);
-    }
+    //for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    //{
+    //    if (i == myID) continue;
+
+    //    Character* pOther = new Character(i);
+    //    others.emplace_back(pOther);
+    //    characters.emplace_back(pOther);
+    //    AddObject(pOther);
+    //}
 
     TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 2000.0f), Vector3::UP, Vector3::ONE * 0.7f);
     D3DXMATRIX m;

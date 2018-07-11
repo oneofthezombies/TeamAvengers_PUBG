@@ -437,27 +437,27 @@ void Communication::Manager::SendLowerAnimationIndex(
             ss.str()));
 }
 
-void Communication::Manager::SendEventFireBullet(Bullet* pBullet)
-{
-    if (m_playMode == PlayMode::ALONE) return;
-
-    assert(pBullet && 
-        "Communicator::SendEventFireBullet() failed. bullet is null.");
-
-    auto tr = pBullet->GetTransform();
-    auto pos = tr->GetPosition();
-    auto rot = tr->GetRotation();
-
-    stringstream ss;
-    ss << m_myInfo.ID 
-       << pos.x << ' ' << pos.y << ' ' << pos.z << ' '
-       << rot.x << ' ' << rot.y << ' ' << rot.z << ' ' << rot.w << ' '
-       << pBullet->GetSpeed() << ' ' << pBullet->GetDamage() << ' ' 
-       << static_cast<int>(pBullet->GetTagCollision());
-
-    m_pClient->Write(
-        Message::Create(TAG_REQUEST::SEND_EVENT_FIRE_BULLET, ss.str()));
-}
+//void Communication::Manager::SendEventFireBullet(Bullet* pBullet)
+//{
+//    if (m_playMode == PlayMode::ALONE) return;
+//
+//    assert(pBullet && 
+//        "Communicator::SendEventFireBullet() failed. bullet is null.");
+//
+//    auto tr = pBullet->GetTransform();
+//    auto pos = tr->GetPosition();
+//    auto rot = tr->GetRotation();
+//
+//    stringstream ss;
+//    ss << m_myInfo.ID 
+//       << pos.x << ' ' << pos.y << ' ' << pos.z << ' '
+//       << rot.x << ' ' << rot.y << ' ' << rot.z << ' ' << rot.w << ' '
+//       << pBullet->GetSpeed() << ' ' << pBullet->GetDamage() << ' ' 
+//       /*<< static_cast<int>(pBullet->GetTagCollision())*/;
+//
+//    m_pClient->Write(
+//        Message::Create(TAG_REQUEST::SEND_EVENT_FIRE_BULLET, ss.str()));
+//}
 
 void Communication::Manager::SendEventSound(
     const TAG_SOUND tag, 
