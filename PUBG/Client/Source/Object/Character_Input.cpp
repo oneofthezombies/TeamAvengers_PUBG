@@ -6,6 +6,26 @@
 
 void Character::setAttacking() //Num1, Num2, X
 {
+    //for test
+    //if (m_currentOnceKey._Num3)
+    //{
+    //    setAnimation(
+    //        CharacterAnimation::BodyPart::UPPER,
+    //        TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Aim,
+    //        false,
+    //        CharacterAnimation::DEFAULT_BLENDING_TIME,
+    //        CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+    //        CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+    //        CharacterAnimation::DEFAULT_POSITION,
+    //        [this]()
+    //    {
+    //        setAnimation(
+    //            CharacterAnimation::BodyPart::BOTH,
+    //            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Aim,
+    //            false);
+    //    });
+    //}
+
     TotalInventory& inven = m_totalInventory;
 
     //if (pAnimation->HasUpperFinishEvent()) return; //애니메이션 체인 관련 
