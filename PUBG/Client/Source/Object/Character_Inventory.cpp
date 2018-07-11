@@ -6,6 +6,8 @@
 ///////추가한거 UI
 #include "UIImage.h"
 #include "UIText.h"
+#include "TagUIPosition.h"
+#include "UIButton.h"
 
 using Event       = UIButtonWithItem::Event;
 using MouseButton = UIButtonWithItem::MouseButton;
@@ -25,59 +27,8 @@ Character::TotalInventory::TotalInventory()
 
     , pTempSaveWeaponForX(nullptr)
     , pCharacter(nullptr)
+    , m_pUIPicked(nullptr)
 {
-    m_Border = new UIImage(
-        "./Resource/UI/Inventory/Basic/",
-        "black_1280_720_70.png",
-        Vector3::ZERO,
-        nullptr,
-        nullptr);
-    UI()()->RegisterUIObject(m_Border);
-
-    auto a = new UIText(
-        Resource()()->GetFont(TAG_FONT::Invetory_28),
-        D3DXVECTOR2(100.0f, 20.0f),
-        string("VICINITY"),
-        D3DCOLOR_XRGB(200, 200, 200),
-        m_Border);
-    a->SetDrawTextFormat(DT_LEFT);
-    a->SetPosition(D3DXVECTOR3(74.0f, 24.0f, 0.0f));
-
-    a = new UIText(
-        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
-        D3DXVECTOR2(100.0f, 20.0f),
-        string("Ground"),
-        D3DCOLOR_XRGB(200, 200, 200),
-        m_Border);
-    a->SetDrawTextFormat(DT_LEFT);
-    a->SetPosition(D3DXVECTOR3(74.0f, 77.0f, 0.0f));
-
-    a = new UIText(
-        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
-        D3DXVECTOR2(100.0f, 20.0f),
-        string("Sortby Type"),
-        D3DCOLOR_XRGB(200, 200, 200),
-        m_Border);
-    a->SetDrawTextFormat(DT_LEFT);
-    a->SetPosition(D3DXVECTOR3(264.0f, 77.0f, 0.0f));
-
-    new UIImage(
-        "./Resource/UI/Inventory/Basic/",
-        "line.png",
-        D3DXVECTOR3(233.0f, 92.0f, 0.0f),
-        nullptr,
-        m_Border);
-
-    auto b = new UIImage(
-        "./Resource/UI/Inventory/Character/",
-        "Female.png",
-        D3DXVECTOR3(410.0f , 85.0f , 0.0f),
-        nullptr,
-        m_Border);
-
-    SetEquipUI();
-
-    m_Border->SetIsRender(false);
 }
 
 Character::TotalInventory::~TotalInventory()
@@ -94,10 +45,76 @@ Character::TotalInventory::~TotalInventory()
               
     SAFE_DELETE(m_pWeaponPrimary);
     SAFE_DELETE(m_pWeaponSecondary);
-
-    UI()()->Destroy(m_Border);
 }
 
+
+void Character::TotalInventory::Init()
+{
+    // 검정 배경
+    m_Border = new UIImage(
+        "./Resource/UI/Inventory/Basic/",
+        "black_1280_720_70.png",
+        Vector3::ZERO,
+        nullptr,
+        nullptr);
+    UI()()->RegisterUIObject(m_Border);
+
+    // 텍스트
+    auto a = new UIText(
+        Resource()()->GetFont(TAG_FONT::Invetory_28),
+        D3DXVECTOR2(100.0f, 20.0f),
+        string("VICINITY"),
+        D3DCOLOR_XRGB(200, 200, 200),
+        m_Border);
+    a->SetDrawTextFormat(DT_LEFT);
+    a->SetPosition(D3DXVECTOR3(74.0f, 24.0f, 0.0f));
+
+    // 텍스트
+    a = new UIText(
+        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        D3DXVECTOR2(100.0f, 20.0f),
+        string("Ground"),
+        D3DCOLOR_XRGB(200, 200, 200),
+        m_Border);
+    a->SetDrawTextFormat(DT_LEFT);
+    a->SetPosition(D3DXVECTOR3(74.0f, 77.0f, 0.0f));
+
+    // 텍스트 
+    a = new UIText(
+        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        D3DXVECTOR2(100.0f, 20.0f),
+        string("Sortby Type"),
+        D3DCOLOR_XRGB(200, 200, 200),
+        m_Border);
+    a->SetDrawTextFormat(DT_LEFT);
+    a->SetPosition(D3DXVECTOR3(264.0f, 77.0f, 0.0f));
+
+    // 드롭드 인벤 구분선
+    new UIImage(
+        "./Resource/UI/Inventory/Basic/",
+        "line.png",
+        D3DXVECTOR3(233.0f, 92.0f, 0.0f),
+        nullptr,
+        m_Border);
+
+    // 여자 캐릭터
+    auto b = new UIImage(
+        "./Resource/UI/Inventory/Character/",
+        "Female.png",
+        D3DXVECTOR3(410.0f, 85.0f, 0.0f),
+        nullptr,
+        m_Border);
+
+    SetEquipUI();
+
+    m_Border->SetIsRender(false);
+}
+
+void Character::TotalInventory::Destroy()
+{
+    UI()()->Destroy(m_Border);
+    UI()()->Destroy(m_pUIPicked);
+}
 
 void Character::TotalInventory::Open()
 {
@@ -105,37 +122,6 @@ void Character::TotalInventory::Open()
     // move ui to in screen
 
     m_Border->SetIsRender(isOpened);
-    
-    //for (auto it = m_mapInventory.begin(); it != m_mapInventory.end(); it++)
-    //{
-    //    (*it).second.back()->SetIsRenderUIImage(isOpened);
-    //    (*it).second.back()->GetUIText()->SetText(string(ItemInfo::GetName((*it).first))
-    //        + "  " + to_string((*it).second.back()->GetCount()));
-    //}
-
-
-    //if (m_Text->GetChild(0)==nullptr)
-    //{
-    //    vector<RECT> rects;
-    //    int i = 0;
-    //    for (auto it = m_mapInventory.begin(); it != m_mapInventory.end(); it++)
-    //    {
-    //        (*it).second.back()->SetUIPosition(D3DXVECTOR2(250.0f / 0.2f, (100.0f + 50.0f * static_cast<float>(i)) / 0.2f));
-    //        auto c = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
-    //            D3DXVECTOR2(100.0f, 50.0f),
-    //            string(ItemInfo::GetName((*it).first))
-    //            + "  " + to_string((*it).second.back()->GetCount()),
-    //            D3DCOLOR_XRGB(200, 200, 200),
-    //            m_Text);
-    //        c->SetDrawTextFormat(DT_LEFT);
-    //        c->SetPosition(D3DXVECTOR3(310.0f, 120.0f + 50.0f * static_cast<float>(i), 0.0f));
-    //        //Gun* g = it->second;
-    //        //UIText::Create(Font::kInteractionMessageDescription, g->GetName(), D3DXVECTOR3(600.0f, 100.0f + 50.0f * static_cast<float>(i), 0.0f), D3DXVECTOR2(200.0f, 50.0f), this);
-    //        rects.emplace_back(RECT{});
-    //        SetRect(&rects.back(), 350, 100 + 50 * i, 550, 150 + 50 * i);
-    //        ++i;
-    //    }
-    //}
 }
 
 void Character::TotalInventory::Close()
@@ -147,12 +133,12 @@ void Character::TotalInventory::Close()
     {
         (*it).second.back()->SetIsRenderUIImage(isOpened);
     }
-    //UI()()->Destroy(m_Border);
-    //POINT center;
-    //center.x = 1280 / 2;
-    //center.y = 720 / 2;
-    //ClientToScreen(g_hWnd, &center);
-    //SetCursorPos(center.x, center.y);
+
+    POINT center;
+    center.x = 1280 / 2;
+    center.y = 720 / 2;
+    ClientToScreen(g_hWnd, &center);
+    SetCursorPos(center.x, center.y);
 }
 
 void Character::TotalInventory::Update()
@@ -161,6 +147,7 @@ void Character::TotalInventory::Update()
     {
         const D3DXVECTOR3 myPos = pCharacter->GetTransform()->GetPosition();
 
+        // set ui dropped
         std::multimap<float, Item*> sortedItems;
         for (std::size_t i = 0; i < droppedItems.size(); ++i)
         {
@@ -186,40 +173,36 @@ void Character::TotalInventory::Update()
 
             UIButtonWithItem* pUI = m_uiDroped[idx];
             pUI->pItem = pItem;
-            pUI->m_tagUIPosition = static_cast<TAG_UI_POSITION>(idx);
+            pUI->m_tagUIPosition = UIPosition::GetTag(TAG_UI_POSITION::dropped_0, idx);
             pUI->pUIImage = pItem->GetUIImage();
             pUI->SetIsActive(true);
         }
+        // end set ui dropped
 
+        // set ui inven
+        for (auto u : m_uiInven)
+        {
+            u->SetIsActive(false);
+            u->pItem = nullptr;
+        }
+        std::size_t idx = 0;
+        for (auto it = m_mapInventory.begin(); it != m_mapInventory.end(); ++it)
+        {
+            if (idx >= TotalInventory::NUM_UI_DROPPED) break;
 
+            const std::vector<Item*>& items = it->second;
+            for (auto item : items)
+            {
+                item->SetIsRenderUIImage(true);
 
-        //vector<RECT> rects;
-        //int i = 0;
-        //for (auto it = m_mapInventory.begin(); it != m_mapInventory.end(); it++)
-        //{
-        ////    (*it).second.back()->SetUIPosition(D3DXVECTOR2(250.0f, (100.0f + 50.0f * static_cast<float>(i))));
-        ////    //(*it).second.back()->GetUIText()->SetPosition(D3DXVECTOR3(310.0f, 120.0f + 50.0f * static_cast<float>(i), 0.0f));
-        //    (*it).second.back()->GetUIText()->SetText(string(ItemInfo::GetName((*it).first))
-        //        + "  " + to_string((*it).second.back()->GetCount()));
-        ////    (*it).second.back()->GetUIText()->SetPosition(D3DXVECTOR3(30.0f, 0.0f,0.0f));
-
-        ////    //UIText test = *(static_cast<UIText*>(m_Text->GetChild(i)));
-        ////    //static_cast<UIText*>(m_Text->GetChild(i))->SetText(string(ItemInfo::GetName((*it).first))
-        ////    //    + "  " + to_string((*it).second.back()->GetCount()));
-        ////   /* a = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
-        ////        D3DXVECTOR2(100.0f, 50.0f),
-        ////        string(ItemInfo::GetName((*it).first))
-        ////        + "  " + to_string((*it).second.back()->GetCount()),
-        ////        D3DCOLOR_XRGB(200, 200, 200),
-        ////        m_Border);
-        ////    a->SetDrawTextFormat(DT_LEFT);
-        ////    a->SetPosition(D3DXVECTOR3(310.0f, 120.0f + 50.0f * static_cast<float>(i), 0.0f));*/
-        ////    //Gun* g = it->second;
-        ////    //UIText::Create(Font::kInteractionMessageDescription, g->GetName(), D3DXVECTOR3(600.0f, 100.0f + 50.0f * static_cast<float>(i), 0.0f), D3DXVECTOR2(200.0f, 50.0f), this);
-        ////    //rects.emplace_back(RECT{});
-        //    //SetRect(&rects.back(), 350, 100 + 50 * i, 550, 150 + 50 * i);
-        //    ++i;
-        //}
+                UIButtonWithItem* pUI = m_uiInven[idx];
+                pUI->pItem = item;
+                pUI->m_tagUIPosition = UIPosition::GetTag(TAG_UI_POSITION::inven_0, idx);
+                pUI->pUIImage = item->GetUIImage();
+                pUI->SetIsActive(true);
+            }
+        }
+        // end set ui inven
     }
 }
 
@@ -231,10 +214,16 @@ void Character::TotalInventory::Render()
     }
 }
 
+bool Character::TotalInventory::IsOpened()
+{
+    return isOpened;
+}
+
 void Character::TotalInventory::SetEquipUI()
 {
-    const int left = 74;
-    const int top = 92;
+    // 드롭드 칸 이미지
+    int left = 74;
+    int top = 92;
     const int height = 40;
     const int gap = 3;
     m_uiDroped.resize(NUM_UI_DROPPED);
@@ -266,98 +255,57 @@ void Character::TotalInventory::SetEquipUI()
         u->SetIsActive(false);
     }
 
+    // 픽된 아이템 이미지
+    const float max = std::numeric_limits<float>::max();
+    m_pUIPicked = new UIButtonWithItem(
+        Vector3::ONE * max,
+        "./Resource/UI/Inventory/Basic/",
+        "Equip_click.png",
+        "Equip_click.png",
+        "Equip_click.png",
+        nullptr, nullptr, "", 0, nullptr,
+        TAG_UI_POSITION::picked,
+        std::bind(
+            &Character::onMouse,
+            pCharacter,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3));
+    UI()()->RegisterUIObject(m_pUIPicked);
 
+    new UIImage("", "", Vector3::ZERO, nullptr, m_pUIPicked);
 
+    // 인벤토리 칸 이미지
+    left = 243;
+    top = 93;
+    m_uiInven.resize(NUM_UI_DROPPED);
+    for (std::size_t i = 0; i < m_uiInven.size(); ++i)
+    {
+        auto& u = m_uiInven[i];
 
+        u = new UIButtonWithItem(
+            D3DXVECTOR3(
+                static_cast<float>(left),
+                static_cast<float>(top + i * (height + gap)), 0.0f),
+            "./Resource/UI/Inventory/Basic/",
+            "ItemSlot.png",
+            "ItemSlot_mouseover.png",
+            "ItemSlot.png",
+            m_Border,
+            Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+            "",
+            D3DCOLOR_XRGB(255, 255, 255),
+            nullptr,
+            TAG_UI_POSITION::dropped_0,
+            std::bind(
+                &Character::onMouse,
+                pCharacter,
+                std::placeholders::_1,
+                std::placeholders::_2,
+                std::placeholders::_3));
 
-    //std::vector<Item*> vItems;
-    //int top = 93;
-    //int heightGap = 3;
-    //int height = 40;
-    //for (auto is : m_mapInventory)
-    //{
-    //    std::vector<Item*>& items = is.second;
-    //    for (std::size_t i = 0; i < items.size(); ++i)
-    //    {
-    //        Item* pItem = items[i];
-
-    //        pItem->SetIsRenderUIImage(true);
-    //        pItem->SetUIPosition(
-    //            D3DXVECTOR2(
-    //                0.0f,
-    //                0.0f));
-
-    //        vItems.emplace_back(pItem);
-    //    }
-    //}
-
-    //static std::vector<UIButtonWithItem*> uis;
-    //for (auto i : vItems)
-    //{
-    //    auto itemSlot = new UIButtonWithItem(
-    //        D3DXVECTOR3(243.0f, 93.0f, 0.0f),
-    //        "./Resource/UI/Inventory/Basic/",
-    //        "ItemSlot.png",
-    //        "ItemSlot_mouseover.png",
-    //        "ItemSlot.png",
-    //        m_Border,
-    //        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
-    //        "",            
-    //        D3DCOLOR_XRGB(255, 255, 255),
-    //        i,
-    //        TAG_UI_POSITION::A,
-    //        std::bind(
-    //            &Character::onMouse,
-    //            pCharacter,
-    //            std::placeholders::_1,
-    //            std::placeholders::_2,
-    //            std::placeholders::_3));
-
-    //    itemSlot->AddChild(i->GetUIImage());
-    //    uis.emplace_back(itemSlot);
-    //}
-
-
-        //new UIButtonWithItem(
-        //D3DXVECTOR3(440.0f, 117.0f, 0.0f),
-        //"./Resource/UI/Inventory/Basic/",
-        //"Equip_no.png",
-        //"Equip_mouseover.png",
-        //"Equip_yes.png",
-        //m_Border,
-        //Resource()()->GetFont(TAG_FONT::Invetory_Ground),
-        //"Helmat",
-        //D3DCOLOR_XRGB(255, 0, 0),
-        //m_pHand,
-        //TAG_UI_POSITION::A,
-        //std::bind(
-        //    &Character::onMouse,
-        //    pCharacter,
-        //    std::placeholders::_1,
-        //    std::placeholders::_2,
-        //    std::placeholders::_3));
-
-        //new UIButtonWithItem(
-        //D3DXVECTOR3(440.0f, 248.0f, 0.0f),
-        //"./Resource/UI/Inventory/Basic/",
-        //"Equip_no.png",
-        //"Equip_mouseover.png",
-        //"Equip_yes.png",
-        //m_Border,
-        //Resource()()->GetFont(TAG_FONT::Invetory_Ground),
-        //"Helmat",
-        //D3DCOLOR_XRGB(255, 0, 0),
-        //m_pHand,
-        //TAG_UI_POSITION::A,
-        //std::bind(
-        //    &Character::onMouse,
-        //    pCharacter,
-        //    std::placeholders::_1,
-        //    std::placeholders::_2,
-        //    std::placeholders::_3));
-
-
-
+        u->SetIsActive(false);
+    }
 }
 
 void Character::PutItemInTotalInventory(Item* item)
@@ -696,13 +644,91 @@ void Character::onMouse(
     const MouseButton button, 
     UIButtonWithItem* pUIButtonWithItem)
 {
-    if (event == Event::DRAG && 
-        button == MouseButton::LEFT && 
-        pUIButtonWithItem->m_tagUIPosition == TAG_UI_POSITION::dropped_0)
-    {
-    }
+    assert(pUIButtonWithItem && "Character::onMouse() button is null.");
 
-    if (event == Event::DRAG)
+    auto& ti = m_totalInventory;
+    const auto tag = pUIButtonWithItem->m_tagUIPosition;
+
+    if (button == MouseButton::LEFT)
     {
+        if (event == Event::DOWN)
+        {
+            if (UIPosition::IsDropped(tag))
+            {
+                // 좌표
+                POINT mouse;
+                GetCursorPos(&mouse);
+                ScreenToClient(g_hWnd, &mouse);
+
+                ti.m_pUIPicked->SetPosition(
+                    D3DXVECTOR3(
+                        static_cast<float>(mouse.x - 21),
+                        static_cast<float>(mouse.y - 21), 0.0f));
+                ti.m_pUIPicked->pItem = pUIButtonWithItem->pItem;
+
+                UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage();
+                UIImage* pPickedImage = static_cast<UIImage*>(ti.m_pUIPicked->GetChild(0));
+
+                pPickedImage->SetTexture(pItemImage->GetTexture());
+                pPickedImage->SetSize(pItemImage->GetSize());
+            }
+        }
+
+        if (event == Event::DRAG)
+        {
+            if (tag == TAG_UI_POSITION::picked)
+            {
+                POINT mouse;
+                GetCursorPos(&mouse);
+                ScreenToClient(g_hWnd, &mouse);
+
+                ti.m_pUIPicked->SetPosition(
+                    D3DXVECTOR3(
+                        static_cast<float>(mouse.x - 21),
+                        static_cast<float>(mouse.y - 21), 0.0f));
+            }
+        }
+
+        if (event == Event::UP)
+        {
+            if (tag == TAG_UI_POSITION::picked)
+            {
+                const D3DXVECTOR3& pos = pUIButtonWithItem->GetPosition();
+                const auto cat =
+                    ItemInfo::GetItemCategory(
+                        pUIButtonWithItem->pItem->GetTagResStatic());
+
+                // 드롭드 인벤 구분선 위치
+                const float firstLine = 233.0f;
+                // TODO : 인벤 장착 구분선 위치 조정해야 함
+                const float secondLine = 500.0f;
+                if (pos.x < firstLine)
+                {
+                }
+                else if (pos.x < secondLine)
+                {
+                    switch (cat)
+                    {
+                    case TAG_ITEM_CATEGORY::Ammo:
+                    {
+                        Item* pItem = pUIButtonWithItem->pItem;
+                        PutItemInTotalInventory(pItem);
+                        CurrentScene()()->ItemIntoInventory(
+                            CurrentScene()()->GetCellIndex(
+                                pItem->GetTransform()->GetPosition()), 
+                            pItem);
+                    }
+                    break;
+                    }
+                }
+                else
+                {
+
+                }
+                const float max = std::numeric_limits<float>::max();
+                pUIButtonWithItem->SetPosition(Vector3::ONE * max);
+            }
+        }
     }
+   
 }

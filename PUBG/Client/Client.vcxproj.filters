@@ -59,6 +59,7 @@
     <ClCompile Include="Area.cpp" />
     <ClCompile Include="Source\Useful\Ballistics.cpp" />
     <ClCompile Include="CameraWorkSpace.cpp" />
+    <ClCompile Include="Source\Useful\TagUIPosition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -118,5 +119,6 @@
     <ClInclude Include="Source\Manager\Resource.h" />
     <ClInclude Include="Area.h" />
     <ClInclude Include="Source\Useful\Ballistics.h" />
+    <ClInclude Include="Source\Useful\TagUIPosition.h" />
   </ItemGroup>
 </Project>

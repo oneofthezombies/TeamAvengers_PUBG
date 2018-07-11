@@ -74,6 +74,8 @@ public:
         UIImage* m_Border;
         UIText*  m_Text;
         std::vector<UIButtonWithItem*> m_uiDroped;
+        std::vector<UIButtonWithItem*> m_uiInven;
+        UIButtonWithItem* m_pUIPicked;
 
         Item* m_pHand; //손에 든 무기
         bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
@@ -105,10 +107,14 @@ public:
 
 
         ////////////함수
+        void Init();
+        void Destroy();
+
         void Open();
         void Close();
         void Update();
         void Render();
+        bool IsOpened();
         void SetEquipUI();
 
          TotalInventory();

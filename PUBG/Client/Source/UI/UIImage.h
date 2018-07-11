@@ -14,7 +14,9 @@ public:
 
 	virtual void Render() override;
 
-	void SetTexture(const string& fullPath);
+	void               SetTexture(const string& fullPath);
+    void               SetTexture(LPDIRECT3DTEXTURE9 pTexture);
+    LPDIRECT3DTEXTURE9 GetTexture() const;
 
     void SetIsRender(const bool val);
     bool IsRender() const;

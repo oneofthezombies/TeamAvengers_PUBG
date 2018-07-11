@@ -1,5 +1,6 @@
 #pragma once
 #include "UIObject.h"
+#include "TagUIPosition.h"
 
 class IUIButtonOnMouseListener;
 class Item;

@@ -50,6 +50,10 @@ Character::Character(const int index)
 
 {
     m_totalInventory.pCharacter = this;
+    if (isMine())
+    {
+        m_totalInventory.Init();
+    }
 
     const float factor(static_cast<float>(m_index + 1) * 100.0f);
 
@@ -100,6 +104,11 @@ Character::~Character()
     for (auto p : m_characterParts)
     {
         SAFE_DELETE(p);
+    }
+
+    if (isMine())
+    {
+        m_totalInventory.Destroy();
     }
 }
 
@@ -255,7 +264,11 @@ void Character::updateMine()
     //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
-    handleMouse(dt, &m_mouseInput);
+
+    if (!m_totalInventory.IsOpened())
+    {
+        handleMouse(dt, &m_mouseInput);
+    }
 
     //m_currentState를 저장해 놓고 //dest pos 로 계 산
     State destState;
@@ -425,7 +438,12 @@ void Character::updateMine()
     setStance();
     setAttacking();
     setReload();
-    setPunch();
+
+    if (!m_totalInventory.IsOpened())
+    {
+        setPunch();
+    }
+
     setInteraction();
     setJump();
     animationControl();
@@ -489,6 +507,7 @@ void Character::updateMine()
     }
 
     tm->SetPosition(pos);
+    //if(m_totalInventory.)
     tm->SetRotation(rot);
 
     //인벤토리 UI 활성화

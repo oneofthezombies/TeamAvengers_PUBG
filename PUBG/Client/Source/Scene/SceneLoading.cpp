@@ -253,6 +253,7 @@ void SceneLoading::OnInit()
 
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot_mouseover.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_click.png");
 
     m_pBackground =
         new UIImage(
