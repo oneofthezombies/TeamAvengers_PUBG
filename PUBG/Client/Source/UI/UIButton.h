@@ -1,11 +1,14 @@
 #pragma once
 #include "UIObject.h"
+#include "TagUIPosition.h"
 
 class IUIButtonOnMouseListener;
+class Item;
+class UIImage;
 
 class UIButton : public UIObject
 {
-private:
+protected:
     enum STATE
     {
         IDLE,
@@ -25,6 +28,7 @@ private:
     bool        m_isMouseOn;
     bool        m_isClicked;
     textures_t  m_textures;
+    bool        m_isActive;
 
     void UpdateOnMouseEnterExit();
     void UpdateOnMouseDownUpDrag();
@@ -39,12 +43,15 @@ public:
 	virtual void Update(const D3DXVECTOR3& parentViewportPos, const D3DXMATRIX& transform) override;
 	virtual void Render() override;
 
-    void UpdateOnMouse();
+    virtual void UpdateOnMouse();
 
 	void SetTexture(const string& idle, const string& mouseOver, const string& select);
 	void SetText(const LPD3DXFONT font, const string& text, const D3DCOLOR textColor);
     void SetKeyToRespond(const int key);
     void SetListener(IUIButtonOnMouseListener* p);
+
+    void SetIsActive(const bool val);
+    bool IsActive() const;
 };
 
 class IUIButtonOnMouseListener
@@ -73,4 +80,59 @@ public:
     {
         return static_cast<T*>(m_pHandle);
     }
+};
+
+class UIButtonWithItem : public UIButton
+{
+public:
+    enum class Event
+    {
+        ENTER,
+        EXIT,
+        DOWN,
+        UP,
+        DRAG
+    };
+
+    enum class MouseButton
+    {
+        IDLE,
+        LEFT,
+        RIGHT
+    };
+
+private:
+    std::function<void(const Event, const MouseButton, UIButtonWithItem*)> m_onMouseCallback;
+
+public:
+    Item* pItem;
+    UIImage* pUIImage;
+    TAG_UI_POSITION m_tagUIPosition;
+
+public:
+             UIButtonWithItem(
+                 const D3DXVECTOR3& pos,
+
+                 const string& textureDir, 
+                 const string& idleTex, 
+                 const string& mouseOverTex, 
+                 const string& selectTex, 
+
+                       UIObject* pParent,
+
+                 const LPD3DXFONT font,
+                 const string& text, 
+                 const D3DCOLOR textColor,
+
+                       Item* pItem,
+                 const TAG_UI_POSITION tagUIPosition,
+                 const std::function<
+                    void(const Event, const MouseButton, UIButtonWithItem*)>& onMouseCallback);
+    virtual ~UIButtonWithItem();
+
+    virtual void Update(
+        const D3DXVECTOR3& parentViewportPos, 
+        const D3DXMATRIX& transform) override;
+    virtual void Render() override;
+    virtual void UpdateOnMouse() override;
 };

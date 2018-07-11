@@ -12,10 +12,6 @@
 void ScenePlay::setAloneMode()
 {
     Communication()()->m_myInfo.ID = 0;
-
-    // 
-    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(300.0f, 100.0f, 300.0f);
-    // ..
     const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);
@@ -102,10 +98,12 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(70, 0, 30);
+    p = D3DXVECTOR3(170, 200, 130);
     item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
     AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(80, 0, 10);
     //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);

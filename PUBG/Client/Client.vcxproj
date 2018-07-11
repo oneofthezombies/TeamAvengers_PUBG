@@ -130,7 +130,6 @@
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
-    <ClCompile Include="Source\Object\Character.cpp" />
     <ClCompile Include="Source\Object\CharacterAnimation.cpp" />
     <ClCompile Include="Source\HeightMap.cpp" />
     <ClCompile Include="Source\Object\Character_ForDebug.cpp" />
@@ -183,6 +182,7 @@
     <ClCompile Include="Source\UI\UIText.cpp" />
     <ClCompile Include="Source\UI\UITextInputField.cpp" />
     <ClCompile Include="Source\Useful\TagAnimation.cpp" />
+    <ClCompile Include="Source\Useful\TagUIPosition.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -244,6 +244,7 @@
     <ClInclude Include="Source\UI\UITextInputField.h" />
     <ClInclude Include="Source\Useful\TagResource.h" />
     <ClInclude Include="Source\Useful\TagAnimation.h" />
+    <ClInclude Include="Source\Useful\TagUIPosition.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

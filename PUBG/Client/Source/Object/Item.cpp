@@ -5,6 +5,7 @@
 #include "SkinnedMeshController.h"
 #include "DirectionalLight.h"
 #include "UIImage.h"
+#include "UIText.h"
 #include "ResourceInfo.h"
 
 using BodyPart = CharacterAnimation::BodyPart;
@@ -33,7 +34,9 @@ Item::Item(
     , pSkinnedMeshController(nullptr)
     , m_isRenderSkinnedMesh(false)
 
-    , pUIImage(nullptr)
+    , m_pUIImage(nullptr)
+    , pUIText(nullptr)
+
 
     , pGunBolt(nullptr)
 
@@ -54,6 +57,7 @@ Item::Item(
 Item::~Item()
 {
     SAFE_DELETE(m_pFramePtr);
+    SAFE_DELETE(m_pUIImage);
 }
 
 void Item::OnUpdate()
@@ -116,12 +120,14 @@ void Item::setup(const TAG_RES_STATIC tag)
     case TAG_ITEM_CATEGORY::Consumable:
         {
             const auto pathName = ResourceInfo::GetUIPathFileName(tag);
-            pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
-            pUIImage->SetIsRender(false);
-            D3DXMATRIX s;
-            //아이콘 이미지 size 조절
-            D3DXMatrixScaling(&s, 0.2f, 0.2f, 0.0f);
-            pUIImage->SetTransform(s);
+            m_pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
+            m_pUIImage->SetIsRender(false);
+            pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+                D3DXVECTOR2(100.0f, 20.0f),
+                string("null"),
+                D3DCOLOR_XRGB(255, 255, 255),
+                m_pUIImage);
+            pUIText->SetPosition(D3DXVECTOR3(50.0f, 10.0f, 0.0f));
         }
         break;
 
@@ -137,7 +143,7 @@ void Item::setup(const TAG_RES_STATIC tag)
             Set(BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
             //const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
-            //pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
+            //m_pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
         }
         break;
     case TAG_ITEM_CATEGORY::Back:
@@ -152,7 +158,7 @@ void Item::setup(const TAG_RES_STATIC tag)
             Set(BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
             //const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
-            //pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
+            //m_pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
         }
         break;
 
@@ -168,7 +174,7 @@ void Item::setup(const TAG_RES_STATIC tag)
             Set(BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
             //const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
-            //pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
+            //m_pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
         }
         break;
     
@@ -306,18 +312,19 @@ bool Item::IsRenderSkinnedMesh() const
     return m_isRenderSkinnedMesh;
 }
 
-void Item::SetInRenderUIImage(const bool isRenderUIImage)
+void Item::SetIsRenderUIImage(const bool isRenderUIImage)
 {
-    assert(pUIImage && "Item::SetInRenderUIImage(), ui image is null.");
+    assert(m_pUIImage && "Item::SetInRenderUIImage(), ui image is null.");
 
-    pUIImage->SetIsRender(isRenderUIImage);
+    m_pUIImage->SetIsRender(isRenderUIImage);
+    //pUIText->Render
 }
 
 bool Item::IsRenderUIImage() const
 {
-    assert(pUIImage && "Item::IsRenderUIImage(), ui image is null.");
+    assert(m_pUIImage && "Item::IsRenderUIImage(), ui image is null.");
 
-    return pUIImage->IsRender();
+    return m_pUIImage->IsRender();
 }
 
 void Item::SetPosition(const D3DXVECTOR3& position)
@@ -327,9 +334,19 @@ void Item::SetPosition(const D3DXVECTOR3& position)
 
 void Item::SetUIPosition(const D3DXVECTOR2& position)
 {
-    assert(pUIImage && "Item::SetUIPosition(), ui image is null.");
+    assert(m_pUIImage && "Item::SetUIPosition(), ui image is null.");
 
-    pUIImage->SetPosition(D3DXVECTOR3(position.x, position.y, 0.0f));
+    m_pUIImage->SetPosition(D3DXVECTOR3(position.x, position.y, 0.0f));
+}
+
+UIText* Item::GetUIText()
+{
+    return pUIText;
+}
+
+UIImage* Item::GetUIImage()
+{
+    return m_pUIImage;
 }
 
 void Item::SetNumBullet(const int numBullet)

@@ -660,51 +660,51 @@ pair<string, string> ResourceInfo::GetUIPathFileName(const TAG_RES_STATIC tag)
         //탄약, 소모품, 무기부착물
     case TAG_RES_STATIC::Ammo_5_56mm:
         filePath = "Inventory/Item/Ammunition/";
-        fileName = "icon_ammo_556mm.tga";
+        fileName = "icon_ammo_556mm.png";
         break;
     case TAG_RES_STATIC::Ammo_7_62mm:
         filePath = "Inventory/Item/Ammunition/";
-        fileName = "icon_ammo_762mm.tga";
+        fileName = "icon_ammo_762mm.png";
         break;
 
     case TAG_RES_STATIC::Bandage:
         filePath = "Inventory/Item/Consumable/";
-        fileName = "icon_Heal_Bandage.tga";
+        fileName = "icon_Heal_Bandage.png";
         break;
     case TAG_RES_STATIC::FirstAidKit:
         filePath = "Inventory/Item/Consumable/";
-        fileName = "icon_Heal_FirstAid.tga";
+        fileName = "icon_Heal_FirstAid.png";
         break;
     case TAG_RES_STATIC::MedKit:
         filePath = "Inventory/Item/Consumable/";
-        fileName = "icon_Heal_MedKit.tga";
+        fileName = "icon_Heal_MedKit.png";
         break;
 
     case TAG_RES_STATIC::ACOG:
         filePath = "Inventory/Item/Attachment/";
-        fileName = "icon_attach_Upper_ACOG.tga";
+        fileName = "icon_attach_Upper_ACOG.png";
         break;
     case TAG_RES_STATIC::Aimpoint2X:
         filePath = "Inventory/Item/Attachment/";
-        fileName = "icon_attach_Upper_Aimpoint2X.tga";
+        fileName = "icon_attach_Upper_Aimpoint2X.png";
         break;
     case TAG_RES_STATIC::RedDot:
         filePath = "Inventory/Item/Attachment/";
-        fileName = "icon_attach_Upper_DotSight.tga";
+        fileName = "icon_attach_Upper_DotSight.png";
         break;
     
     //장비
     case TAG_RES_STATIC::Armor_Lv1:
         filePath = "Inventory/Item/Equipment/";
-        fileName = "icon_equipment_Armor_Lv1.tga";
+        fileName = "icon_equipment_Armor_Lv1.png";
         break;
     case TAG_RES_STATIC::Back_Lv1:
         filePath = "Inventory/Item/Equipment/";
-        fileName = "icon_equipment_Back_Lv1.tga";
+        fileName = "icon_equipment_Back_Lv1.png";
         break;
     case TAG_RES_STATIC::Head_Lv1:
         filePath = "Inventory/Item/Equipment/";
-        fileName = "icon_equipment_Head_Lv1.tga";
+        fileName = "icon_equipment_Head_Lv1.png";
         break;
 
     default:

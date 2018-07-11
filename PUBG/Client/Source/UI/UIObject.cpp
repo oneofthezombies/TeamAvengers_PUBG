@@ -18,10 +18,6 @@ UIObject::UIObject(UIObject* pParent)
     {
         pParent->AddChild(this);
     }
-    else
-    {
-        UI()()->RegisterUIObject(this);
-    }
 }
 
 UIObject::~UIObject()
