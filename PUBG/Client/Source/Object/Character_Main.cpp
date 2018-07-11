@@ -556,12 +556,12 @@ void Character::updateOther()
 
     GameInfo::PlayerInfo& pi = pCom->m_roomInfo.playerInfos[m_index];
 
-    pi.dt += pTime->GetDeltaTime();
+    //pi.dt += pTime->GetDeltaTime();
 
-    D3DXVECTOR3 pos;
-    D3DXVec3Lerp(&pos, &pi.prevPosition, &pi.position, pi.dt / pi.delay);
-    pTr->SetPosition(pos);
-
+    //D3DXVECTOR3 pos;
+    //D3DXVec3Lerp(&pos, &pi.prevPosition, &pi.position, pi.dt / pi.delay);
+    pTr->SetPosition(pi.position);
+    Debug << "others position : " << pTr->GetPosition();
     D3DXQUATERNION rot;
     D3DXQuaternionSlerp(&rot, &pTr->GetRotation(), &pi.rotation, 1.0f);
     pTr->SetRotation(rot);
