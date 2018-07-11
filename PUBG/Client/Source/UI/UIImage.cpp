@@ -49,6 +49,16 @@ void UIImage::SetTexture(const string& fullPath)
 	m_size.y = static_cast<float>(info.Height);
 }
 
+void UIImage::SetTexture(LPDIRECT3DTEXTURE9 pTexture)
+{
+    m_pTex = pTexture;
+}
+
+LPDIRECT3DTEXTURE9 UIImage::GetTexture() const
+{
+    return m_pTex;
+}
+
 void UIImage::SetIsRender(const bool val)
 {
     m_isRender = val;

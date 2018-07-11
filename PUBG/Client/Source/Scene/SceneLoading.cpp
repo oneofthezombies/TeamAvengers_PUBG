@@ -46,8 +46,8 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined);
 
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
     //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
@@ -242,11 +242,18 @@ void SceneLoading::OnInit()
     Resource()()->AddTexture("./Resource/", "LoadingScreen.tga");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
     Resource()()->AddTexture("./Resource/", "dedenne.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "female.tga", D3DCOLOR_XRGB(188, 188, 188));
+    Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "line.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.tga");
-    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_5_56mm);
+    Resource()()->AddTexture("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png");
+    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_5_56mm, D3DCOLOR_XRGB(0, 0, 0));
     Resource()()->AddTexture(TAG_RES_STATIC::Ammo_7_62mm);
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_no.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_mouseover.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_yes.png");
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot_mouseover.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_click.png");
 
     m_pBackground =
         new UIImage(
@@ -255,6 +262,7 @@ void SceneLoading::OnInit()
             Vector3::ZERO,
             nullptr,
             nullptr);
+    UI()()->RegisterUIObject(m_pBackground);
 
     m_pPercentageImage = 
         new UIText(

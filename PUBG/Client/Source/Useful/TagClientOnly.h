@@ -171,3 +171,4 @@ enum class TAG_CHARACTER_PART
     UpperBody,
     LowerBody
 };
+

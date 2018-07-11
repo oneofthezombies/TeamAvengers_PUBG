@@ -230,8 +230,6 @@ void Character::handleMouse(const float dt, MouseInput* mouseInput)
     mouseInput->yaw = diff.x * 0.2f * dt;
     mouseInput->pitch = diff.y * 0.2f * dt;
 
-
-    
     static bool test_sound = true;
 
     if (Input()()->IsOnceKeyDown(VK_LEFT))

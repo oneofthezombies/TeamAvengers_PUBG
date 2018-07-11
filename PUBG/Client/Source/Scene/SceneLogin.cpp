@@ -22,6 +22,7 @@ void SceneLogin::OnInit()
 {
     UIObject* root = new UIObject(nullptr);
     m_buttonListener.SetHandle(root);
+    UI()()->RegisterUIObject(root);
 
     UITextInputField* inputField = new UITextInputField(
         D3DXVECTOR3(100.0f, 100.0f, 0.0f), 

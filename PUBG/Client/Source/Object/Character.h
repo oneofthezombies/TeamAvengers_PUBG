@@ -9,6 +9,7 @@ class CharacterAnimation;
 class CharacterPart;
 class Item;
 class Area;
+class UiButtonListener;
 
 struct FramePtr
 {
@@ -76,13 +77,21 @@ public:
 
     struct TotalInventory
     {
+        static const float DEFAULT_CAPACITY;
+        static const int NUM_UI_DROPPED = 12;
+
+        Character* pCharacter;
+
         UIImage* m_Border;
         UIText*  m_Text;
+        std::vector<UIButtonWithItem*> m_uiDroped;
+        std::vector<UIButtonWithItem*> m_uiInven;
+        UIButtonWithItem* m_pUIPicked;
 
         Item* m_pHand; //손에 든 무기
         bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
 
-        static const float DEFAULT_CAPACITY;
+
 
         map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
 
@@ -107,11 +116,17 @@ public:
         bool isOpened;
         std::deque<Item*> droppedItems;
 
+
         ////////////함수
+        void Init();
+        void Destroy();
+
         void Open();
         void Close();
         void Update();
         void Render();
+        bool IsOpened();
+        void SetEquipUI();
 
          TotalInventory();
         ~TotalInventory();
@@ -215,6 +230,8 @@ public:
         bool            Ing = false;
         bool            Up = true;
     };
+
+
 /**************************** end nested structure ***************************/
  
 
@@ -412,6 +429,10 @@ private:
         const float finishEventAgoTime,
         const std::function<void()>& finishEvent);
 
+    void onMouse(
+        const UIButtonWithItem::Event event, 
+        const UIButtonWithItem::MouseButton button, 
+        UIButtonWithItem* pUIButtonWithItem);
 
 
 /**************************** end member method ******************************/
