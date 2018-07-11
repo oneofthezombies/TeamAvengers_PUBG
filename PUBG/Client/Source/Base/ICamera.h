@@ -9,6 +9,9 @@
 
 class ICamera : public MemoryAllocator
 {
+public:
+    static const float VISUAL_RANGE;
+
 private:
     const TAG_CAMERA    m_tagCamera;
           D3DXMATRIX    m_viewMatrix;
@@ -47,7 +50,7 @@ public:
 
     virtual void Reset() = 0;
     virtual void Update() = 0;
-    virtual void Render() {}
+    virtual void Render() {}    //for debug
     void CameraRender();
     void draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color);
     void drawIndices(const vector<WORD>& indices, const D3DXCOLOR& color);
@@ -64,7 +67,7 @@ public:
 
     D3DXVECTOR4 GetFrustumArea();
     bool CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY);
-
+    Ray PickedRayDistancePosition(OUT D3DXVECTOR3* vOut, OUT float* distance, WORD screenX, WORD screenY);
 };
  
 

@@ -60,7 +60,7 @@ Character::Character(const int index)
     IScene* CS = CurrentScene()();
     m_cellIndex = CS->GetCellIndex(pTransform->GetPosition());                   //캐릭터의 pos에 따라 알맞은 area에 넣어주기
     CS->InsertObjIntoTotalCellSpace(TAG_OBJECT::Character, m_cellIndex, this);   //Object 를 TotalCellSpace(Area)에 넣기
-    CS->m_NearArea.Create(m_cellIndex);                                          //Near Area 계산
+    CS->m_NearArea.CreateNearArea(m_cellIndex);                                          //Near Area 계산
 
     pAnimation = new CharacterAnimation;
     AddChild(pAnimation);
@@ -132,7 +132,10 @@ void Character::OnUpdate()
         pPart->Update();
 
     if (IsFire())
+    {
         RifleShooting();
+    }
+        
 
     // render
     pAnimation->Render(
@@ -371,7 +374,7 @@ void Character::updateMine()
         std::size_t destCellIndex = pCurrentScene->GetCellIndex(destState.position);
         if (destCellIndex != m_cellIndex)
         {
-            pCurrentScene->m_NearArea.Create(destCellIndex);
+            pCurrentScene->m_NearArea.CreateNearArea(destCellIndex);
             pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
         }
     }
@@ -438,6 +441,8 @@ void Character::updateMine()
         }
     }
 
+
+
     // 카메라 프러스텀 업데이트 (왜냐하면 캐릭터0 업데이트, 렌더, 캐릭터1 업데이트, 렌더, ... 순서대로 실행되기 떄문에)
     CurrentCamera()()->UpdateFrustumCulling();
     
@@ -460,8 +465,7 @@ void Character::updateMine()
         {
             if(m_hasChangingState == false) //장전 중일 때는 쏘지못하게
                 m_isFire = true;
-            //rifleShooting();
-            //pistolShooting();?? 이란것도 나중에는 만들겠지요?
+            
         }
     }
     if (m_backAction.Ing)
@@ -512,12 +516,12 @@ void Character::updateMine()
     //    backActionFrame();
     //}
 
+    //이 아래 sound는 어디에 쓰이는 것인가요?? 찬응에게 답해 주세요
     Sound()()->Listen(pos, getForward());
 
     if (Input()()->IsOnceKeyDown(VK_UP))
     {
-        BulletPool()()->Fire(pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_COLLISION::Player_1_Damage);
-
+        BulletPool()()->Fire(Communication()()->m_myInfo,pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_RES_STATIC::QBZ);
     }
 
     ForDebug();

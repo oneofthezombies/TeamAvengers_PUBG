@@ -35,7 +35,7 @@ struct CellSpace
 {
     size_t                    pIndex;
     std::set<TerrainFeature*> pTerrainFeatures;
-    std::set<Bullet*>         pBullets;
+    //std::set<Bullet*>         pBullets;
     std::set<Character*>      pCharacters;
     std::set<IObject*>        pDoors;
     std::set<IObject*>        pWindows;
@@ -57,7 +57,8 @@ protected:
     std::vector<CellSpace>  m_TotalCellSpaces;
 public:
     Area                    m_NearArea;
-
+    Area                    m_RayArea;
+    Area                    m_BulletArea;
 
     IScene();
 
@@ -92,12 +93,11 @@ public:
 
     //Cell - Space  Partitioning function
 
-    std::vector<CellSpace>* GetTotalCellSpace()
-    {
-        return &m_TotalCellSpaces;
-    }
+    std::vector<CellSpace>* GetTotalCellSpace();
     void InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObject* obj);
     std::size_t GetCellIndex(const D3DXVECTOR3& position);
+    CellSpace* GetCellSpaceByPosition(const D3DXVECTOR3& position);
+    const float GetCellSpaceLength();
     void MoveCell(OUT std::size_t* currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject* obj);
     void ItemIntoInventory(size_t index, Item* obj);
     //bool IsMovable(const D3DXVECTOR3* targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject* obj);

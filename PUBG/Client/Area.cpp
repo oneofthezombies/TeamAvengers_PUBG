@@ -9,8 +9,10 @@ Area::~Area()
 {
 }
 
-void Area::Create(const std::size_t index)
+void Area::CreateNearArea(const std::size_t index)
 {
+    m_cellspaces.clear();
+
     vector<CellSpace>* CS = CurrentScene()()->GetTotalCellSpace();
 
     vector<D3DXVECTOR2> p;
@@ -28,7 +30,7 @@ void Area::Create(const std::size_t index)
     int col = index / CellSpace::DIMENSION;
     int row = index % CellSpace::DIMENSION;
 
-    m_cellspaces.clear();
+
     int nRow = 0;
     int nCol = 0;
     for (auto& n : p)
@@ -44,21 +46,48 @@ void Area::Create(const std::size_t index)
     m_cellspaces.emplace_back(&CS->at(row + col * CellSpace::DIMENSION));
 }
 
+Ray Area::CreateRayArea(Ray* ray, const float rayLength)
+{
+    m_cellspaces.clear();
+    vector<CellSpace>* CS = CurrentScene()()->GetTotalCellSpace();
+
+    //Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
+
+    const float cellLength = CurrentScene()()->GetCellSpaceLength();
+    BoundingRect rect;
+    rect.center.x = rect.center.y = cellLength / 2;
+    rect.extent = rect.center;
+    for (int i = 0; i <CellSpace::DIMENSION; i++)
+    {
+        for (int j = 0; j < CellSpace::DIMENSION; j++)
+        {
+            rect.position = D3DXVECTOR2(j*cellLength, i*cellLength);
+            if (Collision::HasCollision(*ray, rect, rayLength))
+            {
+                m_cellspaces.emplace_back(&CS->at(j + i * CellSpace::DIMENSION));
+
+            }
+        }
+    }
+
+    return *ray;
+}
+
 bool Area::checkValid(int v)
 {
     return-1 < v&&v < CellSpace::DIMENSION;
 }
 
-std::vector<Bullet*> Area::GetBullets()
-{
-    std::vector<Bullet*> vBullets;
-    for (std::size_t i = 0; i < m_cellspaces.size(); i++)
-    {
-        auto& set = m_cellspaces[i]->pBullets;
-        vBullets.insert(vBullets.end(), set.begin(), set.end());
-    }
-    return vBullets;
-}
+//std::vector<Bullet*> Area::GetBullets()
+//{
+//    std::vector<Bullet*> vBullets;
+//    for (std::size_t i = 0; i < m_cellspaces.size(); i++)
+//    {
+//        auto& set = m_cellspaces[i]->pBullets;
+//        vBullets.insert(vBullets.end(), set.begin(), set.end());
+//    }
+//    return vBullets;
+//}
 
 std::vector<TerrainFeature*> Area::GetTerrainFeatures()
 {

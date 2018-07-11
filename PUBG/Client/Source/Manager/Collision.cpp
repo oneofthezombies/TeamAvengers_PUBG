@@ -692,8 +692,8 @@ bool Collision::HasCollision(
     const BoundingBox& box, 
     float* OutDistance)
 {
-    float tMin = std::numeric_limits<float>::lowest();
-    float tMax = std::numeric_limits<float>::max();
+    float tMin = 0.0f;
+    float tMax = ICamera::VISUAL_RANGE;
 
     const D3DXVECTOR3 diff = (box.center + box.position) - ray.m_pos;
 
@@ -799,8 +799,8 @@ bool Collision::HasCollision(
 
 bool Collision::HasCollision(const Ray& ray, const BoundingRect& rect)
 {
-    float tMin = std::numeric_limits<float>::lowest();
-    float tMax = std::numeric_limits<float>::max();
+    float tMin = 0.0f;
+    float tMax = ICamera::VISUAL_RANGE;
 
     const D3DXVECTOR2 rayPos(ray.m_pos.x, ray.m_pos.z);
     D3DXVECTOR2 rayDir(ray.m_dir.x, ray.m_dir.z);
@@ -874,6 +874,87 @@ bool Collision::HasCollision(const Ray& ray, const BoundingRect& rect)
 
     return true;
 }
+
+bool Collision::HasCollision(const Ray & ray, const BoundingRect & rect, const float end)
+{
+    float tMin = 0.0f;
+    float tMax = end;
+    //D3DXVECTOR3 endlength = end - ray.m_pos;
+    //float tMax = D3DXVec3Length(&endlength);
+    
+    const D3DXVECTOR2 rayPos(ray.m_pos.x, ray.m_pos.z);
+    D3DXVECTOR2 rayDir(ray.m_dir.x, ray.m_dir.z);
+    D3DXVec2Normalize(&rayDir, &rayDir);
+
+    const D3DXVECTOR2 diff
+        = (rect.center + rect.position)
+        - rayPos;
+
+    const D3DXVECTOR2 xAxis(1.0f, 0.0f);
+    float e = D3DXVec2Dot(&xAxis, &diff);
+    float f = D3DXVec2Dot(&rayDir, &xAxis);
+
+    if (std::abs(f) > D3DX_16F_EPSILON)
+    {
+        float t1 = (e - rect.extent.x) / f;
+        float t2 = (e + rect.extent.x) / f;
+
+        if (t1 > t2)
+        {
+            float temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+
+        if (t2 < tMax)
+            tMax = t2;
+
+        if (t1 > tMin)
+            tMin = t1;
+
+        if (tMax < tMin)
+            return false;
+    }
+    else
+    {
+        if (-e - rect.extent.x > 0.0f || -e + rect.extent.x < 0.0f)
+            return false;
+    }
+
+    const D3DXVECTOR2 zAxis(0.0f, 1.0f);
+    e = D3DXVec2Dot(&zAxis, &diff);
+    f = D3DXVec2Dot(&rayDir, &zAxis);
+
+    if (std::abs(f) > D3DX_16F_EPSILON)
+    {
+        float t1 = (e - rect.extent.y) / f;
+        float t2 = (e + rect.extent.y) / f;
+
+        if (t1 > t2)
+        {
+            float temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+
+        if (t2 < tMax)
+            tMax = t2;
+
+        if (t1 > tMin)
+            tMin = t1;
+
+        if (tMax < tMin)
+            return false;
+    }
+    else
+    {
+        if (-e - rect.extent.y > 0.0f || -e + rect.extent.y < 0.0f)
+            return false;
+    }
+
+    return true;
+}
+
 
 BoundingRect::BoundingRect()
     : center(0.0f, 0.0f)

@@ -14,39 +14,41 @@ void ScenePlay::setAloneMode()
     Communication()()->m_myInfo.ID = 0;
 
     // 
-    Communication()()->m_roomInfo.playerInfos[1].position       = D3DXVECTOR3(300.0f, 150.0f, 300.0f);
-    Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[2].position       = D3DXVECTOR3(500.0f, 150.0f, 300.0f);
-    Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[3].position       = D3DXVECTOR3(700.0f, 150.0f, 300.0f);
-    Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(300.0f, 100.0f, 300.0f);
     // ..
-
     const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
-    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
-    {
-        if (i == myID) continue;
 
-        Character* pOther = new Character(i);
-        others.emplace_back(pOther);
-        characters.emplace_back(pOther);
-        AddObject(pOther);
-    }
-    //Character* pOther = new Character(1);
-    //m_others.emplace_back(pOther);
-    //AddObject(pOther);
+    //for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    //{
+    //    if (i == myID) continue;
 
-    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(2000.0f, 100.0f, 2000.0f), Vector3::UP, Vector3::ONE * 0.7f);
+    //    Character* pOther = new Character(i);
+    //    others.emplace_back(pOther);
+    //    characters.emplace_back(pOther);
+    //    AddObject(pOther);
+    //}
+    Character* pOther = new Character(1);
+    others.emplace_back(pOther);
+    characters.emplace_back(pOther);
+    AddObject(pOther);
+    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(600.0f, 100.0f, 600.0f);
+    Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 2000.0f), Vector3::UP, Vector3::ONE * 0.7f);
     D3DXMATRIX m;
     D3DXQUATERNION qR;
     D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
-    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(2000.0f, 100.0f, 2000.0f));
+    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 2000.0f));
+    tf->AddBoundingBox(m);
+    AddObject(tf);
+
+    tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 1000.0f), Vector3::UP, Vector3::ONE * 0.7f);
+    D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
+    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 1000.0f));
     tf->AddBoundingBox(m);
     AddObject(tf);
 
@@ -56,19 +58,19 @@ void ScenePlay::setAloneMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    item = new Item(TAG_RES_STATIC::Head_Lv1, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
-    
-    p = D3DXVECTOR3(20, 0, 10);
-    item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //item = new Item(TAG_RES_STATIC::Head_Lv1, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
+    //
+    //p = D3DXVECTOR3(20, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(30, 0, 10);
-    item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(30, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(40, 0, 10);
     //item = new Item(TAG_RES_STATIC::Bandage, p, r, s);
@@ -100,10 +102,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(70, 0, 30);
-    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(70, 0, 30);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(80, 0, 10);
     //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
@@ -115,10 +117,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(90, 0, 10);
-    //item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(90, 0, 10);
+    item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(100, 0, 10);
     //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
@@ -233,7 +235,7 @@ void ScenePlay::OnInit()
     //cell space partitioning
     m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
 
-    LoadObjectsFromFile("./Resource/save.txt");
+    //LoadObjectsFromFile("./Resource/save.txt");
 
     // No id received
     if (Communication()()->m_myInfo.ID == -1)

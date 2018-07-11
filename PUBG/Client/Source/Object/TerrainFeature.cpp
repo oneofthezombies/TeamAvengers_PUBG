@@ -25,6 +25,7 @@ TerrainFeature::TerrainFeature(
     m_boundingSphere = pEffectMeshRenderer->GetBoundingSphere();
     m_boundingSphere.position = position;
 
+    //Total Cell Space에 넣는것
     CurrentScene()()->InsertObjIntoTotalCellSpace(TAG_OBJECT::TerrainFeature, CurrentScene()()->GetCellIndex(position), this);
 }
 

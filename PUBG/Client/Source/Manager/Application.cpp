@@ -55,6 +55,7 @@ void Application::Update()
     UI           ()()->Update();
 
     Scene        ()()->Render();
+    BulletPool   ()()->Render();
 
     UI           ()()->Render();
     DebugMgr     ()()->Render();

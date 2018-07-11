@@ -338,7 +338,7 @@ private:
     bool isMine() const;
 
     void setInfo();
-    void minusDamage(const float damage);
+
 
     D3DXVECTOR3 getUp();
     //D3DXVECTOR3 getDown();
@@ -459,6 +459,8 @@ public:
     D3DXVECTOR3 GetWaistPosition();
     bool IsFire() const;
     void RifleShooting();
+    D3DXVECTOR3 FindShootingTargetPos();
+    void minusDamage(const float damage);
 
             const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;

@@ -5,6 +5,8 @@
 #include "Ray.h"
 #include "HeightMap.h"
 
+const float ICamera::VISUAL_RANGE = 100000.0f;
+
 Character::Info* ICamera::GetTargetInfo()//(전)TargetTransform* GetTarget()
 {
     return Camera()()->GetTargetInfo();
@@ -182,7 +184,7 @@ bool ICamera::CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD scre
     float intersectionDist;
     bool bIntersect = false;
 
-    vector<D3DXVECTOR3>& rayBox = CurrentScene()()->GetHeightMap()->GetBoundaryBox(); //이건 data가 copy 되나요? referance 되나요?
+    vector<D3DXVECTOR3>& rayBox = CurrentScene()()->GetHeightMap()->GetBoundaryBox(); 
     
     
     for (size_t i = 0u; i < rayBox.size(); i += 3)
@@ -204,6 +206,22 @@ bool ICamera::CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD scre
     }
 
     return bIntersect;
+}
+
+Ray ICamera::PickedRayDistancePosition(OUT D3DXVECTOR3 * vOut, OUT float* distance, WORD screenX, WORD screenY)
+{
+    Ray ray = Ray::RayAtWorldSpace(screenX, screenY);
+
+    vector<D3DXVECTOR3>& rayBox = CurrentScene()()->GetHeightMap()->GetBoundaryBox(); 
+
+    for (size_t i = 0u; i < rayBox.size(); i += 3)
+    {
+        if (ray.CalcIntersectTri(&rayBox[i], distance))
+        {
+            *vOut = ray.m_pos + ray.m_dir * (*distance);
+        }
+    }
+    return ray;
 }
 
 
@@ -267,7 +285,7 @@ void CameraFree::Update()
     GetClientRect(g_hWnd, &rc);
     D3DXMatrixPerspectiveFovLH(&proj,
         m_fovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom),
-        1.0f, 5000.0f);
+        1.0f, ICamera::VISUAL_RANGE);
     SetProjectionMatrix(&proj);
     pD->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
 }
@@ -394,7 +412,7 @@ void Camera2xScope::Update()
 
         RECT rc;
         GetClientRect(g_hWnd, &rc);
-        D3DXMatrixPerspectiveFovLH(&proj, m_deltaFovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom), 1, 10000);
+        D3DXMatrixPerspectiveFovLH(&proj, m_deltaFovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom), 1, ICamera::VISUAL_RANGE);
         SetProjectionMatrix(&proj);
         g_pDevice->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
     }
