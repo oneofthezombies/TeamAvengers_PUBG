@@ -46,8 +46,8 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined);
 
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
     //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
