@@ -52,9 +52,9 @@ void Bullet::OnUpdate()
     
      m_nextPos = m_curPos = pTr->GetPosition();
      //JHTODO
-     m_nextPos += m_dir /** m_Speed*/*87.0f
+     m_nextPos += m_dir * m_Speed
          /**ItemInfo::GetDropOffByDistance(1.0f,GetTagObject())*/ 
-         /** Time()()->GetDeltaTime()*/;
+         * Time()()->GetDeltaTime();
      
      Ray ray;
      ray.m_pos = m_curPos;
