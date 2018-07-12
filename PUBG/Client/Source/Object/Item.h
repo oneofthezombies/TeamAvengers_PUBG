@@ -123,6 +123,9 @@ public:
         const float finishEventAgoTime,
         const std::function<void()>& finishEvent);
 
+    void OnKar98kReload(const int numReload);
+    void OnKar98kReloadEnd();
+
     bool HasFinishEvent() const;
 
     //for 장비 애니메이션

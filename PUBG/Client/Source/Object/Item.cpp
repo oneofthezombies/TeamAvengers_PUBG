@@ -478,6 +478,44 @@ void Item::Set(
         finishEvent);
 }
 
+void Item::OnKar98kReload(const int numReload)
+{
+    if (numReload == 1)
+    {
+        OnKar98kReloadEnd();
+    }
+    else
+    {
+        Set(
+            TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Loop,
+            false,
+            Item::DEFAULT_BLENDING_TIME,
+            Item::DEFAULT_NEXT_WEIGHT,
+            Item::DEFAULT_POSITION,
+            Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+            std::bind(&Item::OnKar98kReload, this, numReload - 1)
+        );
+    }
+}
+
+void Item::OnKar98kReloadEnd()
+{
+    Set(
+        TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_End,
+        false,
+        Item::DEFAULT_BLENDING_TIME,
+        Item::DEFAULT_NEXT_WEIGHT,
+        Item::DEFAULT_POSITION,
+        Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+        [this]()
+    {
+        Set(
+            TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
+            false
+        );
+    });
+}
+
 bool Item::HasFinishEvent() const
 {
     return pSkinnedMeshController->HasFinishEvent();

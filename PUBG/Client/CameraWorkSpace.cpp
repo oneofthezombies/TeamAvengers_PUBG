@@ -93,7 +93,7 @@ void CameraOnGun::Render()
         [this](LPD3DXEFFECT pEffect)
     {
         D3DXMATRIX s, m;
-        D3DXMatrixScaling(&s, 3.0f, 3.0f, 3.0f);
+        D3DXMatrixScaling(&s, 1.0f, 1.0f, 1.0f);
         m = s * m_worldMatrix;
         pEffect->SetMatrix(Shader::World, &m);
 

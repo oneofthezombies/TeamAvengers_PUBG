@@ -420,6 +420,21 @@ void Character::setReload()
                     }
                     else
                     {
+                        //여기
+                        //총 자체 애니메이션
+                        m_isNeedRifleAnim = true;
+                        inven.m_pHand->Set
+                        (
+                            TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Start,
+                            false,
+                            Item::DEFAULT_BLENDING_TIME,
+                            Item::DEFAULT_NEXT_WEIGHT,
+                            Item::DEFAULT_POSITION,
+                            Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+                                   //Member Function Pointer, 객체의 포인터, 인자나열
+                            std::bind(&Item::OnKar98kReload, inven.m_pHand, m_totalInventory.m_numReload)
+                        );
+                         
                         if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                         {
                             m_hasChangingState = true;                   
