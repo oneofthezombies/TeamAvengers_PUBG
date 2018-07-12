@@ -270,8 +270,8 @@ private:
 
     CharacterAnimation*    pAnimation;
     vector<CharacterPart*> m_characterParts;
-
-    //
+    
+    
     FramePtr      m_framePtr;
     RootTransform m_rootTransform;
     WaistRotation m_waistRotation;
@@ -313,7 +313,7 @@ private:
     WaitBackAction m_backAction;
 
     // for character x character collision
-    BoundingBox m_boundingBox;
+    BoundingBox m_bBox;
 
 
 /**************************** end member variable ****************************/

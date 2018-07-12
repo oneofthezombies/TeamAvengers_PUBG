@@ -101,6 +101,43 @@ void BoundingBox::Render()
     });
 }
 
+void BoundingBox::RenderRed()
+{
+    if (!Collision()()->IsRender()) return;
+
+    auto& vertices = Resource()()->GetBoundingBoxVertices();
+    auto& indices = Resource()()->GetBoundingBoxIndices();
+
+    D3DXMATRIX e, c, r, p, m;
+    D3DXMatrixScaling(&e, extent.x, extent.y, extent.z);
+    D3DXMatrixTranslation(&c, center.x, center.y, center.z);
+    D3DXMatrixRotationQuaternion(&r, &rotation);
+    D3DXMatrixTranslation(&p, position.x, position.y, position.z);
+    m = e * c * r * p;
+
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        [&m](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &m);
+        D3DXCOLOR red(1.0f, 0.0f, 0.0f, 1.0f);
+        pEffect->SetValue("Color", &red, sizeof red);
+    },
+        [&vertices, &indices]()
+    {
+        Device()()->DrawIndexedPrimitiveUP(
+            D3DPT_LINELIST,
+            0,
+            vertices.size(),
+            indices.size() / 2,
+            indices.data(),
+            D3DFMT_INDEX16,
+            vertices.data(),
+            sizeof vertices.front());
+    });
+}
+
 BoundingBox BoundingBox::Create(const D3DXVECTOR3& min, const D3DXVECTOR3& max)
 {
     BoundingBox bb;

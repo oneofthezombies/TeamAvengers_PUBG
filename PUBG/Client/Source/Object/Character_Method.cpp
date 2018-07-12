@@ -332,6 +332,14 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
         // 바운딩스피어가 충돌되지 않으면 다음 터레인피처와 충돌을 검사한다.
         if (!Collision::HasCollision(m_boundingSphere, tf->GetBoundingSphere())) continue;
 
+
+
+
+
+
+
+
+
         if (destState->boundingBoxes.empty())
         {
             for (auto& bb : GetBoundingBoxes())
@@ -954,7 +962,7 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
 
 const BoundingBox& Character::GetBoundingBox()
 {
-    return m_boundingBox;
+    return m_bBox;
 }
 
 const std::vector<BoundingBox>& Character::GetBoundingBoxes()

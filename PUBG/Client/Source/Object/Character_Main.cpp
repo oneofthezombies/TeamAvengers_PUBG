@@ -48,7 +48,6 @@ Character::Character(const int index)
     , pAnimation(nullptr)
 
     , m_otherHitPart(0)
-
 {
     m_totalInventory.pCharacter = this;
     if (isMine())
@@ -56,7 +55,7 @@ Character::Character(const int index)
         m_totalInventory.Init();
     }
 
-    const float factor(static_cast<float>(m_index + 1) * 100.0f);
+    const float factor(static_cast<float>(m_index + 1) * 200.0f);
 
     Transform* pTransform = GetTransform();
     pTransform->SetPosition(D3DXVECTOR3(factor, 200.0f, factor));
@@ -73,7 +72,7 @@ Character::Character(const int index)
     setAnimation(
         CharacterAnimation::BodyPart::BOTH, 
         TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
+    
     setFramePtr();
 
     // set boundingShapes
@@ -99,7 +98,7 @@ Character::Character(const int index)
 
     pOtherHitPositionMesh = Resource()()->GetBoundingSphereMesh();
 
-    m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-100.0f, 50.0f, -50.0f), D3DXVECTOR3(100.0f, 150.0f, 50.0f));
+    m_bBox = BoundingBox::Create(D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 170.0f, 50.0f));
 }
 
 Character::~Character()
@@ -139,6 +138,9 @@ void Character::OnUpdate()
     // bounding sphere move to character position
     m_boundingSphere.position = GetTransform()->GetPosition();
 
+    m_bBox.position = GetTransform()->GetPosition();
+    m_bBox.rotation = GetTransform()->GetRotation();
+
     for (auto pPart : m_characterParts)
         pPart->Update();
 
@@ -169,7 +171,7 @@ void Character::OnUpdate()
     // render collision shapes
     for (auto pPart : m_characterParts)
         pPart->Render();
-    m_boundingBox.Render();
+    m_bBox.RenderRed();
     m_boundingSphere.Render();
     // end render collision shapes
 
@@ -249,6 +251,10 @@ void Character::updateMine()
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////
 
+
+
+
+    getRight();
 
 
     setStance();

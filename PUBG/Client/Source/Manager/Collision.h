@@ -32,6 +32,7 @@ struct BoundingBox : public BoundingShape
     virtual ~BoundingBox();
 
     void Render();
+    void RenderRed();
 
     static BoundingBox Create(const D3DXVECTOR3& min, const D3DXVECTOR3& max);
     static BoundingBox Create(const D3DXMATRIX& transformationMatrix);

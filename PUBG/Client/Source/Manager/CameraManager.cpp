@@ -52,10 +52,10 @@ void CameraManager::Update()
             SetCurrentCamera(TAG_CAMERA::First_Person);
     }
 
-    if (pInput->IsOnceKeyDown('L'))
-    {
-        SetCurrentCamera(TAG_CAMERA::OnGun);
-    }
+    //if (pInput->IsOnceKeyDown('L'))
+    //{
+    //    SetCurrentCamera(TAG_CAMERA::OnGun);
+    //}
 
 
     if (pCurrentCamera)
