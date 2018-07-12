@@ -550,7 +550,7 @@ float TagAnimation::GetSpeed(const TAG_ANIM_WEAPON tag)
     switch (tag)
     {
     case TAG_ANIM_WEAPON::Weapon_QBZ_Reload_Charge_FPP:
-        return 0.82f;
+        return 0.83f;
     //case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Start:
     //case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Loop:
     //case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_End:

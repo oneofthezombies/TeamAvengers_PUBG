@@ -717,59 +717,79 @@ void Character::RifleShooting() //bullet 객체에 대한
     switch (inven.m_pHand->GetTagResStatic())
     {
     case TAG_RES_STATIC::QBZ:
-        BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_RES_STATIC::QBZ);
-        break;
-    case TAG_RES_STATIC::Kar98k:
-    {
-        BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_RES_STATIC::Kar98k);
-
-        //Kar98k BoltAction Animation
-        TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
-        if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
-            tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Base;
-        else if (m_stance == Stance::Prone)
-            tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone;
-
-        assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::RifleShooting(), tagAnim is COUNT");
-
-        m_hasChangingState = true;
-
-        //총 자체 애니메이션
-        m_isNeedRifleAnim = true;
-        inven.m_pHand->Set
-        (
-            TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_1,
-            false,
-            Item::DEFAULT_BLENDING_TIME,
-            Item::DEFAULT_NEXT_WEIGHT,
-            Item::DEFAULT_POSITION,
-            Item::DEFAULT_FINISH_EVENT_AGO_TIME,
-            [this, &inven]() {
-            inven.m_pHand->Set(
-                TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
-                false);
-            m_isNeedRifleAnim = false;
-        });
-
-        //캐릭터의 애니메이션
-        setAnimation(
-            CharacterAnimation::BodyPart::UPPER,
-            tagAnim,
-            true, //ok
-            CharacterAnimation::DEFAULT_BLENDING_TIME,
-            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_POSITION,
-            0.3f, //ok
-            [this]()
         {
-            m_hasChangingState = false;
+            BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_RES_STATIC::QBZ);
+            
+            //총 자체 애니메이션
+            m_isNeedRifleAnim = true;
+            inven.m_pHand->Set
+            (
+                TAG_ANIM_WEAPON::Weapon_QBZ_Fire,
+                false,
+                Item::DEFAULT_BLENDING_TIME,
+                Item::DEFAULT_NEXT_WEIGHT,
+                Item::DEFAULT_POSITION,
+                Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+                [this, &inven]() {
+                inven.m_pHand->Set(
+                    TAG_ANIM_WEAPON::Weapon_QBZ_Idle,
+                    false);
+                m_isNeedRifleAnim = false;
+            });
+        }
+    break;
+
+    case TAG_RES_STATIC::Kar98k:
+        {
+            BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_RES_STATIC::Kar98k);
+
+            //Kar98k BoltAction Animation
+            TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+            if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
+                tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Base;
+            else if (m_stance == Stance::Prone)
+                tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone;
+
+            assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::RifleShooting(), tagAnim is COUNT");
+
+            m_hasChangingState = true;
+
+            //총 자체 애니메이션
+            m_isNeedRifleAnim = true;
+            inven.m_pHand->Set
+            (
+                TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_1,
+                false,
+                Item::DEFAULT_BLENDING_TIME,
+                Item::DEFAULT_NEXT_WEIGHT,
+                Item::DEFAULT_POSITION,
+                Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+                [this, &inven]() {
+                inven.m_pHand->Set(
+                    TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
+                    false);
+                m_isNeedRifleAnim = false;
+            });
+
+            //캐릭터의 애니메이션
             setAnimation(
-                CharacterAnimation::BodyPart::BOTH,
-                m_lowerAnimState,
-                true,
-                0.3f);
-        });
-    }
+                CharacterAnimation::BodyPart::UPPER,
+                tagAnim,
+                true, //ok
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_POSITION,
+                0.3f, //ok
+                [this]()
+            {
+                m_hasChangingState = false;
+                setAnimation(
+                    CharacterAnimation::BodyPart::BOTH,
+                    m_lowerAnimState,
+                    true,
+                    0.3f);
+            });
+        }
     break;
     }
 
