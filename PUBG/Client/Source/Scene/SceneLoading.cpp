@@ -64,7 +64,7 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined_FPP);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined_FPP);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Combined_FPP);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Healing_FPP);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Healing_FPP);
 
     //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
