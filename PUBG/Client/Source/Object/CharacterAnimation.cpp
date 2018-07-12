@@ -95,12 +95,21 @@ void CharacterAnimation::Set(
     const float nextWeight,
     const float position)
 {
+    //for FPP
+    TAG_ANIM_CHARACTER tagFPP = TAG_ANIM_CHARACTER::COUNT;
+    if (CurrentCamera()()->GetTagCamera() == TAG_CAMERA::First_Person)
+        tagFPP = TagAnimation::GetFPP(tag);
+    else
+        tagFPP = tag;
+
+    assert((tagFPP != TAG_ANIM_CHARACTER::COUNT) && "CharacterAnimation::Set(), COUNT");
+
     if (part == BodyPart::UPPER)
     {
         pSkinnedMeshController->SetAnimation(
             true,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime, 
             nextWeight,
@@ -113,8 +122,8 @@ void CharacterAnimation::Set(
     {
         pSkinnedMeshController->SetAnimation(
             false,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime, 
             nextWeight,
@@ -127,8 +136,8 @@ void CharacterAnimation::Set(
     {
         pSkinnedMeshController->SetAnimation(
             true,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime, 
             nextWeight,
@@ -136,8 +145,8 @@ void CharacterAnimation::Set(
 
         pSkinnedMeshController->SetAnimation(
             false,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime, 
             nextWeight,
@@ -161,12 +170,21 @@ void CharacterAnimation::Set(
     const float finishEventAgoTime, 
     const std::function<void()>& finishEvent)
 {
+    //for FPP
+    TAG_ANIM_CHARACTER tagFPP = TAG_ANIM_CHARACTER::COUNT;
+    if (CurrentCamera()()->GetTagCamera() == TAG_CAMERA::First_Person)
+        tagFPP = TagAnimation::GetFPP(tag);
+    else
+        tagFPP = tag;
+
+    assert((tagFPP != TAG_ANIM_CHARACTER::COUNT) && "CharacterAnimation::Set(), COUNT");
+
     if (part == BodyPart::UPPER)
     {
         pSkinnedMeshController->SetAnimation(
             true,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime,
             nextWeight,
@@ -181,8 +199,8 @@ void CharacterAnimation::Set(
     {
         pSkinnedMeshController->SetAnimation(
             false,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime,
             nextWeight,
@@ -196,8 +214,8 @@ void CharacterAnimation::Set(
     {
         pSkinnedMeshController->SetAnimation(
             true,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime,
             nextWeight,
@@ -207,8 +225,8 @@ void CharacterAnimation::Set(
 
         pSkinnedMeshController->SetAnimation(
             false,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime,
             nextWeight,
@@ -236,12 +254,21 @@ void CharacterAnimation::Set(
     const float finishEventAgoTime, 
     const std::function<void()>& finishEvent)
 {
+    //for FPP
+    TAG_ANIM_CHARACTER tagFPP = TAG_ANIM_CHARACTER::COUNT;
+    if (CurrentCamera()()->GetTagCamera() == TAG_CAMERA::First_Person)
+        tagFPP = TagAnimation::GetFPP(tag);
+    else
+        tagFPP = tag;
+
+    assert((tagFPP != TAG_ANIM_CHARACTER::COUNT) && "CharacterAnimation::Set(), COUNT");
+
     if (part == BodyPart::UPPER)
     {
         pSkinnedMeshController->SetAnimation(
             true,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime,
             nextWeight,
@@ -258,8 +285,8 @@ void CharacterAnimation::Set(
     {
         pSkinnedMeshController->SetAnimation(
             false,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime,
             nextWeight,
@@ -276,8 +303,8 @@ void CharacterAnimation::Set(
     {
         pSkinnedMeshController->SetAnimation(
             true,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime,
             nextWeight,
@@ -289,8 +316,8 @@ void CharacterAnimation::Set(
 
         pSkinnedMeshController->SetAnimation(
             false,
-            TagAnimation::GetString(tag),
-            TagAnimation::GetSpeed(tag),
+            TagAnimation::GetString(tagFPP),
+            TagAnimation::GetSpeed(tagFPP),
             isBlend,
             blendingTime,
             nextWeight,

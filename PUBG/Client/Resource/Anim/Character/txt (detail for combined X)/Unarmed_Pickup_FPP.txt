@@ -1,0 +1,4 @@
+/// Unarmed_Pickup_FPP.X (무기없이 줍는 애니메이션 FPP용)
+0. (0     ~ 80)[81] - Unarmed_Combat_Crouch_Pickup_FPP
+1. (81  ~ 161)[81] - Unarmed_Combat_Prone_Pickup_FPP
+2. (162 ~ 238)[77] - Unarmed_Combat_Stand_Pickup_FPP

@@ -559,3 +559,240 @@ float TagAnimation::GetSpeed(const TAG_ANIM_WEAPON tag)
         return 1.0f;
     }
 }
+
+TAG_ANIM_CHARACTER TagAnimation::GetFPP(const TAG_ANIM_CHARACTER tag)
+{
+    //case TAG_ANIM_CHARACTER::
+    //    return TAG_ANIM_CHARACTER::
+    switch (tag)
+    {
+    //Weapon_Kar98k_Character_FPP.X
+        {
+        case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Base:
+            return TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone:
+            return TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Base:
+            return TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Base:
+            return TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Base:
+            return TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Prone:
+            return TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Prone_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Prone:
+            return TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Prone_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Prone:
+            return TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Prone_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Base:
+            return TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Prone:
+            return TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Prone_FPP;
+        }
+
+    //Weapon_QBZ_Character_FPP.X
+        {
+        case TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Base:
+            return TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Charge_Base:
+            return TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Charge_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Charge_Prone:
+            return TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Charge_Prone_FPP;
+
+        case TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Prone:
+            return TAG_ANIM_CHARACTER::Weapon_QBZ_Reload_Prone_FPP;
+        }
+
+    //Unarmed_Locomotion_FPP.X
+        {
+            //무기없이 서서 질주한다
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_F_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_FL:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_FL_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_FR:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Sprint_FR_FPP;
+
+            //무기없이 쭈그려서 질주한다
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Sprint_F:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Sprint_F_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Sprint_FL:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Sprint_FL_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Sprint_FR:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Sprint_FR_FPP;
+
+            //무기없이 엎드려서 달린다
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_B:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_B_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_BL:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_BL_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_BR:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_BR_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_F:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_F_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_FL:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_FL_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_FR:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_FR_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_L:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_L_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_R:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Run_R_FPP;
+
+            //무기없이 엎드려서 걷는다
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_B:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_B_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_BL:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_BL_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_BR:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_BR_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_F:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_F_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_FL:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_FL_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_FR:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_FR_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_L:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_L_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_R:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Walk_R_FPP;
+        }
+
+    //Unarmed_Pickup_FPP.X
+        {
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Pickup_Low:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Pickup_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Pickup_Low:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Pickup_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Pickup_Low:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Pickup_FPP;
+        }
+
+    //Unarmed_Jump_FPP.X
+        {
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_F_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Jump_Stationary_FPP;
+        }
+
+    //Unarmed_Attack_FPP.X
+        {
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_1:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_1_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_2:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_2_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_3:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_3_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_1:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_1_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_2:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_2_FPP;
+
+        case TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_3:
+            return TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_3_FPP;
+        }
+
+    //Rifle_Pickup_FPP.X
+        {
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Pickup_Low:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Pickup_FPP;
+
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Pickup_Low:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Pickup_FPP;
+
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Pickup_Low:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Pickup_FPP;
+        }
+
+    //Rifle_Locomotion_FPP.X
+        {
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Sprint_F:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Sprint_F_FPP;
+
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Sprint_FL:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Sprint_FL_FPP;
+
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Sprint_FR:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Sprint_FR_FPP;
+
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_F_WeaponDown:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_F_WeaponDown_FPP;
+
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_F_WeaponInView:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_F_WeaponInView_FPP;
+
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_FL_BigGun:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_FL_BigGun_FPP;
+
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_FL_WeaponDown:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_FL_WeaponDown_FPP;
+
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_FR_BigGun:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_FR_BigGun_FPP;
+
+        case TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_FR_WeaponDown:
+            return TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Sprint_FR_WeaponDonw_FPP;    
+        }
+
+    //Healing_FPP.X
+        {
+        case TAG_ANIM_CHARACTER::Healing_Combat_Prone_Aidkit:
+            return TAG_ANIM_CHARACTER::Healing_Combat_Prone_Aidkit_FPP;
+
+        case TAG_ANIM_CHARACTER::Healing_Combat_Prone_Bandage:
+            return TAG_ANIM_CHARACTER::Healing_Combat_Prone_Bandage_FPP;
+
+        case TAG_ANIM_CHARACTER::Healing_Combat_Prone_Medkit:
+            return TAG_ANIM_CHARACTER::Healing_Combat_Prone_Medkit_FPP;
+
+        case TAG_ANIM_CHARACTER::Healing_Combat_Stand_Aidkit:
+            return TAG_ANIM_CHARACTER::Healing_Combat_Stand_Aidkit_FPP;
+
+        case TAG_ANIM_CHARACTER::Healing_Combat_Stand_Bandage:
+            return TAG_ANIM_CHARACTER::Healing_Combat_Stand_Bandage_FPP;
+
+        case TAG_ANIM_CHARACTER::Healing_Combat_Stand_Medkit:
+            return TAG_ANIM_CHARACTER::Healing_Combat_Stand_Medkit_FPP;
+        }
+
+    default:
+        return tag;
+    }
+}

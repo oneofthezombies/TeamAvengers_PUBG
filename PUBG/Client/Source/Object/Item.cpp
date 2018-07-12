@@ -115,8 +115,10 @@ void Item::setup(const TAG_RES_STATIC tag)
 
     switch (ItemInfo::GetItemCategory(tag))
     {
-    case TAG_ITEM_CATEGORY::Ammo:
     case TAG_ITEM_CATEGORY::Attach:
+    //부착물도 setting용이 따로있음!!
+        
+    case TAG_ITEM_CATEGORY::Ammo:
     case TAG_ITEM_CATEGORY::Consumable:
         {
             const auto pathName = ResourceInfo::GetUIPathFileName(tag);

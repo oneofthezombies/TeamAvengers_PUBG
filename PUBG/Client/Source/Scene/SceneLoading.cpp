@@ -26,13 +26,21 @@ void SceneLoading::Load()
     //load(TAG_RES_STATIC::Back_Lv1);
     //load(TAG_RES_STATIC::Head_Lv1);
     load(TAG_RES_STATIC::QBZ);
-    //load(TAG_RES_STATIC::Kar98k);
+    load(TAG_RES_STATIC::Kar98k);
+
     //load(TAG_RES_STATIC::Bandage);
+    //load(TAG_RES_STATIC::FirstAidKit);
+    //load(TAG_RES_STATIC::MedKit);
+
+    //load(TAG_RES_STATIC::RedDot);
+    //load(TAG_RES_STATIC::Aimpoint2X);
+    //load(TAG_RES_STATIC::ACOG);
+
     load(TAG_RES_STATIC::Rock_1);
 
     //// load skined meshs
     load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    //load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
     load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
@@ -49,9 +57,15 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
+    // load animation FPP
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined_FPP);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined_FPP);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Combined_FPP);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Healing_FPP);
+
     //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
 
     /*
@@ -71,6 +85,20 @@ void SceneLoading::Load()
     - Rifle_Jump.X
     - Rifle_OnBody.X
     - Rifle_OnHand.X
+
+    Unarmed_Combined_FPP.X 는 하단의 X파일들을 합친 것
+    - Unarmed_Pickup_FPP.X
+    - Unarmed_Locomotion_FPP.X
+    - Unarmed_Jump_FPP.X
+    - Unarmed_Attack_FPP.X
+
+    Rifle_Combined_FPP.X 는 하단의 X파일들을 합친 것
+    - Rifle_Pickup_FPP.X
+    - Rifle_Locomotion_FPP.X
+
+    Weapon_Combined_FPP.X 는 하단의 X파일들을 합친 것
+    - Weapon_Kar98k_Character_FPP.X
+    - Weapon_QBZ_Character_FPP.X
     */
 }
 

@@ -92,7 +92,6 @@ public:
         bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
 
 
-
         map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
 
         //헬멧, 가방, 방탄조끼용
@@ -307,8 +306,9 @@ private:
     BoundingBox m_otherHitBox;
 
     bool m_isFire;
-    bool m_hasChangingState;
+    bool m_hasChangingState; //true일 때는 lower만 변화한다
     bool m_isNeedRifleAnim;
+    bool m_isTransitioning;  //전이 중일 때는 움직이지 않는다
 
     WaitBackAction m_backAction;
 
@@ -360,7 +360,7 @@ private:
     bool isMine() const;
 
     void setInfo();
-
+    void minusDamage(const float damage);
 
     D3DXVECTOR3 getUp();
     //D3DXVECTOR3 getDown();
@@ -423,6 +423,36 @@ private:
         const std::function<void()>& finishEvent);
 
     void setAnimation(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float loopEventPeriod,
+        const std::function<void()>& loopEvent,
+        const float finishEventAgoTime,
+        const std::function<void()>& finishEvent);
+
+    void setEquipAnimation(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend = true,
+        const float blendingTime = 0.3f,
+        const float nextWeight = 0.0f,
+        const float position = 0.0f);
+
+    void setEquipAnimation(
+        const CharacterAnimation::BodyPart part,
+        const TAG_ANIM_CHARACTER tag,
+        const bool isBlend,
+        const float blendingTime,
+        const float nextWeight,
+        const float position,
+        const float finishEventAgoTime,
+        const std::function<void()>& finishEvent);
+
+    void setEquipAnimation(
         const CharacterAnimation::BodyPart part,
         const TAG_ANIM_CHARACTER tag,
         const bool isBlend,

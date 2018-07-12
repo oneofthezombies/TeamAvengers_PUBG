@@ -464,4 +464,6 @@ struct TagAnimation
 
     static float GetSpeed(const TAG_ANIM_CHARACTER tag);
     static float GetSpeed(const TAG_ANIM_WEAPON tag);
+
+    static TAG_ANIM_CHARACTER GetFPP(const TAG_ANIM_CHARACTER tag);
 };

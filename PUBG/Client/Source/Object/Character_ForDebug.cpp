@@ -61,6 +61,35 @@ string Character::ForDebugGetMoving(Moving moving)
 
 void Character::ForDebug()
 {
+    //카메라 모드
+    TAG_CAMERA tagCamera = CurrentCamera()()->GetTagCamera();
+    switch (tagCamera)
+    {
+    case TAG_CAMERA::First_Person:
+        Debug << "Camera Mode: " << "First Person" << "\n";
+        break;
+
+    case TAG_CAMERA::Third_Person:
+        Debug << "Camera Mode: " << "Third Person" << "\n";
+        break;
+
+    case TAG_CAMERA::Default:
+        Debug << "Camera Mode: " << "Default" << "\n";
+        break;
+
+    case TAG_CAMERA::KyunChak:
+        Debug << "Camera Mode: " << "KyunChak" << "\n";
+        break;
+
+    case TAG_CAMERA::Scope2X:
+        Debug << "Camera Mode: " << "Scope2X" << "\n";
+        break;
+
+    default:
+        Debug << "Camera Mode: " << "NONE" << "\n";
+        break;
+    }
+
     Item* hand = m_totalInventory.m_pHand;
     Item* saveWeapon = m_totalInventory.pTempSaveWeaponForX;
     if (hand)

@@ -44,6 +44,7 @@ Character::Character(const int index)
     , m_isFire(false)
     , m_hasChangingState(false)
     , m_isNeedRifleAnim(false)
+    , m_isTransitioning(false)
 
     , pAnimation(nullptr)
 
@@ -125,7 +126,6 @@ void Character::OnUpdate()
 
     updateMine();
     updateOther();
-
 
     // update
     GetTransform()->Update();      // set characters world
@@ -263,7 +263,7 @@ void Character::updateMine()
     setInteraction();
     setJump();
     animationControl();
-
+    
     // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
     if (m_savedInput != m_currentStayKey)
     {

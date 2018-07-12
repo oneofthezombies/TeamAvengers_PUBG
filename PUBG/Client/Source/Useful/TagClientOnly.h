@@ -120,16 +120,6 @@ enum class TAG_CAMERA
     OnGun
 };
 
-//enum class TAG_ITEM_CATEGORY
-//{
-//    Idle,
-//    Equipment,  //장비
-//    Consumable, //소모품
-//    Ammo,       //탄약
-//    Weapon,     //무기
-//    Attach      //무기 부착물
-//};
-
 enum class TAG_ITEM_CATEGORY
 {
     Idle,

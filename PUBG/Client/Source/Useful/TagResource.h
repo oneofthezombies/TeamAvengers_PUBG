@@ -152,41 +152,33 @@ enum class TAG_RES_ANIM_WEAPON
 
 enum class TAG_RES_ANIM_CHARACTER
 {
+//FPP
+    Unarmed_Combined_FPP,
+    Rifle_Combined_FPP,
+    Weapon_Combined_FPP,
+    Healing_FPP,
+
 //Character
 //1. 해당 무기를 들고있을 때 캐릭터의 애니메이션
     Weapon_QBZ_Character,
-    Weapon_QBZ_Character_FPP,
-
     Weapon_Kar98k_Character,
-    Weapon_Kar98k_Character_FPP,
 
 //2. 무기를 들고있지 않을 때 애니메이션
     Unarmed_Combined,
     Unarmed_Locomotion,
     Unarmed_Jump, //스킨드매쉬 로드용
 
-    Unarmed_Locomotion_FPP,
-    Unarmed_Jump_FPP,
-    Unarmed_Pickup_FPP,
-    Unarmed_Attack_FPP,
-
 //3. 무기를 들고있을 때 애니메이션
     Rifle_Locomotion,
     Rifle_Combined,
 
-    Rifle_Locomotion_FPP,
-    Rifle_Pickup_FPP,
-
 //4. 힐템을 사용할 때 애니메이션
     Healing,
-    Healing_FPP,
 
 //5. 기절과 관련한 애니메이션
     DBNO,
 
-//6. for test
-    ForTest,
-
+//COUNT
     COUNT
 };
 

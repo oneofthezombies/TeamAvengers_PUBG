@@ -7,24 +7,24 @@
 void Character::setAttacking() //Num1, Num2, X
 {
     //for test
-    if (m_currentOnceKey._Num3)
-    {
-        setAnimation(
-            CharacterAnimation::BodyPart::UPPER,
-            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Aim,
-            false,
-            CharacterAnimation::DEFAULT_BLENDING_TIME,
-            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-            CharacterAnimation::DEFAULT_POSITION,
-            [this]()
-        {
-            setAnimation(
-                CharacterAnimation::BodyPart::BOTH,
-                TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Aim,
-                false);
-        });
-    }
+    //if (m_currentOnceKey._Num3)
+    //{
+    //    setAnimation(
+    //        CharacterAnimation::BodyPart::UPPER,
+    //        TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Aim,
+    //        false,
+    //        CharacterAnimation::DEFAULT_BLENDING_TIME,
+    //        CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+    //        CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+    //        CharacterAnimation::DEFAULT_POSITION,
+    //        [this]()
+    //    {
+    //        setAnimation(
+    //            CharacterAnimation::BodyPart::BOTH,
+    //            TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Aim,
+    //            false);
+    //    });
+    //}
 
     TotalInventory& inven = m_totalInventory;
 
@@ -156,11 +156,13 @@ void Character::setAttacking() //Num1, Num2, X
 
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
+                    m_hasChangingState = true;
                     inven.m_pWeaponPrimary = nullptr;
                     setRifleOnHand(TAG_RIFLE::Primary);
                 }
                 else if (tag == TAG_RES_STATIC::Kar98k)
                 {
+                    m_hasChangingState = true;
                     inven.m_pWeaponSecondary = nullptr;
                     setRifleOnHand(TAG_RIFLE::Secondary);                
                 }
@@ -442,19 +444,16 @@ void Character::setPunch()
     if (m_attacking == Attacking::Unarmed && m_currentOnceKey._LButton)         //주먹을 휘두른다
     {
         TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
-        int randomNum = rand() % 3;
+        int randomNum = rand() % 2;
         //애니메이션 정하기
         if (m_stance == Stance::Stand)
         {
             switch (randomNum)
             {
             case 0:
-                tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_1;
-                break;
-            case 1:
                 tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_2;
                 break;
-            case 2:
+            case 1:
                 tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Upperbody_Attack_3;
                 break;
             }
@@ -464,14 +463,11 @@ void Character::setPunch()
             switch (randomNum)
             {
             case 0:
-                tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_1;
-                break;
-            case 1:
                 tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_2;
                 break;
-            case 2:
+            case 1:
                 tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Attack_3;
-                break;
+                break;;
             }
         }
         else if (m_stance == Stance::Prone)
@@ -618,7 +614,7 @@ void Character::setInteraction()
 
 void Character::setJump()
 {
-    if (m_currentOnceKey._Space && m_currentStayKey._W)
+    if(m_currentOnceKey._Space && m_currentStayKey._W)
     {
         if (m_stance == Stance::Prone)
         {
@@ -768,8 +764,9 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
         assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnBody(), tagAnim is COUNT");
 
         //애니메이션 적용
+        //캐릭터용
         m_hasChangingState = true;
-        setAnimation(
+        pAnimation->Set(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
             false,
@@ -783,7 +780,27 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             inven.m_pHand = nullptr;
             m_hasChangingState = false;
 
-            setAnimation(
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                true,
+                0.3f,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+        });
+
+        //장비용
+        m_hasChangingState = true;
+        setEquipAnimation(
+            CharacterAnimation::BodyPart::UPPER,
+            tagAnim,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION,
+            0.3f,
+            [this, &inven]()
+        {
+            setEquipAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
@@ -803,8 +820,31 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
         assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnBody(), tagAnim is COUNT");
 
         //애니메이션 적용
+        //캐릭터용
         m_hasChangingState = true;
-        setAnimation(
+        pAnimation->Set(
+            CharacterAnimation::BodyPart::UPPER,
+            tagAnim,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            [this, &inven]()
+        {
+            inven.m_pWeaponSecondary = inven.m_pHand;
+            inven.m_pHand = nullptr;
+            m_hasChangingState = false;
+
+            setAnimation(
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                false);
+        });
+
+        //장비용
+        m_hasChangingState = true;
+        setEquipAnimation(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
             false,
@@ -814,11 +854,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             0.3f,
             [this, &inven]()
         {
-            inven.m_pWeaponSecondary = inven.m_pHand;
-            inven.m_pHand = nullptr;
-            m_hasChangingState = false;
-
-            setAnimation(
+            setEquipAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
@@ -843,26 +879,30 @@ void Character::setStandTo(Stance stance)
     {
         if (stance == Stance::Crouch)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Crouch,
                 false,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                0.4f,
-                1.2f,
+                CharacterAnimation::DEFAULT_POSITION,             //0.4f,
+                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,//1.2f,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState, 
-                    true,
-                    1.2f,
-                    CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+                    m_lowerAnimState,
+                    false);
             });
         }
         else if (stance == Stance::Prone)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Prone,
@@ -873,6 +913,8 @@ void Character::setStandTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -884,16 +926,20 @@ void Character::setStandTo(Stance stance)
     {
         if (stance == Stance::Crouch)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_Crouch,
-                false,
+                true,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -902,6 +948,8 @@ void Character::setStandTo(Stance stance)
         }
         else if (stance == Stance::Prone)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Stand_Base_Prone,
@@ -912,6 +960,8 @@ void Character::setStandTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -927,26 +977,30 @@ void Character::setCrouchTo(Stance stance)
     {
         if (stance == Stance::Stand)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Stand,
                 false,
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                0.6f,
-                1.0f,
+                CharacterAnimation::DEFAULT_POSITION,
+                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
-                    true,
-                    1.0f,
-                    CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+                    false);
             });
         }
         else if (stance == Stance::Prone)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Prone,
@@ -957,6 +1011,8 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -968,6 +1024,8 @@ void Character::setCrouchTo(Stance stance)
     {
         if (stance == Stance::Stand)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Stand,
@@ -978,6 +1036,8 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -986,6 +1046,8 @@ void Character::setCrouchTo(Stance stance)
         }
         else if (stance == Stance::Prone)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Prone,
@@ -996,6 +1058,8 @@ void Character::setCrouchTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -1011,6 +1075,8 @@ void Character::setProneTo(Stance stance)
     {
         if (stance == Stance::Stand)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Stand,
@@ -1021,6 +1087,8 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -1029,6 +1097,8 @@ void Character::setProneTo(Stance stance)
         }
         else if (stance == Stance::Crouch)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Crouch,
@@ -1039,6 +1109,8 @@ void Character::setProneTo(Stance stance)
                 0.5f, //이거 해줘야 딸깍 거리지 않음
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -1052,6 +1124,8 @@ void Character::setProneTo(Stance stance)
     {
         if (stance == Stance::Stand)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Base_Stand,
@@ -1062,6 +1136,8 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -1070,6 +1146,8 @@ void Character::setProneTo(Stance stance)
         }
         else if (stance == Stance::Crouch)
         {
+            m_hasChangingState = true;
+            m_isTransitioning = true;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 TAG_ANIM_CHARACTER::Rifle_Combat_Prone_Base_Crouch,
@@ -1080,6 +1158,8 @@ void Character::setProneTo(Stance stance)
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
+                m_isTransitioning = false;
+                m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
@@ -1193,39 +1273,14 @@ void Character::setAnimation(
             nextWeight, 
             position);
     }
-
-    if (m_totalInventory.m_pEquipArmor)
-    {
-        m_totalInventory.m_pEquipArmor->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position);
-    }
-
-    if (m_totalInventory.m_pEquipBack)
-    {
-        m_totalInventory.m_pEquipBack->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position);
-    }
-
-    if (m_totalInventory.m_pEquipHead)
-    {
-        m_totalInventory.m_pEquipHead->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position);
-    }
+    
+    setEquipAnimation(
+        part,
+        tag,
+        isBlend,
+        blendingTime,
+        nextWeight,
+        position);
 }
 
 void Character::setAnimation(
@@ -1248,51 +1303,18 @@ void Character::setAnimation(
             nextWeight,
             position,
             finishEventAgoTime,
-            finishEvent
-        );
+            finishEvent);
     }
 
-    if (m_totalInventory.m_pEquipArmor)
-    {
-        m_totalInventory.m_pEquipArmor->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position,
-            finishEventAgoTime,
-            finishEvent
-        );
-    }
-
-    if (m_totalInventory.m_pEquipBack)
-    {
-        m_totalInventory.m_pEquipBack->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position,
-            finishEventAgoTime,
-            finishEvent
-        );
-    }
-
-    if (m_totalInventory.m_pEquipHead)
-    {
-        m_totalInventory.m_pEquipHead->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position,
-            finishEventAgoTime,
-            finishEvent
-        );
-    }
+    setEquipAnimation(
+        part,
+        tag,
+        isBlend,
+        blendingTime,
+        nextWeight,
+        position,
+        finishEventAgoTime,
+        finishEvent);
 }
 
 void Character::setAnimation(
@@ -1319,10 +1341,102 @@ void Character::setAnimation(
             loopEventPeriod,
             loopEvent,
             finishEventAgoTime,
-            finishEvent
-        );
+            finishEvent);
     }
 
+    setEquipAnimation(
+        part,
+        tag,
+        isBlend,
+        blendingTime,
+        nextWeight,
+        position,
+        loopEventPeriod,
+        loopEvent,
+        finishEventAgoTime,
+        finishEvent);
+}
+
+void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position)
+{
+    if (m_totalInventory.m_pEquipArmor)
+    {
+        m_totalInventory.m_pEquipArmor->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+
+    if (m_totalInventory.m_pEquipBack)
+    {
+        m_totalInventory.m_pEquipBack->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+}
+
+void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+{
+    if (m_totalInventory.m_pEquipArmor)
+    {
+        m_totalInventory.m_pEquipArmor->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+
+    if (m_totalInventory.m_pEquipBack)
+    {
+        m_totalInventory.m_pEquipBack->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+}
+
+void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float loopEventPeriod, const std::function<void()>& loopEvent, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+{
     if (m_totalInventory.m_pEquipArmor)
     {
         m_totalInventory.m_pEquipArmor->Set(
@@ -1335,8 +1449,7 @@ void Character::setAnimation(
             loopEventPeriod,
             loopEvent,
             finishEventAgoTime,
-            finishEvent
-        );
+            finishEvent);
     }
 
     if (m_totalInventory.m_pEquipBack)
@@ -1351,8 +1464,7 @@ void Character::setAnimation(
             loopEventPeriod,
             loopEvent,
             finishEventAgoTime,
-            finishEvent
-        );
+            finishEvent);
     }
 
     if (m_totalInventory.m_pEquipHead)
@@ -1367,7 +1479,6 @@ void Character::setAnimation(
             loopEventPeriod,
             loopEvent,
             finishEventAgoTime,
-            finishEvent
-        );
+            finishEvent);
     }
 }
