@@ -51,13 +51,23 @@ struct Shader
     static const char* World;
     static const char* View;
     static const char* Projection;
+
     static const char* bEmissiveColor;
     static const char* bLight;
-    static const char* lightDirection;
+    static const char* bShadow;
+
+    static const char* LightPos;
+    static const char* LightView;
+    static const char* LightProjection;
+
+    static const char* CameraPos;
+
     static const char* DiffuseColor;
     static const char* SpecularPower;
     static const char* SpecularColor;
     static const char* EmissiveColor;
+
+    static const char* ShadowMap_Tex;
 
     static void Draw(
         LPD3DXEFFECT pEffect,

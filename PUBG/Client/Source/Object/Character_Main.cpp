@@ -142,9 +142,7 @@ void Character::OnUpdate()
         pPart->Update();
 
     if (IsFire())
-    {
         RifleShooting();
-    }
         
     Shader()()->AddShadowSource(
         GetTransform()->GetTransformationMatrix(), 
@@ -152,8 +150,6 @@ void Character::OnUpdate()
 
     // communication
     communicate();
-
-    Debug << "@@ index : " << m_index << ", position : " << GetTransform()->GetPosition() << endl;
 }
 
 void Character::OnRender()
@@ -164,8 +160,11 @@ void Character::OnRender()
         m_boundingSphere.radius))
     {
         pAnimation->Render(
+
+            /* 여기 월드 인자는 레거시임. 밑 셋매트릭스에 변화를 적용시켜야 함 */
             /*m_framePtr.pWaist->CombinedTransformationMatrix
             **/ GetTransform()->GetTransformationMatrix(),
+
             [this](LPD3DXEFFECT pEffect)
         {
             pEffect->SetMatrix(

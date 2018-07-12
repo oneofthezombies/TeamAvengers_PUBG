@@ -1,16 +1,26 @@
 #include "stdafx.h"
 #include "Shader.h"
 
-const char* Shader::World          = "World";
-const char* Shader::View           = "View";
-const char* Shader::Projection     = "Projection";
-const char* Shader::bEmissiveColor = "bEmissiveColor";
-const char* Shader::bLight         = "bLight";
-const char* Shader::lightDirection = "lightDirection";
-const char* Shader::DiffuseColor   = "DiffuseColor";
-const char* Shader::SpecularPower  = "SpecularPower";
-const char* Shader::SpecularColor  = "SpecularColor";
-const char* Shader::EmissiveColor  = "EmissiveColor";
+const char* Shader::World           = "World";
+const char* Shader::View            = "View";
+const char* Shader::Projection      = "Projection";
+                                    
+const char* Shader::bEmissiveColor  = "bEmissiveColor";
+const char* Shader::bLight          = "bLight";
+const char* Shader::bShadow         = "bShadow";
+                                    
+const char* Shader::LightPos        = "LightPos";
+const char* Shader::LightView       = "LightView";
+const char* Shader::LightProjection = "LightProjection";
+
+const char* Shader::CameraPos       = "CameraPos";
+
+const char* Shader::DiffuseColor    = "DiffuseColor";
+const char* Shader::SpecularPower   = "SpecularPower";
+const char* Shader::SpecularColor   = "SpecularColor";
+const char* Shader::EmissiveColor   = "EmissiveColor";
+
+const char* Shader::ShadowMap_Tex   = "ShadowMap_Tex";
 
 Shader::Manager::Manager()
     : Singleton<Shader::Manager>()
@@ -153,15 +163,11 @@ void Shader::Manager::CreateShadowMap()
         1.0f, 
         0);
 
-    const D3DXVECTOR3 v3lightPos(Light()()->GetPosition());
-    const D3DXVECTOR4 lightPos(v3lightPos.x, v3lightPos.y, v3lightPos.z, 1.0f);
-    pCreateShadow->SetVector("gWorldLightPos", &lightPos);
-
     Light()()->SetMatrices();
 
-    pCreateShadow->SetMatrix("gLightViewMatrix", &Light()()->GetViewMatrix());
+    pCreateShadow->SetMatrix(Shader::LightView, &Light()()->GetViewMatrix());
     pCreateShadow->SetMatrix(
-        "gLightProjMatrix", 
+        Shader::LightProjection, 
         &Light()()->GetProjectionMatrix());
 
     UINT numPasses = 0;
@@ -176,7 +182,7 @@ void Shader::Manager::CreateShadowMap()
             LPD3DXMESH  pMesh    = std::get<1>(wmi);
             DWORD       attribID = std::get<2>(wmi);
 
-            pCreateShadow->SetMatrix("gWorldMatrix", &world);
+            pCreateShadow->SetMatrix(Shader::World, &world);
             pCreateShadow->CommitChanges();
             pMesh->DrawSubset(attribID);
         }
@@ -221,9 +227,26 @@ void Shader::Draw(
         Shader::Projection,
         &CurrentCamera()()->GetProjectionMatrix());
 
-    pEffect->SetTexture("ShadowMap_Tex", Shader()()->GetShadowRenderTarget());
-    pEffect->SetMatrix("gLightViewMatrix", &Light()()->GetViewMatrix());
-    pEffect->SetMatrix("gLightProjMatrix", &Light()()->GetProjectionMatrix());
+    const D3DXVECTOR3 v3lightPos(Light()()->GetPosition());
+    const D3DXVECTOR4 lightPos(v3lightPos.x, v3lightPos.y, v3lightPos.z, 1.0f);
+    pEffect->SetVector(Shader::LightPos, &lightPos);
+
+    pEffect->SetMatrix(Shader::LightView, &Light()()->GetViewMatrix());
+    pEffect->SetMatrix(
+        Shader::LightProjection, 
+        &Light()()->GetProjectionMatrix());
+
+    const D3DXVECTOR3 v3CameraPos(CurrentCamera()()->GetPosition());
+    const D3DXVECTOR4 cameraPos(
+        v3CameraPos.x, 
+        v3CameraPos.y, 
+        v3CameraPos.z, 
+        1.0f);
+    pEffect->SetVector(Shader::CameraPos, &cameraPos);
+
+    pEffect->SetTexture(
+        Shader::ShadowMap_Tex, 
+        Shader()()->GetShadowRenderTarget());
 
     setGlobalVariable(pEffect);
     pEffect->CommitChanges();
@@ -274,9 +297,26 @@ void Shader::Draw(
         Shader::Projection,
         &CurrentCamera()()->GetProjectionMatrix());
 
-    pEffect->SetTexture("ShadowMap_Tex", Shader()()->GetShadowRenderTarget());
-    pEffect->SetMatrix("gLightViewMatrix", &Light()()->GetViewMatrix());
-    pEffect->SetMatrix("gLightProjMatrix", &Light()()->GetProjectionMatrix());
+    const D3DXVECTOR3 v3lightPos(Light()()->GetPosition());
+    const D3DXVECTOR4 lightPos(v3lightPos.x, v3lightPos.y, v3lightPos.z, 1.0f);
+    pEffect->SetVector(Shader::LightPos, &lightPos);
+
+    pEffect->SetMatrix(Shader::LightView, &Light()()->GetViewMatrix());
+    pEffect->SetMatrix(
+        Shader::LightProjection,
+        &Light()()->GetProjectionMatrix());
+
+    const D3DXVECTOR3 v3CameraPos(CurrentCamera()()->GetPosition());
+    const D3DXVECTOR4 cameraPos(
+        v3CameraPos.x,
+        v3CameraPos.y,
+        v3CameraPos.z,
+        1.0f);
+    pEffect->SetVector(Shader::CameraPos, &cameraPos);
+
+    pEffect->SetTexture(
+        Shader::ShadowMap_Tex,
+        Shader()()->GetShadowRenderTarget());
 
     setGlobalVariable(pEffect);
     pEffect->CommitChanges();

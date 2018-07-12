@@ -64,12 +64,11 @@ void CameraManager::Update()
           pCurrentCamera->UpdateViewProjMatrix();
 
         //if (Input()()->IsOnceKeyUp(VK_SPACE)) //눌렀을때 볼 수 있도록
-        //{
         //    pCurrentCamera->UpdateFrustumCulling();
-        //}
+
         //pCurrentCamera->CameraRender();
 
-        CurrentCamera()()->UpdateFrustumCulling();
+        pCurrentCamera->UpdateFrustumCulling();
 
 
         //for debug

@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "Light.h"
+#include "ComponentTransform.h"
 
 Light::Manager::Manager()
     : Singleton<Light::Manager>()
     , m_positionInTargetSpace(Vector3::ZERO)
-    , pTargetPosition(nullptr)
     , m_viewMatrix(Matrix::IDENTITY)
     , m_projectionMatrix(Matrix::IDENTITY)
+    , pTarget(nullptr)
 {
 }
 
@@ -19,10 +20,11 @@ void Light::Manager::SetMatrices()
     D3DXVECTOR3 eye = m_positionInTargetSpace;
     D3DXVECTOR3 lookat = Vector3::ZERO;
 
-    if (pTargetPosition)
+    if (pTarget)
     {
-        eye    += *pTargetPosition;
-        lookat += *pTargetPosition;
+        const D3DXVECTOR3 pos = pTarget->GetPosition();
+        eye    += pos;
+        lookat += pos;
     }
 
     D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &lookat, &Vector3::UP);
@@ -39,17 +41,17 @@ void Light::Manager::SetPositionInTargetSpace(const D3DXVECTOR3& pos)
     m_positionInTargetSpace = pos;
 }
 
-void Light::Manager::SetTarget(D3DXVECTOR3* pTargetPosition)
+void Light::Manager::SetTarget(Transform* pTarget)
 {
-    this->pTargetPosition = pTargetPosition;
+    this->pTarget = pTarget;
 }
 
 const D3DXVECTOR3 Light::Manager::GetPosition() const
 {
     D3DXVECTOR3 pos = m_positionInTargetSpace;
 
-    if (pTargetPosition)
-        pos += *pTargetPosition;
+    if (pTarget)
+        pos += pTarget->GetPosition();
 
     return pos;
 }

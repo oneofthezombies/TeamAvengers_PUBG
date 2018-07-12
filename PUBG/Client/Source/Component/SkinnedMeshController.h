@@ -58,15 +58,18 @@ private:
         LPD3DXMESHCONTAINER pMeshContainer, 
         std::vector<BoundingSphere>* OutBoundingSpheres);
 
-    void findMesh(
-        LPD3DXFRAME pFrame, 
-        std::vector<std::pair<LPD3DXMESH, std::size_t>>* OutMeshs);
-    void findMesh(
-        LPD3DXMESHCONTAINER pMeshContainer, 
-        std::vector<std::pair<LPD3DXMESH, std::size_t>>* OutMeshs);
+    //void findMesh(
+    //    LPD3DXFRAME pFrame, 
+    //    std::vector<std::pair<LPD3DXMESH, std::size_t>>* OutMeshs);
+    //void findMesh(
+    //    LPD3DXMESHCONTAINER pMeshContainer, 
+    //    std::vector<std::pair<LPD3DXMESH, std::size_t>>* OutMeshs);
 
     void setEffectMesh(LPD3DXFRAME pFrame);
     void setEffectMesh(LPD3DXMESHCONTAINER pMeshContainer);
+
+    void updateMesh(LPD3DXFRAME pFrame);
+    void updateMesh(LPD3DXMESHCONTAINER pMeshContainer);
 
 public:
              SkinnedMeshController(IObject* pOwner);

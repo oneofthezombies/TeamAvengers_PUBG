@@ -17,6 +17,9 @@ void ScenePlay::setAloneMode()
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
 
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
+    Light()()->SetTarget(pPlayer->GetTransform());
+
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
         if (i == myID) continue;
@@ -40,19 +43,19 @@ void ScenePlay::setAloneMode()
 
     AddObject(new SkySphere);
 
-    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(400.0f, 100.0f, 0.0f), Vector3::UP, Vector3::ONE * 0.7f);
-    D3DXMATRIX m;
-    D3DXQUATERNION qR;
-    D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
-    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 2000.0f));
-    tf->AddBoundingBox(m);
-    AddObject(tf);
+    //TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(400.0f, 100.0f, 0.0f), Vector3::UP, Vector3::ONE * 0.7f);
+    //D3DXMATRIX m;
+    //D3DXQUATERNION qR;
+    //D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
+    //D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 2000.0f));
+    //tf->AddBoundingBox(m);
+    //AddObject(tf);
 
-    tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 1000.0f), Vector3::UP, Vector3::ONE * 0.7f);
-    D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
-    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 1000.0f));
-    tf->AddBoundingBox(m);
-    AddObject(tf);
+    //tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 1000.0f), Vector3::UP, Vector3::ONE * 0.7f);
+    //D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
+    //D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 1000.0f));
+    //tf->AddBoundingBox(m);
+    //AddObject(tf);
 
     //For inventory Test
     Item* item = nullptr;
@@ -104,10 +107,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(170, 200, 130);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    AddObject(item);
-    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    //p = D3DXVECTOR3(170, 200, 130);
+    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    //AddObject(item);
+    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
     //pPlayer->PutItemInTotalInventory(item);
 
@@ -121,10 +124,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(90, 0, 10);
-    item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(90, 0, 10);
+    //item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(100, 0, 10);
     //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
@@ -236,8 +239,6 @@ void ScenePlay::OnInit()
 
     //cell space partitioning
     m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
-
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(500.0f, 500.0f, -500.0f));
 
     //LoadObjectsFromFile("./Resource/save.txt");
 

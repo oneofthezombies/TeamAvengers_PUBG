@@ -61,9 +61,11 @@ public:
 
     void SetViewMatrix(D3DXMATRIX* viewMatrix) { m_viewMatrix = *viewMatrix; }
     void SetProjectionMatrix(D3DXMATRIX* projectionMatrix) { m_projectionMatrix = *projectionMatrix; }
-    const D3DXMATRIX& GetViewMatrix()       const;
-    const D3DXMATRIX& GetProjectionMatrix() const;
-          TAG_CAMERA  GetTagCamera()        const;
+    
+    const D3DXMATRIX&  GetViewMatrix()       const;
+    const D3DXMATRIX&  GetProjectionMatrix() const;
+          TAG_CAMERA   GetTagCamera()        const;
+    const D3DXVECTOR3& GetPosition()         const;
 
     D3DXVECTOR4 GetFrustumArea();
     bool CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY);

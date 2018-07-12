@@ -29,16 +29,14 @@ texture ShadowMap_Tex : RenderColorTarget
    float  ClearDepth=1.000000;
    int    ClearColor=-1;
 >;
-float4x4 gWorldMatrix : World;
-float4x4 gLightViewMatrix
+float4x4 World : World;
+float4x4 LightView
 <
    string UIName = "gLightViewMatrix";
    string UIWidget = "Numeric";
    bool UIVisible =  false;
 > = float4x4( 1.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 1.00 );
-float4x4 gLightProjMatrix : Projection;
-
-float4 gWorldLightPos;
+float4x4 LightProjection : Projection;
 
 struct VS_INPUT 
 {
@@ -56,9 +54,9 @@ VS_OUTPUT ShadowMapping_CreateShadow_Vertex_Shader_vs_main( VS_INPUT Input )
 {
    VS_OUTPUT Output;
    
-   Output.Position = mul( Input.Position, gWorldMatrix);
-   Output.Position = mul( Output.Position, gLightViewMatrix);
-   Output.Position = mul( Output.Position, gLightProjMatrix);
+   Output.Position = mul( Input.Position, World);
+   Output.Position = mul( Output.Position, LightView);
+   Output.Position = mul( Output.Position, LightProjection);
    
    Output.ClipPosition = Output.Position;
    
