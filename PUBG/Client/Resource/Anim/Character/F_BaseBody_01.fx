@@ -61,6 +61,11 @@ sampler2D Map__2Sampler = sampler_state  // TexCoord0
 sampler2D ShadowSampler = sampler_state
 {
    Texture = <ShadowMap_Tex>; 
+   MinFilter = Linear; 
+   MagFilter = Linear; 
+   MipFilter = Linear; 
+   AddressU  = Wrap;     
+   AddressV  = Wrap;    
 };
 
 struct VS_INPUT 

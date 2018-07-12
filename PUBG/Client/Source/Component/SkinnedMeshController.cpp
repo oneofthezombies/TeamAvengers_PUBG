@@ -50,12 +50,11 @@ void SkinnedMeshController::drawMeshContainer(
 
     auto pMeshContainer = static_cast<MeshContainer*>(pMeshContainerBase);
     
-
     //**************frustum culling ************************
-    D3DXVECTOR3 center = Vector3::ZERO;
-    D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_boundingSphere.center, &world);
-    if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_boundingSphere.radius))
-        return;
+    //D3DXVECTOR3 center = Vector3::ZERO;
+    //D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_boundingSphere.center, &world);
+    //if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_boundingSphere.radius))
+    //    return;
     //******************************************************
 
     auto numBones = pMeshContainer->pSkinInfo->GetNumBones();
@@ -66,8 +65,10 @@ void SkinnedMeshController::drawMeshContainer(
             * *pMeshContainer->m_ppBoneMatrixPtrs[i];
     }
 
+    EffectMesh* pEffectMesh = pMeshContainer->pEffectMesh;
+        
     PBYTE pVerticesSrc = nullptr;
-    pMeshContainer->pEffectMesh->m_pMesh->LockVertexBuffer(
+    pEffectMesh->m_pMesh->LockVertexBuffer(
         D3DLOCK_READONLY, (LPVOID*)&pVerticesSrc);
 
     assert(pVerticesSrc && 
@@ -85,11 +86,11 @@ void SkinnedMeshController::drawMeshContainer(
         pMeshContainer->m_pFinalBoneMatrices, nullptr, 
         pVerticesSrc, pVerticesDest);
 
-    pMeshContainer->pEffectMesh->m_pMesh->UnlockVertexBuffer();
+    pEffectMesh->m_pMesh->UnlockVertexBuffer();
     pMeshContainer->m_pWorkMesh->UnlockVertexBuffer();
 
     Shader::Draw(
-        pMeshContainer->pEffectMesh->m_effectParams, 
+        pEffectMesh->m_effectParams, 
         pMeshContainer->m_pWorkMesh, 
         setGlobalVariable);
 }
@@ -358,6 +359,9 @@ void SkinnedMeshController::SetSkinnedMesh(SkinnedMesh* pSkinnedMesh)
 {
     assert(pSkinnedMesh && 
         "SkinnedMeshController::SetSkinnedMesh(), skinned mesh is null.");
+
+    setEffectMesh(pSkinnedMesh->m_pRootFrame);
+    setEffectMesh(pSkinnedMesh->m_pSubRootFrame);
 
     this->pSkinnedMesh = pSkinnedMesh;
 }
@@ -729,9 +733,11 @@ void SkinnedMeshController::findBoundingSphere(
     if (!pMeshContainer) return;
 
     MeshContainer* pMC = static_cast<MeshContainer*>(pMeshContainer);
+    EffectMesh* pEffectMesh = pMC->pEffectMesh;
+
     BoundingSphere bs;
-    bs.center = pMC->pEffectMesh->m_boundingSphere.center;
-    bs.radius = pMC->pEffectMesh->m_boundingSphere.radius;
+    bs.center = pEffectMesh->m_boundingSphere.center;
+    bs.radius = pEffectMesh->m_boundingSphere.radius;
     OutBoundingSpheres->emplace_back(bs);
 }
 
@@ -754,10 +760,40 @@ void SkinnedMeshController::findMesh(
     if (!pMeshContainer) return;
 
     MeshContainer* pMC = static_cast<MeshContainer*>(pMeshContainer);
+    EffectMesh* pEffectMesh = pMC->pEffectMesh;
+
     OutMeshs->emplace_back(
         std::make_pair(
-            pMC->pEffectMesh->m_pMesh, 
-            pMC->pEffectMesh->m_effectParams.size()));
+            pEffectMesh->m_pMesh, 
+            pEffectMesh->m_effectParams.size()));
+}
+
+void SkinnedMeshController::setEffectMesh(LPD3DXFRAME pFrame)
+{
+    if (!pFrame) return;
+
+    LPD3DXMESHCONTAINER pMeshContainer = pFrame->pMeshContainer;
+    while (pMeshContainer)
+    {
+        setEffectMesh(pMeshContainer);
+
+        pMeshContainer = pMeshContainer->pNextMeshContainer;
+    }
+
+    setEffectMesh(pFrame->pFrameSibling);
+    setEffectMesh(pFrame->pFrameFirstChild);
+}
+
+void SkinnedMeshController::setEffectMesh(LPD3DXMESHCONTAINER pMeshContainer)
+{
+    if (!pMeshContainer) return;
+
+    MeshContainer* pMC = static_cast<MeshContainer*>(pMeshContainer);
+    pMC->pEffectMesh = Resource()()->GetEffectMesh(pMC->m_effectMeshKey);
+
+    assert(
+        pMC->pEffectMesh && 
+        "SkinnedMeshController::setEffectMesh() effect mesh is null.");
 }
 
 std::vector<BoundingSphere> SkinnedMeshController::GetBoundingSpheres()

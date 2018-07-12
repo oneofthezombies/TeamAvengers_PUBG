@@ -50,6 +50,11 @@ sampler2D C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures
 sampler2D ShadowSampler = sampler_state
 {
    Texture = <ShadowMap_Tex>; 
+   MinFilter = Linear; 
+   MagFilter = Linear; 
+   MipFilter = Linear; 
+   AddressU  = Wrap;     
+   AddressV  = Wrap;     
 };
 
 struct VS_INPUT 

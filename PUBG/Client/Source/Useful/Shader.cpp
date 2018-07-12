@@ -49,7 +49,9 @@ void Shader::Manager::addShadowSource(
     if (!pMeshContainer) return;
 
     MeshContainer* pMC = static_cast<MeshContainer*>(pMeshContainer);
-    for (std::size_t i = 0; i < pMC->pEffectMesh->m_effectParams.size(); ++i)
+    EffectMesh* pEffectMesh = pMC->pEffectMesh;
+
+    for (std::size_t i = 0; i < pEffectMesh->m_effectParams.size(); ++i)
         AddShadowSource(world, pMC->m_pWorkMesh, i);
 }
 

@@ -152,27 +152,36 @@ void Character::OnUpdate()
 
     // communication
     communicate();
+
+    Debug << "@@ index : " << m_index << ", position : " << GetTransform()->GetPosition() << endl;
 }
 
 void Character::OnRender()
 {
     // render
-    pAnimation->Render(
-        /*m_framePtr.pWaist->CombinedTransformationMatrix
-        **/ GetTransform()->GetTransformationMatrix(),
-        [this](LPD3DXEFFECT pEffect)
+    if (CurrentCamera()()->IsObjectInsideFrustum(
+        m_boundingSphere.center + m_boundingSphere.position, 
+        m_boundingSphere.radius))
     {
-        pEffect->SetMatrix(
-            Shader::World,
-            &GetTransform()->GetTransformationMatrix());
-    });
+        pAnimation->Render(
+            /*m_framePtr.pWaist->CombinedTransformationMatrix
+            **/ GetTransform()->GetTransformationMatrix(),
+            [this](LPD3DXEFFECT pEffect)
+        {
+            pEffect->SetMatrix(
+                Shader::World,
+                &GetTransform()->GetTransformationMatrix());
+        });
 
-    renderTotalInventory();
+        renderTotalInventory();
+    }
 
     // render collision shapes
     for (auto pPart : m_characterParts)
         pPart->Render();
+
     m_boundingBox.Render();
+    Debug << "index : " << m_index << ", center : " << m_boundingSphere.center << ", position : " << m_boundingSphere.position << '\n';
     m_boundingSphere.Render();
     // end render collision shapes
 
@@ -465,11 +474,6 @@ void Character::updateMine()
             m_savedInput = m_currentStayKey;
         }
     }
-
-
-
-    // 카메라 프러스텀 업데이트 (왜냐하면 캐릭터0 업데이트, 렌더, 캐릭터1 업데이트, 렌더, ... 순서대로 실행되기 떄문에)
-    CurrentCamera()()->UpdateFrustumCulling();
     
     D3DXVECTOR3 pos = tm->GetPosition();
     D3DXQUATERNION rot = tm->GetRotation();

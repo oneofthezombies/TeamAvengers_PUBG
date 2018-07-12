@@ -433,8 +433,9 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
         return E_FAIL;
     }
 
+    const std::string effectMeshKey = m_path + meshContainerName;
     EffectMesh* pEffectMesh =
-        pXContainer->m_effectMeshs[m_path + meshContainerName];
+        pXContainer->m_effectMeshs[effectMeshKey];
     LPD3DXMESH pMesh = pEffectMesh->m_pMesh;
     pMesh->AddRef();
 
@@ -480,7 +481,8 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
         return E_OUTOFMEMORY;
     }
 
-    pMeshContainer->pEffectMesh = pEffectMesh;
+    //pMeshContainer->pEffectMesh = pEffectMesh;
+    pMeshContainer->m_effectMeshKey = effectMeshKey;
     pMeshContainer->m_pWorkMesh = pWorkMesh;
     pMeshContainer->pSkinInfo = pSkinInfo;
 
@@ -613,7 +615,7 @@ void Resource::Manager::AddResource(XContainer* pXContainer)
     {
         const std::string key = kv.first;
         EffectMesh*& pEffectMesh = kv.second;
-
+        
         const auto search = m_effectMeshs.find(key);
         if (search == m_effectMeshs.end())
         {
@@ -651,12 +653,14 @@ void Resource::Manager::AddResource(XContainer* pXContainer)
     if (pXContainer->m_pSkinnedMesh.second)
     {
         const std::string key = pXContainer->m_pSkinnedMesh.first;
-        m_skinnedMeshs[key].emplace_back(pXContainer->m_pSkinnedMesh.second);
+
+        SkinnedMesh* pSkinnedMesh = pXContainer->m_pSkinnedMesh.second;
+        m_skinnedMeshs[key].emplace_back(pSkinnedMesh);
         pXContainer->m_pSkinnedMesh.second = nullptr;
 
         const std::size_t numSkinnedMesh = m_skinnedMeshs[key].size();
-        m_skinnedMeshs[key].back()->m_index = numSkinnedMesh - 1;
-        m_skinnedMeshs[key].back()->Setup();
+        pSkinnedMesh->m_index = numSkinnedMesh - 1;
+        pSkinnedMesh->Setup();
         m_availableIndexForSkinnedMesh[key] = 0;
     }
 
@@ -915,18 +919,23 @@ EffectMesh* Resource::Manager::GetEffectMesh(const TAG_RES_STATIC tag)
     return GetEffectMesh(keys.first, keys.second);
 }
 
-EffectMesh* Resource::Manager::GetEffectMesh(
-    const std::string& path, 
-    const std::string& filename)
+EffectMesh* Resource::Manager::GetEffectMesh(const std::string& pathFilename)
 {
-    const auto search = m_effectMeshs.find(path + filename);
+    const auto search = m_effectMeshs.find(pathFilename);
     if (search == m_effectMeshs.end())
     {
-        std::string str(filename + " is not found.");
+        std::string str(pathFilename + " is not found.");
         MessageBoxA(nullptr, str.c_str(), nullptr, MB_OK);
     }
 
     return search->second;
+}
+
+EffectMesh* Resource::Manager::GetEffectMesh(
+    const std::string& path, 
+    const std::string& filename)
+{
+    return GetEffectMesh(path + filename);
 }
 
 LPDIRECT3DTEXTURE9 Resource::Manager::GetTexture(const std::string& fullPath)

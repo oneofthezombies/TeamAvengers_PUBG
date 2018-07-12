@@ -17,24 +17,30 @@ void ScenePlay::setAloneMode()
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
 
-    //for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
-    //{
-    //    if (i == myID) continue;
+    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    {
+        if (i == myID) continue;
 
-    //    Character* pOther = new Character(i);
-    //    others.emplace_back(pOther);
-    //    characters.emplace_back(pOther);
-    //    AddObject(pOther);
-    //}
-    Character* pOther = new Character(1);
-    others.emplace_back(pOther);
-    characters.emplace_back(pOther);
-    AddObject(pOther);
-    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(600.0f, 100.0f, 600.0f);
-    Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+        Character* pOther = new Character(i);
+        others.emplace_back(pOther);
+        characters.emplace_back(pOther);
+        AddObject(pOther);
+        Communication()()->m_roomInfo.playerInfos[i].position = D3DXVECTOR3(i * 200.0f, 200.0f, 200.0f);
+        Communication()()->m_roomInfo.playerInfos[i].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+        Communication()()->m_roomInfo.playerInfos[i].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    }
 
-    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 2000.0f), Vector3::UP, Vector3::ONE * 0.7f);
+    //Character* pOther = new Character(1);
+    //others.emplace_back(pOther);
+    //characters.emplace_back(pOther);
+    //AddObject(pOther);
+    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(600.0f, 100.0f, 600.0f);
+    //Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    AddObject(new SkySphere);
+
+    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(400.0f, 100.0f, 0.0f), Vector3::UP, Vector3::ONE * 0.7f);
     D3DXMATRIX m;
     D3DXQUATERNION qR;
     D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
@@ -98,10 +104,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(170, 200, 130);
-    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    //AddObject(item);
-    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    p = D3DXVECTOR3(170, 200, 130);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
     //pPlayer->PutItemInTotalInventory(item);
 
@@ -115,10 +121,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(90, 0, 10);
-    //item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(90, 0, 10);
+    item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(100, 0, 10);
     //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);

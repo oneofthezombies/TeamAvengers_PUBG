@@ -49,6 +49,7 @@ struct Frame : public D3DXFRAME
 struct MeshContainer : public D3DXMESHCONTAINER
 {
     EffectMesh*  pEffectMesh;
+    std::string  m_effectMeshKey;
     LPD3DXMESH   m_pWorkMesh;
     D3DXMATRIX** m_ppBoneMatrixPtrs;
     D3DXMATRIX*  m_pBoneOffsetMatrices;

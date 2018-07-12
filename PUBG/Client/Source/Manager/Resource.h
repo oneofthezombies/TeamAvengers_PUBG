@@ -141,6 +141,7 @@ struct Resource
             const std::string& filename);
 
         EffectMesh* GetEffectMesh(const TAG_RES_STATIC tag);
+        EffectMesh* GetEffectMesh(const std::string& pathFilename);
         EffectMesh* GetEffectMesh(
             const std::string& path, 
             const std::string& filename);

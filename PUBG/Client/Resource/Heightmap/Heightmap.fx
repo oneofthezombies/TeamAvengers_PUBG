@@ -32,6 +32,11 @@ sampler2D Heightmap_Diffuse_Sampler = sampler_state
 sampler2D ShadowSampler = sampler_state
 {
    Texture = <ShadowMap_Tex>;
+   MinFilter = Linear; 
+   MagFilter = Linear; 
+   MipFilter = Linear; 
+   AddressU  = Wrap;     
+   AddressV  = Wrap;    
 };
 
 struct VS_INPUT 

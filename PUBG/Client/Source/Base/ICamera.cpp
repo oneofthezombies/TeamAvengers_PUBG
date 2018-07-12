@@ -131,6 +131,7 @@ void ICamera::UpdateFrustumCulling()
     D3DXPlaneFromPoints(&m_vecPlane[5], &m_vecWorld[6], &m_vecWorld[7], &m_vecWorld[4]);
     
 }
+
 bool ICamera::IsObjectInsideFrustum(const D3DXVECTOR3 center, const float radius)
 {
     for (int i = 0; i < 6; i++)

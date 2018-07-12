@@ -524,6 +524,7 @@ void Character::updateTotalInventory()
         //Debug << "primary weapon matrix : \n" << weaponWorld << '\n';
 
         pWeaponPrimaryTr->Update();
+
     }
     
     //보조무기
