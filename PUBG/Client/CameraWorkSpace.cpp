@@ -76,8 +76,6 @@ void CameraOnGun::Update()
         D3DXMatrixTranslation(&m, 0.0f, 8.0f, 0.0f);
         if (pTarInfo->pGunBolt)
             m_worldMatrix = m * pTarInfo->pGunBolt->CombinedTransformationMatrix * pTarInfo->pHandGun->CombinedTransformationMatrix *  pTarInfo->pTransform->GetTransformationMatrix();
-        else
-            cout << "¾ø¾î!" << endl;
     }
     m_eye = Vector3::ZERO;
     //D3DXVECTOR3 eye 
@@ -95,7 +93,7 @@ void CameraOnGun::Render()
         [this](LPD3DXEFFECT pEffect)
     {
         D3DXMATRIX s, m;
-        D3DXMatrixScaling(&s, 10.0f, 10.0f, 10.0f);
+        D3DXMatrixScaling(&s, 3.0f, 3.0f, 3.0f);
         m = s * m_worldMatrix;
         pEffect->SetMatrix(Shader::World, &m);
 

@@ -280,6 +280,24 @@ void Character::setReload()
 
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
+                    //총 자체 애니메이션
+                    m_isNeedRifleAnim = true;
+                    inven.m_pHand->Set
+                    (
+                        TAG_ANIM_WEAPON::Weapon_QBZ_Reload_Charge_FPP,
+                        false,
+                        Item::DEFAULT_BLENDING_TIME,
+                        Item::DEFAULT_NEXT_WEIGHT,
+                        Item::DEFAULT_POSITION,
+                        Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+                        [this, &inven]() {
+                        inven.m_pHand->Set(
+                            TAG_ANIM_WEAPON::Weapon_QBZ_Idle,
+                            false);
+                        m_isNeedRifleAnim = false;
+                    });
+
+                    //캐릭터 애니메이션
                     if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                     {
                         m_hasChangingState = true;
@@ -329,11 +347,17 @@ void Character::setReload()
                 {
                     if (inven.m_numReload == 5)
                     {
+                        TAG_ANIM_WEAPON tagAnim = TAG_ANIM_WEAPON::COUNT;
+                        if (CurrentCamera()()->GetTagCamera() == TAG_CAMERA::First_Person)
+                            tagAnim = TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast_FPP;
+                        else
+                            tagAnim = TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast;
+
                         //총 자체 애니메이션
                         m_isNeedRifleAnim = true;
                         inven.m_pHand->Set
                         (
-                            TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast,
+                            tagAnim,
                             false,
                             Item::DEFAULT_BLENDING_TIME,
                             Item::DEFAULT_NEXT_WEIGHT,
