@@ -348,7 +348,6 @@ private:
     void backAction(D3DXQUATERNION* OutRotation ,int virtical = 100 , int horizontal = 50);
     void backActionFrame();
 
-
     void updateMine();
     void updateOther();
     void updateBone();
@@ -360,7 +359,6 @@ private:
     bool isMine() const;
 
     void setInfo();
-    void minusDamage(const float damage);
 
     D3DXVECTOR3 getUp();
     //D3DXVECTOR3 getDown();

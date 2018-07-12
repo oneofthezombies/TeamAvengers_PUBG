@@ -1022,6 +1022,7 @@ void Character::movementControl(OUT State* OutState)
     float dt = Time()()->GetDeltaTime();
     float dist = movingFactor * m_rootTransform.MOVE_SPEED * dt;
 
+    //여기
     //점프 직후 이동 금지
     const string& animName = pAnimation->GetLowerAnimationName();
     if (animName == TagAnimation::GetString(TAG_ANIM_CHARACTER::Unarmed_Combat_Fall_Landing_Additive) ||
