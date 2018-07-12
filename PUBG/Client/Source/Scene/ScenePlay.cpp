@@ -68,20 +68,20 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(50, 0, 10);
-    item = new Item(TAG_RES_STATIC::FirstAidKit, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(40, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Bandage, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(50, 0, 10);
-    item = new Item(TAG_RES_STATIC::FirstAidKit, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(50, 0, 10);
+    //item = new Item(TAG_RES_STATIC::FirstAidKit, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(60, 0, 10);
-    item = new Item(TAG_RES_STATIC::MedKit, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);*/
+    //p = D3DXVECTOR3(60, 0, 10);
+    //item = new Item(TAG_RES_STATIC::MedKit, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(70, 0, 10);
     item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
@@ -127,8 +127,6 @@ void ScenePlay::setAloneMode()
     //item = new Item(TAG_RES_STATIC::ACOG, p, r, s);
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
-
-    //character0->ShowTotalInventory();
 }
 
 void ScenePlay::setWithOthersMode()
