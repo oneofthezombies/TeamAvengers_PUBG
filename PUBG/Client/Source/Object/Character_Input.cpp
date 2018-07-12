@@ -868,7 +868,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_POSITION,
-            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            0.3f,
             [this, &inven]()
         {
             inven.m_pWeaponSecondary = inven.m_pHand;
@@ -878,7 +878,8 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
-                false);
+                true,
+                0.3f);
         });
 
         //Àåºñ¿ë
