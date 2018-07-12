@@ -555,7 +555,7 @@ float TagAnimation::GetSpeed(const TAG_ANIM_WEAPON tag)
     case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Start:
     case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Loop:
     case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_End:
-        return 0.95;
+        return 0.95f;
 
     default:
         return 1.0f;
