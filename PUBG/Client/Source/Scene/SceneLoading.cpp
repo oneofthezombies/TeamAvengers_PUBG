@@ -20,24 +20,25 @@ void SceneLoading::Load()
 
     //// load effect meshs
     load(TAG_RES_STATIC::SkySphere);
-    load(TAG_RES_STATIC::Ammo_5_56mm);
-    load(TAG_RES_STATIC::Ammo_7_62mm);
+    //load(TAG_RES_STATIC::Ammo_5_56mm);
+    //load(TAG_RES_STATIC::Ammo_7_62mm);
     //load(TAG_RES_STATIC::Armor_Lv1);
     //load(TAG_RES_STATIC::Back_Lv1);
     //load(TAG_RES_STATIC::Head_Lv1);
-    load(TAG_RES_STATIC::QBZ);
-    load(TAG_RES_STATIC::Kar98k);
+    //load(TAG_RES_STATIC::QBZ);
+    //load(TAG_RES_STATIC::Kar98k);
     //load(TAG_RES_STATIC::Bandage);
     //load(TAG_RES_STATIC::Rock_1);
+    load(TAG_RES_STATIC::WareHouse_A);
 
-    // load skined meshs
-    const int numQBZ = 1;
-    for (int i = 0; i < numQBZ; ++i)
-        load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
+    //// load skined meshs
+    //const int numQBZ = 1;
+    //for (int i = 0; i < numQBZ; ++i)
+    //    load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
-    const int numKar98k = 1;
-    for (int i = 0; i < numKar98k; ++i)
-        load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    //const int numKar98k = 1;
+    //for (int i = 0; i < numKar98k; ++i)
+    //    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
@@ -62,13 +63,13 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined);
 
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
     //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
-    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
 
     /*
     Unarmed_Combined.X 는 하단의 X파일들을 합친 것
