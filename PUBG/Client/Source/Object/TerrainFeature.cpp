@@ -2,7 +2,7 @@
 #include "TerrainFeature.h"
 #include "Collider.h"
 #include "EffectMeshRenderer.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 
 TerrainFeature::TerrainFeature(
     const TAG_RES_STATIC tag,
@@ -35,7 +35,7 @@ TerrainFeature::~TerrainFeature()
 
 void TerrainFeature::OnUpdate()
 {
-    // do nothing
+    Shader()()->AddShadowSource(GetTransform()->GetTransformationMatrix(), pEffectMeshRenderer->GetEffectMesh());
 }
 
 void TerrainFeature::OnRender()
@@ -46,10 +46,6 @@ void TerrainFeature::OnRender()
         pEffect->SetMatrix(
             Shader::World,
             &GetTransform()->GetTransformationMatrix());
-
-        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-        D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
     });
 
     for (auto& bb : m_boundingBoxes)

@@ -479,6 +479,10 @@ void Character::updateTotalInventory()
             pHand->UpdateAnimation();
 
         pHand->UpdateModel();
+
+        Shader()()->AddShadowSource(
+            pHandTr->GetTransformationMatrix(), 
+            pHand->GetSkinnedMesh());
     }
 
     Item* pArmor = m_totalInventory.m_pEquipArmor;
@@ -556,6 +560,10 @@ void Character::updateTotalInventory()
         //Debug << "primary weapon matrix : \n" << weaponWorld << '\n';
 
         pWeaponPrimaryTr->Update();
+
+        Shader()()->AddShadowSource(
+            pWeaponPrimaryTr->GetTransformationMatrix(), 
+            pWeaponPrimary->GetSkinnedMesh());
     }
     
     //보조무기
@@ -571,6 +579,10 @@ void Character::updateTotalInventory()
         //Debug << "secondary weapon matrix : \n" << weaponWorld << '\n';
 
         pWeaponSecondaryTr->Update();
+
+        Shader()()->AddShadowSource(
+            pWeaponSecondaryTr->GetTransformationMatrix(),
+            pWeaponSecondary->GetSkinnedMesh());
     }
 }
 

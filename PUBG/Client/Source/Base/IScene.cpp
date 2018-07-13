@@ -2,7 +2,7 @@
 #include "IScene.h"
 #include "IObject.h"
 #include "TerrainFeature.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "ResourceInfo.h"
 #include "Item.h"
 #include "HeightMap.h"
@@ -23,7 +23,6 @@ ObjectInFile::ObjectInFile()
 
 IScene::IScene()
     : MemoryAllocator()
-    , m_pDirectionalLight(nullptr)
     , pHeightMap(nullptr)
 {
 }
@@ -32,8 +31,6 @@ IScene::~IScene()
 {
 	for (auto o : m_objects)
         SAFE_DELETE(o);
-
-    SAFE_DELETE(m_pDirectionalLight);
 }
 
 void IScene::Init()
@@ -123,6 +120,9 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
         //{
         //    cout << b.m_transform << '\n';
         //}
+
+        // degrees to radians
+        o.m_rotation = D3DXToRadian(o.m_rotation);
 
         if (ResourceInfo::IsItem(o.m_tagResStatic))
         {
@@ -276,20 +276,7 @@ HRESULT IScene::parseBoxColliderInFile(
     return S_OK;
 }
 
-void IScene::SetDirectionalLight(DirectionalLight* p)
-{
-    assert(p && "IScene::SetDirectionalLight(), directional light is null.");
-
-    SAFE_DELETE(m_pDirectionalLight);
-    m_pDirectionalLight = p;
-}
-
-DirectionalLight* IScene::GetDirectionalLight()
-{
-    return m_pDirectionalLight;
-}
-
-void IScene::SetHeightMap(HeightMap * p)
+void IScene::SetHeightMap(HeightMap* p)
 {
     assert(p && "IScene::SetHeightMap(), SetHeightMapis null.");
     m_objects.emplace(p);

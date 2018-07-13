@@ -3,7 +3,7 @@
 #include "CharacterAnimation.h"
 #include "CharacterPart.h"
 #include "Bullet.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "AnimationState.h"
 #include "Item.h"
 #include "ResourceInfo.h"
@@ -69,7 +69,7 @@ Character::Character(const int index)
     CS->InsertObjIntoTotalCellSpace(TAG_OBJECT::Character, m_cellIndex, this);   //Object 를 TotalCellSpace(Area)에 넣기
     CS->m_NearArea.CreateNearArea(m_cellIndex);                                          //Near Area 계산
 
-    pAnimation = new CharacterAnimation;
+    pAnimation = new CharacterAnimation(m_index);
     AddChild(pAnimation);
     setAnimation(
         CharacterAnimation::BodyPart::BOTH, 
@@ -143,33 +143,45 @@ void Character::OnUpdate()
         pPart->Update();
 
     if (IsFire())
-    {
         RifleShooting();
-    }
         
-    if (isMine())
-        Camera()()->Update();
+    Shader()()->AddShadowSource(
+        GetTransform()->GetTransformationMatrix(), 
+        pAnimation->GetSkinnedMesh());
 
+    // communication
+    communicate();
+}
+
+void Character::OnRender()
+{
     // render
-    pAnimation->Render(
-        /*m_framePtr.pWaist->CombinedTransformationMatrix
-        **/ GetTransform()->GetTransformationMatrix(),
-        [this](LPD3DXEFFECT pEffect)
+    if (CurrentCamera()()->IsObjectInsideFrustum(
+        m_boundingSphere.center + m_boundingSphere.position, 
+        m_boundingSphere.radius))
     {
-        pEffect->SetMatrix(
-            Shader::World,
-            &GetTransform()->GetTransformationMatrix());
+        pAnimation->Render(
 
-        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-        D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
-    });
-    renderTotalInventory();
+            /* 여기 월드 인자는 레거시임. 밑 셋매트릭스에 변화를 적용시켜야 함 */
+            /*m_framePtr.pWaist->CombinedTransformationMatrix
+            **/ GetTransform()->GetTransformationMatrix(),
+
+            [this](LPD3DXEFFECT pEffect)
+        {
+            pEffect->SetMatrix(
+                Shader::World,
+                &GetTransform()->GetTransformationMatrix());
+        });
+
+        renderTotalInventory();
+    }
 
     // render collision shapes
     for (auto pPart : m_characterParts)
         pPart->Render();
+
     m_boundingBox.Render();
+    Debug << "index : " << m_index << ", center : " << m_boundingSphere.center << ", position : " << m_boundingSphere.position << '\n';
     m_boundingSphere.Render();
     // end render collision shapes
 
@@ -183,7 +195,7 @@ void Character::OnUpdate()
     m = e * c * r * p;
     const auto& vertices = Resource()()->GetBoundingBoxVertices();
     const auto& indices = Resource()()->GetBoundingBoxIndices();
-    Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr, 
+    Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr,
         [&m](LPD3DXEFFECT pEffect)
     {
         pEffect->SetMatrix(Shader::World, &m);
@@ -202,13 +214,6 @@ void Character::OnUpdate()
             sizeof vertices.front());
     });
     // end render hited box
-    
-    // communication
-    communicate();
-}
-
-void Character::OnRender()
-{
 }
 
 void Character::updateMine()
@@ -290,11 +295,6 @@ void Character::updateMine()
             m_savedInput = m_currentStayKey;
         }
     }
-
-
-
-    // 카메라 프러스텀 업데이트 (왜냐하면 캐릭터0 업데이트, 렌더, 캐릭터1 업데이트, 렌더, ... 순서대로 실행되기 떄문에)
-    CurrentCamera()()->UpdateFrustumCulling();
     
     D3DXVECTOR3 pos = tm->GetPosition();
     D3DXQUATERNION rot = tm->GetRotation();

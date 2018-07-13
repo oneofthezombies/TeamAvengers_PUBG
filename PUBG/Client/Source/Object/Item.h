@@ -95,6 +95,8 @@ public:
 
     void UpdateBone(Item* pHand, const float headRot, const float waistRot);
 
+    SkinnedMesh* GetSkinnedMesh() const;
+
     //for 아이템 자체 애니메이션
     void Set(
         const TAG_ANIM_WEAPON tag,

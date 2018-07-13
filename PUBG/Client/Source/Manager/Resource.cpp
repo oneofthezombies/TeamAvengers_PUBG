@@ -433,8 +433,9 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
         return E_FAIL;
     }
 
+    const std::string effectMeshKey = m_path + meshContainerName;
     EffectMesh* pEffectMesh =
-        pXContainer->m_effectMeshs[m_path + meshContainerName];
+        pXContainer->m_effectMeshs[effectMeshKey];
     LPD3DXMESH pMesh = pEffectMesh->m_pMesh;
     pMesh->AddRef();
 
@@ -480,7 +481,8 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
         return E_OUTOFMEMORY;
     }
 
-    pMeshContainer->pEffectMesh = pEffectMesh;
+    //pMeshContainer->pEffectMesh = pEffectMesh;
+    pMeshContainer->m_effectMeshKey = effectMeshKey;
     pMeshContainer->m_pWorkMesh = pWorkMesh;
     pMeshContainer->pSkinInfo = pSkinInfo;
 
@@ -593,7 +595,13 @@ void Resource::Manager::Destroy()
         SAFE_DELETE(em.second);
 
     for (auto sm : m_skinnedMeshs)
-        SAFE_DELETE(sm.second);
+    {
+        auto& sms = sm.second;
+        for (auto sm : sms)
+        {
+            SAFE_DELETE(sm);
+        }
+    }
 
     //RemoveFontResource(TEXT("resources/fonts/SeoulNamsanM.ttf"));
 }
@@ -607,7 +615,7 @@ void Resource::Manager::AddResource(XContainer* pXContainer)
     {
         const std::string key = kv.first;
         EffectMesh*& pEffectMesh = kv.second;
-
+        
         const auto search = m_effectMeshs.find(key);
         if (search == m_effectMeshs.end())
         {
@@ -645,14 +653,15 @@ void Resource::Manager::AddResource(XContainer* pXContainer)
     if (pXContainer->m_pSkinnedMesh.second)
     {
         const std::string key = pXContainer->m_pSkinnedMesh.first;
-        const auto search = m_skinnedMeshs.find(key);
-        if (search == m_skinnedMeshs.end())
-        {
-            m_skinnedMeshs[key] = pXContainer->m_pSkinnedMesh.second;
-            pXContainer->m_pSkinnedMesh.second = nullptr;
 
-            m_skinnedMeshs[key]->Setup();
-        }
+        SkinnedMesh* pSkinnedMesh = pXContainer->m_pSkinnedMesh.second;
+        m_skinnedMeshs[key].emplace_back(pSkinnedMesh);
+        pXContainer->m_pSkinnedMesh.second = nullptr;
+
+        const std::size_t numSkinnedMesh = m_skinnedMeshs[key].size();
+        pSkinnedMesh->m_index = numSkinnedMesh - 1;
+        pSkinnedMesh->Setup();
+        m_availableIndexForSkinnedMesh[key] = 0;
     }
 
     SAFE_DELETE(pXContainer);
@@ -823,20 +832,85 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
     //return m_umapFont[val];
 }
 
-SkinnedMesh* Resource::Manager::GetSkinnedMesh(const std::string& fullPath)
+SkinnedMesh* Resource::Manager::GetSkinnedMesh(
+    const std::string& fullPath,
+    const std::size_t index)
 {
     const auto search = m_skinnedMeshs.find(fullPath);
-    if (search != m_skinnedMeshs.end())
-        return search->second;
+    if (search == m_skinnedMeshs.end())
+        return nullptr;
 
-    return nullptr;
+    const std::size_t size = search->second.size();
+    if (index >= size)
+        return nullptr;
+
+    return m_skinnedMeshs[fullPath][index];
 }
 
 SkinnedMesh* Resource::Manager::GetSkinnedMesh(
     const std::string& path, 
+    const std::string& filename,
+    const std::size_t index)
+{
+    return GetSkinnedMesh(path + filename, index);
+}
+
+std::size_t Resource::Manager::GetNumSkinnedMesh(
+    const std::string& path, 
     const std::string& filename)
 {
-    return GetSkinnedMesh(path + filename);
+    return GetNumSkinnedMesh(path + filename);
+}
+
+std::size_t Resource::Manager::GetNumSkinnedMesh(const std::string& fullPath)
+{
+    const auto search = m_skinnedMeshs.find(fullPath);
+    if (search != m_skinnedMeshs.end())
+        return search->second.size();
+
+    return std::numeric_limits<std::size_t>::max();
+}
+
+bool Resource::Manager::GetAvailableIndexForSkinnedMesh(
+    const std::string& path, 
+    const std::string& filename, 
+          std::size_t* OutIndex)
+{
+    const std::string key(path + filename);
+    const auto search = m_skinnedMeshs.find(key);
+    if (search == m_skinnedMeshs.end())
+        return false;
+
+    const std::size_t size = search->second.size();
+    const auto search2 = m_availableIndexForSkinnedMesh.find(key);
+    if (search2 == m_availableIndexForSkinnedMesh.end())
+        return false;
+
+    const std::size_t availableIndex = m_availableIndexForSkinnedMesh[key];
+    if (availableIndex >= size)
+        return false;
+
+    assert(
+        OutIndex && 
+        "Resource::Manager::GetAvailableIndexForSkinnedMesh(), \
+         argument is null.");
+
+    *OutIndex = availableIndex;
+    return true;
+}
+
+void Resource::Manager::AddSkinnedMeshCount(
+    const std::string& path, 
+    const std::string& filename)
+{
+    const std::string key(path + filename);
+    const auto search = m_skinnedMeshs.find(key);
+    
+    assert(
+        search != m_skinnedMeshs.end() && 
+        "Resource::Manager::AddSkinnedMeshCount(), path filename is wrong.");
+
+    ++m_availableIndexForSkinnedMesh[key];
 }
 
 EffectMesh* Resource::Manager::GetEffectMesh(const TAG_RES_STATIC tag)
@@ -845,18 +919,23 @@ EffectMesh* Resource::Manager::GetEffectMesh(const TAG_RES_STATIC tag)
     return GetEffectMesh(keys.first, keys.second);
 }
 
-EffectMesh* Resource::Manager::GetEffectMesh(
-    const std::string& path, 
-    const std::string& filename)
+EffectMesh* Resource::Manager::GetEffectMesh(const std::string& pathFilename)
 {
-    const auto search = m_effectMeshs.find(path + filename);
+    const auto search = m_effectMeshs.find(pathFilename);
     if (search == m_effectMeshs.end())
     {
-        std::string str(filename + " is not found.");
+        std::string str(pathFilename + " is not found.");
         MessageBoxA(nullptr, str.c_str(), nullptr, MB_OK);
     }
 
     return search->second;
+}
+
+EffectMesh* Resource::Manager::GetEffectMesh(
+    const std::string& path, 
+    const std::string& filename)
+{
+    return GetEffectMesh(path + filename);
 }
 
 LPDIRECT3DTEXTURE9 Resource::Manager::GetTexture(const std::string& fullPath)

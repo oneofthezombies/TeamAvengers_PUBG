@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Structure.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 
 VERTEX_RHWC::VERTEX_RHWC()
     : p(0.0f, 0.0f, 0.0f, 0.0f)
@@ -58,6 +58,8 @@ SkinnedMesh::SkinnedMesh()
     , m_pSubRootFrame(nullptr)
     , pConnectFrame(nullptr)
     , m_pAnimController(nullptr)
+    , m_pSubAnimController(nullptr)
+    , m_index(std::numeric_limits<std::size_t>::max())
 {
 }
 
@@ -72,6 +74,7 @@ SkinnedMesh::~SkinnedMesh()
         D3DXFrameDestroy(m_pSubRootFrame, &ah);
 
     SAFE_RELEASE(m_pAnimController);
+    SAFE_RELEASE(m_pSubAnimController);
 }
 
 void SkinnedMesh::Setup()
@@ -85,8 +88,21 @@ bool SkinnedMesh::Seperate(const string& name)
 
     seperate(m_pRootFrame, name);
 
-    if (m_pSubRootFrame) return true;
-    else                 return false;
+    if (m_pSubRootFrame)
+    {
+        m_pAnimController->CloneAnimationController(
+            m_pAnimController->GetMaxNumAnimationOutputs(),
+            m_pAnimController->GetMaxNumAnimationSets(),
+            m_pAnimController->GetMaxNumTracks(),
+            m_pAnimController->GetMaxNumEvents(),
+            &m_pSubAnimController);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void SkinnedMesh::setupBoneMatrixPointers(LPD3DXFRAME pFrame)
@@ -503,16 +519,3 @@ void SkinnedMesh::seperate(LPD3DXFRAME pFrame, const string& name)
 //    SAFE_DELETE(pMeshContainer);
 //    return S_OK;
 //}
-
-SkinnedMeshInstance::SkinnedMeshInstance()
-    : pSkinnedMesh(nullptr)
-    , m_pAnimController(nullptr)
-    , m_pSubAnimController(nullptr)
-{
-}
-
-SkinnedMeshInstance::~SkinnedMeshInstance()
-{
-    SAFE_RELEASE(m_pAnimController);
-    SAFE_RELEASE(m_pSubAnimController);
-}

@@ -19,36 +19,43 @@ void SceneLoading::Load()
     setPlayMode(Communication::PlayMode::ALONE);
 
     //// load effect meshs
-    //load(TAG_RES_STATIC::SkySphere);
-    load(TAG_RES_STATIC::Ammo_5_56mm);
-    load(TAG_RES_STATIC::Ammo_7_62mm);
-    //load(TAG_RES_STATIC::Armor_Lv1);
-    //load(TAG_RES_STATIC::Back_Lv1);
-    //load(TAG_RES_STATIC::Head_Lv1);
-    load(TAG_RES_STATIC::QBZ);
+    load(TAG_RES_STATIC::SkySphere);
+    //load(TAG_RES_STATIC::Ammo_5_56mm);
+    //load(TAG_RES_STATIC::Ammo_7_62mm);
+    load(TAG_RES_STATIC::Armor_Lv1);
+    load(TAG_RES_STATIC::Back_Lv1);
+    load(TAG_RES_STATIC::Head_Lv1);
+    //load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
-
     //load(TAG_RES_STATIC::Bandage);
-    //load(TAG_RES_STATIC::FirstAidKit);
-    //load(TAG_RES_STATIC::MedKit);
+    //load(TAG_RES_STATIC::Rock_1);
+    //load(TAG_RES_STATIC::WareHouse_A);
 
-    //load(TAG_RES_STATIC::RedDot);
-    //load(TAG_RES_STATIC::Aimpoint2X);
-    //load(TAG_RES_STATIC::ACOG);
+    // load skined meshs
+    //const int numQBZ = 1;
+    //for (int i = 0; i < numQBZ; ++i)
+    //    load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
-    load(TAG_RES_STATIC::Rock_1);
-
-    //// load skined meshs
-    load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
-    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    const int numKar98k = 1;
+    for (int i = 0; i < numKar98k; ++i)
+        load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
-    load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
+    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+        load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load equipment
-    //load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
-    //load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
-    //load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
+    const int numArmor = 1;
+    for (int i = 0; i < numArmor; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
+
+    const int numBack = 1;
+    for (int i = 0; i < numBack; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
+
+    const int numHead = 1;
+    for (int i = 0; i < numHead; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
@@ -66,7 +73,7 @@ void SceneLoading::Load()
     //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
 
     /*
     Unarmed_Combined.X 는 하단의 X파일들을 합친 것
@@ -268,6 +275,7 @@ void SceneLoading::OnInit()
 {
     Resource()()->AddTexture("./Resource/", "input_field.png");
     Resource()()->AddTexture("./Resource/", "LoadingScreen.tga");
+    Resource()()->AddTexture("./Resource/", "Honeyview_RandomLoading01.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
     Resource()()->AddTexture("./Resource/", "dedenne.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
@@ -286,7 +294,7 @@ void SceneLoading::OnInit()
     m_pBackground =
         new UIImage(
             "./Resource/",
-            "LoadingScreen.tga",
+            "Honeyview_RandomLoading01.png",
             Vector3::ZERO,
             nullptr,
             nullptr);
@@ -384,11 +392,12 @@ void SceneLoading::OnUpdate()
                 pResources->emplace(pResources->size(), pXContainer);
 
                 m_tasksForSingleThread.erase(begin);
+
+                addEffectMeshs();
+                addSkinnedMeshs();
             }
             else
             {
-                addEffectMeshs();
-                addSkinnedMeshs();
                 addAnimationsToCharacter();
                 addAnimationsToEquipment();
             }
@@ -419,69 +428,91 @@ void SceneLoading::OnUpdate()
 
 void SceneLoading::addAnimationsToCharacter()
 {
-    Resource::XContainer* pCharacterResource = 
-        m_characterSkinnedMeshResources.begin()->second;
-
     const auto pathFilename = ResourceInfo::GetCharacterPathFileName();
-    
-    pCharacterResource->m_pSkinnedMesh.first = 
-        pathFilename.first + pathFilename.second;
 
-    Resource()()->AddResource(pCharacterResource);
+    for (auto csmr : m_characterSkinnedMeshResources)
+    {
+        Resource::XContainer* pCharacterResource = csmr.second;
+        pCharacterResource->m_pSkinnedMesh.first = 
+            pathFilename.first + pathFilename.second;
 
-    SkinnedMesh* pCharacter = 
-        Resource()()->GetSkinnedMesh(pathFilename.first, pathFilename.second); 
+        Resource()()->AddResource(pCharacterResource);
+    }
 
-    bool res = pCharacter->Seperate("spine_02");
-    assert(res && 
-        "SceneLoading::addAnimationsToCharacter(), \
-         SkinnedMesh::Seperate() failed.");
+    m_characterSkinnedMeshResources.clear();
 
-    LPD3DXANIMATIONCONTROLLER& pOld = pCharacter->m_pAnimController;
+    for (std::size_t i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    {
+        SkinnedMesh* pCharacter =
+            Resource()()->GetSkinnedMesh(
+                pathFilename.first,
+                pathFilename.second,
+                i);
 
-    LPD3DXANIMATIONCONTROLLER pAdd    = nullptr;
-    LPD3DXANIMATIONCONTROLLER pNew    = nullptr;
-    LPD3DXANIMATIONSET        pAddSet = nullptr;
-    
-    UINT numAddSet = 0;
+        LPD3DXANIMATIONCONTROLLER& pOld = pCharacter->m_pAnimController;
+
+        LPD3DXANIMATIONCONTROLLER pAdd = nullptr;
+        LPD3DXANIMATIONCONTROLLER pNew = nullptr;
+        LPD3DXANIMATIONSET        pAddSet = nullptr;
+
+        UINT numAddSet = 0;
+
+        for (auto pR : m_characterAnimationResources)
+        {
+            if (!pR.second)
+            {
+                std::string text(std::to_string(pR.first));
+                MessageBoxA(nullptr, text.c_str(), nullptr, MB_OK);
+
+                assert(
+                    false &&
+                    "SceneLoading::addAnimationsToCharacter(), \
+                XContainer is null.");
+            }
+
+            pAdd = pR.second->m_pSkinnedMesh.second->m_pAnimController;
+
+            pOld->CloneAnimationController(
+                pOld->GetMaxNumAnimationOutputs(),
+                pOld->GetMaxNumAnimationSets()
+                + pAdd->GetMaxNumAnimationSets(),
+                pOld->GetMaxNumTracks(),
+                pOld->GetMaxNumEvents(),
+                &pNew);
+
+            numAddSet = pAdd->GetNumAnimationSets();
+            for (int i = static_cast<int>(numAddSet) - 1; i >= 0; --i)
+            {
+                pAdd->GetAnimationSet(i, &pAddSet);
+                pNew->RegisterAnimationSet(pAddSet);
+                pAddSet->Release();
+
+                ++m_numAddedAnim;
+            }
+
+            pOld->Release();
+            pOld = pNew;
+        }
+    }
+
+    for (std::size_t i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    {
+        SkinnedMesh* pCharacter =
+            Resource()()->GetSkinnedMesh(
+                pathFilename.first,
+                pathFilename.second,
+                i);
+
+        bool res = pCharacter->Seperate("spine_02");
+        assert(res &&
+            "SceneLoading::addAnimationsToCharacter(), \
+             SkinnedMesh::Seperate() failed.");
+    }
 
     for (auto pR : m_characterAnimationResources)
-    {
-        if (!pR.second)
-        {
-            std::string text(std::to_string(pR.first));
-            MessageBoxA(nullptr, text.c_str(), nullptr, MB_OK);
-
-            assert(
-                false && 
-                "SceneLoading::addAnimationsToCharacter(), \
-                 XContainer is null.");
-        }
-
-        pAdd = pR.second->m_pSkinnedMesh.second->m_pAnimController;
-
-        pOld->CloneAnimationController(
-            pOld->GetMaxNumAnimationOutputs(),
-            pOld->GetMaxNumAnimationSets() + pAdd->GetMaxNumAnimationSets(),
-            pOld->GetMaxNumTracks(),
-            pOld->GetMaxNumEvents(),
-            &pNew);
-        
-        numAddSet = pAdd->GetNumAnimationSets();
-        for (int i = static_cast<int>(numAddSet) - 1; i >= 0; --i)
-        {
-            pAdd->GetAnimationSet(i, &pAddSet);
-            pNew->RegisterAnimationSet(pAddSet);
-            pAddSet->Release();
-
-            ++m_numAddedAnim;
-        }
-
-        pOld->Release();
-        pOld = pNew;
-
         SAFE_DELETE(pR.second);
-    }
+
+    m_characterAnimationResources.clear();
 
     m_isDoneCharacters = true;
 }
@@ -493,7 +524,9 @@ void SceneLoading::addEffectMeshs()
         Resource()()->AddResource(r.second);
     }
 
-    m_isDoneEffectMeshs = true;
+    m_effectMeshResources.clear();
+
+    //m_isDoneEffectMeshs = true;
 }
 
 void SceneLoading::addSkinnedMeshs()
@@ -503,28 +536,32 @@ void SceneLoading::addSkinnedMeshs()
         Resource()()->AddResource(r.second);
     }
 
-    m_isDoneSkinnedMeshs = true;
+    m_skinnedMeshResources.clear();
+
+    //m_isDoneSkinnedMeshs = true;
 }
 
 void SceneLoading::addAnimationsToEquipment()
 {
-    const auto characterPathFilename = ResourceInfo::GetCharacterPathFileName();
+    const auto characterPathFilename = 
+        ResourceInfo::GetCharacterPathFileName();
+    
     SkinnedMesh* pCharacter =
-        Resource()()->GetSkinnedMesh(characterPathFilename.first, characterPathFilename.second);
+        Resource()()->GetSkinnedMesh(
+            characterPathFilename.first, 
+            characterPathFilename.second, 0);
 
-    for (auto r : this->m_equipmentSkinnedMeshResources)
+    for (auto r : m_equipmentSkinnedMeshResources)
     {
         Resource::XContainer* pResource = r.second;
         
         const std::string key = pResource->m_pSkinnedMesh.first;
         Resource()()->AddResource(pResource);
 
-        SkinnedMesh* pSkinnedMesh = Resource()()->GetSkinnedMesh(key);
-        bool res = pSkinnedMesh->Seperate("spine_02");
-        assert(
-            res &&
-            "SceneLoading::addAnimationsToEquipment(), \
-             SkinnedMesh::Seperate() failed.");
+        std::size_t numSkinnedMesh = Resource()()->GetNumSkinnedMesh(key);
+
+        SkinnedMesh* pSkinnedMesh = 
+            Resource()()->GetSkinnedMesh(key, numSkinnedMesh - 1);
 
         LPD3DXANIMATIONCONTROLLER& pOld = pSkinnedMesh->m_pAnimController;
         LPD3DXANIMATIONCONTROLLER  pAdd = pCharacter->m_pAnimController;
@@ -548,9 +585,19 @@ void SceneLoading::addAnimationsToEquipment()
 
         pOld->Release();
         pOld = pNew;
+
+        bool res = pSkinnedMesh->Seperate("spine_02");
+        assert(
+            res &&
+            "SceneLoading::addAnimationsToEquipment(), \
+             SkinnedMesh::Seperate() failed.");
     }
 
+    m_equipmentSkinnedMeshResources.clear();
+
     m_isDoneEquipments = true;
+    m_isDoneEffectMeshs = true;
+    m_isDoneSkinnedMeshs = true;
 }
 
 void SceneLoading::addHeightmapResource()

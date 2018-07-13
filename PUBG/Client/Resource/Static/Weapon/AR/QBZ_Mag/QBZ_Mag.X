@@ -3991,6 +3991,11 @@ Frame SM_MAG_QBZ95 {
      }
 
      EffectParamString {
+      "Map__0";
+      "F_BaseBody_03_S.tga";
+     }
+
+     EffectParamString {
       "C__Users_user_Desktop_QBZ_Textures__T_QBZ95_N_tga";
       "T_QBZ95_N.tga";
      }

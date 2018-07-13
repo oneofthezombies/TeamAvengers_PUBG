@@ -92,12 +92,14 @@ struct Resource
     class Manager : public Singleton<Manager>
     {
     private:
-        std::unordered_map<std::string, LPDIRECT3DTEXTURE9> m_textures;
-        LPD3DXEFFECTPOOL                                    m_pEffectPool;
-        std::unordered_map<std::string, LPD3DXEFFECT>       m_effects;
-        std::unordered_map<std::string, EffectMesh*>        m_effectMeshs;
-        std::unordered_map<std::string, SkinnedMesh*>       m_skinnedMeshs;
-        std::unordered_map<TAG_FONT,    LPD3DXFONT>         m_fonts;
+        std::map<std::string, LPDIRECT3DTEXTURE9>        m_textures;
+        LPD3DXEFFECTPOOL                                 m_pEffectPool;
+        std::map<std::string, LPD3DXEFFECT>              m_effects;
+        std::map<std::string, EffectMesh*>               m_effectMeshs;
+        std::map<TAG_FONT,    LPD3DXFONT>                m_fonts;
+        std::map<std::string, std::vector<SkinnedMesh*>> m_skinnedMeshs;
+        std::map<std::string, std::size_t>               
+            m_availableIndexForSkinnedMesh;
 
         LPD3DXMESH               m_pBoundingSphereMesh;
         std::vector<D3DXVECTOR3> m_boundingBoxVertices;
@@ -116,12 +118,30 @@ struct Resource
 
         LPD3DXFONT GetFont(const TAG_FONT tag);
 
-        SkinnedMesh* GetSkinnedMesh(const std::string& fullPath);
+        SkinnedMesh* GetSkinnedMesh(
+            const std::string& fullPath, 
+            const std::size_t index);
         SkinnedMesh* GetSkinnedMesh(
             const std::string& path, 
+            const std::string& filename, 
+            const std::size_t index);
+
+        std::size_t GetNumSkinnedMesh(
+            const std::string& path, 
+            const std::string& filename);
+        std::size_t GetNumSkinnedMesh(const std::string& fullPath);
+
+        bool GetAvailableIndexForSkinnedMesh(
+            const std::string& path, 
+            const std::string& filename, 
+            std::size_t* OutIndex);
+
+        void AddSkinnedMeshCount(
+            const std::string& path,
             const std::string& filename);
 
         EffectMesh* GetEffectMesh(const TAG_RES_STATIC tag);
+        EffectMesh* GetEffectMesh(const std::string& pathFilename);
         EffectMesh* GetEffectMesh(
             const std::string& path, 
             const std::string& filename);

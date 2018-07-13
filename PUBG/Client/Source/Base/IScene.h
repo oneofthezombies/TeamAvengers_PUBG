@@ -3,7 +3,6 @@
 //#define CellSpaceDim 4
 
 class IObject;
-class DirectionalLight;
 class HeightMap;
 class Area;
 class Bullet;
@@ -50,10 +49,8 @@ private:
     unordered_set<IObject*>        m_objects;
     unordered_map<IObject*, float> m_toDeleteObjects;
 
-    DirectionalLight* m_pDirectionalLight;
-    
 protected:
-    HeightMap *             pHeightMap;
+    HeightMap*             pHeightMap;
     std::vector<CellSpace>  m_TotalCellSpaces;
 public:
     Area                    m_NearArea;
@@ -80,9 +77,6 @@ public:
 
     void LoadObjectsFromFile(const std::string& fullPath);
     IObject* FindWithTag(const TAG_OBJECT tag);
-
-    void              SetDirectionalLight(DirectionalLight* p);
-    DirectionalLight* GetDirectionalLight();
 
     void              SetHeightMap(HeightMap* p);
     HeightMap*        GetHeightMap();
