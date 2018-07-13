@@ -33,10 +33,10 @@ sampler2D ShadowSampler = sampler_state
 
 /*** dependency block ***/
 texture C__Users_user_Desktop_Rifle_Kar98k_Textures__kar98k_01_d_tga; 
+texture Map__1; 
 texture C__Users_user_Desktop_Rifle_Kar98k_Textures__kar98k_01_n_tga; 
 
-// DiffuseMap
-sampler2D C__Users_user_Desktop_Rifle_Kar98k_Textures__kar98k_01_d_tgaSampler = sampler_state
+sampler2D C__Users_user_Desktop_Rifle_Kar98k_Textures__kar98k_01_d_tgaSampler = sampler_state  // TexCoord0 
 { 
    Texture = <C__Users_user_Desktop_Rifle_Kar98k_Textures__kar98k_01_d_tga>; 
    MinFilter = Linear; 
@@ -46,8 +46,17 @@ sampler2D C__Users_user_Desktop_Rifle_Kar98k_Textures__kar98k_01_d_tgaSampler = 
    AddressV  = Wrap;     
 }; 
 
-// NormalMap
-sampler2D C__Users_user_Desktop_Rifle_Kar98k_Textures__kar98k_01_n_tgaSampler = sampler_state
+sampler2D Map__1Sampler = sampler_state  // SpecularMap
+{ 
+   Texture = <Map__1>; 
+   MinFilter = Linear; 
+   MagFilter = Linear; 
+   MipFilter = Linear; 
+   AddressU  = Wrap;     
+   AddressV  = Wrap;     
+}; 
+
+sampler2D C__Users_user_Desktop_Rifle_Kar98k_Textures__kar98k_01_n_tgaSampler = sampler_state  // TexCoord0 
 { 
    Texture = <C__Users_user_Desktop_Rifle_Kar98k_Textures__kar98k_01_n_tga>; 
    MinFilter = Linear; 
@@ -124,8 +133,21 @@ float4  PS(VS_OUTPUT vout) : COLOR
     diffuse = max(float3(0.3f, 0.3f, 0.3f), diffuse);
     diffuse = albedo.rgb * diffuse;
 
+    float3 specular = 0;
+    if (diffuse.x > 0)
+    {
+        float3 reflection = reflect(lightDir, worldNormal);
+        float3 viewDir = normalize(vout.ViewDirection);
+
+        specular = saturate(dot(reflection, -viewDir));
+        specular = pow(specular, SpecularPower);
+
+        float4 specularIntensity = tex2D(Map__1Sampler, vout.TexCoord);
+        specular *= specularIntensity.rgb;
+    }
+
     float3 ambient = float3(0.1f, 0.1f, 0.1f) * albedo;
-    float3 rgb = ambient + diffuse;
+    float3 rgb = ambient + diffuse + specular;
 
     if (bShadow)
     {

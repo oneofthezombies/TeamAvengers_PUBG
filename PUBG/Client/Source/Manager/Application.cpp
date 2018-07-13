@@ -12,10 +12,6 @@ Application::~Application()
 
 void Application::Init()
 {
-    D3DXVECTOR3 n;
-    D3DXVec3Normalize(&n, &D3DXVECTOR3(1.0f, -1.0f, 1.0f));
-    cout << n << endl;
-
     srand(GetTickCount());
 	DeviceMgr()()->Init();
     Resource ()()->Init();

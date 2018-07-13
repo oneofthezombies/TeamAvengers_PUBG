@@ -15,7 +15,7 @@ float4x4 LightProjection;
 float4 CameraPos;
 
 float4 DiffuseColor  = { 1.000000f, 1.000000f, 1.000000f, 1.000000f }; 
-float  SpecularPower = 20.000000f; 
+float  SpecularPower = 3.000000f; 
 float4 SpecularColor = { 0.000000f, 0.000000f, 0.000000f, 1.000000f }; 
 float4 EmissiveColor = { 0.010000f, 0.010000f, 0.010000f, 1.000000f }; 
 
@@ -146,7 +146,7 @@ float4  PS(VS_OUTPUT vout) : COLOR
         specular = pow(specular, SpecularPower);
 
         float4 specularIntensity = tex2D(Map__1Sampler, vout.TexCoord);
-        specular *= specularIntensity.rgb;
+        specular *= specularIntensity.rgb * 0.3f;
     }
 
     float3 ambient = float3(0.1f, 0.1f, 0.1f) * albedo;

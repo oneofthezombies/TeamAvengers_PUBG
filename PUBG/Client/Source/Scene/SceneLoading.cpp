@@ -22,53 +22,51 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::SkySphere);
     //load(TAG_RES_STATIC::Ammo_5_56mm);
     //load(TAG_RES_STATIC::Ammo_7_62mm);
-    //load(TAG_RES_STATIC::Armor_Lv1);
-    //load(TAG_RES_STATIC::Back_Lv1);
-    //load(TAG_RES_STATIC::Head_Lv1);
+    load(TAG_RES_STATIC::Armor_Lv1);
+    load(TAG_RES_STATIC::Back_Lv1);
+    load(TAG_RES_STATIC::Head_Lv1);
     //load(TAG_RES_STATIC::QBZ);
-    //load(TAG_RES_STATIC::Kar98k);
+    load(TAG_RES_STATIC::Kar98k);
     //load(TAG_RES_STATIC::Bandage);
     //load(TAG_RES_STATIC::Rock_1);
-    load(TAG_RES_STATIC::WareHouse_A);
+    //load(TAG_RES_STATIC::WareHouse_A);
 
-    //// load skined meshs
+    // load skined meshs
     //const int numQBZ = 1;
     //for (int i = 0; i < numQBZ; ++i)
     //    load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
-    //const int numKar98k = 1;
-    //for (int i = 0; i < numKar98k; ++i)
-    //    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    const int numKar98k = 1;
+    for (int i = 0; i < numKar98k; ++i)
+        load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
-    {
         load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
-    }
 
-    //// load equipment
-    //const int numArmor = 1;
-    //for (int i = 0; i < numArmor; ++i)
-    //    load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
+    // load equipment
+    const int numArmor = 1;
+    for (int i = 0; i < numArmor; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
 
-    //const int numBack = 1;
-    //for (int i = 0; i < numBack; ++i)
-    //    load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
+    const int numBack = 1;
+    for (int i = 0; i < numBack; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
 
-    //const int numHead = 1;
-    //for (int i = 0; i < numHead; ++i)
-    //    load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
+    const int numHead = 1;
+    for (int i = 0; i < numHead; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined);
 
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
     //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
 
     /*
@@ -257,6 +255,7 @@ void SceneLoading::OnInit()
 {
     Resource()()->AddTexture("./Resource/", "input_field.png");
     Resource()()->AddTexture("./Resource/", "LoadingScreen.tga");
+    Resource()()->AddTexture("./Resource/", "Honeyview_RandomLoading01.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
     Resource()()->AddTexture("./Resource/", "dedenne.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
@@ -275,7 +274,7 @@ void SceneLoading::OnInit()
     m_pBackground =
         new UIImage(
             "./Resource/",
-            "LoadingScreen.tga",
+            "Honeyview_RandomLoading01.png",
             Vector3::ZERO,
             nullptr,
             nullptr);
@@ -373,11 +372,12 @@ void SceneLoading::OnUpdate()
                 pResources->emplace(pResources->size(), pXContainer);
 
                 m_tasksForSingleThread.erase(begin);
+
+                addEffectMeshs();
+                addSkinnedMeshs();
             }
             else
             {
-                addEffectMeshs();
-                addSkinnedMeshs();
                 addAnimationsToCharacter();
                 addAnimationsToEquipment();
             }
@@ -506,7 +506,7 @@ void SceneLoading::addEffectMeshs()
 
     m_effectMeshResources.clear();
 
-    m_isDoneEffectMeshs = true;
+    //m_isDoneEffectMeshs = true;
 }
 
 void SceneLoading::addSkinnedMeshs()
@@ -518,7 +518,7 @@ void SceneLoading::addSkinnedMeshs()
 
     m_skinnedMeshResources.clear();
 
-    m_isDoneSkinnedMeshs = true;
+    //m_isDoneSkinnedMeshs = true;
 }
 
 void SceneLoading::addAnimationsToEquipment()
@@ -576,6 +576,8 @@ void SceneLoading::addAnimationsToEquipment()
     m_equipmentSkinnedMeshResources.clear();
 
     m_isDoneEquipments = true;
+    m_isDoneEffectMeshs = true;
+    m_isDoneSkinnedMeshs = true;
 }
 
 void SceneLoading::addHeightmapResource()

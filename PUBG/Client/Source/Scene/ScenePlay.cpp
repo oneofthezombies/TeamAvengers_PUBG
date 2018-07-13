@@ -17,7 +17,7 @@ void ScenePlay::setAloneMode()
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
 
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 5000.0f, -500.0f));
     Light()()->SetTarget(pPlayer->GetTransform());
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
@@ -63,19 +63,19 @@ void ScenePlay::setAloneMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    //item = new Item(TAG_RES_STATIC::Head_Lv1, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-    //
-    //p = D3DXVECTOR3(20, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    item = new Item(TAG_RES_STATIC::Head_Lv1, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
+    
+    p = D3DXVECTOR3(20, 0, 10);
+    item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(30, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(30, 0, 10);
+    item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(40, 0, 10);
     //item = new Item(TAG_RES_STATIC::Bandage, p, r, s);
@@ -129,10 +129,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(100, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(100, 0, 10);
+    item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(110, 0, 10);
     //item = new Item(TAG_RES_STATIC::RedDot, p, r, s);
@@ -240,7 +240,7 @@ void ScenePlay::OnInit()
     //cell space partitioning
     m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
 
-    LoadObjectsFromFile("./Resource/save.txt");
+    //LoadObjectsFromFile("./Resource/save.txt");
 
     // No id received
     if (Communication()()->m_myInfo.ID == -1)

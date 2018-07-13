@@ -8488,12 +8488,17 @@ Frame F_Head_E_01 {
      "F_Head_E_01.fx";
 
      EffectParamString {
-      "C__Users_user_Desktop_umodel_win32_UmodelExport_Assets_Character_Female_Head_Textures__F_Head_E_01_D_tga";
+      "C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_D_tga";
       "F_Head_E_01_D.tga";
      }
 
      EffectParamString {
-      "C__Users_user_Desktop_umodel_win32_UmodelExport_Assets_Character_Female_Head_Textures__F_Head_E_01_N_tga";
+      "Map__0";
+      "F_BaseBody_03_S.tga";
+     }
+
+     EffectParamString {
+      "C__Users_user_Desktop_Head_Lv1_Textures__F_Head_E_01_N_tga";
       "F_Head_E_01_N.tga";
      }
     }
