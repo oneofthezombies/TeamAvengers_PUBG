@@ -35,6 +35,7 @@ Character::Character(const int index)
     , m_savedInput()
     , m_currentStayKey()
     , m_totalInventory()
+    , m_inGameUI()
     , m_attacking(Attacking::Unarmed)
     , m_stance(Stance::Stand)
     , m_moving(Moving::Run)
@@ -55,6 +56,7 @@ Character::Character(const int index)
     if (isMine())
     {
         m_totalInventory.Init();
+        m_inGameUI.Init();
     }
 
     const float factor(static_cast<float>(m_index + 1) * 100.0f);
@@ -113,6 +115,7 @@ Character::~Character()
     if (isMine())
     {
         m_totalInventory.Destroy();
+        m_inGameUI.Destroy();
     }
 }
 

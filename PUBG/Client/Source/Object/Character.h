@@ -75,6 +75,19 @@ public:
         RootTransform(const float moveSpeed);
     };
 
+    struct InGameUI
+    {
+        UIImage* m_background;
+        
+         InGameUI();
+        ~InGameUI();
+
+        void Init();
+        void Destroy();
+        void Update();
+        void Render();
+    };
+
     struct TotalInventory
     {
         static const float DEFAULT_CAPACITY;
@@ -284,6 +297,9 @@ private:
 
     // for inventory
     TotalInventory m_totalInventory;
+
+    // for InGameUI
+    InGameUI m_inGameUI;
     
     // state
     TAG_ANIM_CHARACTER m_upperAnimState;
@@ -518,7 +534,6 @@ public:
 
             const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
-
 /**************************** end public method ******************************/
 
 

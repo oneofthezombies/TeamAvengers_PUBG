@@ -283,6 +283,10 @@ void SceneLoading::OnInit()
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot_mouseover.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_click.png");
 
+    //for InGameUI
+    Resource()()->AddTexture("./Resource/UI/InGame/", "transparent_1280_720.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "compass.png", D3DCOLOR_XRGB(0, 0, 0));
+
     m_pBackground =
         new UIImage(
             "./Resource/",

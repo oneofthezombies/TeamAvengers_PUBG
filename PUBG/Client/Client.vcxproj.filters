@@ -61,7 +61,7 @@
     <ClCompile Include="CameraWorkSpace.cpp" />
     <ClCompile Include="Source\Useful\Interpolation.cpp" />
     <ClCompile Include="Source\Useful\TagUIPosition.cpp" />
-    <ClCompile Include="Source\Object\Character_UI.cpp" />
+    <ClCompile Include="Source\Object\Character_InGameUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
