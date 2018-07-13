@@ -25,16 +25,41 @@ void Character::InGameUI::Init()
     );
     UI()()->RegisterUIObject(m_background);
 
-    //Compass - 사이즈 조정 필요
-    //auto n = new UIImage(
-    //    "./Resource/UI/InGame/",
-    //    "compass.png",
-    //    D3DXVECTOR3(40.0f, 22.0f, 0.0f),
-    //    nullptr,
-    //    m_background
-    //);
-    //n->SetIsRender(false);
+    //Compass
+    auto compassBg = new UIImage(
+        "./Resource/UI/InGame/",
+        "compass_bg.png",
+        D3DXVECTOR3(420.0f, 28.0f, 0.0f),
+        nullptr,
+        m_background
+    );
 
+    new UIImage(
+        "./Resource/UI/InGame/",
+        "compass.png",
+        D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
+        nullptr,
+        compassBg
+    );
+
+    auto compassArrowBg = new UIImage(
+        "./Resource/UI/InGame/",
+        "compass_arraw_bg.png",
+        D3DXVECTOR3(420.0f, 8.75f, 0.0f),
+        nullptr,
+        m_background
+    );
+
+    new UIImage(
+        "./Resource/UI/InGame/",
+        "compass_arrow.png",
+        D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
+        nullptr,
+        compassArrowBg
+    );
+
+    //for test
+    //compassBg->SetIsRender(false);
     //부모를 가리면 자식도 함께 안보인다
 
     //장비템

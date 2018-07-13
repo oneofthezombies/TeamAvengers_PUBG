@@ -285,7 +285,11 @@ void SceneLoading::OnInit()
 
     //for InGameUI
     Resource()()->AddTexture("./Resource/UI/InGame/", "transparent_1280_720.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "compass.png", D3DCOLOR_XRGB(0, 0, 0));
+
+    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_bg.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_arrow_bg.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "compass.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_arrow.png", D3DCOLOR_XRGB(0, 0, 0));
     
     Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_bag01.png");
     Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_helmet01.png");
