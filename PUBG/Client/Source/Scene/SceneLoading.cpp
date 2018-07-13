@@ -296,6 +296,7 @@ void SceneLoading::OnInit()
     Resource()()->AddTexture("./Resource/UI/InGame/", "player_HP_bar_red.png");
 
     Resource()()->AddTexture("./Resource/UI/InGame/", "ammo_info.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "survival_text_bg.png");
 
     m_pBackground =
         new UIImage(
