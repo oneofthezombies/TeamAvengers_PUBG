@@ -334,12 +334,6 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
 
 
 
-
-
-
-
-
-
         if (destState->boundingBoxes.empty())
         {
             for (auto& bb : GetBoundingBoxes())
@@ -360,7 +354,6 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
                 if (hasCollision) break;
 
                 hasCollision = Collision::HasCollision(mine, others);
-
                 // sliding vector
                 if (hasCollision)
                 {
@@ -406,6 +399,133 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
                 }
             }
         }
+    }
+
+    // collision with other characters
+    if (!hasCollision)
+    {
+        for (auto o : pCurrentScene->m_NearArea.GetCharacters())
+        {
+            if (hasCollision) break;
+
+            if (o->GetIndex() == m_index) continue;
+
+            const D3DXVECTOR3 dist = destState->position - o->GetTransform()->GetPosition();
+            const float distLen = D3DXVec3Length(&dist);
+            if (distLen < RADIUS * 2.0f)
+                hasCollision = true;
+        }
+    }
+    // end collision /////////////////////////
+    Transform* tm = GetTransform();
+    // 셋 커런트
+    if (hasCollision)
+    {
+        // 만약 스프린트일 경우에는 쉬프트키 유무에 상관없이 런으로 바꾼다.
+        if (destState->isHeadBump)
+        {
+            // TODO : impl
+        }
+
+        tm->SetPosition(destState->position);
+    }
+    else
+    {
+        // update state
+        tm->SetPosition(destState->position);
+        tm->SetRotation(destState->rotation);
+
+        // 이사하기 //NearArea(cell space)를 다시 구하기!
+        std::size_t destCellIndex = pCurrentScene->GetCellIndex(destState->position);
+        if (destCellIndex != m_cellIndex)
+        {
+            pCurrentScene->m_NearArea.CreateNearArea(destCellIndex);
+            pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
+        }
+    }
+    //////////////////////////////////////////////////
+
+}
+void Character::terrainFeaturesCollisionInteraction2(OUT State* destState)
+{
+    IScene* pCurrentScene = CurrentScene()();
+    bool hasCollision = false;
+    auto tfs(pCurrentScene->m_NearArea.GetTerrainFeatures());
+    for (auto tf : tfs)
+    {
+        if (hasCollision) break;
+
+        // 바운딩스피어가 충돌되지 않으면 다음 터레인피처와 충돌을 검사한다.
+        if (!Collision::HasCollision(m_boundingSphere, tf->GetBoundingSphere())) continue;
+
+
+
+        //if (destState->boundingBoxes.empty())
+        //{
+        //    for (auto& bb : GetBoundingBoxes())
+        //    {
+        //        BoundingBox destBB = bb;
+        //        destBB.rotation = destState->rotation;
+        //        destBB.position = destState->position;
+        //        destState->boundingBoxes.emplace_back(destBB);
+        //    }
+        //}
+
+        //for (auto& mine : destState->boundingBoxes)
+        //{
+        if (hasCollision) break;
+
+        for (auto& others : tf->GetBoundingBoxes())
+        {
+            if (hasCollision) break;
+
+            //hasCollision = Collision::HasCollision(mine, others);
+            hasCollision = Collision::HasCollision(m_bBox, others);
+            // sliding vector
+            if (hasCollision)
+            {
+                const D3DXVECTOR3 currPos = GetTransform()->GetPosition();
+                const D3DXVECTOR3 destPos = destState->position;
+                D3DXVECTOR3 to(destPos.x - currPos.x, 0.0f, destPos.z - currPos.z);
+                D3DXVECTOR3 dir;
+                D3DXVec3Normalize(&dir, &to);
+
+                D3DXVECTOR3 diff((others.center + others.position) - currPos);
+                D3DXVec3Normalize(&diff, &diff);
+
+                D3DXVECTOR3 right, forward;
+                D3DXMATRIX r;
+                D3DXMatrixRotationQuaternion(&r, &others.rotation);
+                D3DXVec3TransformNormal(&right, &Vector3::RIGHT, &r);
+                D3DXVec3Normalize(&right, &right);
+                D3DXVec3TransformNormal(&forward, &Vector3::FORWARD, &r);
+                D3DXVec3Normalize(&forward, &forward);
+
+                float dotX = D3DXVec3Dot(&right, &diff);
+                if (dotX < 0.0f)
+                    dotX *= -1.0f;
+
+                float dotZ = D3DXVec3Dot(&forward, &diff);
+                if (dotZ < 0.0f)
+                    dotZ *= -1.0f;
+
+                D3DXVECTOR3 dist(Vector3::ZERO);
+                float len(0.0f);
+                if (dotX > dotZ)
+                {
+                    len = D3DXVec3Dot(&to, &forward);
+                    dist = len * forward;
+                }
+                else
+                {
+                    len = D3DXVec3Dot(&to, &right);
+                    dist = len * right;
+                }
+
+                destState->position = currPos + dist;
+            }
+        }
+        /*}*/
     }
 
     // collision with other characters

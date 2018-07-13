@@ -148,7 +148,7 @@ BoundingBox BoundingBox::Create(const D3DXVECTOR3& min, const D3DXVECTOR3& max)
 
 BoundingBox BoundingBox::Create(const D3DXMATRIX& transformationMatrix)
 {
-    D3DXVECTOR3 extent(Vector3::ONE * 0.5f);
+    D3DXVECTOR3 extent(Vector3::ONE * 5.0f);
     D3DXVECTOR3 vS;
     D3DXQUATERNION qR;
     Matrix::GetScaleAndRotation(transformationMatrix, &vS, &qR);

@@ -337,6 +337,7 @@ private:
     void handleMouse(const float dt, MouseInput* mouseInput);
 
     void terrainFeaturesCollisionInteraction(OUT State* OutState);
+    void terrainFeaturesCollisionInteraction2(OUT State* OutState);
     void itemSphereCollisionInteraction();
     void characterRotation(MouseInput* mouseinput);
     void cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotation, MouseInput* mouseInput);
