@@ -17,7 +17,7 @@ void ScenePlay::setAloneMode()
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
 
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 5000.0f, -500.0f));
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
     Light()()->SetTarget(pPlayer->GetTransform());
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
