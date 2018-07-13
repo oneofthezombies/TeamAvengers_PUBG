@@ -477,6 +477,11 @@ void Item::UpdateBone(Item* pHand, const float headRot, const float waistRot)
     m_pFramePtr->pRoot->TransformationMatrix = Matrix::IDENTITY;
 }
 
+SkinnedMesh* Item::GetSkinnedMesh() const
+{
+    return pSkinnedMeshController->GetSkinnedMesh();
+}
+
 //for 아이템 자체 애니메이션
 void Item::Set(
     const TAG_ANIM_WEAPON tag,

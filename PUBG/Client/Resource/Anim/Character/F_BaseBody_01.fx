@@ -106,8 +106,8 @@ VS_OUTPUT VS(VS_INPUT vin)
     
     vout.ViewDirection = normalize(worldPos.xyz - CameraPos.xyz);
 
-    vout.Normal   = normalize(mul(vin.Normal, (float3x3)World));
-    vout.Tangent  = normalize(mul(vin.Tangent, (float3x3)World));
+    vout.Normal   = normalize(mul(vin.Normal,   (float3x3)World));
+    vout.Tangent  = normalize(mul(vin.Tangent,  (float3x3)World));
     vout.Binormal = normalize(mul(vin.Binormal, (float3x3)World));
 
     vout.ClipPosition = mul(mul(worldPos, LightView), LightProjection);
