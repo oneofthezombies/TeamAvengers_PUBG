@@ -286,6 +286,16 @@ void SceneLoading::OnInit()
     //for InGameUI
     Resource()()->AddTexture("./Resource/UI/InGame/", "transparent_1280_720.png");
     Resource()()->AddTexture("./Resource/UI/InGame/", "compass.png", D3DCOLOR_XRGB(0, 0, 0));
+    
+    Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_bag01.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_helmet01.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_vest01.png");
+
+    Resource()()->AddTexture("./Resource/UI/InGame/", "player_HP_BG_v3.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "player_HP_bar_v2.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "player_HP_bar_red.png");
+
+    Resource()()->AddTexture("./Resource/UI/InGame/", "ammo_info.png");
 
     m_pBackground =
         new UIImage(

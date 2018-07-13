@@ -73,6 +73,11 @@ enum class TAG_FONT
     Default,
     Invetory_Ground,
     Invetory_28,
+    InGameAmmoReload,
+    InGameAmmoTotalNum,
+    InGameSurvival,
+    InGameSurvivalNum,
+    InGameID,
 };
 
 enum class TAG_SOUND
