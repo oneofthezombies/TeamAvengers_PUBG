@@ -726,7 +726,8 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     FF_DONTCARE,
-                    "08¼­¿ï³²»êÃ¼ M", &m_fonts[tag]);
+                    "08¼­¿ï³²»êÃ¼ M", 
+                    &m_fonts[tag]);
             }
             break;
         case TAG_FONT::Invetory_28:
@@ -739,7 +740,8 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     FF_DONTCARE,
-                    "08¼­¿ï³²»êÃ¼ M", &m_fonts[tag]);
+                    "08¼­¿ï³²»êÃ¼ M", 
+                    &m_fonts[tag]);
             }
             break;
 
@@ -753,7 +755,8 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     FF_DONTCARE,
-                    "Agency FB", &m_fonts[tag]);
+                    "Agency FB", 
+                    &m_fonts[tag]);
             }
             break;
         case TAG_FONT::InGameAmmoTotalNum:
@@ -766,7 +769,8 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,
                     FF_DONTCARE,
-                    "Agency FB", &m_fonts[tag]);
+                    "Agency FB", 
+                    &m_fonts[tag]);
             }
             break;
 
@@ -779,7 +783,8 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
                 FF_DONTCARE,
-                "¸¼Àº °íµñ", &m_fonts[tag]);
+                "¸¼Àº °íµñ", 
+                &m_fonts[tag]);
         }
         break;
 
@@ -793,7 +798,8 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
                 FF_DONTCARE,
-                "Agency FB", &m_fonts[tag]);
+                "Agency FB", 
+                &m_fonts[tag]);
         }
         break;
 
@@ -807,10 +813,47 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
                 FF_DONTCARE,
-                "Roboto Condensed", &m_fonts[tag]);
+                "Roboto Condensed", 
+                &m_fonts[tag]);
         }
         break;
 
+        case TAG_FONT::InGameKillNum:
+        {
+            hr = D3DXCreateFontA(
+                Device()(),
+                28, 10, FW_MEDIUM, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "¸¼Àº °íµñ", 
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::InGameKillText:
+        {
+            hr = D3DXCreateFontA(
+                Device()(),
+                24, 6, FW_MEDIUM, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "¸¼Àº °íµñ",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::InGameKillLog:
+        {
+        
+        
+        
+        }
+        break;
+        
         default:
             {
             }

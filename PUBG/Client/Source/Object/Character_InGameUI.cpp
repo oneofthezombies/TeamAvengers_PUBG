@@ -190,6 +190,43 @@ void Character::InGameUI::Init()
     idText->SetDrawTextFormat(DT_CENTER);
     idText->SetPosition(D3DXVECTOR3(598.0f, 705.0f, 0.0f));
 
+    //킬
+
+    auto killNumShadow = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameKillNum),
+        D3DXVECTOR2(60.0f, 30.0f),
+        string("2") + string(" 킬"),
+        D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f),
+        m_background);
+    killNumShadow->SetDrawTextFormat(DT_CENTER);
+    killNumShadow->SetPosition(D3DXVECTOR3(612.0f + 1.0f, 504.0f + 1.0f, 0.0f));
+
+    auto killNum = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameKillNum),
+        D3DXVECTOR2(60.0f, 30.0f),
+        string("2") + string(" 킬"),
+        D3DCOLOR_XRGB(255, 0, 0),
+        m_background);
+    killNum->SetDrawTextFormat(DT_CENTER);
+    killNum->SetPosition(D3DXVECTOR3(612.0f, 504.0f, 0.0f));
+
+    auto killTextShadow = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameKillText),
+        D3DXVECTOR2(400.0f, 20.0f),
+        string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
+        D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f),
+        m_background);
+    killTextShadow->SetDrawTextFormat(DT_CENTER);
+    killTextShadow->SetPosition(D3DXVECTOR3(440.0f + 1.0f, 480.0f + 1.0f, 0.0f));
+
+    auto killText = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameKillText),
+        D3DXVECTOR2(400.0f, 20.0f),
+        string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
+        D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+        m_background);
+    killText->SetDrawTextFormat(DT_CENTER);
+    killText->SetPosition(D3DXVECTOR3(440.0f, 480.0f, 0.0f));
 }
 
 void Character::InGameUI::Destroy()

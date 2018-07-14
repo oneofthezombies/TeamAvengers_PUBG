@@ -78,6 +78,9 @@ enum class TAG_FONT
     InGameSurvival,
     InGameSurvivalNum,
     InGameID,
+    InGameKillNum,
+    InGameKillText,
+    InGameKillLog,
 };
 
 enum class TAG_SOUND
