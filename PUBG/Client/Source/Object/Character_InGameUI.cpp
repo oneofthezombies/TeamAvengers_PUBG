@@ -289,6 +289,25 @@ void Character::InGameUI::Init()
         m_background);
     info->SetDrawTextFormat(DT_CENTER);
     info->SetPosition(D3DXVECTOR3(510.0f, 579.0f, 0.0f));
+
+    //킬로그
+    auto killLog = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameKillLog),
+        D3DXVECTOR2(400.0f, 14.0f),
+        string("HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
+        D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f),
+        m_background);
+    killLog->SetDrawTextFormat(DT_RIGHT);
+    killLog->SetPosition(D3DXVECTOR3(856.0f, 52.0f, 0.0f));
+
+    auto killLog2 = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameKillLog),
+        D3DXVECTOR2(400.0f, 14.0f),
+        string("John의 QBZ(으)로 인해 ootz이(가) 사망했습니다"),
+        D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f),
+        m_background);
+    killLog2->SetDrawTextFormat(DT_RIGHT);
+    killLog2->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 20.0f, 0.0f));
 }
 
 void Character::InGameUI::Destroy()

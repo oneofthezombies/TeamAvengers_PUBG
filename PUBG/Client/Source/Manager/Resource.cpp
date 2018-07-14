@@ -841,7 +841,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
-                24, 12, FW_MEDIUM, 1, false,
+                26, 13, FW_MEDIUM, 1, false,
                 HANGEUL_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
@@ -856,7 +856,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
-                16, 8, FW_MEDIUM, 1, false,
+                18, 9, FW_NORMAL, 1, false,
                 HANGEUL_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
@@ -868,9 +868,16 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
 
         case TAG_FONT::InGameKillLog:
         {
-
-
-
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                12, 6, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
         }
         break;
 
