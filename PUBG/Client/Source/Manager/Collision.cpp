@@ -624,6 +624,93 @@ bool Collision::HasCollision2(const BoundingSphere & sphere, const BoundingBox &
     return sqDist <=sphere.radius*sphere.radius;
 }
 
+std::vector<D3DXVECTOR3> Collision::GetCollidedNormal(const D3DXVECTOR3& mypos, const BoundingBox& box)
+{
+    std::vector<D3DXVECTOR3> m_vecProj;
+    m_vecProj.resize(8);
+    m_vecProj[0] = (D3DXVECTOR3(-1, 1, 1));	    //ÁÂ»óÈÄ
+    m_vecProj[1] = (D3DXVECTOR3(1, 1, 1));	    //¿ì»óÈÄ
+    m_vecProj[2] = (D3DXVECTOR3(-1, 1, -1));	//ÁÂ»óÀü
+    m_vecProj[3] = (D3DXVECTOR3(1, 1, -1));	    //¿ì»óÀü
+    m_vecProj[4] = (D3DXVECTOR3(-1, -1, 1));	//ÁÂÇÏÈÄ
+    m_vecProj[5] = (D3DXVECTOR3(1, -1, 1));	    //¿ìÇÏÈÄ
+    m_vecProj[6] = (D3DXVECTOR3(-1, -1, -1));	//ÁÂÇÏÀü 
+    m_vecProj[7] = (D3DXVECTOR3(1, -1, -1));	//¿ìÇÏÀü
+
+    D3DXMATRIX s, r, t, m;
+    D3DXMatrixScaling(&s, box.extent.x, box.extent.y, box.extent.z);
+    D3DXMatrixRotationQuaternion(&r, &box.rotation);
+    D3DXVECTOR3 boxPos(box.center + box.position);
+    D3DXMatrixTranslation(&t, boxPos.x, boxPos.y, boxPos.z);
+    m = s * r * t;
+
+    std::vector<D3DXVECTOR3> m_vecWorld;
+    m_vecWorld.resize(8);
+    for (int i = 0; i < m_vecWorld.size(); ++i)
+        D3DXVec3TransformCoord(&m_vecWorld[i], &m_vecProj[i], &m);
+
+    std::vector<D3DXPLANE> m_vecPlane;
+    m_vecPlane.resize(6);
+    //±ÙÆò¸é//ÁÂ»óÀü//¿ì»óÀü//ÁÂÇÏÀü
+    D3DXPlaneFromPoints(&m_vecPlane[0], &m_vecWorld[2], &m_vecWorld[3], &m_vecWorld[6]);
+    //¿øÆò¸é//¿ì»óÈÄ//ÁÂ»óÈÄ//¿ìÇÏÈÄ
+    D3DXPlaneFromPoints(&m_vecPlane[1], &m_vecWorld[1], &m_vecWorld[0], &m_vecWorld[5]);
+    //ÁÂÆò¸é//ÁÂ»óÈÄ//ÁÂ»óÀü//ÁÂÇÏÈÄ
+    D3DXPlaneFromPoints(&m_vecPlane[2], &m_vecWorld[0], &m_vecWorld[2], &m_vecWorld[4]);
+    //¿ìÆò¸é//¿ì»óÀü//¿ì»óÈÄ//¿ìÇÏÀü
+    D3DXPlaneFromPoints(&m_vecPlane[3], &m_vecWorld[3], &m_vecWorld[1], &m_vecWorld[7]);
+    //»óÆò¸é//ÁÂ»óÈÄ//¿ì»óÈÄ//ÁÂ»óÀü
+    D3DXPlaneFromPoints(&m_vecPlane[4], &m_vecWorld[0], &m_vecWorld[1], &m_vecWorld[2]);
+    //ÇÏÆò¸é//ÁÂÇÏÀü//¿ìÇÏÀü//ÁÂÇÏÈÄ
+    D3DXPlaneFromPoints(&m_vecPlane[5], &m_vecWorld[6], &m_vecWorld[7], &m_vecWorld[4]);
+    
+    D3DXVECTOR3 p12(boxPos - mypos);
+    float p12len = D3DXVec3Length(&p12);
+    std::vector<int> results;
+    for (int i = 0; i < m_vecPlane.size(); ++i)
+    {
+        D3DXVECTOR3 pout;
+        if (D3DXPlaneIntersectLine(&pout, &m_vecPlane[i], &mypos, &boxPos))
+        {
+            D3DXVECTOR3 p1out(pout - mypos);
+            float p1outlen = D3DXVec3Length(&p1out);
+            if (p1outlen < p12len)
+            {
+                results.emplace_back(i);
+            }
+        }
+    }
+
+    auto getV = [&m_vecWorld](int a, int b) { return m_vecWorld[b] - m_vecWorld[a]; };
+
+/*    if (results.size() >= 2)
+    {
+        for (auto result : results)
+            cout << "result : " << result << endl;
+    }
+    cout << endl;  */ 
+    //assert((results.size() != 2) && "fdsafdsafdasfdsafdsa");
+    std::vector<D3DXVECTOR3> normals;
+    for (auto& result : results)
+    {
+        D3DXVECTOR3 normal;
+        switch (result)
+        {
+        case 0: D3DXVec3Cross(&normal, &getV(2, 3), &getV(3, 6)); break;
+        case 1: D3DXVec3Cross(&normal, &getV(1, 0), &getV(0, 5)); break;
+        case 2: D3DXVec3Cross(&normal, &getV(0, 2), &getV(2, 4)); break;
+        case 3: D3DXVec3Cross(&normal, &getV(2, 3), &getV(2, 3)); break;
+        case 4: D3DXVec3Cross(&normal, &getV(3, 1), &getV(1, 7)); break;
+        case 5: D3DXVec3Cross(&normal, &getV(0, 1), &getV(1, 2)); break;
+        case 6: D3DXVec3Cross(&normal, &getV(6, 7), &getV(7, 4)); break;
+        }
+        D3DXVec3Normalize(&normal, &normal);
+        normals.emplace_back(normal);
+    }
+
+    return normals;
+}
+
 bool Collision::HasCollision(const BoundingBox& lhs, const BoundingBox& rhs)
 {
     D3DXMATRIX A_transform, B_transform;

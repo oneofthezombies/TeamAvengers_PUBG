@@ -60,9 +60,9 @@ void CameraManager::Update()
 
     if (pCurrentCamera)
     {
-        //for debug
-        if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::OnGun)
-            m_cameras[TAG_CAMERA::OnGun]->Update();
+        ////for debug
+        //if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::OnGun)
+        //    m_cameras[TAG_CAMERA::OnGun]->Update();
 
         pCurrentCamera->Update();
 
@@ -75,7 +75,7 @@ void CameraManager::Update()
         //pCurrentCamera->CameraRender();
 
         //for debug
-        m_cameras[TAG_CAMERA::OnGun]->Render();
+        //m_cameras[TAG_CAMERA::OnGun]->Render();
     }
 }
 
