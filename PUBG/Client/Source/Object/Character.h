@@ -313,7 +313,8 @@ private:
     WaitBackAction m_backAction;
 
     // for character x character collision
-    BoundingBox m_bBox;
+    //BoundingBox m_bBox;
+    BoundingSphere m_bSphereSlidingCollision;
 
 
 /**************************** end member variable ****************************/
@@ -489,7 +490,7 @@ public:
     D3DXVECTOR3 FindShootingTargetPos();
     void MinusDamage(const float damage);
 
-            const BoundingBox&              GetBoundingBox();
+    //        const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
 
 /**************************** end public method ******************************/

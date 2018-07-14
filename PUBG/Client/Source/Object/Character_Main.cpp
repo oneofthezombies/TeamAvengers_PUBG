@@ -98,7 +98,8 @@ Character::Character(const int index)
 
     pOtherHitPositionMesh = Resource()()->GetBoundingSphereMesh();
 
-    m_bBox = BoundingBox::Create(D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 170.0f, 50.0f));
+    //m_bBox = BoundingBox::Create(D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 170.0f, 50.0f));
+    m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
 }
 
 Character::~Character()
@@ -138,9 +139,8 @@ void Character::OnUpdate()
     // bounding sphere move to character position
     m_boundingSphere.position = GetTransform()->GetPosition();
 
-    m_bBox.position = GetTransform()->GetPosition();
-    m_bBox.rotation = GetTransform()->GetRotation();
-
+    m_bSphereSlidingCollision.position = GetTransform()->GetPosition();
+    
     for (auto pPart : m_characterParts)
         pPart->Update();
 
@@ -171,7 +171,8 @@ void Character::OnUpdate()
     // render collision shapes
     for (auto pPart : m_characterParts)
         pPart->Render();
-    m_bBox.RenderRed();
+
+    m_bSphereSlidingCollision.RenderRed();
     m_boundingSphere.Render();
     // end render collision shapes
 
@@ -246,8 +247,8 @@ void Character::updateMine()
 
     ////////////충돌 체크 Area/////////////////////
     //Terrain과의 충돌체크
-    terrainFeaturesCollisionInteraction(&destState);
-    //terrainFeaturesCollisionInteraction2(&destState);
+    //terrainFeaturesCollisionInteraction(&destState);
+    terrainFeaturesCollisionInteraction2(&destState);
     //Item 과의 충돌체크
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////

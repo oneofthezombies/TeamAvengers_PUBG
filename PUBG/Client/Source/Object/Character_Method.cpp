@@ -362,7 +362,8 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
                     D3DXVECTOR3 to(destPos.x - currPos.x, 0.0f, destPos.z - currPos.z);
                     D3DXVECTOR3 dir;
                     D3DXVec3Normalize(&dir, &to);
-
+                    if (dir.z > 0.0f)
+                        int i = 0;
                     D3DXVECTOR3 diff((others.center + others.position) - currPos);
                     D3DXVec3Normalize(&diff, &diff);
 
@@ -459,73 +460,43 @@ void Character::terrainFeaturesCollisionInteraction2(OUT State* destState)
         if (!Collision::HasCollision(m_boundingSphere, tf->GetBoundingSphere())) continue;
 
 
-
-        //if (destState->boundingBoxes.empty())
-        //{
-        //    for (auto& bb : GetBoundingBoxes())
-        //    {
-        //        BoundingBox destBB = bb;
-        //        destBB.rotation = destState->rotation;
-        //        destBB.position = destState->position;
-        //        destState->boundingBoxes.emplace_back(destBB);
-        //    }
-        //}
-
-        //for (auto& mine : destState->boundingBoxes)
-        //{
-        if (hasCollision) break;
-
         for (auto& others : tf->GetBoundingBoxes())
         {
             if (hasCollision) break;
 
-            //hasCollision = Collision::HasCollision(mine, others);
-            hasCollision = Collision::HasCollision(m_bBox, others);
+
+            //hasCollision = Collision::HasCollision(m_bBox, others);
+            hasCollision = Collision::HasCollision(m_bSphereSlidingCollision, others);
             // sliding vector
             if (hasCollision)
             {
+
+                //임의로 rock의 normal vector을 만들겠다.
+
+                D3DXVECTOR3 n = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+
+
                 const D3DXVECTOR3 currPos = GetTransform()->GetPosition();
-                const D3DXVECTOR3 destPos = destState->position;
-                D3DXVECTOR3 to(destPos.x - currPos.x, 0.0f, destPos.z - currPos.z);
-                D3DXVECTOR3 dir;
-                D3DXVec3Normalize(&dir, &to);
+                D3DXVECTOR3 destDir(destState->position.x - currPos.x, destState->position.y - currPos.y, destState->position.z - currPos.z);
+                D3DXVec3Normalize(&destDir, &destDir);
 
-                D3DXVECTOR3 diff((others.center + others.position) - currPos);
-                D3DXVec3Normalize(&diff, &diff);
 
-                D3DXVECTOR3 right, forward;
-                D3DXMATRIX r;
-                D3DXMatrixRotationQuaternion(&r, &others.rotation);
-                D3DXVec3TransformNormal(&right, &Vector3::RIGHT, &r);
-                D3DXVec3Normalize(&right, &right);
-                D3DXVec3TransformNormal(&forward, &Vector3::FORWARD, &r);
-                D3DXVec3Normalize(&forward, &forward);
+                D3DXVECTOR3 dirTowardsObstacle = (others.position + others.center) - currPos;
+                D3DXVec3Normalize(&dirTowardsObstacle, &dirTowardsObstacle);
 
-                float dotX = D3DXVec3Dot(&right, &diff);
-                if (dotX < 0.0f)
-                    dotX *= -1.0f;
-
-                float dotZ = D3DXVec3Dot(&forward, &diff);
-                if (dotZ < 0.0f)
-                    dotZ *= -1.0f;
-
-                D3DXVECTOR3 dist(Vector3::ZERO);
-                float len(0.0f);
-                if (dotX > dotZ)
+                //방향이 toward obstacle 이라면
+                if (D3DXVec3Dot(&destDir, &dirTowardsObstacle) > 0)
                 {
-                    len = D3DXVec3Dot(&to, &forward);
-                    dist = len * forward;
-                }
-                else
-                {
-                    len = D3DXVec3Dot(&to, &right);
-                    dist = len * right;
+                    //sliding vector 적용
+                    D3DXVECTOR3 slidingVector = destDir - D3DXVec3Dot(&destDir, &n)*n;
+                    destState->position = currPos + slidingVector;
                 }
 
-                destState->position = currPos + dist;
+
+
+
             }
         }
-        /*}*/
     }
 
     // collision with other characters
@@ -721,8 +692,6 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
         m_rotationForCamera.x += -mouseInput->pitch;
 
 
-        Debug << "OutRotation : " << *OutRotation << endl;
-        Debug << "m_RotationForCamrera" << m_rotationForCamera << endl;
         // reset rotFotCameraTP
         if (tempBool)
         {
@@ -737,7 +706,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     else if (m_rotationForCamera.x > 1.0f)
         m_rotationForCamera.x = 1.0f;
 
-    Debug << "m_rotationForCamera.x : " << m_rotationForCamera.x << endl << endl << endl;
+    
 }
 
 bool Character::isMine() const
@@ -1080,10 +1049,10 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
     return D3DXVECTOR3(0, 0, 0);
 }
 
-const BoundingBox& Character::GetBoundingBox()
-{
-    return m_bBox;
-}
+//const BoundingBox& Character::GetBoundingBox()
+//{
+//    return m_bBox;
+//}
 
 const std::vector<BoundingBox>& Character::GetBoundingBoxes()
 {

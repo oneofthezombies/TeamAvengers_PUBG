@@ -52,6 +52,43 @@ void BoundingSphere::Render()
     });
     Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
+void BoundingSphere::RenderRed()
+{
+    if (!Collision()()->IsRender()) return;
+
+    D3DXMATRIX m;
+    D3DXMatrixTransformation(
+        &m,
+        nullptr,
+        nullptr,
+        &D3DXVECTOR3(radius, radius, radius),
+        nullptr, nullptr,
+        &(center + position));
+
+    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        Resource()()->GetBoundingSphereMesh(),
+        0,
+        [&m](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &m);
+
+        D3DXCOLOR Red(1.0f, 0.0f, 0.0f, 1.0f);
+        pEffect->SetValue("Color", &Red, sizeof Red);
+    });
+    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+}
+
+
+BoundingSphere BoundingSphere::Create(const D3DXVECTOR3& position, const float radius)
+{
+    BoundingSphere bs;
+    bs.radius = radius;
+    bs.position = position;
+    return bs;
+}
 
 BoundingBox::BoundingBox()
     : BoundingShape()
@@ -101,42 +138,7 @@ void BoundingBox::Render()
     });
 }
 
-void BoundingBox::RenderRed()
-{
-    if (!Collision()()->IsRender()) return;
 
-    auto& vertices = Resource()()->GetBoundingBoxVertices();
-    auto& indices = Resource()()->GetBoundingBoxIndices();
-
-    D3DXMATRIX e, c, r, p, m;
-    D3DXMatrixScaling(&e, extent.x, extent.y, extent.z);
-    D3DXMatrixTranslation(&c, center.x, center.y, center.z);
-    D3DXMatrixRotationQuaternion(&r, &rotation);
-    D3DXMatrixTranslation(&p, position.x, position.y, position.z);
-    m = e * c * r * p;
-
-    Shader::Draw(
-        Resource()()->GetEffect("./Resource/", "Color.fx"),
-        nullptr,
-        [&m](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(Shader::World, &m);
-        D3DXCOLOR red(1.0f, 0.0f, 0.0f, 1.0f);
-        pEffect->SetValue("Color", &red, sizeof red);
-    },
-        [&vertices, &indices]()
-    {
-        Device()()->DrawIndexedPrimitiveUP(
-            D3DPT_LINELIST,
-            0,
-            vertices.size(),
-            indices.size() / 2,
-            indices.data(),
-            D3DFMT_INDEX16,
-            vertices.data(),
-            sizeof vertices.front());
-    });
-}
 
 BoundingBox BoundingBox::Create(const D3DXVECTOR3& min, const D3DXVECTOR3& max)
 {
@@ -517,6 +519,34 @@ bool Collision::HasCollision(
         D3DXVec3Length(&(
         (lhs.center + lhs.position) - (rhs.center + rhs.position))) 
         <= lhs.radius + rhs.radius;
+}
+
+
+bool Collision::HasCollision(const BoundingSphere& sphere, const BoundingBox& box)
+{
+    const D3DXVECTOR3& B_extent = box.extent;
+    D3DXVECTOR3 boxMax = box.extent + box.center + box.position;
+    D3DXVECTOR3 boxMin = -box.extent + box.center + box.position;
+    
+    D3DXMATRIX B_transform;
+    D3DXMatrixRotationQuaternion(&B_transform, &box.rotation);
+    D3DXVec3TransformCoord(&boxMax, &boxMax, &B_transform);
+    D3DXVec3TransformCoord(&boxMin, &boxMin, &B_transform);
+
+    D3DXVECTOR3 spherePos = sphere.center + sphere.position;
+
+
+    // get box closest point to sphere center by clamping
+    float x = std::max(boxMin.x, std::min(spherePos.x, boxMax.x));
+    float y = std::max(boxMin.y, std::min(spherePos.y, boxMax.y));
+    float z = std::max(boxMin.z, std::min(spherePos.z, boxMax.z));
+
+    // this is the same as isPointInsideSphere
+    float distance = std::sqrt((x - spherePos.x) * (x - spherePos.x) +
+        (y - spherePos.y) * (y - spherePos.y) +
+        (z - spherePos.z) * (z - spherePos.z));
+
+    return distance < sphere.radius;
 }
 
 bool Collision::HasCollision(const BoundingBox& lhs, const BoundingBox& rhs)
@@ -991,6 +1021,8 @@ bool Collision::HasCollision(const Ray & ray, const BoundingRect & rect, const f
 
     return true;
 }
+
+
 
 
 BoundingRect::BoundingRect()

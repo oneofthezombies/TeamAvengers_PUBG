@@ -34,13 +34,13 @@ void ScenePlay::setAloneMode()
     //Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     //Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    //TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(0.0f, 200.0f, 0.0f), Vector3::ZERO, Vector3::ONE * 0.7f);
-    //D3DXMATRIX m;
-    //D3DXQUATERNION qR;
-    //D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 0.0f);
-    //D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(0.0f, 200.0f, 0.0f));
-    //tf->AddBoundingBox(m);
-    //AddObject(tf);
+    TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(200.0f, 200.0f, 600.0f), Vector3::ZERO, Vector3::ONE * 0.7f);
+    D3DXMATRIX m;
+    D3DXQUATERNION qR;
+    D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 0.0f);
+    D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 30.0f), nullptr, &qR, &D3DXVECTOR3(200.0f, 200.0f, 600.0f));
+    tf->AddBoundingBox(m);
+    AddObject(tf);
 
     //tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 1000.0f), Vector3::UP, Vector3::ONE * 0.7f);
     //D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
@@ -115,10 +115,10 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(90, 0, 10);
-    item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(90, 0, 10);
+    //item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(100, 0, 10);
     //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
@@ -233,7 +233,7 @@ void ScenePlay::OnInit()
     //cell space partitioning
     m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
 
-    LoadObjectsFromFile("./Resource/save.txt");
+    //LoadObjectsFromFile("./Resource/save.txt");
 
     // No id received
     if (Communication()()->m_myInfo.ID == -1)

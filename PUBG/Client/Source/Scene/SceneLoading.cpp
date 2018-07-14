@@ -25,14 +25,15 @@ void SceneLoading::Load()
     //load(TAG_RES_STATIC::Armor_Lv1);
     //load(TAG_RES_STATIC::Back_Lv1);
     //load(TAG_RES_STATIC::Head_Lv1);
-    load(TAG_RES_STATIC::QBZ);
+    //load(TAG_RES_STATIC::QBZ);
     //load(TAG_RES_STATIC::Kar98k);
     //load(TAG_RES_STATIC::Bandage);
-    //load(TAG_RES_STATIC::Rock_1);
-    load(TAG_RES_STATIC::WareHouse_A);
+    load(TAG_RES_STATIC::Rock_1);
+    //load(TAG_RES_STATIC::WareHouse_A);
+    //load(TAG_RES_STATIC::DeathDropBox);
 
     //// load skined meshs
-    load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
+    //load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
     //load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
@@ -47,13 +48,13 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined);
 
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
     //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
     //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
 
     /*
     Unarmed_Combined.X 는 하단의 X파일들을 합친 것
