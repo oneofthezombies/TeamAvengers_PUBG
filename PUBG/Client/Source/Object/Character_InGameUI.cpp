@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "Character.h"
+#include "Item.h"
+#include "ItemInfo.h"
+
 //for UI
 #include "UIImage.h"
 #include "UIText.h"
@@ -169,7 +172,7 @@ void Character::InGameUI::Init()
     pAmmoReloadText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameAmmoReload),
         D3DXVECTOR2(130.0f, 28.0f),
-        string("30"),
+        string(""),
         D3DCOLOR_XRGB(255, 255, 255),
         ammoBg);
     pAmmoReloadText->SetDrawTextFormat(DT_CENTER);
@@ -178,7 +181,7 @@ void Character::InGameUI::Init()
     pAmmoNumText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameAmmoTotalNum),
         D3DXVECTOR2(130.0f, 28.0f),
-        string("99"),
+        string(""),
         D3DCOLOR_XRGB(180, 180, 180),
         ammoBg);
     pAmmoNumText->SetDrawTextFormat(DT_LEFT);
@@ -389,11 +392,26 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     //손에 들고 있는 총의 장전개수와 총알의 개수
     if (inven.m_pHand)
     {
-        pAmmoReloadText->SetText("있다!");
+        TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();          //총 종류
+        TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag);
+        int numBulletInInventory = 0;
+        int numReloadBullet = 0;
+
+        //총알 개수
+        auto it = inven.m_mapInventory.find(ammoType);
+        if (it != inven.m_mapInventory.end())
+        {
+            numBulletInInventory = (*it).second.back()->GetCount();
+        }
+        //총에 장전된 총알 개수
+        numReloadBullet = inven.m_pHand->GetNumBullet();
+
+        pAmmoNumText->SetText(to_string(numBulletInInventory));
+        pAmmoReloadText->SetText(to_string(numReloadBullet));
     }
     else
     {
-        pAmmoReloadText->SetText("없다!");
+        pAmmoReloadText->SetText("");
     }
 }
 
