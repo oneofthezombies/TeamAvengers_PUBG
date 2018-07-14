@@ -464,36 +464,49 @@ void Character::terrainFeaturesCollisionInteraction2(OUT State* destState)
         {
             if (hasCollision) break;
 
-
-            //hasCollision = Collision::HasCollision(m_bBox, others);
             hasCollision = Collision::HasCollision(m_bSphereSlidingCollision, others);
             // sliding vector
             if (hasCollision)
             {
 
-                //임의로 rock의 normal vector을 만들겠다.
-
-                D3DXVECTOR3 n = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-
-
+                //내가 원하는 
                 const D3DXVECTOR3 currPos = GetTransform()->GetPosition();
                 D3DXVECTOR3 destDir(destState->position.x - currPos.x, destState->position.y - currPos.y, destState->position.z - currPos.z);
                 D3DXVec3Normalize(&destDir, &destDir);
 
-
                 D3DXVECTOR3 dirTowardsObstacle = (others.position + others.center) - currPos;
                 D3DXVec3Normalize(&dirTowardsObstacle, &dirTowardsObstacle);
+
+                D3DXVECTOR3 normals[6];
+                normals[0] = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+                normals[1] = D3DXVECTOR3(0.0f, 0.0f, 1.0f );
+                normals[2] = D3DXVECTOR3(0.0f, -1.0f, 0.0f );
+                normals[3] = D3DXVECTOR3(0.0f, 1.0f, 0.0f );
+                normals[4] = D3DXVECTOR3(-1.0f, 0.0f, 0.0f );
+                normals[5] = D3DXVECTOR3( 1.0f, 0.0f, 0.0f );
+
+                //이거 다 rotation 시켜주자
+                
+
+                float smallest = FLT_MAX;
+                int save = -1;
+                for (int i = 0; i < 6; i++)
+                {
+                    float res = D3DXVec3Dot(&normals[i], &dirTowardsObstacle);
+                    if (smallest>res)
+                    {
+                        smallest = res;
+                        save = i;
+                    }
+                }
 
                 //방향이 toward obstacle 이라면
                 if (D3DXVec3Dot(&destDir, &dirTowardsObstacle) > 0)
                 {
                     //sliding vector 적용
-                    D3DXVECTOR3 slidingVector = destDir - D3DXVec3Dot(&destDir, &n)*n;
+                    D3DXVECTOR3 slidingVector = destDir - D3DXVec3Dot(&destDir, &normals[save])*normals[save];
                     destState->position = currPos + slidingVector;
                 }
-
-
-
 
             }
         }
