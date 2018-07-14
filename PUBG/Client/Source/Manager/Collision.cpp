@@ -52,33 +52,42 @@ void BoundingSphere::Render()
     });
     Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
-void BoundingSphere::RenderRed()
+void BoundingBox::RenderRed()
 {
     if (!Collision()()->IsRender()) return;
 
-    D3DXMATRIX m;
-    D3DXMatrixTransformation(
-        &m,
-        nullptr,
-        nullptr,
-        &D3DXVECTOR3(radius, radius, radius),
-        nullptr, nullptr,
-        &(center + position));
+    auto& vertices = Resource()()->GetBoundingBoxVertices();
+    auto& indices = Resource()()->GetBoundingBoxIndices();
 
-    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+    D3DXMATRIX e, c, r, p, m;
+    D3DXMatrixScaling(&e, extent.x, extent.y, extent.z);
+    D3DXMatrixTranslation(&c, center.x, center.y, center.z);
+    D3DXMatrixRotationQuaternion(&r, &rotation);
+    D3DXMatrixTranslation(&p, position.x, position.y, position.z);
+    m = e * c * r * p;
+
     Shader::Draw(
         Resource()()->GetEffect("./Resource/", "Color.fx"),
         nullptr,
-        Resource()()->GetBoundingSphereMesh(),
-        0,
         [&m](LPD3DXEFFECT pEffect)
     {
         pEffect->SetMatrix(Shader::World, &m);
-
         D3DXCOLOR Red(1.0f, 0.0f, 0.0f, 1.0f);
         pEffect->SetValue("Color", &Red, sizeof Red);
+    },
+        [&vertices, &indices]()
+    {
+        Device()()->DrawIndexedPrimitiveUP(
+            D3DPT_LINELIST,
+            0,
+            vertices.size(),
+            indices.size() / 2,
+            indices.data(),
+            D3DFMT_INDEX16,
+            vertices.data(),
+            sizeof vertices.front());
     });
-    Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+
 }
 
 
@@ -524,29 +533,95 @@ bool Collision::HasCollision(
 
 bool Collision::HasCollision(const BoundingSphere& sphere, const BoundingBox& box)
 {
-    const D3DXVECTOR3& B_extent = box.extent;
-    D3DXVECTOR3 boxMax = box.extent + box.center + box.position;
-    D3DXVECTOR3 boxMin = -box.extent + box.center + box.position;
-    
-    D3DXMATRIX B_transform;
-    D3DXMatrixRotationQuaternion(&B_transform, &box.rotation);
-    D3DXVec3TransformCoord(&boxMax, &boxMax, &B_transform);
-    D3DXVec3TransformCoord(&boxMin, &boxMin, &B_transform);
-
     D3DXVECTOR3 spherePos = sphere.center + sphere.position;
 
+    D3DXVECTOR3 boxMax = box.extent + box.center;
+    D3DXVECTOR3 boxMin = -box.extent + box.center;
 
-    // get box closest point to sphere center by clamping
-    float x = std::max(boxMin.x, std::min(spherePos.x, boxMax.x));
-    float y = std::max(boxMin.y, std::min(spherePos.y, boxMax.y));
-    float z = std::max(boxMin.z, std::min(spherePos.z, boxMax.z));
+    D3DXVECTOR3 EightEdge[8];
+    EightEdge[0] = D3DXVECTOR3(boxMax.x, boxMax.y, boxMax.z);
+    EightEdge[1] = D3DXVECTOR3(boxMax.x, boxMax.y, boxMin.z);
+    EightEdge[2] = D3DXVECTOR3(boxMax.x, boxMin.y, boxMax.z);
+    EightEdge[3] = D3DXVECTOR3(boxMax.x, boxMin.y, boxMin.z);
+    EightEdge[4] = D3DXVECTOR3(boxMin.x, boxMax.y, boxMax.z);
+    EightEdge[5] = D3DXVECTOR3(boxMin.x, boxMax.y, boxMin.z);
+    EightEdge[6] = D3DXVECTOR3(boxMin.x, boxMin.y, boxMax.z);
+    EightEdge[7] = D3DXVECTOR3(boxMin.x, boxMin.y, boxMin.z);
+
+
+    D3DXMATRIX B_transform;
+    D3DXMatrixRotationQuaternion(&B_transform, &box.rotation);
+
+    int find = -1;
+    float min = FLT_MAX;
+    for (int i = 0; i < 8; i++)
+    {
+        D3DXVec3TransformCoord(&EightEdge[i], &EightEdge[i], &B_transform);
+        EightEdge[i] += box.position;
+
+        float length = D3DXVec3Length(&(EightEdge[i] - spherePos));
+
+        if (min > length)
+        {
+            min = length;
+            find = i;
+        }
+    }
+
+
+    //// get box closest point to sphere center by clamping
+    //float x = std::max(boxMin.x, std::min(spherePos.x, boxMax.x));
+    //float y = std::max(boxMin.y, std::min(spherePos.y, boxMax.y));
+    //float z = std::max(boxMin.z, std::min(spherePos.z, boxMax.z));
+    float x = EightEdge[find].x;
+    float y = EightEdge[find].y;
+    float z = EightEdge[find].z;
 
     // this is the same as isPointInsideSphere
     float distance = std::sqrt((x - spherePos.x) * (x - spherePos.x) +
         (y - spherePos.y) * (y - spherePos.y) +
         (z - spherePos.z) * (z - spherePos.z));
 
-    return distance < sphere.radius;
+    return distance <= sphere.radius*sphere.radius;
+}
+float sqDistPointAABB(D3DXVECTOR3 p, BoundingBox aabb)
+{
+    float sqDist = 0.0f;
+    D3DXVECTOR3 aabbMax = aabb.extent + aabb.center;
+    D3DXVECTOR3 aabbMin = -aabb.extent + aabb.center;
+    
+    D3DXMATRIX B_transform;
+    D3DXMatrixRotationQuaternion(&B_transform, &aabb.rotation);
+
+    D3DXVec3TransformCoord(&aabbMax, &aabbMax, &B_transform);
+    D3DXVec3TransformCoord(&aabbMin, &aabbMin, &B_transform);
+    aabbMax += aabb.position;
+    aabbMin += aabb.position;
+    {//x
+        float v = p.x;
+        if (v < aabbMin.x) sqDist += (aabbMin.x - v)*(aabbMin.x - v);
+        if (v > aabbMax.x) sqDist += (v - aabbMax.x)*(v - aabbMax.x);
+    }
+    {//y
+        float v = p.y;
+        if (v < aabbMin.y) sqDist += (aabbMin.y - v)*(aabbMin.y - v);
+        if (v > aabbMax.y) sqDist += (v - aabbMax.y)*(v - aabbMax.y);
+    }
+    {//z
+        float v = p.z;
+        if (v < aabbMin.z) sqDist += (aabbMin.z - v)*(aabbMin.z - v);
+        if (v > aabbMax.z) sqDist += (v - aabbMax.z)*(v - aabbMax.z);
+    }
+    return sqDist;
+}
+
+bool Collision::HasCollision2(const BoundingSphere & sphere, const BoundingBox & box)
+{
+
+    float sqDist = sqDistPointAABB((sphere.center+sphere.position), box);
+
+
+    return sqDist <=sphere.radius*sphere.radius;
 }
 
 bool Collision::HasCollision(const BoundingBox& lhs, const BoundingBox& rhs)

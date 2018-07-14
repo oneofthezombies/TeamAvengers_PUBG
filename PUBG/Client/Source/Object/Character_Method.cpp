@@ -464,7 +464,8 @@ void Character::terrainFeaturesCollisionInteraction2(OUT State* destState)
         {
             if (hasCollision) break;
 
-            hasCollision = Collision::HasCollision(m_bSphereSlidingCollision, others);
+            //hasCollision = Collision::HasCollision2(m_bSphereSlidingCollision, others);
+            hasCollision = Collision::HasCollision(m_bBox, others);
             // sliding vector
             if (hasCollision)
             {
@@ -495,7 +496,8 @@ void Character::terrainFeaturesCollisionInteraction2(OUT State* destState)
                 int save = -1;
                 for (int i = 0; i < 6; i++)
                 {
-                    D3DXVec3TransformCoord(&normals[i], &normals[i], &matR);
+                    D3DXVec3TransformNormal(&normals[i], &normals[i], &matR);
+                    D3DXVec3Normalize(&normals[i], &normals[i]);
 
                     float res = D3DXVec3Dot(&normals[i], &dirTowardsObstacle);
                     if (smallest>res)

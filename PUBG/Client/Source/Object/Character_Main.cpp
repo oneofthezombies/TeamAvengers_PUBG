@@ -98,8 +98,8 @@ Character::Character(const int index)
 
     pOtherHitPositionMesh = Resource()()->GetBoundingSphereMesh();
 
-    //m_bBox = BoundingBox::Create(D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 170.0f, 50.0f));
-    m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
+    m_bBox = BoundingBox::Create(D3DXVECTOR3(-20.0f, 0.0f, -20.0f), D3DXVECTOR3(20.0f, 170.0f, 20.0f));
+    //m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
 }
 
 Character::~Character()
@@ -139,8 +139,10 @@ void Character::OnUpdate()
     // bounding sphere move to character position
     m_boundingSphere.position = GetTransform()->GetPosition();
 
-    m_bSphereSlidingCollision.position = GetTransform()->GetPosition();
-    
+    //m_bSphereSlidingCollision.position = GetTransform()->GetPosition();
+    m_bBox.position = GetTransform()->GetPosition();
+    m_bBox.rotation = GetTransform()->GetRotation();
+
     for (auto pPart : m_characterParts)
         pPart->Update();
 
@@ -172,7 +174,8 @@ void Character::OnUpdate()
     for (auto pPart : m_characterParts)
         pPart->Render();
 
-    m_bSphereSlidingCollision.RenderRed();
+    //m_bSphereSlidingCollision.RenderRed();
+    m_bBox.RenderRed();
     m_boundingSphere.Render();
     // end render collision shapes
 

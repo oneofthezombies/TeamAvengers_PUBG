@@ -29,7 +29,7 @@ void SceneLoading::Load()
     //load(TAG_RES_STATIC::Kar98k);
     //load(TAG_RES_STATIC::Bandage);
     load(TAG_RES_STATIC::Rock_1);
-    //load(TAG_RES_STATIC::WareHouse_A);
+    load(TAG_RES_STATIC::WareHouse_A);
     //load(TAG_RES_STATIC::DeathDropBox);
 
     //// load skined meshs

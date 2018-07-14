@@ -37,7 +37,7 @@ void ScenePlay::setAloneMode()
     TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(200.0f, 200.0f, 600.0f), Vector3::ZERO, Vector3::ONE * 0.7f);
     D3DXMATRIX m;
     D3DXQUATERNION qR;
-    D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 0.0f);
+    D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
     D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 30.0f), nullptr, &qR, &D3DXVECTOR3(200.0f, 200.0f, 600.0f));
     tf->AddBoundingBox(m);
     AddObject(tf);
@@ -233,7 +233,7 @@ void ScenePlay::OnInit()
     //cell space partitioning
     m_TotalCellSpaces.resize(CellSpace::DIMENSION * CellSpace::DIMENSION);
 
-    //LoadObjectsFromFile("./Resource/save.txt");
+    LoadObjectsFromFile("./Resource/save.txt");
 
     // No id received
     if (Communication()()->m_myInfo.ID == -1)

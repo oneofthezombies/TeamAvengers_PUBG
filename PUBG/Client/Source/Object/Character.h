@@ -313,8 +313,8 @@ private:
     WaitBackAction m_backAction;
 
     // for character x character collision
-    //BoundingBox m_bBox;
-    BoundingSphere m_bSphereSlidingCollision;
+    BoundingBox m_bBox;
+    //BoundingSphere m_bSphereSlidingCollision;
 
 
 /**************************** end member variable ****************************/
