@@ -248,7 +248,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameKillNum),
         D3DXVECTOR2(60.0f, 30.0f),
         string("2") + string(" ų"),
-        D3DCOLOR_XRGB(255, 0, 0),
+        D3DCOLOR_XRGB(216, 0, 0),
         m_background);
     killNum->SetDrawTextFormat(DT_CENTER);
     killNum->SetPosition(D3DXVECTOR3(612.0f, 504.0f, 0.0f));
