@@ -127,9 +127,6 @@ void ScenePlay::setAloneMode()
     //item = new Item(TAG_RES_STATIC::ACOG, p, r, s);
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
-
-    UITest* pUITest = new UITest;
-    UI()()->RegisterUIObject(pUITest);
 }
 
 void ScenePlay::setWithOthersMode()

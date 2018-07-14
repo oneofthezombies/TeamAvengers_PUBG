@@ -308,6 +308,45 @@ void Character::InGameUI::Init()
         m_background);
     killLog2->SetDrawTextFormat(DT_RIGHT);
     killLog2->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 20.0f, 0.0f));
+
+    //ÃÑ
+    auto primaryWeaponBg = new UIImage(
+        "./Resource/UI/InGame/",
+        "weapons_bg.png",
+        D3DXVECTOR3(970.0f, 670.0f, 0.0f),
+        nullptr,
+        m_background);
+
+    auto secondaryWeaponBg = new UIImage(
+        "./Resource/UI/InGame/",
+        "weapons_bg.png",
+        D3DXVECTOR3(970.0f, 632.0f, 0.0f),
+        nullptr,
+        m_background);
+
+    auto primaryWeapon = new UIImage(
+        "./Resource/UI/InGame/",
+        "weapons_gun_QBZ95.png",
+        D3DXVECTOR3(28.0f, 0.0f, 0.0f),
+        nullptr,
+        primaryWeaponBg);
+
+    auto secondaryWeapon = new UIImage(
+        "./Resource/UI/InGame/",
+        "weapons_gun_kar98k.png",
+        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+        nullptr,
+        secondaryWeaponBg);
+
+
+    //¸Ê
+    new UIImage(
+        "./Resource/UI/InGame/",
+        "map_bg.png",
+        D3DXVECTOR3(1085.0f, 530.0f, 0.0f),
+        nullptr,
+        m_background
+    );
 }
 
 void Character::InGameUI::Destroy()
