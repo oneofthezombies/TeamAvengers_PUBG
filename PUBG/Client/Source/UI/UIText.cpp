@@ -59,11 +59,22 @@ void UIText::SetText(const string& val)
     m_text = val;
 }
 
+void UIText::SetText(const string& val, UIText*& shadow)
+{
+    m_text = val;
+    shadow->SetText(val);
+}
+
 void UIText::SetText(string* p)
 {
     if (!p) return;
 
     m_pText = p;
+}
+
+string UIText::GetText()
+{
+    return m_text;
 }
 
 void UIText::SetDrawTextFormat(const DWORD val)

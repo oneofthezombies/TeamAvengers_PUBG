@@ -28,6 +28,7 @@ Character::TotalInventory::TotalInventory()
     , pTempSaveWeaponForX(nullptr)
     , pCharacter(nullptr)
     , m_pUIPicked(nullptr)
+
 {
 }
 
@@ -339,8 +340,7 @@ void Character::PutItemInTotalInventory(Item* item)
             }
             else
             {
-                //TODO: 용량 부족 UI 띄우기
-                cout << "공간이 충분하지 않습니다!" << endl;
+                m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
             }
             // TODO : send "delete item on field" to server
         }
@@ -420,8 +420,7 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
     }
     else
     {
-        //TODO: 용량 부족 UI 띄우기
-        cout << "공간이 충분하지 않습니다!" << endl;
+        m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
     }
 
 }

@@ -32,11 +32,17 @@ Character::InGameUI::InGameUI()
 
     , pKillNumText(nullptr)
     , pKillText(nullptr)
+    , pKillNumTextShadow(nullptr)
+    , pKillTextShadow(nullptr)
 
     , pInfoText(nullptr)
+    , pInfoTextShadow(nullptr)
 
     , pKillLog1(nullptr)
     , pKillLog2(nullptr)
+
+    //=========================
+    , COOL_TIME(4.0)
 {
 }
 
@@ -51,6 +57,7 @@ void Character::InGameUI::Destroy()
 
 void Character::InGameUI::Init()
 {
+    m_coolDown = COOL_TIME;
     //투명 배경
     m_pBackground = new UIImage(
         "./Resource/UI/InGame/",
@@ -273,6 +280,7 @@ void Character::InGameUI::Init()
     //킬 (게임 화면 중앙)
     setTextWithShadow(
         pKillNumText,
+        pKillNumTextShadow,
         Resource()()->GetFont(TAG_FONT::InGameKillNum),
         D3DXVECTOR2(60.0f, 30.0f),
         string("2 킬"),
@@ -282,6 +290,7 @@ void Character::InGameUI::Init()
 
     setTextWithShadow(
         pKillText,
+        pKillTextShadow,
         Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(400.0f, 20.0f),
         string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
@@ -292,9 +301,10 @@ void Character::InGameUI::Init()
     //아이템 사용 등 안내문구
     setTextWithShadow(
         pInfoText,
+        pInfoTextShadow,
         Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(252.0f, 20.0f),
-        string("공간이 충분하지 않습니다!"),
+        string(""),
         D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
         m_pBackground,
         D3DXVECTOR3(510.0f, 579.0f, 0.0f));
@@ -363,6 +373,19 @@ void Character::InGameUI::Update()
     //실제 정보를 받아서 string을 넣어주자
     //for test
     pKillNumUpText->SetText(string("9"));
+
+    //일정시간이 지나면 해당 문구 삭제
+    if (pInfoText->GetText() != "")
+    {
+        float t = m_coolDown -= Time()()->GetDeltaTime();
+        cout << t << endl;
+        if (m_coolDown <= 0)
+        {
+            pInfoText->SetText("");
+            pInfoTextShadow->SetText("");
+            m_coolDown = COOL_TIME;
+        }
+    }
 }
 
 void Character::InGameUI::Render()
@@ -370,7 +393,8 @@ void Character::InGameUI::Render()
 }
 
 void Character::InGameUI::setTextWithShadow(
-    UIText* pText,
+    UIText*& pText,
+    UIText*& pTextShadow,
     const LPD3DXFONT font,
     const D3DXVECTOR2& size,
     const string& str,
@@ -378,14 +402,14 @@ void Character::InGameUI::setTextWithShadow(
     UIObject* pParent,
     const D3DXVECTOR3& position)
 {
-    auto shadow = new UIText(
+    pTextShadow = new UIText(
         font,
         size,
         str,
         D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f),
         pParent);
-    shadow->SetDrawTextFormat(DT_CENTER);
-    shadow->SetPosition(D3DXVECTOR3(position.x + 1.0f, position.y + 1.0f, position.z));
+    pTextShadow->SetDrawTextFormat(DT_CENTER);
+    pTextShadow->SetPosition(D3DXVECTOR3(position.x + 1.0f, position.y + 1.0f, position.z));
 
     pText = new UIText(
         font,

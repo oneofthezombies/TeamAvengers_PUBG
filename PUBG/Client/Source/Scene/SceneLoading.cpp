@@ -28,9 +28,9 @@ void SceneLoading::Load()
     //load(TAG_RES_STATIC::QBZ);
     //load(TAG_RES_STATIC::Kar98k);
 
-    //load(TAG_RES_STATIC::Bandage);
-    //load(TAG_RES_STATIC::FirstAidKit);
-    //load(TAG_RES_STATIC::MedKit);
+    load(TAG_RES_STATIC::Bandage);
+    load(TAG_RES_STATIC::FirstAidKit);
+    load(TAG_RES_STATIC::MedKit);
 
     //load(TAG_RES_STATIC::RedDot);
     //load(TAG_RES_STATIC::Aimpoint2X);

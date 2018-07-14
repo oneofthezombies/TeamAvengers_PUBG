@@ -82,13 +82,16 @@ public:
         //Image ===================
         //compass
         UIImage* pCompass;
+
         //equip
         UIImage* pBagImg;
         UIImage* pHelmetImg;
         UIImage* pVestImg;
+
         //hp
         UIImage* pHpRedImg;
         UIImage* pHpWhiteImg;
+
         //weapons
         UIImage* pPrimaryWeaponImg;
         UIImage* pSecondaryWeaponImg;
@@ -99,22 +102,34 @@ public:
         UIText* pAmmoReloadText;
         UIText* pAmmoNumText;
         UIText* pFireModeText;
+
         //survival
         UIText* pSurvivalNumText;
+
         //kill(오른쪽 상단)
         UIText* pKillNumUpText;
+
         //id, version
         UIText* pIdText;
+
         //kill(화면 중앙)
         UIText* pKillNumText;
         UIText* pKillText;
+
+        UIText* pKillNumTextShadow;
+        UIText* pKillTextShadow;
+
         //아이템 사용 등 안내문구
         UIText* pInfoText;
+        UIText* pInfoTextShadow;
+
         //킬로그
         UIText* pKillLog1;
         UIText* pKillLog2;
-        
-        
+       
+        const float COOL_TIME;
+        float m_coolDown;
+
          InGameUI();
         ~InGameUI();
 
@@ -124,7 +139,8 @@ public:
         void Render();
 
         void setTextWithShadow(
-            UIText* pText,
+            UIText*& pText,
+            UIText*& pTextShadow,
             const LPD3DXFONT font,
             const D3DXVECTOR2& size,
             const string& str,
@@ -172,7 +188,6 @@ public:
         
         bool isOpened;
         std::deque<Item*> droppedItems;
-
 
         ////////////함수
         void Init();
