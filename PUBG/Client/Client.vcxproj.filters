@@ -47,8 +47,6 @@
     <ClCompile Include="Source\Useful\Shader.cpp" />
     <ClCompile Include="Source\Object\Grid.cpp" />
     <ClCompile Include="Source\Useful\AnimationState.cpp" />
-    <ClCompile Include="Source\HeightMap.cpp" />
-    <ClCompile Include="Source\Ray.cpp" />
     <ClCompile Include="Source\Object\Character_ForDebug.cpp" />
     <ClCompile Include="Source\Object\Character_Input.cpp" />
     <ClCompile Include="Source\Object\CharacterAnimation.cpp" />
@@ -56,12 +54,15 @@
     <ClCompile Include="Source\Manager\Collision_Core.cpp" />
     <ClCompile Include="Source\Scene\SceneCollisionTest.cpp" />
     <ClCompile Include="Source\Manager\Resource.cpp" />
-    <ClCompile Include="Area.cpp" />
     <ClCompile Include="Source\Useful\Ballistics.cpp" />
     <ClCompile Include="CameraWorkSpace.cpp" />
     <ClCompile Include="Source\Useful\Interpolation.cpp" />
     <ClCompile Include="Source\Useful\TagUIPosition.cpp" />
     <ClCompile Include="Source\Object\Character_InGameUI.cpp" />
+    <ClCompile Include="Source\Useful\HeightMap.cpp" />
+    <ClCompile Include="Source\Useful\Ray.cpp" />
+    <ClCompile Include="Source\Useful\Area.cpp" />
+    <ClCompile Include="Source\UI\UITest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod.dll" />
@@ -113,15 +114,16 @@
     <ClInclude Include="Source\Useful\Shader.h" />
     <ClInclude Include="Source\Object\Grid.h" />
     <ClInclude Include="Source\Useful\AnimationState.h" />
-    <ClInclude Include="Source\HeightMap.h" />
-    <ClInclude Include="Source\Ray.h" />
     <ClInclude Include="Source\Object\CharacterAnimation.h" />
     <ClInclude Include="Source\Manager\Collision.h" />
     <ClInclude Include="Source\Scene\SceneCollisionTest.h" />
     <ClInclude Include="Source\Manager\Resource.h" />
-    <ClInclude Include="Area.h" />
     <ClInclude Include="Source\Useful\Ballistics.h" />
     <ClInclude Include="Source\Useful\Interpolation.h" />
     <ClInclude Include="Source\Useful\TagUIPosition.h" />
+    <ClInclude Include="Source\Useful\HeightMap.h" />
+    <ClInclude Include="Source\Useful\Ray.h" />
+    <ClInclude Include="Source\Useful\Area.h" />
+    <ClInclude Include="Source\UI\UITest.h" />
   </ItemGroup>
 </Project>
