@@ -58,6 +58,7 @@ void Character::InGameUI::Destroy()
 void Character::InGameUI::Init()
 {
     m_coolDown = COOL_TIME;
+
     //투명 배경
     m_pBackground = new UIImage(
         "./Resource/UI/InGame/",
@@ -357,18 +358,16 @@ void Character::InGameUI::Init()
         nullptr,
         secondaryWeaponBg);
 
-
     //맵
     new UIImage(
         "./Resource/UI/InGame/",
         "map_bg.png",
         D3DXVECTOR3(1085.0f, 530.0f, 0.0f),
         nullptr,
-        m_pBackground
-    );
+        m_pBackground);
 }
 
-void Character::InGameUI::Update()
+void Character::InGameUI::Update(const TotalInventory& inven)
 {
     //실제 정보를 받아서 string을 넣어주자
     //for test
@@ -385,6 +384,16 @@ void Character::InGameUI::Update()
             pInfoTextShadow->SetText("");
             m_coolDown = COOL_TIME;
         }
+    }
+
+    //손에 들고 있는 총의 장전개수와 총알의 개수
+    if (inven.m_pHand)
+    {
+        pAmmoReloadText->SetText("있다!");
+    }
+    else
+    {
+        pAmmoReloadText->SetText("없다!");
     }
 }
 

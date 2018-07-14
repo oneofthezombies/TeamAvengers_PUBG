@@ -366,7 +366,7 @@ void Character::updateMine()
 
     //¿©±â
     //for InGameUI
-    m_inGameUI.Update();
+    m_inGameUI.Update(m_totalInventory);
 
     Communication()()->SendPositionAndRotation(pos, rot);
     Communication()()->SendHeadAngle(m_headRotation.m_angle);

@@ -75,80 +75,6 @@ public:
         RootTransform(const float moveSpeed);
     };
 
-    struct InGameUI
-    {
-        UIImage* m_pBackground;
-
-        //Image ===================
-        //compass
-        UIImage* pCompass;
-
-        //equip
-        UIImage* pBagImg;
-        UIImage* pHelmetImg;
-        UIImage* pVestImg;
-
-        //hp
-        UIImage* pHpRedImg;
-        UIImage* pHpWhiteImg;
-
-        //weapons
-        UIImage* pPrimaryWeaponImg;
-        UIImage* pSecondaryWeaponImg;
-
-
-        //Text ====================
-        //ammo
-        UIText* pAmmoReloadText;
-        UIText* pAmmoNumText;
-        UIText* pFireModeText;
-
-        //survival
-        UIText* pSurvivalNumText;
-
-        //kill(오른쪽 상단)
-        UIText* pKillNumUpText;
-
-        //id, version
-        UIText* pIdText;
-
-        //kill(화면 중앙)
-        UIText* pKillNumText;
-        UIText* pKillText;
-
-        UIText* pKillNumTextShadow;
-        UIText* pKillTextShadow;
-
-        //아이템 사용 등 안내문구
-        UIText* pInfoText;
-        UIText* pInfoTextShadow;
-
-        //킬로그
-        UIText* pKillLog1;
-        UIText* pKillLog2;
-       
-        const float COOL_TIME;
-        float m_coolDown;
-
-         InGameUI();
-        ~InGameUI();
-
-        void Init();
-        void Destroy();
-        void Update();
-        void Render();
-
-        void setTextWithShadow(
-            UIText*& pText,
-            UIText*& pTextShadow,
-            const LPD3DXFONT font,
-            const D3DXVECTOR2& size,
-            const string& str,
-            const D3DCOLOR color,
-            UIObject* pParent,
-            const D3DXVECTOR3& position);
-    };
-
     struct TotalInventory
     {
         static const float DEFAULT_CAPACITY;
@@ -202,6 +128,80 @@ public:
 
          TotalInventory();
         ~TotalInventory();
+    };
+
+    struct InGameUI
+    {
+        UIImage* m_pBackground;
+
+        //Image ===================
+        //compass
+        UIImage* pCompass;
+
+        //equip
+        UIImage* pBagImg;
+        UIImage* pHelmetImg;
+        UIImage* pVestImg;
+
+        //hp
+        UIImage* pHpRedImg;
+        UIImage* pHpWhiteImg;
+
+        //weapons
+        UIImage* pPrimaryWeaponImg;
+        UIImage* pSecondaryWeaponImg;
+
+
+        //Text ====================
+        //ammo
+        UIText* pAmmoReloadText;
+        UIText* pAmmoNumText;
+        UIText* pFireModeText;
+
+        //survival
+        UIText* pSurvivalNumText;
+
+        //kill(오른쪽 상단)
+        UIText* pKillNumUpText;
+
+        //id, version
+        UIText* pIdText;
+
+        //kill(화면 중앙)
+        UIText* pKillNumText;
+        UIText* pKillText;
+
+        UIText* pKillNumTextShadow;
+        UIText* pKillTextShadow;
+
+        //아이템 사용 등 안내문구
+        UIText* pInfoText;
+        UIText* pInfoTextShadow;
+
+        //킬로그
+        UIText* pKillLog1;
+        UIText* pKillLog2;
+
+        const float COOL_TIME;
+        float m_coolDown;
+
+        InGameUI();
+        ~InGameUI();
+
+        void Init();
+        void Destroy();
+        void Update(const TotalInventory& inven);
+        void Render();
+
+        void setTextWithShadow(
+            UIText*& pText,
+            UIText*& pTextShadow,
+            const LPD3DXFONT font,
+            const D3DXVECTOR2& size,
+            const string& str,
+            const D3DCOLOR color,
+            UIObject* pParent,
+            const D3DXVECTOR3& position);
     };
 
     struct Info
