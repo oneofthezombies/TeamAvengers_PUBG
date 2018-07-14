@@ -178,6 +178,43 @@ void Character::InGameUI::Init()
         survivalNumBg);
     survivalText->SetDrawTextFormat(DT_CENTER);
     survivalText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
+    
+    //킬 (화면 오른쪽 상단)
+    auto killTextUpBg = new UIImage(
+        "./Resource/UI/InGame/",
+        "kill_text_up_bg.png",
+        D3DXVECTOR3(1145.0f, 20.0f, 0.0f),
+        nullptr,
+        m_background
+    );
+
+    auto killUpText = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameSurvival),
+        D3DXVECTOR2(24.0f, 26.0f),
+        string("킬"),
+        D3DCOLOR_XRGB(180, 180, 180),
+        killTextUpBg
+    );
+    killUpText->SetDrawTextFormat(DT_CENTER);
+    killUpText->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+    auto killNumUpBg = new UIImage(
+        "./Resource/UI/InGame/",
+        "kill_num_up_bg.png",
+        D3DXVECTOR3(1128.0f, 20.0f, 0.0f),
+        nullptr,
+        m_background
+    );
+
+    auto killNumUpText = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
+        D3DXVECTOR2(17.0f, 26.0f),
+        string("0"),
+        D3DCOLOR_XRGB(255, 255, 255),
+        killNumUpBg);
+    killNumUpText->SetDrawTextFormat(DT_CENTER);
+    killNumUpText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
+
 
     //아이디, 게임버전
     auto idText = new UIText(
@@ -190,8 +227,7 @@ void Character::InGameUI::Init()
     idText->SetDrawTextFormat(DT_CENTER);
     idText->SetPosition(D3DXVECTOR3(598.0f, 705.0f, 0.0f));
 
-    //킬
-
+    //킬 (화면 중앙)
     auto killNumShadow = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameKillNum),
         D3DXVECTOR2(60.0f, 30.0f),
@@ -227,6 +263,9 @@ void Character::InGameUI::Init()
         m_background);
     killText->SetDrawTextFormat(DT_CENTER);
     killText->SetPosition(D3DXVECTOR3(440.0f, 480.0f, 0.0f));
+
+    //아이템 사용 등 안내문구
+
 }
 
 void Character::InGameUI::Destroy()

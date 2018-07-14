@@ -303,6 +303,9 @@ void SceneLoading::OnInit()
     Resource()()->AddTexture("./Resource/UI/InGame/", "survival_text_bg.png");
     Resource()()->AddTexture("./Resource/UI/InGame/", "survival_num_bg.png");
 
+    Resource()()->AddTexture("./Resource/UI/InGame/", "kill_num_up_bg.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "kill_text_up_bg.png");
+
     m_pBackground =
         new UIImage(
             "./Resource/",
