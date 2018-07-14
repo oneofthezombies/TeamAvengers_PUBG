@@ -160,16 +160,35 @@ void Character::InGameUI::Init()
         survivalBg
     );
     survival->SetDrawTextFormat(DT_CENTER);
-    survival->SetPosition(D3DXVECTOR3(0.0f, 5.0f, 0.0f));
+    survival->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+    auto survivalNumBg = new UIImage(
+        "./Resource/UI/InGame/",
+        "survival_num_bg.png",
+        D3DXVECTOR3(1190.0f, 20.0f, 0.0f),
+        nullptr,
+        m_background
+    );
 
     auto survivalText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
         D3DXVECTOR2(26.0f, 26.0f),
-        string("47"),
+        string("57"),
         D3DCOLOR_XRGB(255, 255, 255),
-        m_background);
+        survivalNumBg);
     survivalText->SetDrawTextFormat(DT_CENTER);
-    survivalText->SetPosition(D3DXVECTOR3(1185.0f, 22.0f, 0.0f));
+    survivalText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
+
+    //아이디, 게임버전
+    auto idText = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameID),
+        D3DXVECTOR2(87.0f, 9.0f),
+        string("HelloWoori"),
+        D3DCOLOR_XRGB(180, 180, 180),
+        m_background
+    );
+    idText->SetDrawTextFormat(DT_CENTER);
+    idText->SetPosition(D3DXVECTOR3(598.0f, 705.0f, 0.0f));
 
 }
 

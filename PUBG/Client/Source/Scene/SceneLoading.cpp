@@ -54,13 +54,13 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined);
 
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
     // load animation FPP
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined_FPP);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined_FPP);
-    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Combined_FPP);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined_FPP);
+    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Combined_FPP);
     //addAnimation(TAG_RES_ANIM_CHARACTER::Healing_FPP);
 
     //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
@@ -301,6 +301,7 @@ void SceneLoading::OnInit()
 
     Resource()()->AddTexture("./Resource/UI/InGame/", "ammo_info.png");
     Resource()()->AddTexture("./Resource/UI/InGame/", "survival_text_bg.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "survival_num_bg.png");
 
     m_pBackground =
         new UIImage(
