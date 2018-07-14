@@ -138,6 +138,9 @@ public:
         static const D3DCOLOR WHITE_ALPHA;
         static const D3DCOLOR BLACK_ALPHA;
 
+        static const D3DXVECTOR3 PRIMARY_WEAPON_POS;
+        static const D3DXVECTOR3 SECONDARY_WEAPON_POS;
+
         UIImage* m_pBackground;
 
         //Image ===================
@@ -154,8 +157,11 @@ public:
         UIImage* pHpWhiteImg;
 
         //weapons
-        UIImage* pPrimaryWeaponImg;
-        UIImage* pSecondaryWeaponImg;
+        UIImage* pQBZImg;
+        UIImage* pKar98kImg;
+
+        UIImage* pQBZRedImg;
+        UIImage* pKar98kRedImg;
 
 
         //Text ====================

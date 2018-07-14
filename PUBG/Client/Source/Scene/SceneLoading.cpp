@@ -306,9 +306,11 @@ void SceneLoading::OnInit()
     Resource()()->AddTexture("./Resource/UI/InGame/", "kill_num_up_bg.png");
     Resource()()->AddTexture("./Resource/UI/InGame/", "kill_text_up_bg.png");
 
+    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_bg.png");
     Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_kar98k.png");
     Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_QBZ95.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_bg.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_kar98k_red.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_QBZ95_red.png");
 
     Resource()()->AddTexture("./Resource/UI/InGame/", "map_bg.png");
 
