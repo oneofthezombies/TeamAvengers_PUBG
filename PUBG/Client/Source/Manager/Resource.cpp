@@ -51,6 +51,13 @@ Resource::XContainer* Resource::Async::OnLoadEffectMesh(
 
     if (FAILED(hr))
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadEffectMesh(), \
+             D3DXLoadMeshFromXA() failed.",
+            nullptr,
+            MB_OK);
+
         return nullptr;
     }
 
@@ -59,6 +66,18 @@ Resource::XContainer* Resource::Async::OnLoadEffectMesh(
             pEffectInstancesBuffer->GetBufferPointer());
 
     XContainer* pXContainer = new XContainer;
+
+    if (!pXContainer)
+    {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadEffectMesh(), \
+             new XContainer failed.",
+            nullptr,
+            MB_OK);
+
+        return nullptr;
+    }
 
     hr = CreateEffectMesh(
         path, 
@@ -70,6 +89,13 @@ Resource::XContainer* Resource::Async::OnLoadEffectMesh(
 
     if (FAILED(hr))
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadEffectMesh(), \
+             CreateEffectMesh() failed.",
+            nullptr,
+            MB_OK);
+
         SAFE_DELETE(pXContainer);
         return nullptr;
     }
@@ -87,16 +113,30 @@ Resource::XContainer* Resource::Async::OnLoadSkinnedMesh(
     XContainer* pXContainer = new XContainer;
     if (!pXContainer)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadSkinnedMesh(), \
+             new XContainer failed.",
+            nullptr,
+            MB_OK);
+
         return nullptr;
     }
 
-    pXContainer->m_pSkinnedMesh =
-        std::make_pair(fullPath, new SkinnedMesh);
-    SkinnedMesh* pSkinnedMesh = pXContainer->m_pSkinnedMesh.second;
+    SkinnedMesh* pSkinnedMesh = new SkinnedMesh;
     if (!pSkinnedMesh)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadSkinnedMesh(), \
+             new SkinnedMesh failed.",
+            nullptr,
+            MB_OK);
+
         return nullptr;
     }
+
+    pXContainer->m_pSkinnedMesh = std::make_pair(fullPath, pSkinnedMesh);
 
     AllocateHierarchy allocAsync(path, xFilename, pXContainer);
 
@@ -111,6 +151,13 @@ Resource::XContainer* Resource::Async::OnLoadSkinnedMesh(
 
     if (FAILED(hr))
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadSkinnedMesh(), \
+             D3DXLoadMeshHierarchyFromXA() failed.",
+            nullptr,
+            MB_OK);
+
         return nullptr;
     }
 
@@ -126,10 +173,17 @@ HRESULT Resource::Async::CreateEffectMesh(
     const DWORD               numEffectInstances, 
           XContainer*         OutXContainer)
 {
-    if (pMesh            == nullptr ||
-        pEffectInstances == nullptr ||
-        OutXContainer    == nullptr)
+    if (!pMesh            ||
+        !pEffectInstances ||
+        !OutXContainer)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateEffectMesh(), \
+             argument is null.",
+            nullptr,
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -141,6 +195,18 @@ HRESULT Resource::Async::CreateEffectMesh(
     }
 
     EffectMesh* pEffectMesh = new EffectMesh;
+    if (!pEffectMesh)
+    {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateEffectMesh(), \
+             new EffectMesh failed.",
+            nullptr,
+            MB_OK);
+
+        return E_FAIL;
+    }
+
     OutXContainer->m_effectMeshs[key] = pEffectMesh;
 
     pEffectMesh->m_pMesh = pMesh;
@@ -172,6 +238,12 @@ HRESULT Resource::Async::CreateEffectMesh(
 
         if (FAILED(hr))
         {
+            MessageBoxA(
+                nullptr,
+                "Resource::Async::CreateEffectMesh(), CreateEffect() failed.",
+                nullptr,
+                MB_OK);
+
             return E_FAIL;
         }
 
@@ -191,7 +263,7 @@ HRESULT Resource::Async::CreateEffectMesh(
             D3DXHANDLE handle = pEffect->GetParameterByName(
                 nullptr, effectDefault.pParamName);
 
-            if (handle == nullptr) continue;
+            if (!handle) continue;
 
             D3DXPARAMETER_DESC desc;
             pEffect->GetParameterDesc(handle, &desc);
@@ -219,6 +291,13 @@ HRESULT Resource::Async::CreateEffectMesh(
 
                     if (FAILED(hr))
                     {
+                        MessageBoxA(
+                            nullptr,
+                            "Resource::Async::CreateEffectMesh(), \
+                             CreateTexture() failed.",
+                            nullptr,
+                            MB_OK);
+
                         return E_FAIL;
                     }
 
@@ -247,8 +326,15 @@ HRESULT Resource::Async::CreateEffect(
     const std::string filename, 
           XContainer* OutXContainer)
 {
-    if (OutXContainer == nullptr)
+    if (!OutXContainer)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateEffectMesh(), \
+             argument is null.",
+            nullptr,
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -261,7 +347,7 @@ HRESULT Resource::Async::CreateEffect(
 
     LPD3DXEFFECT pEffect = nullptr;
     LPD3DXBUFFER pError = nullptr;
-    DWORD flags = D3DXSHADER_DEBUG | D3DXFX_NOT_CLONEABLE;
+    DWORD flags = D3DXSHADER_DEBUG;
     HRESULT hr = D3DXCreateEffectFromFileA(
         Device()(), 
         key.c_str(), 
@@ -283,6 +369,12 @@ HRESULT Resource::Async::CreateEffect(
             MessageBoxA(nullptr, errorMessage.c_str(), nullptr, MB_OK);
         }
 
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateEffect(), D3DXCreateEffectFromFileA() failed.",
+            nullptr,
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -295,8 +387,15 @@ HRESULT Resource::Async::CreateTexture(
     const std::string filename,
           XContainer* OutXContainer)
 {
-    if (OutXContainer == nullptr)
+    if (!OutXContainer)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateTexture(), \
+             argument is null.",
+            nullptr,
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -308,24 +407,47 @@ HRESULT Resource::Async::CreateTexture(
     }
 
     LPDIRECT3DTEXTURE9 pTexture = nullptr;
+    //HRESULT hr = D3DXCreateTextureFromFileExA(
+    //    Device()(), 
+    //    key.c_str(),
+    //    D3DX_DEFAULT_NONPOW2, 
+    //    D3DX_DEFAULT_NONPOW2, 
+    //    D3DX_DEFAULT, 
+    //    0,
+    //    D3DFMT_UNKNOWN, 
+    //    D3DPOOL_MANAGED, 
+    //    D3DX_DEFAULT, 
+    //    D3DX_DEFAULT, 
+    //    0,
+    //    nullptr, 
+    //    nullptr, 
+    //    &pTexture);
+
     HRESULT hr = D3DXCreateTextureFromFileExA(
-        Device()(), 
+        Device()(),
         key.c_str(),
-        D3DX_DEFAULT_NONPOW2, 
-        D3DX_DEFAULT_NONPOW2, 
-        D3DX_DEFAULT, 
+        D3DX_DEFAULT,
+        D3DX_DEFAULT,
+        D3DX_DEFAULT,
         0,
-        D3DFMT_UNKNOWN, 
-        D3DPOOL_MANAGED, 
-        D3DX_DEFAULT, 
-        D3DX_DEFAULT, 
+        D3DFMT_UNKNOWN,
+        D3DPOOL_MANAGED,
+        D3DX_DEFAULT,
+        D3DX_DEFAULT,
         0,
-        nullptr, 
-        nullptr, 
+        nullptr,
+        nullptr,
         &pTexture);
 
     if (FAILED(hr))
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateTexture(), \
+             D3DXCreateTextureFromFileExA() failed.",
+            nullptr,
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -366,6 +488,13 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateFrame(
         pName = new char[size];
         if (!pName)
         {
+            MessageBoxA(
+                nullptr, 
+                "Resource::Async::AllocateHierarchy::CreateFrame(), \
+                 new char[] failed.", 
+                nullptr, 
+                MB_OK);
+
             return E_OUTOFMEMORY;
         }
 
@@ -375,6 +504,13 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateFrame(
     Frame* pFrame = new Frame;
     if (!pFrame)
     {
+        MessageBoxA(
+            nullptr, 
+            "Resource::Async::AllocateHierarchy::CreateFrame(), \
+             new Frame failed.", 
+            nullptr, 
+            MB_OK);
+
         SAFE_DELETE_ARRAY(pName);
         return E_OUTOFMEMORY;
     }
@@ -398,8 +534,27 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
           LPD3DXSKININFO       pSkinInfo,
           LPD3DXMESHCONTAINER* ppNewMeshContainer)
 {
+    if (!Name)
+    {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+             Name is null.",
+            nullptr,
+            MB_OK);
+
+        return E_FAIL;
+    }
+
     if (pMeshData->Type != D3DXMESHTYPE_MESH)
     {
+        MessageBoxA(
+            nullptr, 
+            "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+             mesh type is not D3DXMESHTYPE_MESH.", 
+            nullptr, 
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -410,14 +565,20 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
         pName = new char[size];
         if (!pName)
         {
+            MessageBoxA(
+                nullptr, 
+                "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+                 new char[] failed.", 
+                nullptr, 
+                MB_OK);
+
             return E_OUTOFMEMORY;
         }
 
         memcpy_s(pName, size, Name, size);
     }
 
-    const std::string meshContainerName = 
-        pName ? std::string(pName) : std::string("");
+    const std::string meshContainerName = std::string(pName);
 
     HRESULT hr = CreateEffectMesh(
         m_path, 
@@ -429,6 +590,13 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
 
     if (FAILED(hr))
     {
+        MessageBoxA(
+            nullptr, 
+            "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+             CreateEffectMesh() failed.", 
+            nullptr, 
+            MB_OK);
+
         SAFE_DELETE_ARRAY(pName);
         return E_FAIL;
     }
@@ -457,9 +625,16 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
         pFinalBoneMatrices  = new D3DXMATRIX [numBones];
 
         if (!pBoneOffsetMatrices ||
-            !ppBoneMatrixPtrs ||
+            !ppBoneMatrixPtrs    ||
             !pFinalBoneMatrices)
         {
+            MessageBoxA(
+                nullptr,
+                "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+                 new D3DXMATRIX[] or new D3DXMATRIX*[] failed.",
+                nullptr,
+                MB_OK);
+
             SAFE_DELETE_ARRAY(pName);
             SAFE_DELETE_ARRAY(pBoneOffsetMatrices);
             SAFE_DELETE_ARRAY(ppBoneMatrixPtrs);
@@ -474,6 +649,13 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
     MeshContainer* pMeshContainer = new MeshContainer;
     if (!pMeshContainer)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+             new MeshContainer failed.",
+            nullptr,
+            MB_OK);
+
         SAFE_DELETE_ARRAY(pName);
         SAFE_DELETE_ARRAY(pBoneOffsetMatrices);
         SAFE_DELETE_ARRAY(ppBoneMatrixPtrs);
@@ -481,7 +663,10 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
         return E_OUTOFMEMORY;
     }
 
+    /* setEffectMesh() is in SkinnedMeshController */
     //pMeshContainer->pEffectMesh = pEffectMesh;
+    /*                                             */
+
     pMeshContainer->m_effectMeshKey = effectMeshKey;
     pMeshContainer->m_pWorkMesh = pWorkMesh;
     pMeshContainer->pSkinInfo = pSkinInfo;

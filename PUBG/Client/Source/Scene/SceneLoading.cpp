@@ -10,7 +10,7 @@ void SceneLoading::Load()
     // set policy 
     // sync  -> on main thread
     // async -> multi threading
-    setPolicy(Resource::Policy::SYNC); //ASYNC
+    setPolicy(Resource::Policy::ASYNC); //ASYNC
 
     // set play mode
     // alone       -> no network
@@ -19,43 +19,43 @@ void SceneLoading::Load()
     setPlayMode(Communication::PlayMode::ALONE);
 
     //// load effect meshs
-    //load(TAG_RES_STATIC::SkySphere);
+    load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
-    //load(TAG_RES_STATIC::Ammo_7_62mm);
-    //load(TAG_RES_STATIC::Armor_Lv1);
-    //load(TAG_RES_STATIC::Back_Lv1);
-    //load(TAG_RES_STATIC::Head_Lv1);
+    load(TAG_RES_STATIC::Ammo_7_62mm);
+    load(TAG_RES_STATIC::Armor_Lv1);
+    load(TAG_RES_STATIC::Back_Lv1);
+    load(TAG_RES_STATIC::Head_Lv1);
     load(TAG_RES_STATIC::QBZ);
-    //load(TAG_RES_STATIC::Kar98k);
-    //load(TAG_RES_STATIC::Bandage);
-    //load(TAG_RES_STATIC::Rock_1);
-    //load(TAG_RES_STATIC::WareHouse_A);
+    load(TAG_RES_STATIC::Kar98k);
+    load(TAG_RES_STATIC::Bandage);
+    load(TAG_RES_STATIC::Rock_1);
+    load(TAG_RES_STATIC::WareHouse_A);
 
     // load skined meshs
     const int numQBZ = 1;
     for (int i = 0; i < numQBZ; ++i)
         load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
-    //const int numKar98k = 1;
-    //for (int i = 0; i < numKar98k; ++i)
-    //    load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
+    const int numKar98k = 1;
+    for (int i = 0; i < numKar98k; ++i)
+        load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
     // load character - Unarmed_Jump.X는 2개의 animation set을 가지고 있음
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
         load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load equipment
-    //const int numArmor = 1;
-    //for (int i = 0; i < numArmor; ++i)
-    //    load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
+    const int numArmor = 1;
+    for (int i = 0; i < numArmor; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
 
-    //const int numBack = 1;
-    //for (int i = 0; i < numBack; ++i)
-    //    load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
+    const int numBack = 1;
+    for (int i = 0; i < numBack; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
 
-    //const int numHead = 1;
-    //for (int i = 0; i < numHead; ++i)
-    //    load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
+    const int numHead = 1;
+    for (int i = 0; i < numHead; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
@@ -65,14 +65,14 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
     // load animation FPP
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined_FPP);
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined_FPP);
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Combined_FPP);
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Healing_FPP);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined_FPP);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined_FPP);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Combined_FPP);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Healing_FPP);
 
-    //addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
+    addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Kar98k_Character);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_QBZ_Character);
 
     /*
@@ -107,6 +107,51 @@ void SceneLoading::Load()
     - Weapon_Kar98k_Character_FPP.X
     - Weapon_QBZ_Character_FPP.X
     */
+}
+
+void SceneLoading::OnInit()
+{
+    Resource()()->AddTexture("./Resource/", "input_field.png");
+    Resource()()->AddTexture("./Resource/", "LoadingScreen.tga");
+    Resource()()->AddTexture("./Resource/", "Honeyview_RandomLoading01.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
+    Resource()()->AddTexture("./Resource/", "dedenne.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "line.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png");
+    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_5_56mm, D3DCOLOR_XRGB(0, 0, 0));
+    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_7_62mm);
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_no.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_mouseover.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_yes.png");
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot_mouseover.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_click.png");
+
+    m_pBackground =
+        new UIImage(
+            "./Resource/",
+            "Honeyview_RandomLoading01.png",
+            Vector3::ZERO,
+            nullptr,
+            nullptr);
+    UI()()->RegisterUIObject(m_pBackground);
+
+    m_pPercentageImage =
+        new UIText(
+            Resource()()->GetFont(TAG_FONT::Default),
+            D3DXVECTOR2(500.0f, 100.0f),
+            &m_percentage,
+            D3DCOLOR_XRGB(0, 255, 0),
+            m_pBackground);
+    m_pPercentageImage->SetPosition(D3DXVECTOR3(450.0f, 450.0f, 0.0f));
+    m_pPercentageImage->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
+
+    m_start = std::chrono::system_clock::now();
+    t = std::thread(std::bind(&SceneLoading::Load, this));
+
+    m_channel = Sound()()->Play(TAG_SOUND::Background, Vector3::ZERO, 1.0f, FMOD_2D | FMOD_LOOP_NORMAL);
 }
 
 void SceneLoading::load(const TAG_RES_STATIC tag)
@@ -253,6 +298,204 @@ bool SceneLoading::isFinished() const
         m_isDoneEquipments;
 }
 
+void SceneLoading::moveFinishedTasksForAsync(
+    tasks_t* OutTasks, 
+    resources_t* OutResources)
+{
+    assert(
+        OutTasks && 
+        OutResources &&
+        "SceneLoading::moveFinishedTasks(), argument is null.");
+
+    std::future_status futureStatus;
+    for (auto it = OutTasks->begin(); it != OutTasks->end();)
+    {
+        //futureStatus = i->second.wait_until(std::chrono::system_clock::now());
+        futureStatus = it->second.wait_for(std::chrono::milliseconds(100));
+        switch (futureStatus)
+        {
+        case std::future_status::deferred:
+            {
+            }
+            break;
+        case std::future_status::timeout:
+            {
+                // waiting...
+                ++it;
+            }
+            break;
+        case std::future_status::ready:
+            {
+                Resource::XContainer* pXContainer = it->second.get();
+                OutResources->emplace(it->first, pXContainer);
+                it = OutTasks->erase(it);
+
+                m_lastFinishedTaskName = pXContainer->m_filename;
+                ++m_numFinishedTasks;
+            }
+            break;
+        }
+    }
+}
+
+void SceneLoading::addEffectMeshsForAsync()
+{
+    resources_t& rs = m_effectMeshResources;
+    for (auto it = rs.begin(); it != rs.end();)
+    {
+        Resource()()->AddResource(it->second);
+        it = rs.erase(it);
+    }
+}
+
+void SceneLoading::addSkinnedMeshsForAsync()
+{
+    resources_t& rs = m_skinnedMeshResources;
+    for (auto it = rs.begin(); it != rs.end();)
+    {
+        Resource()()->AddResource(it->second);
+        it = rs.erase(it);
+    }
+}
+
+void SceneLoading::addCharacterSkinnedMeshsForAsync()
+{
+    const auto pathFilename = ResourceInfo::GetCharacterPathFileName();
+
+    resources_t& rs = m_characterSkinnedMeshResources;
+    for (auto it = rs.begin(); it != rs.end();)
+    {
+        Resource::XContainer* pCharacterResource = it->second;
+        pCharacterResource->m_pSkinnedMesh.first =
+            pathFilename.first + pathFilename.second;
+
+        Resource()()->AddResource(pCharacterResource);
+        it = rs.erase(it);
+    }
+}
+
+void SceneLoading::addCharacterAnimationsForAsync()
+{
+    const auto pathFilename = ResourceInfo::GetCharacterPathFileName();
+    resources_t& rs = m_characterAnimationResources;
+
+    for (std::size_t i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    {
+        SkinnedMesh* pCharacter =
+            Resource()()->GetSkinnedMesh(
+                pathFilename.first,
+                pathFilename.second,
+                i);
+
+        LPD3DXANIMATIONCONTROLLER& pOld = pCharacter->m_pAnimController;
+
+        LPD3DXANIMATIONCONTROLLER pAdd = nullptr;
+        LPD3DXANIMATIONCONTROLLER pNew = nullptr;
+        LPD3DXANIMATIONSET        pAddSet = nullptr;
+
+        UINT numAddSet = 0;
+
+        for (auto it = rs.begin(); it != rs.end(); ++it)
+        {
+            if (!it->second)
+            {
+                std::string text(std::to_string(it->first));
+                MessageBoxA(nullptr, text.c_str(), nullptr, MB_OK);
+
+                assert(
+                    false &&
+                    "SceneLoading::addAnimationsToCharacter(), XContainer is null.");
+            }
+
+            pAdd = it->second->m_pSkinnedMesh.second->m_pAnimController;
+
+            pOld->CloneAnimationController(
+                pOld->GetMaxNumAnimationOutputs(),
+                pOld->GetMaxNumAnimationSets()
+                + pAdd->GetMaxNumAnimationSets(),
+                pOld->GetMaxNumTracks(),
+                pOld->GetMaxNumEvents(),
+                &pNew);
+
+            numAddSet = pAdd->GetNumAnimationSets();
+            for (int i = static_cast<int>(numAddSet) - 1; i >= 0; --i)
+            {
+                pAdd->GetAnimationSet(i, &pAddSet);
+                pNew->RegisterAnimationSet(pAddSet);
+                pAddSet->Release();
+
+                ++m_numAddedAnim;
+            }
+
+            pOld->Release();
+            pOld = pNew;
+        }
+    }
+
+    for (auto it = rs.begin(); it != rs.end();)
+    {
+        SAFE_DELETE(it->second);
+        it = rs.erase(it);
+    }
+}
+
+void SceneLoading::addEquipmentAnimationsForAsync()
+{
+    const auto characterPathFilename =
+        ResourceInfo::GetCharacterPathFileName();
+
+    SkinnedMesh* pCharacter =
+        Resource()()->GetSkinnedMesh(
+            characterPathFilename.first,
+            characterPathFilename.second, 
+            0);
+
+    resources_t& rs = m_equipmentSkinnedMeshResources;
+
+    for (auto it = rs.begin(); it != rs.end();)
+    {
+        Resource::XContainer* pResource = it->second;
+
+        const std::string key = pResource->m_pSkinnedMesh.first;
+        Resource()()->AddResource(pResource);
+
+        std::size_t numSkinnedMesh = Resource()()->GetNumSkinnedMesh(key);
+
+        SkinnedMesh* pSkinnedMesh =
+            Resource()()->GetSkinnedMesh(key, numSkinnedMesh - 1);
+
+        LPD3DXANIMATIONCONTROLLER& pOld = pSkinnedMesh->m_pAnimController;
+        LPD3DXANIMATIONCONTROLLER  pAdd = pCharacter->m_pAnimController;
+        LPD3DXANIMATIONCONTROLLER  pNew = nullptr;
+        LPD3DXANIMATIONSET         pAddSet = nullptr;
+
+        pOld->CloneAnimationController(
+            pOld->GetMaxNumAnimationOutputs(),
+            pOld->GetMaxNumAnimationSets() + pAdd->GetMaxNumAnimationSets(),
+            pOld->GetMaxNumTracks(),
+            pOld->GetMaxNumEvents(),
+            &pNew);
+
+        UINT numAddSet = pAdd->GetNumAnimationSets();
+        for (UINT i = 0; i < numAddSet; ++i)
+        {
+            pAdd->GetAnimationSet(i, &pAddSet);
+            pNew->RegisterAnimationSet(pAddSet);
+            pAddSet->Release();
+        }
+
+        pOld->Release();
+        pOld = pNew;
+
+        bool res = pSkinnedMesh->Seperate("spine_02");
+        assert(
+            res &&
+            "SceneLoading::addAnimationsToEquipment(), SkinnedMesh::Seperate() failed.");
+
+        it = rs.erase(it);
+    }
+}
+
 SceneLoading::SceneLoading()
     : IScene()
     , m_isDoneEquipments(false)
@@ -264,54 +507,14 @@ SceneLoading::SceneLoading()
     , m_lastFinishedTaskName("")
     , m_dotDotDot(0)
     , m_policy(Resource::Policy::SYNC)
+    , m_isDoneCharacterSkinnedMeshs(false)
+    , m_isDoneCharacterAnimations(false)
+    , m_isSperatedCharacters(false)
 {
 }
 
 SceneLoading::~SceneLoading()
 {
-}
-
-void SceneLoading::OnInit()
-{
-    Resource()()->AddTexture("./Resource/", "input_field.png");
-    Resource()()->AddTexture("./Resource/", "LoadingScreen.tga");
-    Resource()()->AddTexture("./Resource/", "Honeyview_RandomLoading01.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
-    Resource()()->AddTexture("./Resource/", "dedenne.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "line.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png");
-    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_5_56mm, D3DCOLOR_XRGB(0, 0, 0));
-    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_7_62mm);
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_no.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_mouseover.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_yes.png");
-
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot_mouseover.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_click.png");
-
-    m_pBackground =
-        new UIImage(
-            "./Resource/",
-            "Honeyview_RandomLoading01.png",
-            Vector3::ZERO,
-            nullptr,
-            nullptr);
-    UI()()->RegisterUIObject(m_pBackground);
-
-    m_pPercentageImage = 
-        new UIText(
-            Resource()()->GetFont(TAG_FONT::Default), 
-            D3DXVECTOR2(500.0f, 100.0f), 
-            &m_percentage, 
-            D3DCOLOR_XRGB(0, 255, 0), 
-            m_pBackground);
-    m_pPercentageImage->SetPosition(D3DXVECTOR3(450.0f, 450.0f, 0.0f));
-    m_pPercentageImage->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
-
-    m_start = std::chrono::system_clock::now();
-    t  = std::thread(std::bind(&SceneLoading::Load, this));
 }
 
 void SceneLoading::OnUpdate()
@@ -343,35 +546,71 @@ void SceneLoading::OnUpdate()
     {
         if (m_policy == Resource::Policy::ASYNC)
         {
-            if (!m_isDoneEffectMeshs)
-            {
-                if (verifyTasks(&m_effectMeshTasks, &m_effectMeshResources))
-                {
-                    addEffectMeshs();
-                }
-            }
+            moveFinishedTasksForAsync(
+                &m_effectMeshTasks, 
+                &m_effectMeshResources);
 
-            if (!m_isDoneSkinnedMeshs)
-            {
-                if (verifyTasks(&m_skinnedMeshTasks, &m_skinnedMeshResources))
-                {
-                    addSkinnedMeshs();
-                }
-            }
+            moveFinishedTasksForAsync(
+                &m_skinnedMeshTasks, 
+                &m_skinnedMeshResources);
 
-            if (!m_isDoneCharacters)
+            moveFinishedTasksForAsync(
+                &m_characterSkinnedMeshTasks, 
+                &m_characterSkinnedMeshResources);
+
+            moveFinishedTasksForAsync(
+                &m_characterAnimationTasks, 
+                &m_characterAnimationResources);
+
+            moveFinishedTasksForAsync(
+                &m_equipmentSkinnedMeshTasks, 
+                &m_equipmentSkinnedMeshResources);
+
+            addEffectMeshsForAsync();
+            addSkinnedMeshsForAsync();
+
+            if (m_characterSkinnedMeshTasks.empty())
             {
-                if (verifyTasks(
-                    &m_characterSkinnedMeshTasks,
-                    &m_characterSkinnedMeshResources) &&
-                    //verifyTasks(
-                    //    &m_equipmentSkinnedMeshTasks,
-                    //    &m_equipmentSkinnedMeshResources) &&
-                    verifyTasks(
-                        &m_characterAnimationTasks,
-                        &m_characterAnimationResources))
+                addCharacterSkinnedMeshsForAsync();
+
+                if (m_characterSkinnedMeshResources.empty())
                 {
-                    addAnimationsToCharacter();
+                    addCharacterAnimationsForAsync();
+
+                    if (m_characterAnimationTasks.empty() &&
+                        m_characterAnimationResources.empty())
+                    {
+                        if (!m_isSperatedCharacters)
+                        {
+                            const auto pathFilename =
+                                ResourceInfo::GetCharacterPathFileName();
+
+                            for (std::size_t i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+                            {
+                                SkinnedMesh* pCharacter =
+                                    Resource()()->GetSkinnedMesh(
+                                        pathFilename.first,
+                                        pathFilename.second,
+                                        i);
+
+                                pCharacter->Seperate("spine_02");
+                            }
+
+                            m_isSperatedCharacters = true;
+                        }
+
+                        addEquipmentAnimationsForAsync();
+
+                        if (m_equipmentSkinnedMeshTasks.empty() &&
+                            m_equipmentSkinnedMeshResources.empty())
+                        {
+                            m_isDoneEffectMeshs = true;
+                            m_isDoneSkinnedMeshs = true;
+                            m_isDoneCharacters = true;
+                            m_isDoneEquipments = true;
+
+                        }
+                    }
                 }
             }
         }
@@ -398,8 +637,25 @@ void SceneLoading::OnUpdate()
             }
             else
             {
+                const auto pathFilename = ResourceInfo::GetCharacterPathFileName();
+
+                for (auto csmr : m_characterSkinnedMeshResources)
+                {
+                    Resource::XContainer* pCharacterResource = csmr.second;
+                    pCharacterResource->m_pSkinnedMesh.first =
+                        pathFilename.first + pathFilename.second;
+
+                    Resource()()->AddResource(pCharacterResource);
+                }
+
+                m_characterSkinnedMeshResources.clear();
+
                 addAnimationsToCharacter();
                 addAnimationsToEquipment();
+
+                m_isDoneEffectMeshs = true;
+                m_isDoneSkinnedMeshs = true;
+                m_isDoneCharacters = true;
             }
         }
     }
@@ -423,23 +679,20 @@ void SceneLoading::OnUpdate()
     for (int i = 0; i < static_cast<int>(percentage * 0.1f); ++i)
         m_percentage += "@";
     m_percentage += '\n';
-    m_percentage += "Loading on single thread...\n";
+
+    if (m_policy == Resource::Policy::SYNC)
+    {
+        m_percentage += "Loading on single thread...\n";
+    }
+    else if (m_policy == Resource::Policy::ASYNC)
+    {
+        m_percentage += "Loading on multi thread...\n";
+    }
 }
 
 void SceneLoading::addAnimationsToCharacter()
 {
     const auto pathFilename = ResourceInfo::GetCharacterPathFileName();
-
-    for (auto csmr : m_characterSkinnedMeshResources)
-    {
-        Resource::XContainer* pCharacterResource = csmr.second;
-        pCharacterResource->m_pSkinnedMesh.first = 
-            pathFilename.first + pathFilename.second;
-
-        Resource()()->AddResource(pCharacterResource);
-    }
-
-    m_characterSkinnedMeshResources.clear();
 
     for (std::size_t i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
@@ -457,11 +710,11 @@ void SceneLoading::addAnimationsToCharacter()
 
         UINT numAddSet = 0;
 
-        for (auto pR : m_characterAnimationResources)
+        for (auto it = m_characterAnimationResources.begin(); it != m_characterAnimationResources.end();)
         {
-            if (!pR.second)
+            if (!it->second)
             {
-                std::string text(std::to_string(pR.first));
+                std::string text(std::to_string(it->first));
                 MessageBoxA(nullptr, text.c_str(), nullptr, MB_OK);
 
                 assert(
@@ -470,7 +723,7 @@ void SceneLoading::addAnimationsToCharacter()
                 XContainer is null.");
             }
 
-            pAdd = pR.second->m_pSkinnedMesh.second->m_pAnimController;
+            pAdd = it->second->m_pSkinnedMesh.second->m_pAnimController;
 
             pOld->CloneAnimationController(
                 pOld->GetMaxNumAnimationOutputs(),
@@ -495,26 +748,11 @@ void SceneLoading::addAnimationsToCharacter()
         }
     }
 
-    for (std::size_t i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    for (auto it = m_characterAnimationResources.begin(); it != m_characterAnimationResources.end();)
     {
-        SkinnedMesh* pCharacter =
-            Resource()()->GetSkinnedMesh(
-                pathFilename.first,
-                pathFilename.second,
-                i);
-
-        bool res = pCharacter->Seperate("spine_02");
-        assert(res &&
-            "SceneLoading::addAnimationsToCharacter(), \
-             SkinnedMesh::Seperate() failed.");
+        SAFE_DELETE(it->second);
+        it = m_characterAnimationResources.erase(it);
     }
-
-    for (auto pR : m_characterAnimationResources)
-        SAFE_DELETE(pR.second);
-
-    m_characterAnimationResources.clear();
-
-    m_isDoneCharacters = true;
 }
 
 void SceneLoading::addEffectMeshs()
@@ -525,8 +763,6 @@ void SceneLoading::addEffectMeshs()
     }
 
     m_effectMeshResources.clear();
-
-    //m_isDoneEffectMeshs = true;
 }
 
 void SceneLoading::addSkinnedMeshs()
@@ -537,8 +773,6 @@ void SceneLoading::addSkinnedMeshs()
     }
 
     m_skinnedMeshResources.clear();
-
-    //m_isDoneSkinnedMeshs = true;
 }
 
 void SceneLoading::addAnimationsToEquipment()
@@ -551,9 +785,9 @@ void SceneLoading::addAnimationsToEquipment()
             characterPathFilename.first, 
             characterPathFilename.second, 0);
 
-    for (auto r : m_equipmentSkinnedMeshResources)
+    for (auto it = m_equipmentSkinnedMeshResources.begin(); it != m_equipmentSkinnedMeshResources.end();)
     {
-        Resource::XContainer* pResource = r.second;
+        Resource::XContainer* pResource = it->second;
         
         const std::string key = pResource->m_pSkinnedMesh.first;
         Resource()()->AddResource(pResource);
@@ -591,13 +825,9 @@ void SceneLoading::addAnimationsToEquipment()
             res &&
             "SceneLoading::addAnimationsToEquipment(), \
              SkinnedMesh::Seperate() failed.");
+
+        it = m_equipmentSkinnedMeshResources.erase(it);
     }
-
-    m_equipmentSkinnedMeshResources.clear();
-
-    m_isDoneEquipments = true;
-    m_isDoneEffectMeshs = true;
-    m_isDoneSkinnedMeshs = true;
 }
 
 void SceneLoading::addHeightmapResource()

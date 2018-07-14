@@ -98,7 +98,7 @@ enum class TAG_SOUND
     Qbz_FakeShoot,
     Qbz_Reload,
 
-
+    Background,
 };
 
 enum class TAG_CHANNEL

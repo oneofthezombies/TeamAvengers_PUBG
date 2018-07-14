@@ -61,8 +61,13 @@ private:
     bool m_isDoneSkinnedMeshs;
     bool m_isDoneEquipments;
     bool m_isFinished;
+    bool m_isDoneCharacterSkinnedMeshs;
+    bool m_isDoneCharacterAnimations;
+    bool m_isSperatedCharacters;
 
     Resource::Policy m_policy;
+
+    int m_channel;
 
     std::thread t;
 
@@ -78,7 +83,7 @@ private:
 
     void addTask(const TAG_RES_STATIC         tag, tasks_t* OutTasks);
     void addTask(const TAG_RES_ANIM_CHARACTER tag, tasks_t* OutTasks);
-    void addTask(const TAG_RES_ANIM_EQUIPMENT      tag, tasks_t* OutTasks);
+    void addTask(const TAG_RES_ANIM_EQUIPMENT tag, tasks_t* OutTasks);
     void addTask(const TAG_RES_ANIM_WEAPON    tag, tasks_t* OutTasks);
 
     void load(const TAG_RES_STATIC         tag);
@@ -90,6 +95,17 @@ private:
     void setPolicy(const Resource::Policy policy);
     void setPlayMode(const Communication::PlayMode mode);
     bool isFinished() const;
+
+    // for async
+    void moveFinishedTasksForAsync(
+        tasks_t* OutTasks, 
+        resources_t* OutResources);
+
+    void addEffectMeshsForAsync();
+    void addSkinnedMeshsForAsync();
+    void addCharacterSkinnedMeshsForAsync();
+    void addCharacterAnimationsForAsync();
+    void addEquipmentAnimationsForAsync();
 
 public:
              SceneLoading();
