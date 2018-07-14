@@ -81,3 +81,8 @@ void UIText::SetDrawTextFormat(const DWORD val)
 {
     m_drawTextFormat = val;
 }
+
+void UIText::ChangeColor(D3DCOLOR color)
+{
+    SetColor(color);
+}

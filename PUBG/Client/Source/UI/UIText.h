@@ -30,5 +30,7 @@ public:
     string GetText();
 
     void SetDrawTextFormat(const DWORD val);
+
+    void ChangeColor(D3DCOLOR color);
 };
 

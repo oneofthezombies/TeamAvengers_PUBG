@@ -392,10 +392,14 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     //손에 들고 있는 총의 장전개수와 총알의 개수
     if (inven.m_pHand)
     {
-        TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();          //총 종류
-        TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag);
-        int numBulletInInventory = 0;
+        TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic(); //총 종류
+        TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag);  //탄약 종류
+
         int numReloadBullet = 0;
+        int numBulletInInventory = 0;
+
+        //총에 장전된 총알 개수
+        numReloadBullet = inven.m_pHand->GetNumBullet();
 
         //총알 개수
         auto it = inven.m_mapInventory.find(ammoType);
@@ -403,8 +407,16 @@ void Character::InGameUI::Update(const TotalInventory& inven)
         {
             numBulletInInventory = (*it).second.back()->GetCount();
         }
-        //총에 장전된 총알 개수
-        numReloadBullet = inven.m_pHand->GetNumBullet();
+
+        //장전이 안되어있다면 빨간색으로
+        if (numReloadBullet == 0)
+        {
+            pAmmoReloadText->ChangeColor(D3DCOLOR_XRGB(216, 0, 0));
+        }
+        else
+        {
+            pAmmoReloadText->ChangeColor(D3DCOLOR_XRGB(255, 255, 255));
+        }
 
         pAmmoNumText->SetText(to_string(numBulletInInventory));
         pAmmoReloadText->SetText(to_string(numReloadBullet));
@@ -412,6 +424,7 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     else
     {
         pAmmoReloadText->SetText("");
+        pAmmoNumText->SetText("");
     }
 }
 
