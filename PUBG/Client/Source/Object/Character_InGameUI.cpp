@@ -203,7 +203,7 @@ void Character::InGameUI::Init()
     pFireModeText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameFireMode),
         D3DXVECTOR2(130.0f, 28.0f),
-        string("연사"),
+        string(""),
         InGameUI::GRAY,
         ammoBg);
     pFireModeText->SetDrawTextFormat(DT_LEFT);
@@ -426,6 +426,19 @@ void Character::InGameUI::Update(const TotalInventory& inven)
         int numReloadBullet = 0;
         int numBulletInInventory = 0;
 
+        //발사모드
+        if (tag == TAG_RES_STATIC::Kar98k)
+        {
+            pFireModeText->SetText("단발");
+        }
+        else if (tag == TAG_RES_STATIC::QBZ)
+        {
+            if (inven.m_pHand->GetAuto())
+                pFireModeText->SetText("연사");
+            else
+                pFireModeText->SetText("단발");
+        }
+
         //총에 장전된 총알 개수
         numReloadBullet = inven.m_pHand->GetNumBullet();
 
@@ -466,8 +479,9 @@ void Character::InGameUI::Update(const TotalInventory& inven)
         pAmmoNumText->SetText(to_string(numBulletInInventory));
         pAmmoReloadText->SetText(to_string(numReloadBullet));
     }
-    else
+    else //if(m_pHand == nullptr)
     {
+        pFireModeText->SetText("");
         pAmmoReloadText->SetText("");
         pAmmoNumText->SetText("");
     }
