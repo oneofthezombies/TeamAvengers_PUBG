@@ -128,7 +128,6 @@ void Character::InGameUI::Init()
         string("30"),
         D3DCOLOR_XRGB(255, 255, 255),
         ammoBg);
-
     ammoReloadText->SetDrawTextFormat(DT_CENTER);
     ammoReloadText->SetPosition(D3DXVECTOR3(1.9f, 0.1f, 0.0f));
 
@@ -138,10 +137,18 @@ void Character::InGameUI::Init()
         string("99"),
         D3DCOLOR_XRGB(180, 180, 180),
         ammoBg);
-
     ammoTotalText->SetDrawTextFormat(DT_LEFT);
     ammoTotalText->SetPosition(D3DXVECTOR3(95.0, 8.0f, 0.0f));
 
+    //발사모드
+    auto fireModeText = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameAmmoTotalNum),
+        D3DXVECTOR2(130.0f, 28.0f),
+        string("연사"),
+        D3DCOLOR_XRGB(180, 180, 180),
+        ammoBg);
+    fireModeText->SetDrawTextFormat(DT_LEFT);
+    fireModeText->SetPosition(D3DXVECTOR3(10.0, 8.0f, 0.0f));
 
     //생존, 생존 수
     auto survivalBg = new UIImage(
@@ -247,7 +254,7 @@ void Character::InGameUI::Init()
     killNum->SetPosition(D3DXVECTOR3(612.0f, 504.0f, 0.0f));
 
     auto killTextShadow = new UIText(
-        Resource()()->GetFont(TAG_FONT::InGameKillText),
+        Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(400.0f, 20.0f),
         string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
         D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f),
@@ -256,7 +263,7 @@ void Character::InGameUI::Init()
     killTextShadow->SetPosition(D3DXVECTOR3(440.0f + 1.0f, 480.0f + 1.0f, 0.0f));
 
     auto killText = new UIText(
-        Resource()()->GetFont(TAG_FONT::InGameKillText),
+        Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(400.0f, 20.0f),
         string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
         D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
@@ -265,7 +272,23 @@ void Character::InGameUI::Init()
     killText->SetPosition(D3DXVECTOR3(440.0f, 480.0f, 0.0f));
 
     //아이템 사용 등 안내문구
+    auto infoShadow = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameInfo),
+        D3DXVECTOR2(252.0f, 20.0f),
+        string("공간이 충분하지 않습니다!"),
+        D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f),
+        m_background);
+    infoShadow->SetDrawTextFormat(DT_CENTER);
+    infoShadow->SetPosition(D3DXVECTOR3(510.0f + 1.0f, 579.0f + 1.0f, 0.0f));
 
+    auto info = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameInfo),
+        D3DXVECTOR2(252.0f, 20.0f),
+        string("공간이 충분하지 않습니다!"),
+        D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+        m_background);
+    info->SetDrawTextFormat(DT_CENTER);
+    info->SetPosition(D3DXVECTOR3(510.0f, 579.0f, 0.0f));
 }
 
 void Character::InGameUI::Destroy()

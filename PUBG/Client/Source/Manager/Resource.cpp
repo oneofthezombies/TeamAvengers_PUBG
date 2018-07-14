@@ -832,11 +832,19 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
         }
         break;
 
-        case TAG_FONT::InGameKillText:
+        case TAG_FONT::InGameKillLog:
+        {
+        
+        
+        
+        }
+        break;
+        
+        case TAG_FONT::InGameInfo:
         {
             hr = D3DXCreateFontA(
                 Device()(),
-                24, 6, FW_MEDIUM, 1, false,
+                24, 8, FW_MEDIUM, 1, false,
                 HANGEUL_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
@@ -846,14 +854,6 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
         }
         break;
 
-        case TAG_FONT::InGameKillLog:
-        {
-        
-        
-        
-        }
-        break;
-        
         default:
             {
             }
