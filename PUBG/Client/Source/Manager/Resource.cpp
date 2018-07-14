@@ -730,6 +730,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                     &m_fonts[tag]);
             }
             break;
+
         case TAG_FONT::Invetory_28:
             {
                 AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
@@ -759,6 +760,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                     &m_fonts[tag]);
             }
             break;
+
         case TAG_FONT::InGameAmmoTotalNum:
             {
                 AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
@@ -774,16 +776,32 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             }
             break;
 
-        case TAG_FONT::InGameSurvival:
+        case TAG_FONT::InGameFireMode:
         {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
-                24, 8, FW_NORMAL, 1, false,
+                14, 7, FW_NORMAL, 1, false,
                 HANGEUL_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
                 FF_DONTCARE,
-                "맑은 고딕", 
+                "08서울남산체 M",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::InGameSurvival:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                18, 9, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M", 
                 &m_fonts[tag]);
         }
         break;
@@ -805,52 +823,54 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
 
         case TAG_FONT::InGameID:
         {
-            AddFontResource(TEXT("Resource/Fonts/roboto-condensed.regular.ttf"));
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
                 10, 6, FW_NORMAL, 1, false,
-                DEFAULT_CHARSET,
+                HANGEUL_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
                 FF_DONTCARE,
-                "Roboto Condensed", 
+                "08서울남산체 M", 
                 &m_fonts[tag]);
         }
         break;
 
         case TAG_FONT::InGameKillNum:
         {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
-                28, 10, FW_MEDIUM, 1, false,
+                24, 12, FW_MEDIUM, 1, false,
                 HANGEUL_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
                 FF_DONTCARE,
-                "맑은 고딕", 
+                "08서울남산체 M", 
+                &m_fonts[tag]);
+        }
+        break;
+        
+        case TAG_FONT::InGameInfo:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                16, 8, FW_MEDIUM, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
                 &m_fonts[tag]);
         }
         break;
 
         case TAG_FONT::InGameKillLog:
         {
-        
-        
-        
-        }
-        break;
-        
-        case TAG_FONT::InGameInfo:
-        {
-            hr = D3DXCreateFontA(
-                Device()(),
-                24, 8, FW_MEDIUM, 1, false,
-                HANGEUL_CHARSET,
-                OUT_DEFAULT_PRECIS,
-                DEFAULT_QUALITY,
-                FF_DONTCARE,
-                "맑은 고딕",
-                &m_fonts[tag]);
+
+
+
         }
         break;
 

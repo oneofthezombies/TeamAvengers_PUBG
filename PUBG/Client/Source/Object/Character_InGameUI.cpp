@@ -138,11 +138,11 @@ void Character::InGameUI::Init()
         D3DCOLOR_XRGB(180, 180, 180),
         ammoBg);
     ammoTotalText->SetDrawTextFormat(DT_LEFT);
-    ammoTotalText->SetPosition(D3DXVECTOR3(95.0, 8.0f, 0.0f));
+    ammoTotalText->SetPosition(D3DXVECTOR3(95.0, 5.0f, 0.0f));
 
     //발사모드
     auto fireModeText = new UIText(
-        Resource()()->GetFont(TAG_FONT::InGameAmmoTotalNum),
+        Resource()()->GetFont(TAG_FONT::InGameFireMode),
         D3DXVECTOR2(130.0f, 28.0f),
         string("연사"),
         D3DCOLOR_XRGB(180, 180, 180),
@@ -167,7 +167,7 @@ void Character::InGameUI::Init()
         survivalBg
     );
     survival->SetDrawTextFormat(DT_CENTER);
-    survival->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+    survival->SetPosition(D3DXVECTOR3(0.0f, 4.0f, 0.0f));
 
     auto survivalNumBg = new UIImage(
         "./Resource/UI/InGame/",
@@ -203,7 +203,7 @@ void Character::InGameUI::Init()
         killTextUpBg
     );
     killUpText->SetDrawTextFormat(DT_CENTER);
-    killUpText->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+    killUpText->SetPosition(D3DXVECTOR3(0.0f, 4.0f, 0.0f));
 
     auto killNumUpBg = new UIImage(
         "./Resource/UI/InGame/",
@@ -228,7 +228,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameID),
         D3DXVECTOR2(87.0f, 9.0f),
         string("HelloWoori"),
-        D3DCOLOR_XRGB(180, 180, 180),
+        D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f),
         m_background
     );
     idText->SetDrawTextFormat(DT_CENTER);

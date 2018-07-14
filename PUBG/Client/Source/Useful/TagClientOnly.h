@@ -81,6 +81,7 @@ enum class TAG_FONT
     InGameKillNum,
     InGameKillLog,
     InGameInfo,
+    InGameFireMode,
 };
 
 enum class TAG_SOUND
