@@ -440,10 +440,27 @@ void Character::InGameUI::Update(const TotalInventory& inven)
         if (numReloadBullet == 0)
         {
             pAmmoReloadText->ChangeColor(InGameUI::RED);
+            //TODO: 주무기, 보조무기에 따라 위치다르게 
+            if (tag == TAG_RES_STATIC::Kar98k)
+            {
+                pQBZRedImg->SetIsRender(true);
+            }
+            else if (tag == TAG_RES_STATIC::QBZ)
+            {
+                pKar98kRedImg->SetIsRender(true);
+            }
         }
         else
         {
             pAmmoReloadText->ChangeColor(InGameUI::WHITE);
+            if (tag == TAG_RES_STATIC::Kar98k)
+            {
+                pQBZRedImg->SetIsRender(false);
+            }
+            else if (tag == TAG_RES_STATIC::QBZ)
+            {
+                pKar98kRedImg->SetIsRender(false);
+            }
         }
 
         pAmmoNumText->SetText(to_string(numBulletInInventory));
