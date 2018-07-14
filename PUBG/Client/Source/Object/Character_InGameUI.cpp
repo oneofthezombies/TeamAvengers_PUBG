@@ -7,6 +7,12 @@
 #include "UIImage.h"
 #include "UIText.h"
 
+const D3DCOLOR Character::InGameUI::RED = D3DCOLOR_XRGB(216, 0, 0);
+const D3DCOLOR Character::InGameUI::WHITE = D3DCOLOR_XRGB(255, 255, 255);
+const D3DCOLOR Character::InGameUI::GRAY = D3DCOLOR_XRGB(180, 180, 180);
+const D3DCOLOR Character::InGameUI::WHITE_ALPHA = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f);
+const D3DCOLOR Character::InGameUI::BLACK_ALPHA = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f);
+
 Character::InGameUI::InGameUI()
     : m_pBackground(nullptr)
 
@@ -173,7 +179,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameAmmoReload),
         D3DXVECTOR2(130.0f, 28.0f),
         string(""),
-        D3DCOLOR_XRGB(255, 255, 255),
+        InGameUI::WHITE,
         ammoBg);
     pAmmoReloadText->SetDrawTextFormat(DT_CENTER);
     pAmmoReloadText->SetPosition(D3DXVECTOR3(1.9f, 0.1f, 0.0f));
@@ -182,7 +188,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameAmmoTotalNum),
         D3DXVECTOR2(130.0f, 28.0f),
         string(""),
-        D3DCOLOR_XRGB(180, 180, 180),
+        InGameUI::GRAY,
         ammoBg);
     pAmmoNumText->SetDrawTextFormat(DT_LEFT);
     pAmmoNumText->SetPosition(D3DXVECTOR3(95.0, 5.0f, 0.0f));
@@ -192,7 +198,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameFireMode),
         D3DXVECTOR2(130.0f, 28.0f),
         string("연사"),
-        D3DCOLOR_XRGB(180, 180, 180),
+        InGameUI::GRAY,
         ammoBg);
     pFireModeText->SetDrawTextFormat(DT_LEFT);
     pFireModeText->SetPosition(D3DXVECTOR3(10.0, 8.0f, 0.0f));
@@ -210,7 +216,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameSurvival),
         D3DXVECTOR2(40.0f, 26.0f),
         string("생존"),
-        D3DCOLOR_XRGB(180, 180, 180),
+        InGameUI::GRAY,
         survivalBg
     );
     survivalText->SetDrawTextFormat(DT_CENTER);
@@ -228,7 +234,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
         D3DXVECTOR2(26.0f, 26.0f),
         string("57"),
-        D3DCOLOR_XRGB(255, 255, 255),
+        InGameUI::WHITE,
         survivalNumBg);
     pSurvivalNumText->SetDrawTextFormat(DT_CENTER);
     pSurvivalNumText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
@@ -246,7 +252,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameSurvival),
         D3DXVECTOR2(24.0f, 26.0f),
         string("킬"),
-        D3DCOLOR_XRGB(180, 180, 180),
+        InGameUI::GRAY,
         killTextUpBg
     );
     killUpText->SetDrawTextFormat(DT_CENTER);
@@ -264,7 +270,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
         D3DXVECTOR2(17.0f, 26.0f),
         string("0"),
-        D3DCOLOR_XRGB(255, 255, 255),
+        InGameUI::WHITE,
         killNumUpBg);
     pKillNumUpText->SetDrawTextFormat(DT_CENTER);
     pKillNumUpText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
@@ -275,7 +281,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameID),
         D3DXVECTOR2(87.0f, 9.0f),
         string("HelloWoori"),
-        D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f),
+        InGameUI::WHITE_ALPHA,
         m_pBackground
     );
     pIdText->SetDrawTextFormat(DT_CENTER);
@@ -288,7 +294,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameKillNum),
         D3DXVECTOR2(60.0f, 30.0f),
         string("2 킬"),
-        D3DCOLOR_XRGB(216, 0, 0),
+        InGameUI::RED,
         m_pBackground,
         D3DXVECTOR3(612.0f, 504.0f, 0.0f));
 
@@ -298,7 +304,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(400.0f, 20.0f),
         string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
-        D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+        InGameUI::WHITE,
         m_pBackground,
         D3DXVECTOR3(440.0f, 480.0f, 0.0f));
 
@@ -309,7 +315,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(252.0f, 20.0f),
         string(""),
-        D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
+        InGameUI::WHITE,
         m_pBackground,
         D3DXVECTOR3(510.0f, 579.0f, 0.0f));
 
@@ -318,7 +324,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
         D3DXVECTOR2(400.0f, 14.0f),
         string("HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
-        D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f),
+        InGameUI::GRAY,
         m_pBackground);
     pKillLog1->SetDrawTextFormat(DT_RIGHT);
     pKillLog1->SetPosition(D3DXVECTOR3(856.0f, 52.0f, 0.0f));
@@ -327,7 +333,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
         D3DXVECTOR2(400.0f, 14.0f),
         string("John의 QBZ(으)로 인해 ootz이(가) 사망했습니다"),
-        D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f),
+        InGameUI::GRAY,
         m_pBackground);
     pKillLog2->SetDrawTextFormat(DT_RIGHT);
     pKillLog2->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 20.0f, 0.0f));
@@ -411,11 +417,11 @@ void Character::InGameUI::Update(const TotalInventory& inven)
         //장전이 안되어있다면 빨간색으로
         if (numReloadBullet == 0)
         {
-            pAmmoReloadText->ChangeColor(D3DCOLOR_XRGB(216, 0, 0));
+            pAmmoReloadText->ChangeColor(InGameUI::RED);
         }
         else
         {
-            pAmmoReloadText->ChangeColor(D3DCOLOR_XRGB(255, 255, 255));
+            pAmmoReloadText->ChangeColor(InGameUI::WHITE);
         }
 
         pAmmoNumText->SetText(to_string(numBulletInInventory));
@@ -446,7 +452,7 @@ void Character::InGameUI::setTextWithShadow(
         font,
         size,
         str,
-        D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f),
+        InGameUI::BLACK_ALPHA,
         pParent);
     pTextShadow->SetDrawTextFormat(DT_CENTER);
     pTextShadow->SetPosition(D3DXVECTOR3(position.x + 1.0f, position.y + 1.0f, position.z));

@@ -132,6 +132,12 @@ public:
 
     struct InGameUI
     {
+        static const D3DCOLOR RED;
+        static const D3DCOLOR WHITE;
+        static const D3DCOLOR GRAY;
+        static const D3DCOLOR WHITE_ALPHA;
+        static const D3DCOLOR BLACK_ALPHA;
+
         UIImage* m_pBackground;
 
         //Image ===================
