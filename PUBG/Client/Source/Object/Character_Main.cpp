@@ -364,6 +364,10 @@ void Character::updateMine()
         << "current lower animation : "
         << pAnimation->GetLowerAnimationName() << "\n\n";
 
+    //¿©±â
+    //for InGameUI
+    m_inGameUI.Update();
+
     Communication()()->SendPositionAndRotation(pos, rot);
     Communication()()->SendHeadAngle(m_headRotation.m_angle);
 }

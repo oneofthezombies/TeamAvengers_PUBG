@@ -5,7 +5,38 @@
 #include "UIText.h"
 
 Character::InGameUI::InGameUI()
-    : m_background(nullptr)
+    : m_pBackground(nullptr)
+
+    //Image ===================
+    , pCompass(nullptr)
+
+    , pBagImg(nullptr)
+    , pHelmetImg(nullptr)
+    , pVestImg(nullptr)
+
+    , pHpRedImg(nullptr)
+    , pHpWhiteImg(nullptr)
+
+    , pPrimaryWeaponImg(nullptr)
+    , pSecondaryWeaponImg(nullptr)
+
+    //Text ====================
+    , pAmmoReloadText(nullptr)
+    , pAmmoNumText(nullptr)
+    , pFireModeText(nullptr)
+
+    , pSurvivalNumText(nullptr)
+    , pKillNumUpText(nullptr)
+
+    , pIdText(nullptr)
+
+    , pKillNumText(nullptr)
+    , pKillText(nullptr)
+
+    , pInfoText(nullptr)
+
+    , pKillLog1(nullptr)
+    , pKillLog2(nullptr)
 {
 }
 
@@ -13,17 +44,22 @@ Character::InGameUI::~InGameUI()
 {
 }
 
+void Character::InGameUI::Destroy()
+{
+    UI()()->Destroy(m_pBackground);
+}
+
 void Character::InGameUI::Init()
 {
     //투명 배경
-    m_background = new UIImage(
+    m_pBackground = new UIImage(
         "./Resource/UI/InGame/",
         "transparent_1280_720",
         Vector3::ZERO,
         nullptr,
         nullptr
     );
-    UI()()->RegisterUIObject(m_background);
+    UI()()->RegisterUIObject(m_pBackground);
 
     //Compass
     auto compassBg = new UIImage(
@@ -31,10 +67,10 @@ void Character::InGameUI::Init()
         "compass_bg.png",
         D3DXVECTOR3(420.0f, 28.0f, 0.0f),
         nullptr,
-        m_background
+        m_pBackground
     );
 
-    new UIImage(
+    pCompass = new UIImage(
         "./Resource/UI/InGame/",
         "compass.png",
         D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
@@ -47,7 +83,7 @@ void Character::InGameUI::Init()
         "compass_arraw_bg.png",
         D3DXVECTOR3(420.0f, 8.75f, 0.0f),
         nullptr,
-        m_background
+        m_pBackground
     );
 
     new UIImage(
@@ -63,28 +99,28 @@ void Character::InGameUI::Init()
     //부모를 가리면 자식도 함께 안보인다
 
     //장비템
-    new UIImage(
+    pBagImg = new UIImage(
         "./Resource/UI/InGame/",
         "equipment_bag01.png",
         D3DXVECTOR3(502.0f, 647.0f, 0.0f),
         nullptr,
-        m_background
+        m_pBackground
     );
 
-    new UIImage(
+    pHelmetImg = new UIImage(
         "./Resource/UI/InGame/",
         "equipment_helmet01.png",
         D3DXVECTOR3(526.0f, 647.0f, 0.0f),
         nullptr,
-        m_background
+        m_pBackground
     );
 
-    new UIImage(
+    pVestImg = new UIImage(
         "./Resource/UI/InGame/",
         "equipment_vest01.png",
         D3DXVECTOR3(550.0f, 647.0f, 0.0f),
         nullptr,
-        m_background
+        m_pBackground
     );
 
     //hp
@@ -93,25 +129,25 @@ void Character::InGameUI::Init()
         "player_HP_BG_v3.png",
         D3DXVECTOR3(502.0f, 684.0f, 0.0f),
         nullptr,
-        m_background);
+        m_pBackground);
 
-    auto hpRed = new UIImage(
+    pHpRedImg = new UIImage(
         "./Resource/UI/InGame/",
         "player_HP_bar_red.png",
         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
         nullptr,
         hpBg);
 
-    auto hpWhite = new UIImage(
+    pHpWhiteImg = new UIImage(
         "./Resource/UI/InGame/",
         "player_HP_bar_v2.png",
         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
         nullptr,
-        hpRed);
+        pHpRedImg);
 
     //피 닳기 코드
-    hpRed->SetSize(D3DXVECTOR2(255.0f, 17.0f));
-    hpWhite->SetSize(D3DXVECTOR2(250.0f, 17.0f));
+    pHpRedImg->SetSize(D3DXVECTOR2(255.0f, 17.0f));
+    pHpWhiteImg->SetSize(D3DXVECTOR2(250.0f, 17.0f));
 
 
     //장전 수, 총알 개수
@@ -120,35 +156,35 @@ void Character::InGameUI::Init()
         "ammo_info.png",
         D3DXVECTOR3(576.0f, 647.0f, 0.0f),
         nullptr,
-        m_background);
+        m_pBackground);
 
-    auto ammoReloadText = new UIText(
+    pAmmoReloadText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameAmmoReload),
         D3DXVECTOR2(130.0f, 28.0f),
         string("30"),
         D3DCOLOR_XRGB(255, 255, 255),
         ammoBg);
-    ammoReloadText->SetDrawTextFormat(DT_CENTER);
-    ammoReloadText->SetPosition(D3DXVECTOR3(1.9f, 0.1f, 0.0f));
+    pAmmoReloadText->SetDrawTextFormat(DT_CENTER);
+    pAmmoReloadText->SetPosition(D3DXVECTOR3(1.9f, 0.1f, 0.0f));
 
-    auto ammoTotalText = new UIText(
+    pAmmoNumText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameAmmoTotalNum),
         D3DXVECTOR2(130.0f, 28.0f),
         string("99"),
         D3DCOLOR_XRGB(180, 180, 180),
         ammoBg);
-    ammoTotalText->SetDrawTextFormat(DT_LEFT);
-    ammoTotalText->SetPosition(D3DXVECTOR3(95.0, 5.0f, 0.0f));
+    pAmmoNumText->SetDrawTextFormat(DT_LEFT);
+    pAmmoNumText->SetPosition(D3DXVECTOR3(95.0, 5.0f, 0.0f));
 
     //발사모드
-    auto fireModeText = new UIText(
+    pFireModeText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameFireMode),
         D3DXVECTOR2(130.0f, 28.0f),
         string("연사"),
         D3DCOLOR_XRGB(180, 180, 180),
         ammoBg);
-    fireModeText->SetDrawTextFormat(DT_LEFT);
-    fireModeText->SetPosition(D3DXVECTOR3(10.0, 8.0f, 0.0f));
+    pFireModeText->SetDrawTextFormat(DT_LEFT);
+    pFireModeText->SetPosition(D3DXVECTOR3(10.0, 8.0f, 0.0f));
 
     //생존, 생존 수
     auto survivalBg = new UIImage(
@@ -156,35 +192,35 @@ void Character::InGameUI::Init()
         "survival_text_bg.png",
         D3DXVECTOR3(1216.0f, 20.0f, 0.0f),
         nullptr,
-        m_background
+        m_pBackground
     );
 
-    auto survival = new UIText(
+    auto survivalText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameSurvival),
         D3DXVECTOR2(40.0f, 26.0f),
         string("생존"),
         D3DCOLOR_XRGB(180, 180, 180),
         survivalBg
     );
-    survival->SetDrawTextFormat(DT_CENTER);
-    survival->SetPosition(D3DXVECTOR3(0.0f, 4.0f, 0.0f));
+    survivalText->SetDrawTextFormat(DT_CENTER);
+    survivalText->SetPosition(D3DXVECTOR3(0.0f, 4.0f, 0.0f));
 
     auto survivalNumBg = new UIImage(
         "./Resource/UI/InGame/",
         "survival_num_bg.png",
         D3DXVECTOR3(1190.0f, 20.0f, 0.0f),
         nullptr,
-        m_background
+        m_pBackground
     );
 
-    auto survivalText = new UIText(
+    pSurvivalNumText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
         D3DXVECTOR2(26.0f, 26.0f),
         string("57"),
         D3DCOLOR_XRGB(255, 255, 255),
         survivalNumBg);
-    survivalText->SetDrawTextFormat(DT_CENTER);
-    survivalText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
+    pSurvivalNumText->SetDrawTextFormat(DT_CENTER);
+    pSurvivalNumText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
     
     //킬 (화면 오른쪽 상단)
     auto killTextUpBg = new UIImage(
@@ -192,7 +228,7 @@ void Character::InGameUI::Init()
         "kill_text_up_bg.png",
         D3DXVECTOR3(1145.0f, 20.0f, 0.0f),
         nullptr,
-        m_background
+        m_pBackground
     );
 
     auto killUpText = new UIText(
@@ -210,104 +246,77 @@ void Character::InGameUI::Init()
         "kill_num_up_bg.png",
         D3DXVECTOR3(1128.0f, 20.0f, 0.0f),
         nullptr,
-        m_background
+        m_pBackground
     );
 
-    auto killNumUpText = new UIText(
+    pKillNumUpText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
         D3DXVECTOR2(17.0f, 26.0f),
         string("0"),
         D3DCOLOR_XRGB(255, 255, 255),
         killNumUpBg);
-    killNumUpText->SetDrawTextFormat(DT_CENTER);
-    killNumUpText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
+    pKillNumUpText->SetDrawTextFormat(DT_CENTER);
+    pKillNumUpText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
 
 
     //아이디, 게임버전
-    auto idText = new UIText(
+    pIdText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameID),
         D3DXVECTOR2(87.0f, 9.0f),
         string("HelloWoori"),
         D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f),
-        m_background
+        m_pBackground
     );
-    idText->SetDrawTextFormat(DT_CENTER);
-    idText->SetPosition(D3DXVECTOR3(598.0f, 705.0f, 0.0f));
+    pIdText->SetDrawTextFormat(DT_CENTER);
+    pIdText->SetPosition(D3DXVECTOR3(598.0f, 705.0f, 0.0f));
 
-    //킬 (화면 중앙)
-    auto killNumShadow = new UIText(
+    //킬 (게임 화면 중앙)
+    setTextWithShadow(
+        pKillNumText,
         Resource()()->GetFont(TAG_FONT::InGameKillNum),
         D3DXVECTOR2(60.0f, 30.0f),
-        string("2") + string(" 킬"),
-        D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f),
-        m_background);
-    killNumShadow->SetDrawTextFormat(DT_CENTER);
-    killNumShadow->SetPosition(D3DXVECTOR3(612.0f + 1.0f, 504.0f + 1.0f, 0.0f));
-
-    auto killNum = new UIText(
-        Resource()()->GetFont(TAG_FONT::InGameKillNum),
-        D3DXVECTOR2(60.0f, 30.0f),
-        string("2") + string(" 킬"),
+        string("2 킬"),
         D3DCOLOR_XRGB(216, 0, 0),
-        m_background);
-    killNum->SetDrawTextFormat(DT_CENTER);
-    killNum->SetPosition(D3DXVECTOR3(612.0f, 504.0f, 0.0f));
+        m_pBackground,
+        D3DXVECTOR3(612.0f, 504.0f, 0.0f));
 
-    auto killTextShadow = new UIText(
-        Resource()()->GetFont(TAG_FONT::InGameInfo),
-        D3DXVECTOR2(400.0f, 20.0f),
-        string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
-        D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f),
-        m_background);
-    killTextShadow->SetDrawTextFormat(DT_CENTER);
-    killTextShadow->SetPosition(D3DXVECTOR3(440.0f + 1.0f, 480.0f + 1.0f, 0.0f));
-
-    auto killText = new UIText(
+    setTextWithShadow(
+        pKillText,
         Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(400.0f, 20.0f),
         string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
         D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
-        m_background);
-    killText->SetDrawTextFormat(DT_CENTER);
-    killText->SetPosition(D3DXVECTOR3(440.0f, 480.0f, 0.0f));
+        m_pBackground,
+        D3DXVECTOR3(440.0f, 480.0f, 0.0f));
 
     //아이템 사용 등 안내문구
-    auto infoShadow = new UIText(
-        Resource()()->GetFont(TAG_FONT::InGameInfo),
-        D3DXVECTOR2(252.0f, 20.0f),
-        string("공간이 충분하지 않습니다!"),
-        D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f),
-        m_background);
-    infoShadow->SetDrawTextFormat(DT_CENTER);
-    infoShadow->SetPosition(D3DXVECTOR3(510.0f + 1.0f, 579.0f + 1.0f, 0.0f));
-
-    auto info = new UIText(
+    setTextWithShadow(
+        pInfoText,
         Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(252.0f, 20.0f),
         string("공간이 충분하지 않습니다!"),
         D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),
-        m_background);
-    info->SetDrawTextFormat(DT_CENTER);
-    info->SetPosition(D3DXVECTOR3(510.0f, 579.0f, 0.0f));
+        m_pBackground,
+        D3DXVECTOR3(510.0f, 579.0f, 0.0f));
 
     //킬로그
-    auto killLog = new UIText(
+    pKillLog1 = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
         D3DXVECTOR2(400.0f, 14.0f),
         string("HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
         D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f),
-        m_background);
-    killLog->SetDrawTextFormat(DT_RIGHT);
-    killLog->SetPosition(D3DXVECTOR3(856.0f, 52.0f, 0.0f));
+        m_pBackground);
+    pKillLog1->SetDrawTextFormat(DT_RIGHT);
+    pKillLog1->SetPosition(D3DXVECTOR3(856.0f, 52.0f, 0.0f));
 
-    auto killLog2 = new UIText(
+    pKillLog2  = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
         D3DXVECTOR2(400.0f, 14.0f),
         string("John의 QBZ(으)로 인해 ootz이(가) 사망했습니다"),
         D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f),
-        m_background);
-    killLog2->SetDrawTextFormat(DT_RIGHT);
-    killLog2->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 20.0f, 0.0f));
+        m_pBackground);
+    pKillLog2->SetDrawTextFormat(DT_RIGHT);
+    pKillLog2->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 20.0f, 0.0f));
 
     //총
     auto primaryWeaponBg = new UIImage(
@@ -315,23 +324,23 @@ void Character::InGameUI::Init()
         "weapons_bg.png",
         D3DXVECTOR3(970.0f, 670.0f, 0.0f),
         nullptr,
-        m_background);
+        m_pBackground);
 
     auto secondaryWeaponBg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_bg.png",
         D3DXVECTOR3(970.0f, 632.0f, 0.0f),
         nullptr,
-        m_background);
+        m_pBackground);
 
-    auto primaryWeapon = new UIImage(
+    pPrimaryWeaponImg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_gun_QBZ95.png",
         D3DXVECTOR3(28.0f, 0.0f, 0.0f),
         nullptr,
         primaryWeaponBg);
 
-    auto secondaryWeapon = new UIImage(
+    pSecondaryWeaponImg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_gun_kar98k.png",
         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
@@ -345,19 +354,45 @@ void Character::InGameUI::Init()
         "map_bg.png",
         D3DXVECTOR3(1085.0f, 530.0f, 0.0f),
         nullptr,
-        m_background
+        m_pBackground
     );
-}
-
-void Character::InGameUI::Destroy()
-{
-    UI()()->Destroy(m_background);
 }
 
 void Character::InGameUI::Update()
 {
+    //실제 정보를 받아서 string을 넣어주자
+    //for test
+    pKillNumUpText->SetText(string("9"));
 }
 
 void Character::InGameUI::Render()
 {
+}
+
+void Character::InGameUI::setTextWithShadow(
+    UIText* pText,
+    const LPD3DXFONT font,
+    const D3DXVECTOR2& size,
+    const string& str,
+    const D3DCOLOR color,
+    UIObject* pParent,
+    const D3DXVECTOR3& position)
+{
+    auto shadow = new UIText(
+        font,
+        size,
+        str,
+        D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f),
+        pParent);
+    shadow->SetDrawTextFormat(DT_CENTER);
+    shadow->SetPosition(D3DXVECTOR3(position.x + 1.0f, position.y + 1.0f, position.z));
+
+    pText = new UIText(
+        font,
+        size,
+        str,
+        color,
+        pParent);
+    pText->SetDrawTextFormat(DT_CENTER);
+    pText->SetPosition(position);
 }

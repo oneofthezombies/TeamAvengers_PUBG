@@ -77,7 +77,43 @@ public:
 
     struct InGameUI
     {
-        UIImage* m_background;
+        UIImage* m_pBackground;
+
+        //Image ===================
+        //compass
+        UIImage* pCompass;
+        //equip
+        UIImage* pBagImg;
+        UIImage* pHelmetImg;
+        UIImage* pVestImg;
+        //hp
+        UIImage* pHpRedImg;
+        UIImage* pHpWhiteImg;
+        //weapons
+        UIImage* pPrimaryWeaponImg;
+        UIImage* pSecondaryWeaponImg;
+
+
+        //Text ====================
+        //ammo
+        UIText* pAmmoReloadText;
+        UIText* pAmmoNumText;
+        UIText* pFireModeText;
+        //survival
+        UIText* pSurvivalNumText;
+        //kill(오른쪽 상단)
+        UIText* pKillNumUpText;
+        //id, version
+        UIText* pIdText;
+        //kill(화면 중앙)
+        UIText* pKillNumText;
+        UIText* pKillText;
+        //아이템 사용 등 안내문구
+        UIText* pInfoText;
+        //킬로그
+        UIText* pKillLog1;
+        UIText* pKillLog2;
+        
         
          InGameUI();
         ~InGameUI();
@@ -86,6 +122,15 @@ public:
         void Destroy();
         void Update();
         void Render();
+
+        void setTextWithShadow(
+            UIText* pText,
+            const LPD3DXFONT font,
+            const D3DXVECTOR2& size,
+            const string& str,
+            const D3DCOLOR color,
+            UIObject* pParent,
+            const D3DXVECTOR3& position);
     };
 
     struct TotalInventory
