@@ -99,6 +99,8 @@ public:
         Item* m_pEquipBack;
         Item* m_pEquipHead;
 
+        int m_equipOnNum;
+
         //¹«±â¿ë
         Item* m_pWeaponPrimary;
         Item* m_pWeaponSecondary;
@@ -214,6 +216,9 @@ public:
             const D3DCOLOR color,
             UIObject* pParent,
             const D3DXVECTOR3& position);
+
+        void updateInfoTextUI();
+        void updateOnHandWeaponUI(const TotalInventory& inven);
     };
 
     struct Info

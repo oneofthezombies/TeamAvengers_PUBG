@@ -239,7 +239,7 @@ void Character::InGameUI::Init()
     pSurvivalNumText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
         D3DXVECTOR2(26.0f, 26.0f),
-        string("57"),
+        string(""),
         InGameUI::WHITE,
         survivalNumBg);
     pSurvivalNumText->SetDrawTextFormat(DT_CENTER);
@@ -400,11 +400,53 @@ void Character::InGameUI::Init()
 
 void Character::InGameUI::Update(const TotalInventory& inven)
 {
-    //실제 정보를 받아서 string을 넣어주자
-    //for test
-    pKillNumUpText->SetText(string("9"));
+    //실제 정보를 받아서 UI를 변경하자
 
     //일정시간이 지나면 해당 문구 삭제
+    updateInfoTextUI();
+
+    //손에 들고 있는 총의 장전개수와 총알의 개수
+    updateOnHandWeaponUI(inven);
+
+    //장비 착용 여부
+
+}
+
+void Character::InGameUI::Render()
+{
+}
+
+void Character::InGameUI::setTextWithShadow(
+    UIText*& pText,
+    UIText*& pTextShadow,
+    const LPD3DXFONT font,
+    const D3DXVECTOR2& size,
+    const string& str,
+    const D3DCOLOR color,
+    UIObject* pParent,
+    const D3DXVECTOR3& position)
+{
+    pTextShadow = new UIText(
+        font,
+        size,
+        str,
+        InGameUI::BLACK_ALPHA,
+        pParent);
+    pTextShadow->SetDrawTextFormat(DT_CENTER);
+    pTextShadow->SetPosition(D3DXVECTOR3(position.x + 1.0f, position.y + 1.0f, position.z));
+
+    pText = new UIText(
+        font,
+        size,
+        str,
+        color,
+        pParent);
+    pText->SetDrawTextFormat(DT_CENTER);
+    pText->SetPosition(position);
+}
+
+void Character::InGameUI::updateInfoTextUI()
+{
     if (pInfoText->GetText() != "")
     {
         float t = m_coolDown -= Time()()->GetDeltaTime();
@@ -416,8 +458,10 @@ void Character::InGameUI::Update(const TotalInventory& inven)
             m_coolDown = COOL_TIME;
         }
     }
+}
 
-    //손에 들고 있는 총의 장전개수와 총알의 개수
+void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
+{
     if (inven.m_pHand)
     {
         TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic(); //총 종류
@@ -449,7 +493,7 @@ void Character::InGameUI::Update(const TotalInventory& inven)
             numBulletInInventory = (*it).second.back()->GetCount();
         }
 
-        //장전이 안되어있다면 빨간색으로
+        //장전이 안되어있다면 그림 & 텍스트 빨간색으로
         if (numReloadBullet == 0)
         {
             pAmmoReloadText->ChangeColor(InGameUI::RED);
@@ -485,37 +529,4 @@ void Character::InGameUI::Update(const TotalInventory& inven)
         pAmmoReloadText->SetText("");
         pAmmoNumText->SetText("");
     }
-}
-
-void Character::InGameUI::Render()
-{
-}
-
-void Character::InGameUI::setTextWithShadow(
-    UIText*& pText,
-    UIText*& pTextShadow,
-    const LPD3DXFONT font,
-    const D3DXVECTOR2& size,
-    const string& str,
-    const D3DCOLOR color,
-    UIObject* pParent,
-    const D3DXVECTOR3& position)
-{
-    pTextShadow = new UIText(
-        font,
-        size,
-        str,
-        InGameUI::BLACK_ALPHA,
-        pParent);
-    pTextShadow->SetDrawTextFormat(DT_CENTER);
-    pTextShadow->SetPosition(D3DXVECTOR3(position.x + 1.0f, position.y + 1.0f, position.z));
-
-    pText = new UIText(
-        font,
-        size,
-        str,
-        color,
-        pParent);
-    pText->SetDrawTextFormat(DT_CENTER);
-    pText->SetPosition(position);
 }

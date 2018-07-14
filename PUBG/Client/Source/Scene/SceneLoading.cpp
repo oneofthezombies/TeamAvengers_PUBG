@@ -22,9 +22,9 @@ void SceneLoading::Load()
     //load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
-    //load(TAG_RES_STATIC::Armor_Lv1);
-    //load(TAG_RES_STATIC::Back_Lv1);
-    //load(TAG_RES_STATIC::Head_Lv1);
+    load(TAG_RES_STATIC::Armor_Lv1);
+    load(TAG_RES_STATIC::Back_Lv1);
+    load(TAG_RES_STATIC::Head_Lv1);
     load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
 
@@ -46,9 +46,9 @@ void SceneLoading::Load()
     load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load equipment
-    //load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
-    //load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
-    //load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
+    load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
+    load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
+    load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
