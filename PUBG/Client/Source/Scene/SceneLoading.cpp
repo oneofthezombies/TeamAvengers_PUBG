@@ -10,7 +10,7 @@ void SceneLoading::Load()
     // set policy 
     // sync  -> on main thread
     // async -> multi threading
-    setPolicy(Resource::Policy::SYNC); //ASYNC
+    setPolicy(Resource::Policy::ASYNC); //ASYNC
 
     // set play mode
     // alone       -> no network
@@ -41,11 +41,11 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::WareHouse_A);
 
     // load skined meshs
-    const int numQBZ = 1;
+    const int numQBZ = 4;
     for (int i = 0; i < numQBZ; ++i)
         load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
-    const int numKar98k = 1;
+    const int numKar98k = 4;
     for (int i = 0; i < numKar98k; ++i)
         load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
