@@ -178,30 +178,32 @@ void ScenePlay::setWithOthersMode()
     p = D3DXVECTOR3(70, 0, 10);
     item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
     AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     for (int i = 0; i < 5; i++)
     {
         p = D3DXVECTOR3(70, 0, 10);
         item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
         AddObject(item);
-        pPlayer->PutItemInTotalInventory(item);
+        //pPlayer->PutItemInTotalInventory(item);
     }
 
     p = D3DXVECTOR3(80, 0, 10);
     item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
     AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    CurrentScene()()->InsertObjIntoTotalCellSpace(TAG_OBJECT::Item,
+        )
+    //pPlayer->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(90, 0, 10);
     item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
     AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(100, 0, 10);
     item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
     AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
 
 }
@@ -225,6 +227,8 @@ void ScenePlay::OnInit()
     ClientToScreen(g_hWnd, &center);
     SetCursorPos(center.x, center.y);
 
+    //로딩 배경음 종료
+    Sound()()->Stop(0);
     //AddObject(new SkySphere);
     //AddObject(new Grid);
 

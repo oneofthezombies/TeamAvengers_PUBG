@@ -337,17 +337,15 @@ void Character::updateMine()
             {
                 if (m_hasChangingState == false) //장전 중일 때는 쏘지못하게
                     m_isFire = true;
-
             }
         }
     }
     if (m_backAction.Ing)
     {
-        backActionFrame();
+        backActionFrame(&rot);
     }
 
     tm->SetPosition(pos);
-    //if(m_totalInventory.)
     tm->SetRotation(rot);
 
     //인벤토리 UI 활성화
@@ -373,10 +371,10 @@ void Character::updateMine()
     //이 아래 sound는 어디에 쓰이는 것인가요?? 찬응에게 답해 주세요
     Sound()()->Listen(pos, getForward());
 
-    if (Input()()->IsOnceKeyDown(VK_UP))
-    {
-        BulletPool()()->Fire(Communication()()->m_myInfo,pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_RES_STATIC::QBZ);
-    }
+    //if (Input()()->IsOnceKeyDown(VK_UP))
+    //{
+    //    BulletPool()()->Fire(Communication()()->m_myInfo,pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_RES_STATIC::QBZ);
+    //}
 
     ForDebug();
     Debug << "current        position : " << pos << "\n\n"

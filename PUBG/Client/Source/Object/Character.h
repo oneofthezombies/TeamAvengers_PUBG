@@ -453,7 +453,7 @@ private:
 
     //ÃÑ ¹Ýµ¿ °ü·Ã
     void backAction(D3DXQUATERNION* OutRotation ,int virtical = 100 , int horizontal = 50);
-    void backActionFrame();
+    void backActionFrame(D3DXQUATERNION* OutRotation);
 
     void updateMine();
     void updateOther();

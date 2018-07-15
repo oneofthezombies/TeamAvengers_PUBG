@@ -39,7 +39,10 @@ void SoundManager::Init()
     AddSound(TAG_SOUND::Kar98_Reload1, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Kar98_Reload2, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Kar98_Reload3, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Qbz_NormalShoot, "Resource/Sound/qbz/Qbz_NormalShoot.mp3", FMOD_3D, false);
+
     AddSound(TAG_SOUND::Background, "Resource/Sound/Background/battleground_lobby.mp3", FMOD_3D, false);
+
 }
 
 void SoundManager::Destroy()
@@ -117,6 +120,7 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
 {
     const auto search = m_sounds.find(tag);
     if (search == m_sounds.end()) return -1;
+    search->second->setMode(mode);
 
     bool isPlaying = false;
     size_t i = 0u;
@@ -144,7 +148,6 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
     }
 
     SetPosition(pos);
-    search->second->setMode(mode);
 
     
     CheckError(m_pSystem->playSound(search->second, nullptr, false, &m_channels[i]));

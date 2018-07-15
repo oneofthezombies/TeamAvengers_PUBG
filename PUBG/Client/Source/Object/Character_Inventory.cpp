@@ -946,9 +946,9 @@ void Character::updateTotalInventory()
 
         pHead->UpdateModel();
 
-        Shader()()->AddShadowSource(
-            pHeadTr->GetTransformationMatrix(),
-            pHead->GetSkinnedMesh());
+        //Shader()()->AddShadowSource(
+        //    pHeadTr->GetTransformationMatrix(),
+        //    pHead->GetSkinnedMesh());
     }
 
     //ÁÖ¹«±â

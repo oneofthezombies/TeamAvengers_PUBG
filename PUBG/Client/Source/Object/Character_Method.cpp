@@ -314,7 +314,7 @@ void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizo
     //나중에 값 바꾸면 디버그 확인용
 
     m_backAction.Ing = true;
-    m_backAction.Rot = OutRotation;
+    m_backAction.Rot = OutRotation;         //로테이션 값 바꿔주는거 저장 값이었지만 다른 코드가 바뀌면서 무쓸모해짐.
     m_backAction.curValY = horizontal_result;
     m_backAction.valY = horizontal_result;
     m_backAction.curValX = virtical_result;
@@ -656,7 +656,7 @@ void Character::characterRotation(MouseInput* mouseInput)
     //    rotateWaist(mouseInput->yaw);
 }
 
-void Character::backActionFrame()
+void Character::backActionFrame(D3DXQUATERNION* OutRotation)
 {
     D3DXQUATERNION q;
     if (m_backAction.Up)
@@ -670,8 +670,8 @@ void Character::backActionFrame()
         }
         m_rotationForCamera.x += m_backAction.curValX;
         D3DXQuaternionRotationYawPitchRoll(&q, m_backAction.curValY, 0.0f, 0.0f);
-        *m_backAction.Rot *= q;
-
+        //*m_backAction.Rot *= q;       //예전코드에서 스트럭트에 저장된 주소에 바로 적용하였음.
+        *OutRotation *= q;
     }
     else
     {
@@ -685,7 +685,8 @@ void Character::backActionFrame()
         }
         m_rotationForCamera.x -= m_backAction.curValX;
         D3DXQuaternionRotationYawPitchRoll(&q, -m_backAction.curValY, 0.0f, 0.0f);
-        *m_backAction.Rot *= q;
+        //*m_backAction.Rot *= q;
+        *OutRotation *= q;
     }
 }
 
@@ -862,6 +863,9 @@ void Character::RifleShooting() //bullet 객체에 대한
     case TAG_RES_STATIC::QBZ:
         {
             BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_RES_STATIC::QBZ);
+            Sound()()->Play(TAG_SOUND::Qbz_NormalShoot,
+                GetTransform()->GetPosition(),
+                1.0f, FMOD_2D);
             
             //총 자체 애니메이션
             m_isNeedRifleAnim = true;
@@ -935,7 +939,8 @@ void Character::RifleShooting() //bullet 객체에 대한
         }
     break;
     }
-
+    D3DXQUATERNION rot = (GetTransform())->GetRotation();
+    backAction(&rot);
 }
 D3DXVECTOR3 Character::FindShootingTargetPos()
 {
