@@ -171,6 +171,38 @@ void SceneLoading::OnInit()
     //for compass UI test
     Resource()()->AddTexture("./Resource/UI/InGame/", "compass_bg_transparent.png");
 
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
+    Resource()()->AddTexture("./Resource/", "dedenne.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "line.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png");
+    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_5_56mm, D3DCOLOR_XRGB(0, 0, 0));
+    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_7_62mm);
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_no.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_mouseover.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_yes.png");
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot_mouseover.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_click.png");
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBox_idle.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBox_mouseover.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBox_possible.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Weapon_highlight.png");
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Attach_click.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Attach_no.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Attach_yes.png");
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBoxNum.png");
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "icon_weapon_Kar98k.png", D3DCOLOR_XRGB(0, 0, 0));
+    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "icon_weapon_QBZ95.png", D3DCOLOR_XRGB(0, 0, 0));
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "Kar98k.png", D3DCOLOR_XRGB(0, 0, 0));
+    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "QBZ.png", D3DCOLOR_XRGB(0, 0, 0));
+
     m_pBackground =
         new UIImage(
             "./Resource/",

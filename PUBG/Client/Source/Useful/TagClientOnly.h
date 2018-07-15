@@ -150,7 +150,8 @@ enum class TAG_ITEM_CATEGORY
 enum class TAG_RIFLE
 {
     Primary,
-    Secondary
+    Secondary,
+    None
 };
 
 enum class TAG_ATTACH_POINT

@@ -19,6 +19,8 @@ void Character::setAttacking() //Num1, Num2, X
             {
                 m_attacking = Attacking::Rifle;
 
+                
+                //inven.pTempSaveWeaponForX = inven.m_pWeaponPrimary;
                 inven.m_pHand = inven.m_pWeaponPrimary;
                 inven.m_pWeaponPrimary = nullptr;
 
@@ -119,10 +121,13 @@ void Character::setAttacking() //Num1, Num2, X
             inven.pTempSaveWeaponForX = inven.m_pHand;
             TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();
 
-            if (tag == TAG_RES_STATIC::QBZ)
+
+            setRifleOnBody(inven.m_handState);
+
+            /*if (tag == TAG_RES_STATIC::QBZ)
                 setRifleOnBody(TAG_RIFLE::Primary);
             else if (tag == TAG_RES_STATIC::Kar98k)
-                setRifleOnBody(TAG_RIFLE::Secondary);
+                setRifleOnBody(TAG_RIFLE::Secondary);*/
         }
         //손에 무기를 들고 있지않는데 X버튼을 누른다면, 이전에 장착했던 무기를 다시 손에 든다
         else
@@ -134,17 +139,17 @@ void Character::setAttacking() //Num1, Num2, X
                 inven.pTempSaveWeaponForX = nullptr;
                 TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();
 
-                if (tag == TAG_RES_STATIC::QBZ)
+                if (inven.m_handState== TAG_RIFLE::Primary)
                 {
                     m_hasChangingState = true;
                     inven.m_pWeaponPrimary = nullptr;
                     setRifleOnHand(TAG_RIFLE::Primary);
                 }
-                else if (tag == TAG_RES_STATIC::Kar98k)
+                else if (inven.m_handState == TAG_RIFLE::Secondary)
                 {
                     m_hasChangingState = true;
                     inven.m_pWeaponSecondary = nullptr;
-                    setRifleOnHand(TAG_RIFLE::Secondary);                
+                    setRifleOnHand(TAG_RIFLE::Secondary);
                 }
             }
         }
@@ -727,6 +732,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
             tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand;
         else if (m_stance == Stance::Prone)
             tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot_OnHand;
+        m_totalInventory.m_handState = tagRifle;
     }
     else if (tagRifle == TAG_RIFLE::Secondary) //보조무기 일 때
     {
@@ -734,6 +740,8 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
             tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand;
         else if (m_stance == Stance::Prone)
             tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot_OnHand;
+        m_totalInventory.m_handState = tagRifle;
+
     }
     assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnHand(), tagAnim is COUNT");
 
