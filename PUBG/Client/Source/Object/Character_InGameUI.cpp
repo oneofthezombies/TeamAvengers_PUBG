@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "Item.h"
 #include "ItemInfo.h"
+#include "ScenePlay.h"
 
 //for UI
 #include "UIImage.h"
@@ -412,6 +413,11 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //손에 들고 있는 총의 장전개수와 총알의 개수
     updateOnHandWeaponUI(inven);
+
+    //생존자수
+    ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    int survivalNum = currentScene->GetSurvivors();
+    pSurvivalNumText->SetText(to_string(survivalNum));
 
     //장비 착용 관련 UI
 

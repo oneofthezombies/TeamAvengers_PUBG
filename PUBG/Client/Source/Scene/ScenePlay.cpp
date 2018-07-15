@@ -269,3 +269,14 @@ const std::vector<Character*> ScenePlay::GetOthers() const
 {
     return others;
 }
+
+int ScenePlay::GetSurvivors() const
+{
+    int survivalNum = 0;
+    for (auto c : characters)
+    {
+        if (c->GetCharacterIsDead() == false)
+            survivalNum++;
+    }
+    return survivalNum;
+}

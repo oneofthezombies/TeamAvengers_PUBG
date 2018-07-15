@@ -589,7 +589,8 @@ public:
     void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
     int GetIndex() const;
-    float GetCharacterHealth();
+    float GetCharacterHealth() const;
+    bool GetCharacterIsDead() const;
 
     TAG_COLLISION GetTagCollisionBody(const int index);
     TAG_COLLISION GetTagCollisionDamage(const int index);
