@@ -463,7 +463,9 @@ void Item::ChangeAuto()
 
 bool Item::GetAuto()
 {
-    if(this!= NULL)
+    //if (this != NULL)
+    //    return m_auto;
+
     return m_auto;
 }
 
