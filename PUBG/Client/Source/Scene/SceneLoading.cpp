@@ -120,8 +120,6 @@ void SceneLoading::Load()
 
 void SceneLoading::OnInit()
 {
-    
-
     Resource()()->AddTexture("./Resource/", "input_field.png");
     Resource()()->AddTexture("./Resource/", "LoadingScreen.tga");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
