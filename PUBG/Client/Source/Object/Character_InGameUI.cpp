@@ -415,9 +415,7 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     updateOnHandWeaponUI(inven);
 
     //생존자수
-    ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
-    int survivalNum = currentScene->GetSurvivors();
-    pSurvivalNumText->SetText(to_string(survivalNum));
+    updateSurvivalNumTextUI();
 
     //장비 착용 관련 UI
 
@@ -476,6 +474,10 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
 {
     if (inven.m_pHand)
     {
+        //총 교체시 UI 버그 fix용
+        pQBZRedImg->SetIsRender(false);
+        pKar98kRedImg->SetIsRender(false);
+
         TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic(); //총 종류
         TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag);  //탄약 종류
 
@@ -504,7 +506,7 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
         {
             numBulletInInventory = (*it).second.back()->GetCount();
         }
-
+        
         //장전이 안되어있다면 그림 & 텍스트 빨간색으로
         if (numReloadBullet == 0)
         {
@@ -512,11 +514,11 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
             //TODO: 주무기, 보조무기에 따라 위치다르게 
             if (tag == TAG_RES_STATIC::Kar98k)
             {
-                pQBZRedImg->SetIsRender(true);
+                pKar98kRedImg->SetIsRender(true);
             }
             else if (tag == TAG_RES_STATIC::QBZ)
             {
-                pKar98kRedImg->SetIsRender(true);
+                pQBZRedImg->SetIsRender(true);
             }
         }
         else
@@ -524,11 +526,11 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
             pAmmoReloadText->ChangeColor(WHITE);
             if (tag == TAG_RES_STATIC::Kar98k)
             {
-                pQBZRedImg->SetIsRender(false);
+                pKar98kRedImg->SetIsRender(false);
             }
             else if (tag == TAG_RES_STATIC::QBZ)
             {
-                pKar98kRedImg->SetIsRender(false);
+                pQBZRedImg->SetIsRender(false);
             }
         }
 
@@ -537,8 +539,18 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
     }
     else //if(m_pHand == nullptr)
     {
+        pQBZRedImg->SetIsRender(false);
+        pKar98kRedImg->SetIsRender(false);
+        
         pFireModeText->SetText("");
         pAmmoReloadText->SetText("");
         pAmmoNumText->SetText("");
     }
+}
+
+void Character::InGameUI::updateSurvivalNumTextUI()
+{
+    ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    int survivalNum = currentScene->GetSurvivors();
+    pSurvivalNumText->SetText(to_string(survivalNum));
 }

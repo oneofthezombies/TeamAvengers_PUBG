@@ -224,6 +224,8 @@ public:
 
         void updateInfoTextUI();
         void updateOnHandWeaponUI(const TotalInventory& inven);
+        void updateSurvivalNumTextUI();
+        
     };
 
     struct Info
