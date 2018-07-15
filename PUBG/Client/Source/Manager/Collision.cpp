@@ -646,7 +646,7 @@ std::vector<D3DXVECTOR3> Collision::GetCollidedNormal(const D3DXVECTOR3& mypos, 
 
     std::vector<D3DXVECTOR3> m_vecWorld;
     m_vecWorld.resize(8);
-    for (int i = 0; i < m_vecWorld.size(); ++i)
+    for (size_t i = 0; i < m_vecWorld.size(); ++i)
         D3DXVec3TransformCoord(&m_vecWorld[i], &m_vecProj[i], &m);
 
     std::vector<D3DXPLANE> m_vecPlane;
@@ -667,7 +667,7 @@ std::vector<D3DXVECTOR3> Collision::GetCollidedNormal(const D3DXVECTOR3& mypos, 
     D3DXVECTOR3 p12(boxPos - mypos);
     float p12len = D3DXVec3Length(&p12);
     std::vector<int> results;
-    for (int i = 0; i < m_vecPlane.size(); ++i)
+    for (size_t i = 0; i < m_vecPlane.size(); ++i)
     {
         D3DXVECTOR3 pout;
         if (D3DXPlaneIntersectLine(&pout, &m_vecPlane[i], &mypos, &boxPos))
