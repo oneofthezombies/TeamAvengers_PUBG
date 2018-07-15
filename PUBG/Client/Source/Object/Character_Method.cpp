@@ -1304,6 +1304,8 @@ void Character::setInfo()
 void Character::MinusDamage(const float damage)
 {
     m_health -= damage;
+    if (m_health < 0.0f)
+        m_health = 0.0f;
 }
 
 D3DXVECTOR3 Character::getUp()

@@ -325,6 +325,8 @@ void Communication::Manager::ReceiveMessage(
             
             ss >> damageID >> damage;
             m_roomInfo.playerInfos[damageID].health -= damage;
+            if (m_roomInfo.playerInfos[damageID].health < 0.0f)
+                m_roomInfo.playerInfos[damageID].health = 0.0f;
         }
         break;
     }

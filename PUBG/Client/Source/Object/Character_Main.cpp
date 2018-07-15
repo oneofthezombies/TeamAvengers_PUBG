@@ -123,6 +123,7 @@ Character::~Character()
 void Character::OnUpdate()
 {
     const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
+    
     if (receivedHealth < m_health)
     {
         m_health = receivedHealth;

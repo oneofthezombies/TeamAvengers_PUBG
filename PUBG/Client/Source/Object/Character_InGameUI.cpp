@@ -437,8 +437,8 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     if (pPlayer->IsDamaged())
     {
         pPlayer->ResetIsDamaged();
-        float t = m_infoTextCoolDown -= Time()()->GetDeltaTime();
-        cout << t << endl;
+        float t = m_hpCoolDown -= Time()()->GetDeltaTime();
+        //cout << t << endl;
         if (m_hpCoolDown <= 0)
         {
             pHpRedImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));

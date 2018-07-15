@@ -128,7 +128,7 @@ void SceneLoading::OnInit()
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "line.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png");
     Resource()()->AddTexture(TAG_RES_STATIC::Ammo_5_56mm, D3DCOLOR_XRGB(0, 0, 0));
-    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_7_62mm);
+    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_7_62mm, D3DCOLOR_XRGB(0, 0, 0));
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_no.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_mouseover.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_yes.png");
