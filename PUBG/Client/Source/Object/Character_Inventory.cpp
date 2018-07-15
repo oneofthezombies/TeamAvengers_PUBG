@@ -945,6 +945,10 @@ void Character::updateTotalInventory()
             m_waistRotation.m_angle);
 
         pHead->UpdateModel();
+
+        Shader()()->AddShadowSource(
+            pHeadTr->GetTransformationMatrix(),
+            pHead->GetSkinnedMesh());
     }
 
     //ÁÖ¹«±â
