@@ -99,6 +99,8 @@ public:
         Item* m_pEquipBack;
         Item* m_pEquipHead;
 
+        int m_equipOnNum;
+
         //무기용
         Item* m_pWeaponPrimary;
         Item* m_pWeaponSecondary;
@@ -115,7 +117,6 @@ public:
         bool isOpened;
         std::deque<Item*> droppedItems;
 
-
         ////////////함수
         void Init();
         void Destroy();
@@ -129,6 +130,102 @@ public:
 
          TotalInventory();
         ~TotalInventory();
+    };
+
+    struct InGameUI
+    {
+        static const D3DCOLOR RED;
+        static const D3DCOLOR WHITE;
+        static const D3DCOLOR GRAY;
+        static const D3DCOLOR WHITE_ALPHA;
+        static const D3DCOLOR BLACK_ALPHA;
+
+        static const D3DXVECTOR3 PRIMARY_WEAPON_POS;
+        static const D3DXVECTOR3 SECONDARY_WEAPON_POS;
+
+        static const float EQUIP_START;
+        static const float EQUIP_WIDTH;
+        static const float EQUIP_HEIGHT;
+        static const float EQUIP_GAP;
+
+        UIImage* m_pBackground;
+
+        //Image ===================
+        //compass
+        UIImage* pCompass;
+
+        //equip
+        UIImage* pBagImg;
+        UIImage* pHelmetImg;
+        UIImage* pVestImg;
+
+        //hp
+        UIImage* pHpRedImg;
+        UIImage* pHpWhiteImg;
+
+        //weapons
+        UIImage* pQBZImg;
+        UIImage* pKar98kImg;
+
+        UIImage* pQBZRedImg;
+        UIImage* pKar98kRedImg;
+
+
+        //Text ====================
+        //ammo
+        UIText* pAmmoReloadText;
+        UIText* pAmmoNumText;
+        UIText* pFireModeText;
+
+        //survival
+        UIText* pSurvivalNumText;
+
+        //kill(오른쪽 상단)
+        UIText* pKillNumUpText;
+
+        //id, version
+        UIText* pIdText;
+
+        //kill(화면 중앙)
+        UIText* pKillNumText;
+        UIText* pKillText;
+
+        UIText* pKillNumTextShadow;
+        UIText* pKillTextShadow;
+
+        //아이템 사용 등 안내문구
+        UIText* pInfoText;
+        UIText* pInfoTextShadow;
+
+        //킬로그
+        UIText* pKillLog1;
+        UIText* pKillLog2;
+
+        const float COOL_TIME;
+        float m_coolDown;
+
+        InGameUI();
+        ~InGameUI();
+
+        void Init();
+        void Destroy();
+        void Update(const TotalInventory& inven);
+        void Render();
+
+        void setTextWithShadow(
+            UIText*& pText,
+            UIText*& pTextShadow,
+            const LPD3DXFONT font,
+            const D3DXVECTOR2& size,
+            const string& str,
+            const D3DCOLOR color,
+            UIObject* pParent,
+            const D3DXVECTOR3& position);
+
+        void updateInfoTextUI();
+        void updateOnHandWeaponUI(const TotalInventory& inven);
+        void updateSurvivalNumTextUI();
+        
     };
 
     struct Info
@@ -284,6 +381,9 @@ private:
 
     // for inventory
     TotalInventory m_totalInventory;
+
+    // for InGameUI
+    InGameUI m_inGameUI;
     
     // state
     TAG_ANIM_CHARACTER m_upperAnimState;
@@ -491,7 +591,8 @@ public:
     void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
     int GetIndex() const;
-    float GetCharacterHealth();
+    float GetCharacterHealth() const;
+    bool GetCharacterIsDead() const;
 
     TAG_COLLISION GetTagCollisionBody(const int index);
     TAG_COLLISION GetTagCollisionDamage(const int index);
@@ -518,7 +619,6 @@ public:
 
             const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
-
 /**************************** end public method ******************************/
 
 

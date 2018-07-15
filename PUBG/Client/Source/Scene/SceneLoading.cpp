@@ -27,8 +27,17 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::Head_Lv1);
     load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
+
     load(TAG_RES_STATIC::Bandage);
+    load(TAG_RES_STATIC::FirstAidKit);
+    load(TAG_RES_STATIC::MedKit);
+
+    load(TAG_RES_STATIC::RedDot);
+    load(TAG_RES_STATIC::Aimpoint2X);
+    load(TAG_RES_STATIC::ACOG);
+
     load(TAG_RES_STATIC::Rock_1);
+
     load(TAG_RES_STATIC::WareHouse_A);
 
     // load skined meshs
@@ -111,9 +120,10 @@ void SceneLoading::Load()
 
 void SceneLoading::OnInit()
 {
+    
+
     Resource()()->AddTexture("./Resource/", "input_field.png");
     Resource()()->AddTexture("./Resource/", "LoadingScreen.tga");
-    Resource()()->AddTexture("./Resource/", "Honeyview_RandomLoading01.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
     Resource()()->AddTexture("./Resource/", "dedenne.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
@@ -129,10 +139,44 @@ void SceneLoading::OnInit()
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot_mouseover.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_click.png");
 
+    //for InGameUI
+    Resource()()->AddTexture("./Resource/UI/InGame/", "transparent_1280_720.png");
+
+    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_bg.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_arrow_bg.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "compass.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_arrow.png", D3DCOLOR_XRGB(0, 0, 0));
+
+    Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_bag01.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_helmet01.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_vest01.png");
+
+    Resource()()->AddTexture("./Resource/UI/InGame/", "player_HP_BG_v3.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "player_HP_bar_v2.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "player_HP_bar_red.png");
+
+    Resource()()->AddTexture("./Resource/UI/InGame/", "ammo_info.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "survival_text_bg.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "survival_num_bg.png");
+
+    Resource()()->AddTexture("./Resource/UI/InGame/", "kill_num_up_bg.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "kill_text_up_bg.png");
+
+    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_bg.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_kar98k.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_QBZ95.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_kar98k_red.png");
+    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_QBZ95_red.png");
+
+    Resource()()->AddTexture("./Resource/UI/InGame/", "map_bg.png");
+
+    //for compass UI test
+    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_bg_transparent.png");
+
     m_pBackground =
         new UIImage(
             "./Resource/",
-            "Honeyview_RandomLoading01.png",
+            "LoadingScreen.tga",
             Vector3::ZERO,
             nullptr,
             nullptr);

@@ -19,6 +19,8 @@ Character::TotalInventory::TotalInventory()
     , m_pEquipArmor(nullptr)
     , m_pEquipBack(nullptr)
     , m_pEquipHead(nullptr)
+    , m_equipOnNum(0)
+
     , m_pWeaponPrimary(nullptr)
     , m_pWeaponSecondary(nullptr)
     , m_capacity(DEFAULT_CAPACITY)
@@ -28,6 +30,7 @@ Character::TotalInventory::TotalInventory()
     , pTempSaveWeaponForX(nullptr)
     , pCharacter(nullptr)
     , m_pUIPicked(nullptr)
+
 {
 }
 
@@ -339,8 +342,7 @@ void Character::PutItemInTotalInventory(Item* item)
             }
             else
             {
-                //TODO: 용량 부족 UI 띄우기
-                cout << "공간이 충분하지 않습니다!" << endl;
+                m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
             }
             // TODO : send "delete item on field" to server
         }
@@ -420,8 +422,7 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
     }
     else
     {
-        //TODO: 용량 부족 UI 띄우기
-        cout << "공간이 충분하지 않습니다!" << endl;
+        m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
     }
 
 }
@@ -435,10 +436,16 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
     assert(newItem && "Character::checkOriginItem(), argument is null.");
     if (*originItem)
     {
+        TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory((*originItem)->GetTagResStatic());
+
         (*originItem)->SetIsRenderEffectMesh(true);
         //TODO: 바닥에 떨군다
         //용량을 줄인다
         m_totalInventory.m_capacity -= ItemInfo::GetCapacityExtension(newItem->GetTagResStatic());
+        if (category == TAG_ITEM_CATEGORY::Armor ||
+            category == TAG_ITEM_CATEGORY::Back  ||
+            category == TAG_ITEM_CATEGORY::Head)
+            m_totalInventory.m_equipOnNum--;
 
         //아래는 임시코드
         CurrentScene()()->Destroy(*originItem);
@@ -451,6 +458,12 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
         //용량을 늘린다
         m_totalInventory.m_capacity += ItemInfo::GetCapacityExtension(newItem->GetTagResStatic());
         CurrentScene()()->RemoveObject(newItem);
+        
+        TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(newItem->GetTagResStatic());
+        if (category == TAG_ITEM_CATEGORY::Armor ||
+            category == TAG_ITEM_CATEGORY::Back ||
+            category == TAG_ITEM_CATEGORY::Head)
+            m_totalInventory.m_equipOnNum++;
 
         // eqiup
         newItem->SetIsRenderEffectMesh(false);

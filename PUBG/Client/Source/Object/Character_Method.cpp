@@ -1310,11 +1310,15 @@ int Character::GetIndex() const
     return m_index;
 }
 
-float Character::GetCharacterHealth()
+float Character::GetCharacterHealth() const
 {
     return m_health;
 }
 
+bool Character::GetCharacterIsDead() const
+{
+    return m_isDead;
+}
 
 TAG_COLLISION Character::GetTagCollisionBody(const int index)
 {

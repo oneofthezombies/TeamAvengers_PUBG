@@ -23,8 +23,14 @@ public:
 	virtual void Render() override;
 
     void SetFont(const LPD3DXFONT p);
+    
     void SetText(const string& val);
+    void SetText(const string& val, UIText*& shadow);
     void SetText(string* p);
+    string GetText();
+
     void SetDrawTextFormat(const DWORD val);
+
+    void ChangeColor(D3DCOLOR color);
 };
 

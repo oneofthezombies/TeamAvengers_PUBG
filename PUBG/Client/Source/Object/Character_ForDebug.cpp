@@ -122,4 +122,6 @@ void Character::ForDebug()
         Debug << "IsJump: TRUE"  << "\n";
     else
         Debug << "IsJump: FALSE" << "\n";
+
+    Debug << "Equip On Num: " << m_totalInventory.m_equipOnNum << endl;
 }

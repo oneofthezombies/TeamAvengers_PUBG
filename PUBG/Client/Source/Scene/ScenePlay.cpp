@@ -7,7 +7,7 @@
 #include "Item.h"
 #include "HeightMap.h"
 #include "ComponentTransform.h"
-//#include "UIImage.h"
+#include "UITest.h"
 
 void ScenePlay::setAloneMode()
 {
@@ -77,13 +77,13 @@ void ScenePlay::setAloneMode()
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(40, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Bandage, p, r, s);
+    //p = D3DXVECTOR3(60, 0, 10);
+    //item = new Item(TAG_RES_STATIC::MedKit, p, r, s);
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(50, 0, 10);
-    //item = new Item(TAG_RES_STATIC::FirstAidKit, p, r, s);
+    //p = D3DXVECTOR3(60, 0, 10);
+    //item = new Item(TAG_RES_STATIC::MedKit, p, r, s);
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
@@ -219,7 +219,7 @@ void ScenePlay::OnInit()
     SetCursorPos(center.x, center.y);
 
     //AddObject(new SkySphere);
-    AddObject(new Grid);
+    //AddObject(new Grid);
 
     SetHeightMap(new HeightMap);
 
@@ -267,4 +267,15 @@ void ScenePlay::OnUpdate()
 const std::vector<Character*> ScenePlay::GetOthers() const
 {
     return others;
+}
+
+int ScenePlay::GetSurvivors() const
+{
+    int survivalNum = 0;
+    for (auto c : characters)
+    {
+        if (c->GetCharacterIsDead() == false)
+            survivalNum++;
+    }
+    return survivalNum;
 }
