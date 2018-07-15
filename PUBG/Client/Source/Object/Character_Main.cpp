@@ -50,7 +50,6 @@ Character::Character(const int index)
     , pAnimation(nullptr)
 
     , m_otherHitPart(0)
-
 {
     m_totalInventory.pCharacter = this;
     if (isMine())
@@ -59,7 +58,7 @@ Character::Character(const int index)
         m_inGameUI.Init();
     }
 
-    const float factor(static_cast<float>(m_index + 1) * 100.0f);
+    const float factor(static_cast<float>(m_index + 1) * 200.0f);
 
     Transform* pTransform = GetTransform();
     pTransform->SetPosition(D3DXVECTOR3(factor, 200.0f, factor));
@@ -76,7 +75,7 @@ Character::Character(const int index)
     setAnimation(
         CharacterAnimation::BodyPart::BOTH, 
         TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
+    
     setFramePtr();
 
     // set boundingShapes
@@ -102,7 +101,8 @@ Character::Character(const int index)
 
     pOtherHitPositionMesh = Resource()()->GetBoundingSphereMesh();
 
-    m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-100.0f, 50.0f, -50.0f), D3DXVECTOR3(100.0f, 150.0f, 50.0f));
+    m_bBox = BoundingBox::Create(D3DXVECTOR3(-20.0f, 0.0f, -20.0f), D3DXVECTOR3(20.0f, 170.0f, 20.0f));
+    //m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
 }
 
 Character::~Character()
@@ -141,6 +141,10 @@ void Character::OnUpdate()
 
     // bounding sphere move to character position
     m_boundingSphere.position = GetTransform()->GetPosition();
+
+    //m_bSphereSlidingCollision.position = GetTransform()->GetPosition();
+    m_bBox.position = GetTransform()->GetPosition();
+    m_bBox.rotation = GetTransform()->GetRotation();
 
     for (auto pPart : m_characterParts)
         pPart->Update();
@@ -183,8 +187,8 @@ void Character::OnRender()
     for (auto pPart : m_characterParts)
         pPart->Render();
 
-    m_boundingBox.Render();
-    Debug << "index : " << m_index << ", center : " << m_boundingSphere.center << ", position : " << m_boundingSphere.position << '\n';
+    //m_bSphereSlidingCollision.RenderRed();
+    m_bBox.RenderRed();
     m_boundingSphere.Render();
     // end render collision shapes
 
@@ -252,11 +256,16 @@ void Character::updateMine()
 
     ////////////충돌 체크 Area/////////////////////
     //Terrain과의 충돌체크
-    terrainFeaturesCollisionInteraction(&destState);
+    //terrainFeaturesCollisionInteraction(&destState);
+    terrainFeaturesCollisionInteraction2(&destState);
     //Item 과의 충돌체크
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////
 
+
+
+
+    getRight();
 
 
     setStance();

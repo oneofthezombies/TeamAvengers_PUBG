@@ -342,7 +342,6 @@ void CameraThirdPerson::Update()
     {
         D3DXMATRIX tarR, baseT;
         D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
-        Debug << "*pTarInfo->pRotationForCamera : " << *pTarInfo->pRotationForCamera << endl << endl;
         D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, 0.0f);
 
         D3DXMATRIX baseY, baseZ;

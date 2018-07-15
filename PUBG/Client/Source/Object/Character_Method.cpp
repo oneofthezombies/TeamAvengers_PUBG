@@ -332,6 +332,8 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
         // 바운딩스피어가 충돌되지 않으면 다음 터레인피처와 충돌을 검사한다.
         if (!Collision::HasCollision(m_boundingSphere, tf->GetBoundingSphere())) continue;
 
+
+
         if (destState->boundingBoxes.empty())
         {
             for (auto& bb : GetBoundingBoxes())
@@ -352,7 +354,6 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
                 if (hasCollision) break;
 
                 hasCollision = Collision::HasCollision(mine, others);
-
                 // sliding vector
                 if (hasCollision)
                 {
@@ -361,7 +362,8 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
                     D3DXVECTOR3 to(destPos.x - currPos.x, 0.0f, destPos.z - currPos.z);
                     D3DXVECTOR3 dir;
                     D3DXVec3Normalize(&dir, &to);
-
+                    if (dir.z > 0.0f)
+                        int i = 0;
                     D3DXVECTOR3 diff((others.center + others.position) - currPos);
                     D3DXVec3Normalize(&diff, &diff);
 
@@ -396,6 +398,149 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
 
                     destState->position = currPos + dist;
                 }
+            }
+        }
+    }
+
+    // collision with other characters
+    if (!hasCollision)
+    {
+        for (auto o : pCurrentScene->m_NearArea.GetCharacters())
+        {
+            if (hasCollision) break;
+
+            if (o->GetIndex() == m_index) continue;
+
+            const D3DXVECTOR3 dist = destState->position - o->GetTransform()->GetPosition();
+            const float distLen = D3DXVec3Length(&dist);
+            if (distLen < RADIUS * 2.0f)
+                hasCollision = true;
+        }
+    }
+    // end collision /////////////////////////
+    Transform* tm = GetTransform();
+    // 셋 커런트
+    if (hasCollision)
+    {
+        // 만약 스프린트일 경우에는 쉬프트키 유무에 상관없이 런으로 바꾼다.
+        if (destState->isHeadBump)
+        {
+            // TODO : impl
+        }
+
+        tm->SetPosition(destState->position);
+    }
+    else
+    {
+        // update state
+        tm->SetPosition(destState->position);
+        tm->SetRotation(destState->rotation);
+
+        // 이사하기 //NearArea(cell space)를 다시 구하기!
+        std::size_t destCellIndex = pCurrentScene->GetCellIndex(destState->position);
+        if (destCellIndex != m_cellIndex)
+        {
+            pCurrentScene->m_NearArea.CreateNearArea(destCellIndex);
+            pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
+        }
+    }
+    //////////////////////////////////////////////////
+
+}
+void Character::terrainFeaturesCollisionInteraction2(OUT State* destState)
+{
+    IScene* pCurrentScene = CurrentScene()();
+    bool hasCollision = false;
+    auto tfs(pCurrentScene->m_NearArea.GetTerrainFeatures());
+    for (auto tf : tfs)
+    {
+        if (hasCollision) break;
+
+        // 바운딩스피어가 충돌되지 않으면 다음 터레인피처와 충돌을 검사한다.
+        if (!Collision::HasCollision(m_boundingSphere, tf->GetBoundingSphere())) continue;
+
+
+        for (auto& others : tf->GetBoundingBoxes())
+        {
+            if (hasCollision) break;
+
+            //hasCollision = Collision::HasCollision2(m_bSphereSlidingCollision, others);
+            hasCollision = Collision::HasCollision(m_bBox, others);
+            // sliding vector
+            if (hasCollision)
+            {
+
+                //내가 원하는 방향의 단위 normal dir
+                const D3DXVECTOR3 currPos = GetTransform()->GetPosition();
+                D3DXVECTOR3 destDir(destState->position.x - currPos.x, /*destState->position.y - currPos.y*/0.0f, destState->position.z - currPos.z);
+                D3DXVec3Normalize(&destDir, &destDir);
+
+                ////나에서 Obstacle의 center을 향하는 방향의 단위 normal dir
+                //D3DXVECTOR3 dirTowardsObstacle = (others.position + others.center) - currPos;
+                //dirTowardsObstacle.y = 0.0f;
+                //D3DXVec3Normalize(&dirTowardsObstacle, &dirTowardsObstacle);
+
+                ////Obstacle의 6개의 normal 방향
+                //D3DXVECTOR3 normals[6];
+                //normals[0] = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+                //normals[1] = D3DXVECTOR3(0.0f, 0.0f, 1.0f );
+                //normals[2] = D3DXVECTOR3(0.0f, -1.0f, 0.0f );
+                //normals[3] = D3DXVECTOR3(0.0f, 1.0f, 0.0f );
+                //normals[4] = D3DXVECTOR3(-1.0f, 0.0f, 0.0f );
+                //normals[5] = D3DXVECTOR3( 1.0f, 0.0f, 0.0f );
+
+                ////Obstacle이 돌아가 있다면 rotation 시켜주자 (바꿔주는 부분은 아래 for 문에서)
+                //D3DXMATRIX matR;
+                //D3DXMatrixRotationQuaternion(&matR, &others.rotation);
+
+                //float smallest = FLT_MAX;
+                //int save = -1;
+                //for (int i = 0; i < 6; i++)
+                //{
+                //    D3DXVec3TransformNormal(&normals[i], &normals[i], &matR);
+                //    D3DXVec3Normalize(&normals[i], &normals[i]);
+
+                //    float res = D3DXVec3Dot(&normals[i], &dirTowardsObstacle);
+                //    if (smallest>res)
+                //    {
+                //        smallest = res;
+                //        save = i;
+                //    }
+                //}
+                //save = 0;
+                //방향이 toward obstacle 이라면
+                //if (D3DXVec3Dot(&destDir, &dirTowardsObstacle) <= 0.0f)
+                {
+                    std::vector<D3DXVECTOR3> ns = Collision::GetCollidedNormal(m_bBox.center + m_bBox.position, others);
+                    
+                    bool isCC = false;
+                    D3DXVECTOR3 t = Vector3::ZERO;
+                    for (auto n : ns)
+                    {
+                        D3DXVECTOR3 ret = D3DXVec3Dot(&destDir, &n)*n;
+
+                        if (D3DXVec3Dot(&n, &ret) < 0.0f)
+                        {
+                            isCC = true;
+                        }
+
+                        t += ret;
+                    }
+
+                    //sliding vector 적용
+                    //D3DXVECTOR3 ret = D3DXVec3Dot(&destDir, &normals[save])*normals[save];
+                    //D3DXVECTOR3 slidingVector = destDir - ret;
+
+
+                    //if (D3DXVec3Dot(&n, &t) < 0.0f)
+                    if (isCC)
+                    {
+                        D3DXVECTOR3 slidingVector = destDir - t;
+                        destState->position = currPos + slidingVector;
+                    }
+                }
+                //아니라면 내버려둠
+
             }
         }
     }
@@ -593,8 +738,6 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
         m_rotationForCamera.x += -mouseInput->pitch;
 
 
-        Debug << "OutRotation : " << *OutRotation << endl;
-        Debug << "m_RotationForCamrera" << m_rotationForCamera << endl;
         // reset rotFotCameraTP
         if (tempBool)
         {
@@ -609,7 +752,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     else if (m_rotationForCamera.x > 1.0f)
         m_rotationForCamera.x = 1.0f;
 
-    Debug << "m_rotationForCamera.x : " << m_rotationForCamera.x << endl << endl << endl;
+    
 }
 
 bool Character::isMine() const
@@ -971,10 +1114,10 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
     return D3DXVECTOR3(0, 0, 0);
 }
 
-const BoundingBox& Character::GetBoundingBox()
-{
-    return m_boundingBox;
-}
+//const BoundingBox& Character::GetBoundingBox()
+//{
+//    return m_bBox;
+//}
 
 const std::vector<BoundingBox>& Character::GetBoundingBoxes()
 {

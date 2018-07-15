@@ -52,17 +52,17 @@ void CameraManager::Update()
             SetCurrentCamera(TAG_CAMERA::First_Person);
     }
 
-    if (pInput->IsOnceKeyDown('L'))
-    {
-        SetCurrentCamera(TAG_CAMERA::OnGun);
-    }
+    //if (pInput->IsOnceKeyDown('L'))
+    //{
+    //    SetCurrentCamera(TAG_CAMERA::OnGun);
+    //}
 
 
     if (pCurrentCamera)
     {
-        //for debug
-        if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::OnGun)
-            m_cameras[TAG_CAMERA::OnGun]->Update();
+        ////for debug
+        //if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::OnGun)
+        //    m_cameras[TAG_CAMERA::OnGun]->Update();
 
         pCurrentCamera->Update();
 
@@ -78,7 +78,7 @@ void CameraManager::Update()
 
 
         //for debug
-        m_cameras[TAG_CAMERA::OnGun]->Render();
+        //m_cameras[TAG_CAMERA::OnGun]->Render();
     }
 }
 

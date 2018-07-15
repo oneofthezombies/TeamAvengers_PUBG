@@ -21,6 +21,9 @@ struct BoundingSphere : public BoundingShape
     virtual ~BoundingSphere();
 
     void Render();
+
+
+    static BoundingSphere Create(const D3DXVECTOR3& position,const float radius);
 };
 
 struct BoundingBox : public BoundingShape
@@ -32,6 +35,7 @@ struct BoundingBox : public BoundingShape
     virtual ~BoundingBox();
 
     void Render();
+    void RenderRed();
 
     static BoundingBox Create(const D3DXVECTOR3& min, const D3DXVECTOR3& max);
     static BoundingBox Create(const D3DXMATRIX& transformationMatrix);
@@ -154,5 +158,8 @@ struct Collision
         float* OutDistance);
     static bool HasCollision(const Ray& ray, const BoundingRect& rect);
     static bool HasCollision(const Ray& ray, const BoundingRect& rect,const float end);
+    static bool HasCollision(const BoundingSphere& sphere, const BoundingBox& box);
+    static bool HasCollision2(const BoundingSphere& sphere, const BoundingBox& box);
+    static std::vector<D3DXVECTOR3> GetCollidedNormal(const D3DXVECTOR3& mypos, const BoundingBox& box);
 };
 

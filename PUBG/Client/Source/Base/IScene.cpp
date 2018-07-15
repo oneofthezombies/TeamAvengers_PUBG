@@ -121,8 +121,10 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
         //    cout << b.m_transform << '\n';
         //}
 
-        // degrees to radians
+
+        //degrees to radians
         o.m_rotation = D3DXToRadian(o.m_rotation);
+
 
         if (ResourceInfo::IsItem(o.m_tagResStatic))
         {
