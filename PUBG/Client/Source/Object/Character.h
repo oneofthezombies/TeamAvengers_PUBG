@@ -143,6 +143,11 @@ public:
         static const D3DXVECTOR3 PRIMARY_WEAPON_POS;
         static const D3DXVECTOR3 SECONDARY_WEAPON_POS;
 
+        static const float EQUIP_START;
+        static const float EQUIP_WIDTH;
+        static const float EQUIP_HEIGHT;
+        static const float EQUIP_GAP;
+
         UIImage* m_pBackground;
 
         //Image ===================

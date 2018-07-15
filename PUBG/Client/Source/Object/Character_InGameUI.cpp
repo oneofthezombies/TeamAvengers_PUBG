@@ -7,14 +7,19 @@
 #include "UIImage.h"
 #include "UIText.h"
 
-const D3DCOLOR Character::InGameUI::RED = D3DCOLOR_XRGB(216, 0, 0);
-const D3DCOLOR Character::InGameUI::WHITE = D3DCOLOR_XRGB(255, 255, 255);
-const D3DCOLOR Character::InGameUI::GRAY = D3DCOLOR_XRGB(180, 180, 180);
+const D3DCOLOR Character::InGameUI::RED         = D3DCOLOR_XRGB(216, 0, 0);
+const D3DCOLOR Character::InGameUI::WHITE       = D3DCOLOR_XRGB(255, 255, 255);
+const D3DCOLOR Character::InGameUI::GRAY        = D3DCOLOR_XRGB(180, 180, 180);
 const D3DCOLOR Character::InGameUI::WHITE_ALPHA = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f);
 const D3DCOLOR Character::InGameUI::BLACK_ALPHA = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f);
 
-const D3DXVECTOR3 Character::InGameUI::PRIMARY_WEAPON_POS = D3DXVECTOR3(970.0f, 670.0f, 0.0f);
+const D3DXVECTOR3 Character::InGameUI::PRIMARY_WEAPON_POS   = D3DXVECTOR3(970.0f, 670.0f, 0.0f);
 const D3DXVECTOR3 Character::InGameUI::SECONDARY_WEAPON_POS = D3DXVECTOR3(970.0f, 632.0f, 0.0f);
+
+const float Character::InGameUI::EQUIP_START  = 502.0f;
+const float Character::InGameUI::EQUIP_WIDTH  = 21.0f;
+const float Character::InGameUI::EQUIP_HEIGHT = 647.0f;
+const float Character::InGameUI::EQUIP_GAP    = 3.0f;
 
 
 Character::InGameUI::InGameUI()
@@ -125,7 +130,7 @@ void Character::InGameUI::Init()
     pBagImg = new UIImage(
         "./Resource/UI/InGame/",
         "equipment_bag01.png",
-        D3DXVECTOR3(502.0f, 647.0f, 0.0f),
+        D3DXVECTOR3(EQUIP_START, EQUIP_HEIGHT, 0.0f),
         nullptr,
         m_pBackground
     );
@@ -133,7 +138,7 @@ void Character::InGameUI::Init()
     pHelmetImg = new UIImage(
         "./Resource/UI/InGame/",
         "equipment_helmet01.png",
-        D3DXVECTOR3(526.0f, 647.0f, 0.0f),
+        D3DXVECTOR3(EQUIP_START + EQUIP_WIDTH + EQUIP_GAP/*526.0f*/, EQUIP_HEIGHT, 0.0f),
         nullptr,
         m_pBackground
     );
@@ -141,7 +146,7 @@ void Character::InGameUI::Init()
     pVestImg = new UIImage(
         "./Resource/UI/InGame/",
         "equipment_vest01.png",
-        D3DXVECTOR3(550.0f, 647.0f, 0.0f),
+        D3DXVECTOR3(EQUIP_START + (EQUIP_WIDTH + EQUIP_GAP) * 2/*550.0f*/, EQUIP_HEIGHT, 0.0f),
         nullptr,
         m_pBackground
     );
@@ -194,7 +199,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameAmmoTotalNum),
         D3DXVECTOR2(130.0f, 28.0f),
         string(""),
-        InGameUI::GRAY,
+        GRAY,
         ammoBg);
     pAmmoNumText->SetDrawTextFormat(DT_LEFT);
     pAmmoNumText->SetPosition(D3DXVECTOR3(95.0, 5.0f, 0.0f));
@@ -204,7 +209,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameFireMode),
         D3DXVECTOR2(130.0f, 28.0f),
         string(""),
-        InGameUI::GRAY,
+        GRAY,
         ammoBg);
     pFireModeText->SetDrawTextFormat(DT_LEFT);
     pFireModeText->SetPosition(D3DXVECTOR3(10.0, 8.0f, 0.0f));
@@ -222,7 +227,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameSurvival),
         D3DXVECTOR2(40.0f, 26.0f),
         string("생존"),
-        InGameUI::GRAY,
+        GRAY,
         survivalBg
     );
     survivalText->SetDrawTextFormat(DT_CENTER);
@@ -240,7 +245,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
         D3DXVECTOR2(26.0f, 26.0f),
         string(""),
-        InGameUI::WHITE,
+        WHITE,
         survivalNumBg);
     pSurvivalNumText->SetDrawTextFormat(DT_CENTER);
     pSurvivalNumText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
@@ -258,7 +263,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameSurvival),
         D3DXVECTOR2(24.0f, 26.0f),
         string("킬"),
-        InGameUI::GRAY,
+        GRAY,
         killTextUpBg
     );
     killUpText->SetDrawTextFormat(DT_CENTER);
@@ -276,7 +281,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
         D3DXVECTOR2(17.0f, 26.0f),
         string("0"),
-        InGameUI::WHITE,
+        WHITE,
         killNumUpBg);
     pKillNumUpText->SetDrawTextFormat(DT_CENTER);
     pKillNumUpText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
@@ -287,7 +292,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameID),
         D3DXVECTOR2(87.0f, 9.0f),
         string("HelloWoori"),
-        InGameUI::WHITE_ALPHA,
+        WHITE_ALPHA,
         m_pBackground
     );
     pIdText->SetDrawTextFormat(DT_CENTER);
@@ -300,7 +305,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameKillNum),
         D3DXVECTOR2(60.0f, 30.0f),
         string("2 킬"),
-        InGameUI::RED,
+        RED,
         m_pBackground,
         D3DXVECTOR3(612.0f, 504.0f, 0.0f));
 
@@ -310,7 +315,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(400.0f, 20.0f),
         string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
-        InGameUI::WHITE,
+        WHITE,
         m_pBackground,
         D3DXVECTOR3(440.0f, 480.0f, 0.0f));
 
@@ -321,7 +326,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(252.0f, 20.0f),
         string(""),
-        InGameUI::WHITE,
+        WHITE,
         m_pBackground,
         D3DXVECTOR3(510.0f, 579.0f, 0.0f));
 
@@ -330,7 +335,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
         D3DXVECTOR2(400.0f, 14.0f),
         string("HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
-        InGameUI::GRAY,
+        GRAY,
         m_pBackground);
     pKillLog1->SetDrawTextFormat(DT_RIGHT);
     pKillLog1->SetPosition(D3DXVECTOR3(856.0f, 52.0f, 0.0f));
@@ -339,7 +344,7 @@ void Character::InGameUI::Init()
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
         D3DXVECTOR2(400.0f, 14.0f),
         string("John의 QBZ(으)로 인해 ootz이(가) 사망했습니다"),
-        InGameUI::GRAY,
+        GRAY,
         m_pBackground);
     pKillLog2->SetDrawTextFormat(DT_RIGHT);
     pKillLog2->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 20.0f, 0.0f));
@@ -348,14 +353,14 @@ void Character::InGameUI::Init()
     auto primaryWeaponBg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_bg.png",
-        InGameUI::PRIMARY_WEAPON_POS,
+        PRIMARY_WEAPON_POS,
         nullptr,
         m_pBackground);
 
     auto secondaryWeaponBg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_bg.png",
-        InGameUI::SECONDARY_WEAPON_POS,
+        SECONDARY_WEAPON_POS,
         nullptr,
         m_pBackground);
 
@@ -408,7 +413,8 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     //손에 들고 있는 총의 장전개수와 총알의 개수
     updateOnHandWeaponUI(inven);
 
-    //장비 착용 여부
+    //장비 착용 관련 UI
+
 
 }
 
@@ -430,7 +436,7 @@ void Character::InGameUI::setTextWithShadow(
         font,
         size,
         str,
-        InGameUI::BLACK_ALPHA,
+        BLACK_ALPHA,
         pParent);
     pTextShadow->SetDrawTextFormat(DT_CENTER);
     pTextShadow->SetPosition(D3DXVECTOR3(position.x + 1.0f, position.y + 1.0f, position.z));
@@ -496,7 +502,7 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
         //장전이 안되어있다면 그림 & 텍스트 빨간색으로
         if (numReloadBullet == 0)
         {
-            pAmmoReloadText->ChangeColor(InGameUI::RED);
+            pAmmoReloadText->ChangeColor(RED);
             //TODO: 주무기, 보조무기에 따라 위치다르게 
             if (tag == TAG_RES_STATIC::Kar98k)
             {
@@ -509,7 +515,7 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
         }
         else
         {
-            pAmmoReloadText->ChangeColor(InGameUI::WHITE);
+            pAmmoReloadText->ChangeColor(WHITE);
             if (tag == TAG_RES_STATIC::Kar98k)
             {
                 pQBZRedImg->SetIsRender(false);
