@@ -48,6 +48,7 @@ class Character : public IObject
 /*****************************************************************************/
 
 public:
+    static const float MAX_HEALTH;
 
     struct WaistRotation
     {
@@ -153,6 +154,11 @@ public:
         static const float EQUIP_HEIGHT;
         static const float EQUIP_GAP;
 
+        static const float HP_WIDTH;
+        static const float HP_HEIGHT;
+
+        Character* pPlayer;
+
         UIImage* m_pBackground;
 
         //Image ===================
@@ -206,13 +212,16 @@ public:
         UIText* pKillLog1;
         UIText* pKillLog2;
 
-        const float COOL_TIME;
-        float m_coolDown;
+        const float INFO_TEXT_COOL_TIME;
+        float m_infoTextCoolDown;
+
+        const float HP_COOL_TIME;
+        float m_hpCoolDown;
 
         InGameUI();
         ~InGameUI();
 
-        void Init();
+        void Init(Character* pPlayer);
         void Destroy();
         void Update(const TotalInventory& inven);
         void Render();
@@ -414,6 +423,7 @@ private:
     bool m_hasChangingState; //true일 때는 lower만 변화한다
     bool m_isNeedRifleAnim;
     bool m_isTransitioning;  //전이 중일 때는 움직이지 않는다
+    bool m_isDamaged;
 
     WaitBackAction m_backAction;
 
@@ -602,6 +612,9 @@ public:
     int GetIndex() const;
     float GetCharacterHealth() const;
     bool GetCharacterIsDead() const;
+    
+    void ResetIsDamaged();
+    bool IsDamaged() const;
 
     TAG_COLLISION GetTagCollisionBody(const int index);
     TAG_COLLISION GetTagCollisionDamage(const int index);

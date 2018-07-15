@@ -22,9 +22,13 @@ const float Character::InGameUI::EQUIP_WIDTH  = 21.0f;
 const float Character::InGameUI::EQUIP_HEIGHT = 647.0f;
 const float Character::InGameUI::EQUIP_GAP    = 3.0f;
 
+const float Character::InGameUI::HP_WIDTH     = 276.0f;
+const float Character::InGameUI::HP_HEIGHT    = 17.0f;
 
 Character::InGameUI::InGameUI()
-    : m_pBackground(nullptr)
+    : pPlayer(nullptr)
+
+    , m_pBackground(nullptr)
 
     //Image ===================
     , pCompass(nullptr)
@@ -63,7 +67,11 @@ Character::InGameUI::InGameUI()
     , pKillLog2(nullptr)
 
     //=========================
-    , COOL_TIME(4.0)
+    , INFO_TEXT_COOL_TIME(4.0f)
+    , m_infoTextCoolDown(0.0f)
+
+    , HP_COOL_TIME(1.0f)
+    , m_hpCoolDown(0.0f)
 {
 }
 
@@ -76,9 +84,12 @@ void Character::InGameUI::Destroy()
     UI()()->Destroy(m_pBackground);
 }
 
-void Character::InGameUI::Init()
+void Character::InGameUI::Init(Character* pPlayer)
 {
-    m_coolDown = COOL_TIME;
+    this->pPlayer = pPlayer;
+
+    m_infoTextCoolDown = INFO_TEXT_COOL_TIME;
+    m_hpCoolDown = HP_COOL_TIME;
 
     //투명 배경
     m_pBackground = new UIImage(
@@ -175,8 +186,8 @@ void Character::InGameUI::Init()
         pHpRedImg);
 
     //피 닳기 코드
-    pHpRedImg->SetSize(D3DXVECTOR2(255.0f, 17.0f));
-    pHpWhiteImg->SetSize(D3DXVECTOR2(250.0f, 17.0f));
+    //pHpRedImg->SetSize(D3DXVECTOR2(255.0f, 17.0f));
+    //pHpWhiteImg->SetSize(D3DXVECTOR2(250.0f, 17.0f));
 
 
     //장전 수, 총알 개수
@@ -417,6 +428,24 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     //생존자수
     updateSurvivalNumTextUI();
 
+    //피 닳기
+    float hp = pPlayer->GetCharacterHealth();
+    float hpWidth = HP_WIDTH / Character::MAX_HEALTH * hp;
+    pHpWhiteImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
+    
+    //1초 뒤 빨간 hp도 흰색만큼 줄어든다
+    if (pPlayer->IsDamaged())
+    {
+        pPlayer->ResetIsDamaged();
+        float t = m_infoTextCoolDown -= Time()()->GetDeltaTime();
+        cout << t << endl;
+        if (m_hpCoolDown <= 0)
+        {
+            pHpRedImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
+            m_hpCoolDown = HP_COOL_TIME;
+        }
+    }
+
     //장비 착용 관련 UI
 
 
@@ -459,13 +488,13 @@ void Character::InGameUI::updateInfoTextUI()
 {
     if (pInfoText->GetText() != "")
     {
-        float t = m_coolDown -= Time()()->GetDeltaTime();
-        cout << t << endl;
-        if (m_coolDown <= 0)
+        float t = m_infoTextCoolDown -= Time()()->GetDeltaTime();
+        //cout << t << endl;
+        if (m_infoTextCoolDown <= 0)
         {
             pInfoText->SetText("");
             pInfoTextShadow->SetText("");
-            m_coolDown = COOL_TIME;
+            m_infoTextCoolDown = INFO_TEXT_COOL_TIME;
         }
     }
 }

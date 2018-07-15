@@ -1463,6 +1463,16 @@ bool Character::GetCharacterIsDead() const
     return m_isDead;
 }
 
+void Character::ResetIsDamaged()
+{
+    m_isDamaged = false;
+}
+
+bool Character::IsDamaged() const
+{
+    return m_isDamaged;
+}
+
 TAG_COLLISION Character::GetTagCollisionBody(const int index)
 {
     switch (index) {
