@@ -8,6 +8,7 @@ struct PlayInfo
 {
     TAG_SOUND TAG;
     D3DXVECTOR3 pos;
+    FMOD_MODE mode;
     float curtime;
 };
 

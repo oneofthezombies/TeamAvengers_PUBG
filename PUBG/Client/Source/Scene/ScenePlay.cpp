@@ -67,12 +67,12 @@ void ScenePlay::setAloneMode()
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
     
-    p = D3DXVECTOR3(20, 0, 10);
+    p = D3DXVECTOR3(20, 200, 10);
     item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(30, 0, 10);
+    p = D3DXVECTOR3(30, 200, 10);
     item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
@@ -97,15 +97,18 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(70, 0, 30);
+    p = D3DXVECTOR3(70, 200, 30);
     item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
     AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(80, 0, 10);
+    p = D3DXVECTOR3(80, 200, 10);
     item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
     AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(80, 0, 10);
     //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
@@ -124,10 +127,12 @@ void ScenePlay::setAloneMode()
 
     //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(100, 0, 10);
+    p = D3DXVECTOR3(190, 200, 310);
     item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
     AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(110, 0, 10);
     //item = new Item(TAG_RES_STATIC::RedDot, p, r, s);
@@ -191,8 +196,6 @@ void ScenePlay::setWithOthersMode()
     p = D3DXVECTOR3(80, 0, 10);
     item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
     AddObject(item);
-    CurrentScene()()->InsertObjIntoTotalCellSpace(TAG_OBJECT::Item,
-        )
     //pPlayer->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(90, 0, 10);

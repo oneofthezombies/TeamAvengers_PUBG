@@ -66,7 +66,7 @@ void SoundManager::Update()
         }
         else
         {
-            Play(it->TAG, it->pos, 1.0f, FMOD_3D);
+            Play(it->TAG, it->pos, 1.0f, it->mode);
             it = m_playInfo.erase(it);
         }
     }
@@ -160,7 +160,7 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
 
 int SoundManager::addPlay(const TAG_SOUND tag, const D3DXVECTOR3 & pos, float time, const FMOD_MODE & mode)
 {
-    PlayInfo PI = { tag, pos, time };
+    PlayInfo PI = { tag, pos,mode, time };
     m_playInfo.push_back(PI);
     return 0;
 }

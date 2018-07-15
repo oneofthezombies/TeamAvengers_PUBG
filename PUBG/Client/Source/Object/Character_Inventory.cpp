@@ -209,6 +209,7 @@ void Character::TotalInventory::Update()
                 pUI->pUIImage = item->GetUIImage();
                 item->GetUIText()->SetText(string(ItemInfo::GetName(item->GetTagResStatic()) + "   " + to_string(item->GetCount())));
                 pUI->SetIsActive(true);
+                idx++;
             }
         }
         // end set ui inven
@@ -291,11 +292,12 @@ void Character::TotalInventory::SetEquipUI()
     for (std::size_t i = 0; i < m_uiInven.size(); ++i)
     {
         auto& u = m_uiInven[i];
+        D3DXVECTOR3 pos = D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top + i * (height + gap)), 0.0f);
 
         u = new UIButtonWithItem(
-            D3DXVECTOR3(
-                static_cast<float>(left),
-                static_cast<float>(top + i * (height + gap)), 0.0f),
+            pos,
             "./Resource/UI/Inventory/Basic/",
             "ItemSlot.png",
             "ItemSlot_mouseover.png",

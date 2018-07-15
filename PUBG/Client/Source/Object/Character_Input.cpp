@@ -3,6 +3,7 @@
 #include "CharacterAnimation.h"
 #include "Item.h"
 #include "ItemInfo.h"
+#include "ComponentTransform.h"
 
 void Character::setAttacking() //Num1, Num2, X
 {
@@ -232,7 +233,8 @@ void Character::setReload()
             {
                 int numBulletInInventory = (*it).second.back()->GetCount(); //인벤토리에 있는 총알 수
                 int numBulletNeedReload = magSize - numBulletCurrentLoad;   //장전할 총알 수 (장탄수 - 현재 장전된 총알 개수)
-
+                Sound()()->addPlay(TAG_SOUND::Kar98_Reload0,GetTransform()->GetPosition(),0.0f,
+                    FMOD_2D);
                 cout << ItemInfo::GetName(ammoType);
                 cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
                 cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";

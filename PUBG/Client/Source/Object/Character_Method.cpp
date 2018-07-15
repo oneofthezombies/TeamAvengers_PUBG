@@ -889,7 +889,9 @@ void Character::RifleShooting() //bullet °´Ã¼¿¡ ´ëÇÑ
     case TAG_RES_STATIC::Kar98k:
         {
             BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_RES_STATIC::Kar98k);
-
+            Sound()()->Play(TAG_SOUND::Kar98_NormalShoot,
+                GetTransform()->GetPosition(),
+                1.0f, FMOD_2D); 
             //Kar98k BoltAction Animation
             TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
             if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
