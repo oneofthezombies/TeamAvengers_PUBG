@@ -19,7 +19,7 @@ void SceneLoading::Load()
     setPlayMode(Communication::PlayMode::ALONE);
 
     //// load effect meshs
-    //load(TAG_RES_STATIC::SkySphere);
+    load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
     load(TAG_RES_STATIC::Armor_Lv1);
@@ -32,9 +32,9 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::FirstAidKit);
     load(TAG_RES_STATIC::MedKit);
 
-    //load(TAG_RES_STATIC::RedDot);
-    //load(TAG_RES_STATIC::Aimpoint2X);
-    //load(TAG_RES_STATIC::ACOG);
+    load(TAG_RES_STATIC::RedDot);
+    load(TAG_RES_STATIC::Aimpoint2X);
+    load(TAG_RES_STATIC::ACOG);
 
     load(TAG_RES_STATIC::Rock_1);
 
@@ -77,7 +77,7 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined_FPP);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined_FPP);
     addAnimation(TAG_RES_ANIM_CHARACTER::Weapon_Combined_FPP);
-    //addAnimation(TAG_RES_ANIM_CHARACTER::Healing_FPP);
+    addAnimation(TAG_RES_ANIM_CHARACTER::Healing_FPP);
 
     addAnimation(TAG_RES_ANIM_CHARACTER::DBNO);
 

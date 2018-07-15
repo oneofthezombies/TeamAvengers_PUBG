@@ -509,6 +509,8 @@ private:
     void onKar98kReloadEnd();
     void onKar98kReload();
 
+    void syncAnimation();
+
     void setAnimation(
         const CharacterAnimation::BodyPart part,
         const TAG_ANIM_CHARACTER tag,

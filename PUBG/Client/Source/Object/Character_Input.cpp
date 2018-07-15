@@ -719,7 +719,8 @@ void Character::setJump()
 void Character::setRifleOnHand(TAG_RIFLE tagRifle)
 {  
     //총구 뒤쪽 카메라
-    m_info.pGunBolt = m_totalInventory.m_pHand->GetGunBolt();
+    // OOTZ FLAG
+    //m_info.pGunBolt = m_totalInventory.m_pHand->GetGunBolt();
 
     //애니메이션 정하기
     TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
@@ -765,7 +766,14 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
 void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 {
     //총구 뒤쪽 카메라
-    m_info.pGunBolt = nullptr;
+    // OOTZ FLAG
+    //m_info.pGunBolt = nullptr;
+
+    //TODO: 캐릭터, 장비 씽크 필요함
+    /**/
+    //D3DXTRACK_DESC desc;
+    //pAnimation->GetUpperTrackDescription(0, &desc);
+    /**/
 
     /*
     - 몸에 장착하는 애니메이션 - Idling 애니메이션 0.3f 보간, Prone상태에서 깜빡거리는 문제 해결
@@ -806,6 +814,12 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 m_lowerAnimState,
                 true,
                 0.3f);
+
+            setEquipAnimation(
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                true,
+                0.3f);
         });
 
         //장비용
@@ -815,16 +829,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             false,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_POSITION,
-            0.3f,
-            [this, &inven]()
-        {
-            setEquipAnimation(
-                CharacterAnimation::BodyPart::BOTH,
-                m_lowerAnimState,
-                true,
-                0.3f);
-        });
+            CharacterAnimation::DEFAULT_POSITION);
     }
     else if (tagRifle == TAG_RIFLE::Secondary) //보조무기를 다시 몸에 장착
     {
@@ -859,27 +864,22 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 m_lowerAnimState,
                 true,
                 0.3f);
-        });
 
-        //장비용
-        m_hasChangingState = true;
-        setEquipAnimation(
-            CharacterAnimation::BodyPart::UPPER,
-            tagAnim,
-            false,
-            CharacterAnimation::DEFAULT_BLENDING_TIME,
-            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_POSITION,
-            0.3f,
-            [this, &inven]()
-        {
-            m_hasChangingState = false;
             setEquipAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
                 0.3f);
         });
+
+        //장비용
+        setEquipAnimation(
+            CharacterAnimation::BodyPart::UPPER,
+            tagAnim,
+            false,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION);
     }
 }
 
@@ -1271,6 +1271,33 @@ void Character::onKar98kReload()
     }
 
     --m_totalInventory.m_numReload;
+}
+
+//캐릭터 애니메이션  + 장비 애니메이션 싱크
+void Character::syncAnimation()
+{
+    D3DXTRACK_DESC lowerDesc, upperDesc;
+    pAnimation->GetLowerTrackDescription(0, &lowerDesc);
+    pAnimation->GetUpperTrackDescription(0, &upperDesc);
+ 
+    if (m_totalInventory.m_pEquipArmor)
+    {
+        m_totalInventory.m_pEquipArmor->SetTrackPosition(0, static_cast<float>(lowerDesc.Position));
+        m_totalInventory.m_pEquipArmor->SetSubTrackPosition(0, static_cast<float>(upperDesc.Position));
+    }
+    
+    if (m_totalInventory.m_pEquipBack)
+    {
+        m_totalInventory.m_pEquipBack->SetTrackPosition(0, static_cast<float>(lowerDesc.Position));
+        m_totalInventory.m_pEquipBack->SetSubTrackPosition(0, static_cast<float>(upperDesc.Position));
+    
+    }
+
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->SetTrackPosition(0, lowerDesc.Position);
+        m_totalInventory.m_pEquipHead->SetSubTrackPosition(0, upperDesc.Position);
+    }
 }
 
 //캐릭터 애니메이션 + 장비 애니메이션

@@ -861,3 +861,23 @@ std::vector<BoundingSphere> SkinnedMeshController::GetBoundingSpheres()
 
     return boundingSpheres;
 }
+
+void SkinnedMeshController::SetTrackPosition(const std::size_t index, const double position)
+{
+    assert(
+        pSkinnedMesh && 
+        pSkinnedMesh->m_pAnimController && 
+        "SkinnedMeshController::SetPosition(), skinned mesh or anim controller is null.");
+
+    pSkinnedMesh->m_pAnimController->SetTrackPosition(static_cast<UINT>(index), position);
+}
+
+void SkinnedMeshController::SetSubTrackPosition(const std::size_t index, const double position)
+{
+    assert(
+        pSkinnedMesh &&
+        pSkinnedMesh->m_pAnimController &&
+        "SkinnedMeshController::SetSubPosition(), skinned mesh or anim controller is null.");
+
+    pSkinnedMesh->m_pSubAnimController->SetTrackPosition(static_cast<UINT>(index), position);
+}

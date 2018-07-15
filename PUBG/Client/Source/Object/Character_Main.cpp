@@ -136,6 +136,9 @@ void Character::OnUpdate()
     updateBone();                  // modified characters local
     pAnimation->UpdateModel();     // set characters model
 
+    // 캐릭터와 장비 애니메이션 씽크
+    syncAnimation();
+
     // set item animation, item model here
     updateTotalInventory();
 
@@ -253,7 +256,6 @@ void Character::updateMine()
 
     movementControl(&destState);
 
-
     ////////////충돌 체크 Area/////////////////////
     //Terrain과의 충돌체크
     //terrainFeaturesCollisionInteraction(&destState);
@@ -262,11 +264,7 @@ void Character::updateMine()
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////
 
-
-
-
     getRight();
-
 
     setStance();
     setAttacking();
