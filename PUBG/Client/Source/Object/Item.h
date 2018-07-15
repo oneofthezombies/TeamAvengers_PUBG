@@ -166,4 +166,7 @@ public:
         const std::function<void()>& loopEvent,
         const float finishEventAgoTime,
         const std::function<void()>& finishEvent);
+
+    void SetTrackPosition(const std::size_t index, const double position);
+    void SetSubTrackPosition(const std::size_t index, const double position);
 };

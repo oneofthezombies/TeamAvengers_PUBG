@@ -21,4 +21,5 @@ public:
 
     const std::vector<Character*> GetOthers() const;
     int GetSurvivors() const;
+    Character* GetPlayer() const;
 };

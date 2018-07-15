@@ -325,3 +325,8 @@ int ScenePlay::GetSurvivors() const
     }
     return survivalNum;
 }
+
+Character* ScenePlay::GetPlayer() const
+{
+    return pPlayer;
+}

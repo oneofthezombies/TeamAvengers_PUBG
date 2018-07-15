@@ -15,6 +15,7 @@ const D3DXQUATERNION Character::OFFSET_ROTATION =
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
 
 const float Character::RADIUS = 30.0f;
+const float Character::MAX_HEALTH = 100.0f;
 
 Character::Character(const int index)
     : IObject(TAG_OBJECT::Character)
@@ -22,7 +23,7 @@ Character::Character(const int index)
     // id
     , m_index(index)
     , m_cellIndex(0)
-    , m_health(100.0f)
+    , m_health(MAX_HEALTH)
     , m_isDead(false)
 
     , m_mouseInput()
@@ -55,7 +56,7 @@ Character::Character(const int index)
     if (isMine())
     {
         m_totalInventory.Init();
-        m_inGameUI.Init();
+        m_inGameUI.Init(this);
     }
 
     const float factor(static_cast<float>(m_index + 1) * 200.0f);
@@ -123,8 +124,10 @@ void Character::OnUpdate()
 {
     const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
     if (receivedHealth < m_health)
+    {
         m_health = receivedHealth;
-
+        m_isDamaged = true;
+    }
     m_isDead = Communication()()->m_roomInfo.playerInfos[m_index].isDead;
 
     updateMine();
@@ -135,6 +138,9 @@ void Character::OnUpdate()
     pAnimation->UpdateAnimation(); // set characters local
     updateBone();                  // modified characters local
     pAnimation->UpdateModel();     // set characters model
+
+    // 캐릭터와 장비 애니메이션 씽크
+    syncAnimation();
 
     // set item animation, item model here
     updateTotalInventory();
@@ -253,7 +259,6 @@ void Character::updateMine()
 
     movementControl(&destState);
 
-
     ////////////충돌 체크 Area/////////////////////
     //Terrain과의 충돌체크
     //terrainFeaturesCollisionInteraction(&destState);
@@ -262,11 +267,7 @@ void Character::updateMine()
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////
 
-
-
-
     getRight();
-
 
     setStance();
     setAttacking();

@@ -809,3 +809,21 @@ void Item::Set(
             finishEvent);
     }
 }
+
+void Item::SetTrackPosition(const std::size_t index, const double position)
+{
+    assert(
+        pSkinnedMeshController &&
+        "Item::SetPosition(), skinned mesh controller is null.");
+
+    pSkinnedMeshController->SetTrackPosition(index, position);
+}
+
+void Item::SetSubTrackPosition(const std::size_t index, const double position)
+{
+    assert(
+        pSkinnedMeshController &&
+        "Item::SetSubPosition(), skinned mesh controller is null.");
+
+    pSkinnedMeshController->SetSubTrackPosition(index, position);
+}

@@ -114,15 +114,12 @@ void Character::setAttacking() //Num1, Num2, X
     else if (m_currentOnceKey._X)
     {
         cout << "X" << endl;
-        //무기가 주무기냐, 보조무기냐에 따라서 다른 애니메이션을 실행한다. 우선 QBZ 주무기 Kar98k 보조무기
-        //등에 부착한다
+        //무기가 주무기냐, 보조무기냐에 따라서 다른 애니메이션을 실행한다.
         if (inven.m_pHand)
         {
             m_attacking = Attacking::Unarmed;
             inven.pTempSaveWeaponForX = inven.m_pHand;
             TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();
-
-
             setRifleOnBody(inven.m_handState);
 
             /*if (tag == TAG_RES_STATIC::QBZ)
@@ -724,7 +721,8 @@ void Character::setJump()
 void Character::setRifleOnHand(TAG_RIFLE tagRifle)
 {  
     //총구 뒤쪽 카메라
-    m_info.pGunBolt = m_totalInventory.m_pHand->GetGunBolt();
+    // OOTZ FLAG
+    //m_info.pGunBolt = m_totalInventory.m_pHand->GetGunBolt();
 
     //애니메이션 정하기
     TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
@@ -755,7 +753,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
         CharacterAnimation::DEFAULT_BLENDING_TIME,
         CharacterAnimation::DEFAULT_NEXT_WEIGHT,
         CharacterAnimation::DEFAULT_POSITION,
-        0.3f,
+        CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
         [this]()
     {
         m_hasChangingState = false;
@@ -763,19 +761,24 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
         setAnimation(
             CharacterAnimation::BodyPart::BOTH,
             m_lowerAnimState,
-            true,
-            0.3f,
-            CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+            false);
     });
 }
 
 void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 {
     //총구 뒤쪽 카메라
-    m_info.pGunBolt = nullptr;
+    // OOTZ FLAG
+    //m_info.pGunBolt = nullptr;
+
+    //TODO: 캐릭터, 장비 씽크 필요함
+    /**/
+    //D3DXTRACK_DESC desc;
+    //pAnimation->GetUpperTrackDescription(0, &desc);
+    /**/
 
     /*
-    - 몸에 ㅠ장착하는 애니메이션 - Idling 애니메이션 0.3f 보간, Prone상태에서 깜빡거리는 문제 해결
+    - 몸에 장착하는 애니메이션 - Idling 애니메이션 0.3f 보간, Prone상태에서 깜빡거리는 문제 해결
     */
 
     TotalInventory& inven = m_totalInventory;
@@ -812,29 +815,23 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
-                0.3f,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+                0.3f);
+
+            setEquipAnimation(
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                true,
+                0.3f);
         });
 
         //장비용
-        m_hasChangingState = true;
         setEquipAnimation(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
             false,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_POSITION,
-            0.3f,
-            [this, &inven]()
-        {
-            setEquipAnimation(
-                CharacterAnimation::BodyPart::BOTH,
-                m_lowerAnimState,
-                true,
-                0.3f,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
-        });
+            CharacterAnimation::DEFAULT_POSITION);
     }
     else if (tagRifle == TAG_RIFLE::Secondary) //보조무기를 다시 몸에 장착
     {
@@ -864,7 +861,13 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             inven.m_pHand = nullptr;
             m_hasChangingState = false;
 
-            setAnimation(
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                true,
+                0.3f);
+
+            setEquipAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
@@ -872,24 +875,13 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
         });
 
         //장비용
-        m_hasChangingState = true;
         setEquipAnimation(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
             false,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-            CharacterAnimation::DEFAULT_POSITION,
-            0.3f,
-            [this, &inven]()
-        {
-            setEquipAnimation(
-                CharacterAnimation::BodyPart::BOTH,
-                m_lowerAnimState,
-                true,
-                0.3f,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
-        });
+            CharacterAnimation::DEFAULT_POSITION);
     }
 }
 
@@ -1283,6 +1275,33 @@ void Character::onKar98kReload()
     --m_totalInventory.m_numReload;
 }
 
+//캐릭터 애니메이션  + 장비 애니메이션 싱크
+void Character::syncAnimation()
+{
+    D3DXTRACK_DESC lowerDesc, upperDesc;
+    pAnimation->GetLowerTrackDescription(0, &lowerDesc);
+    pAnimation->GetUpperTrackDescription(0, &upperDesc);
+ 
+    if (m_totalInventory.m_pEquipArmor)
+    {
+        m_totalInventory.m_pEquipArmor->SetTrackPosition(0, static_cast<float>(lowerDesc.Position));
+        m_totalInventory.m_pEquipArmor->SetSubTrackPosition(0, static_cast<float>(upperDesc.Position));
+    }
+    
+    if (m_totalInventory.m_pEquipBack)
+    {
+        m_totalInventory.m_pEquipBack->SetTrackPosition(0, static_cast<float>(lowerDesc.Position));
+        m_totalInventory.m_pEquipBack->SetSubTrackPosition(0, static_cast<float>(upperDesc.Position));
+    
+    }
+
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->SetTrackPosition(0, lowerDesc.Position);
+        m_totalInventory.m_pEquipHead->SetSubTrackPosition(0, upperDesc.Position);
+    }
+}
+
 //캐릭터 애니메이션 + 장비 애니메이션
 void Character::setAnimation(
     const CharacterAnimation::BodyPart part, 
@@ -1386,7 +1405,13 @@ void Character::setAnimation(
         finishEvent);
 }
 
-void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position)
+void Character::setEquipAnimation(
+    const CharacterAnimation::BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight, 
+    const float position)
 {
     if (m_totalInventory.m_pEquipArmor)
     {
@@ -1422,7 +1447,15 @@ void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const
     }
 }
 
-void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+void Character::setEquipAnimation(
+    const CharacterAnimation::BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight, 
+    const float position, 
+    const float finishEventAgoTime, 
+    const std::function<void()>& finishEvent)
 {
     if (m_totalInventory.m_pEquipArmor)
     {

@@ -146,4 +146,7 @@ public:
     float GetSubTrackPeriod(const std::size_t index);
 
     std::vector<BoundingSphere> GetBoundingSpheres();
+
+    void SetTrackPosition(const std::size_t index, const double position);
+    void SetSubTrackPosition(const std::size_t index, const double position);
 };
