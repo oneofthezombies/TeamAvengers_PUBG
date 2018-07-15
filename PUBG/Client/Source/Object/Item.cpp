@@ -35,7 +35,9 @@ Item::Item(
     , m_isRenderSkinnedMesh(false)
 
     , m_pUIImage(nullptr)
+    , m_pUIImage2(nullptr)
     , pUIText(nullptr)
+    , m_inInventory(false)
 
 
     , pGunBolt(nullptr)
@@ -58,6 +60,7 @@ Item::~Item()
 {
     SAFE_DELETE(m_pFramePtr);
     SAFE_DELETE(m_pUIImage);
+    SAFE_DELETE(m_pUIImage2);
 }
 
 void Item::OnUpdate()
@@ -124,7 +127,7 @@ void Item::setup(const TAG_RES_STATIC tag)
             m_pUIImage->SetIsRender(false);
             pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
                 D3DXVECTOR2(100.0f, 20.0f),
-                string("null"),
+                "",
                 D3DCOLOR_XRGB(255, 255, 255),
                 m_pUIImage);
             pUIText->SetPosition(D3DXVECTOR3(50.0f, 10.0f, 0.0f));
@@ -189,16 +192,27 @@ void Item::setup(const TAG_RES_STATIC tag)
             if (m_tagResStatic == TAG_RES_STATIC::QBZ)
             {
                 pGunBolt = pSkinnedMeshController->FindFrame("gun_bolt");
+                m_pUIImage2 = new UIImage("./Resource/UI/Inventory/Weapon/", "QBZ.png", Vector3::ZERO, this, nullptr);
             }
             else if (m_tagResStatic == TAG_RES_STATIC::Kar98k)
             {
                 pGunBolt = pSkinnedMeshController->FindFrame("Gun_bolt_02");
 
+                m_pUIImage2 = new UIImage("./Resource/UI/Inventory/Weapon/", "Kar98k.png", Vector3::ZERO, this, nullptr);
                 //가장 처음은 idle로 셋해줌
                 Set(TAG_ANIM_WEAPON::Weapon_Kar98k_Idle);
                 UpdateAnimation();
                 UpdateModel();
             }
+            const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
+            m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
+            m_pUIImage->SetIsRender(false);
+            pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+                D3DXVECTOR2(100.0f, 20.0f),
+                "",
+                D3DCOLOR_XRGB(255, 255, 255),
+                m_pUIImage);
+            pUIText->SetPosition(D3DXVECTOR3(50.0f, 10.0f, 0.0f));
             assert(pGunBolt && "Item::setup(), pGunBolt is null.");
         }
         break;
@@ -349,6 +363,21 @@ UIImage* Item::GetUIImage()
     return m_pUIImage;
 }
 
+UIImage * Item::GetUIImage2()
+{
+    return m_pUIImage2;
+}
+
+void Item::SetState(bool state)
+{
+    m_inInventory = state;
+}
+
+bool Item::GetState()
+{
+    return m_inInventory;
+}
+
 void Item::SetNumBullet(const int numBullet)
 {
     //TODO: 장탄수를 넘어서면 안된다
@@ -367,6 +396,7 @@ void Item::ChangeAuto()
 
 bool Item::GetAuto()
 {
+    if(this!= NULL)
     return m_auto;
 }
 

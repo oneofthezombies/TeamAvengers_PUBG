@@ -707,6 +707,17 @@ pair<string, string> ResourceInfo::GetUIPathFileName(const TAG_RES_STATIC tag)
         fileName = "icon_equipment_Head_Lv1.png";
         break;
 
+    //¹«±â
+    case TAG_RES_STATIC::Kar98k:
+        filePath = "Inventory/Weapon/";
+        fileName = "icon_weapon_Kar98k.png";
+        break;
+    case TAG_RES_STATIC::QBZ:
+        filePath = "Inventory/Weapon/";
+        fileName = "icon_weapon_QBZ95.png";
+        break;
+
+
     default:
         assert(false && "ResourceInfo::GetUIPathFileName(), default case.");
         break;

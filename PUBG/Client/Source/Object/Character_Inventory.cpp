@@ -28,6 +28,10 @@ Character::TotalInventory::TotalInventory()
     , pTempSaveWeaponForX(nullptr)
     , pCharacter(nullptr)
     , m_pUIPicked(nullptr)
+    , m_pWeapon1(nullptr)
+    , m_pWeapon2(nullptr)
+    , m_stateClicked(false)
+    , m_handState(TAG_RIFLE::None)
 {
 }
 
@@ -43,7 +47,7 @@ Character::TotalInventory::~TotalInventory()
     SAFE_DELETE(m_pEquipBack);
     SAFE_DELETE(m_pEquipHead);
               
-    SAFE_DELETE(m_pWeaponPrimary);
+    if(m_pWeaponPrimary)SAFE_DELETE(m_pWeaponPrimary);
     SAFE_DELETE(m_pWeaponSecondary);
 }
 
@@ -114,6 +118,8 @@ void Character::TotalInventory::Destroy()
 {
     UI()()->Destroy(m_Border);
     UI()()->Destroy(m_pUIPicked);
+    UI()()->Destroy(m_pWeapon1);
+    UI()()->Destroy(m_pWeapon2);
 }
 
 void Character::TotalInventory::Open()
@@ -129,10 +135,6 @@ void Character::TotalInventory::Close()
     isOpened = false;
     // move ui to out screen
     m_Border->SetIsRender(isOpened);
-    for (auto it = m_mapInventory.begin(); it != m_mapInventory.end(); it++)
-    {
-        (*it).second.back()->SetIsRenderUIImage(isOpened);
-    }
 
     POINT center;
     center.x = 1280 / 2;
@@ -175,6 +177,10 @@ void Character::TotalInventory::Update()
             pUI->pItem = pItem;
             pUI->m_tagUIPosition = UIPosition::GetTag(TAG_UI_POSITION::dropped_0, idx);
             pUI->pUIImage = pItem->GetUIImage();
+            //pUI->SetText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+            //    string(ItemInfo::GetName(pItem->GetTagResStatic()) +"   "+ to_string(pItem->GetCount())),
+            //    D3DCOLOR_XRGB(255, 255, 255));
+            pItem->GetUIText()->SetText(string(ItemInfo::GetName(pItem->GetTagResStatic()) + "   " + to_string(pItem->GetCount())));
             pUI->SetIsActive(true);
         }
         // end set ui dropped
@@ -199,6 +205,7 @@ void Character::TotalInventory::Update()
                 pUI->pItem = item;
                 pUI->m_tagUIPosition = UIPosition::GetTag(TAG_UI_POSITION::inven_0, idx);
                 pUI->pUIImage = item->GetUIImage();
+                item->GetUIText()->SetText(string(ItemInfo::GetName(item->GetTagResStatic()) + "   " + to_string(item->GetCount())));
                 pUI->SetIsActive(true);
             }
         }
@@ -306,6 +313,392 @@ void Character::TotalInventory::SetEquipUI()
 
         u->SetIsActive(false);
     }
+
+
+    //헬멧
+    left = 440;
+    top = 93;
+    auto u = new UIButtonWithItem(
+        D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        "./Resource/UI/Inventory/Basic/",
+        "Equip_no.png",
+        "Equip_mouseover.png",
+        "Equip_click.png",
+        m_Border,
+        nullptr,"",0,nullptr,
+        TAG_UI_POSITION::Helmat,
+        std::bind(
+            &Character::onMouse,
+            pCharacter,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3));
+    //u->SetIsActive(false);
+
+    //가방
+    left = 440;
+    top = 248;
+     u = new UIButtonWithItem(
+        D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        "./Resource/UI/Inventory/Basic/",
+        "Equip_no.png",
+        "Equip_mouseover.png",
+        "Equip_click.png",
+        m_Border,
+         nullptr, "", 0, nullptr,
+        TAG_UI_POSITION::Bag,
+        std::bind(
+            &Character::onMouse,
+            pCharacter,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3));
+    //u->SetIsActive(false);
+
+     //아머
+    left = 440;
+    top = 293;
+     u = new UIButtonWithItem(
+        D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        "./Resource/UI/Inventory/Basic/",
+        "Equip_no.png",
+        "Equip_mouseover.png",
+        "Equip_click.png",
+        m_Border,
+         nullptr, "", 0, nullptr,
+        TAG_UI_POSITION::Armor,
+        std::bind(
+            &Character::onMouse,
+            pCharacter,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3));
+    //u->SetIsActive(false);
+
+     //벨트
+    left = 440;
+    top = 337;
+     u = new UIButtonWithItem(
+        D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        "./Resource/UI/Inventory/Basic/",
+        "Equip_no.png",
+        "Equip_mouseover.png",
+        "Equip_click.png",
+        m_Border,
+         nullptr, "", 0, nullptr,
+        TAG_UI_POSITION::Belt,
+        std::bind(
+            &Character::onMouse,
+            pCharacter,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3));
+    //u->SetIsActive(false);
+
+
+     //무기 슬롯 1
+    left = 870;
+    top = 93;
+    new UIImage("./Resource/UI/Inventory/Basic/",
+        "WeaponBox_idle.png", D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        nullptr, m_Border);
+    m_pWeapon1 = new UIButtonWithItem(
+        D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        "./Resource/UI/Inventory/Basic/",
+        "WeaponBox_idle.png",
+        "WeaponBox_mouseover.png",
+        "WeaponBox_possible.png",
+        m_Border,
+        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        "",
+        D3DCOLOR_XRGB(255, 255, 255),
+        nullptr,
+        TAG_UI_POSITION::Weapon1,
+        std::bind(
+            &Character::onMouse,
+            pCharacter,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3));
+        m_pWeapon1->SetIsActive(false);
+
+
+     //무기 슬롯 2
+    left = 870;
+    top = 234;
+
+    new UIImage("./Resource/UI/Inventory/Basic/",
+        "WeaponBox_idle.png", D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        nullptr, m_Border);
+
+    
+        m_pWeapon2 = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(left),
+             static_cast<float>(top), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "WeaponBox_idle.png",
+         "WeaponBox_mouseover.png",
+         "WeaponBox_possible.png",
+         m_Border,
+         Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+         "",
+         D3DCOLOR_XRGB(255, 255, 255),
+         nullptr,
+         TAG_UI_POSITION::Weapon2,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+        m_pWeapon2->SetIsActive(false);
+     //gunu2->SetTexture
+
+     //무기 슬롯 3
+     left = 870;
+     top = 375;
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(left),
+             static_cast<float>(top), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "WeaponBox_idle.png",
+         "WeaponBox_mouseover.png",
+         "WeaponBox_possible.png",
+         m_Border,
+         Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+         "",
+         D3DCOLOR_XRGB(255, 255, 255),
+         nullptr,
+         TAG_UI_POSITION::Weapon3,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
+
+     //weapon slot 1
+     auto imageu =new UIImage("./Resource/UI/Inventory/Basic/", "WeaponBoxNum.png", 
+         D3DXVECTOR3(5, 6, 0), nullptr, m_pWeapon1);
+     new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+         D3DXVECTOR2(20, 20), "1", D3DCOLOR_XRGB(255, 255, 255), imageu);
+
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(187),
+             static_cast<float>(15), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "Attach_no.png",
+         "Attach_yes.png",
+         "Attach_click.png",
+         m_pWeapon1,
+         nullptr, "", 0, nullptr,
+         TAG_UI_POSITION::Helmat,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
+
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(6),
+             static_cast<float>(102), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "Attach_no.png",
+         "Attach_yes.png",
+         "Attach_click.png",
+         m_pWeapon1,
+         nullptr, "", 0, nullptr,
+         TAG_UI_POSITION::Helmat,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
+
+
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(73),
+             static_cast<float>(102), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "Attach_no.png",
+         "Attach_yes.png",
+         "Attach_click.png",
+         m_pWeapon1,
+         nullptr, "", 0, nullptr,
+         TAG_UI_POSITION::Helmat,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
+
+
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(147),
+             static_cast<float>(102), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "Attach_no.png",
+         "Attach_yes.png",
+         "Attach_click.png",
+         m_pWeapon1,
+         nullptr, "", 0, nullptr,
+         TAG_UI_POSITION::Helmat,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
+
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(288),
+             static_cast<float>(102), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "Attach_no.png",
+         "Attach_yes.png",
+         "Attach_click.png",
+         m_pWeapon1,
+         nullptr, "", 0, nullptr,
+         TAG_UI_POSITION::Helmat,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
+
+     //weapon slot 2
+     imageu = new UIImage("./Resource/UI/Inventory/Basic/", "WeaponBoxNum.png",
+         D3DXVECTOR3(5, 6, 0), nullptr, m_pWeapon2);
+     new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+         D3DXVECTOR2(20, 20), "2", D3DCOLOR_XRGB(255, 255, 255), imageu);
+
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(187),
+             static_cast<float>(15), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "Attach_no.png",
+         "Attach_yes.png",
+         "Attach_click.png",
+         m_pWeapon2,
+         nullptr, "", 0, nullptr,
+         TAG_UI_POSITION::Helmat,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
+
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(6),
+             static_cast<float>(102), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "Attach_no.png",
+         "Attach_yes.png",
+         "Attach_click.png",
+         m_pWeapon2,
+         nullptr, "", 0, nullptr,
+         TAG_UI_POSITION::Helmat,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
+
+
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(73),
+             static_cast<float>(102), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "Attach_no.png",
+         "Attach_yes.png",
+         "Attach_click.png",
+         m_pWeapon2,
+         nullptr, "", 0, nullptr,
+         TAG_UI_POSITION::Helmat,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
+
+
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(147),
+             static_cast<float>(102), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "Attach_no.png",
+         "Attach_yes.png",
+         "Attach_click.png",
+         m_pWeapon2,
+         nullptr, "", 0, nullptr,
+         TAG_UI_POSITION::Helmat,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
+
+     u = new UIButtonWithItem(
+         D3DXVECTOR3(
+             static_cast<float>(288),
+             static_cast<float>(102), 0.0f),
+         "./Resource/UI/Inventory/Basic/",
+         "Attach_no.png",
+         "Attach_yes.png",
+         "Attach_click.png",
+         m_pWeapon2,
+         nullptr, "", 0, nullptr,
+         TAG_UI_POSITION::Helmat,
+         std::bind(
+             &Character::onMouse,
+             pCharacter,
+             std::placeholders::_1,
+             std::placeholders::_2,
+             std::placeholders::_3));
+     //u->SetIsActive(false);
 }
 
 void Character::PutItemInTotalInventory(Item* item)
@@ -355,12 +748,12 @@ void Character::PutItemInTotalInventory(Item* item)
         //TODO: 무기창의 어느부분에 넣느냐에 따라서 달라짐
         //지금은 임시로 QBZ를 주무기, Kar98k를 보조무기로
         {
-            //if (주무기 창이면)
-            if(tag == TAG_RES_STATIC::QBZ)
+            if(!m_totalInventory.m_pWeaponPrimary &&
+                !(m_totalInventory.m_handState==TAG_RIFLE::Primary))
             {
                 checkOriginItem((Item**)&m_totalInventory.m_pWeaponPrimary, item);
             }
-            else if(tag == TAG_RES_STATIC::Kar98k)
+            else
             {
                 checkOriginItem((Item**)&m_totalInventory.m_pWeaponSecondary, item);
             }
@@ -651,9 +1044,9 @@ void Character::onMouse(
 
     if (button == MouseButton::LEFT)
     {
-        if (event == Event::DOWN)
+        if (event == Event::DOWN && !ti.m_stateClicked)
         {
-            if (UIPosition::IsDropped(tag))
+            if (UIPosition::IsDropped(tag)|| UIPosition::IsInven(tag))
             {
                 // 좌표
                 POINT mouse;
@@ -671,7 +1064,53 @@ void Character::onMouse(
 
                 pPickedImage->SetTexture(pItemImage->GetTexture());
                 pPickedImage->SetSize(pItemImage->GetSize());
+
+                if (ItemInfo::GetItemCategory(ti.m_pUIPicked->pItem->GetTagResStatic()) == TAG_ITEM_CATEGORY::Rifle)
+                {
+                    ti.m_pWeapon1->SetIsActive(true);
+                    ti.m_pWeapon2->SetIsActive(true);
+                }
             }
+            //if(UIPosition::IsInven(tag))
+
+            if (tag == TAG_UI_POSITION::Weapon1)
+            {
+                POINT mouse;
+                GetCursorPos(&mouse);
+                ScreenToClient(g_hWnd, &mouse);
+
+                ti.m_pUIPicked->SetPosition(
+                    D3DXVECTOR3(
+                        static_cast<float>(mouse.x - 21),
+                        static_cast<float>(mouse.y - 21), 0.0f));
+                ti.m_pUIPicked->pItem = pUIButtonWithItem->pItem;
+
+                UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage();
+                UIImage* pPickedImage = static_cast<UIImage*>(ti.m_pUIPicked->GetChild(0));
+
+                pPickedImage->SetTexture(pItemImage->GetTexture());
+                pPickedImage->SetSize(pItemImage->GetSize());
+            }
+            else if (tag == TAG_UI_POSITION::Weapon2)
+            {
+                POINT mouse;
+                GetCursorPos(&mouse);
+                ScreenToClient(g_hWnd, &mouse);
+
+                ti.m_pUIPicked->SetPosition(
+                    D3DXVECTOR3(
+                        static_cast<float>(mouse.x - 21),
+                        static_cast<float>(mouse.y - 21), 0.0f));
+                ti.m_pUIPicked->pItem = pUIButtonWithItem->pItem;
+
+                UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage();
+                UIImage* pPickedImage = static_cast<UIImage*>(ti.m_pUIPicked->GetChild(0));
+
+                pPickedImage->SetTexture(pItemImage->GetTexture());
+                pPickedImage->SetSize(pItemImage->GetSize());
+            }
+            ti.m_stateClicked = true;
+
         }
 
         if (event == Event::DRAG)
@@ -691,7 +1130,8 @@ void Character::onMouse(
 
         if (event == Event::UP)
         {
-            if (tag == TAG_UI_POSITION::picked)
+            if (tag == TAG_UI_POSITION::picked 
+                && !pUIButtonWithItem->pItem->GetState())
             {
                 const D3DXVECTOR3& pos = pUIButtonWithItem->GetPosition();
                 const auto cat =
@@ -709,25 +1149,205 @@ void Character::onMouse(
                 {
                     switch (cat)
                     {
+                        case TAG_ITEM_CATEGORY::Ammo:
+                        {
+                            Item* pItem = pUIButtonWithItem->pItem;
+                            PutItemInTotalInventory(pItem);
+                            pItem->SetState(true);
+                            CurrentScene()()->ItemIntoInventory(
+                                CurrentScene()()->GetCellIndex(
+                                    pItem->GetTransform()->GetPosition()),
+                                pItem);
+                        }
+                        break;
+
+                        case TAG_ITEM_CATEGORY::Rifle:
+                        {
+                            Item* pItem = pUIButtonWithItem->pItem;
+                            PutItemInTotalInventory(pItem);
+                            pItem->SetState(true);
+                            CurrentScene()()->ItemIntoInventory(
+                                CurrentScene()()->GetCellIndex(
+                                    pItem->GetTransform()->GetPosition()),
+                                pItem);
+                            /*UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage2();*/
+
+                            //웨폰 버튼.
+                            if (ti.m_pWeaponPrimary)
+                            {
+                                ti.m_pWeapon1->pUIImage = ti.m_pWeaponPrimary->GetUIImage2();
+                                ti.m_pWeapon1->pItem = ti.m_pWeaponPrimary;
+                            }
+                            
+                            if (ti.m_pWeaponSecondary)
+                            {
+                                ti.m_pWeapon2->pUIImage = ti.m_pWeaponSecondary->GetUIImage2();
+                                ti.m_pWeapon2->pItem = ti.m_pWeaponSecondary;
+                            }
+                        }
+                        break;
+                    }
+                }
+                else    //3번째 장비 착용창.
+                {
+                    switch (cat)
+                    {
                     case TAG_ITEM_CATEGORY::Ammo:
                     {
                         Item* pItem = pUIButtonWithItem->pItem;
                         PutItemInTotalInventory(pItem);
+                        pItem->SetState(true);
                         CurrentScene()()->ItemIntoInventory(
                             CurrentScene()()->GetCellIndex(
-                                pItem->GetTransform()->GetPosition()), 
+                                pItem->GetTransform()->GetPosition()),
                             pItem);
                     }
                     break;
-                    }
-                }
-                else
-                {
+                    /*case TAG_ITEM_CATEGORY::Rifle:
+                    {
+                        Item* pItem = pUIButtonWithItem->pItem;
+                        PutItemInTotalInventory(pItem);
+                        pItem->SetState(true);
+                        CurrentScene()()->ItemIntoInventory(
+                            CurrentScene()()->GetCellIndex(
+                                pItem->GetTransform()->GetPosition()),
+                            pItem);
+                        UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage2();
+                        ti.m_pWeapon1->pUIImage = pItemImage;
+                        ti.m_pWeapon1->pItem = pItem;
 
+                    }*/
+                    break;
+                    }
                 }
                 const float max = std::numeric_limits<float>::max();
                 pUIButtonWithItem->SetPosition(Vector3::ONE * max);
             }
+            /////////////////////인벤토리 안에서
+            else if (tag == TAG_UI_POSITION::picked
+                && pUIButtonWithItem->pItem->GetState())
+            {
+                const D3DXVECTOR3& pos = pUIButtonWithItem->GetPosition();
+                const auto cat =
+                    ItemInfo::GetItemCategory(
+                        pUIButtonWithItem->pItem->GetTagResStatic());
+
+                // 드롭드 인벤 구분선 위치
+                const float firstLine = 233.0f;
+                // TODO : 인벤 장착 구분선 위치 조정해야 함
+                const float secondLine = 500.0f;
+                if (pos.x < firstLine)
+                {
+                    Item* pItem = pUIButtonWithItem->pItem;
+                    
+                    pItem->SetState(false);
+                    D3DXVECTOR3 p = m_totalInventory.pCharacter->GetTransform()->GetPosition();
+                    CurrentScene()()->AddObject(pItem);
+                    CurrentScene()()->InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, CurrentScene()()->GetCellIndex(p), pItem);
+                    pItem->SetPosition(D3DXVECTOR3(p.x,p.y+20,p.z));
+                    ti.m_mapInventory.erase(pItem->GetTagResStatic());
+                    pItem->GetTransform()->Update();
+
+                    switch (cat)
+                    {
+                    case TAG_ITEM_CATEGORY::Rifle:
+                        {
+                            //if()
+                            //바닥에 떨구면 Effect
+                            pItem->SetIsRenderSkinnedMesh(false);
+                            pItem->SetIsRenderEffectMesh(true);
+                            pItem->GetTransform()->SetRotation(Vector3::ZERO);
+                            pItem->GetTransform()->Update();
+                            
+                            if (pItem == ti.m_pWeapon1->pItem)
+                            {
+                                ti.m_pWeapon1->pUIImage = nullptr;
+                                ti.m_pWeapon1->pItem = nullptr;
+                                ti.m_pWeaponPrimary = nullptr;
+                                if (ti.m_handState == TAG_RIFLE::Primary)
+                                {
+                                    ti.m_handState = TAG_RIFLE::None;
+                                    ti.pTempSaveWeaponForX = nullptr;
+                                }
+
+                            }
+                            else if(pItem == ti.m_pWeapon2->pItem)
+                            {
+                                ti.m_pWeapon2->pUIImage = nullptr;
+                                ti.m_pWeapon2->pItem = nullptr;
+                                ti.m_pWeaponSecondary = nullptr;
+                                if (ti.m_handState == TAG_RIFLE::Secondary)
+                                {
+                                    ti.m_handState = TAG_RIFLE::None;
+                                    ti.pTempSaveWeaponForX = nullptr;
+                                }
+                            }
+
+                            //손에 장착 되어있는 아이템이 클릭한 아이템이랑 같다면 
+                            if (pItem == ti.m_pHand)
+                            {
+                                ti.m_pHand = nullptr;
+                                ti.m_handState = TAG_RIFLE::None;
+                                ti.pTempSaveWeaponForX = nullptr;
+                                m_attacking = Attacking::Unarmed;
+
+                                //캐릭터 애니메이션
+                                {
+
+                                    TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+                                    if (m_stance == Stance::Stand)
+                                        tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1;
+                                    else if (m_stance == Stance::Crouch)
+                                        tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Idling_1;
+                                    else if (m_stance == Stance::Prone)
+                                        tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Idling_1;
+                                    assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && " Character::onMouse(), COUNT");
+
+                                    setAnimation(
+                                        CharacterAnimation::BodyPart::BOTH,
+                                        tagAnim,
+                                        true);
+                                }
+
+                            }
+
+
+                            
+                        }
+                        break;
+
+                    default:
+                        break;
+                    }
+                    //pItem->
+                }
+                else if (pos.x < secondLine)
+                {
+                }
+                else
+                {
+                    switch (cat)
+                    {
+                    case TAG_ITEM_CATEGORY::Ammo:
+                    {
+
+                    }
+                    break;
+                    }
+                }
+                const float max = std::numeric_limits<float>::max();
+                pUIButtonWithItem->SetPosition(Vector3::ONE * max);
+            }
+            if (ti.m_pWeaponPrimary == nullptr && !(ti.m_handState == TAG_RIFLE::Primary))
+            {
+                ti.m_pWeapon1->SetIsActive(false);
+            }
+            if (ti.m_pWeaponSecondary == nullptr && !(ti.m_handState==TAG_RIFLE::Secondary)
+                /*&& ti.m_pHand == nullptr*/)
+            {
+                ti.m_pWeapon2->SetIsActive(false);
+            }
+            ti.m_stateClicked = false;
         }
     }
    

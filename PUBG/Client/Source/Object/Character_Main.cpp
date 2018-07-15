@@ -483,16 +483,19 @@ void Character::updateMine()
     // shoot!
     m_isFire = false;
     m_totalInventory.m_bulletFireCoolDown -= dt;
-    if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
-    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton && !m_currentStayKey._LAlt 
-        || (m_attacking == Attacking::Rifle && m_totalInventory.m_pHand->GetAuto()
-        && TAG_RES_STATIC::QBZ == m_totalInventory.m_pHand->GetTagResStatic() && m_currentStayKey._LButton && !m_currentStayKey._LAlt))
+    if (!m_totalInventory.isOpened && m_totalInventory.m_pHand != nullptr)      //인벤토리 열려있을때 금지
     {
-        if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_pHand->GetNumBullet() > 0)
+        if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
+        if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton && !m_currentStayKey._LAlt
+            || (m_attacking == Attacking::Rifle && m_totalInventory.m_pHand->GetAuto()
+                && TAG_RES_STATIC::QBZ == m_totalInventory.m_pHand->GetTagResStatic() && m_currentStayKey._LButton && !m_currentStayKey._LAlt))
         {
-            if(m_hasChangingState == false) //장전 중일 때는 쏘지못하게
-                m_isFire = true;
-            
+            if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_pHand->GetNumBullet() > 0)
+            {
+                if (m_hasChangingState == false) //장전 중일 때는 쏘지못하게
+                    m_isFire = true;
+
+            }
         }
     }
     if (m_backAction.Ing)

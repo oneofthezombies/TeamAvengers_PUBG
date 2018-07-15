@@ -255,6 +255,23 @@ void SceneLoading::OnInit()
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot_mouseover.png");
     Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_click.png");
 
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBox_idle.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBox_mouseover.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBox_possible.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Weapon_highlight.png");
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Attach_click.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Attach_no.png");
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Attach_yes.png");
+    
+    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBoxNum.png");
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "icon_weapon_Kar98k.png", D3DCOLOR_XRGB(0, 0, 0));
+    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "icon_weapon_QBZ95.png", D3DCOLOR_XRGB(0, 0, 0));
+
+    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "Kar98k.png", D3DCOLOR_XRGB(0, 0, 0));
+    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "QBZ.png", D3DCOLOR_XRGB(0, 0, 0));
+
     m_pBackground =
         new UIImage(
             "./Resource/",

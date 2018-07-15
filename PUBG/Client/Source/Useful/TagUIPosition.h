@@ -28,6 +28,14 @@ enum class TAG_UI_POSITION
     inven_11,
     picked,
     None,
+    Helmat,
+    Bag,
+    Armor,
+    Belt,
+    Weapon1,
+    Weapon2,
+    Weapon3,
+
 };
 
 struct UIPosition

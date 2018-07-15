@@ -87,6 +87,8 @@ public:
         std::vector<UIButtonWithItem*> m_uiDroped;
         std::vector<UIButtonWithItem*> m_uiInven;
         UIButtonWithItem* m_pUIPicked;
+        UIButtonWithItem* m_pWeapon1;
+        UIButtonWithItem* m_pWeapon2;
 
         Item* m_pHand; //손에 든 무기
         bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
@@ -113,8 +115,11 @@ public:
 
         Item* pTempSaveWeaponForX;
         
+        //ui
         bool isOpened;
         std::deque<Item*> droppedItems;
+        bool m_stateClicked;
+        TAG_RIFLE m_handState;
 
 
         ////////////함수
