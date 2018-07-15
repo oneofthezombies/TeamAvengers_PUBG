@@ -436,13 +436,12 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     //1초 뒤 빨간 hp도 흰색만큼 줄어든다
     if (pPlayer->IsDamaged())
     {
-        pPlayer->ResetIsDamaged();
         float t = m_hpCoolDown -= Time()()->GetDeltaTime();
-        //cout << t << endl;
         if (m_hpCoolDown <= 0)
         {
             pHpRedImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
             m_hpCoolDown = HP_COOL_TIME;
+            pPlayer->ResetIsDamaged();
         }
     }
 
