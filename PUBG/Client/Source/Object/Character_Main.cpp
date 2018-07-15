@@ -235,8 +235,14 @@ void Character::updateMine()
     if (!isMine()) return;
 
     //Dead logic
-    if (m_isDead) return;
+    if (m_isDead)
+    {
+        //남은 hp를 0으로 만든다
+        //TODO: 한번만 실행되도록 하기
+        m_inGameUI.SetRedToZero();
 
+        return;
+    }
     //m_health 가 0이 되면 죽는 애니메이션, server communication;
     checkDead();
 

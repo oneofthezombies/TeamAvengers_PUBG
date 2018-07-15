@@ -225,6 +225,7 @@ public:
         void Destroy();
         void Update(const TotalInventory& inven);
         void Render();
+        void SetRedToZero();
 
         void setTextWithShadow(
             UIText*& pText,
@@ -239,7 +240,6 @@ public:
         void updateInfoTextUI();
         void updateOnHandWeaponUI(const TotalInventory& inven);
         void updateSurvivalNumTextUI();
-        
     };
 
     struct Info

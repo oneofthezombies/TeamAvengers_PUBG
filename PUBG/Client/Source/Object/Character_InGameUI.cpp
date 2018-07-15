@@ -454,6 +454,11 @@ void Character::InGameUI::Render()
 {
 }
 
+void Character::InGameUI::SetRedToZero()
+{
+    pHpRedImg->SetSize(D3DXVECTOR2(0.0f, InGameUI::HP_HEIGHT));
+}
+
 void Character::InGameUI::setTextWithShadow(
     UIText*& pText,
     UIText*& pTextShadow,
