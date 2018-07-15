@@ -22,7 +22,7 @@ private:
     SkinnedMeshController* pSkinnedMeshController;
 
 public:
-    CharacterAnimation();
+    CharacterAnimation(const std::size_t index);
     virtual ~CharacterAnimation();
 
     virtual void OnUpdate() override;
@@ -84,4 +84,6 @@ public:
     float GetLowerTrackPeriod(const std::size_t index);
 
     std::vector<BoundingSphere> GetBoundingSpheres();
+
+    SkinnedMesh* GetSkinnedMesh();
 };

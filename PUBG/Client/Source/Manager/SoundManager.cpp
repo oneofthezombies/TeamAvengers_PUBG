@@ -39,6 +39,7 @@ void SoundManager::Init()
     AddSound(TAG_SOUND::Kar98_Reload1, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Kar98_Reload2, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Kar98_Reload3, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Background, "Resource/Sound/Background/battleground_lobby.mp3", FMOD_3D, false);
 }
 
 void SoundManager::Destroy()
@@ -134,7 +135,10 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
 
     //normalShoot 만 1이고 나머지는 0.8 
     float fVol = 1.0f;
-    if (static_cast<int>(tag) > 2)
+    if (tag == TAG_SOUND::Background)
+    {
+    }
+    else if (static_cast<int>(tag) > 2)
     {
         fVol = 0.5f;
     }
@@ -142,9 +146,11 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
     SetPosition(pos);
     search->second->setMode(mode);
 
+    
     CheckError(m_pSystem->playSound(search->second, nullptr, false, &m_channels[i]));
     
-    m_channels[i]->set3DAttributes(&m_soundPos, nullptr);
+   // m_channels[i]->setMode(FMOD_LOOP_NORMAL);
+    m_channels[i]->set3DAttributes(&m_soundPos,nullptr);
     m_channels[i]->setVolume(fVol);
     return i;
 }

@@ -49,63 +49,41 @@ void SkinnedMeshController::drawMeshContainer(
     if (!pMeshContainerBase || !pMeshContainerBase->pSkinInfo) return;
 
     auto pMeshContainer = static_cast<MeshContainer*>(pMeshContainerBase);
-    
 
-    //**************frustum culling ************************
-    D3DXVECTOR3 center = Vector3::ZERO;
-    D3DXVec3TransformCoord(&center, &pMeshContainer->pEffectMesh->m_boundingSphere.center, &world);
-    if (!CurrentCamera()()->IsObjectInsideFrustum(center, pMeshContainer->pEffectMesh->m_boundingSphere.radius))
-        return;
-    //******************************************************
-
-
-    ////sphere around player
-    //Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-    //Shader::Draw(
-    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
-    //    nullptr,
-    //    m_testmeshSphere,
-    //    0,
-    //    [this, &world](LPD3DXEFFECT pEffect)
+    //auto numBones = pMeshContainer->pSkinInfo->GetNumBones();
+    //for (auto i = 0u; i < numBones; ++i)
     //{
-    //    pEffect->SetMatrix(Shader::World, &world);
-    //    D3DXCOLOR Green(0.0f, 1.0f, 0.0f, 1.0f);
-    //    pEffect->SetValue("Color", &Green, sizeof Green);
-    //});
-    //Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+    //    pMeshContainer->m_pFinalBoneMatrices[i] 
+    //        = pMeshContainer->m_pBoneOffsetMatrices[i] 
+    //        * *pMeshContainer->m_ppBoneMatrixPtrs[i];
+    //}
 
-    auto numBones = pMeshContainer->pSkinInfo->GetNumBones();
-    for (auto i = 0u; i < numBones; ++i)
-    {
-        pMeshContainer->m_pFinalBoneMatrices[i] 
-            = pMeshContainer->m_pBoneOffsetMatrices[i] 
-            * *pMeshContainer->m_ppBoneMatrixPtrs[i];
-    }
+    EffectMesh* pEffectMesh = pMeshContainer->pEffectMesh;
+        
+    //PBYTE pVerticesSrc = nullptr;
+    //pEffectMesh->m_pMesh->LockVertexBuffer(
+    //    D3DLOCK_READONLY, (LPVOID*)&pVerticesSrc);
 
-    PBYTE pVerticesSrc = nullptr;
-    pMeshContainer->pEffectMesh->m_pMesh->LockVertexBuffer(
-        D3DLOCK_READONLY, (LPVOID*)&pVerticesSrc);
+    //assert(pVerticesSrc && 
+    //    "SkinnedMeshController::drawMeshContainer(), \
+    //     source vertices is null.");
 
-    assert(pVerticesSrc && 
-        "SkinnedMeshController::drawMeshContainer(), \
-         source vertices is null.");
+    //PBYTE pVerticesDest = nullptr;
+    //pMeshContainer->m_pWorkMesh->LockVertexBuffer(0, (LPVOID*)&pVerticesDest);
 
-    PBYTE pVerticesDest = nullptr;
-    pMeshContainer->m_pWorkMesh->LockVertexBuffer(0, (LPVOID*)&pVerticesDest);
+    //assert(pVerticesDest &&         
+    //    "SkinnedMeshController::drawMeshContainer(), \
+    //     destination vertices is null.");
 
-    assert(pVerticesDest &&         
-        "SkinnedMeshController::drawMeshContainer(), \
-         destination vertices is null.");
+    //pMeshContainer->pSkinInfo->UpdateSkinnedMesh(
+    //    pMeshContainer->m_pFinalBoneMatrices, nullptr, 
+    //    pVerticesSrc, pVerticesDest);
 
-    pMeshContainer->pSkinInfo->UpdateSkinnedMesh(
-        pMeshContainer->m_pFinalBoneMatrices, nullptr, 
-        pVerticesSrc, pVerticesDest);
-
-    pMeshContainer->pEffectMesh->m_pMesh->UnlockVertexBuffer();
-    pMeshContainer->m_pWorkMesh->UnlockVertexBuffer();
+    //pEffectMesh->m_pMesh->UnlockVertexBuffer();
+    //pMeshContainer->m_pWorkMesh->UnlockVertexBuffer();
 
     Shader::Draw(
-        pMeshContainer->pEffectMesh->m_effectParams, 
+        pEffectMesh->m_effectParams, 
         pMeshContainer->m_pWorkMesh, 
         setGlobalVariable);
 }
@@ -279,44 +257,36 @@ SkinnedMeshController::SkinnedMeshController(IObject* pOwner)
     , m_subAnimName("")
     , m_subTotalBlendingTime(0.3f)
     , m_subPassedBlendingTime(0.0f)
-    , m_pSkinnedMeshInstance(nullptr)
-    , m_testmeshSphere(NULL)
+    , pSkinnedMesh(nullptr)
 {
-    D3DXCreateSphere(Device()(), 96.42f, 5, 5, &m_testmeshSphere, NULL);
 }
 
 SkinnedMeshController::~SkinnedMeshController()
 {
-    SAFE_DELETE(m_pSkinnedMeshInstance);
-    SAFE_RELEASE(m_testmeshSphere);
 }
 
 void SkinnedMeshController::UpdateAnimation()
 {
-    assert(m_pSkinnedMeshInstance &&
+    assert(pSkinnedMesh &&
         "SkinnedMeshController::UpdateAnimation(), \
          skinned mesh instance is null.");
 
     const float factor = 2.0f;
     const float dt = Time()()->GetDeltaTime();
     const float calcedDT = dt * factor;
-    SkinnedMesh* pSkinnedMesh = m_pSkinnedMeshInstance->pSkinnedMesh;
 
     notifyAnimationEvent(
         calcedDT,
         m_animName,
-        m_pSkinnedMeshInstance->m_pAnimController,
+        pSkinnedMesh->m_pAnimController,
         &m_loopEvents,
         &m_finishEvents);
 
     updateAnimation(
         calcedDT,
         m_totalBlendingTime,
-        m_pSkinnedMeshInstance->m_pAnimController,
+        pSkinnedMesh->m_pAnimController,
         &m_passedBlendingTime);
-
-    //FindFrame("root")->TransformationMatrix = Matrix::IDENTITY;
-    //updateFrameToModelSpace(pSkinnedMesh->m_pRootFrame, nullptr);
 
     for (auto& a : m_animationBackup)
         a.second = a.first->TransformationMatrix;
@@ -324,28 +294,23 @@ void SkinnedMeshController::UpdateAnimation()
     notifyAnimationEvent(
         calcedDT,
         m_subAnimName,
-        m_pSkinnedMeshInstance->m_pSubAnimController,
+        pSkinnedMesh->m_pSubAnimController,
         &m_subLoopEvents,
         &m_subFinishEvents);
 
     updateAnimation(
         calcedDT,
         m_subTotalBlendingTime,
-        m_pSkinnedMeshInstance->m_pSubAnimController,
+        pSkinnedMesh->m_pSubAnimController,
         &m_subPassedBlendingTime);
-
-    //FindFrame("root")->TransformationMatrix = Matrix::IDENTITY;
 }
 
 void SkinnedMeshController::UpdateModel()
 {
     assert(
-        m_pSkinnedMeshInstance && 
-        m_pSkinnedMeshInstance->pSkinnedMesh && 
+        pSkinnedMesh && 
         "SkinnedMeshController::UpdateModel(), \
-         skinned mesh instance or skinned mehs is null.");
-
-    SkinnedMesh* pSkinnedMesh = m_pSkinnedMeshInstance->pSkinnedMesh;
+         skinned mesh is null.");
 
     for (auto& a : m_animationBackup)
         a.first->TransformationMatrix = a.second;
@@ -360,6 +325,14 @@ void SkinnedMeshController::UpdateModel()
             pSkinnedMesh->m_pSubRootFrame,
             pSkinnedMesh->pConnectFrame);
     }
+
+    UpdateMesh();
+}
+
+void SkinnedMeshController::UpdateMesh()
+{
+    updateMesh(pSkinnedMesh->m_pRootFrame);
+    updateMesh(pSkinnedMesh->m_pSubRootFrame);
 }
 
 void SkinnedMeshController::Render(
@@ -367,14 +340,13 @@ void SkinnedMeshController::Render(
     const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
     assert(
-        m_pSkinnedMeshInstance &&
-        m_pSkinnedMeshInstance->pSkinnedMesh &&
+        pSkinnedMesh &&
         "SkinnedMeshController::Render(), \
-         skinned mesh instance or skinned mesh is null.");
+         skinned mesh is null.");
 
-    SkinnedMesh* pSkinnedMesh = m_pSkinnedMeshInstance->pSkinnedMesh;
     drawFrame(pSkinnedMesh->m_pRootFrame, world, setGlobalVariable);
 
+    // 현재 사용하는 스킨드 메시들은 메시 컨테이너가 루트로부터만 있음
     //if (pSkinnedMesh->m_pSubRootFrame)
     //    drawFrame(pSkinnedMesh->m_pSubRootFrame, setGlobalVariable);
 }
@@ -384,42 +356,24 @@ void SkinnedMeshController::SetSkinnedMesh(SkinnedMesh* pSkinnedMesh)
     assert(pSkinnedMesh && 
         "SkinnedMeshController::SetSkinnedMesh(), skinned mesh is null.");
 
-    SAFE_DELETE(m_pSkinnedMeshInstance);
-    m_pSkinnedMeshInstance = new SkinnedMeshInstance;
+    setEffectMesh(pSkinnedMesh->m_pRootFrame);
+    setEffectMesh(pSkinnedMesh->m_pSubRootFrame);
 
-    m_pSkinnedMeshInstance->pSkinnedMesh = pSkinnedMesh;
-
-    LPD3DXANIMATIONCONTROLLER pSrc = pSkinnedMesh->m_pAnimController;
-    LPD3DXANIMATIONCONTROLLER pDest = nullptr;
-
-    pSrc->CloneAnimationController(
-        pSrc->GetMaxNumAnimationOutputs(),
-        pSrc->GetMaxNumAnimationSets(), 
-        pSrc->GetMaxNumTracks(), 
-        pSrc->GetMaxNumEvents(), 
-        &pDest);
-
-    m_pSkinnedMeshInstance->m_pAnimController = pDest;
-    
-    if (pSkinnedMesh->m_pSubRootFrame)
-    {
-        pSrc->CloneAnimationController(
-            pSrc->GetMaxNumAnimationOutputs(),
-            pSrc->GetMaxNumAnimationSets(),
-            pSrc->GetMaxNumTracks(),
-            pSrc->GetMaxNumEvents(),
-            &pDest);
-
-        m_pSkinnedMeshInstance->m_pSubAnimController = pDest;
-    }
+    this->pSkinnedMesh = pSkinnedMesh;
 }
 
 void SkinnedMeshController::SetSkinnedMesh(
-    const std::pair<std::string, std::string>& fullPath)
+    const std::pair<std::string, std::string>& fullPath,
+    const std::size_t index)
 {
     SetSkinnedMesh(Resource()()->GetSkinnedMesh(
         fullPath.first, 
-        fullPath.second));
+        fullPath.second, index));
+}
+
+SkinnedMesh* SkinnedMeshController::GetSkinnedMesh() const
+{
+    return pSkinnedMesh;
 }
 
 void SkinnedMeshController::SetAnimation(
@@ -432,7 +386,7 @@ void SkinnedMeshController::SetAnimation(
     const float position)
 {
     assert(
-        m_pSkinnedMeshInstance &&
+        pSkinnedMesh &&
         "SkinnedMeshController::SetAnimation(), skinned mesh is null.");
 
     LPD3DXANIMATIONSET pNext = nullptr;
@@ -444,22 +398,22 @@ void SkinnedMeshController::SetAnimation(
     if (isSub)
     {
         assert(
-            m_pSkinnedMeshInstance->m_pSubAnimController && 
+            pSkinnedMesh->m_pSubAnimController && 
             "SkinnedMeshController::SetAnimation(), \
              sub animation controller is null.");
 
         m_subAnimName = name;
-        pController = m_pSkinnedMeshInstance->m_pSubAnimController;
+        pController = pSkinnedMesh->m_pSubAnimController;
     }
     else
     {
         assert(
-            m_pSkinnedMeshInstance->m_pAnimController &&
+            pSkinnedMesh->m_pAnimController &&
             "SkinnedMeshController::SetAnimation(), \
              animation controller is null.");
 
         m_animName = name;
-        pController = m_pSkinnedMeshInstance->m_pAnimController;
+        pController = pSkinnedMesh->m_pAnimController;
     }
 
     hr = pController->GetAnimationSetByName(name.c_str(), &pNext);
@@ -626,12 +580,12 @@ const std::string& SkinnedMeshController::GetAnimationName() const
 std::size_t SkinnedMeshController::GetNumAnimation() const
 {
     assert(
-        m_pSkinnedMeshInstance && 
-        m_pSkinnedMeshInstance->m_pAnimController &&
+        pSkinnedMesh && 
+        pSkinnedMesh->m_pAnimController &&
         "SkinnedMeshController::GetNumAnimation(), \
          skinned mesh instance or controller is null.");
     
-    return m_pSkinnedMeshInstance->m_pAnimController->GetMaxNumAnimationSets();
+    return pSkinnedMesh->m_pAnimController->GetMaxNumAnimationSets();
 }
 
 const std::string& SkinnedMeshController::GetSubAnimationName() const
@@ -642,31 +596,31 @@ const std::string& SkinnedMeshController::GetSubAnimationName() const
 std::size_t SkinnedMeshController::GetSubNumAnimation() const
 {
     assert(
-        m_pSkinnedMeshInstance &&
-        m_pSkinnedMeshInstance->m_pSubAnimController &&
+        pSkinnedMesh &&
+        pSkinnedMesh->m_pSubAnimController &&
         "SkinnedMeshController::GetNumAnimation(), \
          skinned mesh instance or sub controller is null.");
 
-    return m_pSkinnedMeshInstance
+    return pSkinnedMesh
         -> m_pSubAnimController
         -> GetMaxNumAnimationSets();
 }
 
 Frame* SkinnedMeshController::FindFrame(const string& name)
 {
-    assert(m_pSkinnedMeshInstance &&
+    assert(pSkinnedMesh &&
         "SkinnedMeshController::FindFrame(), skinned mesh instance is null.");
 
     LPD3DXFRAME pFrame = 
         D3DXFrameFind(
-            m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame, 
+            pSkinnedMesh->m_pRootFrame, 
             name.c_str());
 
     if (!pFrame)
     {
         pFrame = 
             D3DXFrameFind(
-                m_pSkinnedMeshInstance->pSkinnedMesh->m_pSubRootFrame, 
+                pSkinnedMesh->m_pSubRootFrame, 
                 name.c_str());
     }
 
@@ -700,13 +654,13 @@ void SkinnedMeshController::GetTrackDescription(
 {
     assert(
         OutDesc &&
-        m_pSkinnedMeshInstance &&
-        m_pSkinnedMeshInstance->m_pAnimController &&
+        pSkinnedMesh &&
+        pSkinnedMesh->m_pAnimController &&
         "SkinnedMeshController::GetTrackDescription(), \
          skinned mesh instance or animation controller or argument is null.");
 
     HRESULT hr = 
-        m_pSkinnedMeshInstance->m_pAnimController->GetTrackDesc(
+        pSkinnedMesh->m_pAnimController->GetTrackDesc(
             index, 
             OutDesc);
 
@@ -722,13 +676,13 @@ void SkinnedMeshController::GetSubTrackDescription(
 {
     assert(
         OutDesc &&
-        m_pSkinnedMeshInstance &&
-        m_pSkinnedMeshInstance->m_pSubAnimController &&
+        pSkinnedMesh &&
+        pSkinnedMesh->m_pSubAnimController &&
         "SkinnedMeshController::GetSubTrackDescription(), \
          skinned mesh instance or animation controller or argument is null.");
 
     HRESULT hr =
-        m_pSkinnedMeshInstance->m_pSubAnimController->GetTrackDesc(
+        pSkinnedMesh->m_pSubAnimController->GetTrackDesc(
             index, 
             OutDesc);
 
@@ -741,7 +695,7 @@ void SkinnedMeshController::GetSubTrackDescription(
 float SkinnedMeshController::GetTrackPeriod(const std::size_t index)
 {
     LPD3DXANIMATIONSET pSet = nullptr;
-    m_pSkinnedMeshInstance->m_pAnimController->GetTrackAnimationSet(index, &pSet);
+    pSkinnedMesh->m_pAnimController->GetTrackAnimationSet(index, &pSet);
     float period = static_cast<float>(pSet->GetPeriod());
     pSet->Release();
     return period;
@@ -750,7 +704,7 @@ float SkinnedMeshController::GetTrackPeriod(const std::size_t index)
 float SkinnedMeshController::GetSubTrackPeriod(const std::size_t index)
 {
     LPD3DXANIMATIONSET pSet = nullptr;
-    m_pSkinnedMeshInstance->m_pSubAnimController->GetTrackAnimationSet(index, &pSet);
+    pSkinnedMesh->m_pSubAnimController->GetTrackAnimationSet(index, &pSet);
     float period = static_cast<float>(pSet->GetPeriod());
     pSet->Release();
     return period;
@@ -775,16 +729,135 @@ void SkinnedMeshController::findBoundingSphere(
     if (!pMeshContainer) return;
 
     MeshContainer* pMC = static_cast<MeshContainer*>(pMeshContainer);
+    EffectMesh* pEffectMesh = pMC->pEffectMesh;
+
     BoundingSphere bs;
-    bs.center = pMC->pEffectMesh->m_boundingSphere.center;
-    bs.radius = pMC->pEffectMesh->m_boundingSphere.radius;
+    bs.center = pEffectMesh->m_boundingSphere.center;
+    bs.radius = pEffectMesh->m_boundingSphere.radius;
     OutBoundingSpheres->emplace_back(bs);
+}
+
+//void SkinnedMeshController::findMesh(
+//    LPD3DXFRAME pFrame, 
+//    std::vector<std::pair<LPD3DXMESH, std::size_t>>* OutMeshs)
+//{
+//    if (!pFrame) return;
+//
+//    findMesh(pFrame->pMeshContainer, OutMeshs);
+//
+//    findMesh(pFrame->pFrameSibling, OutMeshs);
+//    findMesh(pFrame->pFrameFirstChild, OutMeshs);
+//}
+//
+//void SkinnedMeshController::findMesh(
+//    LPD3DXMESHCONTAINER pMeshContainer, 
+//    std::vector<std::pair<LPD3DXMESH, std::size_t>>* OutMeshs)
+//{
+//    if (!pMeshContainer) return;
+//
+//    MeshContainer* pMC = static_cast<MeshContainer*>(pMeshContainer);
+//    EffectMesh* pEffectMesh = pMC->pEffectMesh;
+//
+//    OutMeshs->emplace_back(
+//        std::make_pair(
+//            pEffectMesh->m_pMesh, 
+//            pEffectMesh->m_effectParams.size()));
+//}
+
+void SkinnedMeshController::setEffectMesh(LPD3DXFRAME pFrame)
+{
+    if (!pFrame) return;
+
+    LPD3DXMESHCONTAINER pMeshContainer = pFrame->pMeshContainer;
+    while (pMeshContainer)
+    {
+        setEffectMesh(pMeshContainer);
+
+        pMeshContainer = pMeshContainer->pNextMeshContainer;
+    }
+
+    setEffectMesh(pFrame->pFrameSibling);
+    setEffectMesh(pFrame->pFrameFirstChild);
+}
+
+void SkinnedMeshController::setEffectMesh(LPD3DXMESHCONTAINER pMeshContainer)
+{
+    if (!pMeshContainer) return;
+
+    MeshContainer* pMC = static_cast<MeshContainer*>(pMeshContainer);
+    pMC->pEffectMesh = Resource()()->GetEffectMesh(pMC->m_effectMeshKey);
+
+    assert(
+        pMC->pEffectMesh && 
+        "SkinnedMeshController::setEffectMesh() effect mesh is null.");
+}
+
+void SkinnedMeshController::updateMesh(LPD3DXFRAME pFrame)
+{
+    if (!pFrame) return;
+
+    LPD3DXMESHCONTAINER pMeshContainer = pFrame->pMeshContainer;
+    while (pMeshContainer)
+    {
+        updateMesh(pMeshContainer);
+
+        pMeshContainer = pMeshContainer->pNextMeshContainer;
+    }
+
+    updateMesh(pFrame->pFrameSibling);
+    updateMesh(pFrame->pFrameFirstChild);
+}
+
+void SkinnedMeshController::updateMesh(LPD3DXMESHCONTAINER pMeshContainer)
+{
+    if (!pMeshContainer || !pMeshContainer->pSkinInfo) return;
+
+    auto pMC = static_cast<MeshContainer*>(pMeshContainer);
+
+    auto numBones = pMC->pSkinInfo->GetNumBones();
+    for (auto i = 0u; i < numBones; ++i)
+    {
+        pMC->m_pFinalBoneMatrices[i]
+            =  pMC->m_pBoneOffsetMatrices[i]
+            * *pMC->m_ppBoneMatrixPtrs[i];
+    }
+
+    EffectMesh* pEffectMesh = pMC->pEffectMesh;
+
+    PBYTE pVerticesSrc = nullptr;
+    pEffectMesh->m_pMesh->LockVertexBuffer(
+        D3DLOCK_READONLY, (LPVOID*)&pVerticesSrc);
+
+    assert(pVerticesSrc &&
+        "SkinnedMeshController::drawMeshContainer(), \
+         source vertices is null.");
+
+    PBYTE pVerticesDest = nullptr;
+    pMC->m_pWorkMesh->LockVertexBuffer(0, (LPVOID*)&pVerticesDest);
+
+    assert(pVerticesDest &&
+        "SkinnedMeshController::drawMeshContainer(), \
+         destination vertices is null.");
+
+    pMC->pSkinInfo->UpdateSkinnedMesh(
+        pMC->m_pFinalBoneMatrices, nullptr,
+        pVerticesSrc, pVerticesDest);
+
+    pEffectMesh->m_pMesh->UnlockVertexBuffer();
+    pMC->m_pWorkMesh->UnlockVertexBuffer();
 }
 
 std::vector<BoundingSphere> SkinnedMeshController::GetBoundingSpheres()
 {
     std::vector<BoundingSphere> boundingSpheres;
-    findBoundingSphere(m_pSkinnedMeshInstance->pSkinnedMesh->m_pRootFrame, &boundingSpheres);
-    findBoundingSphere(m_pSkinnedMeshInstance->pSkinnedMesh->m_pSubRootFrame, &boundingSpheres);
+
+    findBoundingSphere(
+        pSkinnedMesh->m_pRootFrame, 
+        &boundingSpheres);
+
+    findBoundingSphere(
+        pSkinnedMesh->m_pSubRootFrame, 
+        &boundingSpheres);
+
     return boundingSpheres;
 }

@@ -13,6 +13,7 @@ public:
 	void Init();
 	void Destroy();
 	void Update();
+    void Render();
 	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	friend Singleton<Application>;

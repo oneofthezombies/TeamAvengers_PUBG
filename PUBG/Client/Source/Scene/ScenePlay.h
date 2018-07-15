@@ -20,4 +20,5 @@ public:
     virtual void OnUpdate() override;
 
     const std::vector<Character*> GetOthers() const;
+    int GetSurvivors() const;
 };

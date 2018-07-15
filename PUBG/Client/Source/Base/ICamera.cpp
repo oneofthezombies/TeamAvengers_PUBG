@@ -131,6 +131,7 @@ void ICamera::UpdateFrustumCulling()
     D3DXPlaneFromPoints(&m_vecPlane[5], &m_vecWorld[6], &m_vecWorld[7], &m_vecWorld[4]);
     
 }
+
 bool ICamera::IsObjectInsideFrustum(const D3DXVECTOR3 center, const float radius)
 {
     for (int i = 0; i < 6; i++)
@@ -158,6 +159,11 @@ const D3DXMATRIX& ICamera::GetProjectionMatrix() const
 TAG_CAMERA ICamera::GetTagCamera() const
 {
     return m_tagCamera;
+}
+
+const D3DXVECTOR3& ICamera::GetPosition() const
+{
+    return m_eye;
 }
 
 D3DXVECTOR4 ICamera::GetFrustumArea()
@@ -336,7 +342,6 @@ void CameraThirdPerson::Update()
     {
         D3DXMATRIX tarR, baseT;
         D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
-        Debug << "*pTarInfo->pRotationForCamera : " << *pTarInfo->pRotationForCamera << endl << endl;
         D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, 0.0f);
 
         D3DXMATRIX baseY, baseZ;

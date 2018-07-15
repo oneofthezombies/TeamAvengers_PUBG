@@ -6,14 +6,10 @@
 using animation_event_t  = std::pair<float, std::function<void()>>;
 using animation_events_t = std::deque<animation_event_t>;
 
-struct SkinnedMeshInstance;
-
 class SkinnedMeshController : public Component
 {
 private:
-    LPD3DXMESH  m_testmeshSphere;
-private:
-    SkinnedMeshInstance* m_pSkinnedMeshInstance;
+    SkinnedMesh*         pSkinnedMesh;
 
     std::string          m_animName;
     float                m_totalBlendingTime;
@@ -55,8 +51,25 @@ private:
         const D3DXMATRIX& world,
         const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
 
-    void findBoundingSphere(LPD3DXFRAME pFrame, std::vector<BoundingSphere>* OutBoundingSpheres);
-    void findBoundingSphere(LPD3DXMESHCONTAINER pMeshContainer, std::vector<BoundingSphere>* OutBoundingSpheres);
+    void findBoundingSphere(
+        LPD3DXFRAME pFrame, 
+        std::vector<BoundingSphere>* OutBoundingSpheres);
+    void findBoundingSphere(
+        LPD3DXMESHCONTAINER pMeshContainer, 
+        std::vector<BoundingSphere>* OutBoundingSpheres);
+
+    //void findMesh(
+    //    LPD3DXFRAME pFrame, 
+    //    std::vector<std::pair<LPD3DXMESH, std::size_t>>* OutMeshs);
+    //void findMesh(
+    //    LPD3DXMESHCONTAINER pMeshContainer, 
+    //    std::vector<std::pair<LPD3DXMESH, std::size_t>>* OutMeshs);
+
+    void setEffectMesh(LPD3DXFRAME pFrame);
+    void setEffectMesh(LPD3DXMESHCONTAINER pMeshContainer);
+
+    void updateMesh(LPD3DXFRAME pFrame);
+    void updateMesh(LPD3DXMESHCONTAINER pMeshContainer);
 
 public:
              SkinnedMeshController(IObject* pOwner);
@@ -64,12 +77,16 @@ public:
 
     void UpdateAnimation();
     void UpdateModel();
+    void UpdateMesh();
     void Render(
         const D3DXMATRIX& world, 
         const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
 
-    void SetSkinnedMesh(SkinnedMesh* pSkinnedMesh);
-    void SetSkinnedMesh(const std::pair<std::string, std::string>& path);
+            void SetSkinnedMesh(SkinnedMesh* pSkinnedMesh);
+            void SetSkinnedMesh(
+                const std::pair<std::string, std::string>& path, 
+                const std::size_t index);
+    SkinnedMesh* GetSkinnedMesh() const;
 
     void SetAnimation(
         const bool isSub,

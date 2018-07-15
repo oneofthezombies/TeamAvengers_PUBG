@@ -8,6 +8,7 @@ struct ResourceInfo
         Input: Resource Tag
         Output: pair<filePath, fileName>
     */
+    static pair<string, string> GetFileNameWithoutX(const TAG_RES_STATIC tag);
     static pair<string, string> GetPathFileName(const TAG_RES_STATIC tag);
     static pair<string, string> GetPathFileName(const TAG_RES_ANIM_WEAPON tag);
     static pair<string, string> GetPathFileName(const TAG_RES_ANIM_CHARACTER tag);

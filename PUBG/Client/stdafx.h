@@ -22,7 +22,7 @@
 // math and usefuls
 #include "Ray.h"
 #include "Collision.h"        // has Collision    ()()
-
+#include "Light.h"
 #include "Structure.h"
 #include "Shader.h"
 // end math and usefuls

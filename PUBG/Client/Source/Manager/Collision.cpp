@@ -52,6 +52,52 @@ void BoundingSphere::Render()
     });
     Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
+void BoundingBox::RenderRed()
+{
+    if (!Collision()()->IsRender()) return;
+
+    auto& vertices = Resource()()->GetBoundingBoxVertices();
+    auto& indices = Resource()()->GetBoundingBoxIndices();
+
+    D3DXMATRIX e, c, r, p, m;
+    D3DXMatrixScaling(&e, extent.x, extent.y, extent.z);
+    D3DXMatrixTranslation(&c, center.x, center.y, center.z);
+    D3DXMatrixRotationQuaternion(&r, &rotation);
+    D3DXMatrixTranslation(&p, position.x, position.y, position.z);
+    m = e * c * r * p;
+
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        [&m](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &m);
+        D3DXCOLOR Red(1.0f, 0.0f, 0.0f, 1.0f);
+        pEffect->SetValue("Color", &Red, sizeof Red);
+    },
+        [&vertices, &indices]()
+    {
+        Device()()->DrawIndexedPrimitiveUP(
+            D3DPT_LINELIST,
+            0,
+            vertices.size(),
+            indices.size() / 2,
+            indices.data(),
+            D3DFMT_INDEX16,
+            vertices.data(),
+            sizeof vertices.front());
+    });
+
+}
+
+
+BoundingSphere BoundingSphere::Create(const D3DXVECTOR3& position, const float radius)
+{
+    BoundingSphere bs;
+    bs.radius = radius;
+    bs.position = position;
+    return bs;
+}
 
 BoundingBox::BoundingBox()
     : BoundingShape()
@@ -101,6 +147,8 @@ void BoundingBox::Render()
     });
 }
 
+
+
 BoundingBox BoundingBox::Create(const D3DXVECTOR3& min, const D3DXVECTOR3& max)
 {
     BoundingBox bb;
@@ -111,7 +159,7 @@ BoundingBox BoundingBox::Create(const D3DXVECTOR3& min, const D3DXVECTOR3& max)
 
 BoundingBox BoundingBox::Create(const D3DXMATRIX& transformationMatrix)
 {
-    D3DXVECTOR3 extent(Vector3::ONE * 0.5f);
+    D3DXVECTOR3 extent(Vector3::ONE * 5.0f);
     D3DXVECTOR3 vS;
     D3DXQUATERNION qR;
     Matrix::GetScaleAndRotation(transformationMatrix, &vS, &qR);
@@ -480,6 +528,187 @@ bool Collision::HasCollision(
         D3DXVec3Length(&(
         (lhs.center + lhs.position) - (rhs.center + rhs.position))) 
         <= lhs.radius + rhs.radius;
+}
+
+
+bool Collision::HasCollision(const BoundingSphere& sphere, const BoundingBox& box)
+{
+    D3DXVECTOR3 spherePos = sphere.center + sphere.position;
+
+    D3DXVECTOR3 boxMax = box.extent + box.center;
+    D3DXVECTOR3 boxMin = -box.extent + box.center;
+
+    D3DXVECTOR3 EightEdge[8];
+    EightEdge[0] = D3DXVECTOR3(boxMax.x, boxMax.y, boxMax.z);
+    EightEdge[1] = D3DXVECTOR3(boxMax.x, boxMax.y, boxMin.z);
+    EightEdge[2] = D3DXVECTOR3(boxMax.x, boxMin.y, boxMax.z);
+    EightEdge[3] = D3DXVECTOR3(boxMax.x, boxMin.y, boxMin.z);
+    EightEdge[4] = D3DXVECTOR3(boxMin.x, boxMax.y, boxMax.z);
+    EightEdge[5] = D3DXVECTOR3(boxMin.x, boxMax.y, boxMin.z);
+    EightEdge[6] = D3DXVECTOR3(boxMin.x, boxMin.y, boxMax.z);
+    EightEdge[7] = D3DXVECTOR3(boxMin.x, boxMin.y, boxMin.z);
+
+
+    D3DXMATRIX B_transform;
+    D3DXMatrixRotationQuaternion(&B_transform, &box.rotation);
+
+    int find = -1;
+    float min = FLT_MAX;
+    for (int i = 0; i < 8; i++)
+    {
+        D3DXVec3TransformCoord(&EightEdge[i], &EightEdge[i], &B_transform);
+        EightEdge[i] += box.position;
+
+        float length = D3DXVec3Length(&(EightEdge[i] - spherePos));
+
+        if (min > length)
+        {
+            min = length;
+            find = i;
+        }
+    }
+
+
+    //// get box closest point to sphere center by clamping
+    //float x = std::max(boxMin.x, std::min(spherePos.x, boxMax.x));
+    //float y = std::max(boxMin.y, std::min(spherePos.y, boxMax.y));
+    //float z = std::max(boxMin.z, std::min(spherePos.z, boxMax.z));
+    float x = EightEdge[find].x;
+    float y = EightEdge[find].y;
+    float z = EightEdge[find].z;
+
+    // this is the same as isPointInsideSphere
+    float distance = std::sqrt((x - spherePos.x) * (x - spherePos.x) +
+        (y - spherePos.y) * (y - spherePos.y) +
+        (z - spherePos.z) * (z - spherePos.z));
+
+    return distance <= sphere.radius*sphere.radius;
+}
+float sqDistPointAABB(D3DXVECTOR3 p, BoundingBox aabb)
+{
+    float sqDist = 0.0f;
+    D3DXVECTOR3 aabbMax = aabb.extent + aabb.center;
+    D3DXVECTOR3 aabbMin = -aabb.extent + aabb.center;
+    
+    D3DXMATRIX B_transform;
+    D3DXMatrixRotationQuaternion(&B_transform, &aabb.rotation);
+
+    D3DXVec3TransformCoord(&aabbMax, &aabbMax, &B_transform);
+    D3DXVec3TransformCoord(&aabbMin, &aabbMin, &B_transform);
+    aabbMax += aabb.position;
+    aabbMin += aabb.position;
+    {//x
+        float v = p.x;
+        if (v < aabbMin.x) sqDist += (aabbMin.x - v)*(aabbMin.x - v);
+        if (v > aabbMax.x) sqDist += (v - aabbMax.x)*(v - aabbMax.x);
+    }
+    {//y
+        float v = p.y;
+        if (v < aabbMin.y) sqDist += (aabbMin.y - v)*(aabbMin.y - v);
+        if (v > aabbMax.y) sqDist += (v - aabbMax.y)*(v - aabbMax.y);
+    }
+    {//z
+        float v = p.z;
+        if (v < aabbMin.z) sqDist += (aabbMin.z - v)*(aabbMin.z - v);
+        if (v > aabbMax.z) sqDist += (v - aabbMax.z)*(v - aabbMax.z);
+    }
+    return sqDist;
+}
+
+bool Collision::HasCollision2(const BoundingSphere & sphere, const BoundingBox & box)
+{
+
+    float sqDist = sqDistPointAABB((sphere.center+sphere.position), box);
+
+
+    return sqDist <=sphere.radius*sphere.radius;
+}
+
+std::vector<D3DXVECTOR3> Collision::GetCollidedNormal(const D3DXVECTOR3& mypos, const BoundingBox& box)
+{
+    std::vector<D3DXVECTOR3> m_vecProj;
+    m_vecProj.resize(8);
+    m_vecProj[0] = (D3DXVECTOR3(-1, 1, 1));	    //ÁÂ»óÈÄ
+    m_vecProj[1] = (D3DXVECTOR3(1, 1, 1));	    //¿ì»óÈÄ
+    m_vecProj[2] = (D3DXVECTOR3(-1, 1, -1));	//ÁÂ»óÀü
+    m_vecProj[3] = (D3DXVECTOR3(1, 1, -1));	    //¿ì»óÀü
+    m_vecProj[4] = (D3DXVECTOR3(-1, -1, 1));	//ÁÂÇÏÈÄ
+    m_vecProj[5] = (D3DXVECTOR3(1, -1, 1));	    //¿ìÇÏÈÄ
+    m_vecProj[6] = (D3DXVECTOR3(-1, -1, -1));	//ÁÂÇÏÀü 
+    m_vecProj[7] = (D3DXVECTOR3(1, -1, -1));	//¿ìÇÏÀü
+
+    D3DXMATRIX s, r, t, m;
+    D3DXMatrixScaling(&s, box.extent.x, box.extent.y, box.extent.z);
+    D3DXMatrixRotationQuaternion(&r, &box.rotation);
+    D3DXVECTOR3 boxPos(box.center + box.position);
+    D3DXMatrixTranslation(&t, boxPos.x, boxPos.y, boxPos.z);
+    m = s * r * t;
+
+    std::vector<D3DXVECTOR3> m_vecWorld;
+    m_vecWorld.resize(8);
+    for (int i = 0; i < m_vecWorld.size(); ++i)
+        D3DXVec3TransformCoord(&m_vecWorld[i], &m_vecProj[i], &m);
+
+    std::vector<D3DXPLANE> m_vecPlane;
+    m_vecPlane.resize(6);
+    //±ÙÆò¸é//ÁÂ»óÀü//¿ì»óÀü//ÁÂÇÏÀü
+    D3DXPlaneFromPoints(&m_vecPlane[0], &m_vecWorld[2], &m_vecWorld[3], &m_vecWorld[6]);
+    //¿øÆò¸é//¿ì»óÈÄ//ÁÂ»óÈÄ//¿ìÇÏÈÄ
+    D3DXPlaneFromPoints(&m_vecPlane[1], &m_vecWorld[1], &m_vecWorld[0], &m_vecWorld[5]);
+    //ÁÂÆò¸é//ÁÂ»óÈÄ//ÁÂ»óÀü//ÁÂÇÏÈÄ
+    D3DXPlaneFromPoints(&m_vecPlane[2], &m_vecWorld[0], &m_vecWorld[2], &m_vecWorld[4]);
+    //¿ìÆò¸é//¿ì»óÀü//¿ì»óÈÄ//¿ìÇÏÀü
+    D3DXPlaneFromPoints(&m_vecPlane[3], &m_vecWorld[3], &m_vecWorld[1], &m_vecWorld[7]);
+    //»óÆò¸é//ÁÂ»óÈÄ//¿ì»óÈÄ//ÁÂ»óÀü
+    D3DXPlaneFromPoints(&m_vecPlane[4], &m_vecWorld[0], &m_vecWorld[1], &m_vecWorld[2]);
+    //ÇÏÆò¸é//ÁÂÇÏÀü//¿ìÇÏÀü//ÁÂÇÏÈÄ
+    D3DXPlaneFromPoints(&m_vecPlane[5], &m_vecWorld[6], &m_vecWorld[7], &m_vecWorld[4]);
+    
+    D3DXVECTOR3 p12(boxPos - mypos);
+    float p12len = D3DXVec3Length(&p12);
+    std::vector<int> results;
+    for (int i = 0; i < m_vecPlane.size(); ++i)
+    {
+        D3DXVECTOR3 pout;
+        if (D3DXPlaneIntersectLine(&pout, &m_vecPlane[i], &mypos, &boxPos))
+        {
+            D3DXVECTOR3 p1out(pout - mypos);
+            float p1outlen = D3DXVec3Length(&p1out);
+            if (p1outlen < p12len)
+            {
+                results.emplace_back(i);
+            }
+        }
+    }
+
+    auto getV = [&m_vecWorld](int a, int b) { return m_vecWorld[b] - m_vecWorld[a]; };
+
+/*    if (results.size() >= 2)
+    {
+        for (auto result : results)
+            cout << "result : " << result << endl;
+    }
+    cout << endl;  */ 
+    //assert((results.size() != 2) && "fdsafdsafdasfdsafdsa");
+    std::vector<D3DXVECTOR3> normals;
+    for (auto& result : results)
+    {
+        D3DXVECTOR3 normal;
+        switch (result)
+        {
+        case 0: D3DXVec3Cross(&normal, &getV(2, 3), &getV(3, 6)); break;
+        case 1: D3DXVec3Cross(&normal, &getV(1, 0), &getV(0, 5)); break;
+        case 2: D3DXVec3Cross(&normal, &getV(0, 2), &getV(2, 4)); break;
+        case 3: D3DXVec3Cross(&normal, &getV(2, 3), &getV(2, 3)); break;
+        case 4: D3DXVec3Cross(&normal, &getV(3, 1), &getV(1, 7)); break;
+        case 5: D3DXVec3Cross(&normal, &getV(0, 1), &getV(1, 2)); break;
+        case 6: D3DXVec3Cross(&normal, &getV(6, 7), &getV(7, 4)); break;
+        }
+        D3DXVec3Normalize(&normal, &normal);
+        normals.emplace_back(normal);
+    }
+
+    return normals;
 }
 
 bool Collision::HasCollision(const BoundingBox& lhs, const BoundingBox& rhs)
@@ -954,6 +1183,8 @@ bool Collision::HasCollision(const Ray & ray, const BoundingRect & rect, const f
 
     return true;
 }
+
+
 
 
 BoundingRect::BoundingRect()

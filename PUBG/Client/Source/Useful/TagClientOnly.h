@@ -73,6 +73,15 @@ enum class TAG_FONT
     Default,
     Invetory_Ground,
     Invetory_28,
+    InGameAmmoReload,
+    InGameAmmoTotalNum,
+    InGameSurvival,
+    InGameSurvivalNum,
+    InGameID,
+    InGameKillNum,
+    InGameKillLog,
+    InGameInfo,
+    InGameFireMode,
 };
 
 enum class TAG_SOUND
@@ -98,7 +107,7 @@ enum class TAG_SOUND
     Qbz_FakeShoot,
     Qbz_Reload,
 
-
+    Background,
 };
 
 enum class TAG_CHANNEL
@@ -141,7 +150,8 @@ enum class TAG_ITEM_CATEGORY
 enum class TAG_RIFLE
 {
     Primary,
-    Secondary
+    Secondary,
+    None
 };
 
 enum class TAG_ATTACH_POINT

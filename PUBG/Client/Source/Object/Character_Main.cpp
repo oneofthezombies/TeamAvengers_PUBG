@@ -3,7 +3,7 @@
 #include "CharacterAnimation.h"
 #include "CharacterPart.h"
 #include "Bullet.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "AnimationState.h"
 #include "Item.h"
 #include "ResourceInfo.h"
@@ -35,6 +35,7 @@ Character::Character(const int index)
     , m_savedInput()
     , m_currentStayKey()
     , m_totalInventory()
+    , m_inGameUI()
     , m_attacking(Attacking::Unarmed)
     , m_stance(Stance::Stand)
     , m_moving(Moving::Run)
@@ -49,15 +50,15 @@ Character::Character(const int index)
     , pAnimation(nullptr)
 
     , m_otherHitPart(0)
-
 {
     m_totalInventory.pCharacter = this;
     if (isMine())
     {
         m_totalInventory.Init();
+        m_inGameUI.Init();
     }
 
-    const float factor(static_cast<float>(m_index + 1) * 100.0f);
+    const float factor(static_cast<float>(m_index + 1) * 200.0f);
 
     Transform* pTransform = GetTransform();
     pTransform->SetPosition(D3DXVECTOR3(factor, 200.0f, factor));
@@ -69,12 +70,12 @@ Character::Character(const int index)
     CS->InsertObjIntoTotalCellSpace(TAG_OBJECT::Character, m_cellIndex, this);   //Object 를 TotalCellSpace(Area)에 넣기
     CS->m_NearArea.CreateNearArea(m_cellIndex);                                          //Near Area 계산
 
-    pAnimation = new CharacterAnimation;
+    pAnimation = new CharacterAnimation(m_index);
     AddChild(pAnimation);
     setAnimation(
         CharacterAnimation::BodyPart::BOTH, 
         TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
+    
     setFramePtr();
 
     // set boundingShapes
@@ -100,7 +101,8 @@ Character::Character(const int index)
 
     pOtherHitPositionMesh = Resource()()->GetBoundingSphereMesh();
 
-    m_boundingBox = BoundingBox::Create(D3DXVECTOR3(-100.0f, 50.0f, -50.0f), D3DXVECTOR3(100.0f, 150.0f, 50.0f));
+    m_bBox = BoundingBox::Create(D3DXVECTOR3(-20.0f, 0.0f, -20.0f), D3DXVECTOR3(20.0f, 170.0f, 20.0f));
+    //m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
 }
 
 Character::~Character()
@@ -113,6 +115,7 @@ Character::~Character()
     if (isMine())
     {
         m_totalInventory.Destroy();
+        m_inGameUI.Destroy();
     }
 }
 
@@ -139,37 +142,53 @@ void Character::OnUpdate()
     // bounding sphere move to character position
     m_boundingSphere.position = GetTransform()->GetPosition();
 
+    //m_bSphereSlidingCollision.position = GetTransform()->GetPosition();
+    m_bBox.position = GetTransform()->GetPosition();
+    m_bBox.rotation = GetTransform()->GetRotation();
+
     for (auto pPart : m_characterParts)
         pPart->Update();
 
     if (IsFire())
-    {
         RifleShooting();
-    }
         
-    if (isMine())
-        Camera()()->Update();
+    Shader()()->AddShadowSource(
+        GetTransform()->GetTransformationMatrix(), 
+        pAnimation->GetSkinnedMesh());
 
+    // communication
+    communicate();
+}
+
+void Character::OnRender()
+{
     // render
-    pAnimation->Render(
-        /*m_framePtr.pWaist->CombinedTransformationMatrix
-        **/ GetTransform()->GetTransformationMatrix(),
-        [this](LPD3DXEFFECT pEffect)
+    if (CurrentCamera()()->IsObjectInsideFrustum(
+        m_boundingSphere.center + m_boundingSphere.position, 
+        m_boundingSphere.radius))
     {
-        pEffect->SetMatrix(
-            Shader::World,
-            &GetTransform()->GetTransformationMatrix());
+        pAnimation->Render(
 
-        DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-        D3DXVECTOR3 lightDir = light->GetDirection();
-        pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
-    });
-    renderTotalInventory();
+            /* 여기 월드 인자는 레거시임. 밑 셋매트릭스에 변화를 적용시켜야 함 */
+            /*m_framePtr.pWaist->CombinedTransformationMatrix
+            **/ GetTransform()->GetTransformationMatrix(),
+
+            [this](LPD3DXEFFECT pEffect)
+        {
+            pEffect->SetMatrix(
+                Shader::World,
+                &GetTransform()->GetTransformationMatrix());
+        });
+
+        renderTotalInventory();
+    }
 
     // render collision shapes
     for (auto pPart : m_characterParts)
         pPart->Render();
-    m_boundingBox.Render();
+
+    //m_bSphereSlidingCollision.RenderRed();
+    m_bBox.RenderRed();
     m_boundingSphere.Render();
     // end render collision shapes
 
@@ -183,7 +202,7 @@ void Character::OnUpdate()
     m = e * c * r * p;
     const auto& vertices = Resource()()->GetBoundingBoxVertices();
     const auto& indices = Resource()()->GetBoundingBoxIndices();
-    Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr, 
+    Shader::Draw(Resource()()->GetEffect("./Resource/", "Color.fx"), nullptr,
         [&m](LPD3DXEFFECT pEffect)
     {
         pEffect->SetMatrix(Shader::World, &m);
@@ -202,13 +221,6 @@ void Character::OnUpdate()
             sizeof vertices.front());
     });
     // end render hited box
-    
-    // communication
-    communicate();
-}
-
-void Character::OnRender()
-{
 }
 
 void Character::updateMine()
@@ -244,11 +256,16 @@ void Character::updateMine()
 
     ////////////충돌 체크 Area/////////////////////
     //Terrain과의 충돌체크
-    terrainFeaturesCollisionInteraction(&destState);
+    //terrainFeaturesCollisionInteraction(&destState);
+    terrainFeaturesCollisionInteraction2(&destState);
     //Item 과의 충돌체크
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////
 
+
+
+
+    getRight();
 
 
     setStance();
@@ -290,11 +307,6 @@ void Character::updateMine()
             m_savedInput = m_currentStayKey;
         }
     }
-
-
-
-    // 카메라 프러스텀 업데이트 (왜냐하면 캐릭터0 업데이트, 렌더, 캐릭터1 업데이트, 렌더, ... 순서대로 실행되기 떄문에)
-    CurrentCamera()()->UpdateFrustumCulling();
     
     D3DXVECTOR3 pos = tm->GetPosition();
     D3DXQUATERNION rot = tm->GetRotation();
@@ -306,15 +318,27 @@ void Character::updateMine()
     // shoot!
     m_isFire = false;
     m_totalInventory.m_bulletFireCoolDown -= dt;
-    if (m_totalInventory.m_bulletFireCoolDown <= 0.f) m_totalInventory.m_bulletFireCoolDown = 0.f;
-    if (m_attacking == Attacking::Rifle && m_currentOnceKey._LButton && !m_currentStayKey._LAlt 
-        || (m_attacking == Attacking::Rifle && m_totalInventory.m_pHand->GetAuto()
-        && TAG_RES_STATIC::QBZ == m_totalInventory.m_pHand->GetTagResStatic() && m_currentStayKey._LButton && !m_currentStayKey._LAlt))
+    if (!m_totalInventory.isOpened && m_totalInventory.m_pHand != nullptr)      //인벤토리 열려있을때 금지
     {
-        if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_pHand->GetNumBullet() > 0)
+        if (m_totalInventory.m_bulletFireCoolDown <= 0.f) 
+            m_totalInventory.m_bulletFireCoolDown = 0.f;
+
+        if (m_attacking == Attacking::Rifle && 
+            m_currentOnceKey._LButton && 
+            !m_currentStayKey._LAlt || 
+
+            (m_attacking == Attacking::Rifle && 
+                m_totalInventory.m_pHand->GetAuto() && 
+                TAG_RES_STATIC::QBZ == m_totalInventory.m_pHand->GetTagResStatic() && 
+                m_currentStayKey._LButton && 
+                !m_currentStayKey._LAlt))
         {
-            if(m_hasChangingState == false) //장전 중일 때는 쏘지못하게
-                m_isFire = true;
+            if (m_totalInventory.m_bulletFireCoolDown <= 0.f &&  m_totalInventory.m_pHand->GetNumBullet() > 0)
+            {
+                if (m_hasChangingState == false) //장전 중일 때는 쏘지못하게
+                    m_isFire = true;
+
+            }
         }
     }
     if (m_backAction.Ing)
@@ -360,6 +384,10 @@ void Character::updateMine()
         << pAnimation->GetUpperAnimationName() << '\n'
         << "current lower animation : "
         << pAnimation->GetLowerAnimationName() << "\n\n";
+
+    //여기
+    //for InGameUI
+    m_inGameUI.Update(m_totalInventory);
 
     Communication()()->SendPositionAndRotation(pos, rot);
     Communication()()->SendHeadAngle(m_headRotation.m_angle);

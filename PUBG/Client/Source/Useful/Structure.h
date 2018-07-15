@@ -49,6 +49,7 @@ struct Frame : public D3DXFRAME
 struct MeshContainer : public D3DXMESHCONTAINER
 {
     EffectMesh*  pEffectMesh;
+    std::string  m_effectMeshKey;
     LPD3DXMESH   m_pWorkMesh;
     D3DXMATRIX** m_ppBoneMatrixPtrs;
     D3DXMATRIX*  m_pBoneOffsetMatrices;
@@ -64,6 +65,9 @@ struct SkinnedMesh
     LPD3DXFRAME               pConnectFrame;
 
     LPD3DXANIMATIONCONTROLLER m_pAnimController;
+    LPD3DXANIMATIONCONTROLLER m_pSubAnimController;
+
+    std::size_t               m_index;
 
     SkinnedMesh();
     ~SkinnedMesh();
@@ -76,16 +80,6 @@ private:
 public:
     void Setup();
     bool Seperate(const string& name);
-};
-
-struct SkinnedMeshInstance
-{
-    SkinnedMesh* pSkinnedMesh;
-    LPD3DXANIMATIONCONTROLLER m_pAnimController;
-    LPD3DXANIMATIONCONTROLLER m_pSubAnimController;
-
-    SkinnedMeshInstance();
-    ~SkinnedMeshInstance();
 };
 
 ///* do NOT use! this will be deleted soon.*/

@@ -33,8 +33,11 @@ private:
     SkinnedMeshController* pSkinnedMeshController;
     bool                   m_isRenderSkinnedMesh;
 
+    //ui
     UIImage* m_pUIImage;
+    UIImage* m_pUIImage2;
     UIText * pUIText;
+    bool    m_inInventory;
  
     //총알이 나갈 위치
     Frame* pGunBolt;
@@ -81,6 +84,9 @@ public:
     //ui text
     UIText* GetUIText();
     UIImage* GetUIImage();
+    UIImage* GetUIImage2();
+    void SetState(bool state);
+    bool GetState();
 
     //for Rifle
     void SetNumBullet(const int numBullet);
@@ -94,6 +100,8 @@ public:
     void UpdateModel();
 
     void UpdateBone(Item* pHand, const float headRot, const float waistRot);
+
+    SkinnedMesh* GetSkinnedMesh() const;
 
     //for 아이템 자체 애니메이션
     void Set(

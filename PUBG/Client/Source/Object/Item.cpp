@@ -3,7 +3,7 @@
 #include "ItemInfo.h"
 #include "EffectMeshRenderer.h"
 #include "SkinnedMeshController.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "UIImage.h"
 #include "UIText.h"
 #include "ResourceInfo.h"
@@ -35,7 +35,9 @@ Item::Item(
     , m_isRenderSkinnedMesh(false)
 
     , m_pUIImage(nullptr)
+    , m_pUIImage2(nullptr)
     , pUIText(nullptr)
+    , m_inInventory(false)
 
 
     , pGunBolt(nullptr)
@@ -58,6 +60,7 @@ Item::~Item()
 {
     SAFE_DELETE(m_pFramePtr);
     SAFE_DELETE(m_pUIImage);
+    SAFE_DELETE(m_pUIImage2);
 }
 
 void Item::OnUpdate()
@@ -126,7 +129,7 @@ void Item::setup(const TAG_RES_STATIC tag)
             m_pUIImage->SetIsRender(false);
             pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
                 D3DXVECTOR2(100.0f, 20.0f),
-                string("null"),
+                "",
                 D3DCOLOR_XRGB(255, 255, 255),
                 m_pUIImage);
             pUIText->SetPosition(D3DXVECTOR3(50.0f, 10.0f, 0.0f));
@@ -137,7 +140,24 @@ void Item::setup(const TAG_RES_STATIC tag)
         {
             pSkinnedMeshController = AddComponent<SkinnedMeshController>();
             const auto pathFileName = ResourceInfo::GetPathFileName(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
-            pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathFileName.first, pathFileName.second));
+
+            std::size_t skinnedMeshIndex;
+            const bool available = 
+                Resource()()->GetAvailableIndexForSkinnedMesh(
+                    pathFileName.first, 
+                    pathFileName.second, 
+                    &skinnedMeshIndex);
+
+            assert(
+                available && 
+                "Item::setup(), skinned mesh is not available.");
+
+            pSkinnedMeshController->SetSkinnedMesh(
+                Resource()()->GetSkinnedMesh(
+                    pathFileName.first, 
+                    pathFileName.second, 
+                    skinnedMeshIndex));
+
             m_pFramePtr = new FramePtr;
             setFramePtr();
             addAnimationBackupFrameForEquip();
@@ -152,7 +172,24 @@ void Item::setup(const TAG_RES_STATIC tag)
         {
             pSkinnedMeshController = AddComponent<SkinnedMeshController>();
             const auto pathFileName = ResourceInfo::GetPathFileName(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
-            pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathFileName.first, pathFileName.second));
+
+            std::size_t skinnedMeshIndex;
+            const bool available =
+                Resource()()->GetAvailableIndexForSkinnedMesh(
+                    pathFileName.first,
+                    pathFileName.second,
+                    &skinnedMeshIndex);
+
+            assert(
+                available &&
+                "Item::setup(), skinned mesh is not available.");
+
+            pSkinnedMeshController->SetSkinnedMesh(
+                Resource()()->GetSkinnedMesh(
+                    pathFileName.first,
+                    pathFileName.second,
+                    skinnedMeshIndex));
+
             m_pFramePtr = new FramePtr;
             setFramePtr();
             addAnimationBackupFrameForEquip();
@@ -168,7 +205,24 @@ void Item::setup(const TAG_RES_STATIC tag)
         {
             pSkinnedMeshController = AddComponent<SkinnedMeshController>();
             const auto pathFileName = ResourceInfo::GetPathFileName(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
-            pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathFileName.first, pathFileName.second));
+
+            std::size_t skinnedMeshIndex;
+            const bool available =
+                Resource()()->GetAvailableIndexForSkinnedMesh(
+                    pathFileName.first,
+                    pathFileName.second,
+                    &skinnedMeshIndex);
+
+            assert(
+                available &&
+                "Item::setup(), skinned mesh is not available.");
+
+            pSkinnedMeshController->SetSkinnedMesh(
+                Resource()()->GetSkinnedMesh(
+                    pathFileName.first,
+                    pathFileName.second,
+                    skinnedMeshIndex));
+
             m_pFramePtr = new FramePtr;
             setFramePtr();
             addAnimationBackupFrameForEquip();
@@ -184,23 +238,52 @@ void Item::setup(const TAG_RES_STATIC tag)
         {
             // TODO : putin or equip으로 옮겨야 함
             pSkinnedMeshController = AddComponent<SkinnedMeshController>();
-            const auto pathName = ResourceInfo::GetPathFileName(ResourceInfo::GetTagResAnimWeapon(tag));
-            pSkinnedMeshController->SetSkinnedMesh(Resource()()->GetSkinnedMesh(pathName.first, pathName.second));
+            const auto pathFileName = 
+                ResourceInfo::GetPathFileName(
+                    ResourceInfo::GetTagResAnimWeapon(tag));
+
+            std::size_t skinnedMeshIndex;
+            const bool available =
+                Resource()()->GetAvailableIndexForSkinnedMesh(
+                    pathFileName.first,
+                    pathFileName.second,
+                    &skinnedMeshIndex);
+
+            assert(
+                available &&
+                "Item::setup(), skinned mesh is not available.");
+
+            pSkinnedMeshController->SetSkinnedMesh(
+                Resource()()->GetSkinnedMesh(
+                    pathFileName.first,
+                    pathFileName.second,
+                    skinnedMeshIndex));
 
             //총알이 나갈 위치
             if (m_tagResStatic == TAG_RES_STATIC::QBZ)
             {
                 pGunBolt = pSkinnedMeshController->FindFrame("gun_bolt");
+                m_pUIImage2 = new UIImage("./Resource/UI/Inventory/Weapon/", "QBZ.png", Vector3::ZERO, this, nullptr);
             }
             else if (m_tagResStatic == TAG_RES_STATIC::Kar98k)
             {
                 pGunBolt = pSkinnedMeshController->FindFrame("Gun_bolt_02");
 
+                m_pUIImage2 = new UIImage("./Resource/UI/Inventory/Weapon/", "Kar98k.png", Vector3::ZERO, this, nullptr);
                 //가장 처음은 idle로 셋해줌
                 Set(TAG_ANIM_WEAPON::Weapon_Kar98k_Idle);
                 UpdateAnimation();
                 UpdateModel();
             }
+            const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
+            m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
+            m_pUIImage->SetIsRender(false);
+            pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+                D3DXVECTOR2(100.0f, 20.0f),
+                "",
+                D3DCOLOR_XRGB(255, 255, 255),
+                m_pUIImage);
+            pUIText->SetPosition(D3DXVECTOR3(50.0f, 10.0f, 0.0f));
             assert(pGunBolt && "Item::setup(), pGunBolt is null.");
         }
         break;
@@ -220,10 +303,6 @@ void Item::setGlobalVariable(LPD3DXEFFECT pEffect)
     pEffect->SetMatrix(
         Shader::World,
         &GetTransform()->GetTransformationMatrix());
-
-    DirectionalLight* light = CurrentScene()()->GetDirectionalLight();
-    D3DXVECTOR3 lightDir = light->GetDirection();
-    pEffect->SetValue(Shader::lightDirection, &lightDir, sizeof lightDir);
 }
 
 void Item::addAnimationBackupFrameForEquip()
@@ -351,6 +430,21 @@ UIImage* Item::GetUIImage()
     return m_pUIImage;
 }
 
+UIImage * Item::GetUIImage2()
+{
+    return m_pUIImage2;
+}
+
+void Item::SetState(bool state)
+{
+    m_inInventory = state;
+}
+
+bool Item::GetState()
+{
+    return m_inInventory;
+}
+
 void Item::SetNumBullet(const int numBullet)
 {
     //TODO: 장탄수를 넘어서면 안된다
@@ -369,6 +463,9 @@ void Item::ChangeAuto()
 
 bool Item::GetAuto()
 {
+    //if (this != NULL)
+    //    return m_auto;
+
     return m_auto;
 }
 
@@ -412,6 +509,11 @@ void Item::UpdateBone(Item* pHand, const float headRot, const float waistRot)
     m_pFramePtr->pWaist->TransformationMatrix *= rWaist;
 
     m_pFramePtr->pRoot->TransformationMatrix = Matrix::IDENTITY;
+}
+
+SkinnedMesh* Item::GetSkinnedMesh() const
+{
+    return pSkinnedMeshController->GetSkinnedMesh();
 }
 
 //for 아이템 자체 애니메이션

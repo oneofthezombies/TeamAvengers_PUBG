@@ -94,6 +94,14 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDIr)Debug;$(SolutionDir)boost_1_67_0\stage\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <HeapReserveSize>
+      </HeapReserveSize>
+      <HeapCommitSize>4000000000</HeapCommitSize>
+      <LargeAddressAware>true</LargeAddressAware>
+      <StackReserveSize>
+      </StackReserveSize>
+      <StackCommitSize>
+      </StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -125,16 +133,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Area.cpp" />
+    <ClCompile Include="Source\UI\UITest.cpp" />
+    <ClCompile Include="Source\Useful\Area.cpp" />
     <ClCompile Include="CameraWorkSpace.cpp" />
     <ClCompile Include="ClientMain.cpp" />
     <ClCompile Include="Source\Base\IMap.cpp" />
     <ClCompile Include="Source\Base\IObject.cpp" />
     <ClCompile Include="Source\Object\CharacterAnimation.cpp" />
-    <ClCompile Include="Source\HeightMap.cpp" />
+    <ClCompile Include="Source\Useful\HeightMap.cpp" />
     <ClCompile Include="Source\Object\Character_ForDebug.cpp" />
     <ClCompile Include="Source\Object\Character_Input.cpp" />
-    <ClCompile Include="Source\Object\DirectionalLight.cpp" />
+    <ClCompile Include="Source\Object\Character_InGameUI.cpp" />
+    <ClCompile Include="Source\Useful\Light.cpp" />
     <ClCompile Include="Source\Object\Grid.cpp" />
     <ClCompile Include="Source\Object\Character_Inventory.cpp" />
     <ClCompile Include="Source\Object\Item.cpp" />
@@ -160,7 +170,7 @@
     <ClCompile Include="Source\Base\IScene.cpp" />
     <ClCompile Include="Source\Manager\Resource.cpp" />
     <ClCompile Include="Source\Manager\TimeManager.cpp" />
-    <ClCompile Include="Source\Ray.cpp" />
+    <ClCompile Include="Source\Useful\Ray.cpp" />
     <ClCompile Include="Source\Scene\SceneCollisionTest.cpp" />
     <ClCompile Include="Source\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\UI\UIObject.cpp" />
@@ -192,12 +202,14 @@
     <None Include="fmod.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Area.h" />
+    <ClInclude Include="Source\UI\UITest.h" />
+    <ClInclude Include="Source\Useful\Area.h" />
     <ClInclude Include="Source\Base\IMap.h" />
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Object\CharacterAnimation.h" />
-    <ClInclude Include="Source\HeightMap.h" />
-    <ClInclude Include="Source\Object\DirectionalLight.h" />
+    <ClInclude Include="Source\Useful\HeightMap.h" />
+
+    <ClInclude Include="Source\Useful\Light.h" />
     <ClInclude Include="Source\Object\Grid.h" />
     <ClInclude Include="Source\Object\SkySphere.h" />
     <ClInclude Include="Source\Object\Item.h" />
@@ -217,7 +229,7 @@
     <ClInclude Include="Source\Manager\DebugManager.h" />
     <ClInclude Include="Source\Manager\DeviceManager.h" />
     <ClInclude Include="Source\Manager\TimeManager.h" />
-    <ClInclude Include="Source\Ray.h" />
+    <ClInclude Include="Source\Useful\Ray.h" />
     <ClInclude Include="Source\Scene\SceneCollisionTest.h" />
     <ClInclude Include="Source\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Useful\AnimationState.h" />

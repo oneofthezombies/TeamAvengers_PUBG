@@ -51,6 +51,13 @@ Resource::XContainer* Resource::Async::OnLoadEffectMesh(
 
     if (FAILED(hr))
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadEffectMesh(), \
+             D3DXLoadMeshFromXA() failed.",
+            nullptr,
+            MB_OK);
+
         return nullptr;
     }
 
@@ -59,6 +66,18 @@ Resource::XContainer* Resource::Async::OnLoadEffectMesh(
             pEffectInstancesBuffer->GetBufferPointer());
 
     XContainer* pXContainer = new XContainer;
+
+    if (!pXContainer)
+    {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadEffectMesh(), \
+             new XContainer failed.",
+            nullptr,
+            MB_OK);
+
+        return nullptr;
+    }
 
     hr = CreateEffectMesh(
         path, 
@@ -70,6 +89,13 @@ Resource::XContainer* Resource::Async::OnLoadEffectMesh(
 
     if (FAILED(hr))
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadEffectMesh(), \
+             CreateEffectMesh() failed.",
+            nullptr,
+            MB_OK);
+
         SAFE_DELETE(pXContainer);
         return nullptr;
     }
@@ -87,16 +113,30 @@ Resource::XContainer* Resource::Async::OnLoadSkinnedMesh(
     XContainer* pXContainer = new XContainer;
     if (!pXContainer)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadSkinnedMesh(), \
+             new XContainer failed.",
+            nullptr,
+            MB_OK);
+
         return nullptr;
     }
 
-    pXContainer->m_pSkinnedMesh =
-        std::make_pair(fullPath, new SkinnedMesh);
-    SkinnedMesh* pSkinnedMesh = pXContainer->m_pSkinnedMesh.second;
+    SkinnedMesh* pSkinnedMesh = new SkinnedMesh;
     if (!pSkinnedMesh)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadSkinnedMesh(), \
+             new SkinnedMesh failed.",
+            nullptr,
+            MB_OK);
+
         return nullptr;
     }
+
+    pXContainer->m_pSkinnedMesh = std::make_pair(fullPath, pSkinnedMesh);
 
     AllocateHierarchy allocAsync(path, xFilename, pXContainer);
 
@@ -111,6 +151,13 @@ Resource::XContainer* Resource::Async::OnLoadSkinnedMesh(
 
     if (FAILED(hr))
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadSkinnedMesh(), \
+             D3DXLoadMeshHierarchyFromXA() failed.",
+            nullptr,
+            MB_OK);
+
         return nullptr;
     }
 
@@ -126,10 +173,17 @@ HRESULT Resource::Async::CreateEffectMesh(
     const DWORD               numEffectInstances, 
           XContainer*         OutXContainer)
 {
-    if (pMesh            == nullptr ||
-        pEffectInstances == nullptr ||
-        OutXContainer    == nullptr)
+    if (!pMesh            ||
+        !pEffectInstances ||
+        !OutXContainer)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateEffectMesh(), \
+             argument is null.",
+            nullptr,
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -141,6 +195,18 @@ HRESULT Resource::Async::CreateEffectMesh(
     }
 
     EffectMesh* pEffectMesh = new EffectMesh;
+    if (!pEffectMesh)
+    {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateEffectMesh(), \
+             new EffectMesh failed.",
+            nullptr,
+            MB_OK);
+
+        return E_FAIL;
+    }
+
     OutXContainer->m_effectMeshs[key] = pEffectMesh;
 
     pEffectMesh->m_pMesh = pMesh;
@@ -172,6 +238,12 @@ HRESULT Resource::Async::CreateEffectMesh(
 
         if (FAILED(hr))
         {
+            MessageBoxA(
+                nullptr,
+                "Resource::Async::CreateEffectMesh(), CreateEffect() failed.",
+                nullptr,
+                MB_OK);
+
             return E_FAIL;
         }
 
@@ -191,7 +263,7 @@ HRESULT Resource::Async::CreateEffectMesh(
             D3DXHANDLE handle = pEffect->GetParameterByName(
                 nullptr, effectDefault.pParamName);
 
-            if (handle == nullptr) continue;
+            if (!handle) continue;
 
             D3DXPARAMETER_DESC desc;
             pEffect->GetParameterDesc(handle, &desc);
@@ -219,6 +291,13 @@ HRESULT Resource::Async::CreateEffectMesh(
 
                     if (FAILED(hr))
                     {
+                        MessageBoxA(
+                            nullptr,
+                            "Resource::Async::CreateEffectMesh(), \
+                             CreateTexture() failed.",
+                            nullptr,
+                            MB_OK);
+
                         return E_FAIL;
                     }
 
@@ -247,8 +326,15 @@ HRESULT Resource::Async::CreateEffect(
     const std::string filename, 
           XContainer* OutXContainer)
 {
-    if (OutXContainer == nullptr)
+    if (!OutXContainer)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateEffectMesh(), \
+             argument is null.",
+            nullptr,
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -261,7 +347,7 @@ HRESULT Resource::Async::CreateEffect(
 
     LPD3DXEFFECT pEffect = nullptr;
     LPD3DXBUFFER pError = nullptr;
-    DWORD flags = D3DXSHADER_DEBUG | D3DXFX_NOT_CLONEABLE;
+    DWORD flags = D3DXSHADER_DEBUG;
     HRESULT hr = D3DXCreateEffectFromFileA(
         Device()(), 
         key.c_str(), 
@@ -283,6 +369,12 @@ HRESULT Resource::Async::CreateEffect(
             MessageBoxA(nullptr, errorMessage.c_str(), nullptr, MB_OK);
         }
 
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateEffect(), D3DXCreateEffectFromFileA() failed.",
+            nullptr,
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -295,8 +387,15 @@ HRESULT Resource::Async::CreateTexture(
     const std::string filename,
           XContainer* OutXContainer)
 {
-    if (OutXContainer == nullptr)
+    if (!OutXContainer)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateTexture(), \
+             argument is null.",
+            nullptr,
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -308,24 +407,47 @@ HRESULT Resource::Async::CreateTexture(
     }
 
     LPDIRECT3DTEXTURE9 pTexture = nullptr;
+    //HRESULT hr = D3DXCreateTextureFromFileExA(
+    //    Device()(), 
+    //    key.c_str(),
+    //    D3DX_DEFAULT_NONPOW2, 
+    //    D3DX_DEFAULT_NONPOW2, 
+    //    D3DX_DEFAULT, 
+    //    0,
+    //    D3DFMT_UNKNOWN, 
+    //    D3DPOOL_MANAGED, 
+    //    D3DX_DEFAULT, 
+    //    D3DX_DEFAULT, 
+    //    0,
+    //    nullptr, 
+    //    nullptr, 
+    //    &pTexture);
+
     HRESULT hr = D3DXCreateTextureFromFileExA(
-        Device()(), 
+        Device()(),
         key.c_str(),
-        D3DX_DEFAULT_NONPOW2, 
-        D3DX_DEFAULT_NONPOW2, 
-        D3DX_DEFAULT, 
+        D3DX_DEFAULT,
+        D3DX_DEFAULT,
+        D3DX_DEFAULT,
         0,
-        D3DFMT_UNKNOWN, 
-        D3DPOOL_MANAGED, 
-        D3DX_DEFAULT, 
-        D3DX_DEFAULT, 
+        D3DFMT_UNKNOWN,
+        D3DPOOL_MANAGED,
+        D3DX_DEFAULT,
+        D3DX_DEFAULT,
         0,
-        nullptr, 
-        nullptr, 
+        nullptr,
+        nullptr,
         &pTexture);
 
     if (FAILED(hr))
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::CreateTexture(), \
+             D3DXCreateTextureFromFileExA() failed.",
+            nullptr,
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -366,6 +488,13 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateFrame(
         pName = new char[size];
         if (!pName)
         {
+            MessageBoxA(
+                nullptr, 
+                "Resource::Async::AllocateHierarchy::CreateFrame(), \
+                 new char[] failed.", 
+                nullptr, 
+                MB_OK);
+
             return E_OUTOFMEMORY;
         }
 
@@ -375,6 +504,13 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateFrame(
     Frame* pFrame = new Frame;
     if (!pFrame)
     {
+        MessageBoxA(
+            nullptr, 
+            "Resource::Async::AllocateHierarchy::CreateFrame(), \
+             new Frame failed.", 
+            nullptr, 
+            MB_OK);
+
         SAFE_DELETE_ARRAY(pName);
         return E_OUTOFMEMORY;
     }
@@ -398,8 +534,27 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
           LPD3DXSKININFO       pSkinInfo,
           LPD3DXMESHCONTAINER* ppNewMeshContainer)
 {
+    if (!Name)
+    {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+             Name is null.",
+            nullptr,
+            MB_OK);
+
+        return E_FAIL;
+    }
+
     if (pMeshData->Type != D3DXMESHTYPE_MESH)
     {
+        MessageBoxA(
+            nullptr, 
+            "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+             mesh type is not D3DXMESHTYPE_MESH.", 
+            nullptr, 
+            MB_OK);
+
         return E_FAIL;
     }
 
@@ -410,14 +565,20 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
         pName = new char[size];
         if (!pName)
         {
+            MessageBoxA(
+                nullptr, 
+                "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+                 new char[] failed.", 
+                nullptr, 
+                MB_OK);
+
             return E_OUTOFMEMORY;
         }
 
         memcpy_s(pName, size, Name, size);
     }
 
-    const std::string meshContainerName = 
-        pName ? std::string(pName) : std::string("");
+    const std::string meshContainerName = std::string(pName);
 
     HRESULT hr = CreateEffectMesh(
         m_path, 
@@ -429,12 +590,20 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
 
     if (FAILED(hr))
     {
+        MessageBoxA(
+            nullptr, 
+            "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+             CreateEffectMesh() failed.", 
+            nullptr, 
+            MB_OK);
+
         SAFE_DELETE_ARRAY(pName);
         return E_FAIL;
     }
 
+    const std::string effectMeshKey = m_path + meshContainerName;
     EffectMesh* pEffectMesh =
-        pXContainer->m_effectMeshs[m_path + meshContainerName];
+        pXContainer->m_effectMeshs[effectMeshKey];
     LPD3DXMESH pMesh = pEffectMesh->m_pMesh;
     pMesh->AddRef();
 
@@ -456,9 +625,16 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
         pFinalBoneMatrices  = new D3DXMATRIX [numBones];
 
         if (!pBoneOffsetMatrices ||
-            !ppBoneMatrixPtrs ||
+            !ppBoneMatrixPtrs    ||
             !pFinalBoneMatrices)
         {
+            MessageBoxA(
+                nullptr,
+                "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+                 new D3DXMATRIX[] or new D3DXMATRIX*[] failed.",
+                nullptr,
+                MB_OK);
+
             SAFE_DELETE_ARRAY(pName);
             SAFE_DELETE_ARRAY(pBoneOffsetMatrices);
             SAFE_DELETE_ARRAY(ppBoneMatrixPtrs);
@@ -473,6 +649,13 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
     MeshContainer* pMeshContainer = new MeshContainer;
     if (!pMeshContainer)
     {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::AllocateHierarchy::CreateMeshContainer(), \
+             new MeshContainer failed.",
+            nullptr,
+            MB_OK);
+
         SAFE_DELETE_ARRAY(pName);
         SAFE_DELETE_ARRAY(pBoneOffsetMatrices);
         SAFE_DELETE_ARRAY(ppBoneMatrixPtrs);
@@ -480,7 +663,11 @@ STDMETHODIMP Resource::Async::AllocateHierarchy::CreateMeshContainer(
         return E_OUTOFMEMORY;
     }
 
-    pMeshContainer->pEffectMesh = pEffectMesh;
+    /* setEffectMesh() is in SkinnedMeshController */
+    //pMeshContainer->pEffectMesh = pEffectMesh;
+    /*                                             */
+
+    pMeshContainer->m_effectMeshKey = effectMeshKey;
     pMeshContainer->m_pWorkMesh = pWorkMesh;
     pMeshContainer->pSkinInfo = pSkinInfo;
 
@@ -593,7 +780,13 @@ void Resource::Manager::Destroy()
         SAFE_DELETE(em.second);
 
     for (auto sm : m_skinnedMeshs)
-        SAFE_DELETE(sm.second);
+    {
+        auto& sms = sm.second;
+        for (auto sm : sms)
+        {
+            SAFE_DELETE(sm);
+        }
+    }
 
     //RemoveFontResource(TEXT("resources/fonts/SeoulNamsanM.ttf"));
 }
@@ -607,7 +800,7 @@ void Resource::Manager::AddResource(XContainer* pXContainer)
     {
         const std::string key = kv.first;
         EffectMesh*& pEffectMesh = kv.second;
-
+        
         const auto search = m_effectMeshs.find(key);
         if (search == m_effectMeshs.end())
         {
@@ -645,14 +838,15 @@ void Resource::Manager::AddResource(XContainer* pXContainer)
     if (pXContainer->m_pSkinnedMesh.second)
     {
         const std::string key = pXContainer->m_pSkinnedMesh.first;
-        const auto search = m_skinnedMeshs.find(key);
-        if (search == m_skinnedMeshs.end())
-        {
-            m_skinnedMeshs[key] = pXContainer->m_pSkinnedMesh.second;
-            pXContainer->m_pSkinnedMesh.second = nullptr;
 
-            m_skinnedMeshs[key]->Setup();
-        }
+        SkinnedMesh* pSkinnedMesh = pXContainer->m_pSkinnedMesh.second;
+        m_skinnedMeshs[key].emplace_back(pSkinnedMesh);
+        pXContainer->m_pSkinnedMesh.second = nullptr;
+
+        const std::size_t numSkinnedMesh = m_skinnedMeshs[key].size();
+        pSkinnedMesh->m_index = numSkinnedMesh - 1;
+        pSkinnedMesh->Setup();
+        m_availableIndexForSkinnedMesh[key] = 0;
     }
 
     SAFE_DELETE(pXContainer);
@@ -715,18 +909,84 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                     &m_fonts[tag]);
             }
             break;
+
         case TAG_FONT::Invetory_Ground:
+            {
+                AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+                hr = D3DXCreateFontA(
+                    Device()(),
+                    14, 7, FW_NORMAL, 1, false,
+                    HANGEUL_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    FF_DONTCARE,
+                    "08서울남산체 M", 
+                    &m_fonts[tag]);
+            }
+            break;
+
+        case TAG_FONT::Invetory_28:
+            {
+                AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+                hr = D3DXCreateFontA(
+                    Device()(),
+                    18, 9, FW_NORMAL, 1, false,
+                    HANGEUL_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    FF_DONTCARE,
+                    "08서울남산체 M", 
+                    &m_fonts[tag]);
+            }
+            break;
+
+        case TAG_FONT::InGameAmmoReload:
+            {
+                AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+                hr = D3DXCreateFontA(
+                    Device()(),
+                    26, 10, FW_BOLD, 1, false,
+                    DEFAULT_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    FF_DONTCARE,
+                    "Agency FB", 
+                    &m_fonts[tag]);
+            }
+            break;
+
+        case TAG_FONT::InGameAmmoTotalNum:
+            {
+                AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+                hr = D3DXCreateFontA(
+                    Device()(),
+                    18, 8, FW_SEMIBOLD, 1, false,
+                    DEFAULT_CHARSET,
+                    OUT_DEFAULT_PRECIS,
+                    DEFAULT_QUALITY,
+                    FF_DONTCARE,
+                    "Agency FB", 
+                    &m_fonts[tag]);
+            }
+            break;
+
+        case TAG_FONT::InGameFireMode:
+        {
             AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
                 14, 7, FW_NORMAL, 1, false,
-                HANGEUL_CHARSET, 
-                OUT_DEFAULT_PRECIS, 
-                DEFAULT_QUALITY, 
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
                 FF_DONTCARE,
-                "08서울남산체 M", &m_fonts[tag]);
-            break;
-        case TAG_FONT::Invetory_28:
+                "08서울남산체 M",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::InGameSurvival:
+        {
             AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
@@ -735,8 +995,86 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
                 FF_DONTCARE,
-                "08서울남산체 M", &m_fonts[tag]);
-            break;
+                "08서울남산체 M", 
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::InGameSurvivalNum:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                22, 7, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB", 
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::InGameID:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                10, 6, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M", 
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::InGameKillNum:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                26, 13, FW_MEDIUM, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M", 
+                &m_fonts[tag]);
+        }
+        break;
+        
+        case TAG_FONT::InGameInfo:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                18, 9, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::InGameKillLog:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                12, 6, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
+        }
+        break;
+
         default:
             {
             }
@@ -823,20 +1161,85 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
     //return m_umapFont[val];
 }
 
-SkinnedMesh* Resource::Manager::GetSkinnedMesh(const std::string& fullPath)
+SkinnedMesh* Resource::Manager::GetSkinnedMesh(
+    const std::string& fullPath,
+    const std::size_t index)
 {
     const auto search = m_skinnedMeshs.find(fullPath);
-    if (search != m_skinnedMeshs.end())
-        return search->second;
+    if (search == m_skinnedMeshs.end())
+        return nullptr;
 
-    return nullptr;
+    const std::size_t size = search->second.size();
+    if (index >= size)
+        return nullptr;
+
+    return m_skinnedMeshs[fullPath][index];
 }
 
 SkinnedMesh* Resource::Manager::GetSkinnedMesh(
     const std::string& path, 
+    const std::string& filename,
+    const std::size_t index)
+{
+    return GetSkinnedMesh(path + filename, index);
+}
+
+std::size_t Resource::Manager::GetNumSkinnedMesh(
+    const std::string& path, 
     const std::string& filename)
 {
-    return GetSkinnedMesh(path + filename);
+    return GetNumSkinnedMesh(path + filename);
+}
+
+std::size_t Resource::Manager::GetNumSkinnedMesh(const std::string& fullPath)
+{
+    const auto search = m_skinnedMeshs.find(fullPath);
+    if (search != m_skinnedMeshs.end())
+        return search->second.size();
+
+    return std::numeric_limits<std::size_t>::max();
+}
+
+bool Resource::Manager::GetAvailableIndexForSkinnedMesh(
+    const std::string& path, 
+    const std::string& filename, 
+          std::size_t* OutIndex)
+{
+    const std::string key(path + filename);
+    const auto search = m_skinnedMeshs.find(key);
+    if (search == m_skinnedMeshs.end())
+        return false;
+
+    const std::size_t size = search->second.size();
+    const auto search2 = m_availableIndexForSkinnedMesh.find(key);
+    if (search2 == m_availableIndexForSkinnedMesh.end())
+        return false;
+
+    const std::size_t availableIndex = m_availableIndexForSkinnedMesh[key];
+    if (availableIndex >= size)
+        return false;
+
+    assert(
+        OutIndex && 
+        "Resource::Manager::GetAvailableIndexForSkinnedMesh(), \
+         argument is null.");
+
+    *OutIndex = availableIndex;
+    return true;
+}
+
+void Resource::Manager::AddSkinnedMeshCount(
+    const std::string& path, 
+    const std::string& filename)
+{
+    const std::string key(path + filename);
+    const auto search = m_skinnedMeshs.find(key);
+    
+    assert(
+        search != m_skinnedMeshs.end() && 
+        "Resource::Manager::AddSkinnedMeshCount(), path filename is wrong.");
+
+    ++m_availableIndexForSkinnedMesh[key];
 }
 
 EffectMesh* Resource::Manager::GetEffectMesh(const TAG_RES_STATIC tag)
@@ -845,18 +1248,23 @@ EffectMesh* Resource::Manager::GetEffectMesh(const TAG_RES_STATIC tag)
     return GetEffectMesh(keys.first, keys.second);
 }
 
-EffectMesh* Resource::Manager::GetEffectMesh(
-    const std::string& path, 
-    const std::string& filename)
+EffectMesh* Resource::Manager::GetEffectMesh(const std::string& pathFilename)
 {
-    const auto search = m_effectMeshs.find(path + filename);
+    const auto search = m_effectMeshs.find(pathFilename);
     if (search == m_effectMeshs.end())
     {
-        std::string str(filename + " is not found.");
+        std::string str(pathFilename + " is not found.");
         MessageBoxA(nullptr, str.c_str(), nullptr, MB_OK);
     }
 
     return search->second;
+}
+
+EffectMesh* Resource::Manager::GetEffectMesh(
+    const std::string& path, 
+    const std::string& filename)
+{
+    return GetEffectMesh(path + filename);
 }
 
 LPDIRECT3DTEXTURE9 Resource::Manager::GetTexture(const std::string& fullPath)

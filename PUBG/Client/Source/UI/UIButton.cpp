@@ -362,8 +362,7 @@ void UIButtonWithItem::UpdateOnMouse()
         if (input->IsKeyDownMouseL() &&
             input->GetPrevIsKeyDownMouseL())
         {
-            if (m_isMouseOn &&
-                m_prevIsMouseOn)
+            if (/*m_isMouseOn &&m_prevIsMouseOn*/1)         //클릭을 풀지 않은이상 내꺼
             {
                 if (m_onMouseCallback)
                     m_onMouseCallback(
