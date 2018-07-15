@@ -77,10 +77,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(ProjectDir)sources\7. Study;$(ProjectDir)sources\6. Base;$(ProjectDir)sources\5. Manager;$(ProjectDir)sources\4. UI;$(ProjectDir)sources\3. Useful;$(ProjectDir)sources\2. Object\Map;$(ProjectDir)sources\2. Object\Item;$(ProjectDir)sources\2. Object\Effect;$(ProjectDir)sources\2. Object\Character;$(ProjectDir)sources\2. Object\Camera;$(ProjectDir)sources\2. Object;$(ProjectDir)sources\1. Scene;$(ProjectDir)sources;$(ProjectDir);$(SolutionDir)PUBG\sources\3. Useful;$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\Useful;$(ProjectDir)Source\UI;$(ProjectDir)Source\Scene;$(ProjectDir)Source\Object;$(ProjectDir)Source\Manager;$(ProjectDir)Source\Component;$(ProjectDir)Source\Base;$(ProjectDir)Source;$(ProjectDir);$(SolutionDir)Common\Source\Useful;$(SolutionDir)Common\Source\Base;$(SolutionDir)Common\Source;$(SolutionDir)boost_1_67_0;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)boost_1_67_0\stage\lib;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)x64\Debug;$(SolutionDir)boost_1_67_0\stage\lib;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\lowlevel\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <HeapCommitSize>4000000000</HeapCommitSize>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -199,7 +201,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fmod.dll" />
+    <None Include="fmod64.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\UI\UITest.h" />
@@ -208,7 +210,6 @@
     <ClInclude Include="Source\Base\IObject.h" />
     <ClInclude Include="Source\Object\CharacterAnimation.h" />
     <ClInclude Include="Source\Useful\HeightMap.h" />
-
     <ClInclude Include="Source\Useful\Light.h" />
     <ClInclude Include="Source\Object\Grid.h" />
     <ClInclude Include="Source\Object\SkySphere.h" />

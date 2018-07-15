@@ -15,8 +15,8 @@ void SceneLoading::Load()
     // set play mode
     // alone       -> no network
     // with others -> login to network
-    //setPlayMode(Communication::PlayMode::WITH_OTHERS);
-    setPlayMode(Communication::PlayMode::ALONE);
+    setPlayMode(Communication::PlayMode::WITH_OTHERS);
+    //setPlayMode(Communication::PlayMode::ALONE);
 
     //// load effect meshs
     load(TAG_RES_STATIC::SkySphere);
@@ -41,11 +41,11 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::WareHouse_A);
 
     // load skined meshs
-    const int numQBZ = 1;
+    const int numQBZ = 4;
     for (int i = 0; i < numQBZ; ++i)
         load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
-    const int numKar98k = 1;
+    const int numKar98k = 4;
     for (int i = 0; i < numKar98k; ++i)
         load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
@@ -54,15 +54,15 @@ void SceneLoading::Load()
         load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load equipment
-    const int numArmor = 1;
+    const int numArmor = 4;
     for (int i = 0; i < numArmor; ++i)
         load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
 
-    const int numBack = 1;
+    const int numBack = 4;
     for (int i = 0; i < numBack; ++i)
         load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
 
-    const int numHead = 1;
+    const int numHead = 4;
     for (int i = 0; i < numHead; ++i)
         load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
@@ -691,30 +691,40 @@ void SceneLoading::OnUpdate()
 
                 m_tasksForSingleThread.erase(begin);
 
-                addEffectMeshs();
-                addSkinnedMeshs();
+                addEffectMeshsForAsync();
+                addSkinnedMeshsForAsync();
+
+                addCharacterSkinnedMeshsForAsync();
             }
             else
             {
-                const auto pathFilename = ResourceInfo::GetCharacterPathFileName();
+                addCharacterAnimationsForAsync();
 
-                for (auto csmr : m_characterSkinnedMeshResources)
+                if (!m_isSperatedCharacters)
                 {
-                    Resource::XContainer* pCharacterResource = csmr.second;
-                    pCharacterResource->m_pSkinnedMesh.first =
-                        pathFilename.first + pathFilename.second;
+                    const auto pathFilename =
+                        ResourceInfo::GetCharacterPathFileName();
 
-                    Resource()()->AddResource(pCharacterResource);
+                    for (std::size_t i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+                    {
+                        SkinnedMesh* pCharacter =
+                            Resource()()->GetSkinnedMesh(
+                                pathFilename.first,
+                                pathFilename.second,
+                                i);
+
+                        pCharacter->Seperate("spine_02");
+                    }
+
+                    m_isSperatedCharacters = true;
                 }
 
-                m_characterSkinnedMeshResources.clear();
-
-                addAnimationsToCharacter();
-                addAnimationsToEquipment();
+                addEquipmentAnimationsForAsync();
 
                 m_isDoneEffectMeshs = true;
                 m_isDoneSkinnedMeshs = true;
                 m_isDoneCharacters = true;
+                m_isDoneEquipments = true;
             }
         }
     }
