@@ -65,7 +65,7 @@
     <ClCompile Include="Source\Useful\Light.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="fmod.dll" />
+    <None Include="fmod64.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

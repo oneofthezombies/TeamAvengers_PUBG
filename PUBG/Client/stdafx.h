@@ -7,6 +7,7 @@
 #include <fmod.hpp>
 #include <fmod_errors.h>
 #pragma comment(lib, "fmod_vc.lib")
+#pragma comment(lib, "fmod64_vc.lib")
 // end FMOD
 
 // debug
