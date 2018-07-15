@@ -113,15 +113,12 @@ void Character::setAttacking() //Num1, Num2, X
     else if (m_currentOnceKey._X)
     {
         cout << "X" << endl;
-        //무기가 주무기냐, 보조무기냐에 따라서 다른 애니메이션을 실행한다. 우선 QBZ 주무기 Kar98k 보조무기
-        //등에 부착한다
+        //무기가 주무기냐, 보조무기냐에 따라서 다른 애니메이션을 실행한다.
         if (inven.m_pHand)
         {
             m_attacking = Attacking::Unarmed;
             inven.pTempSaveWeaponForX = inven.m_pHand;
             TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();
-
-
             setRifleOnBody(inven.m_handState);
 
             /*if (tag == TAG_RES_STATIC::QBZ)
@@ -753,7 +750,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
         CharacterAnimation::DEFAULT_BLENDING_TIME,
         CharacterAnimation::DEFAULT_NEXT_WEIGHT,
         CharacterAnimation::DEFAULT_POSITION,
-        0.3f,
+        CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
         [this]()
     {
         m_hasChangingState = false;
@@ -761,9 +758,7 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
         setAnimation(
             CharacterAnimation::BodyPart::BOTH,
             m_lowerAnimState,
-            true,
-            0.3f,
-            CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+            false);
     });
 }
 
@@ -773,7 +768,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
     m_info.pGunBolt = nullptr;
 
     /*
-    - 몸에 ㅠ장착하는 애니메이션 - Idling 애니메이션 0.3f 보간, Prone상태에서 깜빡거리는 문제 해결
+    - 몸에 장착하는 애니메이션 - Idling 애니메이션 0.3f 보간, Prone상태에서 깜빡거리는 문제 해결
     */
 
     TotalInventory& inven = m_totalInventory;
@@ -810,12 +805,10 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
-                0.3f,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+                0.3f);
         });
 
         //장비용
-        m_hasChangingState = true;
         setEquipAnimation(
             CharacterAnimation::BodyPart::UPPER,
             tagAnim,
@@ -830,8 +823,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
-                0.3f,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+                0.3f);
         });
     }
     else if (tagRifle == TAG_RIFLE::Secondary) //보조무기를 다시 몸에 장착
@@ -862,7 +854,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             inven.m_pHand = nullptr;
             m_hasChangingState = false;
 
-            setAnimation(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
@@ -881,12 +873,12 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             0.3f,
             [this, &inven]()
         {
+            m_hasChangingState = false;
             setEquipAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
                 true,
-                0.3f,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT);
+                0.3f);
         });
     }
 }
@@ -1384,7 +1376,13 @@ void Character::setAnimation(
         finishEvent);
 }
 
-void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position)
+void Character::setEquipAnimation(
+    const CharacterAnimation::BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight, 
+    const float position)
 {
     if (m_totalInventory.m_pEquipArmor)
     {
@@ -1420,7 +1418,15 @@ void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const
     }
 }
 
-void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+void Character::setEquipAnimation(
+    const CharacterAnimation::BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight, 
+    const float position, 
+    const float finishEventAgoTime, 
+    const std::function<void()>& finishEvent)
 {
     if (m_totalInventory.m_pEquipArmor)
     {
