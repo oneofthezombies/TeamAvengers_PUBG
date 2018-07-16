@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Client.h"
 #include "ComponentTransform.h"
+#include "ScenePlay.h"
+#include "IObject.h"
+#include "Item.h"
 
 void Client::Connect(const tcp::resolver::results_type& endpoints)
 {
@@ -329,6 +332,43 @@ void Communication::Manager::ReceiveMessage(
                 m_roomInfo.playerInfos[damageID].health = 0.0f;
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FROM_FIELD_TO_CHARACTER:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int&         id               = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+            int         pickerID;
+            std::string pickedItemName;
+
+            ss >> pickerID >> pickedItemName;
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(pScenePlay);
+            Item* pItem = pScenePlay->FindItemWithName(pickedItemName);
+
+            pScenePlay->GetCharacters()[pickerID]->PutItemInTotalInventory(pItem);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_DESTROY_ITEM:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int&         id = parsedDesc.first;
+            std::string& eventDestroyItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventDestroyItemStr);
+            std::string       destoryedItemName;
+
+            ss >> destoryedItemName;
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(pScenePlay);
+            Item* pItem = pScenePlay->FindItemWithName(destoryedItemName);
+            IObject* pO = static_cast<IObject*>(pItem);
+            pScenePlay->Destroy(pO);
+        }
+        break;
     }
 }
 
@@ -479,6 +519,34 @@ void Communication::Manager::SendEventMinusDamage(
     m_pClient->Write(
         Message::Create(
             TAG_REQUEST::SEND_EVENT_MINUS_DAMAGE, 
+            ss.str()));
+}
+
+void Communication::Manager::SendEventMoveItemFromFieldToCharacter(
+    const int id, 
+    const std::string& itemName)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FROM_FIELD_TO_CHARACTER, 
+            ss.str()));
+}
+
+void Communication::Manager::SendEventDestroyItem(const std::string& itemName)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << itemName;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_DESTROY_ITEM, 
             ss.str()));
 }
 

@@ -128,7 +128,13 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
 
         if (ResourceInfo::IsItem(o.m_tagResStatic))
         {
-            Item* pItem = new Item(o.m_tagResStatic, o.m_position, o.m_rotation, o.m_scale);
+            Item* pItem = new Item(
+                o.m_tagResStatic, 
+                o.m_name, 
+                o.m_position, 
+                o.m_rotation, 
+                o.m_scale);
+
             // Total Space ¿¡ Item ³Ö±â
             InsertObjIntoTotalCellSpace(pItem->GetTagObject(), GetCellIndex(o.m_position), pItem);
             AddObject(pItem);
@@ -137,6 +143,7 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
         {
             TerrainFeature* pTerrainFeature = new TerrainFeature(
                 o.m_tagResStatic,
+                o.m_name,
                 o.m_position,
                 o.m_rotation,
                 o.m_scale);
@@ -156,6 +163,23 @@ IObject* IScene::FindWithTag(const TAG_OBJECT tag)
     {
         if (o->GetTagObject() == tag)
             return o;
+    }
+
+    return nullptr;
+}
+
+Item* IScene::FindItemWithName(const std::string& name)
+{
+    for (auto o : m_objects)
+    {
+        if (o->GetTagObject() == TAG_OBJECT::Item)
+        {
+            Item* pItem = static_cast<Item*>(o);
+            if (pItem->GetName() == name)
+            {
+                return pItem;
+            }
+        }
     }
 
     return nullptr;

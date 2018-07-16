@@ -50,7 +50,7 @@ private:
     unordered_map<IObject*, float> m_toDeleteObjects;
 
 protected:
-    HeightMap*             pHeightMap;
+    HeightMap*              pHeightMap;
     std::vector<CellSpace>  m_TotalCellSpaces;
 public:
     Area                    m_NearArea;
@@ -77,10 +77,11 @@ public:
 
     void LoadObjectsFromFile(const std::string& fullPath);
     IObject* FindWithTag(const TAG_OBJECT tag);
+    Item* FindItemWithName(const std::string& name);
 
     void              SetHeightMap(HeightMap* p);
     HeightMap*        GetHeightMap();
-    bool              GetHeight(const D3DXVECTOR3 & pos, OUT float * OutHeight);
+    bool              GetHeight(const D3DXVECTOR3& pos, OUT float* OutHeight);
 
     bool              isOutOfBoundaryBox(const D3DXVECTOR3& pos);
 
@@ -90,10 +91,17 @@ public:
     std::vector<CellSpace>* GetTotalCellSpace();
     void InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObject* obj);
     std::size_t GetCellIndex(const D3DXVECTOR3& position);
-    CellSpace* GetCellSpaceByPosition(const D3DXVECTOR3& position);
+    CellSpace*  GetCellSpaceByPosition(const D3DXVECTOR3& position);
     const float GetCellSpaceLength();
-    void MoveCell(OUT std::size_t* currentCellIndex, std::size_t destCellIndex, TAG_OBJECT tag, IObject* obj);
+    
+    void MoveCell(
+        OUT std::size_t* currentCellIndex, 
+        std::size_t destCellIndex, 
+        TAG_OBJECT tag, 
+        IObject* obj);
+
     void ItemIntoInventory(size_t index, Item* obj);
+    
     //bool IsMovable(const D3DXVECTOR3* targetPos, size_t currentCellIndex, TAG_OBJECT tag, IObject* obj);
 
     virtual void OnInit() = 0;

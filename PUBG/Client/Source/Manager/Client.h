@@ -65,6 +65,10 @@ struct Communication
         //void SendEventFireBullet(Bullet* pBullet);
         void SendEventSound(const TAG_SOUND tag, const D3DXVECTOR3& p);
         void SendEventMinusDamage(const int id, const float damage);
+        void SendEventMoveItemFromFieldToCharacter(
+            const int id, 
+            const std::string& itemName);
+        void SendEventDestroyItem(const std::string& itemName);
 
         friend Singleton<Manager>;
     };

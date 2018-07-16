@@ -493,7 +493,7 @@ private:
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
     void createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);
     //이미 아이템이 있는 경우, 그 아이템을 바닥에 떨구고 새아이템을 착용한다
-    void checkOriginItem(Item** originItem, Item* newItem);
+    bool checkOriginItem(Item** originItem, Item* newItem);
 
     // TODO : impl
     void equipItem() {}

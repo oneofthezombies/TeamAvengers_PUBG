@@ -19,6 +19,7 @@ public:
 
 private:
     const TAG_RES_STATIC m_tagResStatic;
+    const std::string    m_name;
     
     float m_durability; //내구성
     int   m_count;      //아이템의 개수
@@ -53,6 +54,7 @@ private:
 public:
              Item(
                  const TAG_RES_STATIC tag, 
+                 const std::string& name,
                  const D3DXVECTOR3& position, 
                  const D3DXVECTOR3& rotation, 
                  const D3DXVECTOR3& scale);
@@ -80,6 +82,8 @@ public:
 
     void SetPosition(const D3DXVECTOR3& position);
     void SetUIPosition(const D3DXVECTOR2& position);
+
+    const std::string& GetName();
 
     //ui text
     UIText* GetUIText();

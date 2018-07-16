@@ -6,10 +6,12 @@
 
 TerrainFeature::TerrainFeature(
     const TAG_RES_STATIC tag,
-    const D3DXVECTOR3& position,
-    const D3DXVECTOR3& rotation,
-    const D3DXVECTOR3& scale)
+    const std::string&   name,
+    const D3DXVECTOR3&   position,
+    const D3DXVECTOR3&   rotation,
+    const D3DXVECTOR3&   scale)
     : IObject(TAG_OBJECT::TerrainFeature)
+    , m_name(name)
     , pEffectMeshRenderer(nullptr)
 {
     pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
@@ -35,7 +37,9 @@ TerrainFeature::~TerrainFeature()
 
 void TerrainFeature::OnUpdate()
 {
-    Shader()()->AddShadowSource(GetTransform()->GetTransformationMatrix(), pEffectMeshRenderer->GetEffectMesh());
+    Shader()()->AddShadowSource(
+        GetTransform()->GetTransformationMatrix(), 
+        pEffectMeshRenderer->GetEffectMesh());
 }
 
 void TerrainFeature::OnRender()

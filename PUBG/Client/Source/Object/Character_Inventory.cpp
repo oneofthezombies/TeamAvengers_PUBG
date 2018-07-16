@@ -53,7 +53,6 @@ Character::TotalInventory::~TotalInventory()
     SAFE_DELETE(m_pWeaponSecondary);
 }
 
-
 void Character::TotalInventory::Init()
 {
     // 검정 배경
@@ -731,44 +730,82 @@ void Character::PutItemInTotalInventory(Item* item)
             if (m_totalInventory.m_capacity - ItemInfo::GetCapacity(tag) >= 0)
             {
                 (m_totalInventory.m_mapInventory)[tag].push_back(item);
+
                 CurrentScene()()->RemoveObject(item);
+               
+                // OOTZ_FLAG : 네트워크 필드 -> 메드킷, 부착물
+                
                 m_totalInventory.m_capacity -= ItemInfo::GetCapacity(tag);
             }
             else
             {
                 m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
             }
-            // TODO : send "delete item on field" to server
         }
     }
         break;
 
     case TAG_ITEM_CATEGORY::Armor:
-        //TODO: 피해감소량 적용
-        checkOriginItem(&m_totalInventory.m_pEquipArmor, item);
+        {
+            //TODO: 피해감소량 적용
+            const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipArmor, item);
+            if (dropped)
+            {
+                // OOTZ_FLAG : 네트워크 아머 -> 필드
+            }
+
+            // OOTZ_FLAG : 네트워크 필드 -> 아머
+        }
         break;
 
     case TAG_ITEM_CATEGORY::Back:
-        checkOriginItem(&m_totalInventory.m_pEquipBack, item);
+        {
+            const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipBack, item);
+            if (dropped)
+            {
+                // OOTZ_FLAG : 네트워크 백 -> 필드
+            }
+
+            // OOTZ_FLAG : 네트워크 필드 -> 백
+        }
         break;
 
     case TAG_ITEM_CATEGORY::Head:
-        //TODO: 피해감소량 적용
-        checkOriginItem(&m_totalInventory.m_pEquipHead, item);
+        {
+            //TODO: 피해감소량 적용
+            const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipHead, item);
+            if (dropped)
+            {
+                // OOTZ_FLAG : 네트워크 헤드 -> 필드
+            }
+
+            // OOTZ_FLAG : 네트워크 필드 -> 헤드
+        }
         break;
 
     case TAG_ITEM_CATEGORY::Rifle:
         //TODO: 무기창의 어느부분에 넣느냐에 따라서 달라짐
-        //지금은 임시로 QBZ를 주무기, Kar98k를 보조무기로
         {
             if(!m_totalInventory.m_pWeaponPrimary &&
                 !(m_totalInventory.m_handState==TAG_RIFLE::Primary))
             {
-                checkOriginItem((Item**)&m_totalInventory.m_pWeaponPrimary, item);
+                const bool dropped = checkOriginItem((Item**)&m_totalInventory.m_pWeaponPrimary, item);
+                if (dropped)
+                {
+                    // OOTZ_FLAG : 네트워크 프라이머리 -> 필드
+                }
+
+                // OOTZ_FLAG : 네트워크 필드 -> 프라이머리
             }
             else
             {
-                checkOriginItem((Item**)&m_totalInventory.m_pWeaponSecondary, item);
+                const bool dropped = checkOriginItem((Item**)&m_totalInventory.m_pWeaponSecondary, item);
+                if (dropped)
+                {
+                    // OOTZ_FLAG : 네트워크 세컨더리 -> 필드
+                }
+
+                // OOTZ_FLAG : 네트워크 필드 -> 세컨더리
             }
         }
         break;
@@ -786,7 +823,7 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
 {
     /*
         - 자신의 용량만큼 캐릭터의 소지용량에서 제외된다
-        - 소모품, 부착물, 탄약
+        - 소모품(Bandage, FirstAidKit), 탄약
     */
     assert(map && item && "Character::CreateOrMergeItem(), argument is null.");
 
@@ -802,7 +839,8 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
             (*map)[tag].push_back(item);
             item->SetCount(count);
             CurrentScene()()->RemoveObject(item);
-            // TODO : send "delete item on field" to server
+            
+            // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
         }
         else
         {
@@ -810,7 +848,10 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
             auto origin_item = it->second.back();
             origin_item->SetCount(origin_item->GetCount() + count);
             CurrentScene()()->Destroy(item);
-            // TODO : send "delete item on field" to server
+
+            // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
+            // TODO : 네트워크 아이템 삭제
+            Communication()()->SendEventDestroyItem(item->GetName());
         }
         m_totalInventory.m_capacity -= count * ItemInfo::GetCapacity(tag);
     }
@@ -818,10 +859,9 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
     {
         m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
     }
-
 }
 
-void Character::checkOriginItem(Item** originItem, Item* newItem)
+bool Character::checkOriginItem(Item** originItem, Item* newItem)
 {
     /*
         - 장비, 무기
@@ -841,9 +881,11 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
             category == TAG_ITEM_CATEGORY::Head)
             m_totalInventory.m_equipOnNum--;
 
-        //아래는 임시코드
-        CurrentScene()()->Destroy(*originItem);
-        checkOriginItem(originItem, newItem);
+        // 재설계
+        // TODO : 승훈
+                
+
+        return true;
     }
     else
     {
@@ -851,8 +893,9 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
         //m_totalInventory.m_capacity += ItemInfo::GetCapacity(newItem->GetTagResStatic());
         //용량을 늘린다
         m_totalInventory.m_capacity += ItemInfo::GetCapacityExtension(newItem->GetTagResStatic());
+
         CurrentScene()()->RemoveObject(newItem);
-        
+
         TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(newItem->GetTagResStatic());
         if (category == TAG_ITEM_CATEGORY::Armor ||
             category == TAG_ITEM_CATEGORY::Back ||
@@ -862,7 +905,8 @@ void Character::checkOriginItem(Item** originItem, Item* newItem)
         // eqiup
         newItem->SetIsRenderEffectMesh(false);
         newItem->SetIsRenderSkinnedMesh(true);
-        // TODO : send "delete item on field" to server
+
+        return false;
     }
 }
 
@@ -1306,9 +1350,24 @@ void Character::onMouse(
                     pItem->SetState(false);
                     D3DXVECTOR3 p = m_totalInventory.pCharacter->GetTransform()->GetPosition();
                     CurrentScene()()->AddObject(pItem);
-                    CurrentScene()()->InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, CurrentScene()()->GetCellIndex(p), pItem);
+                    CurrentScene()()->InsertObjIntoTotalCellSpace(
+                        TAG_OBJECT::Item, 
+                        CurrentScene()()->GetCellIndex(p), 
+                        pItem);
+
                     pItem->SetPosition(D3DXVECTOR3(p.x,p.y+20,p.z));
-                    ti.m_mapInventory.erase(pItem->GetTagResStatic());
+
+                    TAG_RES_STATIC tag = pItem->GetTagResStatic();
+                    std::vector<Item*>& items = ti.m_mapInventory[tag];
+                    for (auto it = items.begin(); it != items.end(); ++it)
+                    {
+                        if (*it == pItem)
+                        {
+                            items.erase(it);
+                            break;
+                        }
+                    }
+
                     pItem->GetTransform()->Update();
 
                     switch (cat)
@@ -1333,6 +1392,7 @@ void Character::onMouse(
                                     ti.pTempSaveWeaponForX = nullptr;
                                 }
 
+                                // OOTZ_FLAG : 네트워크 프라이머리 -> 필드
                             }
                             else if(pItem == ti.m_pWeapon2->pItem)
                             {
@@ -1344,6 +1404,8 @@ void Character::onMouse(
                                     ti.m_handState = TAG_RIFLE::None;
                                     ti.pTempSaveWeaponForX = nullptr;
                                 }
+
+                                // OOTZ_FLAG : 네트워크 세컨더리 -> 필드
                             }
 
                             //손에 장착 되어있는 아이템이 클릭한 아이템이랑 같다면 
@@ -1372,6 +1434,7 @@ void Character::onMouse(
                                         true);
                                 }
 
+                                // OOTZ_FLAG : 네트워크 핸드 -> 필드
                             }
 
 

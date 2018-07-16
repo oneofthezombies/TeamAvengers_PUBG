@@ -9,11 +9,14 @@ class EffectMeshRenderer;
 class TerrainFeature : public IObject
 {
 private:
+    const std::string& m_name;
+
     EffectMeshRenderer*  pEffectMeshRenderer;
 
 public:
              TerrainFeature(
                  const TAG_RES_STATIC tag, 
+                 const std::string&   name,
                  const D3DXVECTOR3&   position,
                  const D3DXVECTOR3&   rotation,
                  const D3DXVECTOR3&   scale);

@@ -17,12 +17,15 @@ const float Item::DEFAULT_FINISH_EVENT_AGO_TIME = 0.0f;
 
 Item::Item(
     const TAG_RES_STATIC tag,
+    const std::string& name,
     const D3DXVECTOR3&   position,
     const D3DXVECTOR3&   rotation,
     const D3DXVECTOR3&   scale)
     : IObject(TAG_OBJECT::Item)
 
     , m_tagResStatic(tag)
+    , m_name(name)
+
     , m_durability(0.0f)
     , m_count(0)
     , m_numBullet(0)
@@ -38,7 +41,6 @@ Item::Item(
     , m_pUIImage2(nullptr)
     , pUIText(nullptr)
     , m_inInventory(false)
-
 
     , pGunBolt(nullptr)
 
@@ -73,7 +75,12 @@ void Item::OnRender()
     {
         EffectMesh* pEM = pEffectMeshRenderer->GetEffectMesh();
         D3DXVECTOR3 center = Vector3::ZERO;
-        D3DXVec3TransformCoord(&center, &pEM->m_boundingSphere.center, &GetTransform()->GetTransformationMatrix());
+
+        D3DXVec3TransformCoord(
+            &center, 
+            &pEM->m_boundingSphere.center, 
+            &GetTransform()->GetTransformationMatrix());
+
         if(CurrentCamera()()->IsObjectInsideFrustum(center, pEM->m_boundingSphere.radius))
             pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
     }
@@ -420,6 +427,11 @@ void Item::SetUIPosition(const D3DXVECTOR2& position)
     m_pUIImage->SetPosition(D3DXVECTOR3(position.x, position.y, 0.0f));
 }
 
+const std::string& Item::GetName()
+{
+    return m_name;
+}
+
 UIText* Item::GetUIText()
 {
     return pUIText;
@@ -469,7 +481,7 @@ bool Item::GetAuto()
     return m_auto;
 }
 
-Frame * Item::GetGunBolt() const
+Frame* Item::GetGunBolt() const
 {
     return pGunBolt;
 }

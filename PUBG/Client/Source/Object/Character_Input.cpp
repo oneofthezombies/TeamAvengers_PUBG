@@ -25,6 +25,8 @@ void Character::setAttacking() //Num1, Num2, X
                 inven.m_pHand = inven.m_pWeaponPrimary;
                 inven.m_pWeaponPrimary = nullptr;
 
+                // OOTZ_FLAG : 네트워크 프라이머리 -> 손
+
                 setRifleOnHand(TAG_RIFLE::Primary);
             }
             else if (m_attacking == Attacking::Rifle) //보조무기를 해제하고, 주무기를 장착한다
@@ -53,6 +55,8 @@ void Character::setAttacking() //Num1, Num2, X
                     inven.m_pHand = inven.m_pWeaponPrimary;
                     inven.m_pWeaponPrimary = nullptr;
 
+                    // OOTZ_FLAG : 네트워크 손 -> 세컨더리, 프라이머리 -> 손
+
                     setRifleOnHand(TAG_RIFLE::Primary);
                 });
             }
@@ -74,6 +78,8 @@ void Character::setAttacking() //Num1, Num2, X
 
                 inven.m_pHand = inven.m_pWeaponSecondary;
                 inven.m_pWeaponSecondary = nullptr;
+
+                // OOTZ_FLAG : 네트워크 세컨더리 -> 손
 
                 setRifleOnHand(TAG_RIFLE::Secondary);
             }
@@ -100,6 +106,8 @@ void Character::setAttacking() //Num1, Num2, X
                     inven.m_pWeaponPrimary = inven.m_pHand;
                     inven.m_pHand = inven.m_pWeaponSecondary;
                     inven.m_pWeaponSecondary = nullptr;
+
+                    // OOTZ_FLAG : 네트워크 손 -> 프라이머리, 세컨더리 -> 손
 
                     setRifleOnHand(TAG_RIFLE::Secondary);
                 });
@@ -142,12 +150,16 @@ void Character::setAttacking() //Num1, Num2, X
                     m_hasChangingState = true;
                     inven.m_pWeaponPrimary = nullptr;
                     setRifleOnHand(TAG_RIFLE::Primary);
+
+                    // OOTZ_FLAG : 네트워크 프라이머리 -> 손
                 }
                 else if (inven.m_handState == TAG_RIFLE::Secondary)
                 {
                     m_hasChangingState = true;
                     inven.m_pWeaponSecondary = nullptr;
                     setRifleOnHand(TAG_RIFLE::Secondary);
+
+                    // OOTZ_FLAG : 네트워크 세컨더리 -> 손
                 }
             }
         }
@@ -811,6 +823,8 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             inven.m_pHand = nullptr;
             m_hasChangingState = false;
 
+            // OOTZ_FLAG : 네트워크 손 -> 프라이머리
+
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
@@ -860,6 +874,8 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             inven.m_pWeaponSecondary = inven.m_pHand;
             inven.m_pHand = nullptr;
             m_hasChangingState = false;
+
+            // OOTZ_FLAG : 네트워크 손 -> 세컨더리
 
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,

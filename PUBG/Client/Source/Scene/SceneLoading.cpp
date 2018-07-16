@@ -626,7 +626,20 @@ void SceneLoading::OnUpdate()
                 &m_equipmentSkinnedMeshResources);
 
             addEffectMeshsForAsync();
+
+            if (m_effectMeshTasks.empty() && 
+                m_effectMeshResources.empty())
+            {
+                m_isDoneEffectMeshs = true;
+            }
+
             addSkinnedMeshsForAsync();
+
+            if (m_skinnedMeshTasks.empty() && 
+                m_skinnedMeshResources.empty())
+            {
+                m_isDoneSkinnedMeshs = true;
+            }
 
             if (m_characterSkinnedMeshTasks.empty())
             {
@@ -663,11 +676,8 @@ void SceneLoading::OnUpdate()
                         if (m_equipmentSkinnedMeshTasks.empty() &&
                             m_equipmentSkinnedMeshResources.empty())
                         {
-                            m_isDoneEffectMeshs = true;
-                            m_isDoneSkinnedMeshs = true;
                             m_isDoneCharacters = true;
                             m_isDoneEquipments = true;
-
                         }
                     }
                 }

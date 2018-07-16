@@ -197,9 +197,6 @@ void ScenePlay::setWithOthersMode()
     Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-
-
-
     AddObject(new SkySphere);
 
     //TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(500.0f, 100.0f, 500.0f), Vector3::ZERO, Vector3::ONE);
@@ -329,4 +326,9 @@ int ScenePlay::GetSurvivors() const
 Character* ScenePlay::GetPlayer() const
 {
     return pPlayer;
+}
+
+const std::vector<Character*>& ScenePlay::GetCharacters() const
+{
+    return characters;
 }
