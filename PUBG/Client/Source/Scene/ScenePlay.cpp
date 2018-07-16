@@ -11,7 +11,7 @@
 
 void ScenePlay::setAloneMode()
 {
-    Communication()()->m_myInfo.ID = 1;
+    Communication()()->m_myInfo.ID = 3;
     const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);

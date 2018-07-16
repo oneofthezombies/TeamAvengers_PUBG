@@ -59,19 +59,19 @@ Character::Character(const int index)
         m_inGameUI.Init(this);
     }
 
-    const float factor(static_cast<float>(m_index + 1) * 200.0f);
+    int x = m_index / 2;
+    int z = m_index % 2;
+
+    const float factor(4648.0f);
 
     Transform* pTransform = GetTransform();
-    pTransform->SetPosition(D3DXVECTOR3(factor, 200.0f, factor));
+    pTransform->SetPosition(D3DXVECTOR3(x*factor + 200.0f, 200.0f, z*factor + 200.0f));
 
-    //if(m_index == 0)
-    //    pTransform->SetPosition(D3DXVECTOR3(200.0f, 200.0f, 200.0f));
-    //if (m_index == 1)
-    //    pTransform->SetPosition(D3DXVECTOR3(200.0f, 200.0f, 4848.0f));
-    //if (m_index == 2)
-    //    pTransform->SetPosition(D3DXVECTOR3(4848.0f, 200.0f, 200.0f));
-    //if (m_index == 3)
-    //    pTransform->SetPosition(D3DXVECTOR3(4848.0f, 200.0f, 4848.0f));
+
+    //const float factor(static_cast<float>(m_index + 1) * 200.0f);
+
+    //Transform* pTransform = GetTransform();
+    //pTransform->SetPosition(D3DXVECTOR3(factor, 200.0f, factor));
 
     pTransform->SetRotation(OFFSET_ROTATION);
 
