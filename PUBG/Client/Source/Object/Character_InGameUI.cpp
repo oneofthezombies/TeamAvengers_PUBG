@@ -459,89 +459,7 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     updateHpUI();
 
     //킬 수
-    //TODO: 상단 킬은 죽인 순간이랑, 탭을 눌렀을 때만 보임
-    if (inven.isOpened)
-    {
-        pKillNumUpBg->SetIsRender(true);
-        pKillTextUpBg->SetIsRender(true);
-        pKillNumUpText->SetText(to_string(pPlayer->GetKillNum()));
-
-        pCompassBg->SetIsRender(false);
-        pCompassArrowBg->SetIsRender(false);
-        pAmmoBg->SetIsRender(false);
-        pMapImg->SetIsRender(false);
-        pQBZImg->SetIsRender(false);
-        pKar98kImg->SetIsRender(false);
-
-    }
-    else
-    {
-        if (m_isKill == false)
-        {
-            pKillNumUpBg->SetIsRender(false);
-            pKillTextUpBg->SetIsRender(false);
-            pKillNumUpText->SetText("");
-        }
-
-        pCompassBg->SetIsRender(true);
-        pCompassArrowBg->SetIsRender(true);
-        pAmmoBg->SetIsRender(true);
-        pMapImg->SetIsRender(true);
-        pQBZImg->SetIsRender(true);
-        pKar98kImg->SetIsRender(true);
-    }
-
-    //킬 한 그 순간에 텍스트가 뜬다
-    if (pPlayer->GetIsKill())
-    {
-        m_isKill = true;
-        //화면 중앙 킬
-        //ex) "당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
-        string str = string("당신의 ") + m_weaponNameForKill + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
-        pKillText->SetText(str, pKillTextShadow);
-
-        int killNum = pPlayer->GetKillNum();
-        pKillNumText->SetText(to_string(killNum) + " 킬", pKillNumTextShadow);
-        
-        //화면 오른쪽 상단 킬
-        pKillNumUpBg->SetIsRender(true);
-        pKillTextUpBg->SetIsRender(true);
-        pKillNumUpText->SetText(to_string(killNum));
-
-        pPlayer->SetIsKill(false);
-    }
-
-    //일정시간이 지나면 텍스트가 사라진다
-    //화면 중앙 킬
-    if (pKillNumText->GetText() != "")
-    {
-        m_killCoolDown -= Time()()->GetDeltaTime();
-        if (m_killCoolDown <= 0.0f)
-        {
-            pKillNumText->SetText("", pKillNumTextShadow);
-            pKillText->SetText("", pKillTextShadow);
-
-            m_killCoolDown = KILL_COOL_TIME;
-        }
-    }
-
-    //화면 오른쪽 상단 킬
-    if (pKillNumUpText->GetText() != "" && inven.isOpened == false)
-    {
-        float t = m_killUpCoolDown -= Time()()->GetDeltaTime();
-        cout << t << endl;
-
-        if (m_killUpCoolDown <= 0.0f)
-        {
-            m_isKill = false;
-
-            pKillNumUpBg->SetIsRender(false);
-            pKillTextUpBg->SetIsRender(false);
-            pKillNumUpText->SetText("");
-
-            m_killUpCoolDown = KILL_UP_COOL_TIME;
-        }
-    }
+    updateKillUI(inven);
 
 
     //장비 착용 관련 UI
@@ -702,6 +620,92 @@ void Character::InGameUI::updateHpUI()
             pHpRedImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
             m_hpCoolDown = HP_COOL_TIME;
             pPlayer->ResetIsDamaged();
+        }
+    }
+}
+
+void Character::InGameUI::updateKillUI(const TotalInventory& inven)
+{
+    if (inven.isOpened)
+    {
+        pKillNumUpBg->SetIsRender(true);
+        pKillTextUpBg->SetIsRender(true);
+        pKillNumUpText->SetText(to_string(pPlayer->GetKillNum()));
+
+        pCompassBg->SetIsRender(false);
+        pCompassArrowBg->SetIsRender(false);
+        pAmmoBg->SetIsRender(false);
+        pMapImg->SetIsRender(false);
+        pQBZImg->SetIsRender(false);
+        pKar98kImg->SetIsRender(false);
+
+    }
+    else
+    {
+        if (m_isKill == false)
+        {
+            pKillNumUpBg->SetIsRender(false);
+            pKillTextUpBg->SetIsRender(false);
+            pKillNumUpText->SetText("");
+        }
+
+        pCompassBg->SetIsRender(true);
+        pCompassArrowBg->SetIsRender(true);
+        pAmmoBg->SetIsRender(true);
+        pMapImg->SetIsRender(true);
+        pQBZImg->SetIsRender(true);
+        pKar98kImg->SetIsRender(true);
+    }
+
+    //킬 한 그 순간에 텍스트가 뜬다
+    if (pPlayer->GetIsKill())
+    {
+        m_isKill = true;
+        //화면 중앙 킬
+        //ex) "당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
+        string str = string("당신의 ") + m_weaponNameForKill + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
+        pKillText->SetText(str, pKillTextShadow);
+
+        int killNum = pPlayer->GetKillNum();
+        pKillNumText->SetText(to_string(killNum) + " 킬", pKillNumTextShadow);
+
+        //화면 오른쪽 상단 킬
+        pKillNumUpBg->SetIsRender(true);
+        pKillTextUpBg->SetIsRender(true);
+        pKillNumUpText->SetText(to_string(killNum));
+
+        pPlayer->SetIsKill(false);
+    }
+
+    //일정시간이 지나면 텍스트가 사라진다
+    //화면 중앙 킬
+    if (pKillNumText->GetText() != "")
+    {
+        m_killCoolDown -= Time()()->GetDeltaTime();
+        if (m_killCoolDown <= 0.0f)
+        {
+            pKillNumText->SetText("", pKillNumTextShadow);
+            pKillText->SetText("", pKillTextShadow);
+
+            m_killCoolDown = KILL_COOL_TIME;
+        }
+    }
+
+    //화면 오른쪽 상단 킬
+    if (pKillNumUpText->GetText() != "" && inven.isOpened == false)
+    {
+        float t = m_killUpCoolDown -= Time()()->GetDeltaTime();
+        cout << t << endl;
+
+        if (m_killUpCoolDown <= 0.0f)
+        {
+            m_isKill = false;
+
+            pKillNumUpBg->SetIsRender(false);
+            pKillTextUpBg->SetIsRender(false);
+            pKillNumUpText->SetText("");
+
+            m_killUpCoolDown = KILL_UP_COOL_TIME;
         }
     }
 }

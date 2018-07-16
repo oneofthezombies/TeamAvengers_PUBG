@@ -263,6 +263,7 @@ public:
         void updateOnHandWeaponUI(const TotalInventory& inven);
         void updateSurvivalNumTextUI();
         void updateHpUI();
+        void updateKillUI(const TotalInventory& inven);
     };
 
     struct Info
