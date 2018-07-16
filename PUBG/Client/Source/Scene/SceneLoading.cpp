@@ -656,19 +656,19 @@ void SceneLoading::OnUpdate()
                 &m_effectMeshResources);
 
             moveFinishedTasksForAsync(
-                &m_skinnedMeshTasks, 
+                &m_skinnedMeshTasks,
                 &m_skinnedMeshResources);
 
             moveFinishedTasksForAsync(
-                &m_characterSkinnedMeshTasks, 
+                &m_characterSkinnedMeshTasks,
                 &m_characterSkinnedMeshResources);
 
             moveFinishedTasksForAsync(
-                &m_characterAnimationTasks, 
+                &m_characterAnimationTasks,
                 &m_characterAnimationResources);
 
             moveFinishedTasksForAsync(
-                &m_equipmentSkinnedMeshTasks, 
+                &m_equipmentSkinnedMeshTasks,
                 &m_equipmentSkinnedMeshResources);
 
             addTexturesForAsync();
@@ -688,6 +688,11 @@ void SceneLoading::OnUpdate()
             }
 
             addSkinnedMeshsForAsync();
+            if (m_skinnedMeshTasks.empty() &&
+                m_skinnedMeshResources.empty())
+            {
+                m_isDoneSkinnedMeshs = true;
+            }
 
             if (m_skinnedMeshTasks.empty() && 
                 m_skinnedMeshResources.empty())

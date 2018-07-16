@@ -66,10 +66,20 @@ Character::Character(const int index)
         m_totalInventory.Init();
     }
 
-    const float factor(static_cast<float>(m_index + 1) * 200.0f);
+    int x = m_index / 2;
+    int z = m_index % 2;
+
+    const float factor(4648.0f);
 
     Transform* pTransform = GetTransform();
-    pTransform->SetPosition(D3DXVECTOR3(factor, 200.0f, factor));
+    pTransform->SetPosition(D3DXVECTOR3(x*factor + 200.0f, 200.0f, z*factor + 200.0f));
+
+
+    //const float factor(static_cast<float>(m_index + 1) * 200.0f);
+
+    //Transform* pTransform = GetTransform();
+    //pTransform->SetPosition(D3DXVECTOR3(factor, 200.0f, factor));
+
     pTransform->SetRotation(OFFSET_ROTATION);
 
     //putting character into TotalCellSpace
@@ -111,6 +121,7 @@ Character::Character(const int index)
 
     m_bBox = BoundingBox::Create(D3DXVECTOR3(-20.0f, 0.0f, -20.0f), D3DXVECTOR3(20.0f, 170.0f, 20.0f));
     //m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
+    
 }
 
 Character::~Character()
@@ -130,7 +141,7 @@ Character::~Character()
 void Character::OnUpdate()
 {
     const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
-    
+
     if (receivedHealth < m_health)
     {
         m_health = receivedHealth;
@@ -140,6 +151,9 @@ void Character::OnUpdate()
 
     updateMine();
     updateOther();
+
+    Debug << "------current cell space ------ : " << m_cellIndex << endl;
+    
 
     // update
     GetTransform()->Update();      // set characters world
@@ -276,7 +290,7 @@ void Character::updateMine()
     ////////////충돌 체크 Area/////////////////////
     //Terrain과의 충돌체크
     //terrainFeaturesCollisionInteraction(&destState);
-    terrainFeaturesCollisionInteraction2(&destState);
+    terrainFeaturesCollisionInteraction(&destState);
     //Item 과의 충돌체크
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////
@@ -425,6 +439,17 @@ void Character::updateOther()
 
     pTr->SetPosition(pos);
     pTr->SetRotation(rot);
+
+    //others cell space update
+    IScene* pCurrentScene = CurrentScene()();
+    std::size_t cellIndex = pCurrentScene->GetCellIndex(pos);
+    if (cellIndex != m_cellIndex)
+    {
+        pCurrentScene->MoveCell(&m_cellIndex, cellIndex, TAG_OBJECT::Character, this);
+    }
+
+
+
 
     D3DXVECTOR2 headAngle;
     D3DXVec2Lerp(
