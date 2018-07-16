@@ -158,6 +158,7 @@ public:
         static const float HP_HEIGHT;
 
         Character* pPlayer;
+        string m_killedNickName;
 
         UIImage* m_pBackground;
 
@@ -622,6 +623,7 @@ public:
     void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
     int GetIndex() const;
+    string GetNickName() const;
     float GetCharacterHealth() const;
     bool GetCharacterIsDead() const;
     
@@ -648,12 +650,17 @@ public:
     D3DXVECTOR3 GetWaistPosition();
     bool IsFire() const;
     void RifleShooting();
+
+    /* ¾È¾¸ */
     D3DXVECTOR3 FindShootingTargetPos();
+
     void MinusDamage(const float damage);
 
     int GetKillNum() const;
+    void SetKillNum(const int killNum);
     bool GetIsKill() const;
-    void ResetIsKill();
+    void SetIsKill(const bool isKill);
+    InGameUI& GetInGameUI();
 
     //        const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;

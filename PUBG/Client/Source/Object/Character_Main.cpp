@@ -39,7 +39,7 @@ Character::Character(const int index)
 
     , m_inGameUI()
     , m_killNum(0)
-    , m_isKill(true)
+    , m_isKill(false)
 
     , m_attacking(Attacking::Unarmed)
     , m_stance(Stance::Stand)

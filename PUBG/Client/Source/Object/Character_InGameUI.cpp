@@ -27,6 +27,7 @@ const float Character::InGameUI::HP_HEIGHT    = 17.0f;
 
 Character::InGameUI::InGameUI()
     : pPlayer(nullptr)
+    , m_killedNickName("")
 
     , m_pBackground(nullptr)
 
@@ -331,12 +332,13 @@ void Character::InGameUI::Init(Character* pPlayer)
         m_pBackground,
         D3DXVECTOR3(612.0f, 504.0f, 0.0f));
 
+    //"당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
     setTextWithShadow(
         pKillText,
         pKillTextShadow,
         Resource()()->GetFont(TAG_FONT::InGameInfo),
         D3DXVECTOR2(400.0f, 20.0f),
-        string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
+        string(""),
         WHITE,
         m_pBackground,
         D3DXVECTOR3(440.0f, 480.0f, 0.0f));
@@ -446,6 +448,11 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     //킬 한 순간에 텍스트가 뜬다
     if (pPlayer->GetIsKill())
     {
+        //화면 중앙 킬 텍스트
+        //"당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
+        string str = string("당신의 ") + "Kar98k " + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
+        pKillText->SetText(str, pKillTextShadow);
+
         pKillNumUpBg->SetIsRender(true);
         pKillTextUpBg->SetIsRender(true);
 
@@ -453,7 +460,7 @@ void Character::InGameUI::Update(const TotalInventory& inven)
         pKillNumUpText->SetText(to_string(killNum));
         pKillNumText->SetText(to_string(killNum) + " 킬", pKillNumTextShadow);
 
-        pPlayer->ResetIsKill();
+        pPlayer->SetIsKill(false);
     }
 
     //일정시간이 지나면 텍스트가 사라진다

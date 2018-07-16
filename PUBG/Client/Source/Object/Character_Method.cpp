@@ -1034,14 +1034,7 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
                 * CharacterInfo::GetHitAreaDamage(tagPart) //Hit Area Damage
                 * CharacterInfo::GetWeaponClassDamageByHitZone(tagPart); //Weapon Class Damage By Hit Zone
 
-            const float prevHP = o->GetCharacterHealth();
             o->MinusDamage(damage);
-            const float currHP = o->GetCharacterHealth();
-            if (currHP == 0.0f && prevHP > 0.0f)
-            {
-                m_killNum++;
-                m_isKill = true;
-            }
             Communication()()->SendEventMinusDamage(o->GetIndex(), damage);
         }
     }
@@ -1322,14 +1315,24 @@ int Character::GetKillNum() const
     return m_killNum;
 }
 
+void Character::SetKillNum(const int killNum)
+{
+    m_killNum = killNum;
+}
+
 bool Character::GetIsKill() const
 {
     return m_isKill;
 }
 
-void Character::ResetIsKill()
+void Character::SetIsKill(const bool isKill)
 {
-    m_isKill = false;
+    m_isKill = isKill;
+}
+
+Character::InGameUI & Character::GetInGameUI()
+{
+    return m_inGameUI;
 }
 
 D3DXVECTOR3 Character::getUp()
@@ -1484,6 +1487,11 @@ void Character::rotateHead(const float quantity)
 int Character::GetIndex() const
 {
     return m_index;
+}
+
+string Character::GetNickName() const
+{
+    return Communication()()->m_roomInfo.playerInfos[m_index].nickname;
 }
 
 float Character::GetCharacterHealth() const
