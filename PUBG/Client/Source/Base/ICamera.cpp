@@ -37,19 +37,19 @@ ICamera::~ICamera()
 
 void ICamera::CameraRender()
 {
-    Character::Info* pTarInfo = GetTargetInfo();
-    if (pTarInfo)
-    {    
-        D3DXMATRIX tarR, matWorld;
-        D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
-        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
-        
-        D3DXMATRIX testT;
-        D3DXMatrixTranslation(&testT, TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
-        testT *=pTarInfo->pTransform->GetTransformationMatrix();
-        //              (model space)                      (rotation get from character) 
-        matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
-    }
+    //Character::Info* pTarInfo = GetTargetInfo();
+    //if (pTarInfo)
+    //{    
+    //    D3DXMATRIX tarR, matWorld;
+    //    D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
+    //    D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, vRot.z);
+    //    
+    //    D3DXMATRIX testT;
+    //    D3DXMatrixTranslation(&testT, TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
+    //    testT *=pTarInfo->pTransform->GetTransformationMatrix();
+    //    //              (model space)                      (rotation get from character) 
+    //    matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
+    //}
 
     drawIndices(FRUSTUM_INDICES, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
     

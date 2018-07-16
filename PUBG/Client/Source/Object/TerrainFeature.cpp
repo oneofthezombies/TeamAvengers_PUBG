@@ -40,18 +40,24 @@ void TerrainFeature::OnUpdate()
 
 void TerrainFeature::OnRender()
 {
-    pEffectMeshRenderer->Render(
-        [this](LPD3DXEFFECT pEffect) 
+    if (CurrentCamera()()->IsObjectInsideFrustum(
+        m_boundingSphere.center + m_boundingSphere.position,
+        m_boundingSphere.radius))
     {
-        pEffect->SetMatrix(
-            Shader::World,
-            &GetTransform()->GetTransformationMatrix());
-    });
+        pEffectMeshRenderer->Render(
+            [this](LPD3DXEFFECT pEffect)
+        {
+            pEffect->SetMatrix(
+                Shader::World,
+                &GetTransform()->GetTransformationMatrix());
+        });
 
-    for (auto& bb : m_boundingBoxes)
-        bb.Render();
+        for (auto& bb : m_boundingBoxes)
+            bb.Render();
 
-    m_boundingSphere.Render();
+        m_boundingSphere.Render();
+    }
+    
 }
 
 void TerrainFeature::AddBoundingBox(const D3DXMATRIX& transformationMatrix)

@@ -74,6 +74,7 @@ void CameraManager::Update()
 
         //pCurrentCamera->CameraRender();
 
+
         pCurrentCamera->UpdateFrustumCulling();
 
 
