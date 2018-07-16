@@ -426,6 +426,18 @@ void Character::updateOther()
     pTr->SetPosition(pos);
     pTr->SetRotation(rot);
 
+    //JHTODO 이곳에 어떻게 cell space를 바꿀지 고민하라!
+    IScene* pCurrentScene = CurrentScene()();
+    std::size_t cellIndex = pCurrentScene->GetCellIndex(pos);
+    if (cellIndex != m_cellIndex)
+    {
+        //pCurrentScene->m_NearArea.CreateNearArea(destCellIndex);
+        pCurrentScene->MoveCell(&m_cellIndex, cellIndex, TAG_OBJECT::Character, this);
+    }
+
+
+
+
     D3DXVECTOR2 headAngle;
     D3DXVec2Lerp(
         &headAngle, 
