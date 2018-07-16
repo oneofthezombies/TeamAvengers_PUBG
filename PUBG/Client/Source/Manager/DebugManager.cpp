@@ -24,6 +24,13 @@ void DebugManager::Render()
     if (GetAsyncKeyState('M') & 0x0001)
         m_isRender = !m_isRender;
 
+    if (GetAsyncKeyState('N') & 0x0001)
+    {
+        bool isRender = Collision()()->IsRender();
+        Collision()()->SetIsRender(!isRender);
+    }
+        
+
     if (!m_isRender) return;
 
 	const std::string str = m_stringstream.str();

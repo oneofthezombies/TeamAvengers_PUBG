@@ -69,11 +69,6 @@ void CameraManager::Update()
         if(pCurrentCamera->GetTagCamera()!=TAG_CAMERA::Default)//디버그 카메라는 player의 이동에 영향이 없도록
           pCurrentCamera->UpdateViewProjMatrix();
 
-        //if (Input()()->IsOnceKeyUp(VK_SPACE)) //눌렀을때 볼 수 있도록
-        //    pCurrentCamera->UpdateFrustumCulling();
-
-        //pCurrentCamera->CameraRender();
-
 
         pCurrentCamera->UpdateFrustumCulling();
 
@@ -83,13 +78,11 @@ void CameraManager::Update()
     }
 }
 
-void CameraManager::SetTarget(Character::Info* info/*Transform* pTarget, D3DXVECTOR3* pTargetRotForCameraTP*/)
+void CameraManager::SetTarget(Character::Info* info)
 {
     assert(info &&
         "CameraManager::SetTarget(), pointer is null.");
     m_targetInfo = info;
-    //m_targetTransform.pTransform = pTarget;
-    //m_targetTransform.pRotForCameraTP = pTargetRotForCameraTP;
 }
 
 Character::Info * CameraManager::GetTargetInfo()

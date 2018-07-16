@@ -104,6 +104,7 @@ Character::Character(const int index)
 
     m_bBox = BoundingBox::Create(D3DXVECTOR3(-20.0f, 0.0f, -20.0f), D3DXVECTOR3(20.0f, 170.0f, 20.0f));
     //m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
+    
 }
 
 Character::~Character()
