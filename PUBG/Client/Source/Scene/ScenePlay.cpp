@@ -107,19 +107,22 @@ void ScenePlay::setAloneMode()
     //pPlayer->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(170, 200, 130);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_0", p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
     p = D3DXVECTOR3(170, 200, 130);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_1", p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
     p = D3DXVECTOR3(170, 200, 130);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_2", p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
     p = D3DXVECTOR3(90, 200, 10);
-    item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
+    item = new Item(TAG_RES_STATIC::QBZ, "QBZ_0", p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
