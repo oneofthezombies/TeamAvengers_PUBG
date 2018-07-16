@@ -1034,7 +1034,14 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
                 * CharacterInfo::GetHitAreaDamage(tagPart) //Hit Area Damage
                 * CharacterInfo::GetWeaponClassDamageByHitZone(tagPart); //Weapon Class Damage By Hit Zone
 
+            const float prevHP = o->GetCharacterHealth();
             o->MinusDamage(damage);
+            const float currHP = o->GetCharacterHealth();
+            if (currHP == 0.0f && prevHP > 0.0f)
+            {
+                m_killNum++;
+                m_isKill = true;
+            }
             Communication()()->SendEventMinusDamage(o->GetIndex(), damage);
         }
     }
@@ -1304,8 +1311,25 @@ void Character::setInfo()
 void Character::MinusDamage(const float damage)
 {
     m_health -= damage;
-    if (m_health < 0.0f)
+    if (m_health <= 0.0f)
+    {
         m_health = 0.0f;
+    }
+}
+
+int Character::GetKillNum() const
+{
+    return m_killNum;
+}
+
+bool Character::GetIsKill() const
+{
+    return m_isKill;
+}
+
+void Character::ResetIsKill()
+{
+    m_isKill = false;
 }
 
 D3DXVECTOR3 Character::getUp()

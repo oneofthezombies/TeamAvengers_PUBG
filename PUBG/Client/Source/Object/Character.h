@@ -218,6 +218,9 @@ public:
         const float HP_COOL_TIME;
         float m_hpCoolDown;
 
+        const float KILL_COOL_TIME;
+        float m_killCoolDown;
+
         InGameUI();
         ~InGameUI();
 
@@ -240,6 +243,7 @@ public:
         void updateInfoTextUI();
         void updateOnHandWeaponUI(const TotalInventory& inven);
         void updateSurvivalNumTextUI();
+        void updateHpUI();
     };
 
     struct Info
@@ -398,6 +402,8 @@ private:
 
     // for InGameUI
     InGameUI m_inGameUI;
+    int m_killNum;
+    bool m_isKill;
     
     // state
     TAG_ANIM_CHARACTER m_upperAnimState;
@@ -638,6 +644,10 @@ public:
     void RifleShooting();
     D3DXVECTOR3 FindShootingTargetPos();
     void MinusDamage(const float damage);
+
+    int GetKillNum() const;
+    bool GetIsKill() const;
+    void ResetIsKill();
 
     //        const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;

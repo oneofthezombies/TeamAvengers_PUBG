@@ -36,7 +36,11 @@ Character::Character(const int index)
     , m_savedInput()
     , m_currentStayKey()
     , m_totalInventory()
+
     , m_inGameUI()
+    , m_killNum(0)
+    , m_isKill(true)
+
     , m_attacking(Attacking::Unarmed)
     , m_stance(Stance::Stand)
     , m_moving(Moving::Run)

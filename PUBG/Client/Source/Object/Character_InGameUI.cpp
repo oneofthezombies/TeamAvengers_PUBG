@@ -70,8 +70,11 @@ Character::InGameUI::InGameUI()
     , INFO_TEXT_COOL_TIME(4.0f)
     , m_infoTextCoolDown(0.0f)
 
-    , HP_COOL_TIME(1.0f)
+    , HP_COOL_TIME(0.6f)
     , m_hpCoolDown(0.0f)
+
+    , KILL_COOL_TIME(8.0f)
+    , m_killCoolDown(0.0f)
 {
 }
 
@@ -90,6 +93,7 @@ void Character::InGameUI::Init(Character* pPlayer)
 
     m_infoTextCoolDown = INFO_TEXT_COOL_TIME;
     m_hpCoolDown = HP_COOL_TIME;
+    m_killCoolDown = KILL_COOL_TIME;
 
     //투명 배경
     m_pBackground = new UIImage(
@@ -292,7 +296,7 @@ void Character::InGameUI::Init(Character* pPlayer)
     pKillNumUpText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
         D3DXVECTOR2(17.0f, 26.0f),
-        string("0"),
+        string(""),
         WHITE,
         killNumUpBg);
     pKillNumUpText->SetDrawTextFormat(DT_CENTER);
@@ -316,7 +320,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         pKillNumTextShadow,
         Resource()()->GetFont(TAG_FONT::InGameKillNum),
         D3DXVECTOR2(60.0f, 30.0f),
-        string("2 킬"),
+        string(""),
         RED,
         m_pBackground,
         D3DXVECTOR3(612.0f, 504.0f, 0.0f));
@@ -417,7 +421,7 @@ void Character::InGameUI::Init(Character* pPlayer)
 
 void Character::InGameUI::Update(const TotalInventory& inven)
 {
-    //실제 정보를 받아서 UI를 변경하자
+    /*실제 정보를 받아서 UI를 변경하자*/
 
     //일정시간이 지나면 해당 문구 삭제
     updateInfoTextUI();
@@ -429,21 +433,34 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     updateSurvivalNumTextUI();
 
     //피 닳기
-    float hp = pPlayer->GetCharacterHealth();
-    float hpWidth = HP_WIDTH / Character::MAX_HEALTH * hp;
-    pHpWhiteImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
-    
-    //1초 뒤 빨간 hp도 흰색만큼 줄어든다
-    if (pPlayer->IsDamaged())
+    updateHpUI();
+
+    //킬 수
+    //TODO: 상단 킬은 죽인순간이랑, 탭을 눌렀을 때만 보임
+    //킬 한 순간에 텍스트가 뜬다
+    if (pPlayer->GetIsKill())
     {
-        float t = m_hpCoolDown -= Time()()->GetDeltaTime();
-        if (m_hpCoolDown <= 0)
+        int killNum = pPlayer->GetKillNum();
+        pKillNumUpText->SetText(to_string(killNum));
+        pKillNumText->SetText(to_string(killNum) + " 킬", pKillNumTextShadow);
+
+        pPlayer->ResetIsKill();
+    }
+
+    //일정시간이 지나면 텍스트가 사라진다
+    if (pKillNumText->GetText() != "")
+    {
+        float t = m_killCoolDown -= Time()()->GetDeltaTime();
+        cout << t << endl;
+        if (m_killCoolDown <= 0.0f)
         {
-            pHpRedImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
-            m_hpCoolDown = HP_COOL_TIME;
-            pPlayer->ResetIsDamaged();
+            //pKillNumUpText->SetText("");
+            pKillNumText->SetText("");
+            pKillNumTextShadow->SetText("");
+            m_killCoolDown = KILL_COOL_TIME;
         }
     }
+
 
     //장비 착용 관련 UI
 
@@ -494,7 +511,7 @@ void Character::InGameUI::updateInfoTextUI()
     {
         float t = m_infoTextCoolDown -= Time()()->GetDeltaTime();
         //cout << t << endl;
-        if (m_infoTextCoolDown <= 0)
+        if (m_infoTextCoolDown <= 0.0f)
         {
             pInfoText->SetText("");
             pInfoTextShadow->SetText("");
@@ -586,4 +603,23 @@ void Character::InGameUI::updateSurvivalNumTextUI()
     ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
     int survivalNum = currentScene->GetSurvivors();
     pSurvivalNumText->SetText(to_string(survivalNum));
+}
+
+void Character::InGameUI::updateHpUI()
+{
+    float hp = pPlayer->GetCharacterHealth();
+    float hpWidth = HP_WIDTH / Character::MAX_HEALTH * hp;
+    pHpWhiteImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
+
+    //1초 뒤 빨간 hp도 흰색만큼 줄어든다
+    if (pPlayer->IsDamaged())
+    {
+        m_hpCoolDown -= Time()()->GetDeltaTime();
+        if (m_hpCoolDown <= 0.0f)
+        {
+            pHpRedImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
+            m_hpCoolDown = HP_COOL_TIME;
+            pPlayer->ResetIsDamaged();
+        }
+    }
 }
