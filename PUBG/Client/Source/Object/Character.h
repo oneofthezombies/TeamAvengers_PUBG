@@ -224,6 +224,9 @@ public:
         const float KILL_COOL_TIME;
         float m_killCoolDown;
 
+        //const float KILL_UP_COOL_TIME;
+        //float m_killUpCoolDown;
+
         InGameUI();
         ~InGameUI();
 

@@ -308,11 +308,12 @@ void Character::InGameUI::Init(Character* pPlayer)
     pKillNumUpText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
     pKillNumUpBg->SetIsRender(false);
 
+    auto nickname = Communication()()->m_myInfo.nickname;
     //아이디, 게임버전
     pIdText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameID),
         D3DXVECTOR2(87.0f, 9.0f),
-        string("HelloWoori"),
+        nickname,
         WHITE_ALPHA,
         m_pBackground
     );
