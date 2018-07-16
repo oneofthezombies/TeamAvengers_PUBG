@@ -250,8 +250,7 @@ void Character::setReload()
             {
                 int numBulletInInventory = (*it).second.back()->GetCount(); //인벤토리에 있는 총알 수
                 int numBulletNeedReload = magSize - numBulletCurrentLoad;   //장전할 총알 수 (장탄수 - 현재 장전된 총알 개수)
-                Sound()()->addPlay(TAG_SOUND::Kar98_Reload0,GetTransform()->GetPosition(),0.0f,
-                    FMOD_2D);
+
                 cout << ItemInfo::GetName(ammoType);
                 cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
                 cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
@@ -284,6 +283,9 @@ void Character::setReload()
 
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
+                    Sound()()->addPlay(TAG_SOUND::Qbz_Reload,
+                        GetTransform()->GetPosition(),
+                        0.0f, FMOD_2D);
                     //총 자체 애니메이션
                     m_isNeedRifleAnim = true;
                     inven.m_pHand->Set
@@ -349,6 +351,14 @@ void Character::setReload()
                 }
                 else if (tag == TAG_RES_STATIC::Kar98k)
                 {
+                    Sound()()->addPlay(TAG_SOUND::Kar98_Reload0, GetTransform()->GetPosition(), 0.5f,
+                        FMOD_2D);
+                    Sound()()->addPlay(TAG_SOUND::Kar98_Reload1, GetTransform()->GetPosition(), 2.0f,
+                        FMOD_2D);
+                    Sound()()->addPlay(TAG_SOUND::Kar98_Reload2, GetTransform()->GetPosition(), 2.3f,
+                        FMOD_2D);
+                    Sound()()->addPlay(TAG_SOUND::Kar98_Reload3, GetTransform()->GetPosition(), 3.4f,
+                        FMOD_2D);
                     if (inven.m_numReload == 5)
                     {
                         TAG_ANIM_WEAPON tagAnim = TAG_ANIM_WEAPON::COUNT;

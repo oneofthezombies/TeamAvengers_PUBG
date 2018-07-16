@@ -16,6 +16,7 @@ void ScenePlay::setAloneMode()
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
+    Sound()()->Stop(0);
 
     Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
     Light()()->SetTarget(pPlayer->GetTransform());
@@ -105,10 +106,22 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(170, 200, 130);
-    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    //AddObject(item);
-    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    p = D3DXVECTOR3(170, 200, 130);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    p = D3DXVECTOR3(170, 200, 130);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    p = D3DXVECTOR3(170, 200, 130);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    p = D3DXVECTOR3(90, 200, 10);
+    item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
     //p = D3DXVECTOR3(70, 0, 30);
     //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
