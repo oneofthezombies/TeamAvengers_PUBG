@@ -181,6 +181,9 @@ public:
         UIImage* pQBZRedImg;
         UIImage* pKar98kRedImg;
 
+        //킬 (오른쪽 상단)
+        UIImage* pKillTextUpBg;
+        UIImage* pKillNumUpBg;
 
         //Text ====================
         //ammo

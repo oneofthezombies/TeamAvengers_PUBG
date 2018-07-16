@@ -45,6 +45,9 @@ Character::InGameUI::InGameUI()
     , pKar98kImg(nullptr)
     , pKar98kRedImg(nullptr)
 
+    , pKillTextUpBg(nullptr)
+    , pKillNumUpBg(nullptr)
+
     //Text ====================
     , pAmmoReloadText(nullptr)
     , pAmmoNumText(nullptr)
@@ -266,8 +269,9 @@ void Character::InGameUI::Init(Character* pPlayer)
     pSurvivalNumText->SetDrawTextFormat(DT_CENTER);
     pSurvivalNumText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
     
+    //여기
     //킬 (화면 오른쪽 상단)
-    auto killTextUpBg = new UIImage(
+    pKillTextUpBg = new UIImage(
         "./Resource/UI/InGame/",
         "kill_text_up_bg.png",
         D3DXVECTOR3(1145.0f, 20.0f, 0.0f),
@@ -280,12 +284,13 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(24.0f, 26.0f),
         string("킬"),
         GRAY,
-        killTextUpBg
+        pKillTextUpBg
     );
     killUpText->SetDrawTextFormat(DT_CENTER);
     killUpText->SetPosition(D3DXVECTOR3(0.0f, 4.0f, 0.0f));
+    pKillTextUpBg->SetIsRender(false);
 
-    auto killNumUpBg = new UIImage(
+    pKillNumUpBg = new UIImage(
         "./Resource/UI/InGame/",
         "kill_num_up_bg.png",
         D3DXVECTOR3(1128.0f, 20.0f, 0.0f),
@@ -298,10 +303,10 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(17.0f, 26.0f),
         string(""),
         WHITE,
-        killNumUpBg);
+        pKillNumUpBg);
     pKillNumUpText->SetDrawTextFormat(DT_CENTER);
     pKillNumUpText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
-
+    pKillNumUpBg->SetIsRender(false);
 
     //아이디, 게임버전
     pIdText = new UIText(
@@ -440,6 +445,9 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     //킬 한 순간에 텍스트가 뜬다
     if (pPlayer->GetIsKill())
     {
+        pKillNumUpBg->SetIsRender(true);
+        pKillTextUpBg->SetIsRender(true);
+
         int killNum = pPlayer->GetKillNum();
         pKillNumUpText->SetText(to_string(killNum));
         pKillNumText->SetText(to_string(killNum) + " 킬", pKillNumTextShadow);
@@ -450,11 +458,15 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     //일정시간이 지나면 텍스트가 사라진다
     if (pKillNumText->GetText() != "")
     {
-        float t = m_killCoolDown -= Time()()->GetDeltaTime();
-        cout << t << endl;
+        m_killCoolDown -= Time()()->GetDeltaTime();
+        //cout << t << endl;
         if (m_killCoolDown <= 0.0f)
         {
-            //pKillNumUpText->SetText("");
+            pKillNumUpBg->SetIsRender(false);
+            pKillTextUpBg->SetIsRender(false);
+
+            pKillNumUpText->SetText("");
+
             pKillNumText->SetText("");
             pKillNumTextShadow->SetText("");
             m_killCoolDown = KILL_COOL_TIME;
