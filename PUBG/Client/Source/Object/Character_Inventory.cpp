@@ -705,7 +705,7 @@ void Character::TotalInventory::SetEquipUI()
      //u->SetIsActive(false);
 }
 
-void Character::PutItemInTotalInventory(Item* item)
+bool Character::PutItemInTotalInventory(Item* item)
 {
     assert(item && "Character::PutItemInTotalInventory(), item is null.");
 
@@ -715,7 +715,10 @@ void Character::PutItemInTotalInventory(Item* item)
     switch (category)
     {
     case TAG_ITEM_CATEGORY::Ammo:
-        createOrMergeItem(&(m_totalInventory.m_mapInventory), item);
+        if (createOrMergeItem(&(m_totalInventory.m_mapInventory), item))
+            return true;
+        else 
+            return false;
         break;
 
     case TAG_ITEM_CATEGORY::Attach:
@@ -724,7 +727,10 @@ void Character::PutItemInTotalInventory(Item* item)
         if (tag == TAG_RES_STATIC::Bandage ||
             tag == TAG_RES_STATIC::FirstAidKit)
         {
-            createOrMergeItem(&(m_totalInventory.m_mapInventory), item);
+            if (createOrMergeItem(&(m_totalInventory.m_mapInventory), item))
+                return true;
+            else
+                return false;
         }
         else
         {
@@ -737,9 +743,12 @@ void Character::PutItemInTotalInventory(Item* item)
             else
             {
                 m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
+                return false;
             }
             // TODO : send "delete item on field" to server
         }
+
+        return true;
     }
         break;
 
@@ -778,11 +787,12 @@ void Character::PutItemInTotalInventory(Item* item)
         break;
     }
 
+    return true;
     //For Debug
     ShowTotalInventory();
 }
 
-void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item)
+bool Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item)
 {
     /*
         - 자신의 용량만큼 캐릭터의 소지용량에서 제외된다
@@ -813,10 +823,12 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
             // TODO : send "delete item on field" to server
         }
         m_totalInventory.m_capacity -= count * ItemInfo::GetCapacity(tag);
+        return true;
     }
     else
     {
         m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
+        return false;
     }
 
 }
@@ -1215,38 +1227,43 @@ void Character::onMouse(
                         case TAG_ITEM_CATEGORY::Ammo:
                         {
                             Item* pItem = pUIButtonWithItem->pItem;
-                            PutItemInTotalInventory(pItem);
-                            pItem->SetState(true);
-                            CurrentScene()()->ItemIntoInventory(
-                                CurrentScene()()->GetCellIndex(
-                                    pItem->GetTransform()->GetPosition()),
-                                pItem);
+                            if (PutItemInTotalInventory(pItem))
+                            {
+                                pItem->SetState(true);
+                                CurrentScene()()->ItemIntoInventory(
+                                    CurrentScene()()->GetCellIndex(
+                                        pItem->GetTransform()->GetPosition()),
+                                    pItem);
+                            }
                         }
                         break;
 
                         case TAG_ITEM_CATEGORY::Rifle:
                         {
                             Item* pItem = pUIButtonWithItem->pItem;
-                            PutItemInTotalInventory(pItem);
-                            pItem->SetState(true);
-                            CurrentScene()()->ItemIntoInventory(
-                                CurrentScene()()->GetCellIndex(
-                                    pItem->GetTransform()->GetPosition()),
-                                pItem);
-                            /*UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage2();*/
-
-                            //웨폰 버튼.
-                            if (ti.m_pWeaponPrimary)
+                            if (PutItemInTotalInventory(pItem))
                             {
-                                ti.m_pWeapon1->pUIImage = ti.m_pWeaponPrimary->GetUIImage2();
-                                ti.m_pWeapon1->pItem = ti.m_pWeaponPrimary;
+                                pItem->SetState(true);
+                                CurrentScene()()->ItemIntoInventory(
+                                    CurrentScene()()->GetCellIndex(
+                                        pItem->GetTransform()->GetPosition()),
+                                    pItem);
+                                /*UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage2();*/
+
+                                //웨폰 버튼.
+                                if (ti.m_pWeaponPrimary)
+                                {
+                                    ti.m_pWeapon1->pUIImage = ti.m_pWeaponPrimary->GetUIImage2();
+                                    ti.m_pWeapon1->pItem = ti.m_pWeaponPrimary;
+                                }
+
+                                if (ti.m_pWeaponSecondary)
+                                {
+                                    ti.m_pWeapon2->pUIImage = ti.m_pWeaponSecondary->GetUIImage2();
+                                    ti.m_pWeapon2->pItem = ti.m_pWeaponSecondary;
+                                }
                             }
                             
-                            if (ti.m_pWeaponSecondary)
-                            {
-                                ti.m_pWeapon2->pUIImage = ti.m_pWeaponSecondary->GetUIImage2();
-                                ti.m_pWeapon2->pItem = ti.m_pWeaponSecondary;
-                            }
                         }
                         break;
                     }
@@ -1257,13 +1274,13 @@ void Character::onMouse(
                     {
                     case TAG_ITEM_CATEGORY::Ammo:
                     {
-                        Item* pItem = pUIButtonWithItem->pItem;
-                        PutItemInTotalInventory(pItem);
-                        pItem->SetState(true);
-                        CurrentScene()()->ItemIntoInventory(
-                            CurrentScene()()->GetCellIndex(
-                                pItem->GetTransform()->GetPosition()),
-                            pItem);
+                        //Item* pItem = pUIButtonWithItem->pItem;
+                        //PutItemInTotalInventory(pItem);
+                        //pItem->SetState(true);
+                        //CurrentScene()()->ItemIntoInventory(
+                        //    CurrentScene()()->GetCellIndex(
+                        //        pItem->GetTransform()->GetPosition()),
+                        //    pItem);
                     }
                     break;
                     /*case TAG_ITEM_CATEGORY::Rifle:

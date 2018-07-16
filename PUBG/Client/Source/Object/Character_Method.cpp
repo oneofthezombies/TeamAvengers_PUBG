@@ -611,9 +611,9 @@ void Character::itemSphereCollisionInteraction()
 
         if (m_currentOnceKey._F)
         {
-            PutItemInTotalInventory(itm); //inventory에 넣기
-            //current scene 에서 지우기
-            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
+            //PutItemInTotalInventory(itm); //inventory에 넣기
+            ////current scene 에서 지우기
+            //pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
         }
     }
 

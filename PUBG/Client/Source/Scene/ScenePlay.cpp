@@ -16,6 +16,7 @@ void ScenePlay::setAloneMode()
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
+    Sound()()->Stop(0);
 
     Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
     Light()()->SetTarget(pPlayer->GetTransform());
