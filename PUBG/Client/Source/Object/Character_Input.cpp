@@ -351,16 +351,17 @@ void Character::setReload()
                 }
                 else if (tag == TAG_RES_STATIC::Kar98k)
                 {
-                    Sound()()->addPlay(TAG_SOUND::Kar98_Reload0, GetTransform()->GetPosition(), 0.5f,
-                        FMOD_2D);
-                    Sound()()->addPlay(TAG_SOUND::Kar98_Reload1, GetTransform()->GetPosition(), 2.0f,
-                        FMOD_2D);
-                    Sound()()->addPlay(TAG_SOUND::Kar98_Reload2, GetTransform()->GetPosition(), 2.3f,
-                        FMOD_2D);
-                    Sound()()->addPlay(TAG_SOUND::Kar98_Reload3, GetTransform()->GetPosition(), 3.4f,
-                        FMOD_2D);
                     if (inven.m_numReload == 5)
                     {
+
+                        Sound()()->addPlay(TAG_SOUND::Kar98_Reload0, GetTransform()->GetPosition(), 0.3f,
+                            FMOD_2D);
+                        Sound()()->addPlay(TAG_SOUND::Kar98_Reload1, GetTransform()->GetPosition(), 2.4f,
+                            FMOD_2D);
+                        Sound()()->addPlay(TAG_SOUND::Kar98_Reload2, GetTransform()->GetPosition(), 2.5f,
+                            FMOD_2D);
+                        Sound()()->addPlay(TAG_SOUND::Kar98_Reload3, GetTransform()->GetPosition(), 2.9f,
+                            FMOD_2D);
                         TAG_ANIM_WEAPON tagAnim = TAG_ANIM_WEAPON::COUNT;
                         if (CurrentCamera()()->GetTagCamera() == TAG_CAMERA::First_Person)
                             tagAnim = TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast_FPP;
@@ -434,6 +435,8 @@ void Character::setReload()
                     }
                     else
                     {
+                        Sound()()->addPlay(TAG_SOUND::Kar98_Reload0, GetTransform()->GetPosition(), 0.0f,
+                            FMOD_2D);
                         //총 자체 애니메이션
                         m_isNeedRifleAnim = true;
                         inven.m_pHand->Set

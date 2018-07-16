@@ -600,6 +600,8 @@ void Item::OnKar98kReload(const int numReload)
     }
     else
     {
+        Sound()()->addPlay(TAG_SOUND::Kar98_Reload1, GetTransform()->GetPosition(), 0.0f,
+            FMOD_2D);
         Set(
             TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Loop,
             false,
@@ -614,6 +616,10 @@ void Item::OnKar98kReload(const int numReload)
 
 void Item::OnKar98kReloadEnd()
 {
+    Sound()()->addPlay(TAG_SOUND::Kar98_Reload2, GetTransform()->GetPosition(), 0.0f,
+        FMOD_2D);
+    Sound()()->addPlay(TAG_SOUND::Kar98_Reload3, GetTransform()->GetPosition(), 0.4f,
+        FMOD_2D);
     Set(
         TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_End,
         false,
