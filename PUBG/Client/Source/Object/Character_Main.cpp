@@ -145,6 +145,8 @@ void Character::OnUpdate()
     updateMine();
     updateOther();
 
+    Debug << "!!! cellIndex : "<<m_cellIndex << endl;
+
     // update
     GetTransform()->Update();      // set characters world
     pAnimation->UpdateAnimation(); // set characters local
@@ -246,7 +248,7 @@ void Character::updateMine()
     if (!isMine()) return;
 
     //Dead logic
-    if (m_isDead) return;
+        if (m_isDead) return;
 
     //m_health 가 0이 되면 죽는 애니메이션, server communication;
     checkDead();
