@@ -586,6 +586,7 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
         {
             pCurrentScene->m_NearArea.CreateNearArea(destCellIndex);
             pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
+            int i = 0;
         }
     }
     //////////////////////////////////////////////////

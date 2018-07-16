@@ -63,6 +63,16 @@ Character::Character(const int index)
 
     Transform* pTransform = GetTransform();
     pTransform->SetPosition(D3DXVECTOR3(factor, 200.0f, factor));
+
+    if(index == 0)
+        pTransform->SetPosition(D3DXVECTOR3(200.0f, 200.0f, 200.0f));
+    if (index == 1)
+        pTransform->SetPosition(D3DXVECTOR3(200.0f, 200.0f, 4848.0f));
+    if (index == 2)
+        pTransform->SetPosition(D3DXVECTOR3(4848.0f, 200.0f, 200.0f));
+    if (index == 3)
+        pTransform->SetPosition(D3DXVECTOR3(4848.0f, 200.0f, 4848.0f));
+
     pTransform->SetRotation(OFFSET_ROTATION);
 
     //putting character into TotalCellSpace
