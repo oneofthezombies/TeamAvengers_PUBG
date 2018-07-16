@@ -198,8 +198,8 @@ void BoxCollider::Render()
         Device()()->DrawIndexedPrimitiveUP(
             D3DPT_LINELIST,
             0,
-            m_vertices.size(),
-            INDICES.size() / 2,
+            static_cast<UINT>(m_vertices.size()),
+            static_cast<UINT>(INDICES.size() / 2),
             INDICES.data(),
             D3DFMT_INDEX16,
             m_vertices.data(),

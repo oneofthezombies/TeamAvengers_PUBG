@@ -90,7 +90,7 @@ void Grid::draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color)
     {
         Device()()->DrawPrimitiveUP(
             D3DPT_LINELIST,
-            vertices.size() / 2,
+            static_cast<UINT>(vertices.size() / 2),
             vertices.data(),
             sizeof vertices.front());
     });

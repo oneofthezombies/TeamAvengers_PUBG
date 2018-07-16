@@ -155,7 +155,9 @@ void HeightMap::Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat)
 		}
 	}
 
-	HRESULT hr = D3DXCreateMeshFVF(vecIndex.size() / 3, vecVertex.size(), 
+	HRESULT hr = D3DXCreateMeshFVF(
+        static_cast<DWORD>(vecIndex.size() / 3), 
+        static_cast<DWORD>(vecVertex.size()), 
 		D3DXMESH_MANAGED | D3DXMESH_32BIT, VERTEX_PNT::FVF, Device()(), &m_pMesh);
 
     assert(!FAILED(hr) && "HeightMap::Load(), D3DXCreateMesh() failed.");
@@ -205,10 +207,10 @@ void HeightMap::SetSurface()
     {
         for (size_t x = 0; x < numSurfaceTile; ++x)
         {
-            DWORD _0 = (z + 0) * surfaceDim + x + 0;
-            DWORD _1 = (z + 1) * surfaceDim + x + 0;
-            DWORD _2 = (z + 0) * surfaceDim + x + 1;
-            DWORD _3 = (z + 1) * surfaceDim + x + 1;
+            DWORD _0 = static_cast<DWORD>((z + 0) * surfaceDim + x + 0);
+            DWORD _1 = static_cast<DWORD>((z + 1) * surfaceDim + x + 0);
+            DWORD _2 = static_cast<DWORD>((z + 0) * surfaceDim + x + 1);
+            DWORD _3 = static_cast<DWORD>((z + 1) * surfaceDim + x + 1);
 
             vecIndex.push_back(_0);
             vecIndex.push_back(_1);
@@ -268,7 +270,7 @@ void HeightMap::drawIndices(const vector<WORD>& indices, const D3DXCOLOR & color
             D3DPT_LINELIST,
             0,
             sizeof m_boundary / sizeof m_boundary[0],
-            indices.size() / 2,
+            static_cast<UINT>(indices.size() / 2),
             indices.data(),
             D3DFMT_INDEX16,
             &m_boundary[0],

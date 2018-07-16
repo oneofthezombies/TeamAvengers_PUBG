@@ -661,7 +661,7 @@ void SkinnedMeshController::GetTrackDescription(
 
     HRESULT hr = 
         pSkinnedMesh->m_pAnimController->GetTrackDesc(
-            index, 
+            static_cast<UINT>(index), 
             OutDesc);
 
     assert(
@@ -683,7 +683,7 @@ void SkinnedMeshController::GetSubTrackDescription(
 
     HRESULT hr =
         pSkinnedMesh->m_pSubAnimController->GetTrackDesc(
-            index, 
+            static_cast<UINT>(index), 
             OutDesc);
 
     assert(
@@ -695,7 +695,7 @@ void SkinnedMeshController::GetSubTrackDescription(
 float SkinnedMeshController::GetTrackPeriod(const std::size_t index)
 {
     LPD3DXANIMATIONSET pSet = nullptr;
-    pSkinnedMesh->m_pAnimController->GetTrackAnimationSet(index, &pSet);
+    pSkinnedMesh->m_pAnimController->GetTrackAnimationSet(static_cast<UINT>(index), &pSet);
     float period = static_cast<float>(pSet->GetPeriod());
     pSet->Release();
     return period;
@@ -704,7 +704,7 @@ float SkinnedMeshController::GetTrackPeriod(const std::size_t index)
 float SkinnedMeshController::GetSubTrackPeriod(const std::size_t index)
 {
     LPD3DXANIMATIONSET pSet = nullptr;
-    pSkinnedMesh->m_pSubAnimController->GetTrackAnimationSet(index, &pSet);
+    pSkinnedMesh->m_pSubAnimController->GetTrackAnimationSet(static_cast<UINT>(index), &pSet);
     float period = static_cast<float>(pSet->GetPeriod());
     pSet->Release();
     return period;

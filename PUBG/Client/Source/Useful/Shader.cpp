@@ -62,7 +62,7 @@ void Shader::Manager::addShadowSource(
     EffectMesh* pEffectMesh = pMC->pEffectMesh;
 
     for (std::size_t i = 0; i < pEffectMesh->m_effectParams.size(); ++i)
-        AddShadowSource(world, pMC->m_pWorkMesh, i);
+        AddShadowSource(world, pMC->m_pWorkMesh, static_cast<DWORD>(i));
 }
 
 void Shader::Manager::Init()
@@ -123,7 +123,7 @@ void Shader::Manager::AddShadowSource(
     if (!pEffectMesh) return;
 
     for (std::size_t i = 0; i < pEffectMesh->m_effectParams.size(); ++i)
-        AddShadowSource(world, pEffectMesh->m_pMesh, i);
+        AddShadowSource(world, pEffectMesh->m_pMesh, static_cast<DWORD>(i));
 }
 
 void Shader::Manager::AddShadowSource(
@@ -275,7 +275,7 @@ void Shader::Draw(
             effectParams[i].pEffect, 
             effectParams[i].hParam, 
             pMesh, 
-            i, 
+            static_cast<DWORD>(i), 
             setGlobalVariable);
     }
 }

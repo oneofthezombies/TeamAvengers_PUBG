@@ -27,8 +27,8 @@ void Area::CreateNearArea(const std::size_t index)
     p.push_back(D3DXVECTOR2(0, 1));
     p.push_back(D3DXVECTOR2(1, 1));
 
-    int col = index / CellSpace::DIMENSION;
-    int row = index % CellSpace::DIMENSION;
+    int col = static_cast<int>(index) / CellSpace::DIMENSION;
+    int row = static_cast<int>(index) % CellSpace::DIMENSION;
 
 
     int nRow = 0;

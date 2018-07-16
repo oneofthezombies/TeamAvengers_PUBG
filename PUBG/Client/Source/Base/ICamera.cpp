@@ -72,7 +72,7 @@ void ICamera::draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color)
     {
         Device()()->DrawPrimitiveUP(
             D3DPT_LINELIST,
-            vertices.size() / 2,
+            static_cast<UINT>(vertices.size() / 2),
             vertices.data(),
             sizeof vertices.front());
     });
@@ -95,7 +95,7 @@ void ICamera::drawIndices(const vector<WORD>& indices, const D3DXCOLOR & color)
             D3DPT_LINELIST,
             0,
             sizeof m_vecWorld / sizeof m_vecWorld[0],
-            indices.size() / 2,
+            static_cast<UINT>(indices.size() / 2),
             indices.data(),
             D3DFMT_INDEX16,
             &m_vecWorld[0],

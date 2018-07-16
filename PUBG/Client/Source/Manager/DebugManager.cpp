@@ -55,7 +55,7 @@ void DebugManager::Render()
         m_pFont->DrawTextA(
             nullptr, 
             newLinedStrs[i].c_str(), 
-            newLinedStrs[i].size(), 
+            static_cast<INT>(newLinedStrs[i].size()), 
             &rc,
             DT_LEFT | DT_TOP | DT_NOCLIP, 
             D3DCOLOR_XRGB(255, 0, 255));

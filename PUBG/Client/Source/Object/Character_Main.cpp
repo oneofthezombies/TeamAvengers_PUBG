@@ -220,8 +220,8 @@ void Character::OnRender()
         Device()()->DrawIndexedPrimitiveUP(
             D3DPT_LINELIST,
             0,
-            vertices.size(),
-            indices.size() / 2,
+            static_cast<UINT>(vertices.size()),
+            static_cast<UINT>(indices.size() / 2),
             indices.data(),
             D3DFMT_INDEX16,
             vertices.data(),

@@ -345,7 +345,7 @@ void Communication::Manager::ReceiveMessage(
 
             ss >> pickerID >> pickedItemName;
 
-            ScenePlay* pScenePlay = static_cast<ScenePlay*>(pScenePlay);
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(pickedItemName);
 
             pScenePlay->GetCharacters()[pickerID]->PutItemInTotalInventory(pItem);
@@ -363,7 +363,7 @@ void Communication::Manager::ReceiveMessage(
 
             ss >> destoryedItemName;
 
-            ScenePlay* pScenePlay = static_cast<ScenePlay*>(pScenePlay);
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(destoryedItemName);
             IObject* pO = static_cast<IObject*>(pItem);
             pScenePlay->Destroy(pO);

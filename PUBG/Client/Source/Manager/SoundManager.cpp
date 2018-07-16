@@ -113,7 +113,7 @@ int SoundManager::Play(const TAG_SOUND tag)
     CheckError(m_pSystem->playSound(search->second, nullptr, false, &m_channels[i]));
     m_channels[i]->set3DAttributes(&m_soundPos, nullptr);
     m_channels[i]->setVolume(m_volume);
-    return i;
+    return static_cast<int>(i);
 }
 
 int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float vol, const FMOD_MODE& mode)
@@ -155,7 +155,7 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
    // m_channels[i]->setMode(FMOD_LOOP_NORMAL);
     m_channels[i]->set3DAttributes(&m_soundPos,nullptr);
     m_channels[i]->setVolume(fVol);
-    return i;
+    return static_cast<int>(i);
 }
 
 int SoundManager::addPlay(const TAG_SOUND tag, const D3DXVECTOR3 & pos, float time, const FMOD_MODE & mode)

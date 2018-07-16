@@ -80,8 +80,8 @@ void BoundingBox::RenderRed()
         Device()()->DrawIndexedPrimitiveUP(
             D3DPT_LINELIST,
             0,
-            vertices.size(),
-            indices.size() / 2,
+            static_cast<UINT>(vertices.size()),
+            static_cast<UINT>(indices.size() / 2),
             indices.data(),
             D3DFMT_INDEX16,
             vertices.data(),
@@ -138,8 +138,8 @@ void BoundingBox::Render()
         Device()()->DrawIndexedPrimitiveUP(
             D3DPT_LINELIST,
             0,
-            vertices.size(),
-            indices.size() / 2,
+            static_cast<UINT>(vertices.size()),
+            static_cast<UINT>(indices.size() / 2),
             indices.data(),
             D3DFMT_INDEX16,
             vertices.data(),
@@ -676,7 +676,7 @@ std::vector<D3DXVECTOR3> Collision::GetCollidedNormal(const D3DXVECTOR3& mypos, 
             float p1outlen = D3DXVec3Length(&p1out);
             if (p1outlen < p12len)
             {
-                results.emplace_back(i);
+                results.emplace_back(static_cast<int>(i));
             }
         }
     }
