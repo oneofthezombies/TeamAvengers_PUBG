@@ -851,7 +851,7 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
 
             // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
             // TODO : 네트워크 아이템 삭제
-            Communication()()->SendEventDestroyItem(item->GetName());
+            //Communication()()->SendEventDestroyItem(item->GetName());
         }
         m_totalInventory.m_capacity -= count * ItemInfo::GetCapacity(tag);
     }
