@@ -1308,6 +1308,62 @@ void Character::MinusDamage(const float damage)
         m_health = 0.0f;
 }
 
+void Character::MoveItemFieldToHead(Item* pItem)
+{
+}
+
+void Character::MoveItemFieldToArmor(Item* pItem)
+{
+}
+
+void Character::MoveItemFieldToBack(Item* pItem)
+{
+}
+
+void Character::MoveItemFieldToPrimary(Item* pItem)
+{
+}
+
+void Character::MoveItemFieldToSecondary(Item* pItem)
+{
+}
+
+void Character::MoveItemHeadToField()
+{
+}
+
+void Character::MoveItemArmorToField()
+{
+}
+
+void Character::MoveItemBackToField()
+{
+}
+
+void Character::MoveItemPrimaryToField()
+{
+}
+
+void Character::MoveItemSecondaryToField()
+{
+}
+
+void Character::MoveItemPrimaryToHand()
+{
+}
+
+void Character::MoveItemSecondaryToHand()
+{
+}
+
+void Character::MoveItemHandToPrimary()
+{
+}
+
+void Character::MoveItemHandToSecondary()
+{
+}
+
 D3DXVECTOR3 Character::getUp()
 {
     auto rot = GetTransform()->GetRotation();

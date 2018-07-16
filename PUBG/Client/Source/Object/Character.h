@@ -639,8 +639,27 @@ public:
     D3DXVECTOR3 FindShootingTargetPos();
     void MinusDamage(const float damage);
 
+    void MoveItemFieldToHead(Item* pItem);
+    void MoveItemFieldToArmor(Item* pItem);
+    void MoveItemFieldToBack(Item* pItem);
+    void MoveItemFieldToPrimary(Item* pItem);
+    void MoveItemFieldToSecondary(Item* pItem);
+    void MoveItemHeadToField();
+    void MoveItemArmorToField();
+    void MoveItemBackToField();
+    void MoveItemPrimaryToField();
+    void MoveItemSecondaryToField();
+    void MoveItemPrimaryToHand();
+    void MoveItemSecondaryToHand();
+    void MoveItemHandToPrimary();
+    void MoveItemHandToSecondary();
+
     //        const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
+
+
+
+
 /**************************** end public method ******************************/
 
 

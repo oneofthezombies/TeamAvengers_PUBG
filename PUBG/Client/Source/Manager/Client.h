@@ -65,10 +65,24 @@ struct Communication
         //void SendEventFireBullet(Bullet* pBullet);
         void SendEventSound(const TAG_SOUND tag, const D3DXVECTOR3& p);
         void SendEventMinusDamage(const int id, const float damage);
-        void SendEventMoveItemFromFieldToCharacter(
-            const int id, 
-            const std::string& itemName);
         void SendEventDestroyItem(const std::string& itemName);
+
+        void SendEventMoveItemFieldToPrimary  (const int id, const std::string& itemName);
+        void SendEventMoveItemFieldToSecondary(const int id, const std::string& itemName);
+        void SendEventMoveItemFieldToHead     (const int id, const std::string& itemName);
+        void SendEventMoveItemFieldToArmor    (const int id, const std::string& itemName);
+        void SendEventMoveItemFieldToBack     (const int id, const std::string& itemName);
+
+        void SendEventMoveItemPrimaryToField  (const int id, const std::string& itemName);
+        void SendEventMoveItemSecondaryToField(const int id, const std::string& itemName);
+        void SendEventMoveItemHeadToField     (const int id, const std::string& itemName);
+        void SendEventMoveItemArmorToField    (const int id, const std::string& itemName);
+        void SendEventMoveItemBackToField     (const int id, const std::string& itemName);
+
+        void SendEventMoveItemPrimaryToHand  (const int id);
+        void SendEventMoveItemSecondaryToHand(const int id);
+        void SendEventMoveItemHandToPrimary  (const int id);
+        void SendEventMoveItemHandToSecondary(const int id);
 
         friend Singleton<Manager>;
     };

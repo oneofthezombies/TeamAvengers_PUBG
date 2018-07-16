@@ -26,6 +26,7 @@ void Character::setAttacking() //Num1, Num2, X
                 inven.m_pWeaponPrimary = nullptr;
 
                 // OOTZ_FLAG : 네트워크 프라이머리 -> 손
+                Communication()()->SendEventMoveItemPrimaryToHand(m_index);
 
                 setRifleOnHand(TAG_RIFLE::Primary);
             }
@@ -56,6 +57,8 @@ void Character::setAttacking() //Num1, Num2, X
                     inven.m_pWeaponPrimary = nullptr;
 
                     // OOTZ_FLAG : 네트워크 손 -> 세컨더리, 프라이머리 -> 손
+                    Communication()()->SendEventMoveItemHandToSecondary(m_index);
+                    Communication()()->SendEventMoveItemPrimaryToHand(m_index);
 
                     setRifleOnHand(TAG_RIFLE::Primary);
                 });
@@ -80,6 +83,7 @@ void Character::setAttacking() //Num1, Num2, X
                 inven.m_pWeaponSecondary = nullptr;
 
                 // OOTZ_FLAG : 네트워크 세컨더리 -> 손
+                Communication()()->SendEventMoveItemSecondaryToHand(m_index);
 
                 setRifleOnHand(TAG_RIFLE::Secondary);
             }
@@ -108,6 +112,8 @@ void Character::setAttacking() //Num1, Num2, X
                     inven.m_pWeaponSecondary = nullptr;
 
                     // OOTZ_FLAG : 네트워크 손 -> 프라이머리, 세컨더리 -> 손
+                    Communication()()->SendEventMoveItemHandToPrimary(m_index);
+                    Communication()()->SendEventMoveItemSecondaryToHand(m_index);
 
                     setRifleOnHand(TAG_RIFLE::Secondary);
                 });
@@ -152,6 +158,7 @@ void Character::setAttacking() //Num1, Num2, X
                     setRifleOnHand(TAG_RIFLE::Primary);
 
                     // OOTZ_FLAG : 네트워크 프라이머리 -> 손
+                    Communication()()->SendEventMoveItemPrimaryToHand(m_index);
                 }
                 else if (inven.m_handState == TAG_RIFLE::Secondary)
                 {
@@ -160,6 +167,7 @@ void Character::setAttacking() //Num1, Num2, X
                     setRifleOnHand(TAG_RIFLE::Secondary);
 
                     // OOTZ_FLAG : 네트워크 세컨더리 -> 손
+                    Communication()()->SendEventMoveItemSecondaryToHand(m_index);
                 }
             }
         }
@@ -824,6 +832,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             m_hasChangingState = false;
 
             // OOTZ_FLAG : 네트워크 손 -> 프라이머리
+            Communication()()->SendEventMoveItemHandToPrimary(m_index);
 
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
@@ -876,6 +885,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             m_hasChangingState = false;
 
             // OOTZ_FLAG : 네트워크 손 -> 세컨더리
+            Communication()()->SendEventMoveItemHandToSecondary(m_index);
 
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,

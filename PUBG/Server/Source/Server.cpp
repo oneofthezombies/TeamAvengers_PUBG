@@ -300,6 +300,156 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_IS_DEAD, description));
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_DESTROY_ITEM:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventDestroyItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventDestroyItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_HEAD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_ARMOR:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_BACK:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_PRIMARY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_SECONDARY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HEAD_TO_FIELD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_ARMOR_TO_FIELD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BACK_TO_FIELD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_FIELD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_FIELD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_HAND:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_HAND:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_PRIMARY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_SECONDARY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+        }
+        break;
     }
 }
 

@@ -734,6 +734,7 @@ void Character::PutItemInTotalInventory(Item* item)
                 CurrentScene()()->RemoveObject(item);
                
                 // OOTZ_FLAG : 네트워크 필드 -> 메드킷, 부착물
+                Communication()()->SendEventDestroyItem(item->GetName());
                 
                 m_totalInventory.m_capacity -= ItemInfo::GetCapacity(tag);
             }
@@ -748,38 +749,55 @@ void Character::PutItemInTotalInventory(Item* item)
     case TAG_ITEM_CATEGORY::Armor:
         {
             //TODO: 피해감소량 적용
+
+            std::string originItemName("");
+            if (m_totalInventory.m_pEquipArmor)
+                originItemName = m_totalInventory.m_pEquipArmor->GetName();
+
             const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipArmor, item);
+
+            // OOTZ_FLAG : 네트워크 아머 -> 필드
             if (dropped)
-            {
-                // OOTZ_FLAG : 네트워크 아머 -> 필드
-            }
+                Communication()()->SendEventMoveItemArmorToField(m_index, originItemName);
 
             // OOTZ_FLAG : 네트워크 필드 -> 아머
+            Communication()()->SendEventMoveItemFieldToArmor(m_index, item->GetName());
         }
         break;
 
     case TAG_ITEM_CATEGORY::Back:
         {
+            std::string originItemName("");
+            if (m_totalInventory.m_pEquipBack)
+                originItemName = m_totalInventory.m_pEquipBack->GetName();
+
             const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipBack, item);
+
+            // OOTZ_FLAG : 네트워크 백 -> 필드
             if (dropped)
-            {
-                // OOTZ_FLAG : 네트워크 백 -> 필드
-            }
+                Communication()()->SendEventMoveItemBackToField(m_index, originItemName);
 
             // OOTZ_FLAG : 네트워크 필드 -> 백
+            Communication()()->SendEventMoveItemFieldToBack(m_index, item->GetName());
         }
         break;
 
     case TAG_ITEM_CATEGORY::Head:
         {
             //TODO: 피해감소량 적용
+
+            std::string originItemName("");
+            if (m_totalInventory.m_pEquipHead)
+                originItemName = m_totalInventory.m_pEquipHead->GetName();
+
             const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipHead, item);
+
+            // OOTZ_FLAG : 네트워크 헤드 -> 필드
             if (dropped)
-            {
-                // OOTZ_FLAG : 네트워크 헤드 -> 필드
-            }
+                Communication()()->SendEventMoveItemHeadToField(m_index, originItemName);
 
             // OOTZ_FLAG : 네트워크 필드 -> 헤드
+            Communication()()->SendEventMoveItemFieldToHead(m_index, originItemName);
         }
         break;
 
@@ -789,23 +807,33 @@ void Character::PutItemInTotalInventory(Item* item)
             if(!m_totalInventory.m_pWeaponPrimary &&
                 !(m_totalInventory.m_handState==TAG_RIFLE::Primary))
             {
+                std::string originItemName("");
+                if (m_totalInventory.m_pWeaponPrimary)
+                    originItemName = m_totalInventory.m_pWeaponPrimary->GetName();
+
                 const bool dropped = checkOriginItem((Item**)&m_totalInventory.m_pWeaponPrimary, item);
+
+                // OOTZ_FLAG : 네트워크 프라이머리 -> 필드
                 if (dropped)
-                {
-                    // OOTZ_FLAG : 네트워크 프라이머리 -> 필드
-                }
+                    Communication()()->SendEventMoveItemPrimaryToField(m_index, originItemName);
 
                 // OOTZ_FLAG : 네트워크 필드 -> 프라이머리
+                Communication()()->SendEventMoveItemFieldToPrimary(m_index, item->GetName());
             }
             else
             {
+                std::string originItemName("");
+                if (m_totalInventory.m_pWeaponSecondary)
+                    originItemName = m_totalInventory.m_pWeaponSecondary->GetName();
+
                 const bool dropped = checkOriginItem((Item**)&m_totalInventory.m_pWeaponSecondary, item);
+
+                // OOTZ_FLAG : 네트워크 세컨더리 -> 필드
                 if (dropped)
-                {
-                    // OOTZ_FLAG : 네트워크 세컨더리 -> 필드
-                }
+                    Communication()()->SendEventMoveItemSecondaryToField(m_index, originItemName);
 
                 // OOTZ_FLAG : 네트워크 필드 -> 세컨더리
+                Communication()()->SendEventMoveItemFieldToSecondary(m_index, item->GetName());
             }
         }
         break;
@@ -841,6 +869,7 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
             CurrentScene()()->RemoveObject(item);
             
             // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
+            Communication()()->SendEventDestroyItem(item->GetName());
         }
         else
         {
@@ -850,8 +879,7 @@ void Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
             CurrentScene()()->Destroy(item);
 
             // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
-            // TODO : 네트워크 아이템 삭제
-            //Communication()()->SendEventDestroyItem(item->GetName());
+            Communication()()->SendEventDestroyItem(item->GetName());
         }
         m_totalInventory.m_capacity -= count * ItemInfo::GetCapacity(tag);
     }
