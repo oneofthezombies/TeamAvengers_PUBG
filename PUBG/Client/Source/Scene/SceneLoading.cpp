@@ -66,6 +66,7 @@ void SceneLoading::Load()
     load("./Resource/UI/InGame/", "compass.png");
     load("./Resource/UI/InGame/", "compass_arrow.png", D3DCOLOR_XRGB(0, 0, 0));
 
+    load("./Resource/UI/InGame/", "equipment_panel.png");
     load("./Resource/UI/InGame/", "equipment_bag01.png");
     load("./Resource/UI/InGame/", "equipment_helmet01.png");
     load("./Resource/UI/InGame/", "equipment_vest01.png");

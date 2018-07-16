@@ -8,6 +8,7 @@
 #include "UIText.h"
 #include "TagUIPosition.h"
 #include "UIButton.h"
+#include "ScenePlay.h"
 
 using Event       = UIButtonWithItem::Event;
 using MouseButton = UIButtonWithItem::MouseButton;
@@ -29,11 +30,13 @@ Character::TotalInventory::TotalInventory()
 
     , pTempSaveWeaponForX(nullptr)
     , pCharacter(nullptr)
-    , m_pUIPicked(nullptr)
+    , pUIPicked(nullptr)
     , m_pWeapon1(nullptr)
     , m_pWeapon2(nullptr)
     , m_stateClicked(false)
     , m_handState(TAG_RIFLE::None)
+
+    , isOpened(false)
 {
 }
 
@@ -49,48 +52,62 @@ Character::TotalInventory::~TotalInventory()
     SAFE_DELETE(m_pEquipBack);
     SAFE_DELETE(m_pEquipHead);
               
-    if(m_pWeaponPrimary)SAFE_DELETE(m_pWeaponPrimary);
+    SAFE_DELETE(m_pWeaponPrimary);
     SAFE_DELETE(m_pWeaponSecondary);
 }
 
 void Character::TotalInventory::Init()
 {
+    ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    UIObject* layer1 = scenePlay->GetLayer(1);
+
     // 검정 배경
-    m_Border = new UIImage(
+    pBorder = new UIImage(
         "./Resource/UI/Inventory/Basic/",
         "black_1280_720_70.png",
         Vector3::ZERO,
         nullptr,
-        nullptr);
-    UI()()->RegisterUIObject(m_Border);
+        layer1);
+
+    //캐릭터 닉네임 텍스트
+    string nickName = Communication()()->m_myInfo.nickname;
+    auto nickNameText = new UIText(
+        Resource()()->GetFont(TAG_FONT::Inventory_NickName),
+        D3DXVECTOR2(120.0f, 20.0f),
+        nickName,
+        D3DCOLOR_XRGB(255, 255, 255),
+        pBorder);
+    nickNameText->SetDrawTextFormat(DT_CENTER);
+    nickNameText->SetPosition(D3DXVECTOR3(590.0f, 22.0f, 0.0f));
+
 
     // 텍스트
     auto a = new UIText(
-        Resource()()->GetFont(TAG_FONT::Invetory_28),
+        Resource()()->GetFont(TAG_FONT::Inventory_28),
         D3DXVECTOR2(100.0f, 20.0f),
         string("VICINITY"),
         D3DCOLOR_XRGB(200, 200, 200),
-        m_Border);
+        pBorder);
     a->SetDrawTextFormat(DT_LEFT);
     a->SetPosition(D3DXVECTOR3(74.0f, 24.0f, 0.0f));
 
     // 텍스트
     a = new UIText(
-        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        Resource()()->GetFont(TAG_FONT::Inventory_Ground),
         D3DXVECTOR2(100.0f, 20.0f),
         string("Ground"),
         D3DCOLOR_XRGB(200, 200, 200),
-        m_Border);
+        pBorder);
     a->SetDrawTextFormat(DT_LEFT);
     a->SetPosition(D3DXVECTOR3(74.0f, 77.0f, 0.0f));
 
     // 텍스트 
     a = new UIText(
-        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        Resource()()->GetFont(TAG_FONT::Inventory_Ground),
         D3DXVECTOR2(100.0f, 20.0f),
         string("Sortby Type"),
         D3DCOLOR_XRGB(200, 200, 200),
-        m_Border);
+        pBorder);
     a->SetDrawTextFormat(DT_LEFT);
     a->SetPosition(D3DXVECTOR3(264.0f, 77.0f, 0.0f));
 
@@ -100,7 +117,7 @@ void Character::TotalInventory::Init()
         "line.png",
         D3DXVECTOR3(233.0f, 92.0f, 0.0f),
         nullptr,
-        m_Border);
+        pBorder);
 
     // 여자 캐릭터
     auto b = new UIImage(
@@ -108,17 +125,15 @@ void Character::TotalInventory::Init()
         "Female.png",
         D3DXVECTOR3(410.0f, 85.0f, 0.0f),
         nullptr,
-        m_Border);
+        pBorder);
 
     SetEquipUI();
 
-    m_Border->SetIsRender(false);
+    pBorder->SetIsRender(false);
 }
 
 void Character::TotalInventory::Destroy()
 {
-    UI()()->Destroy(m_Border);
-    UI()()->Destroy(m_pUIPicked);
     UI()()->Destroy(m_pWeapon1);
     UI()()->Destroy(m_pWeapon2);
 }
@@ -128,14 +143,14 @@ void Character::TotalInventory::Open()
     isOpened = true;
     // move ui to in screen
 
-    m_Border->SetIsRender(isOpened);
+    pBorder->SetIsRender(isOpened);
 }
 
 void Character::TotalInventory::Close()
 {
     isOpened = false;
     // move ui to out screen
-    m_Border->SetIsRender(isOpened);
+    pBorder->SetIsRender(isOpened);
 
     POINT center;
     center.x = 1280 / 2;
@@ -178,7 +193,7 @@ void Character::TotalInventory::Update()
             pUI->pItem = pItem;
             pUI->m_tagUIPosition = UIPosition::GetTag(TAG_UI_POSITION::dropped_0, idx);
             pUI->pUIImage = pItem->GetUIImage();
-            //pUI->SetText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+            //pUI->SetText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
             //    string(ItemInfo::GetName(pItem->GetTagResStatic()) +"   "+ to_string(pItem->GetCount())),
             //    D3DCOLOR_XRGB(255, 255, 255));
             pItem->GetUIText()->SetText(string(ItemInfo::GetName(pItem->GetTagResStatic()) + "   " + to_string(pItem->GetCount())));
@@ -248,8 +263,8 @@ void Character::TotalInventory::SetEquipUI()
             "ItemSlot.png",
             "ItemSlot_mouseover.png",
             "ItemSlot.png",
-            m_Border,
-            Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+            pBorder,
+            Resource()()->GetFont(TAG_FONT::Inventory_Ground),
             "",
             D3DCOLOR_XRGB(255, 255, 255),
             nullptr,
@@ -265,14 +280,17 @@ void Character::TotalInventory::SetEquipUI()
     }
 
     // 픽된 아이템 이미지
+    ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    UIObject* layer3 = scenePlay->GetLayer(3);
+
     const float max = std::numeric_limits<float>::max();
-    m_pUIPicked = new UIButtonWithItem(
+    pUIPicked = new UIButtonWithItem(
         Vector3::ONE * max,
         "./Resource/UI/Inventory/Basic/",
         "Equip_click.png",
         "Equip_click.png",
         "Equip_click.png",
-        nullptr, nullptr, "", 0, nullptr,
+        layer3, nullptr, "", 0, nullptr,
         TAG_UI_POSITION::picked,
         std::bind(
             &Character::onMouse,
@@ -280,9 +298,8 @@ void Character::TotalInventory::SetEquipUI()
             std::placeholders::_1,
             std::placeholders::_2,
             std::placeholders::_3));
-    UI()()->RegisterUIObject(m_pUIPicked);
 
-    new UIImage("", "", Vector3::ZERO, nullptr, m_pUIPicked);
+    new UIImage("", "", Vector3::ZERO, nullptr, pUIPicked);
 
     // 인벤토리 칸 이미지
     left = 243;
@@ -301,8 +318,8 @@ void Character::TotalInventory::SetEquipUI()
             "ItemSlot.png",
             "ItemSlot_mouseover.png",
             "ItemSlot.png",
-            m_Border,
-            Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+            pBorder,
+            Resource()()->GetFont(TAG_FONT::Inventory_Ground),
             "",
             D3DCOLOR_XRGB(255, 255, 255),
             nullptr,
@@ -329,7 +346,7 @@ void Character::TotalInventory::SetEquipUI()
         "Equip_no.png",
         "Equip_mouseover.png",
         "Equip_click.png",
-        m_Border,
+        pBorder,
         nullptr,"",0,nullptr,
         TAG_UI_POSITION::Helmat,
         std::bind(
@@ -351,7 +368,7 @@ void Character::TotalInventory::SetEquipUI()
         "Equip_no.png",
         "Equip_mouseover.png",
         "Equip_click.png",
-        m_Border,
+        pBorder,
          nullptr, "", 0, nullptr,
         TAG_UI_POSITION::Bag,
         std::bind(
@@ -373,7 +390,7 @@ void Character::TotalInventory::SetEquipUI()
         "Equip_no.png",
         "Equip_mouseover.png",
         "Equip_click.png",
-        m_Border,
+        pBorder,
          nullptr, "", 0, nullptr,
         TAG_UI_POSITION::Armor,
         std::bind(
@@ -395,7 +412,7 @@ void Character::TotalInventory::SetEquipUI()
         "Equip_no.png",
         "Equip_mouseover.png",
         "Equip_click.png",
-        m_Border,
+        pBorder,
          nullptr, "", 0, nullptr,
         TAG_UI_POSITION::Belt,
         std::bind(
@@ -414,7 +431,7 @@ void Character::TotalInventory::SetEquipUI()
         "WeaponBox_idle.png", D3DXVECTOR3(
             static_cast<float>(left),
             static_cast<float>(top), 0.0f),
-        nullptr, m_Border);
+        nullptr, pBorder);
     m_pWeapon1 = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
@@ -423,8 +440,8 @@ void Character::TotalInventory::SetEquipUI()
         "WeaponBox_idle.png",
         "WeaponBox_mouseover.png",
         "WeaponBox_possible.png",
-        m_Border,
-        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        pBorder,
+        Resource()()->GetFont(TAG_FONT::Inventory_Ground),
         "",
         D3DCOLOR_XRGB(255, 255, 255),
         nullptr,
@@ -446,7 +463,7 @@ void Character::TotalInventory::SetEquipUI()
         "WeaponBox_idle.png", D3DXVECTOR3(
             static_cast<float>(left),
             static_cast<float>(top), 0.0f),
-        nullptr, m_Border);
+        nullptr, pBorder);
 
     
         m_pWeapon2 = new UIButtonWithItem(
@@ -457,8 +474,8 @@ void Character::TotalInventory::SetEquipUI()
          "WeaponBox_idle.png",
          "WeaponBox_mouseover.png",
          "WeaponBox_possible.png",
-         m_Border,
-         Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+         pBorder,
+         Resource()()->GetFont(TAG_FONT::Inventory_Ground),
          "",
          D3DCOLOR_XRGB(255, 255, 255),
          nullptr,
@@ -483,8 +500,8 @@ void Character::TotalInventory::SetEquipUI()
          "WeaponBox_idle.png",
          "WeaponBox_mouseover.png",
          "WeaponBox_possible.png",
-         m_Border,
-         Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+         pBorder,
+         Resource()()->GetFont(TAG_FONT::Inventory_Ground),
          "",
          D3DCOLOR_XRGB(255, 255, 255),
          nullptr,
@@ -500,7 +517,7 @@ void Character::TotalInventory::SetEquipUI()
      //weapon slot 1
      auto imageu =new UIImage("./Resource/UI/Inventory/Basic/", "WeaponBoxNum.png", 
          D3DXVECTOR3(5, 6, 0), nullptr, m_pWeapon1);
-     new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+     new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
          D3DXVECTOR2(20, 20), "1", D3DCOLOR_XRGB(255, 255, 255), imageu);
 
      u = new UIButtonWithItem(
@@ -603,7 +620,7 @@ void Character::TotalInventory::SetEquipUI()
      //weapon slot 2
      imageu = new UIImage("./Resource/UI/Inventory/Basic/", "WeaponBoxNum.png",
          D3DXVECTOR3(5, 6, 0), nullptr, m_pWeapon2);
-     new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+     new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
          D3DXVECTOR2(20, 20), "2", D3DCOLOR_XRGB(255, 255, 255), imageu);
 
      u = new UIButtonWithItem(
@@ -762,6 +779,8 @@ void Character::PutItemInTotalInventory(Item* item)
 
             // OOTZ_FLAG : 네트워크 필드 -> 아머
             Communication()()->SendEventMoveItemFieldToArmor(m_index, item->GetName());
+
+            m_isEatEquip = true;
         }
         break;
 
@@ -779,6 +798,8 @@ void Character::PutItemInTotalInventory(Item* item)
 
             // OOTZ_FLAG : 네트워크 필드 -> 백
             Communication()()->SendEventMoveItemFieldToBack(m_index, item->GetName());
+
+            m_isEatEquip = true;
         }
         break;
 
@@ -798,6 +819,8 @@ void Character::PutItemInTotalInventory(Item* item)
 
             // OOTZ_FLAG : 네트워크 필드 -> 헤드
             Communication()()->SendEventMoveItemFieldToHead(m_index, originItemName);
+
+            m_isEatEquip = true;
         }
         break;
 
@@ -1188,19 +1211,19 @@ void Character::onMouse(
                 GetCursorPos(&mouse);
                 ScreenToClient(g_hWnd, &mouse);
 
-                ti.m_pUIPicked->SetPosition(
+                ti.pUIPicked->SetPosition(
                     D3DXVECTOR3(
                         static_cast<float>(mouse.x - 21),
                         static_cast<float>(mouse.y - 21), 0.0f));
-                ti.m_pUIPicked->pItem = pUIButtonWithItem->pItem;
+                ti.pUIPicked->pItem = pUIButtonWithItem->pItem;
 
                 UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage();
-                UIImage* pPickedImage = static_cast<UIImage*>(ti.m_pUIPicked->GetChild(0));
+                UIImage* pPickedImage = static_cast<UIImage*>(ti.pUIPicked->GetChild(0));
 
                 pPickedImage->SetTexture(pItemImage->GetTexture());
                 pPickedImage->SetSize(pItemImage->GetSize());
 
-                if (ItemInfo::GetItemCategory(ti.m_pUIPicked->pItem->GetTagResStatic()) == TAG_ITEM_CATEGORY::Rifle)
+                if (ItemInfo::GetItemCategory(ti.pUIPicked->pItem->GetTagResStatic()) == TAG_ITEM_CATEGORY::Rifle)
                 {
                     ti.m_pWeapon1->SetIsActive(true);
                     ti.m_pWeapon2->SetIsActive(true);
@@ -1214,14 +1237,14 @@ void Character::onMouse(
                 GetCursorPos(&mouse);
                 ScreenToClient(g_hWnd, &mouse);
 
-                ti.m_pUIPicked->SetPosition(
+                ti.pUIPicked->SetPosition(
                     D3DXVECTOR3(
                         static_cast<float>(mouse.x - 21),
                         static_cast<float>(mouse.y - 21), 0.0f));
-                ti.m_pUIPicked->pItem = pUIButtonWithItem->pItem;
+                ti.pUIPicked->pItem = pUIButtonWithItem->pItem;
 
                 UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage();
-                UIImage* pPickedImage = static_cast<UIImage*>(ti.m_pUIPicked->GetChild(0));
+                UIImage* pPickedImage = static_cast<UIImage*>(ti.pUIPicked->GetChild(0));
 
                 pPickedImage->SetTexture(pItemImage->GetTexture());
                 pPickedImage->SetSize(pItemImage->GetSize());
@@ -1232,14 +1255,14 @@ void Character::onMouse(
                 GetCursorPos(&mouse);
                 ScreenToClient(g_hWnd, &mouse);
 
-                ti.m_pUIPicked->SetPosition(
+                ti.pUIPicked->SetPosition(
                     D3DXVECTOR3(
                         static_cast<float>(mouse.x - 21),
                         static_cast<float>(mouse.y - 21), 0.0f));
-                ti.m_pUIPicked->pItem = pUIButtonWithItem->pItem;
+                ti.pUIPicked->pItem = pUIButtonWithItem->pItem;
 
                 UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage();
-                UIImage* pPickedImage = static_cast<UIImage*>(ti.m_pUIPicked->GetChild(0));
+                UIImage* pPickedImage = static_cast<UIImage*>(ti.pUIPicked->GetChild(0));
 
                 pPickedImage->SetTexture(pItemImage->GetTexture());
                 pPickedImage->SetSize(pItemImage->GetSize());
@@ -1256,7 +1279,7 @@ void Character::onMouse(
                 GetCursorPos(&mouse);
                 ScreenToClient(g_hWnd, &mouse);
 
-                ti.m_pUIPicked->SetPosition(
+                ti.pUIPicked->SetPosition(
                     D3DXVECTOR3(
                         static_cast<float>(mouse.x - 21),
                         static_cast<float>(mouse.y - 21), 0.0f));

@@ -1304,8 +1304,50 @@ void Character::setInfo()
 void Character::MinusDamage(const float damage)
 {
     m_health -= damage;
-    if (m_health < 0.0f)
+    if (m_health <= 0.0f)
+    {
         m_health = 0.0f;
+    }
+}
+
+int Character::GetKillNum() const
+{
+    return m_killNum;
+}
+
+void Character::SetKillNum(const int killNum)
+{
+    m_killNum = killNum;
+}
+
+bool Character::GetIsKill() const
+{
+    return m_isKill;
+}
+
+void Character::SetIsKill(const bool isKill)
+{
+    m_isKill = isKill;
+}
+
+bool Character::GetIsEatEquip() const
+{
+    return m_isEatEquip;
+}
+
+void Character::SetIsEatEquip(const bool isEatEquip)
+{
+    m_isEatEquip = isEatEquip;
+}
+
+Character::InGameUI& Character::GetInGameUI()
+{
+    return m_inGameUI;
+}
+
+Character::TotalInventory& Character::GetTotalInventory()
+{
+    return m_totalInventory;
 }
 
 void Character::MoveItemFieldToHead(Item* pItem)
@@ -1516,6 +1558,11 @@ void Character::rotateHead(const float quantity)
 int Character::GetIndex() const
 {
     return m_index;
+}
+
+string Character::GetNickName() const
+{
+    return Communication()()->m_roomInfo.playerInfos[m_index].nickname;
 }
 
 float Character::GetCharacterHealth() const

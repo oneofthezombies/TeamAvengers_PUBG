@@ -134,7 +134,7 @@ void Item::setup(const TAG_RES_STATIC tag)
             const auto pathName = ResourceInfo::GetUIPathFileName(tag);
             m_pUIImage = new UIImage(pathName.first, pathName.second, Vector3::ZERO, this, nullptr);
             m_pUIImage->SetIsRender(false);
-            pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+            pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
                 D3DXVECTOR2(100.0f, 20.0f),
                 "",
                 D3DCOLOR_XRGB(255, 255, 255),
@@ -285,7 +285,7 @@ void Item::setup(const TAG_RES_STATIC tag)
             const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
             m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
             m_pUIImage->SetIsRender(false);
-            pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+            pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
                 D3DXVECTOR2(100.0f, 20.0f),
                 "",
                 D3DCOLOR_XRGB(255, 255, 255),

@@ -36,17 +36,24 @@ Character::Character(const int index)
     , m_savedInput()
     , m_currentStayKey()
     , m_totalInventory()
+
     , m_inGameUI()
+    , m_killNum(0)
+    , m_isKill(false)
+
     , m_attacking(Attacking::Unarmed)
     , m_stance(Stance::Stand)
     , m_moving(Moving::Run)
     , m_direction(Direction::Front)
     , m_upperAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
+   
     , m_isFire(false)
     , m_hasChangingState(false)
     , m_isNeedRifleAnim(false)
     , m_isTransitioning(false)
+    , m_isDamaged(false)
+    , m_isEatEquip(false)
 
     , pAnimation(nullptr)
 
@@ -55,8 +62,8 @@ Character::Character(const int index)
     m_totalInventory.pCharacter = this;
     if (isMine())
     {
-        m_totalInventory.Init();
         m_inGameUI.Init(this);
+        m_totalInventory.Init();
     }
 
     const float factor(static_cast<float>(m_index + 1) * 200.0f);

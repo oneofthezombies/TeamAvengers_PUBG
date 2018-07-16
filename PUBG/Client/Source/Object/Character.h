@@ -83,11 +83,11 @@ public:
 
         Character* pCharacter;
 
-        UIImage* m_Border;
+        UIImage* pBorder;
         UIText*  m_Text;
         std::vector<UIButtonWithItem*> m_uiDroped;
         std::vector<UIButtonWithItem*> m_uiInven;
-        UIButtonWithItem* m_pUIPicked;
+        UIButtonWithItem* pUIPicked;
         UIButtonWithItem* m_pWeapon1;
         UIButtonWithItem* m_pWeapon2;
 
@@ -158,21 +158,31 @@ public:
         static const float HP_HEIGHT;
 
         Character* pPlayer;
+        string m_nickName;
+        string m_killedNickName;
+        string m_weaponNameForKill;
 
-        UIImage* m_pBackground;
+        UIImage* pBackground;
 
         //Image ===================
         //compass
+        UIImage* pCompassBg;
         UIImage* pCompass;
+        UIImage* pCompassArrowBg;
+        UIImage* pCompassArrow;
 
         //equip
-        UIImage* pBagImg;
-        UIImage* pHelmetImg;
-        UIImage* pVestImg;
+        //UIImage* pBagImg;
+        //UIImage* pHelmetImg;
+        //UIImage* pVestImg;
+        vector<UIImage*> vecEquipImg;
 
         //hp
         UIImage* pHpRedImg;
         UIImage* pHpWhiteImg;
+
+        //Ammo
+        UIImage* pAmmoBg;
 
         //weapons
         UIImage* pQBZImg;
@@ -181,6 +191,12 @@ public:
         UIImage* pQBZRedImg;
         UIImage* pKar98kRedImg;
 
+        //킬 (오른쪽 상단)
+        UIImage* pKillTextUpBg;
+        UIImage* pKillNumUpBg;
+
+        //map
+        UIImage* pMapImg;
 
         //Text ====================
         //ammo
@@ -209,14 +225,21 @@ public:
         UIText* pInfoTextShadow;
 
         //킬로그
-        UIText* pKillLog1;
-        UIText* pKillLog2;
+        vector<UIText*> vecKillLog;
 
         const float INFO_TEXT_COOL_TIME;
         float m_infoTextCoolDown;
 
         const float HP_COOL_TIME;
         float m_hpCoolDown;
+
+        const float KILL_COOL_TIME;
+        float m_killCoolDown;
+
+        const float KILL_UP_COOL_TIME;
+        float m_killUpCoolDown;
+
+        bool m_isKill;
 
         InGameUI();
         ~InGameUI();
@@ -240,6 +263,9 @@ public:
         void updateInfoTextUI();
         void updateOnHandWeaponUI(const TotalInventory& inven);
         void updateSurvivalNumTextUI();
+        void updateHpUI();
+        void updateKillUI(const TotalInventory& inven);
+        void updateEquipUI(const TotalInventory& inven);
     };
 
     struct Info
@@ -398,6 +424,8 @@ private:
 
     // for InGameUI
     InGameUI m_inGameUI;
+    int m_killNum;
+    bool m_isKill;
     
     // state
     TAG_ANIM_CHARACTER m_upperAnimState;
@@ -424,6 +452,7 @@ private:
     bool m_isNeedRifleAnim;
     bool m_isTransitioning;  //전이 중일 때는 움직이지 않는다
     bool m_isDamaged;
+    bool m_isEatEquip;       //장비템을 주웠을 때
 
     WaitBackAction m_backAction;
 
@@ -610,6 +639,7 @@ public:
     void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
     int GetIndex() const;
+    string GetNickName() const;
     float GetCharacterHealth() const;
     bool GetCharacterIsDead() const;
     
@@ -636,7 +666,10 @@ public:
     D3DXVECTOR3 GetWaistPosition();
     bool IsFire() const;
     void RifleShooting();
+
+    /* 안씀 */
     D3DXVECTOR3 FindShootingTargetPos();
+
     void MinusDamage(const float damage);
 
     void MoveItemFieldToHead(Item* pItem);
@@ -653,6 +686,18 @@ public:
     void MoveItemSecondaryToHand();
     void MoveItemHandToPrimary();
     void MoveItemHandToSecondary();
+
+    int GetKillNum() const;
+    void SetKillNum(const int killNum);
+    
+    bool GetIsKill() const;
+    void SetIsKill(const bool isKill);
+
+    bool GetIsEatEquip() const;
+    void SetIsEatEquip(const bool isEatEquip);
+
+    InGameUI& GetInGameUI();
+    TotalInventory& GetTotalInventory();
 
     //        const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;

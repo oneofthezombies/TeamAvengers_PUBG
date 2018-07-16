@@ -27,23 +27,36 @@ const float Character::InGameUI::HP_HEIGHT    = 17.0f;
 
 Character::InGameUI::InGameUI()
     : pPlayer(nullptr)
+    , m_nickName("")
+    , m_killedNickName("")
+    , m_weaponNameForKill("")
 
-    , m_pBackground(nullptr)
+    , pBackground(nullptr)
 
     //Image ===================
+    , pCompassBg(nullptr)
     , pCompass(nullptr)
+    , pCompassArrowBg(nullptr)
+    , pCompassArrow(nullptr)
 
-    , pBagImg(nullptr)
-    , pHelmetImg(nullptr)
-    , pVestImg(nullptr)
+    //, pBagImg(nullptr)
+    //, pHelmetImg(nullptr)
+    //, pVestImg(nullptr)
 
     , pHpRedImg(nullptr)
     , pHpWhiteImg(nullptr)
+
+    , pAmmoBg(nullptr)
 
     , pQBZImg(nullptr)
     , pQBZRedImg(nullptr)
     , pKar98kImg(nullptr)
     , pKar98kRedImg(nullptr)
+
+    , pKillTextUpBg(nullptr)
+    , pKillNumUpBg(nullptr)
+
+    , pMapImg(nullptr)
 
     //Text ====================
     , pAmmoReloadText(nullptr)
@@ -63,15 +76,20 @@ Character::InGameUI::InGameUI()
     , pInfoText(nullptr)
     , pInfoTextShadow(nullptr)
 
-    , pKillLog1(nullptr)
-    , pKillLog2(nullptr)
-
     //=========================
     , INFO_TEXT_COOL_TIME(4.0f)
     , m_infoTextCoolDown(0.0f)
 
-    , HP_COOL_TIME(1.0f)
+    , HP_COOL_TIME(0.6f)
     , m_hpCoolDown(0.0f)
+
+    , KILL_COOL_TIME(10.0f)
+    , m_killCoolDown(0.0f)
+
+    , KILL_UP_COOL_TIME(8.0f)
+    , m_killUpCoolDown(0.0f)
+
+    , m_isKill(false)
 {
 }
 
@@ -81,7 +99,6 @@ Character::InGameUI::~InGameUI()
 
 void Character::InGameUI::Destroy()
 {
-    UI()()->Destroy(m_pBackground);
 }
 
 void Character::InGameUI::Init(Character* pPlayer)
@@ -90,24 +107,28 @@ void Character::InGameUI::Init(Character* pPlayer)
 
     m_infoTextCoolDown = INFO_TEXT_COOL_TIME;
     m_hpCoolDown = HP_COOL_TIME;
+    m_killCoolDown = KILL_COOL_TIME;
+    m_killUpCoolDown = KILL_UP_COOL_TIME;
 
+    ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    UIObject* layer2 = scenePlay->GetLayer(2);
+    
     //투명 배경
-    m_pBackground = new UIImage(
+    pBackground = new UIImage(
         "./Resource/UI/InGame/",
         "transparent_1280_720",
         Vector3::ZERO,
         nullptr,
-        nullptr
+        layer2
     );
-    UI()()->RegisterUIObject(m_pBackground);
 
     //Compass
-    auto compassBg = new UIImage(
+    pCompassBg = new UIImage(
         "./Resource/UI/InGame/",
         "compass_bg.png",
         D3DXVECTOR3(420.0f, 28.0f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     pCompass = new UIImage(
@@ -115,23 +136,23 @@ void Character::InGameUI::Init(Character* pPlayer)
         "compass.png",
         D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
         nullptr,
-        compassBg
+        pCompassBg
     );
 
-    auto compassArrowBg = new UIImage(
+    pCompassArrowBg = new UIImage(
         "./Resource/UI/InGame/",
         "compass_arraw_bg.png",
         D3DXVECTOR3(420.0f, 8.75f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
-    new UIImage(
+    pCompassArrow = new UIImage(
         "./Resource/UI/InGame/",
         "compass_arrow.png",
         D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
         nullptr,
-        compassArrowBg
+        pCompassArrowBg
     );
 
     //for test
@@ -139,29 +160,35 @@ void Character::InGameUI::Init(Character* pPlayer)
     //부모를 가리면 자식도 함께 안보인다
 
     //장비템
-    pBagImg = new UIImage(
+    auto pEquip1 = new UIImage(
         "./Resource/UI/InGame/",
-        "equipment_bag01.png",
+        "equipment_panel.png",
         D3DXVECTOR3(EQUIP_START, EQUIP_HEIGHT, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
+    vecEquipImg.push_back(pEquip1);
+    pEquip1->SetIsRender(false);
 
-    pHelmetImg = new UIImage(
+    auto pEquip2 = new UIImage(
         "./Resource/UI/InGame/",
-        "equipment_helmet01.png",
+        "equipment_panel.png",
         D3DXVECTOR3(EQUIP_START + EQUIP_WIDTH + EQUIP_GAP/*526.0f*/, EQUIP_HEIGHT, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
+    vecEquipImg.push_back(pEquip2);
+    pEquip2->SetIsRender(false);
 
-    pVestImg = new UIImage(
+    auto pEquip3 = new UIImage(
         "./Resource/UI/InGame/",
-        "equipment_vest01.png",
+        "equipment_panel.png",
         D3DXVECTOR3(EQUIP_START + (EQUIP_WIDTH + EQUIP_GAP) * 2/*550.0f*/, EQUIP_HEIGHT, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
+    vecEquipImg.push_back(pEquip3);
+    pEquip3->SetIsRender(false);
 
     //hp
     auto hpBg = new UIImage(
@@ -169,7 +196,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "player_HP_BG_v3.png",
         D3DXVECTOR3(502.0f, 684.0f, 0.0f),
         nullptr,
-        m_pBackground);
+        pBackground);
 
     pHpRedImg = new UIImage(
         "./Resource/UI/InGame/",
@@ -189,21 +216,20 @@ void Character::InGameUI::Init(Character* pPlayer)
     //pHpRedImg->SetSize(D3DXVECTOR2(255.0f, 17.0f));
     //pHpWhiteImg->SetSize(D3DXVECTOR2(250.0f, 17.0f));
 
-
     //장전 수, 총알 개수
-    auto ammoBg = new UIImage(
+    pAmmoBg = new UIImage(
         "./Resource/UI/InGame/",
         "ammo_info.png",
         D3DXVECTOR3(576.0f, 647.0f, 0.0f),
         nullptr,
-        m_pBackground);
+        pBackground);
 
     pAmmoReloadText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameAmmoReload),
         D3DXVECTOR2(130.0f, 28.0f),
         string(""),
         InGameUI::WHITE,
-        ammoBg);
+        pAmmoBg);
     pAmmoReloadText->SetDrawTextFormat(DT_CENTER);
     pAmmoReloadText->SetPosition(D3DXVECTOR3(1.9f, 0.1f, 0.0f));
 
@@ -212,7 +238,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(130.0f, 28.0f),
         string(""),
         GRAY,
-        ammoBg);
+        pAmmoBg);
     pAmmoNumText->SetDrawTextFormat(DT_LEFT);
     pAmmoNumText->SetPosition(D3DXVECTOR3(95.0, 5.0f, 0.0f));
 
@@ -222,7 +248,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(130.0f, 28.0f),
         string(""),
         GRAY,
-        ammoBg);
+        pAmmoBg);
     pFireModeText->SetDrawTextFormat(DT_LEFT);
     pFireModeText->SetPosition(D3DXVECTOR3(10.0, 8.0f, 0.0f));
 
@@ -232,7 +258,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "survival_text_bg.png",
         D3DXVECTOR3(1216.0f, 20.0f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     auto survivalText = new UIText(
@@ -250,7 +276,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "survival_num_bg.png",
         D3DXVECTOR3(1190.0f, 20.0f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     pSurvivalNumText = new UIText(
@@ -262,13 +288,14 @@ void Character::InGameUI::Init(Character* pPlayer)
     pSurvivalNumText->SetDrawTextFormat(DT_CENTER);
     pSurvivalNumText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
     
+    //여기
     //킬 (화면 오른쪽 상단)
-    auto killTextUpBg = new UIImage(
+    pKillTextUpBg = new UIImage(
         "./Resource/UI/InGame/",
         "kill_text_up_bg.png",
         D3DXVECTOR3(1145.0f, 20.0f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     auto killUpText = new UIText(
@@ -276,36 +303,38 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(24.0f, 26.0f),
         string("킬"),
         GRAY,
-        killTextUpBg
+        pKillTextUpBg
     );
     killUpText->SetDrawTextFormat(DT_CENTER);
     killUpText->SetPosition(D3DXVECTOR3(0.0f, 4.0f, 0.0f));
+    pKillTextUpBg->SetIsRender(false);
 
-    auto killNumUpBg = new UIImage(
+    pKillNumUpBg = new UIImage(
         "./Resource/UI/InGame/",
         "kill_num_up_bg.png",
         D3DXVECTOR3(1128.0f, 20.0f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     pKillNumUpText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameSurvivalNum),
         D3DXVECTOR2(17.0f, 26.0f),
-        string("0"),
+        string(""),
         WHITE,
-        killNumUpBg);
+        pKillNumUpBg);
     pKillNumUpText->SetDrawTextFormat(DT_CENTER);
     pKillNumUpText->SetPosition(D3DXVECTOR3(0.0f, 2.0f, 0.0f));
-
+    pKillNumUpBg->SetIsRender(false);
 
     //아이디, 게임버전
+    m_nickName = Communication()()->m_myInfo.nickname;
     pIdText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameID),
         D3DXVECTOR2(87.0f, 9.0f),
-        string("HelloWoori"),
+        m_nickName,
         WHITE_ALPHA,
-        m_pBackground
+        pBackground
     );
     pIdText->SetDrawTextFormat(DT_CENTER);
     pIdText->SetPosition(D3DXVECTOR3(598.0f, 705.0f, 0.0f));
@@ -316,19 +345,20 @@ void Character::InGameUI::Init(Character* pPlayer)
         pKillNumTextShadow,
         Resource()()->GetFont(TAG_FONT::InGameKillNum),
         D3DXVECTOR2(60.0f, 30.0f),
-        string("2 킬"),
+        string(""),
         RED,
-        m_pBackground,
+        pBackground,
         D3DXVECTOR3(612.0f, 504.0f, 0.0f));
 
+    //ex) "당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
     setTextWithShadow(
         pKillText,
         pKillTextShadow,
         Resource()()->GetFont(TAG_FONT::InGameInfo),
-        D3DXVECTOR2(400.0f, 20.0f),
-        string("당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
+        D3DXVECTOR2(500.0f, 20.0f),
+        string(""),
         WHITE,
-        m_pBackground,
+        pBackground,
         D3DXVECTOR3(440.0f, 480.0f, 0.0f));
 
     //아이템 사용 등 안내문구
@@ -339,27 +369,50 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(252.0f, 20.0f),
         string(""),
         WHITE,
-        m_pBackground,
+        pBackground,
         D3DXVECTOR3(510.0f, 579.0f, 0.0f));
 
     //킬로그
-    pKillLog1 = new UIText(
+    //ex) "HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
+    auto pKillLog1 = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
         D3DXVECTOR2(400.0f, 14.0f),
-        string("HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
+        string(""),
         GRAY,
-        m_pBackground);
+        pBackground);
     pKillLog1->SetDrawTextFormat(DT_RIGHT);
     pKillLog1->SetPosition(D3DXVECTOR3(856.0f, 52.0f, 0.0f));
+    vecKillLog.push_back(pKillLog1);
 
-    pKillLog2  = new UIText(
+    auto pKillLog2  = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
         D3DXVECTOR2(400.0f, 14.0f),
-        string("John의 QBZ(으)로 인해 ootz이(가) 사망했습니다"),
+        string(""),
         GRAY,
-        m_pBackground);
+        pBackground);
     pKillLog2->SetDrawTextFormat(DT_RIGHT);
     pKillLog2->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 20.0f, 0.0f));
+    vecKillLog.push_back(pKillLog2);
+
+    auto pKillLog3 = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameKillLog),
+        D3DXVECTOR2(400.0f, 14.0f),
+        string(""),
+        GRAY,
+        pBackground);
+    pKillLog3->SetDrawTextFormat(DT_RIGHT);
+    pKillLog3->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 40.0f, 0.0f));
+    vecKillLog.push_back(pKillLog3);
+
+    auto pKillLog4 = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameKillLog),
+        D3DXVECTOR2(400.0f, 14.0f),
+        string(""),
+        GRAY,
+        pBackground);
+    pKillLog4->SetDrawTextFormat(DT_RIGHT);
+    pKillLog4->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 60.0f, 0.0f));
+    vecKillLog.push_back(pKillLog4);
 
     //총
     auto primaryWeaponBg = new UIImage(
@@ -367,14 +420,14 @@ void Character::InGameUI::Init(Character* pPlayer)
         "weapons_bg.png",
         PRIMARY_WEAPON_POS,
         nullptr,
-        m_pBackground);
+        pBackground);
 
     auto secondaryWeaponBg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_bg.png",
         SECONDARY_WEAPON_POS,
         nullptr,
-        m_pBackground);
+        pBackground);
 
     pQBZImg = new UIImage(
         "./Resource/UI/InGame/",
@@ -407,17 +460,17 @@ void Character::InGameUI::Init(Character* pPlayer)
     pKar98kRedImg->SetIsRender(false);
 
     //맵
-    new UIImage(
+    pMapImg = new UIImage(
         "./Resource/UI/InGame/",
         "map_bg.png",
         D3DXVECTOR3(1085.0f, 530.0f, 0.0f),
         nullptr,
-        m_pBackground);
+        pBackground);
 }
 
 void Character::InGameUI::Update(const TotalInventory& inven)
 {
-    //실제 정보를 받아서 UI를 변경하자
+    /*실제 정보를 받아서 UI를 변경하자*/
 
     //일정시간이 지나면 해당 문구 삭제
     updateInfoTextUI();
@@ -429,25 +482,21 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     updateSurvivalNumTextUI();
 
     //피 닳기
-    float hp = pPlayer->GetCharacterHealth();
-    float hpWidth = HP_WIDTH / Character::MAX_HEALTH * hp;
-    pHpWhiteImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
-    
-    //1초 뒤 빨간 hp도 흰색만큼 줄어든다
-    if (pPlayer->IsDamaged())
+    updateHpUI();
+
+    //TODO: 킬로그 (서버랑 연관해서 생각해야함) 
+    if (pPlayer->GetIsKill())
     {
-        float t = m_hpCoolDown -= Time()()->GetDeltaTime();
-        if (m_hpCoolDown <= 0)
-        {
-            pHpRedImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
-            m_hpCoolDown = HP_COOL_TIME;
-            pPlayer->ResetIsDamaged();
-        }
+        //ex) "HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
+        string str = m_nickName + m_weaponNameForKill + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
+        vecKillLog.at(0)->SetText(str);
     }
 
+    //킬 수
+    updateKillUI(inven);
+
     //장비 착용 관련 UI
-
-
+    updateEquipUI(inven);
 }
 
 void Character::InGameUI::Render()
@@ -494,7 +543,7 @@ void Character::InGameUI::updateInfoTextUI()
     {
         float t = m_infoTextCoolDown -= Time()()->GetDeltaTime();
         //cout << t << endl;
-        if (m_infoTextCoolDown <= 0)
+        if (m_infoTextCoolDown <= 0.0f)
         {
             pInfoText->SetText("");
             pInfoTextShadow->SetText("");
@@ -586,4 +635,198 @@ void Character::InGameUI::updateSurvivalNumTextUI()
     ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
     int survivalNum = currentScene->GetSurvivors();
     pSurvivalNumText->SetText(to_string(survivalNum));
+}
+
+void Character::InGameUI::updateHpUI()
+{
+    float hp = pPlayer->GetCharacterHealth();
+    float hpWidth = HP_WIDTH / Character::MAX_HEALTH * hp;
+    pHpWhiteImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
+
+    //1초 뒤 빨간 hp도 흰색만큼 줄어든다
+    if (pPlayer->IsDamaged())
+    {
+        m_hpCoolDown -= Time()()->GetDeltaTime();
+        if (m_hpCoolDown <= 0.0f)
+        {
+            pHpRedImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
+            m_hpCoolDown = HP_COOL_TIME;
+            pPlayer->ResetIsDamaged();
+        }
+    }
+}
+
+void Character::InGameUI::updateKillUI(const TotalInventory& inven)
+{
+    if (inven.isOpened)
+    {
+        pKillNumUpBg->SetIsRender(true);
+        pKillTextUpBg->SetIsRender(true);
+        pKillNumUpText->SetText(to_string(pPlayer->GetKillNum()));
+
+        pCompassBg->SetIsRender(false);
+        pCompassArrowBg->SetIsRender(false);
+        pAmmoBg->SetIsRender(false);
+        pMapImg->SetIsRender(false);
+
+        pQBZImg->SetIsRender(false);
+        pKar98kImg->SetIsRender(false);
+        pQBZRedImg->SetIsRender(false);
+        pKar98kRedImg->SetIsRender(false);
+
+    }
+    else
+    {
+        if (m_isKill == false)
+        {
+            pKillNumUpBg->SetIsRender(false);
+            pKillTextUpBg->SetIsRender(false);
+            pKillNumUpText->SetText("");
+        }
+
+        pCompassBg->SetIsRender(true);
+        pCompassArrowBg->SetIsRender(true);
+        pAmmoBg->SetIsRender(true);
+        pMapImg->SetIsRender(true);
+
+        pQBZImg->SetIsRender(true);
+        pKar98kImg->SetIsRender(true);
+    }
+
+    //킬 한 그 순간에 텍스트가 뜬다
+    if (pPlayer->GetIsKill())
+    {
+        m_isKill = true;
+        //화면 중앙 킬
+        //ex) "당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
+        string str = string("당신의 ") + m_weaponNameForKill + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
+        pKillText->SetText(str, pKillTextShadow);
+
+        int killNum = pPlayer->GetKillNum();
+        pKillNumText->SetText(to_string(killNum) + " 킬", pKillNumTextShadow);
+
+        //화면 오른쪽 상단 킬
+        pKillNumUpBg->SetIsRender(true);
+        pKillTextUpBg->SetIsRender(true);
+        pKillNumUpText->SetText(to_string(killNum));
+
+        pPlayer->SetIsKill(false);
+    }
+
+    //일정시간이 지나면 텍스트가 사라진다
+    //화면 중앙 킬
+    if (pKillNumText->GetText() != "")
+    {
+        m_killCoolDown -= Time()()->GetDeltaTime();
+        if (m_killCoolDown <= 0.0f)
+        {
+            pKillNumText->SetText("", pKillNumTextShadow);
+            pKillText->SetText("", pKillTextShadow);
+
+            m_killCoolDown = KILL_COOL_TIME;
+        }
+    }
+
+    //화면 오른쪽 상단 킬
+    if (pKillNumUpText->GetText() != "" && inven.isOpened == false)
+    {
+        float t = m_killUpCoolDown -= Time()()->GetDeltaTime();
+        cout << t << endl;
+
+        if (m_killUpCoolDown <= 0.0f)
+        {
+            m_isKill = false;
+
+            pKillNumUpBg->SetIsRender(false);
+            pKillTextUpBg->SetIsRender(false);
+            pKillNumUpText->SetText("");
+
+            m_killUpCoolDown = KILL_UP_COOL_TIME;
+        }
+    }
+}
+
+void Character::InGameUI::updateEquipUI(const TotalInventory& inven)
+{
+    if (pPlayer->GetIsEatEquip())
+    {
+        switch (inven.m_equipOnNum)
+        {
+        case 0:
+        {
+            vecEquipImg[0]->SetIsRender(false);
+            vecEquipImg[1]->SetIsRender(false);
+            vecEquipImg[2]->SetIsRender(false);
+        }
+        break;
+
+        case 1:
+        {
+            if (inven.m_pEquipArmor)
+            {
+                vecEquipImg[0]->SetTexture("./Resource/UI/InGame/equipment_vest01.png");
+                vecEquipImg[0]->SetIsRender(true);
+            }
+            else if (inven.m_pEquipBack)
+            {
+                vecEquipImg[0]->SetTexture("./Resource/UI/InGame/equipment_bag01.png");
+                vecEquipImg[0]->SetIsRender(true);
+            }
+            else if (inven.m_pEquipHead)
+            {
+                vecEquipImg[0]->SetTexture("./Resource/UI/InGame/equipment_helmet01.png");
+                vecEquipImg[0]->SetIsRender(true);
+            }
+        }
+        break;
+
+        case 2:
+        {
+            if (inven.m_pEquipArmor && inven.m_pEquipBack)
+            {
+                vecEquipImg[0]->SetTexture("./Resource/UI/InGame/equipment_bag01.png");
+                vecEquipImg[1]->SetTexture("./Resource/UI/InGame/equipment_vest01.png");
+
+                vecEquipImg[0]->SetIsRender(true);
+                vecEquipImg[1]->SetIsRender(true);
+            }
+            else if (inven.m_pEquipArmor && inven.m_pEquipHead)
+            {
+                vecEquipImg[0]->SetTexture("./Resource/UI/InGame/equipment_helmet01.png");
+                vecEquipImg[1]->SetTexture("./Resource/UI/InGame/equipment_vest01.png");
+
+                vecEquipImg[0]->SetIsRender(true);
+                vecEquipImg[1]->SetIsRender(true);
+            }
+            else if (inven.m_pEquipBack && inven.m_pEquipHead)
+            {
+                vecEquipImg[0]->SetTexture("./Resource/UI/InGame/equipment_bag01.png");
+                vecEquipImg[1]->SetTexture("./Resource/UI/InGame/equipment_helmet01.png");
+
+                vecEquipImg[0]->SetIsRender(true);
+                vecEquipImg[1]->SetIsRender(true);
+            }
+        }
+        break;
+
+        case 3:
+        {
+            vecEquipImg[0]->SetTexture("./Resource/UI/InGame/equipment_bag01.png");
+            vecEquipImg[1]->SetTexture("./Resource/UI/InGame/equipment_helmet01.png");
+            vecEquipImg[2]->SetTexture("./Resource/UI/InGame/equipment_vest01.png");
+
+            vecEquipImg[0]->SetIsRender(true);
+            vecEquipImg[1]->SetIsRender(true);
+            vecEquipImg[2]->SetIsRender(true);
+        }
+        break;
+
+        default:
+        {
+            assert(false && "Character::InGameUI::updateEquipUI(), default case.");
+        }
+        break;
+        }
+        pPlayer->SetIsEatEquip(false);
+    }
 }

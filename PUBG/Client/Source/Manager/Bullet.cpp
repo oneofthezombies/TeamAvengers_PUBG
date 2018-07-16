@@ -4,6 +4,8 @@
 #include "TerrainFeature.h"
 #include "Character.h"
 #include "ItemInfo.h"
+#include "Item.h"
+#include "ScenePlay.h"
 
 Bullet::Bullet()
     : IObject(TAG_OBJECT::Bullet)
@@ -181,7 +183,24 @@ void Bullet::OnUpdate()
                  * CharacterInfo::GetHitAreaDamage(targetInfo.tag_chrPart) //Hit Area Damage
                  * CharacterInfo::GetWeaponClassDamageByHitZone(targetInfo.tag_chrPart); //Weapon Class Damage By Hit Zone
 
+             const float prevHP = targetInfo.chr->GetCharacterHealth();
              targetInfo.chr->MinusDamage(damage);
+             const float currHP = targetInfo.chr->GetCharacterHealth();
+             if (currHP == 0.0f && prevHP > 0.0f)
+             {
+                 //상대 닉네임 및 사용한 무기 이름 가져오기
+                 ScenePlay* pScenePlay = static_cast<ScenePlay*>(CS);
+                 Character* player = pScenePlay->GetPlayer();
+                 player->SetKillNum(player->GetKillNum() + 1);
+                 player->SetIsKill(true);
+
+                 Character::InGameUI& inGameUI = player->GetInGameUI();
+                 inGameUI.m_killedNickName = targetInfo.chr->GetNickName();
+
+                 Character::TotalInventory& inven = player->GetTotalInventory();
+                 string weaponNameForKill = ItemInfo::GetName(inven.m_pHand->GetTagResStatic());
+                 inGameUI.m_weaponNameForKill = weaponNameForKill;
+             }
              Communication()()->SendEventMinusDamage(targetInfo.chr->GetIndex(), damage);
          }
          else

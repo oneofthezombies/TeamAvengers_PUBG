@@ -71,8 +71,9 @@ enum class TAG_SCENE
 enum class TAG_FONT
 {
     Default,
-    Invetory_Ground,
-    Invetory_28,
+    Inventory_Ground,
+    Inventory_28,
+    Inventory_NickName,
     InGameAmmoReload,
     InGameAmmoTotalNum,
     InGameSurvival,

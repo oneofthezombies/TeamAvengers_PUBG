@@ -34,7 +34,7 @@ void ScenePlay::setAloneMode()
     Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(200.0f, 200.0f, 4848.0f);
+    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(200.0f, 200.0f, 308.0f);
     Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
@@ -45,12 +45,6 @@ void ScenePlay::setAloneMode()
     Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(4848.0f, 200.0f, 4848.0f);
     Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-
-
-
-
-
 
     //Character* pOther = new Character(1);
     //others.emplace_back(pOther);
@@ -82,14 +76,14 @@ void ScenePlay::setAloneMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    //item = new Item(TAG_RES_STATIC::Head_Lv1, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-    //
-    //p = D3DXVECTOR3(20, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    item = new Item(TAG_RES_STATIC::Head_Lv1, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
+    
+    p = D3DXVECTOR3(20, 0, 10);
+    item = new Item(TAG_RES_STATIC::Armor_Lv1, p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(30, 0, 10);
     //item = new Item(TAG_RES_STATIC::Back_Lv1, p, r, s);
@@ -245,15 +239,24 @@ void ScenePlay::setWithOthersMode()
 ScenePlay::ScenePlay()
     : IScene()
     , pPlayer(nullptr)
+    , m_layer(nullptr)
 {
 }
 
 ScenePlay::~ScenePlay()
 {
+    UI()()->Destroy(m_layer);
 }
 
 void ScenePlay::OnInit()
 {
+    m_layer = new UIObject(nullptr);
+    UI()()->RegisterUIObject(m_layer);
+
+    new UIObject(m_layer);
+    new UIObject(m_layer); 
+    new UIObject(m_layer);
+    
     // set mouse point to center
     POINT center;
     center.x = 1280 / 2;
@@ -331,4 +334,14 @@ Character* ScenePlay::GetPlayer() const
 const std::vector<Character*>& ScenePlay::GetCharacters() const
 {
     return characters;
+}
+
+UIObject* ScenePlay::GetLayer(int layerIndex) const
+{
+    switch (layerIndex)
+    {
+    case 1: return m_layer->GetChild(0);
+    case 2: return m_layer->GetChild(1);
+    case 3: return m_layer->GetChild(2);
+    }
 }
