@@ -9,6 +9,8 @@ private:
     std::vector<Character*> others;
     std::vector<Character*> characters;
 
+    UIObject* m_layer;
+
     void setAloneMode();
     void setWithOthersMode();
 
@@ -22,4 +24,6 @@ public:
     const std::vector<Character*> GetOthers() const;
     int GetSurvivors() const;
     Character* GetPlayer() const;
+    
+    UIObject* GetLayer(int layerIndex) const;
 };

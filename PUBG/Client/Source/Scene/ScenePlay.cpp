@@ -242,15 +242,24 @@ void ScenePlay::setWithOthersMode()
 ScenePlay::ScenePlay()
     : IScene()
     , pPlayer(nullptr)
+    , m_layer(nullptr)
 {
 }
 
 ScenePlay::~ScenePlay()
 {
+    UI()()->Destroy(m_layer);
 }
 
 void ScenePlay::OnInit()
 {
+    m_layer = new UIObject(nullptr);
+    UI()()->RegisterUIObject(m_layer);
+
+    new UIObject(m_layer);
+    new UIObject(m_layer); 
+    new UIObject(m_layer);
+    
     // set mouse point to center
     POINT center;
     center.x = 1280 / 2;
@@ -323,4 +332,14 @@ int ScenePlay::GetSurvivors() const
 Character* ScenePlay::GetPlayer() const
 {
     return pPlayer;
+}
+
+UIObject* ScenePlay::GetLayer(int layerIndex) const
+{
+    switch (layerIndex)
+    {
+    case 1: return m_layer->GetChild(0);
+    case 2: return m_layer->GetChild(1);
+    case 3: return m_layer->GetChild(2);
+    }
 }

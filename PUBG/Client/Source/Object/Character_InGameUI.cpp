@@ -30,7 +30,7 @@ Character::InGameUI::InGameUI()
     , m_killedNickName("")
     , m_weaponNameForKill("")
 
-    , m_pBackground(nullptr)
+    , pBackground(nullptr)
 
     //Image ===================
     , pCompassBg(nullptr)
@@ -101,7 +101,6 @@ Character::InGameUI::~InGameUI()
 
 void Character::InGameUI::Destroy()
 {
-    UI()()->Destroy(m_pBackground);
 }
 
 void Character::InGameUI::Init(Character* pPlayer)
@@ -113,15 +112,17 @@ void Character::InGameUI::Init(Character* pPlayer)
     m_killCoolDown = KILL_COOL_TIME;
     m_killUpCoolDown = KILL_UP_COOL_TIME;
 
+    ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    UIObject* layer2 = scenePlay->GetLayer(2);
+    
     //투명 배경
-    m_pBackground = new UIImage(
+    pBackground = new UIImage(
         "./Resource/UI/InGame/",
         "transparent_1280_720",
         Vector3::ZERO,
         nullptr,
-        nullptr
+        layer2
     );
-    UI()()->RegisterUIObject(m_pBackground);
 
     //Compass
     pCompassBg = new UIImage(
@@ -129,7 +130,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "compass_bg.png",
         D3DXVECTOR3(420.0f, 28.0f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     pCompass = new UIImage(
@@ -145,7 +146,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "compass_arraw_bg.png",
         D3DXVECTOR3(420.0f, 8.75f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     pCompassArrow = new UIImage(
@@ -166,7 +167,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "equipment_bag01.png",
         D3DXVECTOR3(EQUIP_START, EQUIP_HEIGHT, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     pHelmetImg = new UIImage(
@@ -174,7 +175,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "equipment_helmet01.png",
         D3DXVECTOR3(EQUIP_START + EQUIP_WIDTH + EQUIP_GAP/*526.0f*/, EQUIP_HEIGHT, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     pVestImg = new UIImage(
@@ -182,7 +183,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "equipment_vest01.png",
         D3DXVECTOR3(EQUIP_START + (EQUIP_WIDTH + EQUIP_GAP) * 2/*550.0f*/, EQUIP_HEIGHT, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     //hp
@@ -191,7 +192,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "player_HP_BG_v3.png",
         D3DXVECTOR3(502.0f, 684.0f, 0.0f),
         nullptr,
-        m_pBackground);
+        pBackground);
 
     pHpRedImg = new UIImage(
         "./Resource/UI/InGame/",
@@ -218,7 +219,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "ammo_info.png",
         D3DXVECTOR3(576.0f, 647.0f, 0.0f),
         nullptr,
-        m_pBackground);
+        pBackground);
 
     pAmmoReloadText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameAmmoReload),
@@ -254,7 +255,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "survival_text_bg.png",
         D3DXVECTOR3(1216.0f, 20.0f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     auto survivalText = new UIText(
@@ -272,7 +273,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "survival_num_bg.png",
         D3DXVECTOR3(1190.0f, 20.0f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     pSurvivalNumText = new UIText(
@@ -291,7 +292,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "kill_text_up_bg.png",
         D3DXVECTOR3(1145.0f, 20.0f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     auto killUpText = new UIText(
@@ -310,7 +311,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "kill_num_up_bg.png",
         D3DXVECTOR3(1128.0f, 20.0f, 0.0f),
         nullptr,
-        m_pBackground
+        pBackground
     );
 
     pKillNumUpText = new UIText(
@@ -330,7 +331,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(87.0f, 9.0f),
         nickname,
         WHITE_ALPHA,
-        m_pBackground
+        pBackground
     );
     pIdText->SetDrawTextFormat(DT_CENTER);
     pIdText->SetPosition(D3DXVECTOR3(598.0f, 705.0f, 0.0f));
@@ -343,7 +344,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(60.0f, 30.0f),
         string(""),
         RED,
-        m_pBackground,
+        pBackground,
         D3DXVECTOR3(612.0f, 504.0f, 0.0f));
 
     //"당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
@@ -354,7 +355,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(500.0f, 20.0f),
         string(""),
         WHITE,
-        m_pBackground,
+        pBackground,
         D3DXVECTOR3(440.0f, 480.0f, 0.0f));
 
     //아이템 사용 등 안내문구
@@ -365,7 +366,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(252.0f, 20.0f),
         string(""),
         WHITE,
-        m_pBackground,
+        pBackground,
         D3DXVECTOR3(510.0f, 579.0f, 0.0f));
 
     //킬로그
@@ -374,7 +375,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(400.0f, 14.0f),
         string("HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"),
         GRAY,
-        m_pBackground);
+        pBackground);
     pKillLog1->SetDrawTextFormat(DT_RIGHT);
     pKillLog1->SetPosition(D3DXVECTOR3(856.0f, 52.0f, 0.0f));
 
@@ -383,7 +384,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(400.0f, 14.0f),
         string("John의 QBZ(으)로 인해 ootz이(가) 사망했습니다"),
         GRAY,
-        m_pBackground);
+        pBackground);
     pKillLog2->SetDrawTextFormat(DT_RIGHT);
     pKillLog2->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 20.0f, 0.0f));
 
@@ -393,14 +394,14 @@ void Character::InGameUI::Init(Character* pPlayer)
         "weapons_bg.png",
         PRIMARY_WEAPON_POS,
         nullptr,
-        m_pBackground);
+        pBackground);
 
     auto secondaryWeaponBg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_bg.png",
         SECONDARY_WEAPON_POS,
         nullptr,
-        m_pBackground);
+        pBackground);
 
     pQBZImg = new UIImage(
         "./Resource/UI/InGame/",
@@ -438,7 +439,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "map_bg.png",
         D3DXVECTOR3(1085.0f, 530.0f, 0.0f),
         nullptr,
-        m_pBackground);
+        pBackground);
 }
 
 void Character::InGameUI::Update(const TotalInventory& inven)

@@ -83,11 +83,11 @@ public:
 
         Character* pCharacter;
 
-        UIImage* m_Border;
+        UIImage* pBorder;
         UIText*  m_Text;
         std::vector<UIButtonWithItem*> m_uiDroped;
         std::vector<UIButtonWithItem*> m_uiInven;
-        UIButtonWithItem* m_pUIPicked;
+        UIButtonWithItem* pUIPicked;
         UIButtonWithItem* m_pWeapon1;
         UIButtonWithItem* m_pWeapon2;
 
@@ -161,7 +161,7 @@ public:
         string m_killedNickName;
         string m_weaponNameForKill;
 
-        UIImage* m_pBackground;
+        UIImage* pBackground;
 
         //Image ===================
         //compass

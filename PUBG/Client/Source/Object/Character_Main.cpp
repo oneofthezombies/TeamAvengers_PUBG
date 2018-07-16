@@ -59,8 +59,8 @@ Character::Character(const int index)
     m_totalInventory.pCharacter = this;
     if (isMine())
     {
-        m_totalInventory.Init();
         m_inGameUI.Init(this);
+        m_totalInventory.Init();
     }
 
     const float factor(static_cast<float>(m_index + 1) * 200.0f);
