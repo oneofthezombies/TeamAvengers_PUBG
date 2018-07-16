@@ -62,6 +62,11 @@ struct Resource
                 THIS_ LPD3DXMESHCONTAINER pMeshContainerBase) override;
         };
 
+        static XContainer* OnLoadTexture(
+            const std::string path,
+            const std::string xFilename,
+            const D3DCOLOR colorKey);
+
         static XContainer* OnLoadEffectMesh(
             const std::string path, 
             const std::string xFilename);

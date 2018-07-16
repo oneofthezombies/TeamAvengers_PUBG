@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneLogin.h"
 #include "UITextInputField.h"
+#include "UIImage.h"
 
 enum CHILD
 {
@@ -20,7 +21,12 @@ SceneLogin::~SceneLogin()
 
 void SceneLogin::OnInit()
 {
-    UIObject* root = new UIObject(nullptr);
+    UIObject* root = new UIImage(
+        "./Resource/", 
+        "dedenne.png", 
+        Vector3::ZERO, 
+        nullptr, 
+        nullptr);
     m_buttonListener.SetHandle(root);
     UI()()->RegisterUIObject(root);
 

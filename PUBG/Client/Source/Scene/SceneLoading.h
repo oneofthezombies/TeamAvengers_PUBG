@@ -15,6 +15,9 @@ class UIImage;
 class SceneLoading : public IScene
 {
 private:
+    tasks_t     m_textureTasks;
+    resources_t m_textureResources;
+
     tasks_t     m_effectMeshTasks;
     resources_t m_effectMeshResources;
 
@@ -64,6 +67,7 @@ private:
     bool m_isDoneCharacterSkinnedMeshs;
     bool m_isDoneCharacterAnimations;
     bool m_isSperatedCharacters;
+    bool m_isDoneTextures;
 
     Resource::Policy m_policy;
 
@@ -86,6 +90,11 @@ private:
     void addTask(const TAG_RES_ANIM_EQUIPMENT tag, tasks_t* OutTasks);
     void addTask(const TAG_RES_ANIM_WEAPON    tag, tasks_t* OutTasks);
 
+    void load(
+        const std::string path,
+        const std::string xFilename,
+        const D3DCOLOR colorKey = 0);
+
     void load(const TAG_RES_STATIC         tag);
     void load(const TAG_RES_ANIM_WEAPON    tag);
     void load(const TAG_RES_ANIM_EQUIPMENT tag);
@@ -101,6 +110,7 @@ private:
         tasks_t* OutTasks, 
         resources_t* OutResources);
 
+    void addTexturesForAsync();
     void addEffectMeshsForAsync();
     void addSkinnedMeshsForAsync();
     void addCharacterSkinnedMeshsForAsync();

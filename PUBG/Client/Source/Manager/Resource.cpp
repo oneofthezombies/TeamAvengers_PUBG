@@ -30,6 +30,58 @@ Resource::XContainer::~XContainer()
     SAFE_DELETE(m_pSkinnedMesh.second);
 }
 
+Resource::XContainer* Resource::Async::OnLoadTexture(
+    const std::string path, 
+    const std::string xFilename, 
+    const D3DCOLOR colorKey)
+{
+    const std::string fullPath(path + xFilename);
+
+    LPDIRECT3DTEXTURE9 pTexture = nullptr;
+    HRESULT hr = D3DXCreateTextureFromFileExA(
+        Device()(),
+        fullPath.c_str(),
+        D3DX_DEFAULT_NONPOW2,
+        D3DX_DEFAULT_NONPOW2,
+        D3DX_DEFAULT,
+        0,
+        D3DFMT_UNKNOWN,
+        D3DPOOL_MANAGED,
+        D3DX_DEFAULT,
+        D3DX_DEFAULT,
+        colorKey,
+        nullptr,
+        nullptr,
+        &pTexture);
+
+    if (FAILED(hr))
+    {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadTexture(), D3DXCreateTextureFromFileExA() failed.",
+            nullptr,
+            MB_OK);
+
+        return nullptr;
+    }
+
+    XContainer* pXContainer = new XContainer;
+    if (!pXContainer)
+    {
+        MessageBoxA(
+            nullptr,
+            "Resource::Async::OnLoadTexture(), new XContainer failed.",
+            nullptr,
+            MB_OK);
+
+        return nullptr;
+    }
+
+    pXContainer->m_textures[fullPath] = pTexture;
+    pXContainer->m_filename = xFilename;
+    return pXContainer;
+}
+
 Resource::XContainer* Resource::Async::OnLoadEffectMesh(
     const std::string path, 
     const std::string xFilename)
@@ -858,7 +910,10 @@ void Resource::Manager::AddTexture(const TAG_RES_STATIC tag, const D3DCOLOR colo
     AddTexture(p.first, p.second, colorKey);
 }
 
-void Resource::Manager::AddTexture(const string& path, const string& xFilename, const D3DCOLOR colorKey)
+void Resource::Manager::AddTexture(
+    const string& path, 
+    const string& xFilename, 
+    const D3DCOLOR colorKey)
 {
     const string key(path + xFilename);
 

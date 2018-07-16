@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "UIText.h"
 #include "UIImage.h"
+#include "Resource.h"
 
 void SceneLoading::Load()
 {
@@ -18,7 +19,80 @@ void SceneLoading::Load()
     setPlayMode(Communication::PlayMode::WITH_OTHERS);
     //setPlayMode(Communication::PlayMode::ALONE);
 
-    //// load effect meshs
+    // load textures
+    auto p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
+    load(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
+
+    p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
+    load(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
+
+    load("./Resource/", "dedenne.png");
+    load("./Resource/", "input_field.png");
+    load("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
+    load("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
+    load("./Resource/UI/Inventory/Basic/", "line.png");
+    load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png");
+
+    load("./Resource/UI/Inventory/Basic/", "Equip_no.png");
+    load("./Resource/UI/Inventory/Basic/", "Equip_mouseover.png");
+    load("./Resource/UI/Inventory/Basic/", "Equip_yes.png");
+
+    load("./Resource/UI/Inventory/Basic/", "ItemSlot.png");
+    load("./Resource/UI/Inventory/Basic/", "ItemSlot_mouseover.png");
+
+    load("./Resource/UI/Inventory/Basic/", "Equip_click.png");
+
+    load("./Resource/UI/Inventory/Basic/", "WeaponBox_idle.png");
+    load("./Resource/UI/Inventory/Basic/", "WeaponBox_mouseover.png");
+    load("./Resource/UI/Inventory/Basic/", "WeaponBox_possible.png");
+    load("./Resource/UI/Inventory/Basic/", "Weapon_highlight.png");
+
+    load("./Resource/UI/Inventory/Basic/", "Attach_click.png");
+    load("./Resource/UI/Inventory/Basic/", "Attach_no.png");
+    load("./Resource/UI/Inventory/Basic/", "Attach_yes.png");
+
+    load("./Resource/UI/Inventory/Basic/", "WeaponBoxNum.png");
+    load("./Resource/UI/Inventory/Weapon/", "icon_weapon_Kar98k.png", D3DCOLOR_XRGB(0, 0, 0));
+    load("./Resource/UI/Inventory/Weapon/", "icon_weapon_QBZ95.png", D3DCOLOR_XRGB(0, 0, 0));
+
+    load("./Resource/UI/Inventory/Weapon/", "Kar98k.png", D3DCOLOR_XRGB(0, 0, 0));
+    load("./Resource/UI/Inventory/Weapon/", "QBZ.png", D3DCOLOR_XRGB(0, 0, 0));
+
+    //for InGameUI
+    load("./Resource/UI/InGame/", "transparent_1280_720.png");
+
+    load("./Resource/UI/InGame/", "compass_bg.png");
+    load("./Resource/UI/InGame/", "compass_arrow_bg.png");
+    load("./Resource/UI/InGame/", "compass.png");
+    load("./Resource/UI/InGame/", "compass_arrow.png", D3DCOLOR_XRGB(0, 0, 0));
+
+    load("./Resource/UI/InGame/", "equipment_bag01.png");
+    load("./Resource/UI/InGame/", "equipment_helmet01.png");
+    load("./Resource/UI/InGame/", "equipment_vest01.png");
+
+    load("./Resource/UI/InGame/", "player_HP_BG_v3.png");
+    load("./Resource/UI/InGame/", "player_HP_bar_v2.png");
+    load("./Resource/UI/InGame/", "player_HP_bar_red.png");
+
+    load("./Resource/UI/InGame/", "ammo_info.png");
+    load("./Resource/UI/InGame/", "survival_text_bg.png");
+    load("./Resource/UI/InGame/", "survival_num_bg.png");
+
+    load("./Resource/UI/InGame/", "kill_num_up_bg.png");
+    load("./Resource/UI/InGame/", "kill_text_up_bg.png");
+
+    load("./Resource/UI/InGame/", "weapons_bg.png");
+    load("./Resource/UI/InGame/", "weapons_gun_kar98k.png");
+    load("./Resource/UI/InGame/", "weapons_gun_QBZ95.png");
+    load("./Resource/UI/InGame/", "weapons_gun_kar98k_red.png");
+    load("./Resource/UI/InGame/", "weapons_gun_QBZ95_red.png");
+
+    load("./Resource/UI/InGame/", "map_bg.png");
+
+    //for compass UI test
+    load("./Resource/UI/InGame/", "compass_bg_transparent.png");
+
+    // load effect meshs
     load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
@@ -120,73 +194,7 @@ void SceneLoading::Load()
 
 void SceneLoading::OnInit()
 {
-    Resource()()->AddTexture("./Resource/", "input_field.png");
     Resource()()->AddTexture("./Resource/", "LoadingScreen.tga");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
-    Resource()()->AddTexture("./Resource/", "dedenne.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "line.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png");
-    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_5_56mm, D3DCOLOR_XRGB(0, 0, 0));
-    Resource()()->AddTexture(TAG_RES_STATIC::Ammo_7_62mm, D3DCOLOR_XRGB(0, 0, 0));
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_no.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_mouseover.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_yes.png");
-
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "ItemSlot_mouseover.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Equip_click.png");
-
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBox_idle.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBox_mouseover.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBox_possible.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Weapon_highlight.png");
-
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Attach_click.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Attach_no.png");
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "Attach_yes.png");
-
-    Resource()()->AddTexture("./Resource/UI/Inventory/Basic/", "WeaponBoxNum.png");
-
-    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "icon_weapon_Kar98k.png", D3DCOLOR_XRGB(0, 0, 0));
-    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "icon_weapon_QBZ95.png", D3DCOLOR_XRGB(0, 0, 0));
-
-    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "Kar98k.png", D3DCOLOR_XRGB(0, 0, 0));
-    Resource()()->AddTexture("./Resource/UI/Inventory/Weapon/", "QBZ.png", D3DCOLOR_XRGB(0, 0, 0));
-
-    //for InGameUI
-    Resource()()->AddTexture("./Resource/UI/InGame/", "transparent_1280_720.png");
-
-    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_bg.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_arrow_bg.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "compass.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_arrow.png", D3DCOLOR_XRGB(0, 0, 0));
-
-    Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_bag01.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_helmet01.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "equipment_vest01.png");
-
-    Resource()()->AddTexture("./Resource/UI/InGame/", "player_HP_BG_v3.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "player_HP_bar_v2.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "player_HP_bar_red.png");
-
-    Resource()()->AddTexture("./Resource/UI/InGame/", "ammo_info.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "survival_text_bg.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "survival_num_bg.png");
-
-    Resource()()->AddTexture("./Resource/UI/InGame/", "kill_num_up_bg.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "kill_text_up_bg.png");
-
-    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_bg.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_kar98k.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_QBZ95.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_kar98k_red.png");
-    Resource()()->AddTexture("./Resource/UI/InGame/", "weapons_gun_QBZ95_red.png");
-
-    Resource()()->AddTexture("./Resource/UI/InGame/", "map_bg.png");
-
-    //for compass UI test
-    Resource()()->AddTexture("./Resource/UI/InGame/", "compass_bg_transparent.png");
 
     m_pBackground =
         new UIImage(
@@ -338,6 +346,27 @@ void SceneLoading::addAnimation(const TAG_RES_ANIM_CHARACTER tag)
     }
 }
 
+void SceneLoading::load(
+    const std::string path, 
+    const std::string xFilename, 
+    const D3DCOLOR colorKey)
+{
+    if (m_policy == Resource::Policy::ASYNC)
+    {
+        m_textureTasks.emplace_back(
+            std::make_pair(
+                m_textureTasks.size(),
+                std::async(
+                    std::launch::async,
+                    &Resource::Async::OnLoadTexture,
+                    path,
+                    xFilename, 
+                    colorKey)));
+
+        ++m_numTotalTasks;
+    }
+}
+
 void SceneLoading::setPolicy(const Resource::Policy policy)
 {
     m_policy = policy;
@@ -354,7 +383,8 @@ bool SceneLoading::isFinished() const
         m_isDoneCharacters   && 
         m_isDoneEffectMeshs  && 
         m_isDoneSkinnedMeshs && 
-        m_isDoneEquipments;
+        m_isDoneEquipments   &&
+        m_isDoneTextures;
 }
 
 void SceneLoading::moveFinishedTasksForAsync(
@@ -370,7 +400,7 @@ void SceneLoading::moveFinishedTasksForAsync(
     for (auto it = OutTasks->begin(); it != OutTasks->end();)
     {
         //futureStatus = i->second.wait_until(std::chrono::system_clock::now());
-        futureStatus = it->second.wait_for(std::chrono::milliseconds(100));
+        futureStatus = it->second.wait_for(std::chrono::milliseconds(10));
         switch (futureStatus)
         {
         case std::future_status::deferred:
@@ -394,6 +424,16 @@ void SceneLoading::moveFinishedTasksForAsync(
             }
             break;
         }
+    }
+}
+
+void SceneLoading::addTexturesForAsync()
+{
+    resources_t& rs = m_textureResources;
+    for (auto it = rs.begin(); it != rs.end();)
+    {
+        Resource()()->AddResource(it->second);
+        it = rs.erase(it);
     }
 }
 
@@ -569,6 +609,7 @@ SceneLoading::SceneLoading()
     , m_isDoneCharacterSkinnedMeshs(false)
     , m_isDoneCharacterAnimations(false)
     , m_isSperatedCharacters(false)
+    , m_isDoneTextures(false)
 {
 }
 
@@ -606,6 +647,10 @@ void SceneLoading::OnUpdate()
         if (m_policy == Resource::Policy::ASYNC)
         {
             moveFinishedTasksForAsync(
+                &m_textureTasks, 
+                &m_textureResources);
+
+            moveFinishedTasksForAsync(
                 &m_effectMeshTasks, 
                 &m_effectMeshResources);
 
@@ -624,6 +669,14 @@ void SceneLoading::OnUpdate()
             moveFinishedTasksForAsync(
                 &m_equipmentSkinnedMeshTasks, 
                 &m_equipmentSkinnedMeshResources);
+
+            addTexturesForAsync();
+
+            if (m_textureTasks.empty() && 
+                m_textureResources.empty())
+            {
+                m_isDoneTextures = true;
+            }
 
             addEffectMeshsForAsync();
 
