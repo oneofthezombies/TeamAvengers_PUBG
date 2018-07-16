@@ -606,27 +606,38 @@ void SceneLoading::OnUpdate()
         if (m_policy == Resource::Policy::ASYNC)
         {
             moveFinishedTasksForAsync(
-                &m_effectMeshTasks, 
+                &m_effectMeshTasks,
                 &m_effectMeshResources);
 
             moveFinishedTasksForAsync(
-                &m_skinnedMeshTasks, 
+                &m_skinnedMeshTasks,
                 &m_skinnedMeshResources);
 
             moveFinishedTasksForAsync(
-                &m_characterSkinnedMeshTasks, 
+                &m_characterSkinnedMeshTasks,
                 &m_characterSkinnedMeshResources);
 
             moveFinishedTasksForAsync(
-                &m_characterAnimationTasks, 
+                &m_characterAnimationTasks,
                 &m_characterAnimationResources);
 
             moveFinishedTasksForAsync(
-                &m_equipmentSkinnedMeshTasks, 
+                &m_equipmentSkinnedMeshTasks,
                 &m_equipmentSkinnedMeshResources);
 
             addEffectMeshsForAsync();
+            if (m_effectMeshTasks.empty() && 
+                m_effectMeshResources.empty())
+            {
+                m_isDoneEffectMeshs = true;
+            }
+
             addSkinnedMeshsForAsync();
+            if (m_skinnedMeshTasks.empty() &&
+                m_skinnedMeshResources.empty())
+            {
+                m_isDoneSkinnedMeshs = true;
+            }
 
             if (m_characterSkinnedMeshTasks.empty())
             {
@@ -663,8 +674,6 @@ void SceneLoading::OnUpdate()
                         if (m_equipmentSkinnedMeshTasks.empty() &&
                             m_equipmentSkinnedMeshResources.empty())
                         {
-                            m_isDoneEffectMeshs = true;
-                            m_isDoneSkinnedMeshs = true;
                             m_isDoneCharacters = true;
                             m_isDoneEquipments = true;
 
