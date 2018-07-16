@@ -159,6 +159,7 @@ public:
 
         Character* pPlayer;
         string m_killedNickName;
+        string m_weaponNameForKill;
 
         UIImage* m_pBackground;
 
@@ -661,6 +662,7 @@ public:
     bool GetIsKill() const;
     void SetIsKill(const bool isKill);
     InGameUI& GetInGameUI();
+    TotalInventory& GetTotalInventory();
 
     //        const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;

@@ -1330,9 +1330,14 @@ void Character::SetIsKill(const bool isKill)
     m_isKill = isKill;
 }
 
-Character::InGameUI & Character::GetInGameUI()
+Character::InGameUI& Character::GetInGameUI()
 {
     return m_inGameUI;
+}
+
+Character::TotalInventory& Character::GetTotalInventory()
+{
+    return m_totalInventory;
 }
 
 D3DXVECTOR3 Character::getUp()

@@ -4,6 +4,7 @@
 #include "TerrainFeature.h"
 #include "Character.h"
 #include "ItemInfo.h"
+#include "Item.h"
 #include "ScenePlay.h"
 
 Bullet::Bullet()
@@ -187,13 +188,19 @@ void Bullet::OnUpdate()
              const float currHP = targetInfo.chr->GetCharacterHealth();
              if (currHP == 0.0f && prevHP > 0.0f)
              {
-                 //woori_flag
+                 //상대 닉네임 및 사용한 무기 이름 가져오기
                  ScenePlay* pScenePlay = static_cast<ScenePlay*>(CS);
                  Character* player = pScenePlay->GetPlayer();
                  player->SetKillNum(player->GetKillNum() + 1);
                  player->SetIsKill(true);
+
                  Character::InGameUI& inGameUI = player->GetInGameUI();
                  inGameUI.m_killedNickName = targetInfo.chr->GetNickName();
+
+                 Character::TotalInventory& inven = player->GetTotalInventory();
+                 string weaponNameForKill = ItemInfo::GetName(inven.m_pHand->GetTagResStatic());
+                 inGameUI.m_weaponNameForKill = weaponNameForKill;
+
                  //for test
                  //inGameUI.m_killedNickName = "ootz";
              }

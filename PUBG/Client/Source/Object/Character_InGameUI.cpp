@@ -28,6 +28,7 @@ const float Character::InGameUI::HP_HEIGHT    = 17.0f;
 Character::InGameUI::InGameUI()
     : pPlayer(nullptr)
     , m_killedNickName("")
+    , m_weaponNameForKill("")
 
     , m_pBackground(nullptr)
 
@@ -337,7 +338,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         pKillText,
         pKillTextShadow,
         Resource()()->GetFont(TAG_FONT::InGameInfo),
-        D3DXVECTOR2(400.0f, 20.0f),
+        D3DXVECTOR2(500.0f, 20.0f),
         string(""),
         WHITE,
         m_pBackground,
@@ -450,7 +451,7 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     {
         //화면 중앙 킬 텍스트
         //"당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
-        string str = string("당신의 ") + "Kar98k " + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
+        string str = string("당신의 ") + m_weaponNameForKill + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
         pKillText->SetText(str, pKillTextShadow);
 
         pKillNumUpBg->SetIsRender(true);
@@ -470,13 +471,15 @@ void Character::InGameUI::Update(const TotalInventory& inven)
         //cout << t << endl;
         if (m_killCoolDown <= 0.0f)
         {
+            //상단 킬
             pKillNumUpBg->SetIsRender(false);
             pKillTextUpBg->SetIsRender(false);
-
             pKillNumUpText->SetText("");
 
-            pKillNumText->SetText("");
-            pKillNumTextShadow->SetText("");
+            //화면 중앙 킬
+            pKillNumText->SetText("", pKillNumTextShadow);
+            pKillText->SetText("", pKillTextShadow);
+
             m_killCoolDown = KILL_COOL_TIME;
         }
     }
