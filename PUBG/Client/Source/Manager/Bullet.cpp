@@ -200,9 +200,6 @@ void Bullet::OnUpdate()
                  Character::TotalInventory& inven = player->GetTotalInventory();
                  string weaponNameForKill = ItemInfo::GetName(inven.m_pHand->GetTagResStatic());
                  inGameUI.m_weaponNameForKill = weaponNameForKill;
-
-                 //for test
-                 //inGameUI.m_killedNickName = "ootz";
              }
              Communication()()->SendEventMinusDamage(targetInfo.chr->GetIndex(), damage);
          }

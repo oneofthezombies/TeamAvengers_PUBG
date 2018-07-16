@@ -158,6 +158,7 @@ public:
         static const float HP_HEIGHT;
 
         Character* pPlayer;
+        string m_nickName;
         string m_killedNickName;
         string m_weaponNameForKill;
 
@@ -171,9 +172,10 @@ public:
         UIImage* pCompassArrow;
 
         //equip
-        UIImage* pBagImg;
-        UIImage* pHelmetImg;
-        UIImage* pVestImg;
+        //UIImage* pBagImg;
+        //UIImage* pHelmetImg;
+        //UIImage* pVestImg;
+        vector<UIImage*> vecEquipImg;
 
         //hp
         UIImage* pHpRedImg;
@@ -223,8 +225,7 @@ public:
         UIText* pInfoTextShadow;
 
         //킬로그
-        UIText* pKillLog1;
-        UIText* pKillLog2;
+        vector<UIText*> vecKillLog;
 
         const float INFO_TEXT_COOL_TIME;
         float m_infoTextCoolDown;
@@ -264,6 +265,7 @@ public:
         void updateSurvivalNumTextUI();
         void updateHpUI();
         void updateKillUI(const TotalInventory& inven);
+        void updateEquipUI(const TotalInventory& inven);
     };
 
     struct Info
@@ -450,6 +452,7 @@ private:
     bool m_isNeedRifleAnim;
     bool m_isTransitioning;  //전이 중일 때는 움직이지 않는다
     bool m_isDamaged;
+    bool m_isEatEquip;       //장비템을 주웠을 때
 
     WaitBackAction m_backAction;
 
@@ -671,8 +674,13 @@ public:
 
     int GetKillNum() const;
     void SetKillNum(const int killNum);
+    
     bool GetIsKill() const;
     void SetIsKill(const bool isKill);
+
+    bool GetIsEatEquip() const;
+    void SetIsEatEquip(const bool isEatEquip);
+
     InGameUI& GetInGameUI();
     TotalInventory& GetTotalInventory();
 

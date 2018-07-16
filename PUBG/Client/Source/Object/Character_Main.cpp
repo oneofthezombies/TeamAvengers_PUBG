@@ -47,10 +47,13 @@ Character::Character(const int index)
     , m_direction(Direction::Front)
     , m_upperAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
     , m_lowerAnimState(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1)
+   
     , m_isFire(false)
     , m_hasChangingState(false)
     , m_isNeedRifleAnim(false)
     , m_isTransitioning(false)
+    , m_isDamaged(false)
+    , m_isEatEquip(false)
 
     , pAnimation(nullptr)
 

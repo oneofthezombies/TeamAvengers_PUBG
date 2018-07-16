@@ -763,15 +763,18 @@ void Character::PutItemInTotalInventory(Item* item)
     case TAG_ITEM_CATEGORY::Armor:
         //TODO: 피해감소량 적용
         checkOriginItem(&m_totalInventory.m_pEquipArmor, item);
+        m_isEatEquip = true;
         break;
 
     case TAG_ITEM_CATEGORY::Back:
         checkOriginItem(&m_totalInventory.m_pEquipBack, item);
+        m_isEatEquip = true;
         break;
 
     case TAG_ITEM_CATEGORY::Head:
         //TODO: 피해감소량 적용
         checkOriginItem(&m_totalInventory.m_pEquipHead, item);
+        m_isEatEquip = true;
         break;
 
     case TAG_ITEM_CATEGORY::Rifle:

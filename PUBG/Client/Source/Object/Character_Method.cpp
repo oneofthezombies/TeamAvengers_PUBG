@@ -1330,6 +1330,16 @@ void Character::SetIsKill(const bool isKill)
     m_isKill = isKill;
 }
 
+bool Character::GetIsEatEquip() const
+{
+    return m_isEatEquip;
+}
+
+void Character::SetIsEatEquip(const bool isEatEquip)
+{
+    m_isEatEquip = isEatEquip;
+}
+
 Character::InGameUI& Character::GetInGameUI()
 {
     return m_inGameUI;
