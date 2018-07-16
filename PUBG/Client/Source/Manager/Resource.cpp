@@ -910,7 +910,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             }
             break;
 
-        case TAG_FONT::Invetory_Ground:
+        case TAG_FONT::Inventory_Ground:
             {
                 AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
                 hr = D3DXCreateFontA(
@@ -925,7 +925,22 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             }
             break;
 
-        case TAG_FONT::Invetory_28:
+        case TAG_FONT::Inventory_NickName:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                22, 11, FW_BOLD, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::Inventory_28:
             {
                 AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
                 hr = D3DXCreateFontA(

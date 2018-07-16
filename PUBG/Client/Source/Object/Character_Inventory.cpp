@@ -67,9 +67,20 @@ void Character::TotalInventory::Init()
         nullptr);
     UI()()->RegisterUIObject(m_Border);
 
+    //캐릭터 닉네임 텍스트
+    string nickName = Communication()()->m_myInfo.nickname;
+    auto nickNameText = new UIText(
+        Resource()()->GetFont(TAG_FONT::Inventory_NickName),
+        D3DXVECTOR2(120.0f, 20.0f),
+        nickName,
+        D3DCOLOR_XRGB(255, 255, 255),
+        m_Border);
+    nickNameText->SetDrawTextFormat(DT_CENTER);
+    nickNameText->SetPosition(D3DXVECTOR3(590.0f, 22.0f, 0.0f));
+
     // 텍스트
     auto a = new UIText(
-        Resource()()->GetFont(TAG_FONT::Invetory_28),
+        Resource()()->GetFont(TAG_FONT::Inventory_28),
         D3DXVECTOR2(100.0f, 20.0f),
         string("VICINITY"),
         D3DCOLOR_XRGB(200, 200, 200),
@@ -79,7 +90,7 @@ void Character::TotalInventory::Init()
 
     // 텍스트
     a = new UIText(
-        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        Resource()()->GetFont(TAG_FONT::Inventory_Ground),
         D3DXVECTOR2(100.0f, 20.0f),
         string("Ground"),
         D3DCOLOR_XRGB(200, 200, 200),
@@ -89,7 +100,7 @@ void Character::TotalInventory::Init()
 
     // 텍스트 
     a = new UIText(
-        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        Resource()()->GetFont(TAG_FONT::Inventory_Ground),
         D3DXVECTOR2(100.0f, 20.0f),
         string("Sortby Type"),
         D3DCOLOR_XRGB(200, 200, 200),
@@ -181,7 +192,7 @@ void Character::TotalInventory::Update()
             pUI->pItem = pItem;
             pUI->m_tagUIPosition = UIPosition::GetTag(TAG_UI_POSITION::dropped_0, idx);
             pUI->pUIImage = pItem->GetUIImage();
-            //pUI->SetText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+            //pUI->SetText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
             //    string(ItemInfo::GetName(pItem->GetTagResStatic()) +"   "+ to_string(pItem->GetCount())),
             //    D3DCOLOR_XRGB(255, 255, 255));
             pItem->GetUIText()->SetText(string(ItemInfo::GetName(pItem->GetTagResStatic()) + "   " + to_string(pItem->GetCount())));
@@ -252,7 +263,7 @@ void Character::TotalInventory::SetEquipUI()
             "ItemSlot_mouseover.png",
             "ItemSlot.png",
             m_Border,
-            Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+            Resource()()->GetFont(TAG_FONT::Inventory_Ground),
             "",
             D3DCOLOR_XRGB(255, 255, 255),
             nullptr,
@@ -305,7 +316,7 @@ void Character::TotalInventory::SetEquipUI()
             "ItemSlot_mouseover.png",
             "ItemSlot.png",
             m_Border,
-            Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+            Resource()()->GetFont(TAG_FONT::Inventory_Ground),
             "",
             D3DCOLOR_XRGB(255, 255, 255),
             nullptr,
@@ -427,7 +438,7 @@ void Character::TotalInventory::SetEquipUI()
         "WeaponBox_mouseover.png",
         "WeaponBox_possible.png",
         m_Border,
-        Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+        Resource()()->GetFont(TAG_FONT::Inventory_Ground),
         "",
         D3DCOLOR_XRGB(255, 255, 255),
         nullptr,
@@ -461,7 +472,7 @@ void Character::TotalInventory::SetEquipUI()
          "WeaponBox_mouseover.png",
          "WeaponBox_possible.png",
          m_Border,
-         Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+         Resource()()->GetFont(TAG_FONT::Inventory_Ground),
          "",
          D3DCOLOR_XRGB(255, 255, 255),
          nullptr,
@@ -487,7 +498,7 @@ void Character::TotalInventory::SetEquipUI()
          "WeaponBox_mouseover.png",
          "WeaponBox_possible.png",
          m_Border,
-         Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+         Resource()()->GetFont(TAG_FONT::Inventory_Ground),
          "",
          D3DCOLOR_XRGB(255, 255, 255),
          nullptr,
@@ -503,7 +514,7 @@ void Character::TotalInventory::SetEquipUI()
      //weapon slot 1
      auto imageu =new UIImage("./Resource/UI/Inventory/Basic/", "WeaponBoxNum.png", 
          D3DXVECTOR3(5, 6, 0), nullptr, m_pWeapon1);
-     new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+     new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
          D3DXVECTOR2(20, 20), "1", D3DCOLOR_XRGB(255, 255, 255), imageu);
 
      u = new UIButtonWithItem(
@@ -606,7 +617,7 @@ void Character::TotalInventory::SetEquipUI()
      //weapon slot 2
      imageu = new UIImage("./Resource/UI/Inventory/Basic/", "WeaponBoxNum.png",
          D3DXVECTOR3(5, 6, 0), nullptr, m_pWeapon2);
-     new UIText(Resource()()->GetFont(TAG_FONT::Invetory_Ground),
+     new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
          D3DXVECTOR2(20, 20), "2", D3DCOLOR_XRGB(255, 255, 255), imageu);
 
      u = new UIButtonWithItem(
