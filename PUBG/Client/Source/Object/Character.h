@@ -165,7 +165,10 @@ public:
 
         //Image ===================
         //compass
+        UIImage* pCompassBg;
         UIImage* pCompass;
+        UIImage* pCompassArrowBg;
+        UIImage* pCompassArrow;
 
         //equip
         UIImage* pBagImg;
@@ -175,6 +178,9 @@ public:
         //hp
         UIImage* pHpRedImg;
         UIImage* pHpWhiteImg;
+
+        //Ammo
+        UIImage* pAmmoBg;
 
         //weapons
         UIImage* pQBZImg;
@@ -186,6 +192,9 @@ public:
         //킬 (오른쪽 상단)
         UIImage* pKillTextUpBg;
         UIImage* pKillNumUpBg;
+
+        //map
+        UIImage* pMapImg;
 
         //Text ====================
         //ammo
@@ -226,8 +235,10 @@ public:
         const float KILL_COOL_TIME;
         float m_killCoolDown;
 
-        //const float KILL_UP_COOL_TIME;
-        //float m_killUpCoolDown;
+        const float KILL_UP_COOL_TIME;
+        float m_killUpCoolDown;
+
+        bool m_isKill;
 
         InGameUI();
         ~InGameUI();

@@ -33,7 +33,10 @@ Character::InGameUI::InGameUI()
     , m_pBackground(nullptr)
 
     //Image ===================
+    , pCompassBg(nullptr)
     , pCompass(nullptr)
+    , pCompassArrowBg(nullptr)
+    , pCompassArrow(nullptr)
 
     , pBagImg(nullptr)
     , pHelmetImg(nullptr)
@@ -42,6 +45,8 @@ Character::InGameUI::InGameUI()
     , pHpRedImg(nullptr)
     , pHpWhiteImg(nullptr)
 
+    , pAmmoBg(nullptr)
+
     , pQBZImg(nullptr)
     , pQBZRedImg(nullptr)
     , pKar98kImg(nullptr)
@@ -49,6 +54,8 @@ Character::InGameUI::InGameUI()
 
     , pKillTextUpBg(nullptr)
     , pKillNumUpBg(nullptr)
+
+    , pMapImg(nullptr)
 
     //Text ====================
     , pAmmoReloadText(nullptr)
@@ -78,8 +85,13 @@ Character::InGameUI::InGameUI()
     , HP_COOL_TIME(0.6f)
     , m_hpCoolDown(0.0f)
 
-    , KILL_COOL_TIME(8.0f)
+    , KILL_COOL_TIME(10.0f)
     , m_killCoolDown(0.0f)
+
+    , KILL_UP_COOL_TIME(8.0f)
+    , m_killUpCoolDown(0.0f)
+
+    , m_isKill(false)
 {
 }
 
@@ -99,6 +111,7 @@ void Character::InGameUI::Init(Character* pPlayer)
     m_infoTextCoolDown = INFO_TEXT_COOL_TIME;
     m_hpCoolDown = HP_COOL_TIME;
     m_killCoolDown = KILL_COOL_TIME;
+    m_killUpCoolDown = KILL_UP_COOL_TIME;
 
     //투명 배경
     m_pBackground = new UIImage(
@@ -111,7 +124,7 @@ void Character::InGameUI::Init(Character* pPlayer)
     UI()()->RegisterUIObject(m_pBackground);
 
     //Compass
-    auto compassBg = new UIImage(
+    pCompassBg = new UIImage(
         "./Resource/UI/InGame/",
         "compass_bg.png",
         D3DXVECTOR3(420.0f, 28.0f, 0.0f),
@@ -124,10 +137,10 @@ void Character::InGameUI::Init(Character* pPlayer)
         "compass.png",
         D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
         nullptr,
-        compassBg
+        pCompassBg
     );
 
-    auto compassArrowBg = new UIImage(
+    pCompassArrowBg = new UIImage(
         "./Resource/UI/InGame/",
         "compass_arraw_bg.png",
         D3DXVECTOR3(420.0f, 8.75f, 0.0f),
@@ -135,12 +148,12 @@ void Character::InGameUI::Init(Character* pPlayer)
         m_pBackground
     );
 
-    new UIImage(
+    pCompassArrow = new UIImage(
         "./Resource/UI/InGame/",
         "compass_arrow.png",
         D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
         nullptr,
-        compassArrowBg
+        pCompassArrowBg
     );
 
     //for test
@@ -200,7 +213,7 @@ void Character::InGameUI::Init(Character* pPlayer)
 
 
     //장전 수, 총알 개수
-    auto ammoBg = new UIImage(
+    pAmmoBg = new UIImage(
         "./Resource/UI/InGame/",
         "ammo_info.png",
         D3DXVECTOR3(576.0f, 647.0f, 0.0f),
@@ -212,7 +225,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(130.0f, 28.0f),
         string(""),
         InGameUI::WHITE,
-        ammoBg);
+        pAmmoBg);
     pAmmoReloadText->SetDrawTextFormat(DT_CENTER);
     pAmmoReloadText->SetPosition(D3DXVECTOR3(1.9f, 0.1f, 0.0f));
 
@@ -221,7 +234,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(130.0f, 28.0f),
         string(""),
         GRAY,
-        ammoBg);
+        pAmmoBg);
     pAmmoNumText->SetDrawTextFormat(DT_LEFT);
     pAmmoNumText->SetPosition(D3DXVECTOR3(95.0, 5.0f, 0.0f));
 
@@ -231,7 +244,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR2(130.0f, 28.0f),
         string(""),
         GRAY,
-        ammoBg);
+        pAmmoBg);
     pFireModeText->SetDrawTextFormat(DT_LEFT);
     pFireModeText->SetPosition(D3DXVECTOR3(10.0, 8.0f, 0.0f));
 
@@ -420,7 +433,7 @@ void Character::InGameUI::Init(Character* pPlayer)
     pKar98kRedImg->SetIsRender(false);
 
     //맵
-    new UIImage(
+    pMapImg = new UIImage(
         "./Resource/UI/InGame/",
         "map_bg.png",
         D3DXVECTOR3(1085.0f, 530.0f, 0.0f),
@@ -445,54 +458,87 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     updateHpUI();
 
     //킬 수
-    //TODO: 상단 킬은 죽인순간이랑, 탭을 눌렀을 때만 보임
+    //TODO: 상단 킬은 죽인 순간이랑, 탭을 눌렀을 때만 보임
     if (inven.isOpened)
     {
         pKillNumUpBg->SetIsRender(true);
         pKillTextUpBg->SetIsRender(true);
         pKillNumUpText->SetText(to_string(pPlayer->GetKillNum()));
+
+        pCompassBg->SetIsRender(false);
+        pCompassArrowBg->SetIsRender(false);
+        pAmmoBg->SetIsRender(false);
+        pMapImg->SetIsRender(false);
+        pQBZImg->SetIsRender(false);
+        pKar98kImg->SetIsRender(false);
+
     }
     else
     {
-        pKillNumUpBg->SetIsRender(false);
-        pKillTextUpBg->SetIsRender(false);
+        if (m_isKill == false)
+        {
+            pKillNumUpBg->SetIsRender(false);
+            pKillTextUpBg->SetIsRender(false);
+            pKillNumUpText->SetText("");
+        }
+
+        pCompassBg->SetIsRender(true);
+        pCompassArrowBg->SetIsRender(true);
+        pAmmoBg->SetIsRender(true);
+        pMapImg->SetIsRender(true);
+        pQBZImg->SetIsRender(true);
+        pKar98kImg->SetIsRender(true);
     }
 
-
-    //킬 한 순간에 텍스트가 뜬다
+    //킬 한 그 순간에 텍스트가 뜬다
     if (pPlayer->GetIsKill())
     {
-        //화면 중앙 킬 텍스트
-        //"당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
+        m_isKill = true;
+        //화면 중앙 킬
+        //ex) "당신의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
         string str = string("당신의 ") + m_weaponNameForKill + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
         pKillText->SetText(str, pKillTextShadow);
 
+        int killNum = pPlayer->GetKillNum();
+        pKillNumText->SetText(to_string(killNum) + " 킬", pKillNumTextShadow);
+        
+        //화면 오른쪽 상단 킬
         pKillNumUpBg->SetIsRender(true);
         pKillTextUpBg->SetIsRender(true);
-
-        int killNum = pPlayer->GetKillNum();
         pKillNumUpText->SetText(to_string(killNum));
-        pKillNumText->SetText(to_string(killNum) + " 킬", pKillNumTextShadow);
 
         pPlayer->SetIsKill(false);
     }
 
     //일정시간이 지나면 텍스트가 사라진다
+    //화면 중앙 킬
     if (pKillNumText->GetText() != "")
     {
         m_killCoolDown -= Time()()->GetDeltaTime();
-        //cout << t << endl;
         if (m_killCoolDown <= 0.0f)
         {
-            //상단 킬
-            pKillNumUpBg->SetIsRender(false);
-            pKillTextUpBg->SetIsRender(false);
-
-            //화면 중앙 킬
             pKillNumText->SetText("", pKillNumTextShadow);
             pKillText->SetText("", pKillTextShadow);
 
             m_killCoolDown = KILL_COOL_TIME;
+        }
+    }
+
+    //화면 오른쪽 상단 킬
+    if (pKillNumUpText->GetText() != "" && inven.isOpened == false)
+    {
+        float t = m_killUpCoolDown -= Time()()->GetDeltaTime();
+        cout << t << endl;
+
+        if (m_killUpCoolDown <= 0.0f)
+        {
+            m_isKill = false;
+
+            pKillNumUpBg->SetIsRender(false);
+            pKillTextUpBg->SetIsRender(false);
+            pKillNumUpText->SetText("");
+
+            m_killUpCoolDown = KILL_UP_COOL_TIME;
         }
     }
 
