@@ -609,11 +609,73 @@ void Character::itemSphereCollisionInteraction()
         // UI로 F key가 나오게 하기 
 
 
+        //Ray를 쏘아서 맞는 물건 먼저 먹기
+        for (auto& rayItm : di)
+        {
+            Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
+
+            // 먼저 terrain features의 바운딩스피어와 충돌을 검사한다.
+            BoundingSphere bs = rayItm->GetBoundingSphere();
+
+            if (!D3DXSphereBoundProbe(
+                &(bs.center + bs.position),
+                bs.radius,
+                &ray.m_pos,
+                &ray.m_dir)) continue;
+
+            if (m_currentOnceKey._F)
+            {
+                PutItemInTotalInventory(rayItm); //inventory에 넣기
+                                                 //current scene 에서 지우기
+                pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
+
+                rayItm->SetState(true);
+                
+                if (m_totalInventory.m_pWeaponPrimary)
+                {
+                    m_totalInventory.m_pWeapon1->SetIsActive(true);
+                    m_totalInventory.m_pWeapon1->pUIImage =
+                        m_totalInventory.m_pWeaponPrimary->GetUIImage2();
+                    m_totalInventory.m_pWeapon1->pItem = 
+                        m_totalInventory.m_pWeaponPrimary;
+                }
+                if (m_totalInventory.m_pWeaponSecondary)
+                {
+                    m_totalInventory.m_pWeapon2->SetIsActive(true);
+                    m_totalInventory.m_pWeapon2->pUIImage = 
+                        m_totalInventory.m_pWeaponSecondary->GetUIImage2();
+                    m_totalInventory.m_pWeapon2->pItem = 
+                        m_totalInventory.m_pWeaponSecondary;
+                }
+                return;
+            }
+        }
+
+
         if (m_currentOnceKey._F)
         {
-            //PutItemInTotalInventory(itm); //inventory에 넣기
-            ////current scene 에서 지우기
-            //pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
+            PutItemInTotalInventory(itm); //inventory에 넣기
+            //current scene 에서 지우기
+            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
+            itm->SetState(true);
+
+            if (m_totalInventory.m_pWeaponPrimary)
+            {
+                m_totalInventory.m_pWeapon1->SetIsActive(true);
+                m_totalInventory.m_pWeapon1->pUIImage =
+                    m_totalInventory.m_pWeaponPrimary->GetUIImage2();
+                m_totalInventory.m_pWeapon1->pItem =
+                    m_totalInventory.m_pWeaponPrimary;
+            }
+            if (m_totalInventory.m_pWeaponSecondary)
+            {
+                m_totalInventory.m_pWeapon2->SetIsActive(true);
+                m_totalInventory.m_pWeapon2->pUIImage =
+                    m_totalInventory.m_pWeaponSecondary->GetUIImage2();
+                m_totalInventory.m_pWeapon2->pItem =
+                    m_totalInventory.m_pWeaponSecondary;
+            }
+            return;
         }
     }
 
@@ -621,27 +683,27 @@ void Character::itemSphereCollisionInteraction()
     if (di.size() == 0)
         m_currentOnceKey._F = false;
 
-    //Ray를 쏘아서 맞는 물건 먼저 먹기
-    for (auto& rayItm : di)
-    {
-        Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
+    ////Ray를 쏘아서 맞는 물건 먼저 먹기
+    //for (auto& rayItm : di)
+    //{
+    //    Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
 
-        // 먼저 terrain features의 바운딩스피어와 충돌을 검사한다.
-        BoundingSphere bs = rayItm->GetBoundingSphere();
+    //    // 먼저 terrain features의 바운딩스피어와 충돌을 검사한다.
+    //    BoundingSphere bs = rayItm->GetBoundingSphere();
 
-        if (!D3DXSphereBoundProbe(
-            &(bs.center + bs.position),
-            bs.radius,
-            &ray.m_pos,
-            &ray.m_dir)) continue;
+    //    if (!D3DXSphereBoundProbe(
+    //        &(bs.center + bs.position),
+    //        bs.radius,
+    //        &ray.m_pos,
+    //        &ray.m_dir)) continue;
 
-        if (m_currentOnceKey._F)
-        {
-            PutItemInTotalInventory(rayItm); //inventory에 넣기
-                                             //current scene 에서 지우기
-            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
-        }
-    }
+    //    if (m_currentOnceKey._F)
+    //    {
+    //        PutItemInTotalInventory(rayItm); //inventory에 넣기
+    //                                         //current scene 에서 지우기
+    //        pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
+    //    }
+    //}
 
     //////////////////////////////////////////////////
 
@@ -892,6 +954,15 @@ void Character::RifleShooting() //bullet 객체에 대한
             Sound()()->Play(TAG_SOUND::Kar98_NormalShoot,
                 GetTransform()->GetPosition(),
                 1.0f, FMOD_2D); 
+            Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove0,
+                GetTransform()->GetPosition(),
+                0.3f, FMOD_2D);
+            Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove1,
+                GetTransform()->GetPosition(),
+                0.8f, FMOD_2D);
+            Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove2,
+                GetTransform()->GetPosition(),
+                1.0f, FMOD_2D);
             //Kar98k BoltAction Animation
             TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
             if (m_stance == Stance::Stand || m_stance == Stance::Crouch)

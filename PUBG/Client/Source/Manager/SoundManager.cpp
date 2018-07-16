@@ -32,14 +32,19 @@ void SoundManager::Init()
 
     AddSound(TAG_SOUND::Kar98_NormalShoot, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D,false);
     AddSound(TAG_SOUND::Kar98_SilenceShoot, "Resource/Sound/kar98/Kar98_SilenceShoot.mp3", FMOD_3D, false);
-    AddSound(TAG_SOUND::Kar98_BoltMove0, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
-    AddSound(TAG_SOUND::Kar98_BoltMove1, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
-    AddSound(TAG_SOUND::Kar98_BoltMove2, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
-    AddSound(TAG_SOUND::Kar98_Reload0, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
-    AddSound(TAG_SOUND::Kar98_Reload1, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
-    AddSound(TAG_SOUND::Kar98_Reload2, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
-    AddSound(TAG_SOUND::Kar98_Reload3, "Resource/Sound/kar98/Kar98_NormalShoot.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Kar98_BoltMove0, "Resource/Sound/kar98/Kar98_BoltMove0.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Kar98_BoltMove1, "Resource/Sound/kar98/Kar98_BoltMove1.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Kar98_BoltMove2, "Resource/Sound/kar98/Kar98_BoltMove2.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Kar98_Reload0, "Resource/Sound/kar98/Kar98_Reload0.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Kar98_Reload1, "Resource/Sound/kar98/Kar98_Reload1.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Kar98_Reload2, "Resource/Sound/kar98/Kar98_Reload2.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Kar98_Reload3, "Resource/Sound/kar98/Kar98_Reload3.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Qbz_NormalShoot, "Resource/Sound/qbz/Qbz_NormalShoot.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Qbz_BoltMove76, "Resource/Sound/qbz/Qbz_BoltMove76.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Qbz_Reload, "Resource/Sound/qbz/Qbz_Reload.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Qbz_FakeShoot, "Resource/Sound/qbz/Qbz_FakeShoot.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Qbz_SilenceShoot, "Resource/Sound/qbz/Qbz_SilenceShoot.mp3", FMOD_3D, false);
+
 
     AddSound(TAG_SOUND::Background, "Resource/Sound/Background/battleground_lobby.mp3", FMOD_3D, false);
 
