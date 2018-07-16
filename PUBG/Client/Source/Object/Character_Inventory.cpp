@@ -34,6 +34,8 @@ Character::TotalInventory::TotalInventory()
     , m_pWeapon2(nullptr)
     , m_stateClicked(false)
     , m_handState(TAG_RIFLE::None)
+
+    , isOpened(false)
 {
 }
 

@@ -446,6 +446,19 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //킬 수
     //TODO: 상단 킬은 죽인순간이랑, 탭을 눌렀을 때만 보임
+    if (inven.isOpened)
+    {
+        pKillNumUpBg->SetIsRender(true);
+        pKillTextUpBg->SetIsRender(true);
+        pKillNumUpText->SetText(to_string(pPlayer->GetKillNum()));
+    }
+    else
+    {
+        pKillNumUpBg->SetIsRender(false);
+        pKillTextUpBg->SetIsRender(false);
+    }
+
+
     //킬 한 순간에 텍스트가 뜬다
     if (pPlayer->GetIsKill())
     {
@@ -474,7 +487,6 @@ void Character::InGameUI::Update(const TotalInventory& inven)
             //상단 킬
             pKillNumUpBg->SetIsRender(false);
             pKillTextUpBg->SetIsRender(false);
-            pKillNumUpText->SetText("");
 
             //화면 중앙 킬
             pKillNumText->SetText("", pKillNumTextShadow);
