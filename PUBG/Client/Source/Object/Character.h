@@ -460,6 +460,7 @@ private:
     BoundingBox m_bBox;
     //BoundingSphere m_bSphereSlidingCollision;
 
+    float m_stepDistance;
 
 /**************************** end member variable ****************************/
 

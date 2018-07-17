@@ -58,6 +58,7 @@ Character::Character(const int index)
     , pAnimation(nullptr)
 
     , m_otherHitPart(0)
+    , m_stepDistance(0.0f)
 {
     m_totalInventory.pCharacter = this;
     if (isMine())
@@ -282,6 +283,7 @@ void Character::updateMine()
     }
 
     //m_currentState를 저장해 놓고 //dest pos 로 계 산
+    D3DXVECTOR3 backupPos = tm->GetPosition();
     State destState;
     destState.position = tm->GetPosition();
     destState.rotation = tm->GetRotation();
@@ -298,8 +300,6 @@ void Character::updateMine()
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////
 
-    getRight();
-
     setStance();
     setAttacking();
     setReload();
@@ -308,7 +308,7 @@ void Character::updateMine()
     {
         setPunch();
     }
-
+    
     setInteraction();
     setJump();
     animationControl();
@@ -334,7 +334,11 @@ void Character::updateMine()
 
             setAnimation(
                 bodyPart,
-                m_lowerAnimState, true, 0.3f, 0.0f, 0.0f);
+                m_lowerAnimState,
+                true,
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_POSITION);
 
             m_savedInput = m_currentStayKey;
         }
@@ -377,6 +381,22 @@ void Character::updateMine()
         backActionFrame(&rot);
     }
 
+    // footstep
+    if (m_direction == Direction::StandStill)
+    {
+        m_stepDistance = 0.0f;
+    }
+    D3DXVECTOR3 v3Distance = D3DXVECTOR3(destState.position.x, 0.0f, destState.position.z) - D3DXVECTOR3(backupPos.x, 0.0f, backupPos.z);
+    float fDistance = D3DXVec3Length(&v3Distance);
+    m_stepDistance += fDistance;
+    if (m_stepDistance >= 78.0f)
+    {
+        m_stepDistance -= 78.0f;
+        Sound()()->Play(TAG_SOUND::FootStep, pos, 1.0f, FMOD_2D);
+        Communication()()->SendEventSound(TAG_SOUND::FootStep, pos);
+    }
+    // end footstep
+
     tm->SetPosition(pos);
     tm->SetRotation(rot);
 
@@ -400,7 +420,6 @@ void Character::updateMine()
         m_totalInventory.m_pHand->ChangeAuto();
     }
 
-    //이 아래 sound는 어디에 쓰이는 것인가요?? 찬응에게 답해 주세요
     Sound()()->Listen(pos, getForward());
 
     //if (Input()()->IsOnceKeyDown(VK_UP))
