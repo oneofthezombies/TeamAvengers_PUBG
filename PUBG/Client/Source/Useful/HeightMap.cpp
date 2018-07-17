@@ -15,7 +15,7 @@ HeightMap::HeightMap()
 
 
     D3DXMATRIXA16 matS, matT;
-    D3DXMatrixScaling(&matS, 30.0f, 1.0f, 30.0f);
+    D3DXMatrixScaling(&matS, 30.0f, 10.0f, 30.0f);
     D3DXMatrixTranslation(&matT, 0.0f, 0.0f, 0.0f);
 
     m_matWorld = matS * matT;
@@ -49,7 +49,7 @@ HeightMap::HeightMap()
             "Heightmap_Diffuse_Tex",
             Resource()()->GetTexture(
                 "./Resource/Heightmap/testing/",
-                "Heightmap.jpg"));
+                "Plain_BaseColor.tga"));
 
     //ray box
     SetRayBox();
