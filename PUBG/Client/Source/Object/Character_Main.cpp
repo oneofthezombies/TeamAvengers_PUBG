@@ -10,6 +10,7 @@
 #include "ComponentTransform.h"
 
 #include "Interpolation.h"
+#include "ScenePlay.h"
 
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
@@ -260,6 +261,19 @@ void Character::OnRender()
 void Character::updateMine()
 {
     if (!isMine()) return;
+
+    //rank 1
+    if (m_isGameOver == false)
+    {
+        ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+        int rank = currentScene->GetSurvivors();
+        if (rank == 1)
+        {
+            m_isGameOver = true;
+            m_gameOverUI.Update();
+            return;
+        }
+    }
 
     //Dead logic
     if (m_isDead)
