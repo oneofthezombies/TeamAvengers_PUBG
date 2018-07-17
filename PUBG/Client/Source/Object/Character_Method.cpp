@@ -1465,18 +1465,30 @@ void Character::MoveItemSecondaryToField()
 
 void Character::MoveItemPrimaryToHand()
 {
+    TotalInventory& ti = m_totalInventory;
+    ti.m_pHand = ti.m_pWeaponPrimary;
+    ti.m_pWeaponPrimary = nullptr;
 }
 
 void Character::MoveItemSecondaryToHand()
 {
+    TotalInventory& ti = m_totalInventory;
+    ti.m_pHand = ti.m_pWeaponSecondary;
+    ti.m_pWeaponSecondary = nullptr;
 }
 
 void Character::MoveItemHandToPrimary()
 {
+    TotalInventory& ti = m_totalInventory;
+    ti.m_pWeaponPrimary = ti.m_pHand;
+    ti.m_pHand = nullptr;
 }
 
 void Character::MoveItemHandToSecondary()
 {
+    TotalInventory& ti = m_totalInventory;
+    ti.m_pWeaponSecondary = ti.m_pHand;
+    ti.m_pHand = nullptr;
 }
 
 D3DXVECTOR3 Character::getUp()

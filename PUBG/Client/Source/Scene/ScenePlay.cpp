@@ -186,6 +186,11 @@ void ScenePlay::setWithOthersMode()
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
 
+    p = D3DXVECTOR3(100, 0, 10);
+    item = new Item(TAG_RES_STATIC::Kar98k, "Kar98k_0", p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
+
     //item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
@@ -208,6 +213,11 @@ void ScenePlay::setWithOthersMode()
         others.emplace_back(pOther);
         characters.emplace_back(pOther);
         AddObject(pOther);
+
+        p = D3DXVECTOR3(100, 0, 10);
+        item = new Item(TAG_RES_STATIC::Kar98k, "Kar98k_0", p, r, s);
+        AddObject(item);
+        pOther->PutItemInTotalInventory(item);
 
         //item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
         //AddObject(item);

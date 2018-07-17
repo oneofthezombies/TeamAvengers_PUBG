@@ -417,7 +417,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_HAND, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_HAND:
@@ -427,7 +427,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_HAND, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_PRIMARY:
@@ -437,7 +437,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_PRIMARY, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_SECONDARY:
@@ -447,7 +447,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_SECONDARY, description));
         }
         break;
     }
