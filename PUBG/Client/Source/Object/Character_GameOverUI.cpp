@@ -220,7 +220,16 @@ void Character::GameOverUI::Update()
 
         //등수 = 생존 수 + 1
         ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
-        int rank = currentScene->GetSurvivors() + 1;
+        int survivors = currentScene->GetSurvivors();
+        int rank = 0;
+        if (survivors == 1)
+        {
+            rank = 1;
+        }
+        else
+        {
+            rank = survivors + 1;
+        }
         pRankingNumText->SetText("#" + to_string(rank));
         pUpRankingNumText->SetText("#" + to_string(rank));
 
