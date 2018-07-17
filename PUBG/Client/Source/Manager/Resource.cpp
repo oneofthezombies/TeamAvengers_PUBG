@@ -1201,7 +1201,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
-                30, 10, FW_BOLD, 1, false,
+                32, 10, FW_BOLD, 1, false,
                 DEFAULT_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
