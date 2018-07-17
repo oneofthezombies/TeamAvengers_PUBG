@@ -186,19 +186,19 @@ void ScenePlay::setWithOthersMode()
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
 
-    item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(20, 0, 10);
-    item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(20, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(30, 0, 10);
-    item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(30, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
@@ -209,19 +209,19 @@ void ScenePlay::setWithOthersMode()
         characters.emplace_back(pOther);
         AddObject(pOther);
 
-        item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
-        AddObject(item);
-        pOther->PutItemInTotalInventory(item);
+        //item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
+        //AddObject(item);
+        //pOther->PutItemInTotalInventory(item);
 
-        p = D3DXVECTOR3(20, 0, 10);
-        item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
-        AddObject(item);
-        pOther->PutItemInTotalInventory(item);
+        //p = D3DXVECTOR3(20, 0, 10);
+        //item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
+        //AddObject(item);
+        //pOther->PutItemInTotalInventory(item);
 
-        p = D3DXVECTOR3(30, 0, 10);
-        item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
-        AddObject(item);
-        pOther->PutItemInTotalInventory(item);
+        //p = D3DXVECTOR3(30, 0, 10);
+        //item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
+        //AddObject(item);
+        //pOther->PutItemInTotalInventory(item);
     }
 
     //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
