@@ -495,6 +495,8 @@ void Communication::Manager::ReceiveMessage(
             static_cast<ScenePlay*>(CurrentScene()())
                 ->GetCharacters()[moveItemID]
                 ->MoveItemPrimaryToHand();
+
+            cout << "receive id : " << moveItemID << endl;
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_HAND:
@@ -875,6 +877,8 @@ void Communication::Manager::SendEventMoveItemPrimaryToHand(const int id)
         Message::Create(
             TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_HAND,
             ss.str()));
+
+    cout << "send id : " << id << endl;
 }
 
 void Communication::Manager::SendEventMoveItemSecondaryToHand(const int id)
