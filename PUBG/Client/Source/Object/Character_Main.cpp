@@ -469,12 +469,12 @@ void Character::updateOther()
     if (upperAnim != m_upperAnimState)
     {
         m_upperAnimState = upperAnim;
-        setAnimation(CharacterAnimation::BodyPart::UPPER, upperAnim, true);
+        setAnimation(CharacterAnimation::BodyPart::UPPER, upperAnim, false);
     }
 
     if (lowerAnim != m_lowerAnimState)
     {
         m_lowerAnimState = lowerAnim;
-        setAnimation(CharacterAnimation::BodyPart::LOWER, lowerAnim, true);
+        setAnimation(CharacterAnimation::BodyPart::LOWER, lowerAnim, false);
     }
 }
