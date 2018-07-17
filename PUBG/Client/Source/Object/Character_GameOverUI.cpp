@@ -6,7 +6,8 @@
 #include "UIText.h"
 
 Character::GameOverUI::GameOverUI()
-    : pPlayer(nullptr)
+    : IUIButtonOnMouseListener()
+    , pPlayer(nullptr)
 {
 }
 
@@ -14,7 +15,28 @@ Character::GameOverUI::~GameOverUI()
 {
 }
 
-void Character::GameOverUI::Init(Character * pPlayer)
+void Character::GameOverUI::OnMouseEnter()
+{
+}
+
+void Character::GameOverUI::OnMouseExit()
+{
+}
+
+void Character::GameOverUI::OnMouseDown(const int key)
+{
+}
+
+void Character::GameOverUI::OnMouseUp(const int key)
+{
+    //cout << "UP" << endl;
+}
+
+void Character::GameOverUI::OnMouseDrag(const int key)
+{
+}
+
+void Character::GameOverUI::Init(Character* pPlayer)
 {
     this->pPlayer = pPlayer;
 
@@ -124,21 +146,53 @@ void Character::GameOverUI::Init(Character * pPlayer)
     upPlayersNum->SetDrawTextFormat(DT_LEFT);
     upPlayersNum->SetPosition(D3DXVECTOR3(1167.0f, 36.0f, 0.0f));
 
-    auto lobbyBtn = new UIImage(
-        "./Resource/UI/GameOver/",
-        "lobby_btn_idle.png",
-        D3DXVECTOR3(1083.0f, 623.0f, 0.0f),
-        nullptr,
-        pBackground);
 
-    auto lobbyText = new UIText(
-        Resource()()->GetFont(TAG_FONT::GameOverLobby),
-        D3DXVECTOR2(120.0f, 25.0f),
-        "로비로 나가기",
-        D3DCOLOR_XRGB(0, 0, 0),
-        lobbyBtn);
-    lobbyText->SetDrawTextFormat(DT_CENTER | DT_VCENTER);
-    lobbyText->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+    UIButton* button = new UIButton(
+        D3DXVECTOR3(58.5f, 623.0f, 0.0f),
+        "./Resource/UI/GameOver/", 
+        "lobby_btn_idle.png", 
+        "lobby_btn_mouseover.png", 
+        "lobby_btn_mouseover.png",
+        this,
+        pBackground,
+        Resource()()->GetFont(TAG_FONT::GameOverLobby), "로비로 나가기",
+        D3DCOLOR_XRGB(0, 0, 0));
+
+  
+    //하단은 꼴만 있고 기능 구현 x
+    //관전
+    new UIButton(
+        D3DXVECTOR3(202.0f, 623.0f, 0.0f),
+        "./Resource/UI/GameOver/",
+        "watch_btn_idle.png",
+        "watch_btn_mouseover.png",
+        "watch_btn_mouseover.png",
+        this,
+        pBackground,
+        Resource()()->GetFont(TAG_FONT::GameOverLobby), "",
+        D3DCOLOR_XRGB(0, 0, 0));
+    //신고
+    new UIButton(
+        D3DXVECTOR3(940.0f, 623.0f, 0.0f),
+        "./Resource/UI/GameOver/",
+        "report_btn_idle.png",
+        "report_btn_mouseover.png",
+        "report_btn_mouseover.png",
+        this,
+        pBackground,
+        Resource()()->GetFont(TAG_FONT::GameOverLobby), "",
+        D3DCOLOR_XRGB(0, 0, 0));
+    //데스 캠
+    new UIButton(
+        D3DXVECTOR3(1083.0f, 623.0f, 0.0f),
+        "./Resource/UI/GameOver/",
+        "deathcam_btn_idle.png",
+        "deathcam_btn_mouseover.png",
+        "deathcam_btn_mouseover.png",
+        this,
+        pBackground,
+        Resource()()->GetFont(TAG_FONT::GameOverLobby), "",
+        D3DCOLOR_XRGB(0, 0, 0));
 }
 
 void Character::GameOverUI::Update()
