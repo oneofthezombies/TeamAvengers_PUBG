@@ -1466,10 +1466,6 @@ void Character::MoveItemSecondaryToField()
 void Character::MoveItemPrimaryToHand()
 {
     TotalInventory& ti = m_totalInventory;
-
-    cout << "my index : " << m_index << endl;
-    cout << "skinned mesh index : " << ti.m_pWeaponPrimary->GetSkinnedMesh()->m_index << endl;
-
     ti.m_pHand = ti.m_pWeaponPrimary;
     ti.m_pWeaponPrimary = nullptr;
 }
