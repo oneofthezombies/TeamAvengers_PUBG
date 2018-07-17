@@ -480,7 +480,7 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     //피 닳기
     updateHpUI();
 
-    //TODO: 킬로그 (서버랑 연관해서 생각해야함) 
+    //TODO: 킬로그 (서버랑 연관해서 생각해야함), 동시에 들어왔을 때 변경
     if (pPlayer->GetIsKill())
     {
         //ex) "HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"

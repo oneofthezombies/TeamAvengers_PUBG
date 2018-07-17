@@ -262,28 +262,25 @@ void Character::updateMine()
 {
     if (!isMine()) return;
 
-    //rank 1
     if (m_isGameOver == false)
     {
-        ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
-        int rank = currentScene->GetSurvivors();
-        if (rank == 1)
+        if (m_isDead)
         {
             m_isGameOver = true;
             m_gameOverUI.Update();
             return;
         }
-    }
-
-    //Dead logic
-    if (m_isDead)
-    {
-        if (m_isGameOver == false)
+        else
         {
-            m_isGameOver = true;
-            m_gameOverUI.Update();
+            ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+            int rank = currentScene->GetSurvivors();
+            if (rank == 1)
+            {
+                m_isGameOver = true;
+                m_gameOverUI.Update();
+                return;
+            }
         }
-        return;
     }
 
     //m_health 가 0이 되면 죽는 애니메이션, server communication;
