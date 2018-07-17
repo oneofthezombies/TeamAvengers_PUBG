@@ -1171,7 +1171,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
-                48, 24, FW_BOLD, 1, false,
+                48, 24, FW_NORMAL, 1, false,
                 HANGEUL_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
@@ -1201,7 +1201,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
-                32, 10, FW_BOLD, 1, false,
+                36, 11, FW_BOLD, 1, false,
                 DEFAULT_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
@@ -1231,7 +1231,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
-                60, 20, FW_BOLD, 1, false,
+                68, 21, FW_BOLD, 1, false,
                 DEFAULT_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
@@ -1246,7 +1246,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
             hr = D3DXCreateFontA(
                 Device()(),
-                48, 10, FW_BOLD, 1, false,
+                52, 16, FW_NORMAL, 1, false,
                 DEFAULT_CHARSET,
                 OUT_DEFAULT_PRECIS,
                 DEFAULT_QUALITY,
