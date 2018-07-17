@@ -281,7 +281,7 @@ void Character::updateMine()
     //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
-    if (!m_totalInventory.IsOpened())
+    if (!m_totalInventory.IsOpened() && !m_isGameOver)
     {
         handleMouse(dt, &m_mouseInput);
     }
