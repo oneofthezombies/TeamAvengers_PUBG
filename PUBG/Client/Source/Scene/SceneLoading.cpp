@@ -116,7 +116,7 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::WareHouse_A);
 
     // load skined meshs
-    const int numQBZ = 4;
+    const int numQBZ = 6;
     for (int i = 0; i < numQBZ; ++i)
         load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
