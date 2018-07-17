@@ -154,7 +154,13 @@ void Bullet::OnUpdate()
          }
          else
          {
-             Communication()()->SendEventSound(TAG_SOUND::Bullet_Miss, m_curPos);
+             static bool played = false;
+             if (!played)
+             {
+                 Communication()()->SendEventSound(TAG_SOUND::Bullet_Miss, m_curPos);
+                 played = true;
+             }
+
          }
      }
 
