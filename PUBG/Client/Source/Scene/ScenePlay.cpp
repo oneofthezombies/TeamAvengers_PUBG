@@ -259,7 +259,7 @@ void ScenePlay::setWithOthersMode()
     pPlayer->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(30, 0, 10);
-    item = new Item(TAG_RES_STATIC::Back_Lv1, "Armor_Lv1_0", p, r, s);
+    item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
     AddObject(item);
     pPlayer->PutItemInTotalInventory(item);
 }
