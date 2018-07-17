@@ -33,6 +33,7 @@ private:
     float                   m_Speed;
     float                   m_Damage;
     bool                    m_IsActive;
+    bool                    m_soundPlayed;
     
     LPD3DXMESH              pCylinder;
 

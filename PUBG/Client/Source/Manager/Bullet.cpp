@@ -15,6 +15,7 @@ Bullet::Bullet()
     , pCylinder(nullptr)
     //, pBoxCollider(nullptr)
     , pCurrentScene(nullptr)
+    , m_soundPlayed(false)
 {
     GetTransform()->SetPosition(Vector3::ZERO);
 
@@ -154,11 +155,10 @@ void Bullet::OnUpdate()
          }
          else
          {
-             static bool played = false;
-             if (!played)
+             if (!m_soundPlayed)
              {
                  Communication()()->SendEventSound(TAG_SOUND::Bullet_Miss, m_curPos);
-                 played = true;
+                 m_soundPlayed = true;
              }
 
          }
@@ -305,6 +305,7 @@ void Bullet::Set(GameInfo::MyInfo myInfo, const D3DXVECTOR3 & startPos, const D3
     m_Speed = speed;
     m_Damage = damage;
     m_IsActive = true;
+    m_soundPlayed = false;
 
     pCurrentScene->AddObject(this);
 
