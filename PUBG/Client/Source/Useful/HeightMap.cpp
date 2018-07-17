@@ -17,6 +17,7 @@ HeightMap::HeightMap()
     D3DXMATRIXA16 matS, matT;
     D3DXMatrixScaling(&matS, 30.0f, 1.0f, 30.0f);
     D3DXMatrixTranslation(&matT, 0.0f, 0.0f, 0.0f);
+
     m_matWorld = matS * matT;
 
 
