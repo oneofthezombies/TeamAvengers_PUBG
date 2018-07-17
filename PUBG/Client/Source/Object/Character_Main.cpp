@@ -262,7 +262,11 @@ void Character::updateMine()
 {
     if (!isMine()) return;
 
-    if (m_isGameOver == false)
+    if (m_isGameOver)
+    {
+        return;
+    }
+    else // m_isGameOver == false
     {
         if (m_isDead)
         {
