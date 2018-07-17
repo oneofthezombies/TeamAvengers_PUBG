@@ -301,6 +301,7 @@ void ScenePlay::OnInit()
     new UIObject(m_layer);
     new UIObject(m_layer); 
     new UIObject(m_layer);
+    new UIObject(m_layer);
     
     // set mouse point to center
     POINT center;
@@ -395,5 +396,6 @@ UIObject* ScenePlay::GetLayer(int layerIndex) const
     case 1: return m_layer->GetChild(0);
     case 2: return m_layer->GetChild(1);
     case 3: return m_layer->GetChild(2);
+    case 4: return m_layer->GetChild(3);
     }
 }

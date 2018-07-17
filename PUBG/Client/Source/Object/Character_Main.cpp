@@ -41,6 +41,8 @@ Character::Character(const int index)
     , m_killNum(0)
     , m_isKill(false)
 
+    , m_gameOverUI()
+
     , m_attacking(Attacking::Unarmed)
     , m_stance(Stance::Stand)
     , m_moving(Moving::Run)
@@ -64,6 +66,7 @@ Character::Character(const int index)
     {
         m_inGameUI.Init(this);
         m_totalInventory.Init();
+        m_gameOverUI.Init(this);
     }
 
     int x = m_index / 2;
@@ -137,7 +140,6 @@ Character::~Character()
     if (isMine())
     {
         m_totalInventory.Destroy();
-        m_inGameUI.Destroy();
     }
 }
 
@@ -261,6 +263,13 @@ void Character::updateMine()
     //Dead logic
     if (m_isDead)
     {
+        //GameOverUI 띄우기
+        //if (not exist)
+        //{
+        //    pointer = new ui;
+        //    pointer->init();
+        //}
+
         //남은 hp를 0으로 만든다
         //TODO: 한번만 실행되도록 하기
         m_inGameUI.SetRedToZero();

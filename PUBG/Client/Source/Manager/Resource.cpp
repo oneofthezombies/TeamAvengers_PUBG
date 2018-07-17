@@ -965,6 +965,8 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             }
             break;
 
+
+        //Inventory ==================================================
         case TAG_FONT::Inventory_Ground:
             {
                 AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
@@ -1010,6 +1012,8 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             }
             break;
 
+
+        //InGameUI ==================================================
         case TAG_FONT::InGameAmmoReload:
             {
                 AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
@@ -1144,6 +1148,27 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                 &m_fonts[tag]);
         }
         break;
+
+
+        //GameOverUI ==================================================
+        case TAG_FONT::GameOverNickName:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                36, 18, FW_BOLD, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
+        }
+        break;
+
+        //여기서부터
+
+
 
         default:
             {

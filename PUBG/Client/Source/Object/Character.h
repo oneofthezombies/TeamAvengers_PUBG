@@ -245,9 +245,8 @@ public:
         ~InGameUI();
 
         void Init(Character* pPlayer);
-        void Destroy();
         void Update(const TotalInventory& inven);
-        void Render();
+
         void SetRedToZero();
 
         void setTextWithShadow(
@@ -266,6 +265,17 @@ public:
         void updateHpUI();
         void updateKillUI(const TotalInventory& inven);
         void updateEquipUI(const TotalInventory& inven);
+    };
+
+    struct GameOverUI
+    {
+        Character* pPlayer;
+
+        void Init(Character* pPlayer);
+        void Update();
+
+        GameOverUI();
+        ~GameOverUI();
     };
 
     struct Info
@@ -424,8 +434,12 @@ private:
 
     // for InGameUI
     InGameUI m_inGameUI;
+
     int m_killNum;
     bool m_isKill;
+
+    //for GameOverUI
+    GameOverUI m_gameOverUI;
     
     // state
     TAG_ANIM_CHARACTER m_upperAnimState;

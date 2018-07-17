@@ -93,6 +93,12 @@ void SceneLoading::Load()
     //for compass UI test
     load("./Resource/UI/InGame/", "compass_bg_transparent.png");
 
+    //for GameOverUI
+    load("./Resource/UI/GameOver/", "black_1280_720_70.png");
+    load("./Resource/UI/GameOver/", "ranking_bg.png");
+    load("./Resource/UI/GameOver/", "kill_bg.png");
+    load("./Resource/UI/GameOver/", "lobby_btn_idle.png");
+
     // load effect meshs
     load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);

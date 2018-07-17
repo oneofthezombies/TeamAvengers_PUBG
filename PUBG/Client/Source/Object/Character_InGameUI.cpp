@@ -97,10 +97,6 @@ Character::InGameUI::~InGameUI()
 {
 }
 
-void Character::InGameUI::Destroy()
-{
-}
-
 void Character::InGameUI::Init(Character* pPlayer)
 {
     this->pPlayer = pPlayer;
@@ -497,10 +493,6 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //장비 착용 관련 UI
     updateEquipUI(inven);
-}
-
-void Character::InGameUI::Render()
-{
 }
 
 void Character::InGameUI::SetRedToZero()
