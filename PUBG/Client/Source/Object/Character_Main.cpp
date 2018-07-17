@@ -382,7 +382,7 @@ void Character::updateMine()
     }
 
     // footstep
-    if (m_direction == Direction::StandStill)
+    if (m_direction == Direction::StandStill || m_Jump.isJumping)
     {
         m_stepDistance = 0.0f;
     }
