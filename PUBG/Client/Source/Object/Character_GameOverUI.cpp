@@ -225,7 +225,7 @@ void Character::GameOverUI::Update()
         pUpRankingNumText->SetText("#" + to_string(rank));
 
         //playersNum은 현재씬의 캐릭터 백터 사이즈 갖고오기
-        int playersNum = currentScene->GetCharacters().size();
+        int playersNum = static_cast<int>(currentScene->GetCharacters().size());
         pUpPlayersNumText->SetText("/" + to_string(playersNum));
 
         if (rank == 1)
