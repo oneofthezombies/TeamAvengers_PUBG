@@ -186,6 +186,9 @@ void ScenePlay::setWithOthersMode()
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
 
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
+    Light()()->SetTarget(pPlayer->GetTransform());
+
     p = D3DXVECTOR3(100, 0, 10);
     item = new Item(TAG_RES_STATIC::Kar98k, "gun", p, r, s);
     AddObject(item);
