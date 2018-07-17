@@ -47,46 +47,46 @@ void Character::GameOverUI::Init(Character * pPlayer)
     str->SetDrawTextFormat(DT_LEFT);
     str->SetPosition(D3DXVECTOR3(62.0f, 92.0f, 0.0f));
 
-    auto rankingBg = new UIImage(
-        "./Resource/UI/InGame/",
-        "ranking_bg.png",
-        D3DXVECTOR3(59.0f, 170.0f, 0.0f),
-        nullptr,
-        pBackground);
+    //auto rankingBg = new UIImage(
+    //    "./Resource/UI/InGame/",
+    //    "ranking_bg.png",
+    //    D3DXVECTOR3(59.0f, 170.0f, 0.0f),
+    //    nullptr,
+    //    pBackground);
 
     auto rankingText = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverRankingAndKillText),
-        D3DXVECTOR2(90.0f, 30.0f),
+        D3DXVECTOR2(51.0f, 30.0f),
         "·©Å·",
         InGameUI::WHITE,
-        rankingBg);
+        pBackground);
     rankingText->SetDrawTextFormat(DT_LEFT);
-    rankingText->SetPosition(D3DXVECTOR3(3.0f, 0.0f, 0.0f));
+    rankingText->SetPosition(D3DXVECTOR3(62.0f, 170.0f, 0.0f));
 
     auto rankingNum = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverRankingAndKillNum),
         D3DXVECTOR2(43.0f, 24.0f),
         "#63",
         InGameUI::WHITE,
-        rankingBg);
-    rankingNum->SetDrawTextFormat(DT_LEFT);
-    rankingNum->SetPosition(D3DXVECTOR3(104.0f, 3.0f, 0.0f));
-
-    auto killBg = new UIImage(
-        "./Resource/UI/InGame/",
-        "kill_bg.png",
-        D3DXVECTOR3(245.0f, 170.0f, 0.0f),
-        nullptr,
         pBackground);
+    rankingNum->SetDrawTextFormat(DT_LEFT);
+    rankingNum->SetPosition(D3DXVECTOR3(128.75f, 173.75f, 0.0f));
 
-    auto killText = new UIText(
-        Resource()()->GetFont(TAG_FONT::GameOverRankingAndKillText),
-        D3DXVECTOR2(25.0f, 30.0f),
-        "Å³",
-        InGameUI::WHITE,
-        killBg);
-    killText->SetDrawTextFormat(DT_LEFT);
-    killText->SetPosition(D3DXVECTOR3(3.0f, 0.0f, 0.0f));
+    //auto killBg = new UIImage(
+    //    "./Resource/UI/InGame/",
+    //    "kill_bg.png",
+    //    D3DXVECTOR3(245.0f, 170.0f, 0.0f),
+    //    nullptr,
+    //    pBackground);
+
+    //auto killText = new UIText(
+    //    Resource()()->GetFont(TAG_FONT::GameOverRankingAndKillText),
+    //    D3DXVECTOR2(25.0f, 30.0f),
+    //    "Å³",
+    //    InGameUI::WHITE,
+    //    pBackground);
+    //killText->SetDrawTextFormat(DT_LEFT);
+    //killText->SetPosition(D3DXVECTOR3(3.0f, 0.0f, 0.0f));
 }
 
 void Character::GameOverUI::Update()
