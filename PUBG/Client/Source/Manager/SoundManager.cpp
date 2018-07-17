@@ -44,7 +44,12 @@ void SoundManager::Init()
     AddSound(TAG_SOUND::Qbz_Reload, "Resource/Sound/qbz/Qbz_Reload.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Qbz_FakeShoot, "Resource/Sound/qbz/Qbz_FakeShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Qbz_SilenceShoot, "Resource/Sound/qbz/Qbz_SilenceShoot.mp3", FMOD_3D, false);
-
+    AddSound(TAG_SOUND::Bullet_Miss, "Resource/Sound/Bullet/miss.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Bullet_HitTerrain, "Resource/Sound/Bullet/hit_terrain.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::FootStep, "Resource/Sound/footstep/footstep.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Hand_Punch, "Resource/Sound/Hand/Punch.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Medicine_Bandage, "Resource/Sound/medicine/Bandage.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Medicine_Bandage, "Resource/Sound/medicine/Bandage.mp3", FMOD_3D, false);
 
     AddSound(TAG_SOUND::Background, "Resource/Sound/Background/battleground_lobby.mp3", FMOD_3D, false);
 

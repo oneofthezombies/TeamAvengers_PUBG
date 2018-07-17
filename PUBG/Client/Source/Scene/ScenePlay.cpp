@@ -374,6 +374,27 @@ void ScenePlay::OnUpdate()
     ·¹ÀÌ,
     */
 
+    static int testi;
+
+    if (Input()()->IsOnceKeyDown(VK_LEFT))
+    {
+        testi--;
+        if (testi < 1)
+        {
+            testi = 1;
+        }
+        Sound()()->Play(static_cast<TAG_SOUND>(testi), Vector3::ZERO, 1.0f, FMOD_2D);
+    }
+    if (Input()()->IsOnceKeyDown(VK_RIGHT))
+    {
+        testi++;
+        if (testi > static_cast<int>(TAG_SOUND::Background))
+        {
+            testi = 21;
+        }
+        Sound()()->Play(static_cast<TAG_SOUND>(testi), Vector3::ZERO, 1.0f, FMOD_2D);
+    }
+
     Shader()()->AddShadowSource(Matrix::IDENTITY, pHeightMap->GetMesh(), 0);
 
     for (auto c : characters)

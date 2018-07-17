@@ -930,6 +930,7 @@ void Character::RifleShooting() //bullet 객체에 대한
             Sound()()->Play(TAG_SOUND::Qbz_NormalShoot,
                 GetTransform()->GetPosition(),
                 1.0f, FMOD_2D);
+            Communication()()->SendEventSound(TAG_SOUND::Qbz_NormalShoot, GetTransform()->GetPosition());
             
             //총 자체 애니메이션
             m_isNeedRifleAnim = true;
@@ -965,6 +966,9 @@ void Character::RifleShooting() //bullet 객체에 대한
             Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove2,
                 GetTransform()->GetPosition(),
                 1.0f, FMOD_2D);
+
+            Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, GetTransform()->GetPosition());
+
             //Kar98k BoltAction Animation
             TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
             if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
