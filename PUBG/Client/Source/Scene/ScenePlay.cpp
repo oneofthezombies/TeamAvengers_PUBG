@@ -176,29 +176,29 @@ void ScenePlay::setAloneMode()
 void ScenePlay::setWithOthersMode()
 {
     //For inventory Test
-    //Item* item = nullptr;
-    //D3DXVECTOR3 p(10, 0, 10);
-    //D3DXVECTOR3 r(0, 0, 0);
-    //D3DXVECTOR3 s(1, 1, 1);
+    Item* item = nullptr;
+    D3DXVECTOR3 p(10, 0, 10);
+    D3DXVECTOR3 r(0, 0, 0);
+    D3DXVECTOR3 s(1, 1, 1);
 
     const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
 
-    //item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(20, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(20, 0, 10);
+    item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(30, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(30, 0, 10);
+    item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
+    AddObject(item);
+    pPlayer->PutItemInTotalInventory(item);
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
