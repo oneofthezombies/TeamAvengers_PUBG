@@ -11,7 +11,7 @@ HeightMap::HeightMap()
 {
     //D3DXCreateSphere(Device()(), 10.0f, 10, 10, &m_testSphereMesh, NULL);
 
-    SetDimension(257);
+
 
 
     D3DXMATRIXA16 matS, matT;
@@ -21,20 +21,34 @@ HeightMap::HeightMap()
     m_matWorld = matS * matT;
 
 
-    Load(_T("./Resource/Heightmap/Heightmap.raw"), &m_matWorld);
-    
+    ////--original--
+    //SetDimension(257);
+    //Load(_T("./Resource/Heightmap/Heightmap.raw"), &m_matWorld);
 
-   
+    //SetSurface();
+
+    //Resource()()->GetEffect(
+    //    "./Resource/Heightmap/", 
+    //    "Heightmap.fx")->
+    //    SetTexture(
+    //        "Heightmap_Diffuse_Tex", 
+    //        Resource()()->GetTexture(
+    //            "./Resource/Heightmap/", 
+    //            "Heightmap.jpg"));
+
+    //--Testing--
+    SetDimension(256);
+    Load(_T("./Resource/Heightmap/testing/Heightmap.raw"), &m_matWorld);
 
     SetSurface();
 
     Resource()()->GetEffect(
-        "./Resource/Heightmap/", 
+        "./Resource/Heightmap/",
         "Heightmap.fx")->
         SetTexture(
-            "Heightmap_Diffuse_Tex", 
+            "Heightmap_Diffuse_Tex",
             Resource()()->GetTexture(
-                "./Resource/Heightmap/", 
+                "./Resource/Heightmap/testing/",
                 "Heightmap.jpg"));
 
     //ray box
