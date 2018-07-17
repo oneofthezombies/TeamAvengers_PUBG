@@ -1166,9 +1166,50 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
         }
         break;
 
-        //여기서부터
+        case TAG_FONT::GameOverString:
+        {
+        
+        
+        }
+        break;
 
+        case TAG_FONT::GameOverRankingAndKillText:
+        {
+        
+        }
+        break;
 
+        case TAG_FONT::GameOverRankingAndKillNum:
+        {
+        
+        
+        }
+        break;
+
+        case TAG_FONT::GameOverPlayerText:
+        {
+        
+        }
+        break;
+
+        case TAG_FONT::GameOverUpRanking:
+        {
+        
+        
+        }
+        break;
+
+        case TAG_FONT::GameOverUpPlayersNum:
+        {
+        
+        }
+        break;
+
+        case TAG_FONT::GameOverLobby:
+        {
+        
+        }
+        break;
 
         default:
             {

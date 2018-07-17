@@ -89,9 +89,9 @@ enum class TAG_FONT
     GameOverString,
     GameOverRankingAndKillText,
     GameOverRankingAndKillNum,
-    GameOverPlayer,
+    GameOverPlayerText,
     GameOverUpRanking,
-    GameOverUpAll,
+    GameOverUpPlayersNum,
     GameOverLobby,
 };
 
