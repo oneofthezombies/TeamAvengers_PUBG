@@ -218,9 +218,9 @@ void Character::GameOverUI::Update()
         int killNum = pPlayer->GetKillNum();
         pKillNumText->SetText(to_string(killNum));
 
-        //등수 = 생존 수
+        //등수 = 생존 수 + 1
         ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
-        int rank = currentScene->GetSurvivors();
+        int rank = currentScene->GetSurvivors() + 1;
         pRankingNumText->SetText("#" + to_string(rank));
         pUpRankingNumText->SetText("#" + to_string(rank));
 
