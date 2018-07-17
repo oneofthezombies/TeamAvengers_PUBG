@@ -461,17 +461,22 @@ void Character::updateOther()
         &D3DXVECTOR2(pi.headAngle, 0.0f), 1.0f);
     m_headRotation.m_angle = headAngle.x;
 
+
+
+    // animation
     const auto upperAnim = static_cast<TAG_ANIM_CHARACTER>(pi.upperAnimState);
     const auto lowerAnim = static_cast<TAG_ANIM_CHARACTER>(pi.lowerAnimState);
     if (upperAnim != m_upperAnimState)
     {
         m_upperAnimState = upperAnim;
         setAnimation(CharacterAnimation::BodyPart::UPPER, upperAnim, true);
+        setEquipAnimation(CharacterAnimation::BodyPart::UPPER, upperAnim, true);
     }
 
     if (lowerAnim != m_lowerAnimState)
     {
         m_lowerAnimState = lowerAnim;
         setAnimation(CharacterAnimation::BodyPart::LOWER, lowerAnim, true);
+        setEquipAnimation(CharacterAnimation::BodyPart::LOWER, lowerAnim, true);
     }
 }

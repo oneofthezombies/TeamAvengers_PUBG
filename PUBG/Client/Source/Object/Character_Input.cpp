@@ -1536,7 +1536,17 @@ void Character::setEquipAnimation(
     }
 }
 
-void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float loopEventPeriod, const std::function<void()>& loopEvent, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+void Character::setEquipAnimation(
+    const CharacterAnimation::BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight, 
+    const float position, 
+    const float loopEventPeriod, 
+    const std::function<void()>& loopEvent, 
+    const float finishEventAgoTime, 
+    const std::function<void()>& finishEvent)
 {
     if (m_totalInventory.m_pEquipArmor)
     {
