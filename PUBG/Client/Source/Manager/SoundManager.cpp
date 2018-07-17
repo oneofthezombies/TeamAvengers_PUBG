@@ -91,7 +91,7 @@ void SoundManager::AddSound(const TAG_SOUND tag, const string& path, const FMOD_
 
     CheckError(m_pSystem->createSound(path.c_str(), mode/*| FMOD_LOOP_NORMAL*/, nullptr, &m_sounds[tag]));
     //explain : 30까지는 본래의 소리를 냄 30이후부터 줄어들고 10000까지 Fmod::system에 저장한 감쇠량만큼 감소됨
-    CheckError(m_sounds[tag]->set3DMinMaxDistance(30.0f, 10000.0f));
+    CheckError(m_sounds[tag]->set3DMinMaxDistance(300.0f, 10000.0f));
     // 총/폭발음 이외에는 디스턴스 조절 감소가 시작하는 시점을 아주 적은 시점부터 시작하여 소리를 작게만듬.
     if (static_cast<int>(tag) > 4)
     {
