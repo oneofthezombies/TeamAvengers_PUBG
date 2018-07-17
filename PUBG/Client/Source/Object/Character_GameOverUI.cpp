@@ -209,6 +209,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
 void Character::GameOverUI::Update()
 {
     //TODO: 키보드 입력 막기, 마우스 자유롭게
+    //TODO: 버그있음
     if (pPlayer->GetIsGameOver())
     {
         //남은 hp를 0으로 만든다
