@@ -56,6 +56,7 @@ Character::Character(const int index)
     , m_isTransitioning(false)
     , m_isDamaged(false)
     , m_isEatEquip(false)
+    , m_isGameOver(false)
 
     , pAnimation(nullptr)
 
@@ -263,19 +264,14 @@ void Character::updateMine()
     //Dead logic
     if (m_isDead)
     {
-        //GameOverUI 띄우기
-        //if (not exist)
-        //{
-        //    pointer = new ui;
-        //    pointer->init();
-        //}
-
-        //남은 hp를 0으로 만든다
-        //TODO: 한번만 실행되도록 하기
-        m_inGameUI.SetRedToZero();
-
+        if (m_isGameOver == false)
+        {
+            m_isGameOver = true;
+            m_gameOverUI.Update();
+        }
         return;
     }
+
     //m_health 가 0이 되면 죽는 애니메이션, server communication;
     checkDead();
 

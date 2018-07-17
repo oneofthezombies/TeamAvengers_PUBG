@@ -271,6 +271,15 @@ public:
     {
         Character* pPlayer;
 
+        UIImage* pBackgroundImg;
+
+        UIText* pChickenText;
+        UIText* pRankingNumText;  // ex) #63
+        UIText* pKillNumText;     // ex) 0
+        UIText* pUpRankingNumText;// ex) #63
+        UIText* pUpPlayersNumText;// ex) /97
+
+
         void Init(Character* pPlayer);
         void Update();
 
@@ -474,6 +483,7 @@ private:
     bool m_isTransitioning;  //전이 중일 때는 움직이지 않는다
     bool m_isDamaged;
     bool m_isEatEquip;       //장비템을 주웠을 때
+    bool m_isGameOver;
 
     WaitBackAction m_backAction;
 
@@ -716,6 +726,9 @@ public:
 
     bool GetIsEatEquip() const;
     void SetIsEatEquip(const bool isEatEquip);
+
+    bool GetIsGameOver() const;
+    void SetIsGameOver(const bool isGameOver);
 
     InGameUI& GetInGameUI();
     TotalInventory& GetTotalInventory();

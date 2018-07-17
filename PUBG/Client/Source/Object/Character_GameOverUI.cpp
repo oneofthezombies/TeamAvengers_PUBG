@@ -8,6 +8,14 @@
 Character::GameOverUI::GameOverUI()
     : IUIButtonOnMouseListener()
     , pPlayer(nullptr)
+
+    , pBackgroundImg(nullptr)
+
+    , pChickenText(nullptr)
+    , pRankingNumText(nullptr)
+    , pKillNumText(nullptr)
+    , pUpRankingNumText(nullptr)
+    , pUpPlayersNumText(nullptr)
 {
 }
 
@@ -44,7 +52,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
     UIObject* layer4 = scenePlay->GetLayer(4);
 
     // 검정 배경
-    auto pBackground = new UIImage(
+    pBackgroundImg = new UIImage(
         "./Resource/UI/GameOver/",
         "black_1280_720_70.png",
         Vector3::ZERO,
@@ -56,95 +64,95 @@ void Character::GameOverUI::Init(Character* pPlayer)
         D3DXVECTOR2(300.0f, 33.0f),
         Communication()()->m_myInfo.nickname,
         InGameUI::WHITE,
-        pBackground);
+        pBackgroundImg);
     nickName->SetDrawTextFormat(DT_LEFT);
     nickName->SetPosition(D3DXVECTOR3(62.0f, 39.0f, 0.0f));
 
-    auto str = new UIText(
+    pChickenText = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverString),
         D3DXVECTOR2(947.0f, 50.0f),
         "그럴 수 있어. 이런 날도 있는 거지 뭐.", //이겼닭! 오늘 저녁은 치킨이닭!
         D3DCOLOR_XRGB(237, 192, 27),
-        pBackground);
-    str->SetDrawTextFormat(DT_LEFT);
-    str->SetPosition(D3DXVECTOR3(62.0f, 97.0f, 0.0f));
+        pBackgroundImg);
+    pChickenText->SetDrawTextFormat(DT_LEFT);
+    pChickenText->SetPosition(D3DXVECTOR3(62.0f, 97.0f, 0.0f));
 
     auto rankingBg = new UIImage(
         "./Resource/UI/GameOver/", 
         "ranking_bg.png",
         D3DXVECTOR3(59.95f, 174.67f, 0.0f),
         nullptr,
-        pBackground);
+        pBackgroundImg);
 
     auto rankingText = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverRankingAndKillText),
         D3DXVECTOR2(51.0f, 30.0f),
         "랭킹",
         InGameUI::WHITE,
-        pBackground);
+        pBackgroundImg);
     rankingText->SetDrawTextFormat(DT_CENTER);
     rankingText->SetPosition(D3DXVECTOR3(61.95f, 174.69f, 0.0f));
 
-    auto rankingNum = new UIText(
+    pRankingNumText = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverRankingAndKillNum),
         D3DXVECTOR2(50.0f, 30.0f),
         "#63",
         InGameUI::WHITE,
-        pBackground);
-    rankingNum->SetDrawTextFormat(DT_LEFT);
-    rankingNum->SetPosition(D3DXVECTOR3(125.0f, 169.0f, 0.0f));
+        pBackgroundImg);
+    pRankingNumText->SetDrawTextFormat(DT_LEFT);
+    pRankingNumText->SetPosition(D3DXVECTOR3(125.0f, 169.0f, 0.0f));
 
     auto killBg = new UIImage(
         "./Resource/UI/GameOver/",
         "kill_bg.png",
         D3DXVECTOR3(206.04f, 174.67f, 0.0f),
         nullptr,
-        pBackground);
+        pBackgroundImg);
 
     auto killText = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverRankingAndKillText),
         D3DXVECTOR2(25.5f, 30.0f),
         "킬",
         InGameUI::WHITE,
-        pBackground);
+        pBackgroundImg);
     killText->SetDrawTextFormat(DT_CENTER);
     killText->SetPosition(D3DXVECTOR3(207.04f, 174.69f, 0.0f));
 
-    auto killNumText = new UIText(
+    pKillNumText = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverRankingAndKillNum),
         D3DXVECTOR2(27.0f, 30.0f),
         "0",
         InGameUI::WHITE,
-        pBackground);
-    killNumText->SetDrawTextFormat(DT_RIGHT);
-    killNumText->SetPosition(D3DXVECTOR3(233.6f, 169.0f, 0.0f));
+        pBackgroundImg);
+    pKillNumText->SetDrawTextFormat(DT_RIGHT);
+    pKillNumText->SetPosition(D3DXVECTOR3(233.6f, 169.0f, 0.0f));
 
     auto playerText = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverPlayerText),
         D3DXVECTOR2(65.0f, 18.0f),
         "플레이어",
         D3DCOLOR_ARGB(100, 160, 160, 160),
-        pBackground);
+        pBackgroundImg);
     playerText->SetDrawTextFormat(DT_CENTER);
     playerText->SetPosition(D3DXVECTOR3(265.5f, 185.0f, 0.0f));
 
-    auto upRanking = new UIText(
+    pUpRankingNumText = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverUpRanking),
         D3DXVECTOR2(90.0f, 58.0f),
         "#63",
         D3DCOLOR_XRGB(237, 192, 27),
-        pBackground);
-    upRanking->SetDrawTextFormat(DT_LEFT);
-    upRanking->SetPosition(D3DXVECTOR3(1074.97f, 22.0f, 0.0f));
+        pBackgroundImg);
+    pUpRankingNumText->SetDrawTextFormat(DT_LEFT);
+    pUpRankingNumText->SetPosition(D3DXVECTOR3(1074.97f, 22.0f, 0.0f));
 
-    auto upPlayersNum = new UIText(
+    pUpPlayersNumText = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverUpPlayersNum),
         D3DXVECTOR2(62.0f, 45.0f),
         "/97",
         D3DCOLOR_ARGB(100, 160, 160, 160),
-        pBackground);
-    upPlayersNum->SetDrawTextFormat(DT_LEFT);
-    upPlayersNum->SetPosition(D3DXVECTOR3(1167.0f, 36.0f, 0.0f));
+        pBackgroundImg);
+    pUpPlayersNumText->SetDrawTextFormat(DT_LEFT);
+    pUpPlayersNumText->SetPosition(D3DXVECTOR3(1167.0f, 36.0f, 0.0f));
 
 
     UIButton* button = new UIButton(
@@ -154,7 +162,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
         "lobby_btn_mouseover.png", 
         "lobby_btn_mouseover.png",
         this,
-        pBackground,
+        pBackgroundImg,
         Resource()()->GetFont(TAG_FONT::GameOverLobby), "로비로 나가기",
         D3DCOLOR_XRGB(0, 0, 0));
 
@@ -168,7 +176,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
         "watch_btn_mouseover.png",
         "watch_btn_mouseover.png",
         this,
-        pBackground,
+        pBackgroundImg,
         Resource()()->GetFont(TAG_FONT::GameOverLobby), "",
         D3DCOLOR_XRGB(0, 0, 0));
     //신고
@@ -179,7 +187,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
         "report_btn_mouseover.png",
         "report_btn_mouseover.png",
         this,
-        pBackground,
+        pBackgroundImg,
         Resource()()->GetFont(TAG_FONT::GameOverLobby), "",
         D3DCOLOR_XRGB(0, 0, 0));
     //데스 캠
@@ -190,11 +198,45 @@ void Character::GameOverUI::Init(Character* pPlayer)
         "deathcam_btn_mouseover.png",
         "deathcam_btn_mouseover.png",
         this,
-        pBackground,
+        pBackgroundImg,
         Resource()()->GetFont(TAG_FONT::GameOverLobby), "",
         D3DCOLOR_XRGB(0, 0, 0));
+
+    pBackgroundImg->SetIsRender(false);
+
 }
 
 void Character::GameOverUI::Update()
 {
+    if (pPlayer->GetIsGameOver())
+    {
+        //남은 hp를 0으로 만든다
+        pPlayer->GetInGameUI().SetRedToZero();
+        
+        //킬 수
+        int killNum = pPlayer->GetKillNum();
+        pKillNumText->SetText(to_string(killNum));
+
+        //등수 = 생존 수
+        ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+        int rank = currentScene->GetSurvivors();
+        pRankingNumText->SetText("#" + to_string(rank));
+        pUpRankingNumText->SetText("#" + to_string(rank));
+
+        //playersNum은 현재씬의 캐릭터 백터 사이즈 갖고오기
+        int playersNum = currentScene->GetCharacters().size();
+        pUpPlayersNumText->SetText("/" + to_string(playersNum));
+
+        if (rank == 1)
+        {
+            pChickenText->SetText("이겼닭! 오늘 저녁은 치킨이닭!");
+        }
+        else
+        {
+            pChickenText->SetText("그럴 수 있어. 이런 날도 있는 거지 뭐.");
+        }
+
+        //값이 다 바뀌였으면 보여준다!
+        pBackgroundImg->SetIsRender(true);
+    }
 }

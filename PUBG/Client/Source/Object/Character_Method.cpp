@@ -275,6 +275,14 @@ void Character::handleMouse(const float dt, MouseInput* mouseInput)
 
     mouseInput->yaw = diff.x * 0.2f * dt;
     mouseInput->pitch = diff.y * 0.2f * dt;
+
+
+    POINT center;
+    center.x = 1280 / 2;
+    center.y = 720 / 2;
+    ClientToScreen(g_hWnd, &center);
+    SetCursorPos(center.x, center.y);
+
 }
 
 void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizontal)
@@ -1394,6 +1402,16 @@ bool Character::GetIsEatEquip() const
 void Character::SetIsEatEquip(const bool isEatEquip)
 {
     m_isEatEquip = isEatEquip;
+}
+
+bool Character::GetIsGameOver() const
+{
+    return m_isGameOver;
+}
+
+void Character::SetIsGameOver(const bool isGameOver)
+{
+    m_isGameOver = isGameOver;
 }
 
 Character::InGameUI& Character::GetInGameUI()
