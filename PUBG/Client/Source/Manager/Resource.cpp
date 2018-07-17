@@ -1168,46 +1168,106 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
 
         case TAG_FONT::GameOverString:
         {
-        
-        
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                48, 24, FW_BOLD, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
         }
         break;
 
         case TAG_FONT::GameOverRankingAndKillText:
         {
-        
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                28, 14, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
         }
         break;
 
         case TAG_FONT::GameOverRankingAndKillNum:
         {
-        
-        
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                30, 10, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
         }
         break;
 
         case TAG_FONT::GameOverPlayerText:
         {
-        
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                18, 9, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
         }
         break;
 
         case TAG_FONT::GameOverUpRanking:
         {
-        
-        
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                60, 20, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
         }
         break;
 
         case TAG_FONT::GameOverUpPlayersNum:
         {
-        
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                48, 10, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
         }
         break;
 
         case TAG_FONT::GameOverLobby:
         {
-        
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                21, 10, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
         }
         break;
 
