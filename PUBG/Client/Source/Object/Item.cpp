@@ -165,6 +165,10 @@ void Item::setup(const TAG_RES_STATIC tag)
                     pathFileName.second, 
                     skinnedMeshIndex));
 
+            Resource()()->AddSkinnedMeshCount(
+                pathFileName.first, 
+                pathFileName.second);
+
             m_pFramePtr = new FramePtr;
             setFramePtr();
             addAnimationBackupFrameForEquip();
@@ -196,6 +200,10 @@ void Item::setup(const TAG_RES_STATIC tag)
                     pathFileName.first,
                     pathFileName.second,
                     skinnedMeshIndex));
+
+            Resource()()->AddSkinnedMeshCount(
+                pathFileName.first,
+                pathFileName.second);
 
             m_pFramePtr = new FramePtr;
             setFramePtr();
@@ -229,6 +237,10 @@ void Item::setup(const TAG_RES_STATIC tag)
                     pathFileName.first,
                     pathFileName.second,
                     skinnedMeshIndex));
+
+            Resource()()->AddSkinnedMeshCount(
+                pathFileName.first,
+                pathFileName.second);
 
             m_pFramePtr = new FramePtr;
             setFramePtr();
@@ -265,6 +277,10 @@ void Item::setup(const TAG_RES_STATIC tag)
                     pathFileName.first,
                     pathFileName.second,
                     skinnedMeshIndex));
+
+            Resource()()->AddSkinnedMeshCount(
+                pathFileName.first,
+                pathFileName.second);
 
             //총알이 나갈 위치
             if (m_tagResStatic == TAG_RES_STATIC::QBZ)
