@@ -362,8 +362,9 @@ void Communication::Manager::ReceiveMessage(
 
             std::stringstream ss(eventMoveItemStr);
             int pickerID;
+            ss >> pickerID;
             std::string itemName;
-            ss >> pickerID >> itemName;
+            std::getline(ss >> std::ws, itemName);
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(itemName);
@@ -392,8 +393,9 @@ void Communication::Manager::ReceiveMessage(
 
             std::stringstream ss(eventMoveItemStr);
             int pickerID;
+            ss >> pickerID;
             std::string itemName;
-            ss >> pickerID >> itemName;
+            std::getline(ss >> std::ws, itemName);
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(itemName);
@@ -416,8 +418,9 @@ void Communication::Manager::ReceiveMessage(
 
             std::stringstream ss(eventMoveItemStr);
             int pickerID;
+            ss >> pickerID;
             std::string itemName;
-            ss >> pickerID >> itemName;
+            std::getline(ss >> std::ws, itemName);
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(itemName);
@@ -440,8 +443,9 @@ void Communication::Manager::ReceiveMessage(
 
             std::stringstream ss(eventMoveItemStr);
             int pickerID;
+            ss >> pickerID;
             std::string itemName;
-            ss >> pickerID >> itemName;
+            std::getline(ss >> std::ws, itemName);
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(itemName);
@@ -464,8 +468,9 @@ void Communication::Manager::ReceiveMessage(
 
             std::stringstream ss(eventMoveItemStr);
             int pickerID;
+            ss >> pickerID;
             std::string itemName;
-            ss >> pickerID >> itemName;
+            std::getline(ss >> std::ws, itemName);
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(itemName);
