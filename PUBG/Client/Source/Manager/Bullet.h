@@ -1,7 +1,7 @@
 #pragma once
 #include "IObject.h"
 #include "Singleton.h"
-#include "Protocol.h"
+//#include "Protocol.h"
 
 class BoxCollider;
 

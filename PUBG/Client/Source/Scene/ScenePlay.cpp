@@ -12,13 +12,9 @@
 
 void ScenePlay::setAloneMode()
 {
-
-    BloodParticle* pBP = new BloodParticle();
-    pBP->Init();
-    AddObject(pBP);
-
-
-
+    //BloodParticle* pBP = new BloodParticle();
+    //pBP->Init();
+    //AddObject(pBP);
 
     Communication()()->m_myInfo.ID = 0;
     const int myID = Communication()()->m_myInfo.ID;

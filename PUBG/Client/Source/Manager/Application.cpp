@@ -45,7 +45,6 @@ void Application::Update()
     DebugMgr     ()()->Clear();
     Time         ()()->Update();
     Communication()()->Print();
-    //BulletPool   ()()->PrintNumBullet();
     Input        ()()->Update();
     Scene        ()()->Update();
     Sound        ()()->Update();
@@ -63,14 +62,15 @@ void Application::Render()
         1.0f,
         0);
 
-    Device    ()()->BeginScene();
-    Shader    ()()->CreateShadowMap();
-    Scene     ()()->Render();
-    BulletPool()()->Render();
-    UI        ()()->Render();
-    DebugMgr  ()()->Render();
-    Device    ()()->EndScene();
-    Device    ()()->Present(nullptr, nullptr, nullptr, nullptr);
+    Device            ()()->BeginScene();
+    Shader            ()()->CreateShadowMap();
+    Scene             ()()->Render();
+    BulletPool        ()()->Render();
+    ParticlePool      ()()->Render();
+    UI                ()()->Render();
+    DebugMgr          ()()->Render();
+    Device            ()()->EndScene();
+    Device            ()()->Present(nullptr, nullptr, nullptr, nullptr);
 }
 
 void Application::WndProc(HWND hWnd, UINT message, WPARAM wParam,

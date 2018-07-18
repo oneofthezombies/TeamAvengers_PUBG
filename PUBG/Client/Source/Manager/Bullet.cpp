@@ -173,10 +173,13 @@ void Bullet::OnUpdate()
          //Communication()()-> 네트워크로 이 포지션을 줘서 모든 사람이 이곳에 맞았다는 것이 표시 되는 것을 보이도록 하자
          
 
-         
-         if (targetInfo.tag_chrPart != TAG_COLLIDER_CHARACTER_PART::COUNT) //케릭터에 맞은 것이라면
+         //케릭터에 맞은 것이라면
+         if (targetInfo.tag_chrPart != TAG_COLLIDER_CHARACTER_PART::COUNT) 
          {
-             //사람에게 맞는다면 피가 나도록
+             //사람에게 맞는다면 피가 나도록 blood Particel
+             ParticlePool()()->Hit_Blood(targetInfo.pos);
+
+             //데미지
              const float damage
                  = ItemInfo::GetBaseDamage(targetInfo.tag_Weapon)//Base Weapon Damage
                  * ItemInfo::GetDropOffByDistance(shortestLength, targetInfo.tag_Weapon)//Damage drop-off by Distance
@@ -203,10 +206,12 @@ void Bullet::OnUpdate()
              }
              Communication()()->SendEventMinusDamage(targetInfo.chr->GetIndex(), damage);
          }
+         //terrain features 에 맞은 것이라면 
          else
          {
-             //terrain features 에 맞은 것이라면 
+             
              //탄흔         //벽에 맞는다면 벽에 탄흔이 남도록
+             //ParticlePool()()->Hit_BulletHole(targetInfo.pos);
          }
 
          m_IsActive = false;
@@ -338,8 +343,6 @@ void _BulletPool::PrintNumBullet()
 
 void _BulletPool::Render()
 {
-//    if (!Collision()()->IsRender()) return;
-
     //hit 된 position에 구체 그리기
     D3DXMATRIX m;
     D3DXMatrixTransformation(

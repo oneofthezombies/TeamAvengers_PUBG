@@ -101,11 +101,11 @@ void SceneLoading::Load()
     LoadParticleTexture("T_Blood_05", 16, D3DCOLOR_XRGB(27, 0, 0));
     LoadParticleTexture("T_Blood_06", 16, D3DCOLOR_XRGB(27, 0, 0));
 
-    LoadParticleTexture("blood_hit_08", 16, D3DCOLOR_XRGB(0, 0, 0));    //From internet
-    LoadParticleTexture("blood_hit_07", 16, D3DCOLOR_XRGB(0, 0, 0));
-    LoadParticleTexture("blood_hit_06", 16, D3DCOLOR_XRGB(0, 0, 0));
-    LoadParticleTexture("blood_hit_05", 16, D3DCOLOR_XRGB(0, 0, 0));
-    LoadParticleTexture("blood_hit_04", 16, D3DCOLOR_XRGB(0, 0, 0));
+    //LoadParticleTexture("blood_hit_08", 16, D3DCOLOR_XRGB(0, 0, 0));    //From internet
+    //LoadParticleTexture("blood_hit_07", 16, D3DCOLOR_XRGB(0, 0, 0));
+    //LoadParticleTexture("blood_hit_06", 16, D3DCOLOR_XRGB(0, 0, 0));
+    //LoadParticleTexture("blood_hit_05", 16, D3DCOLOR_XRGB(0, 0, 0));
+    //LoadParticleTexture("blood_hit_04", 16, D3DCOLOR_XRGB(0, 0, 0));
 
 
     // load effect meshs
