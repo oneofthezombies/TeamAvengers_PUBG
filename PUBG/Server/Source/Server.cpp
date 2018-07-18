@@ -317,7 +317,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_HEAD, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_ARMOR:
