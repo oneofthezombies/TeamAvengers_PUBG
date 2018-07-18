@@ -63,6 +63,7 @@
     <ClCompile Include="Source\Useful\Area.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />
     <ClCompile Include="Source\Useful\Light.cpp" />
+    <ClCompile Include="BloodParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod64.dll" />
@@ -125,5 +126,6 @@
     <ClInclude Include="Source\Useful\Ray.h" />
     <ClInclude Include="Source\Useful\Area.h" />
     <ClInclude Include="Source\UI\UITest.h" />
+    <ClInclude Include="BloodParticle.h" />
   </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@ enum class TAG_OBJECT
     Door,
     Window,
     Item,
+    Particle,
 };
 
 enum class TAG_COLLISION
