@@ -598,10 +598,7 @@ void Character::itemSphereCollisionInteraction()
         if (!Collision::HasCollision(m_boundingSphere, itm->GetBoundingSphere())) continue;
         //캐릭터와 Item의 spehre 가 충돌이 났다
 
-        di.emplace_back(itm);
-
         // UI로 F key가 나오게 하기 
-
 
         //Ray를 쏘아서 맞는 물건 먼저 먹기
         for (auto& rayItm : di)
@@ -645,7 +642,6 @@ void Character::itemSphereCollisionInteraction()
             }
         }
 
-
         if (m_currentOnceKey._F)
         {
             PutItemInTotalInventory(itm); //inventory에 넣기
@@ -671,6 +667,15 @@ void Character::itemSphereCollisionInteraction()
             }
             return;
         }
+
+        di.emplace_back(itm);
+    }
+
+    auto deathDropboxes(pCurrentScene->m_NearArea.GetDeathDropBoxes());
+    for (auto box : deathDropboxes)
+    {
+        const auto& items = box->GetItems();
+        di.insert(di.end(), items.begin(), items.end());
     }
 
     //캐릭터 spehre안에 아이템이 없으면 모션을 캔슬했다 (앞으로 문열기 등 interaction에서 문제가 많은 코드) (이후에 바뀔것이다)

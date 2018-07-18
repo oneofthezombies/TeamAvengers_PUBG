@@ -7,6 +7,7 @@
 #include "UIImage.h"
 #include "UIText.h"
 #include "ResourceInfo.h"
+#include "DeathDropBox.h"
 
 using BodyPart = CharacterAnimation::BodyPart;
 
@@ -45,6 +46,7 @@ Item::Item(
     , pGunBolt(nullptr)
 
     , m_pFramePtr(nullptr)
+    , pDeathDropBox(nullptr)
 
 {
     Transform* pTr = GetTransform();
@@ -563,6 +565,16 @@ void Item::UpdateBone(Item* pHand, const float headRot, const float waistRot)
 SkinnedMesh* Item::GetSkinnedMesh() const
 {
     return pSkinnedMeshController->GetSkinnedMesh();
+}
+
+bool Item::IsInDeathDropBox() const
+{
+    return pDeathDropBox ? true : false;
+}
+
+void Item::DeleteItemInDeathDropBox()
+{
+    pDeathDropBox->DeleteThisItem(this);
 }
 
 //for 아이템 자체 애니메이션

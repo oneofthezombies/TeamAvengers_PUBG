@@ -18,4 +18,6 @@ public:
 
     void SetPosition(const D3DXVECTOR3& position);
     void SetItems(Character* pCharacter);
+    void DeleteThisItem(Item* pItem);
+    const std::vector<Item*>& GetItems() const;
 };

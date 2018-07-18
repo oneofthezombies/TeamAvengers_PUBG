@@ -90,3 +90,26 @@ void DeathDropBox::SetItems(Character* pCharacter)
         items.clear();
     }
 }
+
+void DeathDropBox::DeleteThisItem(Item* pItem)
+{
+    assert(pItem && "DeathDropBox::DeleteThisItem()");
+
+    for (auto it = m_items.begin(); it != m_items.end();)
+    {
+        if (*it == pItem)
+        {
+            it = m_items.erase(it);
+            return;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
+const std::vector<Item*>& DeathDropBox::GetItems() const
+{
+    return m_items;
+}

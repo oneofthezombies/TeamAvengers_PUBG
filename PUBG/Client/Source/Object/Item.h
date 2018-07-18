@@ -5,6 +5,7 @@ class EffectMeshRenderer;
 class SkinnedMeshController;
 class UIImage;
 struct FramePtr;
+class DeathDropBox;
 
 class Item : public IObject
 {
@@ -44,6 +45,9 @@ private:
     Frame* pGunBolt;
 
     FramePtr* m_pFramePtr;
+
+    // for deathDropBox
+    DeathDropBox* pDeathDropBox;
     
 private:
     void setup(const TAG_RES_STATIC tag);
@@ -106,6 +110,10 @@ public:
     void UpdateBone(Item* pHand, const float headRot, const float waistRot);
 
     SkinnedMesh* GetSkinnedMesh() const;
+
+    // for deathDropBox
+    bool IsInDeathDropBox() const;
+    void DeleteItemInDeathDropBox();
 
     //for 아이템 자체 애니메이션
     void Set(
