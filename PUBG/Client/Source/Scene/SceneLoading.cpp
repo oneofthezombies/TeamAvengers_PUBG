@@ -31,7 +31,6 @@ void SceneLoading::Load()
     load("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
     load("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
     load("./Resource/UI/Inventory/Basic/", "line.png");
-    load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png");
 
     load("./Resource/UI/Inventory/Basic/", "Equip_no.png");
     load("./Resource/UI/Inventory/Basic/", "Equip_mouseover.png");
