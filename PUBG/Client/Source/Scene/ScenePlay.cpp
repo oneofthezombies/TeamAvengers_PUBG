@@ -199,11 +199,6 @@ void ScenePlay::setWithOthersMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(pPlayer->GetTransform()->GetPosition());
-    const string name = "Head_Lv1 " + std::to_string(myID);
-    item = new Item(TAG_RES_STATIC::Head_Lv1, name, p, r, s);
-    AddObject(item);
-    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
     //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(20, 0, 10);
@@ -235,11 +230,6 @@ void ScenePlay::setWithOthersMode()
         //AddObject(item);
         //pOther->PutItemInTotalInventory(item);
 
-        p = D3DXVECTOR3(pOther->GetTransform()->GetPosition());
-        const string name = "Head_Lv1 " + std::to_string(i);
-        item = new Item(TAG_RES_STATIC::Head_Lv1, name, p, r, s);
-        AddObject(item);
-        InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
         //pOther->PutItemInTotalInventory(item);
 
         //p = D3DXVECTOR3(20, 0, 10);
@@ -252,6 +242,12 @@ void ScenePlay::setWithOthersMode()
         //AddObject(item);
         //pOther->PutItemInTotalInventory(item);
     }
+
+    p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
+    const string name = "Head_Lv1 " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Head_Lv1, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
     //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
     //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);

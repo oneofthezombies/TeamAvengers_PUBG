@@ -827,7 +827,7 @@ bool Character::PutItemInTotalInventory(Item* item)
                 Communication()()->SendEventMoveItemHeadToField(m_index, originItemName);
 
             // OOTZ_FLAG : 네트워크 필드 -> 헤드
-            Communication()()->SendEventMoveItemFieldToHead(m_index, originItemName);
+            Communication()()->SendEventMoveItemFieldToHead(m_index, item->GetName());
 
             m_isEatEquip = true;
         }
