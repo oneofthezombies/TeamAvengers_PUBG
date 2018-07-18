@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DeathDropBox.h"
 #include "EffectMeshRenderer.h"
+#include "Item.h"
 
 DeathDropBox::DeathDropBox()
     : IObject(TAG_OBJECT::DeathDropBox)
@@ -49,36 +50,42 @@ void DeathDropBox::SetItems(Character* pCharacter)
 
     if (inven.m_pHand)
     {
+        inven.m_pHand->SetDeathDropBox(this);
         m_items.emplace_back(inven.m_pHand);
         inven.m_pHand = nullptr;
     }
 
     if (inven.m_pWeaponPrimary)
     {
+        inven.m_pWeaponPrimary->SetDeathDropBox(this);
         m_items.emplace_back(inven.m_pWeaponPrimary);
         inven.m_pWeaponPrimary = nullptr;
     }
 
     if (inven.m_pWeaponSecondary)
     {
+        inven.m_pWeaponSecondary->SetDeathDropBox(this);
         m_items.emplace_back(inven.m_pWeaponSecondary);
         inven.m_pWeaponSecondary = nullptr;
     }
 
     if (inven.m_pEquipHead)
     {
+        inven.m_pEquipHead->SetDeathDropBox(this);
         m_items.emplace_back(inven.m_pEquipHead);
         inven.m_pEquipHead = nullptr;
     }
 
     if (inven.m_pEquipArmor)
     {
+        inven.m_pEquipArmor->SetDeathDropBox(this);
         m_items.emplace_back(inven.m_pEquipArmor);
         inven.m_pEquipArmor = nullptr;
     }
 
     if (inven.m_pEquipBack)
     {
+        inven.m_pEquipBack->SetDeathDropBox(this);
         m_items.emplace_back(inven.m_pEquipBack);
         inven.m_pEquipBack = nullptr;
     }
@@ -86,8 +93,11 @@ void DeathDropBox::SetItems(Character* pCharacter)
     for (auto& kv : inven.m_mapInventory)
     {
         std::vector<Item*>& items = kv.second;
-        m_items.insert(m_items.end(), items.begin(), items.end());
-
+        for (Item* p : items)
+        {
+            p->SetDeathDropBox(this);
+            m_items.emplace_back(p);
+        }
         items.clear();
     }
 }

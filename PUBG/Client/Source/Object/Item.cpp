@@ -575,6 +575,12 @@ bool Item::IsInDeathDropBox() const
 void Item::DeleteItemInDeathDropBox()
 {
     pDeathDropBox->DeleteThisItem(this);
+    this->pDeathDropBox = nullptr;
+}
+
+void Item::SetDeathDropBox(DeathDropBox* pDeathDropBox)
+{
+    this->pDeathDropBox = pDeathDropBox;
 }
 
 //for 아이템 자체 애니메이션
