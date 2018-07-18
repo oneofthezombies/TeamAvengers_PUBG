@@ -691,9 +691,8 @@ void Communication::Manager::ReceiveMessage(
             std::vector<std::pair<std::string, int>> consumes;
             std::string buf;
             int count;
-            while (!ss.eof())
+            while (!std::getline(ss >> std::ws, buf))
             {
-                std::getline(ss >> std::ws, buf);
                 std::string name = buf;
 
                 std::getline(ss >> std::ws, buf);
