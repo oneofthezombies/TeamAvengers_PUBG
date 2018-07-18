@@ -399,14 +399,20 @@ void Communication::Manager::ReceiveMessage(
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(itemName);
-            pScenePlay->ItemIntoInventory(
-                pScenePlay->GetCellIndex(
-                    pItem->GetTransform()->GetPosition()),
-                pItem);
+
+            const std::size_t cellIndex = pScenePlay->GetCellIndex(
+                pItem->GetTransform()->GetPosition());
+            pScenePlay->ItemIntoInventory(cellIndex, pItem);
             pScenePlay->RemoveObject(pItem);
 
-            //Character* pPicker = pScenePlay->GetCharacters()[pickerID];
-            //pPicker->MoveItemFieldToArmor(pItem);
+            const std::vector<Character*> characters = pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToArmor(pItem);
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_BACK:
@@ -424,14 +430,20 @@ void Communication::Manager::ReceiveMessage(
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(itemName);
-            pScenePlay->ItemIntoInventory(
-                pScenePlay->GetCellIndex(
-                    pItem->GetTransform()->GetPosition()),
-                pItem);
+
+            const std::size_t cellIndex = pScenePlay->GetCellIndex(
+                pItem->GetTransform()->GetPosition());
+            pScenePlay->ItemIntoInventory(cellIndex, pItem);
             pScenePlay->RemoveObject(pItem);
 
-            //Character* pPicker = pScenePlay->GetCharacters()[pickerID];
-            //pPicker->MoveItemFieldToHead(pItem);
+            const std::vector<Character*> characters = pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToBack(pItem);
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_PRIMARY:

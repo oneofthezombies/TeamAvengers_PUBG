@@ -1439,10 +1439,22 @@ void Character::MoveItemFieldToHead(Item* pItem)
 
 void Character::MoveItemFieldToArmor(Item* pItem)
 {
+    TotalInventory& inven = m_totalInventory;
+
+    inven.m_pEquipArmor = pItem;
+    pItem->SetState(true);
+    pItem->SetIsRenderEffectMesh(false);
+    pItem->SetIsRenderSkinnedMesh(true);
 }
 
 void Character::MoveItemFieldToBack(Item* pItem)
 {
+    TotalInventory& inven = m_totalInventory;
+
+    inven.m_pEquipBack = pItem;
+    pItem->SetState(true);
+    pItem->SetIsRenderEffectMesh(false);
+    pItem->SetIsRenderSkinnedMesh(true);
 }
 
 void Character::MoveItemFieldToPrimary(Item* pItem)
