@@ -175,8 +175,15 @@ void Item::setup(const TAG_RES_STATIC tag)
 
             Set(BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-            //const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
-            //m_pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
+            const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
+            m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
+            m_pUIImage->SetIsRender(false);
+            pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
+                D3DXVECTOR2(100.0f, 20.0f),
+                "",
+                D3DCOLOR_XRGB(255, 255, 255),
+                m_pUIImage);
+            pUIText->SetPosition(D3DXVECTOR3(50.0f, 10.0f, 0.0f));
         }
         break;
     case TAG_ITEM_CATEGORY::Back:
@@ -211,8 +218,15 @@ void Item::setup(const TAG_RES_STATIC tag)
 
             Set(BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-            //const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
-            //m_pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
+            const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
+            m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
+            m_pUIImage->SetIsRender(false);
+            pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
+                D3DXVECTOR2(100.0f, 20.0f),
+                "",
+                D3DCOLOR_XRGB(255, 255, 255),
+                m_pUIImage);
+            pUIText->SetPosition(D3DXVECTOR3(50.0f, 10.0f, 0.0f));
         }
         break;
 
@@ -248,8 +262,15 @@ void Item::setup(const TAG_RES_STATIC tag)
 
             Set(BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-            //const auto UIpathName = ResourceInfo::GetUIPathFileName(tag);
-            //m_pUIImage = new UIImage(UIpathName.first, UIpathName.second, Vector3::ZERO, this, nullptr);
+            const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
+            m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
+            m_pUIImage->SetIsRender(false);
+            pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
+                D3DXVECTOR2(100.0f, 20.0f),
+                "",
+                D3DCOLOR_XRGB(255, 255, 255),
+                m_pUIImage);
+            pUIText->SetPosition(D3DXVECTOR3(50.0f, 10.0f, 0.0f));
         }
         break;
     

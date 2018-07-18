@@ -244,19 +244,19 @@ void ScenePlay::setWithOthersMode()
     }
 
     p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
-    const string name = "Head_Lv1 " + std::to_string(0);
+    string name = "Head_Lv1 " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::Head_Lv1, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
     p = D3DXVECTOR3(300.0f, 200.0f, 200.0f);
-    const string name = "Armor_Lv1 " + std::to_string(0);
+    name = "Armor_Lv1 " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::Armor_Lv1, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
     p = D3DXVECTOR3(400.0f, 200.0f, 200.0f);
-    const string name = "Back_Lv1 " + std::to_string(0);
+    name = "Back_Lv1 " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::Back_Lv1, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
