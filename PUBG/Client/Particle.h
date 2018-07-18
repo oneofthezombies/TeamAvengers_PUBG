@@ -34,7 +34,6 @@ class BloodParticle :
 
 private:
     std::vector<Blood_Hit>                      m_blood_hit;
-    D3DXVECTOR3                                 m_position;
     bool                                        m_IsActive;
 
 public:
@@ -46,10 +45,7 @@ public:
     virtual void OnUpdate() override;
     virtual void OnRender() override;
 
-    void Set(const D3DXVECTOR3& pos)
-    {
-
-    }
+    void Set(const D3DXVECTOR3& pos);
 
     bool IsActive() const
     {
@@ -75,13 +71,8 @@ private:
     deque<BloodParticle*> m_BloodParticle;
     //deque<BulletHoleParticle*> m_BulletHoleParticle;
 
-    _ParticlePool()
-        : Singleton<_ParticlePool>()
-    {
-    }
-    ~_ParticlePool()
-    {
-    }
+    _ParticlePool();
+    ~_ParticlePool();
 
 public:
     void Render();

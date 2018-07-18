@@ -5,7 +5,9 @@
 
 BloodParticle::BloodParticle()
     :IObject(TAG_OBJECT::Particle)
+    , m_IsActive(false)
 {
+    Init();
 }
 
 
@@ -16,34 +18,32 @@ BloodParticle::~BloodParticle()
             SAFE_RELEASE(p);
 }
 
-
-
 void BloodParticle::Init()
 {
     string filePath = "./Resource/particle/";
 
-    int num = 0;
+    size_t num = 0;
     Transform* tm = GetTransform();
     tm->SetPosition(Vector3::ZERO);
     tm->Update();
 
-    //m_blood_hit.emplace_back(Blood_Hit(8));
-    //SetParticle(filePath + "T_Blood_01", &m_blood_hit[num++]);
+    m_blood_hit.emplace_back(Blood_Hit(8));
+    SetParticle(filePath + "T_Blood_01", &m_blood_hit[num++]);
 
-    //m_blood_hit.emplace_back(Blood_Hit(32));
-    //SetParticle(filePath + "T_Blood_02", &m_blood_hit[num++]);
-    //
-    //m_blood_hit.emplace_back(Blood_Hit(8));
-    //SetParticle(filePath + "T_Blood_03", &m_blood_hit[num++]);
+    m_blood_hit.emplace_back(Blood_Hit(32));
+    SetParticle(filePath + "T_Blood_02", &m_blood_hit[num++]);
+    
+    m_blood_hit.emplace_back(Blood_Hit(8));
+    SetParticle(filePath + "T_Blood_03", &m_blood_hit[num++]);
+
+    m_blood_hit.emplace_back(Blood_Hit(16));
+    SetParticle(filePath + "T_Blood_04", &m_blood_hit[num++]);
 
     //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetParticle(filePath + "T_Blood_04", &m_blood_hit[num++]);
+    //SetParticle(filePath + "T_Blood_05", &m_blood_hit[num++]);
 
-    m_blood_hit.emplace_back(Blood_Hit(16));
-    SetParticle(filePath + "T_Blood_05", &m_blood_hit[num++]);
-
-    m_blood_hit.emplace_back(Blood_Hit(16));
-    SetParticle(filePath + "T_Blood_06", &m_blood_hit[num++]);
+    //m_blood_hit.emplace_back(Blood_Hit(16));
+    //SetParticle(filePath + "T_Blood_06", &m_blood_hit[num++]);
 
     //m_blood_hit.emplace_back(Blood_Hit(16));
     //SetParticle(filePath + "blood_hit_08", &m_blood_hit[num++]);
@@ -70,15 +70,8 @@ void BloodParticle::OnUpdate()
 
 void BloodParticle::OnRender()
 {
-
-
-    if (GetAsyncKeyState(VK_END) & 0x0001)
-    {
-        for (auto& p : m_blood_hit)
-        {
-            p.m_currentIndex = 0;
-        }
-    }
+    if (!m_IsActive)
+        return;
 
     {
         g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);// 버퍼를 그릴때 z 값을 넣지 않는다//texture의 외각 부분을 잘라낼 수 있다.
@@ -93,16 +86,26 @@ void BloodParticle::OnRender()
         //g_pDevice->SetRenderState(D3DRS_POINTSCALE_C, FtoDw(0.0f));
 
         g_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+        g_pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
         g_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-        //g_pDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
-        g_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+        g_pDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_ONE);
+        //g_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
     }
 
+
+    
+    int donePlayNum = 0;
     for (auto& p : m_blood_hit)
     {
 
         if (p.m_currentIndex < p.m_maxIndex)
             renderBloodHit(p);
+        else
+            donePlayNum++;
+
+        //여기에 m_IsActive 로직 false 로 하는 로직
+        if (m_blood_hit.size() == donePlayNum)
+            m_IsActive = false;
     }
 
 
@@ -115,6 +118,22 @@ void BloodParticle::OnRender()
         g_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, true);
     }
 
+}
+
+void BloodParticle::Set(const D3DXVECTOR3 & pos)
+{
+    Transform* tm = GetTransform();
+    tm->SetPosition(pos);
+    tm->Update();
+
+    m_IsActive = true;
+
+    for (auto& p : m_blood_hit)
+    {
+        p.m_currentIndex = 0;
+    }
+
+    CurrentScene()()->AddObject(this);
 }
 
 void BloodParticle::SetParticle(string filePath, Blood_Hit * blood_hit)
@@ -151,7 +170,7 @@ void BloodParticle::SetParticle(string filePath, Blood_Hit * blood_hit)
 
         VERTEX_PC* v;
         blood_hit->m_pVB[i]->Lock(0, 0, (LPVOID*)&v, D3DLOCK_DISCARD/*기존에 있었던 값들은 신경쓰지 않는다는 뜻*/);
-        v->p = m_position;
+        v->p = GetTransform()->GetPosition();
         v->c = D3DXCOLOR(1, 1, 1, 1);
         blood_hit->m_pVB[i]->Unlock();
     }
@@ -169,6 +188,15 @@ void BloodParticle::renderBloodHit(Blood_Hit & blood_hit)
     blood_hit.m_currentIndex++;
 }
 
+_ParticlePool::_ParticlePool()
+    : Singleton<_ParticlePool>()
+{
+}
+
+_ParticlePool::~_ParticlePool()
+{
+}
+
 void _ParticlePool::Render()
 {
 
@@ -177,7 +205,6 @@ void _ParticlePool::Render()
 BloodParticle * _ParticlePool::Hit_Blood(
     const D3DXVECTOR3 & hitPos)
 {
-
     for (auto& b : m_BloodParticle)
     {
         if (!b->IsActive())

@@ -118,24 +118,7 @@ private:
     void addEquipmentAnimationsForAsync();
 
     void LoadParticleTexture(const string fileName,
-        const int maxIndex, const D3DCOLOR colorKey)
-    {
-        string filePath = "./Resource/particle/";
-        
-        filePath = filePath + fileName + "/";
-
-
-        for (int i = 0; i <maxIndex; i++)
-        {
-            string  str = "tile0";
-            if (i < 10)
-                str += "0" + to_string(i);
-            else
-                str += to_string(i);
-            str += ".png";
-            load(filePath, str, colorKey);
-        }
-    }
+        const int maxIndex, const D3DCOLOR colorKey);
 
 public:
              SceneLoading();

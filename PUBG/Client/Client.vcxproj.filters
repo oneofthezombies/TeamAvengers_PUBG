@@ -63,7 +63,6 @@
     <ClCompile Include="Source\Useful\Area.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />
     <ClCompile Include="Source\Useful\Light.cpp" />
-    <ClCompile Include="BloodParticle.cpp" />
     <ClCompile Include="Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -127,7 +126,6 @@
     <ClInclude Include="Source\Useful\Ray.h" />
     <ClInclude Include="Source\Useful\Area.h" />
     <ClInclude Include="Source\UI\UITest.h" />
-    <ClInclude Include="BloodParticle.h" />
     <ClInclude Include="Particle.h" />
   </ItemGroup>
 </Project>

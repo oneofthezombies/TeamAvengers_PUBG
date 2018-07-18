@@ -8,7 +8,7 @@
 #include "HeightMap.h"
 #include "ComponentTransform.h"
 #include "UITest.h"
-#include "BloodParticle.h"
+
 
 void ScenePlay::setAloneMode()
 {

@@ -135,7 +135,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BloodParticle.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />
     <ClCompile Include="Source\Useful\Area.cpp" />
@@ -206,7 +205,6 @@
     <None Include="fmod64.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BloodParticle.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Source\UI\UITest.h" />
     <ClInclude Include="Source\Useful\Area.h" />
