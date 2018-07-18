@@ -93,6 +93,21 @@ void SceneLoading::Load()
     //for compass UI test
     load("./Resource/UI/InGame/", "compass_bg_transparent.png");
 
+    //for particles textures
+    LoadParticleTexture("T_Blood_01",  8, D3DCOLOR_XRGB(0, 0, 0));     //From PUBG
+    LoadParticleTexture("T_Blood_02", 32, D3DCOLOR_XRGB(0, 0, 0));
+    LoadParticleTexture("T_Blood_03",  8, D3DCOLOR_XRGB(27,0, 0));
+    LoadParticleTexture("T_Blood_04", 16, D3DCOLOR_XRGB(27, 0, 0));
+    LoadParticleTexture("T_Blood_05", 16, D3DCOLOR_XRGB(27, 0, 0));
+    LoadParticleTexture("T_Blood_06", 16, D3DCOLOR_XRGB(27, 0, 0));
+
+    LoadParticleTexture("blood_hit_08", 16, D3DCOLOR_XRGB(0, 0, 0));    //From internet
+    LoadParticleTexture("blood_hit_07", 16, D3DCOLOR_XRGB(0, 0, 0));
+    LoadParticleTexture("blood_hit_06", 16, D3DCOLOR_XRGB(0, 0, 0));
+    LoadParticleTexture("blood_hit_05", 16, D3DCOLOR_XRGB(0, 0, 0));
+    LoadParticleTexture("blood_hit_04", 16, D3DCOLOR_XRGB(0, 0, 0));
+
+
     // load effect meshs
     load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);

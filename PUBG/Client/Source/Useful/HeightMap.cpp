@@ -15,41 +15,41 @@ HeightMap::HeightMap()
 
 
     D3DXMATRIXA16 matS, matT;
-    D3DXMatrixScaling(&matS, 30.0f, 10.0f, 30.0f);
+    D3DXMatrixScaling(&matS, 30.0f, 1.0f, 30.0f);
     D3DXMatrixTranslation(&matT, 0.0f, 0.0f, 0.0f);
 
     m_matWorld = matS * matT;
 
 
-    ////--original--
-    //SetDimension(257);
-    //Load(_T("./Resource/Heightmap/Heightmap.raw"), &m_matWorld);
-
-    //SetSurface();
-
-    //Resource()()->GetEffect(
-    //    "./Resource/Heightmap/", 
-    //    "Heightmap.fx")->
-    //    SetTexture(
-    //        "Heightmap_Diffuse_Tex", 
-    //        Resource()()->GetTexture(
-    //            "./Resource/Heightmap/", 
-    //            "Heightmap.jpg"));
-
-    //--Testing--
-    SetDimension(256);
-    Load(_T("./Resource/Heightmap/testing/Heightmap.raw"), &m_matWorld);
+    //--original--
+    SetDimension(257);
+    Load(_T("./Resource/Heightmap/Heightmap.raw"), &m_matWorld);
 
     SetSurface();
 
     Resource()()->GetEffect(
-        "./Resource/Heightmap/",
+        "./Resource/Heightmap/", 
         "Heightmap.fx")->
         SetTexture(
-            "Heightmap_Diffuse_Tex",
+            "Heightmap_Diffuse_Tex", 
             Resource()()->GetTexture(
-                "./Resource/Heightmap/testing/",
-                "Plain_BaseColor.tga"));
+                "./Resource/Heightmap/", 
+                "Heightmap.jpg"));
+
+    ////--Testing--
+    //SetDimension(256);
+    //Load(_T("./Resource/Heightmap/testing/Heightmap.raw"), &m_matWorld);
+
+    //SetSurface();
+
+    //Resource()()->GetEffect(
+    //    "./Resource/Heightmap/",
+    //    "Heightmap.fx")->
+    //    SetTexture(
+    //        "Heightmap_Diffuse_Tex",
+    //        Resource()()->GetTexture(
+    //            "./Resource/Heightmap/testing/",
+    //            "Plain_BaseColor.tga"));
 
     //ray box
     SetRayBox();

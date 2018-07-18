@@ -20,54 +20,46 @@ BloodParticle::~BloodParticle()
 
 void BloodParticle::Init()
 {
-    string filePath = "resources/particle/";
+    string filePath = "./Resource/particle/";
 
     int num = 0;
+    Transform* tm = GetTransform();
+    tm->SetPosition(Vector3::ZERO);
+    tm->Update();
 
     //m_blood_hit.emplace_back(Blood_Hit(8));
-    //SetTexture(filePath + "T_Blood", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.0f, -7.0f);
+    //SetParticle(filePath + "T_Blood_01", &m_blood_hit[num++]);
 
-    //m_blood_hit.emplace_back(Blood_Hit(31));
-    //SetTexture(filePath + "T_Blood_02", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.0f, -7.0f);
-
+    //m_blood_hit.emplace_back(Blood_Hit(32));
+    //SetParticle(filePath + "T_Blood_02", &m_blood_hit[num++]);
+    //
     //m_blood_hit.emplace_back(Blood_Hit(8));
-    //SetTexture(filePath + "T_Blood_03", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.0f, -7.0f);
+    //SetParticle(filePath + "T_Blood_03", &m_blood_hit[num++]);
 
     //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetTexture(filePath + "T_Blood_04", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.0f, -7.0f);
+    //SetParticle(filePath + "T_Blood_04", &m_blood_hit[num++]);
+
+    m_blood_hit.emplace_back(Blood_Hit(16));
+    SetParticle(filePath + "T_Blood_05", &m_blood_hit[num++]);
+
+    m_blood_hit.emplace_back(Blood_Hit(16));
+    SetParticle(filePath + "T_Blood_06", &m_blood_hit[num++]);
 
     //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetTexture(filePath + "T_Blood_05", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.0f, -7.0f);
+    //SetParticle(filePath + "blood_hit_08", &m_blood_hit[num++]);
 
     //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetTexture(filePath + "T_Blood_06", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.0f, -7.0f);
-
+    //SetParticle(filePath + "blood_hit_07", &m_blood_hit[num++]);
 
     //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetTexture(filePath + "blood_hit_08", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.0f, -7.0f);
+    //SetParticle(filePath + "blood_hit_06", &m_blood_hit[num++]);
 
     //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetTexture(filePath + "blood_hit_07", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.1f, -7.0f);
+    //SetParticle(filePath + "blood_hit_04", &m_blood_hit[num++]);
 
     //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetTexture(filePath + "blood_hit_06", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.2f, -7.0f);
+    //SetParticle(filePath + "blood_hit_05", &m_blood_hit[num++]);
 
-    //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetTexture(filePath + "blood_hit_05", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.3f, -7.0f);
-
-    //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetTexture(filePath + "blood_hit_04", &m_blood_hit[num]);
-    //D3DXMatrixTranslation(&m_blood_hit[num++].m_matWorld, 0.0f, 8.4f, -7.0f);
 
 
 }
@@ -78,6 +70,8 @@ void BloodParticle::OnUpdate()
 
 void BloodParticle::OnRender()
 {
+
+
     if (GetAsyncKeyState(VK_END) & 0x0001)
     {
         for (auto& p : m_blood_hit)
@@ -104,16 +98,11 @@ void BloodParticle::OnRender()
         g_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
     }
 
-    static int a = 0;
-    if (a++ > 1)
+    for (auto& p : m_blood_hit)
     {
-        a = 0;
-        for (auto& p : m_blood_hit)
-        {
 
-            if (p.m_currentIndex < p.m_maxIndex)
-                renderBloodHit(p);
-        }
+        if (p.m_currentIndex < p.m_maxIndex)
+            renderBloodHit(p);
     }
 
 
@@ -142,7 +131,7 @@ void BloodParticle::SetParticle(string filePath, Blood_Hit * blood_hit)
         blood_hit->m_pTex[i] = Resource()()->GetTexture(str);
         if (blood_hit->m_pTex[i] == NULL)
         {
-            MessageBox(NULL, TEXT("텍스쳐 없어\n"), 0, 0);
+            assert(false && "BloodParticle::SetParticle( , 텍스쳐 없어");
             return;
         }
     }
@@ -170,7 +159,19 @@ void BloodParticle::SetParticle(string filePath, Blood_Hit * blood_hit)
 
 void BloodParticle::renderBloodHit(Blood_Hit & blood_hit)
 {
-    
+
+    //Shader::Draw(
+    //    Resource()()->GetEffect("./Resource/Heightmap/", "Heightmap.fx"),
+    //    nullptr,
+    //    m_pMesh,
+    //    0,
+    //    [this](LPD3DXEFFECT pEffect)
+    //{
+    //    pEffect->SetMatrix(
+    //        Shader::World,
+    //        &GetTransform()->GetTransformationMatrix());
+    //});
+
     g_pDevice->SetTransform(D3DTS_WORLD, &GetTransform()->GetTransformationMatrix());
     g_pDevice->SetTexture(0, blood_hit.m_pTex[blood_hit.m_currentIndex]);
     g_pDevice->SetFVF(VERTEX_PC::FVF);
