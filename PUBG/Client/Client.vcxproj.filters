@@ -63,6 +63,7 @@
     <ClCompile Include="Source\Useful\Area.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />
     <ClCompile Include="Source\Useful\Light.cpp" />
+    <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod64.dll" />

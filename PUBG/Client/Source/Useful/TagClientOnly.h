@@ -74,6 +74,7 @@ enum class TAG_FONT
     Inventory_Ground,
     Inventory_28,
     Inventory_NickName,
+
     InGameAmmoReload,
     InGameAmmoTotalNum,
     InGameSurvival,
@@ -83,6 +84,15 @@ enum class TAG_FONT
     InGameKillLog,
     InGameInfo,
     InGameFireMode,
+
+    GameOverNickName,
+    GameOverString,
+    GameOverRankingAndKillText,
+    GameOverRankingAndKillNum,
+    GameOverPlayerText,
+    GameOverUpRanking,
+    GameOverUpPlayersNum,
+    GameOverLobby,
 };
 
 enum class TAG_SOUND

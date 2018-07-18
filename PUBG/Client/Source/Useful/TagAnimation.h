@@ -6,7 +6,7 @@
 enum class TAG_ANIM_WEAPON
 {
 //총 - 총 자체의 애니메이션
-//OBZ(6)
+//QBZ(6)
 Weapon_QBZ_Fire,
 Weapon_QBZ_Firemode_Auto,
 Weapon_QBZ_Firemode_Semi,

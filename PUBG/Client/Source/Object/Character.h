@@ -143,8 +143,10 @@ public:
         static const D3DCOLOR RED;
         static const D3DCOLOR WHITE;
         static const D3DCOLOR GRAY;
+        static const D3DCOLOR YELLOW;
         static const D3DCOLOR WHITE_ALPHA;
         static const D3DCOLOR BLACK_ALPHA;
+        static const D3DCOLOR GRAY_ALPHA;
 
         static const D3DXVECTOR3 PRIMARY_WEAPON_POS;
         static const D3DXVECTOR3 SECONDARY_WEAPON_POS;
@@ -245,9 +247,8 @@ public:
         ~InGameUI();
 
         void Init(Character* pPlayer);
-        void Destroy();
         void Update(const TotalInventory& inven);
-        void Render();
+
         void SetRedToZero();
 
         void setTextWithShadow(
@@ -266,6 +267,33 @@ public:
         void updateHpUI();
         void updateKillUI(const TotalInventory& inven);
         void updateEquipUI(const TotalInventory& inven);
+    };
+
+    struct GameOverUI : public IUIButtonOnMouseListener
+    {
+        Character* pPlayer;
+
+        UIImage* pBackgroundImg;
+
+        UIText* pChickenText;
+        UIText* pRankingNumText;  // ex) #63
+        UIText* pKillNumText;     // ex) 0
+        UIText* pUpRankingNumText;// ex) #63
+        UIText* pUpPlayersNumText;// ex) /97
+
+
+        void Init(Character* pPlayer);
+        void Update();
+
+        GameOverUI();
+        ~GameOverUI();
+
+        // Inherited via IUIButtonOnMouseListener
+        virtual void OnMouseEnter() override;
+        virtual void OnMouseExit() override;
+        virtual void OnMouseDown(const int key) override;
+        virtual void OnMouseUp(const int key) override;
+        virtual void OnMouseDrag(const int key) override;
     };
 
     struct Info
@@ -424,8 +452,12 @@ private:
 
     // for InGameUI
     InGameUI m_inGameUI;
+
     int m_killNum;
     bool m_isKill;
+
+    //for GameOverUI
+    GameOverUI m_gameOverUI;
     
     // state
     TAG_ANIM_CHARACTER m_upperAnimState;
@@ -453,6 +485,7 @@ private:
     bool m_isTransitioning;  //전이 중일 때는 움직이지 않는다
     bool m_isDamaged;
     bool m_isEatEquip;       //장비템을 주웠을 때
+    bool m_isGameOver;
 
     WaitBackAction m_backAction;
 
@@ -697,6 +730,9 @@ public:
 
     bool GetIsEatEquip() const;
     void SetIsEatEquip(const bool isEatEquip);
+
+    bool GetIsGameOver() const;
+    void SetIsGameOver(const bool isGameOver);
 
     InGameUI& GetInGameUI();
     TotalInventory& GetTotalInventory();

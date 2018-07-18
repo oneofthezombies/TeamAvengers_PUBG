@@ -10,6 +10,7 @@
 #include "ComponentTransform.h"
 
 #include "Interpolation.h"
+#include "ScenePlay.h"
 
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
@@ -41,6 +42,8 @@ Character::Character(const int index)
     , m_killNum(0)
     , m_isKill(false)
 
+    , m_gameOverUI()
+
     , m_attacking(Attacking::Unarmed)
     , m_stance(Stance::Stand)
     , m_moving(Moving::Run)
@@ -54,6 +57,7 @@ Character::Character(const int index)
     , m_isTransitioning(false)
     , m_isDamaged(false)
     , m_isEatEquip(false)
+    , m_isGameOver(false)
 
     , pAnimation(nullptr)
 
@@ -65,6 +69,7 @@ Character::Character(const int index)
     {
         m_inGameUI.Init(this);
         m_totalInventory.Init();
+        m_gameOverUI.Init(this);
     }
 
     int x = m_index / 2;
@@ -138,7 +143,6 @@ Character::~Character()
     if (isMine())
     {
         m_totalInventory.Destroy();
-        m_inGameUI.Destroy();
     }
 }
 
@@ -259,15 +263,31 @@ void Character::updateMine()
 {
     if (!isMine()) return;
 
-    //Dead logic
-    if (m_isDead)
+    if (m_isGameOver)
     {
-        //남은 hp를 0으로 만든다
-        //TODO: 한번만 실행되도록 하기
-        m_inGameUI.SetRedToZero();
-
         return;
     }
+    else // m_isGameOver == false
+    {
+        if (m_isDead)
+        {
+            m_isGameOver = true;
+            m_gameOverUI.Update();
+            return;
+        }
+        else
+        {
+            ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+            int rank = currentScene->GetSurvivors();
+            if (rank == 1)
+            {
+                m_isGameOver = true;
+                m_gameOverUI.Update();
+                return;
+            }
+        }
+    }
+
     //m_health 가 0이 되면 죽는 애니메이션, server communication;
     checkDead();
 
@@ -277,7 +297,7 @@ void Character::updateMine()
     //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용
     handleInput(&m_currentStayKey);
     handleInput(&m_currentOnceKey);
-    if (!m_totalInventory.IsOpened())
+    if (!m_totalInventory.IsOpened() && !m_isGameOver)
     {
         handleMouse(dt, &m_mouseInput);
     }

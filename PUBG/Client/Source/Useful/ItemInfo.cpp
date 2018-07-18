@@ -59,7 +59,7 @@ string ItemInfo::GetName(const TAG_RES_STATIC tag)
     case TAG_RES_STATIC::Head_Lv1: return  "Motocycle Helmet (Level 1)";
 
         //Weapon
-    case TAG_RES_STATIC::QBZ: return "OBZ";
+    case TAG_RES_STATIC::QBZ: return "QBZ";
     case TAG_RES_STATIC::Kar98k: return "Kar98k";
 
     default: return "";

@@ -6,7 +6,7 @@ std::string TagAnimation::GetString(const TAG_ANIM_WEAPON tag)
     switch (tag)
     {
     //총 - 총 자체의 애니메이션
-    //OBZ(6)
+    //QBZ(6)
     case TAG_ANIM_WEAPON::Weapon_QBZ_Fire:              return "Weapon_QBZ_Fire";
     case TAG_ANIM_WEAPON::Weapon_QBZ_Firemode_Auto:     return "Weapon_QBZ_Firemode_Auto";
     case TAG_ANIM_WEAPON::Weapon_QBZ_Firemode_Semi:     return "Weapon_QBZ_Firemode_Semi";

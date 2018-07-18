@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />
     <ClCompile Include="Source\Useful\Area.cpp" />
     <ClCompile Include="CameraWorkSpace.cpp" />
