@@ -202,8 +202,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
         Resource()()->GetFont(TAG_FONT::GameOverLobby), "",
         D3DCOLOR_XRGB(0, 0, 0));
 
-    pBackgroundImg->SetIsRender(true);
-
+    pBackgroundImg->SetIsRender(false);
 }
 
 void Character::GameOverUI::Update()
