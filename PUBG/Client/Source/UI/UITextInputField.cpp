@@ -36,8 +36,14 @@ UITextInputField::UITextInputField(
 
     m_listener.SetHandle(this);
 
-    UIText* pText = new UIText(Resource()()->GetFont(font), GetSize(), &m_text, textColor, this);
+    UIText* pText = new UIText(
+        Resource()()->GetFont(font), 
+        GetSize(), 
+        &m_text, 
+        textColor, 
+        this);
     pText->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
+    pText->SetPosition(D3DXVECTOR3(10.0f, 0.0f, 0.0f)); //왼쪽 마진 주기위함
 
     //m_text = string("127.0.0.1 8253 ");
 }

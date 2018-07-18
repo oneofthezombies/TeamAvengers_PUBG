@@ -1011,6 +1011,36 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                     &m_fonts[tag]);
             }
             break;
+        //Login ==================================================
+        case TAG_FONT::LoginInput:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                32, 9, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LoginButton:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                40, 10, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
 
         //Lobby ==================================================
         case TAG_FONT::LobbyMenu:

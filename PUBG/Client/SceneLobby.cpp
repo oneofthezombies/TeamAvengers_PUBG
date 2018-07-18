@@ -167,7 +167,7 @@ void SceneLobby::OnInit()
         &m_readyButtonListener,
         m_pBackground,
         Resource()()->GetFont(TAG_FONT::LobbyReady), "READY",
-        D3DCOLOR_XRGB(0, 0, 0));
+        D3DCOLOR_XRGB(255, 255, 255));
 
     //¼³Á¤
     new UIImage(

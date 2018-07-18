@@ -127,6 +127,12 @@ void SceneLoading::Load()
     load("./Resource/UI/Lobby/", "ready_nickname_bg.png");
     load("./Resource/UI/Lobby/", "ready_check.png");
     
+    //for login
+    load("./Resource/UI/Login/", "login_bg.png");
+    load("./Resource/UI/Login/", "input_idle.png");
+    load("./Resource/UI/Login/", "input_mouseover.png");
+    load("./Resource/UI/Login/", "login_btn_idle.png");
+    load("./Resource/UI/Login/", "login_btn_mouseover.png");
 
     // load effect meshs
     load(TAG_RES_STATIC::SkySphere);

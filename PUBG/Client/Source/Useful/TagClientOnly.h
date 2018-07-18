@@ -76,6 +76,9 @@ enum class TAG_FONT
     Inventory_28,
     Inventory_NickName,
 
+    LoginInput,
+    LoginButton,
+
     LobbyMenu,
     LobbyMenuSmall,
     LobbyLeftSmall,
