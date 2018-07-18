@@ -1139,6 +1139,8 @@ void Communication::Manager::SendEventCreateDeathDropBox(
         ss << itemName << '\n' << std::to_string(itemCount) << '\n';
     }
 
+    std::string s(ss.str());
+
     m_pClient->Write(
         Message::Create(
             TAG_REQUEST::SEND_EVENT_CREATE_DEATH_DROP_BOX,
