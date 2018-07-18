@@ -1429,6 +1429,12 @@ Character::TotalInventory& Character::GetTotalInventory()
 
 void Character::MoveItemFieldToHead(Item* pItem)
 {
+    TotalInventory& inven = m_totalInventory;
+
+    inven.m_pEquipHead = pItem;
+    pItem->SetState(true);
+    pItem->SetIsRenderEffectMesh(false);
+    pItem->SetIsRenderSkinnedMesh(true);
 }
 
 void Character::MoveItemFieldToArmor(Item* pItem)

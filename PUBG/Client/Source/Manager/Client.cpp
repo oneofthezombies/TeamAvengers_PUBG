@@ -367,14 +367,20 @@ void Communication::Manager::ReceiveMessage(
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(itemName);
-            pScenePlay->ItemIntoInventory(
-                pScenePlay->GetCellIndex(
-                    pItem->GetTransform()->GetPosition()),
-                pItem);
+
+            const std::size_t cellIndex = pScenePlay->GetCellIndex(
+                pItem->GetTransform()->GetPosition());
+            pScenePlay->ItemIntoInventory(cellIndex, pItem);
             pScenePlay->RemoveObject(pItem);
 
-            Character* pPicker = pScenePlay->GetCharacters()[pickerID];
-            pPicker->MoveItemFieldToHead(pItem);
+            const std::vector<Character*> characters = pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToHead(pItem);
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_ARMOR:
@@ -397,8 +403,8 @@ void Communication::Manager::ReceiveMessage(
                 pItem);
             pScenePlay->RemoveObject(pItem);
 
-            Character* pPicker = pScenePlay->GetCharacters()[pickerID];
-            pPicker->MoveItemFieldToArmor(pItem);
+            //Character* pPicker = pScenePlay->GetCharacters()[pickerID];
+            //pPicker->MoveItemFieldToArmor(pItem);
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_BACK:
@@ -421,8 +427,8 @@ void Communication::Manager::ReceiveMessage(
                 pItem);
             pScenePlay->RemoveObject(pItem);
 
-            Character* pPicker = pScenePlay->GetCharacters()[pickerID];
-            pPicker->MoveItemFieldToHead(pItem);
+            //Character* pPicker = pScenePlay->GetCharacters()[pickerID];
+            //pPicker->MoveItemFieldToHead(pItem);
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_PRIMARY:
@@ -782,13 +788,13 @@ void Communication::Manager::SendEventMoveItemFieldToPrimary(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_PRIMARY,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_PRIMARY,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemFieldToSecondary(
@@ -797,13 +803,13 @@ void Communication::Manager::SendEventMoveItemFieldToSecondary(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_SECONDARY,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_SECONDARY,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemFieldToHead(
@@ -812,13 +818,13 @@ void Communication::Manager::SendEventMoveItemFieldToHead(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_HEAD,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_HEAD,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemFieldToArmor(
@@ -827,13 +833,13 @@ void Communication::Manager::SendEventMoveItemFieldToArmor(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_ARMOR,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_ARMOR,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemFieldToBack(
@@ -842,13 +848,13 @@ void Communication::Manager::SendEventMoveItemFieldToBack(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_BACK,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_BACK,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemPrimaryToField(
