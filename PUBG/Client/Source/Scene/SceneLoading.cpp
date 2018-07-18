@@ -58,9 +58,9 @@ void SceneLoading::Load()
     load("./Resource/UI/Inventory/Weapon/", "Kar98k.png", D3DCOLOR_XRGB(0, 0, 0));
     load("./Resource/UI/Inventory/Weapon/", "QBZ.png", D3DCOLOR_XRGB(0, 0, 0));
 
-    load("./Resource/UI/Inventory/Equipment/", "icon_equipment_Armor_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
-    load("./Resource/UI/Inventory/Equipment/", "icon_equipment_Back_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
-    load("./Resource/UI/Inventory/Equipment/", "icon_equipment_Head_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
+    load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
+    load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Back_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
+    load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Head_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
 
 
     //for InGameUI
