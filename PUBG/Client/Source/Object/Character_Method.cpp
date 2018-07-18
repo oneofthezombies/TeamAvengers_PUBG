@@ -674,6 +674,10 @@ void Character::itemSphereCollisionInteraction()
     auto deathDropboxes(pCurrentScene->m_NearArea.GetDeathDropBoxes());
     for (auto box : deathDropboxes)
     {
+        if (!Collision::HasCollision(
+            m_boundingSphere, 
+            box->GetBoundingSphere())) continue;
+
         const auto& items = box->GetItems();
         di.insert(di.end(), items.begin(), items.end());
     }
