@@ -460,6 +460,16 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_SECONDARY, description));
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_CREATE_DEATH_DROP_BOX:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventCreateDeathDropBoxStr = parsedDesc.second;
+
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_CREATE_DEATH_DROP_BOX, description));
+        }
+        break;
     }
 }
 

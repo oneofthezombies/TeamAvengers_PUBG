@@ -740,7 +740,7 @@ public:
     //        const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
 
-
+    void CreateDeathDropBox();
 
 
 /**************************** end public method ******************************/

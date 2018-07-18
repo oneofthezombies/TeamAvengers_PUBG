@@ -85,6 +85,8 @@ struct Communication
         void SendEventMoveItemHandToPrimary  (const int id);
         void SendEventMoveItemHandToSecondary(const int id);
 
+        void SendEventCreateDeathDropBox(const int id, const std::vector<std::pair<std::string, int>>& consumes);
+
         friend Singleton<Manager>;
     };
 

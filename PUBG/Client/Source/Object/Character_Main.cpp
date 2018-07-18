@@ -275,17 +275,19 @@ void Character::updateMine()
             m_isGameOver = true;
             m_gameOverUI.Update();
 
-            ScenePlay* pScenePlay = 
-                static_cast<ScenePlay*>(CurrentScene()());
-            DeathDropBox* pBox = 
-                pScenePlay->GetDeathDropBox(m_index);
-            const D3DXVECTOR3 pos = GetTransform()->GetPosition();
-            pBox->SetPosition(pos);
-            pBox->SetItems(this);
-            pScenePlay->InsertObjIntoTotalCellSpace(
-                TAG_OBJECT::DeathDropBox, 
-                pScenePlay->GetCellIndex(pos), 
-                pBox);
+            std::vector<std::pair<std::string, int>> consumes;
+            TotalInventory& inven = m_totalInventory;
+            for (auto& kv : inven.m_mapInventory)
+            {
+                std::vector<Item*>& items = kv.second;
+
+                for (auto item : items)
+                {
+                    consumes.emplace_back(std::make_pair(item->GetName(), item->GetCount()));
+                }
+            }
+            Communication()()->SendEventCreateDeathDropBox(m_index, consumes);
+            CreateDeathDropBox();
 
             return;
         }

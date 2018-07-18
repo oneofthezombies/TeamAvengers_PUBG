@@ -11,6 +11,7 @@
 #include "ScenePlay.h"
 #include "Ballistics.h"
 #include "TerrainFeature.h"
+#include "DeathDropBox.h"
 
 const float MovingFactor::UNARMED_RUN = 180.0f;
 const float MovingFactor::UNARMED_SPRINT = 260.0f;
@@ -1202,6 +1203,24 @@ const std::vector<BoundingBox>& Character::GetBoundingBoxes()
         m_boundingBoxes[i] = m_characterParts[i]->GetBoundingBoxes().front();
 
     return IObject::GetBoundingBoxes();
+}
+
+void Character::CreateDeathDropBox()
+{
+    ScenePlay* pScenePlay =
+        static_cast<ScenePlay*>(CurrentScene()());
+
+    DeathDropBox* pBox =
+        pScenePlay->GetDeathDropBox(m_index);
+
+    const D3DXVECTOR3 pos = GetTransform()->GetPosition();
+    pBox->SetPosition(pos);
+    pBox->SetItems(this);
+
+    pScenePlay->InsertObjIntoTotalCellSpace(
+        TAG_OBJECT::DeathDropBox,
+        pScenePlay->GetCellIndex(pos),
+        pBox);
 }
 
 void Character::movementControl(OUT State* OutState)

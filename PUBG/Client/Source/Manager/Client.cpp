@@ -676,6 +676,69 @@ void Communication::Manager::ReceiveMessage(
             }
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_CREATE_DEATH_DROP_BOX:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventCreateDeathDropBoxStr = parsedDesc.second;
+
+            std::stringstream ss(eventCreateDeathDropBoxStr);
+
+            int deathID;
+            ss >> deathID;
+
+            std::vector<std::pair<std::string, int>> consumes;
+            std::string buf;
+            int count;
+            while (!ss.eof())
+            {
+                std::getline(ss >> std::ws, buf);
+                std::string name = buf;
+
+                std::getline(ss >> std::ws, buf);
+                int count = std::stoi(buf);
+
+                consumes.emplace_back(std::make_pair(name, count));
+            }
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Character* pDeath = nullptr;
+            for (auto pCharacter : pScenePlay->GetCharacters())
+            {
+                if (pCharacter->GetIndex() == deathID)
+                {
+                    pDeath = pCharacter;
+                    break;
+                }
+            }
+
+            // item 수량 변경
+            for (auto& kv : pDeath->GetTotalInventory().m_mapInventory)
+            {
+                for (auto& item : kv.second)
+                {
+                    for (auto it = consumes.begin(); it != consumes.end();)
+                    {
+                        std::string name = it->first;
+                        int count = it->second;
+
+                        if (item->GetName() == name)
+                        {
+                            item->SetCount(count);
+                            it = consumes.erase(it);
+                        }
+                        else
+                        {
+                            ++it;
+                        }
+                    }
+                }
+            }
+
+            pDeath->CreateDeathDropBox();
+        }
+        break;
     }
 }
 
@@ -1056,6 +1119,29 @@ void Communication::Manager::SendEventMoveItemHandToSecondary(const int id)
     m_pClient->Write(
         Message::Create(
             TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_SECONDARY,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventCreateDeathDropBox(
+    const int id, 
+    const std::vector<std::pair<std::string, int>>& consumes)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ';
+
+    for (auto& kv : consumes)
+    {
+        std::string itemName  = kv.first;
+        int         itemCount = kv.second;
+
+        ss << itemName << '\n' << std::to_string(itemCount) << '\n';
+    }
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_CREATE_DEATH_DROP_BOX,
             ss.str()));
 }
 
