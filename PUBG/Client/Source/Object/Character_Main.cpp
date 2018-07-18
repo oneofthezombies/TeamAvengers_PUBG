@@ -11,6 +11,7 @@
 
 #include "Interpolation.h"
 #include "ScenePlay.h"
+#include "DeathDropBox.h"
 
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
@@ -273,6 +274,19 @@ void Character::updateMine()
         {
             m_isGameOver = true;
             m_gameOverUI.Update();
+
+            ScenePlay* pScenePlay = 
+                static_cast<ScenePlay*>(CurrentScene()());
+            DeathDropBox* pBox = 
+                pScenePlay->GetDeathDropBox(m_index);
+            const D3DXVECTOR3 pos = GetTransform()->GetPosition();
+            pBox->SetPosition(pos);
+            pBox->SetItems(this);
+            pScenePlay->InsertObjIntoTotalCellSpace(
+                TAG_OBJECT::DeathDropBox, 
+                pScenePlay->GetCellIndex(pos), 
+                pBox);
+
             return;
         }
         else

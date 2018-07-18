@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
+    <ClCompile Include="Source\Object\DeathDropBox.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />
     <ClCompile Include="Source\Useful\Area.cpp" />
     <ClCompile Include="CameraWorkSpace.cpp" />
@@ -205,6 +206,7 @@
     <None Include="fmod64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Object\DeathDropBox.h" />
     <ClInclude Include="Source\UI\UITest.h" />
     <ClInclude Include="Source\Useful\Area.h" />
     <ClInclude Include="Source\Base\IMap.h" />

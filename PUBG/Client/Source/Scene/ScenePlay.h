@@ -2,12 +2,15 @@
 #include "IScene.h"
 #include "Character.h"
 
+class DeathDropBox;
+
 class ScenePlay : public IScene
 {
 private:
     Character* pPlayer;
     std::vector<Character*> others;
     std::vector<Character*> characters;
+    std::vector<DeathDropBox*> deathDropBoxes;
 
     UIObject* m_layer;
 
@@ -25,6 +28,7 @@ public:
     int GetSurvivors() const;
     Character* GetPlayer() const;
     const std::vector<Character*>& GetCharacters() const;
+    DeathDropBox* GetDeathDropBox(const std::size_t index);
     
     UIObject* GetLayer(int layerIndex) const;
 };

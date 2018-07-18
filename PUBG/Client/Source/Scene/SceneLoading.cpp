@@ -134,8 +134,9 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::ACOG);
 
     load(TAG_RES_STATIC::Rock_1);
-
     load(TAG_RES_STATIC::WareHouse_A);
+
+    load(TAG_RES_STATIC::DeathDropBox);
 
     // load skined meshs
     const int numQBZ = 6;

@@ -8,6 +8,7 @@
 #include "HeightMap.h"
 #include "ComponentTransform.h"
 #include "UITest.h"
+#include "DeathDropBox.h"
 
 void ScenePlay::setAloneMode()
 {
@@ -374,6 +375,13 @@ void ScenePlay::OnInit()
 
     LoadObjectsFromFile("./Resource/save.txt");
 
+    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+    {
+        DeathDropBox* pBox = new DeathDropBox;
+        deathDropBoxes.emplace_back(pBox);
+        AddObject(pBox);
+    }
+
     // No id received
     if (Communication()()->m_myInfo.ID == -1)
     {
@@ -457,6 +465,16 @@ Character* ScenePlay::GetPlayer() const
 const std::vector<Character*>& ScenePlay::GetCharacters() const
 {
     return characters;
+}
+
+DeathDropBox* ScenePlay::GetDeathDropBox(const std::size_t index)
+{
+    assert(
+        index < deathDropBoxes.size() && 
+        deathDropBoxes[index] && 
+        "ScenePlay::GetDeathDropBox()");
+
+    return deathDropBoxes[index];
 }
 
 UIObject* ScenePlay::GetLayer(int layerIndex) const
