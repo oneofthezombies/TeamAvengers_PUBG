@@ -33,7 +33,8 @@ class BloodParticle :
     };
 
 private:
-    std::vector<Blood_Hit>                      m_blood_hit;
+    std::vector<Blood_Hit>                      m_blood_hit_splash;
+    std::vector<Blood_Hit>                      m_blood_hit_splurt;
     bool                                        m_IsActive;
 
 public:
@@ -57,7 +58,8 @@ public:
 
     }
     void SetParticle(string filePath, Blood_Hit* blood_hit);
-    void renderBloodHit(Blood_Hit& blood_hit);
+    void renderBloodHit_Splash(Blood_Hit& blood_hit);
+    void renderBloodHit_Splurt(Blood_Hit& blood_hit);
     DWORD FtoDw(float f)
     {
         return *((DWORD*)&f);

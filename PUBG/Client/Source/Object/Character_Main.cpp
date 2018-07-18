@@ -66,15 +66,25 @@ Character::Character(const int index)
         m_totalInventory.Init();
     }
 
+    ////origin-----
+
+    //int x = m_index / 2;
+    //int z = m_index % 2;
+
+    //const float factor(4648.0f);
+
+    //Transform* pTransform = GetTransform();
+    //pTransform->SetPosition(D3DXVECTOR3(x*factor + 200.0f, 200.0f, z*factor + 200.0f));
+    
+    
+    ////testing-----
     int x = m_index / 2;
     int z = m_index % 2;
-
-    const float factor(4648.0f);
-
+    const float factor(1900.0f);
     Transform* pTransform = GetTransform();
-    pTransform->SetPosition(D3DXVECTOR3(x*factor + 200.0f, 200.0f, z*factor + 200.0f));
-
-
+    pTransform->SetPosition(D3DXVECTOR3(x*factor+100.0f , 200.0f, z*factor + 100.0f));
+    if(m_index==0)
+        pTransform->SetPosition(D3DXVECTOR3(1900.0f, 200.0f, 1900.0f));
     //const float factor(static_cast<float>(m_index + 1) * 200.0f);
 
     //Transform* pTransform = GetTransform();
@@ -439,6 +449,19 @@ void Character::updateOther()
 
     D3DXVec3Lerp(&pos, &pTr->GetPosition(), &pi.position, 1.0f);
     D3DXQuaternionSlerp(&rot, &pTr->GetRotation(), &pi.rotation, 1.0f);
+
+    
+    //testing
+    //static D3DXQUATERNION q = D3DXQUATERNION(0, 0.0f, 0, 0.0f);
+    //q.y += 0.01f;
+    ////q.w += 0.01f;
+    //rot *= q;
+    static float yaw =0.0f;
+    yaw += 0.01f;
+    D3DXQUATERNION qRot;
+    D3DXQuaternionRotationYawPitchRoll(&qRot, yaw, 0.0f, 0.0f);
+    rot *= qRot;
+
 
     pTr->SetPosition(pos);
     pTr->SetRotation(rot);

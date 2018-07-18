@@ -2,6 +2,7 @@
 #include "Particle.h"
 #include "ComponentTransform.h"
 #include "EffectMeshRenderer.h"
+#include "ScenePlay.h"
 
 BloodParticle::BloodParticle()
     :IObject(TAG_OBJECT::Particle)
@@ -13,7 +14,10 @@ BloodParticle::BloodParticle()
 
 BloodParticle::~BloodParticle()
 {
-    for (auto& m : m_blood_hit)
+    for (auto& m : m_blood_hit_splash)
+        for (auto& p : m.m_pVB)
+            SAFE_RELEASE(p);
+    for (auto& m : m_blood_hit_splurt)
         for (auto& p : m.m_pVB)
             SAFE_RELEASE(p);
 }
@@ -22,28 +26,32 @@ void BloodParticle::Init()
 {
     string filePath = "./Resource/particle/";
 
-    size_t num = 0;
+
     Transform* tm = GetTransform();
     tm->SetPosition(Vector3::ZERO);
     tm->Update();
-
-    m_blood_hit.emplace_back(Blood_Hit(8));
-    SetParticle(filePath + "T_Blood_01", &m_blood_hit[num++]);
-
-    m_blood_hit.emplace_back(Blood_Hit(32));
-    SetParticle(filePath + "T_Blood_02", &m_blood_hit[num++]);
     
-    m_blood_hit.emplace_back(Blood_Hit(8));
-    SetParticle(filePath + "T_Blood_03", &m_blood_hit[num++]);
+    size_t splashNum = 0;
+    size_t splurtNum = 0;
 
-    m_blood_hit.emplace_back(Blood_Hit(16));
-    SetParticle(filePath + "T_Blood_04", &m_blood_hit[num++]);
 
-    //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetParticle(filePath + "T_Blood_05", &m_blood_hit[num++]);
+    m_blood_hit_splash.emplace_back(Blood_Hit(8));
+    SetParticle(filePath + "T_Blood_01", &m_blood_hit_splash[splashNum++]);
 
-    //m_blood_hit.emplace_back(Blood_Hit(16));
-    //SetParticle(filePath + "T_Blood_06", &m_blood_hit[num++]);
+    m_blood_hit_splash.emplace_back(Blood_Hit(32));
+    SetParticle(filePath + "T_Blood_02", &m_blood_hit_splash[splashNum++]);
+    
+    m_blood_hit_splash.emplace_back(Blood_Hit(8));
+    SetParticle(filePath + "T_Blood_03", &m_blood_hit_splash[splashNum++]);
+
+    m_blood_hit_splurt.emplace_back(Blood_Hit(16));
+    SetParticle(filePath + "T_Blood_04", &m_blood_hit_splurt[splurtNum++]);
+
+    m_blood_hit_splurt.emplace_back(Blood_Hit(16));
+    SetParticle(filePath + "T_Blood_05", &m_blood_hit_splurt[splurtNum++]);
+
+    m_blood_hit_splurt.emplace_back(Blood_Hit(16));
+    SetParticle(filePath + "T_Blood_06", &m_blood_hit_splurt[splurtNum++]);
 
     //m_blood_hit.emplace_back(Blood_Hit(16));
     //SetParticle(filePath + "blood_hit_08", &m_blood_hit[num++]);
@@ -95,20 +103,26 @@ void BloodParticle::OnRender()
 
     
     int donePlayNum = 0;
-    for (auto& p : m_blood_hit)
+    for (auto& p : m_blood_hit_splash)
     {
 
         if (p.m_currentIndex < p.m_maxIndex)
-            renderBloodHit(p);
+            renderBloodHit_Splash(p);
         else
             donePlayNum++;
-
-        //여기에 m_IsActive 로직 false 로 하는 로직
-        if (m_blood_hit.size() == donePlayNum)
-            m_IsActive = false;
+    }
+    for (auto& p : m_blood_hit_splurt)
+    {
+        if(p.m_currentIndex<p.m_maxIndex)
+            renderBloodHit_Splurt(p);
+        else
+            donePlayNum++;
     }
 
-
+    //여기에 m_IsActive 로직 false 로 하는 로직
+    if (m_blood_hit_splash.size() + m_blood_hit_splurt.size() 
+        == donePlayNum)
+        m_IsActive = false;
 
 
     {
@@ -128,7 +142,12 @@ void BloodParticle::Set(const D3DXVECTOR3 & pos)
 
     m_IsActive = true;
 
-    for (auto& p : m_blood_hit)
+    for (auto& p : m_blood_hit_splash)
+    {
+        p.m_currentIndex = 0;
+    }
+
+    for (auto& p : m_blood_hit_splurt)
     {
         p.m_currentIndex = 0;
     }
@@ -176,10 +195,27 @@ void BloodParticle::SetParticle(string filePath, Blood_Hit * blood_hit)
     }
 }
 
-void BloodParticle::renderBloodHit(Blood_Hit & blood_hit)
+void BloodParticle::renderBloodHit_Splash(Blood_Hit & blood_hit)
 {
-
     g_pDevice->SetTransform(D3DTS_WORLD, &GetTransform()->GetTransformationMatrix());
+    g_pDevice->SetTexture(0, blood_hit.m_pTex[blood_hit.m_currentIndex]);
+    g_pDevice->SetFVF(VERTEX_PC::FVF);
+    g_pDevice->SetStreamSource(0, blood_hit.m_pVB[blood_hit.m_currentIndex], 0, sizeof(VERTEX_PC));
+    g_pDevice->DrawPrimitive(D3DPT_POINTLIST, 0, 1);
+
+    blood_hit.m_currentIndex++;
+}
+
+void BloodParticle::renderBloodHit_Splurt(Blood_Hit & blood_hit)
+{
+    ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+    
+    D3DXMATRIX r, t, mat;
+    D3DXMatrixRotationQuaternion(&r, &pScenePlay->GetPlayer()->GetTransform()->GetRotation());
+    D3DXMatrixTranslation(&t, -500.0f, 0.0f, 0.0f);
+    mat = r * t * GetTransform()->GetTransformationMatrix();
+
+    g_pDevice->SetTransform(D3DTS_WORLD, &mat);
     g_pDevice->SetTexture(0, blood_hit.m_pTex[blood_hit.m_currentIndex]);
     g_pDevice->SetFVF(VERTEX_PC::FVF);
     g_pDevice->SetStreamSource(0, blood_hit.m_pVB[blood_hit.m_currentIndex], 0, sizeof(VERTEX_PC));
