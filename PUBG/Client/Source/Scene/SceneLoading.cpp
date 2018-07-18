@@ -114,6 +114,19 @@ void SceneLoading::Load()
     load("./Resource/UI/GameOver/", "btn_black_alpha.png");
     load("./Resource/UI/GameOver/", "btn_gray_alpha.png");
 
+    //for LobbyUI
+    load("./Resource/UI/Lobby/", "lobby_bg.png");
+    load("./Resource/UI/Lobby/", "transparent_1280_720.png");
+    load("./Resource/UI/Lobby/", "pubg_white_small.png");
+    load("./Resource/UI/Lobby/", "yellow_line.png");
+    load("./Resource/UI/Lobby/", "select_btn.png");
+    load("./Resource/UI/Lobby/", "ready_btn_idle.png");
+    load("./Resource/UI/Lobby/", "ready_btn_mouseover.png");
+    load("./Resource/UI/Lobby/", "setting.png");
+    load("./Resource/UI/Lobby/", "profile_bg.png");
+    load("./Resource/UI/Lobby/", "ready_nickname_bg.png");
+    load("./Resource/UI/Lobby/", "ready_check.png");
+    
 
     // load effect meshs
     load(TAG_RES_STATIC::SkySphere);

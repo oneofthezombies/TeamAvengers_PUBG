@@ -36,6 +36,15 @@ HeightMap::HeightMap()
                 "./Resource/Heightmap/", 
                 "Heightmap.jpg"));
 
+    //Resource()()->GetEffect(
+    //    "./Resource/Heightmap/",
+    //    "Heightmap.fx")->
+    //    SetTexture(
+    //        "Heightmap_Diffuse_Tex",
+    //        Resource()()->GetTexture(
+    //            "./Resource/Heightmap/",
+    //            "Plain_BaseColor.tga"));
+
     //--Testing--
     //SetDimension(256);
     //Load(_T("./Resource/Heightmap/testing/Heightmap.raw"), &m_matWorld);
@@ -99,6 +108,16 @@ void HeightMap::Load(LPCTSTR fullPath, D3DXMATRIXA16 * pMat)
 			vecVertex[index].p = D3DXVECTOR3(fX, static_cast<float>(y), fZ);
 			vecVertex[index].n = D3DXVECTOR3(0, 1, 0);
 			vecVertex[index].t = D3DXVECTOR2(fX / (float)m_numTile, fZ / (float)m_numTile);
+
+            //static const float d = 64.0f;
+            //const float newNumTile = static_cast<float>(m_numTile) / d;
+            //float newX = fX;
+            //while (newX > newNumTile)
+            //    newX -= newNumTile;
+            //float newZ = fZ;
+            //while (newZ > newNumTile)
+            //    newZ -= newNumTile;
+            //vecVertex[index].t = D3DXVECTOR2(newX / newNumTile, newZ / newNumTile);
 
 			if (pMat)
 				D3DXVec3TransformCoord(&vecVertex[index].p, &vecVertex[index].p, pMat);

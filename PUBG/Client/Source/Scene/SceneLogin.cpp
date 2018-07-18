@@ -86,7 +86,9 @@ void LoginButtonListener::OnMouseUp(const int key)
     c->Connect(host, port, nickname);
 
     UI()()->Destroy(GetHandle());
-    Scene()()->SetCurrentScene(TAG_SCENE::Play);
+    //Scene()()->SetCurrentScene(TAG_SCENE::Play);
+    //for test
+    Scene()()->SetCurrentScene(TAG_SCENE::Lobby);
 }
 
 void LoginButtonListener::OnMouseDrag(const int key)

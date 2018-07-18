@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "IScene.h"
 #include "SceneLogin.h"
+#include "SceneLobby.h"
 #include "ScenePlay.h"
 #include "SceneLoading.h"
 #include "SceneCollisionTest.h"
@@ -20,7 +21,9 @@ void SceneManager::Init()
 {
     m_scenes.emplace(TAG_SCENE::Loading, new SceneLoading);
     m_scenes.emplace(TAG_SCENE::Login,   new SceneLogin);
+    m_scenes.emplace(TAG_SCENE::Lobby,   new SceneLobby);
     m_scenes.emplace(TAG_SCENE::Play,    new ScenePlay);
+
     //m_scenes.emplace(TAG_SCENE::CollisionTest, new SceneCollisionTest);
 
     SetCurrentScene(TAG_SCENE::Loading);

@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SceneLobby.cpp" />
     <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />
     <ClCompile Include="Source\Useful\Area.cpp" />
@@ -205,6 +206,7 @@
     <None Include="fmod64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SceneLobby.h" />
     <ClInclude Include="Source\UI\UITest.h" />
     <ClInclude Include="Source\Useful\Area.h" />
     <ClInclude Include="Source\Base\IMap.h" />
