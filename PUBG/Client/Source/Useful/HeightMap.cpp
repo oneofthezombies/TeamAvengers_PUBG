@@ -22,34 +22,34 @@ HeightMap::HeightMap()
 
 
     ////--original--
-    //SetDimension(257);
-    //Load(_T("./Resource/Heightmap/Heightmap.raw"), &m_matWorld);
-
-    //SetSurface();
-
-    //Resource()()->GetEffect(
-    //    "./Resource/Heightmap/", 
-    //    "Heightmap.fx")->
-    //    SetTexture(
-    //        "Heightmap_Diffuse_Tex", 
-    //        Resource()()->GetTexture(
-    //            "./Resource/Heightmap/", 
-    //            "Heightmap.jpg"));
-
-    //--Testing--
-    SetDimension(256);
-    Load(_T("./Resource/Heightmap/testing/Heightmap.raw"), &m_matWorld);
+    SetDimension(257);
+    Load(_T("./Resource/Heightmap/Heightmap.raw"), &m_matWorld);
 
     SetSurface();
 
     Resource()()->GetEffect(
-        "./Resource/Heightmap/",
+        "./Resource/Heightmap/", 
         "Heightmap.fx")->
         SetTexture(
-            "Heightmap_Diffuse_Tex",
+            "Heightmap_Diffuse_Tex", 
             Resource()()->GetTexture(
-                "./Resource/Heightmap/testing/",
+                "./Resource/Heightmap/", 
                 "Heightmap.jpg"));
+
+    //--Testing--
+    //SetDimension(256);
+    //Load(_T("./Resource/Heightmap/testing/Heightmap.raw"), &m_matWorld);
+
+    //SetSurface();
+
+    //Resource()()->GetEffect(
+    //    "./Resource/Heightmap/",
+    //    "Heightmap.fx")->
+    //    SetTexture(
+    //        "Heightmap_Diffuse_Tex",
+    //        Resource()()->GetTexture(
+    //            "./Resource/Heightmap/testing/",
+    //            "Heightmap.jpg"));
 
     //ray box
     SetRayBox();

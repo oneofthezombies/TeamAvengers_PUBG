@@ -382,18 +382,21 @@ void Character::updateMine()
     }
 
     // footstep
-    if (m_direction == Direction::StandStill || m_Jump.isJumping)
+    if (m_stance != Stance::Prone)
     {
-        m_stepDistance = 0.0f;
-    }
-    D3DXVECTOR3 v3Distance = D3DXVECTOR3(destState.position.x, 0.0f, destState.position.z) - D3DXVECTOR3(backupPos.x, 0.0f, backupPos.z);
-    float fDistance = D3DXVec3Length(&v3Distance);
-    m_stepDistance += fDistance;
-    if (m_stepDistance >= 78.0f)
-    {
-        m_stepDistance -= 78.0f;
-        Sound()()->Play(TAG_SOUND::FootStep, pos, 1.0f, FMOD_2D);
-        Communication()()->SendEventSound(TAG_SOUND::FootStep, pos);
+        if (m_direction == Direction::StandStill || m_Jump.isJumping)
+        {
+            m_stepDistance = 0.0f;
+        }
+        D3DXVECTOR3 v3Distance = D3DXVECTOR3(destState.position.x, 0.0f, destState.position.z) - D3DXVECTOR3(backupPos.x, 0.0f, backupPos.z);
+        float fDistance = D3DXVec3Length(&v3Distance);
+        m_stepDistance += fDistance;
+        if (m_stepDistance >= 78.0f)
+        {
+            m_stepDistance -= 78.0f;
+            Sound()()->Play(TAG_SOUND::FootStep, pos, 1.0f, FMOD_2D);
+            Communication()()->SendEventSound(TAG_SOUND::FootStep, pos);
+        }
     }
     // end footstep
 
