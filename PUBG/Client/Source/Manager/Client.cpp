@@ -1064,7 +1064,7 @@ void Communication::Manager::SendIsDead(
     bool isDead)
 {
     m_roomInfo.playerInfos[id].isDead = isDead;
-
+    
     std::stringstream ss;
     ss << m_myInfo.ID << id << ' ' << isDead;
 
