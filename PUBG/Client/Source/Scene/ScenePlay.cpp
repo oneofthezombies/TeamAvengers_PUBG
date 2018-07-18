@@ -203,6 +203,7 @@ void ScenePlay::setWithOthersMode()
     const string name = "Head_Lv1 " + std::to_string(myID);
     item = new Item(TAG_RES_STATIC::Head_Lv1, name, p, r, s);
     AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
     //pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(20, 0, 10);
@@ -238,6 +239,7 @@ void ScenePlay::setWithOthersMode()
         const string name = "Head_Lv1 " + std::to_string(i);
         item = new Item(TAG_RES_STATIC::Head_Lv1, name, p, r, s);
         AddObject(item);
+        InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
         //pOther->PutItemInTotalInventory(item);
 
         //p = D3DXVECTOR3(20, 0, 10);
