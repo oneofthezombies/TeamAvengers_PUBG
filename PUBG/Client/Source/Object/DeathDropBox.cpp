@@ -6,11 +6,12 @@ DeathDropBox::DeathDropBox()
     : IObject(TAG_OBJECT::DeathDropBox)
     , pEffectMeshRenderer(nullptr)
 {
-    pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
-    pEffectMeshRenderer->SetEffectMesh(TAG_RES_STATIC::DeathDropBox);
-
     const float max = std::numeric_limits<float>::max();
     GetTransform()->SetPosition(Vector3::ONE * max);
+
+    pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
+    pEffectMeshRenderer->SetEffectMesh(TAG_RES_STATIC::DeathDropBox);
+    m_boundingSphere = pEffectMeshRenderer->GetBoundingSphere();
 }
 
 DeathDropBox::~DeathDropBox()
