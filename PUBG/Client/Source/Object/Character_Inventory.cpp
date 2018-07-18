@@ -725,6 +725,9 @@ bool Character::PutItemInTotalInventory(Item* item)
 {
     assert(item && "Character::PutItemInTotalInventory(), item is null.");
 
+    if (item->IsInDeathDropBox())
+        item->DeleteItemInDeathDropBox();
+
     TAG_RES_STATIC    tag      = item->GetTagResStatic();
     TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(tag);
 
