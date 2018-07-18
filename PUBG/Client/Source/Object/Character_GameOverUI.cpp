@@ -72,7 +72,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
         Resource()()->GetFont(TAG_FONT::GameOverString),
         D3DXVECTOR2(947.0f, 50.0f),
         "±×·² ¼ö ÀÖ¾î. ÀÌ·± ³¯µµ ÀÖ´Â °ÅÁö ¹¹.", //ÀÌ°å´ß! ¿À´Ã Àú³áÀº Ä¡Å²ÀÌ´ß!
-        D3DCOLOR_XRGB(237, 192, 27),
+        InGameUI::YELLOW,
         pBackgroundImg);
     pChickenText->SetDrawTextFormat(DT_LEFT);
     pChickenText->SetPosition(D3DXVECTOR3(62.0f, 97.0f, 0.0f));
@@ -131,7 +131,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
         Resource()()->GetFont(TAG_FONT::GameOverPlayerText),
         D3DXVECTOR2(65.0f, 18.0f),
         "ÇÃ·¹ÀÌ¾î",
-        D3DCOLOR_ARGB(100, 160, 160, 160),
+        InGameUI::GRAY_ALPHA,
         pBackgroundImg);
     playerText->SetDrawTextFormat(DT_CENTER);
     playerText->SetPosition(D3DXVECTOR3(265.5f, 185.0f, 0.0f));
@@ -140,7 +140,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
         Resource()()->GetFont(TAG_FONT::GameOverUpRanking),
         D3DXVECTOR2(90.0f, 58.0f),
         "#63",
-        D3DCOLOR_XRGB(237, 192, 27),
+        InGameUI::YELLOW,
         pBackgroundImg);
     pUpRankingNumText->SetDrawTextFormat(DT_LEFT);
     pUpRankingNumText->SetPosition(D3DXVECTOR3(1074.97f, 22.0f, 0.0f));
@@ -149,7 +149,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
         Resource()()->GetFont(TAG_FONT::GameOverUpPlayersNum),
         D3DXVECTOR2(62.0f, 45.0f),
         "/97",
-        D3DCOLOR_ARGB(100, 160, 160, 160),
+        InGameUI::GRAY_ALPHA,
         pBackgroundImg);
     pUpPlayersNumText->SetDrawTextFormat(DT_LEFT);
     pUpPlayersNumText->SetPosition(D3DXVECTOR3(1167.0f, 36.0f, 0.0f));
@@ -202,7 +202,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
         Resource()()->GetFont(TAG_FONT::GameOverLobby), "",
         D3DCOLOR_XRGB(0, 0, 0));
 
-    pBackgroundImg->SetIsRender(false);
+    pBackgroundImg->SetIsRender(true);
 
 }
 

@@ -143,8 +143,10 @@ public:
         static const D3DCOLOR RED;
         static const D3DCOLOR WHITE;
         static const D3DCOLOR GRAY;
+        static const D3DCOLOR YELLOW;
         static const D3DCOLOR WHITE_ALPHA;
         static const D3DCOLOR BLACK_ALPHA;
+        static const D3DCOLOR GRAY_ALPHA;
 
         static const D3DXVECTOR3 PRIMARY_WEAPON_POS;
         static const D3DXVECTOR3 SECONDARY_WEAPON_POS;
