@@ -44,7 +44,12 @@ void SoundManager::Init()
     AddSound(TAG_SOUND::Qbz_Reload, "Resource/Sound/qbz/Qbz_Reload.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Qbz_FakeShoot, "Resource/Sound/qbz/Qbz_FakeShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Qbz_SilenceShoot, "Resource/Sound/qbz/Qbz_SilenceShoot.mp3", FMOD_3D, false);
-
+    AddSound(TAG_SOUND::Bullet_Miss, "Resource/Sound/Bullet/miss.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Bullet_HitTerrain, "Resource/Sound/Bullet/hit_terrain.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::FootStep, "Resource/Sound/footstep/footstep.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Hand_Punch, "Resource/Sound/Hand/Punch.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Medicine_Bandage, "Resource/Sound/medicine/Bandage.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Medicine_Bandage, "Resource/Sound/medicine/Bandage.mp3", FMOD_3D, false);
 
     AddSound(TAG_SOUND::Background, "Resource/Sound/Background/battleground_lobby.mp3", FMOD_3D, false);
 
@@ -86,11 +91,11 @@ void SoundManager::AddSound(const TAG_SOUND tag, const string& path, const FMOD_
 
     CheckError(m_pSystem->createSound(path.c_str(), mode/*| FMOD_LOOP_NORMAL*/, nullptr, &m_sounds[tag]));
     //explain : 30까지는 본래의 소리를 냄 30이후부터 줄어들고 10000까지 Fmod::system에 저장한 감쇠량만큼 감소됨
-    CheckError(m_sounds[tag]->set3DMinMaxDistance(30.0f, 10000.0f));
+    CheckError(m_sounds[tag]->set3DMinMaxDistance(300.0f, 10000.0f));
     // 총/폭발음 이외에는 디스턴스 조절 감소가 시작하는 시점을 아주 적은 시점부터 시작하여 소리를 작게만듬.
     if (static_cast<int>(tag) > 4)
     {
-        CheckError(m_sounds[tag]->set3DMinMaxDistance(10.0f, 10000.0f));
+        CheckError(m_sounds[tag]->set3DMinMaxDistance(100.0f, 10000.0f));
     }
 }
 
@@ -149,7 +154,7 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
     }
     else if (static_cast<int>(tag) > 2)
     {
-        fVol = 0.5f;
+        fVol = 0.7f;
     }
 
     SetPosition(pos);

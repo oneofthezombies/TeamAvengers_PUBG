@@ -341,8 +341,7 @@ void Communication::Manager::ReceiveMessage(
 
             std::stringstream ss(eventDestroyItemStr);
             std::string       destoryedItemName;
-
-            ss >> destoryedItemName;
+            std::getline(ss >> std::ws, destoryedItemName);
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(destoryedItemName);
@@ -350,6 +349,7 @@ void Communication::Manager::ReceiveMessage(
                 pScenePlay->GetCellIndex(
                     pItem->GetTransform()->GetPosition()), 
                 pItem);
+
             pScenePlay->Destroy(pItem);
         }
         break;
@@ -362,19 +362,26 @@ void Communication::Manager::ReceiveMessage(
 
             std::stringstream ss(eventMoveItemStr);
             int pickerID;
+            ss >> pickerID;
             std::string itemName;
-            ss >> pickerID >> itemName;
+            std::getline(ss >> std::ws, itemName);
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(itemName);
-            pScenePlay->ItemIntoInventory(
-                pScenePlay->GetCellIndex(
-                    pItem->GetTransform()->GetPosition()),
-                pItem);
+
+            const std::size_t cellIndex = pScenePlay->GetCellIndex(
+                pItem->GetTransform()->GetPosition());
+            pScenePlay->ItemIntoInventory(cellIndex, pItem);
             pScenePlay->RemoveObject(pItem);
 
-            Character* pPicker = pScenePlay->GetCharacters()[pickerID];
-            pPicker->MoveItemFieldToHead(pItem);
+            const std::vector<Character*> characters = pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToHead(pItem);
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_ARMOR:
@@ -386,19 +393,26 @@ void Communication::Manager::ReceiveMessage(
 
             std::stringstream ss(eventMoveItemStr);
             int pickerID;
+            ss >> pickerID;
             std::string itemName;
-            ss >> pickerID >> itemName;
+            std::getline(ss >> std::ws, itemName);
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(itemName);
-            pScenePlay->ItemIntoInventory(
-                pScenePlay->GetCellIndex(
-                    pItem->GetTransform()->GetPosition()),
-                pItem);
+
+            const std::size_t cellIndex = pScenePlay->GetCellIndex(
+                pItem->GetTransform()->GetPosition());
+            pScenePlay->ItemIntoInventory(cellIndex, pItem);
             pScenePlay->RemoveObject(pItem);
 
-            Character* pPicker = pScenePlay->GetCharacters()[pickerID];
-            pPicker->MoveItemFieldToArmor(pItem);
+            const std::vector<Character*> characters = pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToArmor(pItem);
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_BACK:
@@ -409,6 +423,27 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Item* pItem = pScenePlay->FindItemWithName(itemName);
+
+            const std::size_t cellIndex = pScenePlay->GetCellIndex(
+                pItem->GetTransform()->GetPosition());
+            pScenePlay->ItemIntoInventory(cellIndex, pItem);
+            pScenePlay->RemoveObject(pItem);
+
+            const std::vector<Character*> characters = pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToBack(pItem);
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_PRIMARY:
@@ -419,6 +454,27 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Item* pItem = pScenePlay->FindItemWithName(itemName);
+
+            const std::size_t cellIndex = pScenePlay->GetCellIndex(
+                pItem->GetTransform()->GetPosition());
+            pScenePlay->ItemIntoInventory(cellIndex, pItem);
+            pScenePlay->RemoveObject(pItem);
+
+            const std::vector<Character*> characters = pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToPrimary(pItem);
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_SECONDARY:
@@ -429,6 +485,58 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Item* pItem = pScenePlay->FindItemWithName(itemName);
+
+            const std::size_t cellIndex = pScenePlay->GetCellIndex(
+                pItem->GetTransform()->GetPosition());
+            pScenePlay->ItemIntoInventory(cellIndex, pItem);
+            pScenePlay->RemoveObject(pItem);
+
+            const std::vector<Character*> characters = pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToSecondary(pItem);
+                }
+            }
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_INVENTORY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Item* pItem = pScenePlay->FindItemWithName(itemName);
+
+            const std::size_t cellIndex = pScenePlay->GetCellIndex(
+                pItem->GetTransform()->GetPosition());
+            pScenePlay->ItemIntoInventory(cellIndex, pItem);
+            pScenePlay->RemoveObject(pItem);
+
+            const std::vector<Character*> characters = pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToInventory(pItem);
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HEAD_TO_FIELD:
@@ -489,6 +597,17 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+            int moveItemID;
+            ss >> moveItemID;
+
+            const std::vector<Character*> characters = 
+                static_cast<ScenePlay*>(CurrentScene()())->GetCharacters();
+
+            for (auto c : characters)
+            {
+                if (c->GetIndex() == moveItemID)
+                    c->MoveItemPrimaryToHand();
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_HAND:
@@ -499,6 +618,18 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+
+            int moveItemID;
+            ss >> moveItemID;
+
+            const std::vector<Character*> characters =
+                static_cast<ScenePlay*>(CurrentScene()())->GetCharacters();
+
+            for (auto c : characters)
+            {
+                if (c->GetIndex() == moveItemID)
+                    c->MoveItemSecondaryToHand();
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_PRIMARY:
@@ -509,6 +640,18 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+
+            int moveItemID;
+            ss >> moveItemID;
+
+            const std::vector<Character*> characters =
+                static_cast<ScenePlay*>(CurrentScene()())->GetCharacters();
+
+            for (auto c : characters)
+            {
+                if (c->GetIndex() == moveItemID)
+                    c->MoveItemHandToPrimary();
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_SECONDARY:
@@ -519,6 +662,18 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+
+            int moveItemID;
+            ss >> moveItemID;
+
+            const std::vector<Character*> characters =
+                static_cast<ScenePlay*>(CurrentScene()())->GetCharacters();
+
+            for (auto c : characters)
+            {
+                if (c->GetIndex() == moveItemID)
+                    c->MoveItemHandToSecondary();
+            }
         }
         break;
     }
@@ -693,13 +848,13 @@ void Communication::Manager::SendEventMoveItemFieldToPrimary(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_PRIMARY,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_PRIMARY,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemFieldToSecondary(
@@ -708,13 +863,13 @@ void Communication::Manager::SendEventMoveItemFieldToSecondary(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_SECONDARY,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_SECONDARY,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemFieldToHead(
@@ -723,13 +878,13 @@ void Communication::Manager::SendEventMoveItemFieldToHead(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_HEAD,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_HEAD,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemFieldToArmor(
@@ -738,13 +893,13 @@ void Communication::Manager::SendEventMoveItemFieldToArmor(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_ARMOR,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_ARMOR,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemFieldToBack(
@@ -753,13 +908,28 @@ void Communication::Manager::SendEventMoveItemFieldToBack(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_BACK,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_BACK,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventMoveItemFieldToInventory(
+    const int id, 
+    const std::string& itemName)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_INVENTORY,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemPrimaryToField(
@@ -841,52 +1011,52 @@ void Communication::Manager::SendEventMoveItemPrimaryToHand(const int id)
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_HAND,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_HAND,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemSecondaryToHand(const int id)
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_HAND,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_HAND,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemHandToPrimary(const int id)
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_PRIMARY,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_PRIMARY,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemHandToSecondary(const int id)
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_SECONDARY,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_SECONDARY,
+            ss.str()));
 }
 
 void Communication::Manager::SendIsDead(

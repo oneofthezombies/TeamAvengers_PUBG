@@ -827,7 +827,7 @@ bool Character::PutItemInTotalInventory(Item* item)
                 Communication()()->SendEventMoveItemHeadToField(m_index, originItemName);
 
             // OOTZ_FLAG : 네트워크 필드 -> 헤드
-            Communication()()->SendEventMoveItemFieldToHead(m_index, originItemName);
+            Communication()()->SendEventMoveItemFieldToHead(m_index, item->GetName());
 
             m_isEatEquip = true;
         }
@@ -902,7 +902,7 @@ bool Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
             CurrentScene()()->RemoveObject(item);
             
             // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
-            Communication()()->SendEventDestroyItem(item->GetName());
+            Communication()()->SendEventMoveItemFieldToInventory(m_index, item->GetName());
         }
         else
         {

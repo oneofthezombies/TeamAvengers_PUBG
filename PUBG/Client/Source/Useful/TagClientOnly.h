@@ -104,9 +104,13 @@ enum class TAG_SOUND
     Kar98_Reload2,
     Kar98_Reload3,
     Qbz_BoltMove76,
-    Qbz_BoltMove77,
     Qbz_FakeShoot,
     Qbz_Reload,
+    Bullet_Miss,
+    Bullet_HitTerrain,
+    FootStep,
+    Medicine_Bandage,
+    Hand_Punch,
 
     Background,
 };

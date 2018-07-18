@@ -15,6 +15,7 @@ Bullet::Bullet()
     , pCylinder(nullptr)
     //, pBoxCollider(nullptr)
     , pCurrentScene(nullptr)
+    , m_soundPlayed(false)
 {
     GetTransform()->SetPosition(Vector3::ZERO);
 
@@ -151,6 +152,15 @@ void Bullet::OnUpdate()
          {
              //vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
              vecHitTargetInfo.emplace_back(HitTargetInfo((ray.m_pos + ray.m_dir * minDist), m_tag, static_cast<TAG_COLLIDER_CHARACTER_PART>(otherHitPart), chr));
+         }
+         else
+         {
+             if (!m_soundPlayed)
+             {
+                 Communication()()->SendEventSound(TAG_SOUND::Bullet_Miss, m_nextPos);
+                 m_soundPlayed = true;
+             }
+
          }
      }
 
@@ -295,6 +305,7 @@ void Bullet::Set(GameInfo::MyInfo myInfo, const D3DXVECTOR3 & startPos, const D3
     m_Speed = speed;
     m_Damage = damage;
     m_IsActive = true;
+    m_soundPlayed = false;
 
     pCurrentScene->AddObject(this);
 

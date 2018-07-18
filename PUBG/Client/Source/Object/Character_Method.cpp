@@ -930,6 +930,7 @@ void Character::RifleShooting() //bullet 객체에 대한
             Sound()()->Play(TAG_SOUND::Qbz_NormalShoot,
                 GetTransform()->GetPosition(),
                 1.0f, FMOD_2D);
+            Communication()()->SendEventSound(TAG_SOUND::Qbz_NormalShoot, GetTransform()->GetPosition());
             
             //총 자체 애니메이션
             m_isNeedRifleAnim = true;
@@ -965,6 +966,9 @@ void Character::RifleShooting() //bullet 객체에 대한
             Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove2,
                 GetTransform()->GetPosition(),
                 1.0f, FMOD_2D);
+
+            Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, GetTransform()->GetPosition());
+
             //Kar98k BoltAction Animation
             TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
             if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
@@ -1425,22 +1429,61 @@ Character::TotalInventory& Character::GetTotalInventory()
 
 void Character::MoveItemFieldToHead(Item* pItem)
 {
+    TotalInventory& inven = m_totalInventory;
+
+    inven.m_pEquipHead = pItem;
+    pItem->SetState(true);
+    pItem->SetIsRenderEffectMesh(false);
+    pItem->SetIsRenderSkinnedMesh(true);
 }
 
 void Character::MoveItemFieldToArmor(Item* pItem)
 {
+    TotalInventory& inven = m_totalInventory;
+
+    inven.m_pEquipArmor = pItem;
+    pItem->SetState(true);
+    pItem->SetIsRenderEffectMesh(false);
+    pItem->SetIsRenderSkinnedMesh(true);
 }
 
 void Character::MoveItemFieldToBack(Item* pItem)
 {
+    TotalInventory& inven = m_totalInventory;
+
+    inven.m_pEquipBack = pItem;
+    pItem->SetState(true);
+    pItem->SetIsRenderEffectMesh(false);
+    pItem->SetIsRenderSkinnedMesh(true);
 }
 
 void Character::MoveItemFieldToPrimary(Item* pItem)
 {
+    TotalInventory& inven = m_totalInventory;
+
+    inven.m_pWeaponPrimary = pItem;
+    pItem->SetState(true);
+    pItem->SetIsRenderEffectMesh(false);
+    pItem->SetIsRenderSkinnedMesh(true);
 }
 
 void Character::MoveItemFieldToSecondary(Item* pItem)
 {
+    TotalInventory& inven = m_totalInventory;
+
+    inven.m_pWeaponSecondary = pItem;
+    pItem->SetState(true);
+    pItem->SetIsRenderEffectMesh(false);
+    pItem->SetIsRenderSkinnedMesh(true);
+}
+
+void Character::MoveItemFieldToInventory(Item* pItem)
+{
+    TotalInventory& inven = m_totalInventory;
+
+    inven.m_mapInventory[pItem->GetTagResStatic()].emplace_back(pItem);
+    pItem->SetState(true);
+    pItem->SetIsRenderEffectMesh(false);
 }
 
 void Character::MoveItemHeadToField()
@@ -1465,18 +1508,30 @@ void Character::MoveItemSecondaryToField()
 
 void Character::MoveItemPrimaryToHand()
 {
+    TotalInventory& ti = m_totalInventory;
+    ti.m_pHand = ti.m_pWeaponPrimary;
+    ti.m_pWeaponPrimary = nullptr;
 }
 
 void Character::MoveItemSecondaryToHand()
 {
+    TotalInventory& ti = m_totalInventory;
+    ti.m_pHand = ti.m_pWeaponSecondary;
+    ti.m_pWeaponSecondary = nullptr;
 }
 
 void Character::MoveItemHandToPrimary()
 {
+    TotalInventory& ti = m_totalInventory;
+    ti.m_pWeaponPrimary = ti.m_pHand;
+    ti.m_pHand = nullptr;
 }
 
 void Character::MoveItemHandToSecondary()
 {
+    TotalInventory& ti = m_totalInventory;
+    ti.m_pWeaponSecondary = ti.m_pHand;
+    ti.m_pHand = nullptr;
 }
 
 D3DXVECTOR3 Character::getUp()

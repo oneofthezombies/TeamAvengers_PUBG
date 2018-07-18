@@ -72,6 +72,7 @@ struct Communication
         void SendEventMoveItemFieldToHead     (const int id, const std::string& itemName);
         void SendEventMoveItemFieldToArmor    (const int id, const std::string& itemName);
         void SendEventMoveItemFieldToBack     (const int id, const std::string& itemName);
+        void SendEventMoveItemFieldToInventory(const int id, const std::string& itemName);
 
         void SendEventMoveItemPrimaryToField  (const int id, const std::string& itemName);
         void SendEventMoveItemSecondaryToField(const int id, const std::string& itemName);

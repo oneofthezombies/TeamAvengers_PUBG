@@ -317,7 +317,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_HEAD, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_ARMOR:
@@ -327,7 +327,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_ARMOR, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_BACK:
@@ -337,7 +337,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_BACK, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_PRIMARY:
@@ -347,7 +347,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_PRIMARY, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_SECONDARY:
@@ -357,7 +357,17 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_SECONDARY, description));
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_INVENTORY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_INVENTORY, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HEAD_TO_FIELD:
@@ -417,7 +427,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_HAND, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_HAND:
@@ -427,7 +437,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_HAND, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_PRIMARY:
@@ -437,7 +447,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_PRIMARY, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_SECONDARY:
@@ -447,7 +457,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             int& id = parsedDesc.first;
             std::string& eventMoveItemStr = parsedDesc.second;
 
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HAND_TO_SECONDARY, description));
         }
         break;
     }

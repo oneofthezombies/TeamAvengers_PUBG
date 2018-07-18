@@ -11,7 +11,7 @@
 
 void ScenePlay::setAloneMode()
 {
-    Communication()()->m_myInfo.ID = 3;
+    Communication()()->m_myInfo.ID = 0;
     const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
     characters.emplace_back(pPlayer);
@@ -186,19 +186,30 @@ void ScenePlay::setWithOthersMode()
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
 
-    item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
+    Light()()->SetTarget(pPlayer->GetTransform());
 
-    p = D3DXVECTOR3(20, 0, 10);
-    item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(100, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Kar98k, "gun", p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
-    p = D3DXVECTOR3(30, 0, 10);
-    item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
+    //p = D3DXVECTOR3(90, 0, 10);
+    //item = new Item(TAG_RES_STATIC::QBZ, "gun", p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
+
+    //pPlayer->PutItemInTotalInventory(item);
+
+    //p = D3DXVECTOR3(20, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
+
+    //p = D3DXVECTOR3(30, 0, 10);
+    //item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
+    //AddObject(item);
+    //pPlayer->PutItemInTotalInventory(item);
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
@@ -209,8 +220,16 @@ void ScenePlay::setWithOthersMode()
         characters.emplace_back(pOther);
         AddObject(pOther);
 
-        //item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
+        //p = D3DXVECTOR3(100, 0, 10);
+        //item = new Item(TAG_RES_STATIC::Kar98k, "gun", p, r, s);
         //AddObject(item);
+        //pOther->PutItemInTotalInventory(item);
+
+        //p = D3DXVECTOR3(90, 0, 10);
+        //item = new Item(TAG_RES_STATIC::QBZ, "gun", p, r, s);
+        //AddObject(item);
+        //pOther->PutItemInTotalInventory(item);
+
         //pOther->PutItemInTotalInventory(item);
 
         //p = D3DXVECTOR3(20, 0, 10);
@@ -223,6 +242,36 @@ void ScenePlay::setWithOthersMode()
         //AddObject(item);
         //pOther->PutItemInTotalInventory(item);
     }
+
+    p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
+    string name = "Head_Lv1 " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Head_Lv1, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(300.0f, 200.0f, 200.0f);
+    name = "Armor_Lv1 " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Armor_Lv1, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(400.0f, 200.0f, 200.0f);
+    name = "Back_Lv1 " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Back_Lv1, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(90, 0, 10);
+    name = "QBZ " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::QBZ, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(70, 0, 10);
+    name = "Ammo_5_56mm " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
     //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
     //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
@@ -353,6 +402,27 @@ void ScenePlay::OnUpdate()
     검출 방법
     레이,
     */
+
+    static int testi;
+
+    if (Input()()->IsOnceKeyDown(VK_LEFT))
+    {
+        testi--;
+        if (testi < 1)
+        {
+            testi = 1;
+        }
+        Sound()()->Play(static_cast<TAG_SOUND>(testi), Vector3::ZERO, 1.0f, FMOD_2D);
+    }
+    if (Input()()->IsOnceKeyDown(VK_RIGHT))
+    {
+        testi++;
+        if (testi > static_cast<int>(TAG_SOUND::Background))
+        {
+            testi = 21;
+        }
+        Sound()()->Play(static_cast<TAG_SOUND>(testi), Vector3::ZERO, 1.0f, FMOD_2D);
+    }
 
     Shader()()->AddShadowSource(Matrix::IDENTITY, pHeightMap->GetMesh(), 0);
 

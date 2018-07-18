@@ -31,7 +31,6 @@ void SceneLoading::Load()
     load("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
     load("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
     load("./Resource/UI/Inventory/Basic/", "line.png");
-    load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png");
 
     load("./Resource/UI/Inventory/Basic/", "Equip_no.png");
     load("./Resource/UI/Inventory/Basic/", "Equip_mouseover.png");
@@ -57,6 +56,11 @@ void SceneLoading::Load()
 
     load("./Resource/UI/Inventory/Weapon/", "Kar98k.png", D3DCOLOR_XRGB(0, 0, 0));
     load("./Resource/UI/Inventory/Weapon/", "QBZ.png", D3DCOLOR_XRGB(0, 0, 0));
+
+    load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Armor_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
+    load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Back_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
+    load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Head_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
+
 
     //for InGameUI
     load("./Resource/UI/InGame/", "transparent_1280_720.png");
@@ -116,11 +120,11 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::WareHouse_A);
 
     // load skined meshs
-    const int numQBZ = 4;
+    const int numQBZ = 6;
     for (int i = 0; i < numQBZ; ++i)
         load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
-    const int numKar98k = 4;
+    const int numKar98k = 6;
     for (int i = 0; i < numKar98k; ++i)
         load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 

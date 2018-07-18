@@ -460,6 +460,7 @@ private:
     BoundingBox m_bBox;
     //BoundingSphere m_bSphereSlidingCollision;
 
+    float m_stepDistance;
 
 /**************************** end member variable ****************************/
 
@@ -677,6 +678,7 @@ public:
     void MoveItemFieldToBack(Item* pItem);
     void MoveItemFieldToPrimary(Item* pItem);
     void MoveItemFieldToSecondary(Item* pItem);
+    void MoveItemFieldToInventory(Item* pItem);
     void MoveItemHeadToField();
     void MoveItemArmorToField();
     void MoveItemBackToField();

@@ -9,8 +9,6 @@ void Character::setAttacking() //Num1, Num2, X
 {
     TotalInventory& inven = m_totalInventory;
 
-    //if (pAnimation->HasUpperFinishEvent()) return; //애니메이션 체인 관련 
-
     if (m_currentOnceKey._Num1)
     {
         cout << "Num1" << endl;
@@ -20,8 +18,6 @@ void Character::setAttacking() //Num1, Num2, X
             {
                 m_attacking = Attacking::Rifle;
 
-                
-                //inven.pTempSaveWeaponForX = inven.m_pWeaponPrimary;
                 inven.m_pHand = inven.m_pWeaponPrimary;
                 inven.m_pWeaponPrimary = nullptr;
 
@@ -34,11 +30,16 @@ void Character::setAttacking() //Num1, Num2, X
             {
                 TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
 
-                if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
+                if (m_stance == Stance::Stand ||
+                    m_stance == Stance::Crouch)
+                {
                     tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static;
+                }
                 else if (m_stance == Stance::Prone)
+                {
                     tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot;
-                
+                }
+
                 assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setAttacking(), tagAnim is COUNT");
 
                 m_hasChangingState = true;
@@ -133,13 +134,8 @@ void Character::setAttacking() //Num1, Num2, X
         {
             m_attacking = Attacking::Unarmed;
             inven.pTempSaveWeaponForX = inven.m_pHand;
-            TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();
-            setRifleOnBody(inven.m_handState);
 
-            /*if (tag == TAG_RES_STATIC::QBZ)
-                setRifleOnBody(TAG_RIFLE::Primary);
-            else if (tag == TAG_RES_STATIC::Kar98k)
-                setRifleOnBody(TAG_RIFLE::Secondary);*/
+            setRifleOnBody(inven.m_handState);
         }
         //손에 무기를 들고 있지않는데 X버튼을 누른다면, 이전에 장착했던 무기를 다시 손에 든다
         else
@@ -149,7 +145,6 @@ void Character::setAttacking() //Num1, Num2, X
                 m_attacking = Attacking::Rifle;
                 inven.m_pHand = inven.pTempSaveWeaponForX;
                 inven.pTempSaveWeaponForX = nullptr;
-                TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic();
 
                 if (inven.m_handState== TAG_RIFLE::Primary)
                 {
@@ -776,6 +771,8 @@ void Character::setRifleOnHand(TAG_RIFLE tagRifle)
         m_totalInventory.m_handState = tagRifle;
 
     }
+    m_totalInventory.m_handState = tagRifle;
+
     assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnHand(), tagAnim is COUNT");
 
     //애니메이션 적용
@@ -1536,7 +1533,17 @@ void Character::setEquipAnimation(
     }
 }
 
-void Character::setEquipAnimation(const CharacterAnimation::BodyPart part, const TAG_ANIM_CHARACTER tag, const bool isBlend, const float blendingTime, const float nextWeight, const float position, const float loopEventPeriod, const std::function<void()>& loopEvent, const float finishEventAgoTime, const std::function<void()>& finishEvent)
+void Character::setEquipAnimation(
+    const CharacterAnimation::BodyPart part, 
+    const TAG_ANIM_CHARACTER tag, 
+    const bool isBlend, 
+    const float blendingTime, 
+    const float nextWeight, 
+    const float position, 
+    const float loopEventPeriod, 
+    const std::function<void()>& loopEvent, 
+    const float finishEventAgoTime, 
+    const std::function<void()>& finishEvent)
 {
     if (m_totalInventory.m_pEquipArmor)
     {
