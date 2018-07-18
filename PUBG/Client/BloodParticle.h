@@ -59,3 +59,24 @@ public:
 
 };
 
+class _BloodParticlePool : public Singleton<_BloodParticlePool>
+{
+private:
+    deque<BloodParticle*> m_BloodParticle;
+
+    _BloodParticlePool();
+    ~_BloodParticlePool();
+
+public:
+    void Render();
+
+    friend Singleton<_BloodParticlePool>;
+};
+
+struct BloodParticlePool
+{
+    _BloodParticlePool* operator()()
+    {
+        return _BloodParticlePool::GetInstance();
+    }
+};
