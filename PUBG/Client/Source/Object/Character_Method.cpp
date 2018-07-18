@@ -1477,6 +1477,15 @@ void Character::MoveItemFieldToSecondary(Item* pItem)
     pItem->SetIsRenderSkinnedMesh(true);
 }
 
+void Character::MoveItemFieldToInventory(Item* pItem)
+{
+    TotalInventory& inven = m_totalInventory;
+
+    inven.m_mapInventory[pItem->GetTagResStatic()].emplace_back(pItem);
+    pItem->SetState(true);
+    pItem->SetIsRenderEffectMesh(false);
+}
+
 void Character::MoveItemHeadToField()
 {
 }

@@ -678,6 +678,7 @@ public:
     void MoveItemFieldToBack(Item* pItem);
     void MoveItemFieldToPrimary(Item* pItem);
     void MoveItemFieldToSecondary(Item* pItem);
+    void MoveItemFieldToInventory(Item* pItem);
     void MoveItemHeadToField();
     void MoveItemArmorToField();
     void MoveItemBackToField();

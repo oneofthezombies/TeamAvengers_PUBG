@@ -360,6 +360,16 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_SECONDARY, description));
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_INVENTORY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_FIELD_TO_INVENTORY, description));
+        }
+        break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HEAD_TO_FIELD:
         {
             auto parsedDesc = Message::ParseDescription(description);
