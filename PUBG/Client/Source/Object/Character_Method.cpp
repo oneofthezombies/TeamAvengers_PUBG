@@ -618,9 +618,9 @@ void Character::itemSphereCollisionInteraction()
             {
                 PutItemInTotalInventory(rayItm); //inventory에 넣기
                                                  //current scene 에서 지우기
-                pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
+                //pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
 
-                rayItm->SetState(true);
+                //rayItm->SetState(true);
                 
                 if (m_totalInventory.m_pWeaponPrimary)
                 {
@@ -646,8 +646,8 @@ void Character::itemSphereCollisionInteraction()
         {
             PutItemInTotalInventory(itm); //inventory에 넣기
             //current scene 에서 지우기
-            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
-            itm->SetState(true);
+            //pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
+            //itm->SetState(true);
 
             if (m_totalInventory.m_pWeaponPrimary)
             {
