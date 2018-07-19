@@ -30,11 +30,26 @@ enum class TAG_ANIM_CHARACTER
 {
     //캐릭터
     //0. 로비씬 애니메이션
-    //Lobby(4)
+    //Lobby(4) + P2, P3, P4
     Lobby_P1_NotReady,
     Lobby_P1_NotReady_Ready,
     Lobby_P1_Ready,
     Lobby_P1_Ready_NotReady,
+
+    Lobby_P2_NotReady,
+    Lobby_P2_NotReady_Ready,
+    Lobby_P2_Ready,
+    Lobby_P2_Ready_NotReady,
+
+    Lobby_P3_NotReady,
+    Lobby_P3_NotReady_Ready,
+    Lobby_P3_Ready,
+    Lobby_P3_Ready_NotReady,
+
+    Lobby_P4_NotReady,
+    Lobby_P4_NotReady_Ready,
+    Lobby_P4_Ready,
+    Lobby_P4_Ready_NotReady,
 
     //1. 해당무기를 들고있을 때 캐릭터의 애니메이션
     //Weapon_QBZ_Characert(6)
