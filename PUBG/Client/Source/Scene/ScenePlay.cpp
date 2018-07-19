@@ -362,6 +362,14 @@ ScenePlay::ScenePlay()
 ScenePlay::~ScenePlay()
 {
     UI()()->Destroy(m_layer);
+
+    for (auto box : deathDropBoxes)
+    {
+        for (auto item : box->GetItems())
+        {
+            SAFE_DELETE(item);
+        }
+    }
 }
 
 void ScenePlay::OnInit()
