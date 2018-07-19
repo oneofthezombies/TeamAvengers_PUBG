@@ -80,6 +80,8 @@ public:
     {
         static const float DEFAULT_CAPACITY;
         static const int NUM_UI_DROPPED = 12;
+        static const float FIRST_LINE;
+        static const float SECOND_LINE;
 
         Character* pCharacter;
 

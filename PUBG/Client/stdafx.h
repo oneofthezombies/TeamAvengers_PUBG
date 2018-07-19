@@ -21,6 +21,7 @@
 // end debug
 
 // math and usefuls
+#include "UsefulClientOnly.h"
 #include "Ray.h"
 #include "Collision.h"        // has Collision    ()()
 #include "Light.h"

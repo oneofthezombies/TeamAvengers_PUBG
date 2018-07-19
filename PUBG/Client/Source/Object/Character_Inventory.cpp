@@ -14,6 +14,8 @@ using Event       = UIButtonWithItem::Event;
 using MouseButton = UIButtonWithItem::MouseButton;
 
 const float Character::TotalInventory::DEFAULT_CAPACITY = 70.0f;
+const float Character::TotalInventory::FIRST_LINE = 233.0f;
+const float Character::TotalInventory::SECOND_LINE = 500.0f;
 
 Character::TotalInventory::TotalInventory()
     : m_pHand(nullptr)
@@ -737,7 +739,7 @@ void Character::TotalInventory::DropItem(Item** ppOriginItem)
         m_equipOnNum--;
 
     // 아이템을 필드로
-    originItem->SetState(false);
+    originItem->SetIsInInventory(false);
     originItem->SetIsRenderEffectMesh(true);
     originItem->SetIsRenderSkinnedMesh(false);
     originItem->GetTransform()->SetRotation(Vector3::ZERO);
@@ -761,7 +763,7 @@ int Character::TotalInventory::EquipItem(Item** ppOriginItem, Item* pNewItem)
         m_equipOnNum++;
 
     // 아이템을 낀다
-    pNewItem->SetState(true);
+    pNewItem->SetIsInInventory(true);
     pNewItem->SetIsRenderEffectMesh(false);
     pNewItem->SetIsRenderSkinnedMesh(true);
 
@@ -1196,7 +1198,7 @@ bool Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
             //아이템이 없는 경우는 새로 생성한다
             (*map)[tag].push_back(item);
             item->SetCount(count);
-            item->SetState(true);
+            item->SetIsInInventory(true);
 
             if (item->IsInDeathDropBox())
             {
@@ -1290,7 +1292,7 @@ bool Character::checkOriginItem(Item** originItem, Item* newItem)
             m_totalInventory.m_equipOnNum++;
 
         // eqiup
-        newItem->SetState(true);
+        newItem->SetIsInInventory(true);
         newItem->SetIsRenderEffectMesh(false);
         newItem->SetIsRenderSkinnedMesh(true);
 

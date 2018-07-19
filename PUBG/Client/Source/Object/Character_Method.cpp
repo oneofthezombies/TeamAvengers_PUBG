@@ -620,7 +620,7 @@ void Character::itemSphereCollisionInteraction()
                                                  //current scene 에서 지우기
                 //pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
 
-                //rayItm->SetState(true);
+                //rayItm->SetIsInInventory(true);
                 
                 if (m_totalInventory.m_pWeaponPrimary)
                 {
@@ -647,7 +647,7 @@ void Character::itemSphereCollisionInteraction()
             PutItemInTotalInventory(itm); //inventory에 넣기
             //current scene 에서 지우기
             //pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
-            //itm->SetState(true);
+            //itm->SetIsInInventory(true);
 
             if (m_totalInventory.m_pWeaponPrimary)
             {
@@ -1460,7 +1460,7 @@ void Character::MoveItemFieldToHead(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pEquipHead = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1470,7 +1470,7 @@ void Character::MoveItemFieldToArmor(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pEquipArmor = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1480,7 +1480,7 @@ void Character::MoveItemFieldToBack(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pEquipBack = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1490,7 +1490,7 @@ void Character::MoveItemFieldToPrimary(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pWeaponPrimary = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1500,7 +1500,7 @@ void Character::MoveItemFieldToSecondary(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pWeaponSecondary = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1510,7 +1510,7 @@ void Character::MoveItemFieldToInventory(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_mapInventory[pItem->GetTagResStatic()].emplace_back(pItem);
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
 }
 

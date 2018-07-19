@@ -93,8 +93,8 @@ public:
     UIText* GetUIText();
     UIImage* GetUIImage();
     UIImage* GetUIImage2();
-    void SetState(bool state);
-    bool GetState();
+    void SetIsInInventory(bool state);
+    bool IsInInventory();
 
     //for Rifle
     void SetNumBullet(const int numBullet);

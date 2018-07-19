@@ -26,14 +26,14 @@ void Character::onMouse(
 
     if (button == MouseButton::LEFT)
     {
-        if (event == Event::DOWN && !inven.m_stateClicked)
+        if (event == Event::DOWN && 
+            !inven.m_stateClicked)
         {
-            if (UIPosition::IsDropped(tag) || UIPosition::IsInven(tag))
+            if (UIPosition::IsDropped(tag) || 
+                UIPosition::IsInven(tag))
             {
                 // 좌표
-                POINT mouse;
-                GetCursorPos(&mouse);
-                ScreenToClient(g_hWnd, &mouse);
+                POINT mouse = Mouse::GetPosition();
 
                 inven.pUIPicked->SetPosition(
                     D3DXVECTOR3(
@@ -53,13 +53,10 @@ void Character::onMouse(
                     inven.m_pWeapon2->SetIsActive(true);
                 }
             }
-            //if(UIPosition::IsInven(tag))
 
             if (tag == TAG_UI_POSITION::Weapon1)
             {
-                POINT mouse;
-                GetCursorPos(&mouse);
-                ScreenToClient(g_hWnd, &mouse);
+                POINT mouse = Mouse::GetPosition();
 
                 inven.pUIPicked->SetPosition(
                     D3DXVECTOR3(
@@ -75,9 +72,7 @@ void Character::onMouse(
             }
             else if (tag == TAG_UI_POSITION::Weapon2)
             {
-                POINT mouse;
-                GetCursorPos(&mouse);
-                ScreenToClient(g_hWnd, &mouse);
+                POINT mouse = Mouse::GetPosition();
 
                 inven.pUIPicked->SetPosition(
                     D3DXVECTOR3(
@@ -99,9 +94,7 @@ void Character::onMouse(
         {
             if (tag == TAG_UI_POSITION::picked)
             {
-                POINT mouse;
-                GetCursorPos(&mouse);
-                ScreenToClient(g_hWnd, &mouse);
+                POINT mouse = Mouse::GetPosition();
 
                 inven.pUIPicked->SetPosition(
                     D3DXVECTOR3(
@@ -113,209 +106,174 @@ void Character::onMouse(
         if (event == Event::UP)
         {
             if (tag == TAG_UI_POSITION::picked && 
-                !pUIButtonWithItem->pItem->GetState())
+                !pUIButtonWithItem->pItem->IsInInventory()) // dropped인 것
             {
                 const D3DXVECTOR3& pos = pUIButtonWithItem->GetPosition();
                 const auto cat =
                     ItemInfo::GetItemCategory(
                         pUIButtonWithItem->pItem->GetTagResStatic());
 
-                // 드롭드 인벤 구분선 위치
-                const float firstLine = 233.0f;
-                // TODO : 인벤 장착 구분선 위치 조정해야 함
-                const float secondLine = 500.0f;
-                if (pos.x < firstLine)
+                if (pos.x < TotalInventory::FIRST_LINE)
                 {
                 }
-                else if (pos.x < secondLine)
+                else if (pos.x < TotalInventory::SECOND_LINE)
                 {
                     switch (cat)
                     {
                     case TAG_ITEM_CATEGORY::Ammo:
-                        {
-                            if (PutItemInTotalInventory(pUIButtonWithItem->pItem))
-                            {
-                            }
-                        }
-                        break;
-
                     case TAG_ITEM_CATEGORY::Rifle:
+                    case TAG_ITEM_CATEGORY::Head:
+                    case TAG_ITEM_CATEGORY::Armor:
+                    case TAG_ITEM_CATEGORY::Back:
                         {
                             if (PutItemInTotalInventory(pUIButtonWithItem->pItem))
                             {
-                                /*UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage2();*/
-
-                                //웨폰 버튼.
-                                if (inven.m_pWeaponPrimary)
-                                {
-                                    inven.m_pWeapon1->pUIImage = inven.m_pWeaponPrimary->GetUIImage2();
-                                    inven.m_pWeapon1->pItem = inven.m_pWeaponPrimary;
-                                }
-
-                                if (inven.m_pWeaponSecondary)
-                                {
-                                    inven.m_pWeapon2->pUIImage = inven.m_pWeaponSecondary->GetUIImage2();
-                                    inven.m_pWeapon2->pItem = inven.m_pWeaponSecondary;
-                                }
                             }
-
                         }
                         break;
                     }
                 }
                 else    //3번째 장비 착용창.
                 {
+                    // OOTZ_FLAG 해당 칸 버튼 눌르면 거기로 껴짐
+
                     switch (cat)
                     {
                     case TAG_ITEM_CATEGORY::Ammo:
+                    case TAG_ITEM_CATEGORY::Rifle:
+                    case TAG_ITEM_CATEGORY::Head:
+                    case TAG_ITEM_CATEGORY::Armor:
+                    case TAG_ITEM_CATEGORY::Back:
                         {
-                            //Item* pItem = pUIButtonWithItem->pItem;
-                            //PutItemInTotalInventory(pItem);
-                            //pItem->SetState(true);
-                            //CurrentScene()()->ItemIntoInventory(
-                            //    CurrentScene()()->GetCellIndex(
-                            //        pItem->GetTransform()->GetPosition()),
-                            //    pItem);
+                            if (PutItemInTotalInventory(pUIButtonWithItem->pItem))
+                            {
+                            }
                         }
-                        break;
-                        /*case TAG_ITEM_CATEGORY::Rifle:
-                        {
-                        Item* pItem = pUIButtonWithItem->pItem;
-                        PutItemInTotalInventory(pItem);
-                        pItem->SetState(true);
-                        CurrentScene()()->ItemIntoInventory(
-                        CurrentScene()()->GetCellIndex(
-                        pItem->GetTransform()->GetPosition()),
-                        pItem);
-                        UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage2();
-                        inven.m_pWeapon1->pUIImage = pItemImage;
-                        inven.m_pWeapon1->pItem = pItem;
-
-                        }*/
                         break;
                     }
                 }
                 const float max = std::numeric_limits<float>::max();
                 pUIButtonWithItem->SetPosition(Vector3::ONE * max);
             }
+
             /////////////////////인벤토리 안에서
-            else if (tag == TAG_UI_POSITION::picked
-                && pUIButtonWithItem->pItem->GetState())
+            else if (tag == TAG_UI_POSITION::picked && 
+                pUIButtonWithItem->pItem->IsInInventory())
             {
                 const D3DXVECTOR3& pos = pUIButtonWithItem->GetPosition();
                 const auto cat =
                     ItemInfo::GetItemCategory(
                         pUIButtonWithItem->pItem->GetTagResStatic());
 
-                // 드롭드 인벤 구분선 위치
-                const float firstLine = 233.0f;
-                // TODO : 인벤 장착 구분선 위치 조정해야 함
-                const float secondLine = 500.0f;
-                if (pos.x < firstLine)
+                if (pos.x < TotalInventory::FIRST_LINE) // 필드에 놓는다
                 {
                     Item* pItem = pUIButtonWithItem->pItem;
 
-                    pItem->SetState(false);
-                    D3DXVECTOR3 p = m_totalInventory.pCharacter->GetTransform()->GetPosition();
-                    CurrentScene()()->AddObject(pItem);
-                    CurrentScene()()->InsertObjIntoTotalCellSpace(
-                        TAG_OBJECT::Item,
-                        CurrentScene()()->GetCellIndex(p),
-                        pItem);
-
-                    pItem->SetPosition(D3DXVECTOR3(p.x, p.y + 20, p.z));
-
-                    TAG_RES_STATIC tag = pItem->GetTagResStatic();
-                    std::vector<Item*>& items = inven.m_mapInventory[tag];
-                    for (auto it = items.begin(); it != items.end(); ++it)
-                    {
-                        if (*it == pItem)
-                        {
-                            items.erase(it);
-                            break;
-                        }
-                    }
-
-                    pItem->GetTransform()->Update();
+                    const std::string itemName = pItem->GetName();
 
                     switch (cat)
                     {
-                    case TAG_ITEM_CATEGORY::Rifle:
+                    case TAG_ITEM_CATEGORY::Ammo:
                         {
-                            //if()
-                            //바닥에 떨구면 Effect
-                            pItem->SetIsRenderSkinnedMesh(false);
-                            pItem->SetIsRenderEffectMesh(true);
-                            pItem->GetTransform()->SetRotation(Vector3::ZERO);
-                            pItem->GetTransform()->Update();
-
-                            if (pItem == inven.m_pWeapon1->pItem)
-                            {
-                                inven.m_pWeapon1->pUIImage = nullptr;
-                                inven.m_pWeapon1->pItem = nullptr;
-                                inven.m_pWeaponPrimary = nullptr;
-                                if (inven.m_handState == TAG_RIFLE::Primary)
-                                {
-                                    inven.m_handState = TAG_RIFLE::None;
-                                    inven.pTempSaveWeaponForX = nullptr;
-                                }
-
-                                // OOTZ_FLAG : 네트워크 프라이머리 -> 필드
-                            }
-                            else if (pItem == inven.m_pWeapon2->pItem)
-                            {
-                                inven.m_pWeapon2->pUIImage = nullptr;
-                                inven.m_pWeapon2->pItem = nullptr;
-                                inven.m_pWeaponSecondary = nullptr;
-                                if (inven.m_handState == TAG_RIFLE::Secondary)
-                                {
-                                    inven.m_handState = TAG_RIFLE::None;
-                                    inven.pTempSaveWeaponForX = nullptr;
-                                }
-
-                                // OOTZ_FLAG : 네트워크 세컨더리 -> 필드
-                            }
-
-                            //손에 장착 되어있는 아이템이 클릭한 아이템이랑 같다면 
-                            if (pItem == inven.m_pHand)
-                            {
-                                inven.m_pHand = nullptr;
-                                inven.m_handState = TAG_RIFLE::None;
-                                inven.pTempSaveWeaponForX = nullptr;
-                                m_attacking = Attacking::Unarmed;
-
-                                //캐릭터 애니메이션
-                                {
-
-                                    TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
-                                    if (m_stance == Stance::Stand)
-                                        tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1;
-                                    else if (m_stance == Stance::Crouch)
-                                        tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Idling_1;
-                                    else if (m_stance == Stance::Prone)
-                                        tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Idling_1;
-                                    assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && " Character::onMouse(), COUNT");
-
-                                    setAnimation(
-                                        CharacterAnimation::BodyPart::BOTH,
-                                        tagAnim,
-                                        true);
-                                }
-
-                                // OOTZ_FLAG : 네트워크 핸드 -> 필드
-                            }
-
-
-
+                            //TAG_RES_STATIC tag = pItem->GetTagResStatic();
+                            //std::vector<Item*>& items = inven.m_mapInventory[tag];
+                            //for (auto it = items.begin(); it != items.end(); ++it)
+                            //{
+                            //    if (*it == pItem)
+                            //    {
+                            //        items.erase(it);
+                            //        break;
+                            //    }
+                            //}
+                            //Communication()()->SendEventMoveItem
                         }
                         break;
+                    case TAG_ITEM_CATEGORY::Armor:
+                        {
+                            inven.DropItem(&pUIButtonWithItem->pItem);
+                            Communication()()->SendEventMoveItemArmorToField(m_index, itemName);
+                        }
+                        break;
+                    case TAG_ITEM_CATEGORY::Back:
+                        {
+                            inven.DropItem(&pUIButtonWithItem->pItem);
+                            Communication()()->SendEventMoveItemBackToField(m_index, itemName);
+                        }
+                        break;
+                    case TAG_ITEM_CATEGORY::Head:
+                        {
+                            inven.DropItem(&pUIButtonWithItem->pItem);
+                            Communication()()->SendEventMoveItemHeadToField(m_index, itemName);
+                        }
+                        break;
+                    case TAG_ITEM_CATEGORY::Rifle:
+                        {
+                            bool isHand = false;
+                            if (itemName == inven.m_pWeapon1->pItem->GetName())
+                            {
+                                if (itemName == inven.m_pHand->GetName())
+                                {
+                                    MoveItemHandToPrimary();
+                                    Communication()()->SendEventMoveItemHandToPrimary(m_index);
 
-                    default:
+                                    isHand = true;
+                                }
+
+                                inven.DropPrimary();
+
+                                const std::string tempName = inven.pTempSaveWeaponForX->GetName();
+                                if (itemName == tempName)
+                                {
+                                    inven.pTempSaveWeaponForX = nullptr;
+                                }
+                            }
+                            else if (itemName == inven.m_pWeapon2->pItem->GetName())
+                            {
+                                if (itemName == inven.m_pHand->GetName())
+                                {
+                                    MoveItemHandToSecondary();
+                                    Communication()()->SendEventMoveItemHandToSecondary(m_index);
+
+                                    isHand = true;
+                                }
+
+                                inven.DropSecondary();
+
+                                const std::string tempName = inven.pTempSaveWeaponForX->GetName();
+                                if (itemName == tempName)
+                                {
+                                    inven.pTempSaveWeaponForX = nullptr;
+                                }
+                            }
+                            else
+                            {
+                                assert(false && "Character::onMouse(), rifle name is unknown");
+                            }
+
+                            if (isHand)
+                            {
+                                inven.m_handState = TAG_RIFLE::None;
+                                m_attacking = Attacking::Unarmed;
+
+                                TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+                                if (m_stance == Stance::Stand)
+                                    tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1;
+                                else if (m_stance == Stance::Crouch)
+                                    tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Idling_1;
+                                else if (m_stance == Stance::Prone)
+                                    tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Idling_1;
+                                assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && " Character::onMouse(), COUNT");
+
+                                setAnimation(
+                                    CharacterAnimation::BodyPart::BOTH,
+                                    tagAnim,
+                                    true);
+                            }
+                        }
                         break;
                     }
-                    //pItem->
                 }
-                else if (pos.x < secondLine)
+                else if (pos.x < TotalInventory::SECOND_LINE)
                 {
                 }
                 else
@@ -332,6 +290,7 @@ void Character::onMouse(
                 const float max = std::numeric_limits<float>::max();
                 pUIButtonWithItem->SetPosition(Vector3::ONE * max);
             }
+
             if (inven.m_pWeaponPrimary == nullptr && !(inven.m_handState == TAG_RIFLE::Primary))
             {
                 inven.m_pWeapon1->SetIsActive(false);

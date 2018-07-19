@@ -62,7 +62,7 @@ void DeathDropBox::setItems(Character* pCharacter)
         if (ppItem && *ppItem)
         {
             (*ppItem)->SetDeathDropBox(this);
-            (*ppItem)->SetState(false);
+            (*ppItem)->SetIsInInventory(false);
             m_items.emplace_back(*ppItem);
             *ppItem = nullptr;
         }
@@ -81,7 +81,7 @@ void DeathDropBox::setItems(Character* pCharacter)
         for (Item* p : items)
         {
             p->SetDeathDropBox(this);
-            p->SetState(false);
+            p->SetIsInInventory(false);
             m_items.emplace_back(p);
         }
         items.clear();

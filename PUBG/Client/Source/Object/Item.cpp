@@ -486,12 +486,12 @@ UIImage * Item::GetUIImage2()
     return m_pUIImage2;
 }
 
-void Item::SetState(bool state)
+void Item::SetIsInInventory(bool state)
 {
     m_inInventory = state;
 }
 
-bool Item::GetState()
+bool Item::IsInInventory()
 {
     return m_inInventory;
 }
