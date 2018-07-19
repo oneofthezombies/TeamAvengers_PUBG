@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="SceneLobby.cpp" />
+    <ClCompile Include="Source\Object\Character_OnHand.cpp" />
     <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
     <ClCompile Include="Source\Object\DeathDropBox.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />

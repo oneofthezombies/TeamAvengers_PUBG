@@ -344,10 +344,8 @@ void Character::updateMine()
     }
     
     setInteraction();
-    setJump();
     animationControl();
-    
-    // TODO : 앉아있을 때 점프(스페이스) -> 일어섬
+
     if (m_savedInput != m_currentStayKey)
     {
         if (m_lowerAnimState == TAG_ANIM_CHARACTER::COUNT)
@@ -377,6 +375,7 @@ void Character::updateMine()
             m_savedInput = m_currentStayKey;
         }
     }
+    setJump();
     
     D3DXVECTOR3 pos = tm->GetPosition();
     D3DXQUATERNION rot = tm->GetRotation();
@@ -507,17 +506,12 @@ void Character::updateOther()
         pCurrentScene->MoveCell(&m_cellIndex, cellIndex, TAG_OBJECT::Character, this);
     }
 
-
-
-
     D3DXVECTOR2 headAngle;
     D3DXVec2Lerp(
         &headAngle, 
         &D3DXVECTOR2(m_headRotation.m_angle, 0.0f), 
         &D3DXVECTOR2(pi.headAngle, 0.0f), 1.0f);
     m_headRotation.m_angle = headAngle.x;
-
-
 
     // animation
     const auto upperAnim = static_cast<TAG_ANIM_CHARACTER>(pi.upperAnimState);

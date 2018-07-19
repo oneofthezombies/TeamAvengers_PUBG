@@ -11,13 +11,11 @@ void Character::setAttacking() //Num1, Num2, X
 
     if (m_currentOnceKey._Num1)
     {
-        cout << "Num1" << endl;
         if (inven.m_pWeaponPrimary)
         {
             if (m_attacking == Attacking::Unarmed)    //주무기를 장착한다
             {
                 m_attacking = Attacking::Rifle;
-
                 inven.m_pHand = inven.m_pWeaponPrimary;
                 inven.m_pWeaponPrimary = nullptr;
 
@@ -26,24 +24,20 @@ void Character::setAttacking() //Num1, Num2, X
 
                 setRifleOnHand(TAG_RIFLE::Primary);
             }
-            else if (m_attacking == Attacking::Rifle) //보조무기를 해제하고, 주무기를 장착한다
+            else if (m_attacking == Attacking::Rifle && inven.m_handState == TAG_RIFLE::Secondary) //보조무기를 해제하고, 주무기를 장착한다
             {
+                m_totalInventory.m_handState = TAG_RIFLE::Primary;
+
                 TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
 
-                if (m_stance == Stance::Stand ||
-                    m_stance == Stance::Crouch)
-                {
+                if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                     tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_Static;
-                }
                 else if (m_stance == Stance::Prone)
-                {
                     tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot;
-                }
 
-                assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setAttacking(), tagAnim is COUNT");
 
                 m_hasChangingState = true;
-                setAnimation(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     tagAnim,
                     false, 
@@ -61,25 +55,33 @@ void Character::setAttacking() //Num1, Num2, X
                     Communication()()->SendEventMoveItemHandToSecondary(m_index);
                     Communication()()->SendEventMoveItemPrimaryToHand(m_index);
 
-                    setRifleOnHand(TAG_RIFLE::Primary);
+                    setRifleOnHandCharacter(TAG_RIFLE::Primary);
                 });
-            }
-            else if (m_attacking == Attacking::Melee)
-            {
-                //TODO: melee 생기면 구현
+
+                //장비용
+                setEquipAnimation(
+                    CharacterAnimation::BodyPart::UPPER,
+                    tagAnim,
+                    false,
+                    CharacterAnimation::DEFAULT_BLENDING_TIME,
+                    CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                    CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                    CharacterAnimation::DEFAULT_POSITION,
+                    [this]()
+                {
+                    setRifleOnHandEquip(TAG_RIFLE::Primary);
+                });
             }
         }
     }
     
     else if (m_currentOnceKey._Num2)
     {
-        cout << "Num2" << endl;
         if (inven.m_pWeaponSecondary)
         {
             if (m_attacking == Attacking::Unarmed)
             {
                 m_attacking = Attacking::Rifle;
-
                 inven.m_pHand = inven.m_pWeaponSecondary;
                 inven.m_pWeaponSecondary = nullptr;
 
@@ -88,17 +90,18 @@ void Character::setAttacking() //Num1, Num2, X
 
                 setRifleOnHand(TAG_RIFLE::Secondary);
             }
-            else if (m_attacking == Attacking::Rifle) //주무기를 등짝에 붙이고 보조무기를 손에 든다
+            else if (m_attacking == Attacking::Rifle && inven.m_handState == TAG_RIFLE::Primary) //주무기를 등짝에 붙이고 보조무기를 손에 든다
             {
-                TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+                m_totalInventory.m_handState = TAG_RIFLE::Secondary;
 
+                TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
                 if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                     tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_Static;
                 else if (m_stance == Stance::Prone)
                     tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot;
 
                 m_hasChangingState = true;
-                setAnimation(
+                pAnimation->Set(
                     CharacterAnimation::BodyPart::UPPER,
                     tagAnim,
                     false, 
@@ -116,19 +119,28 @@ void Character::setAttacking() //Num1, Num2, X
                     Communication()()->SendEventMoveItemHandToPrimary(m_index);
                     Communication()()->SendEventMoveItemSecondaryToHand(m_index);
 
-                    setRifleOnHand(TAG_RIFLE::Secondary);
+                    setRifleOnHandCharacter(TAG_RIFLE::Secondary);
                 });
-            }
-            else if (m_attacking == Attacking::Melee)
-            {
-                //TODO: melee 생기면 구현
+
+                //장비용
+                setEquipAnimation(
+                    CharacterAnimation::BodyPart::UPPER,
+                    tagAnim,
+                    false,
+                    CharacterAnimation::DEFAULT_BLENDING_TIME,
+                    CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                    CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+                    CharacterAnimation::DEFAULT_POSITION,
+                    [this]()
+                {
+                    setRifleOnHandEquip(TAG_RIFLE::Secondary);
+                });
             }
         }
     }
     
-    else if (m_currentOnceKey._X)
+    else if (m_currentOnceKey._X && m_Jump.isJumping == false)
     {
-        cout << "X" << endl;
         //무기가 주무기냐, 보조무기냐에 따라서 다른 애니메이션을 실행한다.
         if (inven.m_pHand)
         {
@@ -142,14 +154,14 @@ void Character::setAttacking() //Num1, Num2, X
         {
             if (inven.pTempSaveWeaponForX)
             {
-                m_attacking = Attacking::Rifle;
-                inven.m_pHand = inven.pTempSaveWeaponForX;
-                inven.pTempSaveWeaponForX = nullptr;
-
-                if (inven.m_handState== TAG_RIFLE::Primary)
+                if (inven.m_handState == TAG_RIFLE::Primary)
                 {
-                    m_hasChangingState = true;
+                    m_attacking = Attacking::Rifle;
+
                     inven.m_pWeaponPrimary = nullptr;
+                    inven.m_pHand = inven.pTempSaveWeaponForX;
+                    inven.pTempSaveWeaponForX = nullptr;
+
                     setRifleOnHand(TAG_RIFLE::Primary);
 
                     // OOTZ_FLAG : 네트워크 프라이머리 -> 손
@@ -157,8 +169,12 @@ void Character::setAttacking() //Num1, Num2, X
                 }
                 else if (inven.m_handState == TAG_RIFLE::Secondary)
                 {
-                    m_hasChangingState = true;
+                    m_attacking = Attacking::Rifle;
+
                     inven.m_pWeaponSecondary = nullptr;
+                    inven.m_pHand = inven.pTempSaveWeaponForX;
+                    inven.pTempSaveWeaponForX = nullptr;
+
                     setRifleOnHand(TAG_RIFLE::Secondary);
 
                     // OOTZ_FLAG : 네트워크 세컨더리 -> 손
@@ -173,7 +189,6 @@ void Character::setStance() //C, Z
 {
     if (m_currentOnceKey._C)
     {
-        cout << "C" << endl;
         //서 있으면 쭈그리고, 쭈그리고 있으면 서고, 엎드려 있으면 쭈그린다
         // TODO : check obstacle
         if (m_stance == Stance::Stand)
@@ -195,7 +210,6 @@ void Character::setStance() //C, Z
     
     else if (m_currentOnceKey._Z)
     {
-        cout << "Z" << endl;
         //서 있으면 엎드리고, 쭈그려있으면 엎드리고, 엎드려있으면 선다
         // TODO : check obstacle
         if (m_stance == Stance::Stand)
@@ -234,10 +248,7 @@ void Character::setReload()
             int numBulletCurrentLoad = inven.m_pHand->GetNumBullet();       //장전되어있는 총알 수
 
             if (numBulletCurrentLoad == magSize) //이미 가득 장전 되어있는 경우
-            {
-                cout << "이미 가득차있다!!" << endl;
                 return;
-            }
 
             //총에 알맞는 총알이 있는지 확인해서 장전
             auto it = inven.m_mapInventory.find(ammoType);
@@ -246,15 +257,12 @@ void Character::setReload()
                 int numBulletInInventory = (*it).second.back()->GetCount(); //인벤토리에 있는 총알 수
                 int numBulletNeedReload = magSize - numBulletCurrentLoad;   //장전할 총알 수 (장탄수 - 현재 장전된 총알 개수)
 
-                cout << ItemInfo::GetName(ammoType);
-                cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
-                cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
+                //cout << ItemInfo::GetName(ammoType);
+                //cout << "을 " << ItemInfo::GetName(tag) << "에 장전" << endl;
+                //cout << "인벤토리에 있는 총알 수: " << numBulletInInventory << "\n";
 
                 if (numBulletInInventory == 0)
-                {
-                    cout << "인벤토리에 더이상 총알이 없어 ㅠㅠ" << endl;
                     return;
-                }
 
                 inven.m_numReload = 0;
                 if (numBulletInInventory >= numBulletNeedReload)
@@ -272,17 +280,20 @@ void Character::setReload()
 
                     inven.m_numReload = numBulletInInventory;
                 }
-                cout << "장전한 총알 개수: " << inven.m_numReload << "\n";
-                cout << "총에 장전된 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
-                cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
+                //cout << "장전한 총알 개수: " << inven.m_numReload << "\n";
+                //cout << "총에 장전된 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
+                //cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
 
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
-                    Sound()()->addPlay(TAG_SOUND::Qbz_Reload,
+                    Sound()()->addPlay(
+                        TAG_SOUND::Qbz_Reload,
                         GetTransform()->GetPosition(),
                         0.0f, FMOD_2D);
+
                     //총 자체 애니메이션
                     m_isNeedRifleAnim = true;
+                    m_hasChangingState = true;
                     inven.m_pHand->Set
                     (
                         TAG_ANIM_WEAPON::Weapon_QBZ_Reload_Charge_FPP,
@@ -292,9 +303,13 @@ void Character::setReload()
                         Item::DEFAULT_POSITION,
                         Item::DEFAULT_FINISH_EVENT_AGO_TIME,
                         [this, &inven]() {
+
+                        m_hasChangingState = false;
+
                         inven.m_pHand->Set(
                             TAG_ANIM_WEAPON::Weapon_QBZ_Idle,
                             false);
+
                         m_isNeedRifleAnim = false;
                     });
 
@@ -309,15 +324,14 @@ void Character::setReload()
                             CharacterAnimation::DEFAULT_BLENDING_TIME,
                             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                             CharacterAnimation::DEFAULT_POSITION,
-                            0.3f, //ok
+                            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                             [this]()
                         {
                             m_hasChangingState = false;
                             setAnimation(
                                 CharacterAnimation::BodyPart::BOTH,
                                 m_lowerAnimState,
-                                true,
-                                0.3f);
+                                false);
                         });
 
 
@@ -348,22 +362,36 @@ void Character::setReload()
                 {
                     if (inven.m_numReload == 5)
                     {
+                        Sound()()->addPlay(
+                            TAG_SOUND::Kar98_Reload0, 
+                            GetTransform()->GetPosition(), 
+                            0.3f,
+                            FMOD_2D);
+                        Sound()()->addPlay(
+                            TAG_SOUND::Kar98_Reload1, 
+                            GetTransform()->GetPosition(), 
+                            2.4f,
+                            FMOD_2D);
+                        Sound()()->addPlay(
+                            TAG_SOUND::Kar98_Reload2, 
+                            GetTransform()->GetPosition(), 
+                            2.5f,
+                            FMOD_2D);
+                        Sound()()->addPlay(
+                            TAG_SOUND::Kar98_Reload3, 
+                            GetTransform()->GetPosition(), 
+                            2.9f,
+                            FMOD_2D);
 
-                        Sound()()->addPlay(TAG_SOUND::Kar98_Reload0, GetTransform()->GetPosition(), 0.3f,
-                            FMOD_2D);
-                        Sound()()->addPlay(TAG_SOUND::Kar98_Reload1, GetTransform()->GetPosition(), 2.4f,
-                            FMOD_2D);
-                        Sound()()->addPlay(TAG_SOUND::Kar98_Reload2, GetTransform()->GetPosition(), 2.5f,
-                            FMOD_2D);
-                        Sound()()->addPlay(TAG_SOUND::Kar98_Reload3, GetTransform()->GetPosition(), 2.9f,
-                            FMOD_2D);
                         TAG_ANIM_WEAPON tagAnim = TAG_ANIM_WEAPON::COUNT;
+
                         if (CurrentCamera()()->GetTagCamera() == TAG_CAMERA::First_Person)
                             tagAnim = TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast_FPP;
                         else
                             tagAnim = TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Fast;
 
                         //총 자체 애니메이션
+                        m_hasChangingState = true;
                         m_isNeedRifleAnim = true;
                         inven.m_pHand->Set
                         (
@@ -374,18 +402,21 @@ void Character::setReload()
                             Item::DEFAULT_POSITION,
                             Item::DEFAULT_FINISH_EVENT_AGO_TIME,
                             [this, &inven]() {
+
+                            m_hasChangingState = false;
+
                             inven.m_pHand->Set(
                                 TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
                                 false);
+
                             m_isNeedRifleAnim = false;
                         });
 
                         // fast reload
                         if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                         {
-                            m_hasChangingState = true;
-
                             //캐릭터 애니메이션
+                            m_hasChangingState = true;
                             setAnimation(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Base,
@@ -393,22 +424,20 @@ void Character::setReload()
                                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                                 CharacterAnimation::DEFAULT_POSITION,
-                                0.3f,
+                                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                                 [this, &inven]()
                             {
                                 m_hasChangingState = false;
                                 setAnimation(
                                     CharacterAnimation::BodyPart::BOTH,
                                     m_lowerAnimState,
-                                    true,
-                                    0.3f);
+                                    false);
                             });
                         }
                         else if (m_stance == Stance::Prone)
-                        {
-                            m_hasChangingState = true;
-                           
+                        {                         
                             //캐릭터 애니메이션
+                            m_hasChangingState = true;
                             setAnimation(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_ReloadFast_Prone,
@@ -430,9 +459,14 @@ void Character::setReload()
                     }
                     else
                     {
-                        Sound()()->addPlay(TAG_SOUND::Kar98_Reload0, GetTransform()->GetPosition(), 0.0f,
+                        Sound()()->addPlay(
+                            TAG_SOUND::Kar98_Reload0, 
+                            GetTransform()->GetPosition(), 
+                            0.0f,
                             FMOD_2D);
+
                         //총 자체 애니메이션
+                        m_hasChangingState = true;
                         m_isNeedRifleAnim = true;
                         inven.m_pHand->Set
                         (
@@ -446,6 +480,7 @@ void Character::setReload()
                             std::bind(&Item::OnKar98kReload, inven.m_pHand, m_totalInventory.m_numReload)
                         );
                          
+                        //캐릭터 애니메이션
                         if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
                         {
                             m_hasChangingState = true;                   
@@ -477,13 +512,13 @@ void Character::setReload()
             }
             else
             {
-                cout << "총알이 필요해" << endl;
+                //cout << "총알이 필요해" << endl;
                 //do nothing
             }
         }
         else //inven.m_pHand == nullptr
         {
-            cout << "총을 장착해줘" << endl;
+            //cout << "총을 장착해줘" << endl;
             //do nothing
         }
     }
@@ -495,6 +530,7 @@ void Character::setPunch()
     {
         TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
         int randomNum = rand() % 2;
+        
         //애니메이션 정하기
         if (m_stance == Stance::Stand)
         {
@@ -664,6 +700,9 @@ void Character::setInteraction()
 
 void Character::setJump()
 {
+    if (m_hasChangingState)
+        return;
+
     if(m_currentOnceKey._Space && m_currentStayKey._W)
     {
         if (m_stance == Stance::Prone)
@@ -743,77 +782,18 @@ void Character::setJump()
     }
 }
 
-/*
-무기 장착 및 해제 애니메이션
-*/
-void Character::setRifleOnHand(TAG_RIFLE tagRifle)
-{  
-    //총구 뒤쪽 카메라
-    // OOTZ FLAG
-    //m_info.pGunBolt = m_totalInventory.m_pHand->GetGunBolt();
-
-    //애니메이션 정하기
-    TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
-    if (tagRifle == TAG_RIFLE::Primary)        //주무기 일 때
-    {
-        if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
-            tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_PrimarySlot_OnHand;
-        else if (m_stance == Stance::Prone)
-            tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_PrimarySlot_OnHand;
-        m_totalInventory.m_handState = tagRifle;
-    }
-    else if (tagRifle == TAG_RIFLE::Secondary) //보조무기 일 때
-    {
-        if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
-            tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Stand_SecondarySlot_OnHand;
-        else if (m_stance == Stance::Prone)
-            tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot_OnHand;
-        m_totalInventory.m_handState = tagRifle;
-
-    }
-    m_totalInventory.m_handState = tagRifle;
-
-    assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnHand(), tagAnim is COUNT");
-
-    //애니메이션 적용
-    setAnimation(
-        CharacterAnimation::BodyPart::UPPER,
-        tagAnim,
-        false, //손에 들때 보간하면 총이 들리는 느낌이 나서 false
-        CharacterAnimation::DEFAULT_BLENDING_TIME,
-        CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-        CharacterAnimation::DEFAULT_POSITION,
-        CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-        [this]()
-    {
-        m_hasChangingState = false;
-
-        setAnimation(
-            CharacterAnimation::BodyPart::BOTH,
-            m_lowerAnimState,
-            false);
-    });
-}
-
 void Character::setRifleOnBody(TAG_RIFLE tagRifle)
 {
     //총구 뒤쪽 카메라
     // OOTZ FLAG
     //m_info.pGunBolt = nullptr;
 
-    //TODO: 캐릭터, 장비 씽크 필요함
-    /**/
-    //D3DXTRACK_DESC desc;
-    //pAnimation->GetUpperTrackDescription(0, &desc);
-    /**/
-
     /*
     - 몸에 장착하는 애니메이션 - Idling 애니메이션 0.3f 보간, Prone상태에서 깜빡거리는 문제 해결
     */
 
     TotalInventory& inven = m_totalInventory;
-
-    if (tagRifle == TAG_RIFLE::Primary) //주무기를 다시 몸에 장착
+    if (inven.m_handState == TAG_RIFLE::Primary) //주무기를 다시 몸에 장착
     {
         //애니메이션 정하기
         TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
@@ -839,6 +819,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
         {
             inven.m_pWeaponPrimary = inven.m_pHand;
             inven.m_pHand = nullptr;
+
             m_hasChangingState = false;
 
             // OOTZ_FLAG : 네트워크 손 -> 프라이머리
@@ -866,7 +847,7 @@ void Character::setRifleOnBody(TAG_RIFLE tagRifle)
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_POSITION);
     }
-    else if (tagRifle == TAG_RIFLE::Secondary) //보조무기를 다시 몸에 장착
+    else if (inven.m_handState == TAG_RIFLE::Secondary) //보조무기를 다시 몸에 장착
     {
         //애니메이션 정하기
         TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
@@ -945,7 +926,7 @@ void Character::setStandTo(Stance stance)
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,             //0.4f,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,//1.2f,
+                0.3f,//1.2f,
                 [this]()
             {
                 m_isTransitioning = false;
@@ -953,7 +934,7 @@ void Character::setStandTo(Stance stance)
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
-                    false);
+                    true);
             });
         }
         else if (stance == Stance::Prone)
@@ -1237,19 +1218,18 @@ void Character::onKar98kReloadEnd()
         setAnimation(
             CharacterAnimation::BodyPart::UPPER,
             TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Base,
-            false, //ok
+            false,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_POSITION,
-            0.3f, //ok
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
             [this]()
         {
             m_hasChangingState = false;
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
                 m_lowerAnimState,
-                true,
-                0.3f);
+                false);
         });
     }
     else if (m_stance == Stance::Prone)
@@ -1257,11 +1237,11 @@ void Character::onKar98kReloadEnd()
         setAnimation(
             CharacterAnimation::BodyPart::UPPER,
             TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_End_Prone,
-            false, //ok
+            false,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_POSITION,
-            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME, //ok
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
             [this]()
         {
             m_hasChangingState = false;
@@ -1306,9 +1286,8 @@ void Character::onKar98kReload()
                 0.3f, //ok
                 std::bind(&Character::onKar98kReload, this));        
         }
+        m_totalInventory.m_numReload--;
     }
-
-    --m_totalInventory.m_numReload;
 }
 
 //캐릭터 애니메이션  + 장비 애니메이션 싱크

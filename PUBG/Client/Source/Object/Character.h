@@ -574,6 +574,8 @@ private:
     void setJump();
 
     void setRifleOnHand(TAG_RIFLE tagRifle);
+    void setRifleOnHandCharacter(TAG_RIFLE tagRifle);
+    void setRifleOnHandEquip(TAG_RIFLE tagRifle);
     void setRifleOnBody(TAG_RIFLE tagRifle);
 
     void setStandTo(Stance stance);

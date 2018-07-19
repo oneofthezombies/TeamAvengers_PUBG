@@ -103,6 +103,14 @@ void Character::ForDebug()
         Debug << "On hand Weapon: NONE" << "\n";
     }
 
+    if (m_totalInventory.m_handState == TAG_RIFLE::Primary)
+        Debug << "Hand State: " << "TAG_RIFLE::Primary" << "\n";
+    else if (m_totalInventory.m_handState == TAG_RIFLE::Secondary)
+        Debug << "Hand State: " << "TAG_RIFLE::Secondary" << "\n";
+    else if (m_totalInventory.m_handState == TAG_RIFLE::None)
+        Debug << "Hand State: " << "TAG_RIFLE::None" << "\n";
+
+
     if (saveWeapon)
     {
         TAG_RES_STATIC tagDebug = saveWeapon->GetTagResStatic();
@@ -124,4 +132,9 @@ void Character::ForDebug()
         Debug << "IsJump: FALSE" << "\n";
 
     Debug << "Equip On Num: " << m_totalInventory.m_equipOnNum << endl;
+
+    if (m_hasChangingState)
+        Debug << "m_hasChangingState: " << "TRUE" << endl;
+    else
+        Debug << "m_hasChangingState: " << "FALSE" << endl;
 }

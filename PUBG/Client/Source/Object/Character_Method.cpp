@@ -599,7 +599,7 @@ void Character::itemSphereCollisionInteraction()
 
         di.emplace_back(itm);
 
-        // UI로 F key가 나오게 하기 
+        // TODO: UI로 F key가 나오게 하기 
 
 
         //Ray를 쏘아서 맞는 물건 먼저 먹기
@@ -790,9 +790,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
         *OutRotation *= q;
         //--------
 
-
         m_rotationForCamera.x += -mouseInput->pitch;
-
 
         // reset rotFotCameraTP
         if (tempBool)
@@ -806,9 +804,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     if (m_rotationForCamera.x < -1.0f)
         m_rotationForCamera.x = -1.0f;
     else if (m_rotationForCamera.x > 1.0f)
-        m_rotationForCamera.x = 1.0f;
-
-    
+        m_rotationForCamera.x = 1.0f;    
 }
 
 bool Character::isMine() const
@@ -898,7 +894,7 @@ void Character::RifleShooting() //bullet 객체에 대한
     //bullet 갯수 만큼 조정
     int numBullet = inven.m_pHand->GetNumBullet();
     inven.m_pHand->SetNumBullet(--numBullet);
-    cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
+    //cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
     //bullet이 나가는 포지션 구하기
     D3DXMATRIX mat
         = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
@@ -924,6 +920,7 @@ void Character::RifleShooting() //bullet 객체에 대한
             Communication()()->SendEventSound(TAG_SOUND::Qbz_NormalShoot, GetTransform()->GetPosition());
             
             //총 자체 애니메이션
+            m_hasChangingState = true;
             m_isNeedRifleAnim = true;
             inven.m_pHand->Set
             (
@@ -934,9 +931,13 @@ void Character::RifleShooting() //bullet 객체에 대한
                 Item::DEFAULT_POSITION,
                 Item::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this, &inven]() {
+
+                m_hasChangingState = false;
+
                 inven.m_pHand->Set(
                     TAG_ANIM_WEAPON::Weapon_QBZ_Idle,
                     false);
+
                 m_isNeedRifleAnim = false;
             });
         }
@@ -969,9 +970,8 @@ void Character::RifleShooting() //bullet 객체에 대한
 
             assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::RifleShooting(), tagAnim is COUNT");
 
-            m_hasChangingState = true;
-
             //총 자체 애니메이션
+            m_hasChangingState = true;
             m_isNeedRifleAnim = true;
             inven.m_pHand->Set
             (
@@ -982,13 +982,18 @@ void Character::RifleShooting() //bullet 객체에 대한
                 Item::DEFAULT_POSITION,
                 Item::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this, &inven]() {
+
+                m_hasChangingState = false;
+
                 inven.m_pHand->Set(
                     TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
                     false);
+
                 m_isNeedRifleAnim = false;
             });
 
             //캐릭터의 애니메이션
+            m_hasChangingState = true;
             setAnimation(
                 CharacterAnimation::BodyPart::UPPER,
                 tagAnim,
@@ -996,15 +1001,14 @@ void Character::RifleShooting() //bullet 객체에 대한
                 CharacterAnimation::DEFAULT_BLENDING_TIME,
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
-                0.3f, //ok
+                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 [this]()
             {
                 m_hasChangingState = false;
                 setAnimation(
                     CharacterAnimation::BodyPart::BOTH,
                     m_lowerAnimState,
-                    true,
-                    0.3f);
+                    false);
             });
         }
     break;
@@ -1019,7 +1023,7 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
 
     int numBullet = inven.m_pHand->GetNumBullet();
     inven.m_pHand->SetNumBullet(--numBullet);
-    cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
+    //cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
 
     //Goal : get Fire starting position , get fire direction
 
@@ -1028,8 +1032,8 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
 
     D3DXMATRIX mat
         = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
-        * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
-        * GetTransform()->GetTransformationMatrix();    //character world matrix
+        * m_framePtr.pHandGun->CombinedTransformationMatrix          // hand gun space matrix
+        * GetTransform()->GetTransformationMatrix();                 //character world matrix
 
     D3DXVECTOR3 bulletFirePos = Matrix::GetTranslation(mat);
 
@@ -1106,8 +1110,6 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
             Communication()()->SendEventMinusDamage(o->GetIndex(), damage);
         }
     }
-
-
 
     ////이 함수는 가장 가까운 Object를 찾아서 
 
@@ -1207,7 +1209,7 @@ const std::vector<BoundingBox>& Character::GetBoundingBoxes()
 void Character::movementControl(OUT State* OutState)
 {
     //점프
-    if (m_currentOnceKey._Space && m_stance == Stance::Stand)
+    if (m_currentOnceKey._Space && m_stance == Stance::Stand && m_hasChangingState == false)
     {
         m_Jump.isJumping = true;
     }
