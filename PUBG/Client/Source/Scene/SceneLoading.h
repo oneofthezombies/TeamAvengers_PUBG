@@ -55,7 +55,13 @@ private:
 
     std::string m_lastFinishedTaskName;
     std::string m_percentage;
-    UIText*     m_pPercentageImage;
+    std::string m_loadingDesc;
+    std::string m_percentageDot;
+
+    UIText*     m_pLoadingDescText;
+    UIText*     m_pPercentageText;
+    UIText*     m_pPercentageDot;
+
     UIImage*    m_pBackground;
 
     UINT m_numAddedAnim;

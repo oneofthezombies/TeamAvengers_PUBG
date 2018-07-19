@@ -27,7 +27,6 @@ void SceneLoading::Load()
     load(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
 
     load("./Resource/", "dedenne.png");
-    load("./Resource/", "input_field.png");
     load("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
     load("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
     load("./Resource/UI/Inventory/Basic/", "line.png");
@@ -114,6 +113,25 @@ void SceneLoading::Load()
     load("./Resource/UI/GameOver/", "btn_black_alpha.png");
     load("./Resource/UI/GameOver/", "btn_gray_alpha.png");
 
+    //for LobbyUI
+    load("./Resource/UI/Lobby/", "lobby_bg.png");
+    load("./Resource/UI/Lobby/", "transparent_1280_720.png");
+    load("./Resource/UI/Lobby/", "pubg_white_small.png");
+    load("./Resource/UI/Lobby/", "yellow_line.png");
+    load("./Resource/UI/Lobby/", "select_btn.png");
+    load("./Resource/UI/Lobby/", "ready_btn_idle.png");
+    load("./Resource/UI/Lobby/", "ready_btn_mouseover.png");
+    load("./Resource/UI/Lobby/", "setting.png");
+    load("./Resource/UI/Lobby/", "profile_bg.png");
+    load("./Resource/UI/Lobby/", "ready_nickname_bg.png");
+    load("./Resource/UI/Lobby/", "ready_check.png");
+    
+    //for login
+    load("./Resource/UI/Login/", "login_bg.png");
+    load("./Resource/UI/Login/", "input_idle.png");
+    load("./Resource/UI/Login/", "input_mouseover.png");
+    load("./Resource/UI/Login/", "login_btn_idle.png");
+    load("./Resource/UI/Login/", "login_btn_mouseover.png");
 
     // load effect meshs
     load(TAG_RES_STATIC::SkySphere);
@@ -218,26 +236,60 @@ void SceneLoading::Load()
 
 void SceneLoading::OnInit()
 {
-    Resource()()->AddTexture("./Resource/", "LoadingScreen.tga");
+    Resource()()->AddTexture("./Resource/UI/Loading/", "loading_bg.png");
 
     m_pBackground =
         new UIImage(
-            "./Resource/",
-            "LoadingScreen.tga",
+            "./Resource/UI/Loading/",
+            "loading_bg.png",
             Vector3::ZERO,
             nullptr,
             nullptr);
     UI()()->RegisterUIObject(m_pBackground);
 
-    m_pPercentageImage =
+    //로드되는 파일 설명
+    m_pLoadingDescText =
         new UIText(
-            Resource()()->GetFont(TAG_FONT::Default),
-            D3DXVECTOR2(500.0f, 100.0f),
-            &m_percentage,
-            D3DCOLOR_XRGB(0, 255, 0),
+            Resource()()->GetFont(TAG_FONT::LoadingDesc),
+            D3DXVECTOR2(400.0f, 80.0f),
+            &m_loadingDesc,
+            D3DCOLOR_XRGB(255, 255, 255),
             m_pBackground);
-    m_pPercentageImage->SetPosition(D3DXVECTOR3(450.0f, 450.0f, 0.0f));
-    m_pPercentageImage->SetDrawTextFormat(DT_LEFT | DT_VCENTER);
+    m_pLoadingDescText->SetPosition(D3DXVECTOR3(870.0f, 640.0f, 0.0f));
+    m_pLoadingDescText->SetDrawTextFormat(DT_RIGHT | DT_VCENTER);
+
+    //LOADING
+    auto loadingText =
+        new UIText(
+            Resource()()->GetFont(TAG_FONT::LoadingText),
+            D3DXVECTOR2(500.0f, 200.0f),
+            "LOADING",
+            D3DCOLOR_XRGB(255, 255, 255),
+            m_pBackground);
+    loadingText->SetPosition(D3DXVECTOR3(380.0f, 355.0f, 0.0f));
+    loadingText->SetDrawTextFormat(DT_CENTER);
+
+    //진행률
+    m_pPercentageText =
+        new UIText(
+            Resource()()->GetFont(TAG_FONT::LoadingPercentage),
+            D3DXVECTOR2(500.0f, 200.0f),
+            &m_percentage,
+            D3DCOLOR_XRGB(255, 255, 255),
+            m_pBackground);
+    m_pPercentageText->SetPosition(D3DXVECTOR3(380.0f, 377.0f, 0.0f));
+    m_pPercentageText->SetDrawTextFormat(DT_CENTER);
+
+    //.....
+    m_pPercentageDot =
+        new UIText(
+            Resource()()->GetFont(TAG_FONT::LoadingPercentage),
+            D3DXVECTOR2(500.0f, 200.0f),
+            &m_percentageDot,
+            D3DCOLOR_XRGB(245, 193, 26),
+            m_pBackground);
+    m_pPercentageDot->SetPosition(D3DXVECTOR3(380.0f, 397.0f, 0.0f));
+    m_pPercentageDot->SetDrawTextFormat(DT_CENTER);
 
     m_start = std::chrono::system_clock::now();
     t = std::thread(std::bind(&SceneLoading::Load, this));
@@ -626,9 +678,17 @@ SceneLoading::SceneLoading()
     , m_numAddedAnim(0)
     , m_numFinishedTasks(0)
     , m_numTotalTasks(0)
+
     , m_percentage("")
+    , m_loadingDesc("")
+    , m_percentageDot("")
     , m_lastFinishedTaskName("")
     , m_dotDotDot(0)
+
+    , m_pLoadingDescText(nullptr)
+    , m_pPercentageText(nullptr)
+    , m_pPercentageDot(nullptr)
+
     , m_policy(Resource::Policy::SYNC)
     , m_isDoneCharacterSkinnedMeshs(false)
     , m_isDoneCharacterAnimations(false)
@@ -822,32 +882,40 @@ void SceneLoading::OnUpdate()
     }
 
     Debug << "number of finished tasks : " << m_numFinishedTasks
-        << " / number of total tasks : " << m_numTotalTasks << '\n';
+          << " / number of total tasks : " << m_numTotalTasks 
+          << '\n';
 
     const float percentage = static_cast<float>(m_numFinishedTasks)
-        / static_cast<float>(m_numTotalTasks)
-        * 100.0f;
+                            / static_cast<float>(m_numTotalTasks)
+                            * 100.0f;
+    const int   percentageInt = static_cast<int>(percentage);
 
     ++m_dotDotDot;
     if (m_dotDotDot > 10)
         m_dotDotDot = 0;
 
-    m_percentage = "Finished file : " + m_lastFinishedTaskName + "\n";
-    m_percentage += "Percentage : " + std::to_string(percentage);
+    m_loadingDesc = "Finished file : " + m_lastFinishedTaskName + "\n";
+
+    //percentage
+    m_percentage = std::to_string(percentageInt);
+
+    //......
+    m_percentageDot = "";
     for (std::size_t i = 0; i < m_dotDotDot; ++i)
-        m_percentage += '.';
-    m_percentage += '\n';
-    for (int i = 0; i < static_cast<int>(percentage * 0.1f); ++i)
-        m_percentage += "@";
-    m_percentage += '\n';
+        m_percentageDot += '.';
+
+    //@@@@@@
+    //for (int i = 0; i < static_cast<int>(percentage * 0.1f); ++i)
+    //    m_percentage += "@";
+    //m_percentage += '\n';
 
     if (m_policy == Resource::Policy::SYNC)
     {
-        m_percentage += "Loading on single thread...\n";
+        m_loadingDesc += "Loading on single thread...\n";
     }
     else if (m_policy == Resource::Policy::ASYNC)
     {
-        m_percentage += "Loading on multi thread...\n";
+        m_loadingDesc += "Loading on multi thread...\n";
     }
 }
 

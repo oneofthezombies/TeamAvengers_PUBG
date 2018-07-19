@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SceneLobby.cpp" />
     <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
     <ClCompile Include="Source\Object\DeathDropBox.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />
@@ -207,6 +208,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Object\DeathDropBox.h" />
+    <ClInclude Include="SceneLobby.h" />
     <ClInclude Include="Source\UI\UITest.h" />
     <ClInclude Include="Source\Useful\Area.h" />
     <ClInclude Include="Source\Base\IMap.h" />
