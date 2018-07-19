@@ -1065,7 +1065,10 @@ bool Character::PutItemInTotalInventory(Item* item)
                         Communication()()->SendEventMoveItemHandToPrimary(m_index);
 
                         inven.DropPrimary();
+                        inven.pTempSaveWeaponForX = nullptr;
+
                         inven.EquipPrimary(item);
+                        inven.pTempSaveWeaponForX = item;
 
                         MoveItemPrimaryToHand();
                         Communication()()->SendEventMoveItemPrimaryToHand(m_index);
@@ -1083,7 +1086,10 @@ bool Character::PutItemInTotalInventory(Item* item)
                         Communication()()->SendEventMoveItemHandToSecondary(m_index);
 
                         inven.DropSecondary();
+                        inven.pTempSaveWeaponForX = nullptr;
+
                         inven.EquipSecondary(item);
+                        inven.pTempSaveWeaponForX = item;
 
                         MoveItemSecondaryToHand();
                         Communication()()->SendEventMoveItemSecondaryToHand(m_index);
@@ -1114,12 +1120,18 @@ bool Character::PutItemInTotalInventory(Item* item)
                         if (saveName == primaryName) // 들었던 적이 있는 총이 프라이머리 총일 때
                         {
                             inven.DropPrimary();
+                            inven.pTempSaveWeaponForX = nullptr;
+
                             inven.EquipPrimary(item);
+                            inven.pTempSaveWeaponForX = item;
                         }
                         else if (saveName == secondaryName) // 들었던 적이 있는 총이 세컨더리 총일 때
                         {
                             inven.DropSecondary();
+                            inven.pTempSaveWeaponForX = nullptr;
+
                             inven.EquipSecondary(item);
+                            inven.pTempSaveWeaponForX = item;
                         }
                         else // 들었던 적이 있는 총이 프라이머리, 세컨더리 총이 아닐 때
                         {
