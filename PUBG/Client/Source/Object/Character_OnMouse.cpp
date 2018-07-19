@@ -209,9 +209,11 @@ void Character::onMouse(
                     case TAG_ITEM_CATEGORY::Rifle:
                         {
                             bool isHand = false;
-                            if (itemName == inven.m_pWeapon1->pItem->GetName())
+                            if (inven.m_pWeapon1->pItem &&
+                                itemName == inven.m_pWeapon1->pItem->GetName())
                             {
-                                if (itemName == inven.m_pHand->GetName())
+                                if (inven.m_pHand && 
+                                    itemName == inven.m_pHand->GetName())
                                 {
                                     MoveItemHandToPrimary();
                                     Communication()()->SendEventMoveItemHandToPrimary(m_index);
@@ -220,16 +222,12 @@ void Character::onMouse(
                                 }
 
                                 inven.DropPrimary();
-
-                                const std::string tempName = inven.pTempSaveWeaponForX->GetName();
-                                if (itemName == tempName)
-                                {
-                                    inven.pTempSaveWeaponForX = nullptr;
-                                }
                             }
-                            else if (itemName == inven.m_pWeapon2->pItem->GetName())
+                            else if (inven.m_pWeapon2->pItem &&
+                                itemName == inven.m_pWeapon2->pItem->GetName())
                             {
-                                if (itemName == inven.m_pHand->GetName())
+                                if (inven.m_pHand &&
+                                    itemName == inven.m_pHand->GetName())
                                 {
                                     MoveItemHandToSecondary();
                                     Communication()()->SendEventMoveItemHandToSecondary(m_index);
@@ -238,16 +236,17 @@ void Character::onMouse(
                                 }
 
                                 inven.DropSecondary();
-
-                                const std::string tempName = inven.pTempSaveWeaponForX->GetName();
-                                if (itemName == tempName)
-                                {
-                                    inven.pTempSaveWeaponForX = nullptr;
-                                }
                             }
                             else
                             {
-                                assert(false && "Character::onMouse(), rifle name is unknown");
+                                cout << "Character::onMouse(), rifle name is unknown\n";
+                                //assert(false && "Character::onMouse(), rifle name is unknown");
+                            }
+
+                            if (inven.pTempSaveWeaponForX &&
+                                itemName == inven.pTempSaveWeaponForX->GetName())
+                            {
+                                inven.pTempSaveWeaponForX = nullptr;
                             }
 
                             if (isHand)
