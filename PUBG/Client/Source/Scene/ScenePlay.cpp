@@ -380,8 +380,8 @@ void ScenePlay::OnInit()
         m_TotalCellSpaces[i].pIndex = i;
     }
     
-    LoadObjectsFromFile("./Resource/save.txt");
-    //LoadObjectsFromFile("./Resource/save1.txt");
+    //LoadObjectsFromFile("./Resource/save.txt");
+    LoadObjectsFromFile("./Resource/save1.txt");
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
