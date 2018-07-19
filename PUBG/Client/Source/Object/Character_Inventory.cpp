@@ -341,7 +341,7 @@ void Character::TotalInventory::SetEquipUI()
     //Çï¸ä
     left = 440;
     top = 93;
-    auto u = new UIButtonWithItem(
+    m_pUIHead = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
             static_cast<float>(top), 0.0f),
@@ -363,7 +363,7 @@ void Character::TotalInventory::SetEquipUI()
     //°¡¹æ
     left = 440;
     top = 248;
-     u = new UIButtonWithItem(
+    m_pUIBack = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
             static_cast<float>(top), 0.0f),
@@ -385,7 +385,7 @@ void Character::TotalInventory::SetEquipUI()
      //¾Æ¸Ó
     left = 440;
     top = 293;
-     u = new UIButtonWithItem(
+    m_pUIArmor = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
             static_cast<float>(top), 0.0f),
@@ -407,7 +407,7 @@ void Character::TotalInventory::SetEquipUI()
      //º§Æ®
     left = 440;
     top = 337;
-     u = new UIButtonWithItem(
+    auto u = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
             static_cast<float>(top), 0.0f),
