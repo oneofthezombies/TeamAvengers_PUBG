@@ -48,47 +48,22 @@ void DeathDropBox::SetItems(Character* pCharacter)
     Character::TotalInventory& inven = 
         pCharacter->GetTotalInventory();
 
-    if (inven.m_pHand)
+    auto setItem = [this](Item** ppItem)
     {
-        inven.m_pHand->SetDeathDropBox(this);
-        m_items.emplace_back(inven.m_pHand);
-        inven.m_pHand = nullptr;
-    }
+        if (ppItem && *ppItem)
+        {
+            (*ppItem)->SetDeathDropBox(this);
+            m_items.emplace_back(*ppItem);
+            *ppItem = nullptr;
+        }
+    };
 
-    if (inven.m_pWeaponPrimary)
-    {
-        inven.m_pWeaponPrimary->SetDeathDropBox(this);
-        m_items.emplace_back(inven.m_pWeaponPrimary);
-        inven.m_pWeaponPrimary = nullptr;
-    }
-
-    if (inven.m_pWeaponSecondary)
-    {
-        inven.m_pWeaponSecondary->SetDeathDropBox(this);
-        m_items.emplace_back(inven.m_pWeaponSecondary);
-        inven.m_pWeaponSecondary = nullptr;
-    }
-
-    if (inven.m_pEquipHead)
-    {
-        inven.m_pEquipHead->SetDeathDropBox(this);
-        m_items.emplace_back(inven.m_pEquipHead);
-        inven.m_pEquipHead = nullptr;
-    }
-
-    if (inven.m_pEquipArmor)
-    {
-        inven.m_pEquipArmor->SetDeathDropBox(this);
-        m_items.emplace_back(inven.m_pEquipArmor);
-        inven.m_pEquipArmor = nullptr;
-    }
-
-    if (inven.m_pEquipBack)
-    {
-        inven.m_pEquipBack->SetDeathDropBox(this);
-        m_items.emplace_back(inven.m_pEquipBack);
-        inven.m_pEquipBack = nullptr;
-    }
+    setItem(&inven.m_pHand);
+    setItem(&inven.m_pWeaponPrimary);
+    setItem(&inven.m_pWeaponSecondary);
+    setItem(&inven.m_pEquipHead);
+    setItem(&inven.m_pEquipArmor);
+    setItem(&inven.m_pEquipBack);
 
     for (auto& kv : inven.m_mapInventory)
     {

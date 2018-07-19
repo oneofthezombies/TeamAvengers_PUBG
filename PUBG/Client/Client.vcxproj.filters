@@ -65,6 +65,7 @@
     <ClCompile Include="Source\Useful\Light.cpp" />
     <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
     <ClCompile Include="Source\Object\DeathDropBox.cpp" />
+    <ClCompile Include="Source\Object\Character_OnMouse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod64.dll" />

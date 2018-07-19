@@ -572,7 +572,7 @@ bool Item::IsInDeathDropBox() const
     return pDeathDropBox ? true : false;
 }
 
-void Item::DeleteItemInDeathDropBox()
+void Item::DeleteThisInDeathDropBox()
 {
     pDeathDropBox->DeleteThisItem(this);
     this->pDeathDropBox = nullptr;
