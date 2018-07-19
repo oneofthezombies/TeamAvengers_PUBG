@@ -53,6 +53,7 @@ void DeathDropBox::SetItems(Character* pCharacter)
         if (ppItem && *ppItem)
         {
             (*ppItem)->SetDeathDropBox(this);
+            (*ppItem)->SetState(false);
             m_items.emplace_back(*ppItem);
             *ppItem = nullptr;
         }
@@ -71,6 +72,7 @@ void DeathDropBox::SetItems(Character* pCharacter)
         for (Item* p : items)
         {
             p->SetDeathDropBox(this);
+            p->SetState(false);
             m_items.emplace_back(p);
         }
         items.clear();
