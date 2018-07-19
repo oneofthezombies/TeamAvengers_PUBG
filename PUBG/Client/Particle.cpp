@@ -53,22 +53,17 @@ void BloodParticle::Init()
     m_blood_hit_splurt.emplace_back(Blood_Hit(16));
     SetParticle(filePath + "T_Blood_06", &m_blood_hit_splurt[splurtNum++]);
 
+    //from internet
     //m_blood_hit.emplace_back(Blood_Hit(16));
     //SetParticle(filePath + "blood_hit_08", &m_blood_hit[num++]);
-
     //m_blood_hit.emplace_back(Blood_Hit(16));
     //SetParticle(filePath + "blood_hit_07", &m_blood_hit[num++]);
-
     //m_blood_hit.emplace_back(Blood_Hit(16));
     //SetParticle(filePath + "blood_hit_06", &m_blood_hit[num++]);
-
     //m_blood_hit.emplace_back(Blood_Hit(16));
     //SetParticle(filePath + "blood_hit_04", &m_blood_hit[num++]);
-
     //m_blood_hit.emplace_back(Blood_Hit(16));
     //SetParticle(filePath + "blood_hit_05", &m_blood_hit[num++]);
-
-
 
 }
 

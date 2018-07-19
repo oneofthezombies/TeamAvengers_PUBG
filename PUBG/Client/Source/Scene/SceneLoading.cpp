@@ -131,11 +131,11 @@ void SceneLoading::Load()
     //load(TAG_RES_STATIC::WareHouse_A);
 
     // load skined meshs
-    const int numQBZ = 4;
+    const int numQBZ = 1;
     for (int i = 0; i < numQBZ; ++i)
         load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
-    const int numKar98k = 4;
+    const int numKar98k = 1;
     for (int i = 0; i < numKar98k; ++i)
         load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
