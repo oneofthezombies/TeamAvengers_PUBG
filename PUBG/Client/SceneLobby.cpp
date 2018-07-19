@@ -222,9 +222,6 @@ void SceneLobby::OnInit()
         readyNickNameBg);
     readyNickNameText->SetDrawTextFormat(DT_LEFT);
     readyNickNameText->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
-
-
-
 }
 
 void SceneLobby::OnUpdate()
@@ -253,6 +250,9 @@ void ReadyButtonListener::OnMouseDown(const int key)
 
 void ReadyButtonListener::OnMouseUp(const int key)
 {
+    //TODO: 레디가 모두 되면 플레이씬으로
+    UI()()->Destroy(GetHandle());
+    Scene()()->SetCurrentScene(TAG_SCENE::Play);
 }
 
 void ReadyButtonListener::OnMouseDrag(const int key)
