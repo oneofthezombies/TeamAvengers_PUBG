@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="SceneLobby.cpp" />
     <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
     <ClCompile Include="Source\Object\DeathDropBox.cpp" />
@@ -207,6 +208,7 @@
     <None Include="fmod64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Particle.h" />
     <ClInclude Include="Source\Object\DeathDropBox.h" />
     <ClInclude Include="SceneLobby.h" />
     <ClInclude Include="Source\UI\UITest.h" />

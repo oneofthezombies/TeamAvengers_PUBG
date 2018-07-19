@@ -73,15 +73,25 @@ Character::Character(const int index)
         m_gameOverUI.Init(this);
     }
 
+    ////origin-----
+
+    //int x = m_index / 2;
+    //int z = m_index % 2;
+
+    //const float factor(4648.0f);
+
+    //Transform* pTransform = GetTransform();
+    //pTransform->SetPosition(D3DXVECTOR3(x*factor + 200.0f, 200.0f, z*factor + 200.0f));
+    
+    
+    ////testing-----
     int x = m_index / 2;
     int z = m_index % 2;
-
-    const float factor(4648.0f);
-
+    const float factor(1900.0f);
     Transform* pTransform = GetTransform();
-    pTransform->SetPosition(D3DXVECTOR3(x*factor + 200.0f, 200.0f, z*factor + 200.0f));
-
-
+    pTransform->SetPosition(D3DXVECTOR3(x*factor+100.0f , 200.0f, z*factor + 100.0f));
+    if(m_index==0)
+        pTransform->SetPosition(D3DXVECTOR3(1900.0f, 200.0f, 1900.0f));
     //const float factor(static_cast<float>(m_index + 1) * 200.0f);
 
     //Transform* pTransform = GetTransform();
@@ -263,6 +273,11 @@ void Character::OnRender()
 void Character::updateMine()
 {
     if (!isMine()) return;
+
+    //testing for blood particle << delete when it is done
+    if (Input()()->IsOnceKeyUp(VK_END))
+        ParticlePool()()->Hit_Blood(GetTransform()->GetPosition() + (Vector3::UP*170.0f), GetTransform()->GetRotation());
+
 
     if (m_isGameOver)
     {
@@ -495,6 +510,8 @@ void Character::updateOther()
 
     D3DXVec3Lerp(&pos, &pTr->GetPosition(), &pi.position, 1.0f);
     D3DXQuaternionSlerp(&rot, &pTr->GetRotation(), &pi.rotation, 1.0f);
+
+
 
     pTr->SetPosition(pos);
     pTr->SetRotation(rot);

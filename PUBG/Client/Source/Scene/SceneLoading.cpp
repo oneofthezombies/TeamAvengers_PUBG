@@ -133,23 +133,37 @@ void SceneLoading::Load()
     load("./Resource/UI/Login/", "login_btn_idle.png");
     load("./Resource/UI/Login/", "login_btn_mouseover.png");
 
+    //for particles textures
+    LoadParticleTexture("T_Blood_01", 8, D3DCOLOR_XRGB(0, 0, 0));     //From PUBG
+    LoadParticleTexture("T_Blood_02", 32, D3DCOLOR_XRGB(0, 0, 0));
+    LoadParticleTexture("T_Blood_03", 8, D3DCOLOR_XRGB(27, 0, 0));
+    LoadParticleTexture("T_Blood_04", 16, D3DCOLOR_XRGB(27, 0, 0));
+    LoadParticleTexture("T_Blood_05", 16, D3DCOLOR_XRGB(27, 0, 0));
+    LoadParticleTexture("T_Blood_06", 16, D3DCOLOR_XRGB(27, 0, 0));
+
+    //LoadParticleTexture("blood_hit_08", 16, D3DCOLOR_XRGB(0, 0, 0));    //From internet
+    //LoadParticleTexture("blood_hit_07", 16, D3DCOLOR_XRGB(0, 0, 0));
+    //LoadParticleTexture("blood_hit_06", 16, D3DCOLOR_XRGB(0, 0, 0));
+    //LoadParticleTexture("blood_hit_05", 16, D3DCOLOR_XRGB(0, 0, 0));
+    //LoadParticleTexture("blood_hit_04", 16, D3DCOLOR_XRGB(0, 0, 0));
+
     // load effect meshs
-    load(TAG_RES_STATIC::SkySphere);
+    //load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
-    load(TAG_RES_STATIC::Armor_Lv1);
-    load(TAG_RES_STATIC::Back_Lv1);
-    load(TAG_RES_STATIC::Head_Lv1);
+    //load(TAG_RES_STATIC::Armor_Lv1);
+    //load(TAG_RES_STATIC::Back_Lv1);
+    //load(TAG_RES_STATIC::Head_Lv1);
     load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
 
-    load(TAG_RES_STATIC::Bandage);
-    load(TAG_RES_STATIC::FirstAidKit);
-    load(TAG_RES_STATIC::MedKit);
+    //load(TAG_RES_STATIC::Bandage);
+    //load(TAG_RES_STATIC::FirstAidKit);
+    //load(TAG_RES_STATIC::MedKit);
 
-    load(TAG_RES_STATIC::RedDot);
-    load(TAG_RES_STATIC::Aimpoint2X);
-    load(TAG_RES_STATIC::ACOG);
+    //load(TAG_RES_STATIC::RedDot);
+    //load(TAG_RES_STATIC::Aimpoint2X);
+    //load(TAG_RES_STATIC::ACOG);
 
     load(TAG_RES_STATIC::Rock_1);
     load(TAG_RES_STATIC::WareHouse_A);
@@ -169,18 +183,18 @@ void SceneLoading::Load()
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
         load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
-    // load equipment
-    const int numArmor = 4;
-    for (int i = 0; i < numArmor; ++i)
-        load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
+    //// load equipment
+    //const int numArmor = 4;
+    //for (int i = 0; i < numArmor; ++i)
+    //    load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
 
-    const int numBack = 4;
-    for (int i = 0; i < numBack; ++i)
-        load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
+    //const int numBack = 4;
+    //for (int i = 0; i < numBack; ++i)
+    //    load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
 
-    const int numHead = 4;
-    for (int i = 0; i < numHead; ++i)
-        load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
+    //const int numHead = 4;
+    //for (int i = 0; i < numHead; ++i)
+    //    load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
@@ -668,6 +682,25 @@ void SceneLoading::addEquipmentAnimationsForAsync()
             "SceneLoading::addAnimationsToEquipment(), SkinnedMesh::Seperate() failed.");
 
         it = rs.erase(it);
+    }
+}
+
+void SceneLoading::LoadParticleTexture(const string fileName, const int maxIndex, const D3DCOLOR colorKey)
+{
+    string filePath = "./Resource/particle/";
+
+    filePath = filePath + fileName + "/";
+
+
+    for (int i = 0; i <maxIndex; i++)
+    {
+        string  str = "tile0";
+        if (i < 10)
+            str += "0" + to_string(i);
+        else
+            str += to_string(i);
+        str += ".png";
+        load(filePath, str, colorKey);
     }
 }
 

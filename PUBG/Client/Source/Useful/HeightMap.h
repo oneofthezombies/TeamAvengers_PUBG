@@ -12,8 +12,6 @@ struct VERTEX_PNT
     enum { FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 };
 };
 
-//extern D3DVERTEXELEMENT9 decl[];
-
 class HeightMap :	public IMap
 {
 protected:
