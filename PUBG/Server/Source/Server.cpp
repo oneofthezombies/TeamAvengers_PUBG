@@ -355,9 +355,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto parsedDesc = Message::ParseDescription(description);
 
             int& id = parsedDesc.first;
-            std::string& eventMoveItemStr = parsedDesc.second;
-
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HEAD_TO_FIELD, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_ARMOR_TO_FIELD:
@@ -365,9 +363,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto parsedDesc = Message::ParseDescription(description);
 
             int& id = parsedDesc.first;
-            std::string& eventMoveItemStr = parsedDesc.second;
-
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_ARMOR_TO_FIELD, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BACK_TO_FIELD:
@@ -375,9 +371,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto parsedDesc = Message::ParseDescription(description);
 
             int& id = parsedDesc.first;
-            std::string& eventMoveItemStr = parsedDesc.second;
-
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BACK_TO_FIELD, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_FIELD:
@@ -385,9 +379,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto parsedDesc = Message::ParseDescription(description);
 
             int& id = parsedDesc.first;
-            std::string& eventMoveItemStr = parsedDesc.second;
-
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_FIELD, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_FIELD:
@@ -395,9 +387,7 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             auto parsedDesc = Message::ParseDescription(description);
 
             int& id = parsedDesc.first;
-            std::string& eventMoveItemStr = parsedDesc.second;
-
-            std::stringstream ss(eventMoveItemStr);
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_FIELD, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_HAND:

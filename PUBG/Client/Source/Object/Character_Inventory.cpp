@@ -1066,6 +1066,9 @@ bool Character::PutItemInTotalInventory(Item* item)
 
                         inven.DropPrimary();
                         inven.EquipPrimary(item);
+
+                        MoveItemPrimaryToHand();
+                        Communication()()->SendEventMoveItemPrimaryToHand(m_index);
                     }
                     else
                     {
@@ -1081,6 +1084,9 @@ bool Character::PutItemInTotalInventory(Item* item)
 
                         inven.DropSecondary();
                         inven.EquipSecondary(item);
+
+                        MoveItemSecondaryToHand();
+                        Communication()()->SendEventMoveItemSecondaryToHand(m_index);
                     }
                     else
                     {
