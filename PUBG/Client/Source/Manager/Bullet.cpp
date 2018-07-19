@@ -33,14 +33,16 @@ Bullet::~Bullet()
 }
 Bullet::HitTargetInfo::HitTargetInfo()
     : pos(Vector3::ZERO)
+    , rot(Quaternion::IDENTITY)
     , tag_Weapon(TAG_RES_STATIC::COUNT)
     , tag_chrPart(TAG_COLLIDER_CHARACTER_PART::COUNT)
     , chr(nullptr)
 {
 }
 
-Bullet::HitTargetInfo::HitTargetInfo(D3DXVECTOR3 _pos, TAG_RES_STATIC _tag_Weapon, TAG_COLLIDER_CHARACTER_PART _tag_chrPart, Character* obj)
+Bullet::HitTargetInfo::HitTargetInfo(D3DXVECTOR3 _pos, D3DXQUATERNION _rot, TAG_RES_STATIC _tag_Weapon, TAG_COLLIDER_CHARACTER_PART _tag_chrPart, Character* obj)
     : pos(_pos)
+    , rot(_rot)
     , tag_Weapon(_tag_Weapon)
     , tag_chrPart(_tag_chrPart)
     , chr(obj)
@@ -107,7 +109,13 @@ void Bullet::OnUpdate()
          if (minDist != std::numeric_limits<float>::max())
          {
              //vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
-             vecHitTargetInfo.emplace_back(HitTargetInfo((ray.m_pos + ray.m_dir * minDist), m_tag, TAG_COLLIDER_CHARACTER_PART::COUNT,nullptr));
+             vecHitTargetInfo.emplace_back(
+                 HitTargetInfo(
+                 (ray.m_pos + ray.m_dir * minDist), 
+                     tf->GetTransform()->GetRotation(),
+                     m_tag, 
+                     TAG_COLLIDER_CHARACTER_PART::COUNT,
+                     nullptr)); //terrain features 이니깐 
          }
      }
 
@@ -150,7 +158,13 @@ void Bullet::OnUpdate()
          if (minDist != std::numeric_limits<float>::max())
          {
              //vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
-             vecHitTargetInfo.emplace_back(HitTargetInfo((ray.m_pos + ray.m_dir * minDist), m_tag, static_cast<TAG_COLLIDER_CHARACTER_PART>(otherHitPart), chr));
+             vecHitTargetInfo.emplace_back(
+                 HitTargetInfo(
+                 (ray.m_pos + ray.m_dir * minDist),
+                     chr->GetTransform()->GetRotation(),
+                     m_tag, 
+                     static_cast<TAG_COLLIDER_CHARACTER_PART>(otherHitPart), 
+                     chr));
          }
      }
 
@@ -177,7 +191,7 @@ void Bullet::OnUpdate()
          if (targetInfo.tag_chrPart != TAG_COLLIDER_CHARACTER_PART::COUNT) 
          {
              //사람에게 맞는다면 피가 나도록 blood Particel
-             ParticlePool()()->Hit_Blood(targetInfo.pos);
+             ParticlePool()()->Hit_Blood(targetInfo.pos,targetInfo.rot);
 
              //데미지
              const float damage
@@ -204,6 +218,9 @@ void Bullet::OnUpdate()
                  string weaponNameForKill = ItemInfo::GetName(inven.m_pHand->GetTagResStatic());
                  inGameUI.m_weaponNameForKill = weaponNameForKill;
              }
+
+
+
              Communication()()->SendEventMinusDamage(targetInfo.chr->GetIndex(), damage);
          }
          //terrain features 에 맞은 것이라면 

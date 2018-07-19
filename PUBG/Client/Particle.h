@@ -46,7 +46,7 @@ public:
     virtual void OnUpdate() override;
     virtual void OnRender() override;
 
-    void Set(const D3DXVECTOR3& pos);
+    void Set(const D3DXVECTOR3& pos,const D3DXQUATERNION& rot);
 
     bool IsActive() const
     {
@@ -79,7 +79,7 @@ private:
 public:
     void Render();
 
-    BloodParticle* Hit_Blood(const D3DXVECTOR3& hitPos);
+    BloodParticle* Hit_Blood(const D3DXVECTOR3& hitPos,const D3DXQUATERNION& hitRot);
     //BulletHoleParticle* Hit_BulletHole(const D3DXVECTOR3& hitPos);
 
     friend Singleton<_ParticlePool>;

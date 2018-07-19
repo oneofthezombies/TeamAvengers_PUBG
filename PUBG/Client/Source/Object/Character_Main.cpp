@@ -268,6 +268,10 @@ void Character::updateMine()
 {
     if (!isMine()) return;
 
+    //testing for blood particle << delete when it is done
+    if (Input()()->IsOnceKeyUp(VK_END))
+        ParticlePool()()->Hit_Blood(GetTransform()->GetPosition()+(Vector3::UP*170.0f), GetTransform()->GetRotation());
+
     //Dead logic
     if (m_isDead)
     {
@@ -450,17 +454,6 @@ void Character::updateOther()
     D3DXVec3Lerp(&pos, &pTr->GetPosition(), &pi.position, 1.0f);
     D3DXQuaternionSlerp(&rot, &pTr->GetRotation(), &pi.rotation, 1.0f);
 
-    
-    //testing
-    //static D3DXQUATERNION q = D3DXQUATERNION(0, 0.0f, 0, 0.0f);
-    //q.y += 0.01f;
-    ////q.w += 0.01f;
-    //rot *= q;
-    static float yaw =0.0f;
-    yaw += 0.01f;
-    D3DXQUATERNION qRot;
-    D3DXQuaternionRotationYawPitchRoll(&qRot, yaw, 0.0f, 0.0f);
-    rot *= qRot;
 
 
     pTr->SetPosition(pos);
