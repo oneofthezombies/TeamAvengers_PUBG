@@ -60,6 +60,7 @@ HeightMap::HeightMap()
     //            "./Resource/Heightmap/testing/",
     //            "Heightmap.jpg"));
 
+
     //ray box
     SetRayBox();
 

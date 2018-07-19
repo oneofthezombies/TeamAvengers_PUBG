@@ -63,6 +63,7 @@
     <ClCompile Include="Source\Useful\Area.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />
     <ClCompile Include="Source\Useful\Light.cpp" />
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
     <ClCompile Include="Source\Object\DeathDropBox.cpp" />
     <ClCompile Include="SceneLobby.cpp" />
@@ -130,5 +131,6 @@
     <ClInclude Include="Source\UI\UITest.h" />
     <ClInclude Include="Source\Object\DeathDropBox.h" />
     <ClInclude Include="SceneLobby.h" />
+    <ClInclude Include="Particle.h" />
   </ItemGroup>
 </Project>

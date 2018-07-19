@@ -123,6 +123,9 @@ private:
     void addCharacterAnimationsForAsync();
     void addEquipmentAnimationsForAsync();
 
+    void LoadParticleTexture(const string fileName,
+        const int maxIndex, const D3DCOLOR colorKey);
+
 public:
              SceneLoading();
     virtual ~SceneLoading();

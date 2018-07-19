@@ -133,6 +133,20 @@ void SceneLoading::Load()
     load("./Resource/UI/Login/", "login_btn_idle.png");
     load("./Resource/UI/Login/", "login_btn_mouseover.png");
 
+    //for particles textures
+    LoadParticleTexture("T_Blood_01", 8, D3DCOLOR_XRGB(0, 0, 0));     //From PUBG
+    LoadParticleTexture("T_Blood_02", 32, D3DCOLOR_XRGB(0, 0, 0));
+    LoadParticleTexture("T_Blood_03", 8, D3DCOLOR_XRGB(27, 0, 0));
+    LoadParticleTexture("T_Blood_04", 16, D3DCOLOR_XRGB(27, 0, 0));
+    LoadParticleTexture("T_Blood_05", 16, D3DCOLOR_XRGB(27, 0, 0));
+    LoadParticleTexture("T_Blood_06", 16, D3DCOLOR_XRGB(27, 0, 0));
+
+    //LoadParticleTexture("blood_hit_08", 16, D3DCOLOR_XRGB(0, 0, 0));    //From internet
+    //LoadParticleTexture("blood_hit_07", 16, D3DCOLOR_XRGB(0, 0, 0));
+    //LoadParticleTexture("blood_hit_06", 16, D3DCOLOR_XRGB(0, 0, 0));
+    //LoadParticleTexture("blood_hit_05", 16, D3DCOLOR_XRGB(0, 0, 0));
+    //LoadParticleTexture("blood_hit_04", 16, D3DCOLOR_XRGB(0, 0, 0));
+
     // load effect meshs
     load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
@@ -668,6 +682,25 @@ void SceneLoading::addEquipmentAnimationsForAsync()
             "SceneLoading::addAnimationsToEquipment(), SkinnedMesh::Seperate() failed.");
 
         it = rs.erase(it);
+    }
+}
+
+void SceneLoading::LoadParticleTexture(const string fileName, const int maxIndex, const D3DCOLOR colorKey)
+{
+    string filePath = "./Resource/particle/";
+
+    filePath = filePath + fileName + "/";
+
+
+    for (int i = 0; i <maxIndex; i++)
+    {
+        string  str = "tile0";
+        if (i < 10)
+            str += "0" + to_string(i);
+        else
+            str += to_string(i);
+        str += ".png";
+        load(filePath, str, colorKey);
     }
 }
 
