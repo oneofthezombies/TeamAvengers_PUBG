@@ -277,6 +277,24 @@ void ScenePlay::setWithOthersMode()
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
+    p = D3DXVECTOR3(700.0f, 200.0f, 200.0f);
+    name = "QBZ " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::QBZ, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(800.0f, 200.0f, 200.0f);
+    name = "Kar98k " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Kar98k, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(900.0f, 200.0f, 200.0f);
+    name = "Kar98k " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::Kar98k, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
     //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
     //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     //Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
