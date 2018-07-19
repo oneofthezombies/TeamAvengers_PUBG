@@ -6,6 +6,7 @@
 #include "ItemInfo.h"
 #include "Item.h"
 #include "ScenePlay.h"
+#include "Ballistics.h"
 
 Bullet::Bullet()
     : IObject(TAG_OBJECT::Bullet)
@@ -60,6 +61,7 @@ void Bullet::OnUpdate()
          * Time()()->GetDeltaTime();
 
      //ballistic 으로 y값을 낮추자
+     m_nextPos.y += Ballistics::GetVarianceY(m_tag, 0.0f);
      
      Ray ray;
      ray.m_pos = m_curPos;

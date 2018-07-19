@@ -140,6 +140,7 @@ void Character::TotalInventory::Destroy()
 
 void Character::TotalInventory::Open()
 {
+    ShowCursor(true);
     isOpened = true;
     // move ui to in screen
 
@@ -148,6 +149,8 @@ void Character::TotalInventory::Open()
 
 void Character::TotalInventory::Close()
 {
+    ShowCursor(false);
+
     isOpened = false;
     // move ui to out screen
     pBorder->SetIsRender(isOpened);
