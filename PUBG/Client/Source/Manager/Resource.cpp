@@ -965,7 +965,6 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             }
             break;
 
-
         //Inventory ==================================================
         case TAG_FONT::Inventory_Ground:
             {
@@ -1011,6 +1010,54 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                     &m_fonts[tag]);
             }
             break;
+
+        //Loading ==================================================
+        case TAG_FONT::LoadingDesc:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                18, 9, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LoadingPercentage:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                100, 20, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LoadingText:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                40, 10, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+
         //Login ==================================================
         case TAG_FONT::LoginInput:
         {

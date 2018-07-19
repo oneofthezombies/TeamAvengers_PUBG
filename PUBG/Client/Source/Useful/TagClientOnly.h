@@ -76,6 +76,10 @@ enum class TAG_FONT
     Inventory_28,
     Inventory_NickName,
 
+    LoadingDesc,
+    LoadingPercentage,
+    LoadingText,
+
     LoginInput,
     LoginButton,
 
