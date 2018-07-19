@@ -829,9 +829,9 @@ void Character::TotalInventory::DropSecondary()
     Communication()()->SendEventMoveItemSecondaryToField(pCharacter->GetIndex(), originItemName);
 
     // ui »©±â
-    m_pWeapon1->pUIImage = nullptr;
-    m_pWeapon1->pItem = nullptr;
-    m_pWeapon1->SetIsActive(false);
+    m_pWeapon2->pUIImage = nullptr;
+    m_pWeapon2->pItem = nullptr;
+    m_pWeapon2->SetIsActive(false);
 }
 
 void Character::TotalInventory::EquipSecondary(Item* pNewItem)

@@ -290,15 +290,15 @@ void Character::onMouse(
                 pUIButtonWithItem->SetPosition(Vector3::ONE * max);
             }
 
-            if (inven.m_pWeaponPrimary == nullptr && !(inven.m_handState == TAG_RIFLE::Primary))
-            {
-                inven.m_pWeapon1->SetIsActive(false);
-            }
-            if (inven.m_pWeaponSecondary == nullptr && !(inven.m_handState == TAG_RIFLE::Secondary)
-                /*&& inven.m_pHand == nullptr*/)
-            {
-                inven.m_pWeapon2->SetIsActive(false);
-            }
+            //if (inven.m_pWeaponPrimary == nullptr && !(inven.m_handState == TAG_RIFLE::Primary))
+            //{
+            //    inven.m_pWeapon1->SetIsActive(false);
+            //}
+            //if (inven.m_pWeaponSecondary == nullptr && !(inven.m_handState == TAG_RIFLE::Secondary)
+            //    /*&& inven.m_pHand == nullptr*/)
+            //{
+            //    inven.m_pWeapon2->SetIsActive(false);
+            //}
             inven.m_stateClicked = false;
         }
     }
