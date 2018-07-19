@@ -115,6 +115,7 @@ public:
     bool IsInDeathDropBox() const;
     void DeleteThisInDeathDropBox();
     void SetDeathDropBox(DeathDropBox* pDeathDropBox);
+    int GetDeathDropBoxIndex() const;
 
     //for 아이템 자체 애니메이션
     void Set(

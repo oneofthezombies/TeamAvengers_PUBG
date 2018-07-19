@@ -583,6 +583,13 @@ void Item::SetDeathDropBox(DeathDropBox* pDeathDropBox)
     this->pDeathDropBox = pDeathDropBox;
 }
 
+int Item::GetDeathDropBoxIndex() const
+{
+    assert(pDeathDropBox && "Item::GetDeathDropBoxIndex()");
+
+    return pDeathDropBox->GetIndex();
+}
+
 //for 아이템 자체 애니메이션
 void Item::Set(
     const TAG_ANIM_WEAPON tag,

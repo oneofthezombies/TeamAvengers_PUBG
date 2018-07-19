@@ -4,6 +4,7 @@
 #include "ScenePlay.h"
 #include "IObject.h"
 #include "Item.h"
+#include "DeathDropBox.h"
 
 void Client::Connect(const tcp::resolver::results_type& endpoints)
 {
@@ -345,11 +346,8 @@ void Communication::Manager::ReceiveMessage(
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
             Item* pItem = pScenePlay->FindItemWithName(destoryedItemName);
-            pScenePlay->ItemIntoInventory(
-                pScenePlay->GetCellIndex(
-                    pItem->GetTransform()->GetPosition()), 
-                pItem);
-
+            const std::size_t cellIndex = pScenePlay->GetCellIndex(pItem->GetTransform()->GetPosition());
+            pScenePlay->ItemIntoInventory(cellIndex, pItem);
             pScenePlay->Destroy(pItem);
         }
         break;
@@ -535,6 +533,7 @@ void Communication::Manager::ReceiveMessage(
                 if (p->GetIndex() == pickerID)
                 {
                     p->MoveItemFieldToInventory(pItem);
+                    return;
                 }
             }
         }
@@ -738,6 +737,241 @@ void Communication::Manager::ReceiveMessage(
             pDeath->CreateDeathDropBox();
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_INVENTORY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            int boxID;
+            ss >> boxID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            DeathDropBox* pBox = pScenePlay->GetDeathDropBox(boxID);
+            Item* pItem = pBox->FindItem(itemName);
+
+            if (pItem->IsInDeathDropBox())
+                pItem->DeleteThisInDeathDropBox();
+
+            const std::vector<Character*>& characters = 
+                pScenePlay->GetCharacters();
+
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToInventory(pItem);
+                    return;
+                }
+            }
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_PRIMARY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            int boxID;
+            ss >> boxID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            DeathDropBox* pBox = pScenePlay->GetDeathDropBox(boxID);
+            Item* pItem = pBox->FindItem(itemName);
+
+            if (pItem->IsInDeathDropBox())
+                pItem->DeleteThisInDeathDropBox();
+
+            const std::vector<Character*>& characters =
+                pScenePlay->GetCharacters();
+
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToPrimary(pItem);
+                    return;
+                }
+            }
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_SECONDARY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            int boxID;
+            ss >> boxID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            DeathDropBox* pBox = pScenePlay->GetDeathDropBox(boxID);
+            Item* pItem = pBox->FindItem(itemName);
+
+            if (pItem->IsInDeathDropBox())
+                pItem->DeleteThisInDeathDropBox();
+
+            const std::vector<Character*>& characters =
+                pScenePlay->GetCharacters();
+
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToSecondary(pItem);
+                    return;
+                }
+            }
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_HEAD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            int boxID;
+            ss >> boxID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            DeathDropBox* pBox = pScenePlay->GetDeathDropBox(boxID);
+            Item* pItem = pBox->FindItem(itemName);
+
+            if (pItem->IsInDeathDropBox())
+                pItem->DeleteThisInDeathDropBox();
+
+            const std::vector<Character*>& characters =
+                pScenePlay->GetCharacters();
+
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToHead(pItem);
+                    return;
+                }
+            }
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_ARMOR:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            int boxID;
+            ss >> boxID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            DeathDropBox* pBox = pScenePlay->GetDeathDropBox(boxID);
+            Item* pItem = pBox->FindItem(itemName);
+
+            if (pItem->IsInDeathDropBox())
+                pItem->DeleteThisInDeathDropBox();
+
+            const std::vector<Character*>& characters =
+                pScenePlay->GetCharacters();
+
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToArmor(pItem);
+                    return;
+                }
+            }
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_BACK:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            int boxID;
+            ss >> boxID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            DeathDropBox* pBox = pScenePlay->GetDeathDropBox(boxID);
+            Item* pItem = pBox->FindItem(itemName);
+
+            if (pItem->IsInDeathDropBox())
+                pItem->DeleteThisInDeathDropBox();
+
+            const std::vector<Character*>& characters =
+                pScenePlay->GetCharacters();
+
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == pickerID)
+                {
+                    p->MoveItemFieldToBack(pItem);
+                    return;
+                }
+            }
+        }
+        break;
+    case TAG_REQUEST::SEND_EVENT_DESTROY_ITEM_IN_BOX:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+            int pickerID;
+            ss >> pickerID;
+            int boxID;
+            ss >> boxID;
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            DeathDropBox* pBox = pScenePlay->GetDeathDropBox(boxID);
+            Item* pItem = pBox->FindItem(itemName);
+
+            if (pItem->IsInDeathDropBox())
+                pItem->DeleteThisInDeathDropBox();
+
+            SAFE_DELETE(pItem);
+        }
+        break;
     }
 }
 
@@ -895,13 +1129,13 @@ void Communication::Manager::SendEventDestroyItem(const std::string& itemName)
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_DESTROY_ITEM, 
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_DESTROY_ITEM, 
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemFieldToPrimary(
@@ -1143,6 +1377,118 @@ void Communication::Manager::SendEventCreateDeathDropBox(
     m_pClient->Write(
         Message::Create(
             TAG_REQUEST::SEND_EVENT_CREATE_DEATH_DROP_BOX,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventMoveItemBoxToInventory(
+    const int CharacterID, 
+    const int boxID, 
+    const std::string& itemName)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << CharacterID << ' ' << boxID << ' ' << itemName;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_INVENTORY,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventMoveItemBoxToPrimary(
+    const int CharacterID, 
+    const int boxID, 
+    const std::string& itemName)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << CharacterID << ' ' << boxID << ' ' << itemName;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_PRIMARY,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventMoveItemBoxToSecondary(
+    const int CharacterID, 
+    const int boxID, 
+    const std::string& itemName)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << CharacterID << ' ' << boxID << ' ' << itemName;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_SECONDARY,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventMoveItemBoxToHead(
+    const int CharacterID, 
+    const int boxID, 
+    const std::string& itemName)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << CharacterID << ' ' << boxID << ' ' << itemName;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_HEAD,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventMoveItemBoxToArmor(
+    const int CharacterID, 
+    const int boxID, 
+    const std::string& itemName)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << CharacterID << ' ' << boxID << ' ' << itemName;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_ARMOR,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventMoveItemBoxToBack(
+    const int CharacterID, 
+    const int boxID, 
+    const std::string& itemName)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << CharacterID << ' ' << boxID << ' ' << itemName;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BOX_TO_BACK,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventDestroyItemInBox(
+    const int CharacterID, 
+    const int boxID, 
+    const std::string& itemName)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << CharacterID << ' ' << boxID << ' ' << itemName;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_DESTROY_ITEM_IN_BOX,
             ss.str()));
 }
 

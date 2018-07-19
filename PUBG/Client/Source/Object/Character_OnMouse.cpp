@@ -133,35 +133,16 @@ void Character::onMouse(
                     {
                     case TAG_ITEM_CATEGORY::Ammo:
                         {
-                            Item* pItem = pUIButtonWithItem->pItem;
-                            if (PutItemInTotalInventory(pItem))
+                            if (PutItemInTotalInventory(pUIButtonWithItem->pItem))
                             {
-                                pItem->SetState(true);
-                                CurrentScene()()->ItemIntoInventory(
-                                    CurrentScene()()->GetCellIndex(
-                                        pItem->GetTransform()->GetPosition()),
-                                    pItem);
-                                
-                                if (pItem->IsInDeathDropBox())
-                                    pItem->DeleteThisInDeathDropBox();
                             }
                         }
                         break;
 
                     case TAG_ITEM_CATEGORY::Rifle:
                         {
-                            Item* pItem = pUIButtonWithItem->pItem;
-                            if (PutItemInTotalInventory(pItem))
+                            if (PutItemInTotalInventory(pUIButtonWithItem->pItem))
                             {
-                                pItem->SetState(true);
-                                CurrentScene()()->ItemIntoInventory(
-                                    CurrentScene()()->GetCellIndex(
-                                        pItem->GetTransform()->GetPosition()),
-                                    pItem);
-
-                                if (pItem->IsInDeathDropBox())
-                                    pItem->DeleteThisInDeathDropBox();
-
                                 /*UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage2();*/
 
                                 //웨폰 버튼.

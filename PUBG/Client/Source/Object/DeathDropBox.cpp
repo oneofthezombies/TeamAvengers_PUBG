@@ -6,6 +6,7 @@
 DeathDropBox::DeathDropBox()
     : IObject(TAG_OBJECT::DeathDropBox)
     , pEffectMeshRenderer(nullptr)
+    , m_index(-1)
 {
     const float max = std::numeric_limits<float>::max();
     GetTransform()->SetPosition(Vector3::ONE * max);
@@ -37,13 +38,21 @@ void DeathDropBox::OnRender()
     m_boundingSphere.Render();
 }
 
-void DeathDropBox::SetPosition(const D3DXVECTOR3& position)
+void DeathDropBox::Set(const D3DXVECTOR3& position, Character* pCharacter)
+{
+    setPosition(position);
+    setItems(pCharacter);
+
+    m_index = pCharacter->GetIndex();
+}
+
+void DeathDropBox::setPosition(const D3DXVECTOR3& position)
 {
     GetTransform()->SetPosition(position);
     GetTransform()->Update();
 }
 
-void DeathDropBox::SetItems(Character* pCharacter)
+void DeathDropBox::setItems(Character* pCharacter)
 {
     Character::TotalInventory& inven = 
         pCharacter->GetTotalInventory();
@@ -97,7 +106,30 @@ void DeathDropBox::DeleteThisItem(Item* pItem)
     }
 }
 
+Item* DeathDropBox::FindItem(const std::string& itemName)
+{
+    for (auto it = m_items.begin(); it != m_items.end();)
+    {
+        if ((*it)->GetName() == itemName)
+        {
+            Item* pItem = *it;
+            return pItem;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    return nullptr;
+}
+
 const std::vector<Item*>& DeathDropBox::GetItems() const
 {
     return m_items;
+}
+
+int DeathDropBox::GetIndex() const
+{
+    return m_index;
 }

@@ -1223,8 +1223,7 @@ void Character::CreateDeathDropBox()
         pScenePlay->GetDeathDropBox(m_index);
 
     const D3DXVECTOR3 pos = GetTransform()->GetPosition();
-    pBox->SetPosition(pos);
-    pBox->SetItems(this);
+    pBox->Set(pos, this);
 
     pScenePlay->InsertObjIntoTotalCellSpace(
         TAG_OBJECT::DeathDropBox,

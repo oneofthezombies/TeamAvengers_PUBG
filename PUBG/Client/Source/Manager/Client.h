@@ -85,7 +85,14 @@ struct Communication
         void SendEventMoveItemHandToPrimary  (const int id);
         void SendEventMoveItemHandToSecondary(const int id);
 
-        void SendEventCreateDeathDropBox(const int id, const std::vector<std::pair<std::string, int>>& consumes);
+        void SendEventCreateDeathDropBox    (const int id, const std::vector<std::pair<std::string, int>>& consumes);
+        void SendEventMoveItemBoxToInventory(const int CharacterID, const int boxID, const std::string& itemName);
+        void SendEventMoveItemBoxToPrimary  (const int CharacterID, const int boxID, const std::string& itemName);
+        void SendEventMoveItemBoxToSecondary(const int CharacterID, const int boxID, const std::string& itemName);
+        void SendEventMoveItemBoxToHead     (const int CharacterID, const int boxID, const std::string& itemName);
+        void SendEventMoveItemBoxToArmor    (const int CharacterID, const int boxID, const std::string& itemName);
+        void SendEventMoveItemBoxToBack     (const int CharacterID, const int boxID, const std::string& itemName);
+        void SendEventDestroyItemInBox      (const int CharacterID, const int boxID, const std::string& itemName);
 
         friend Singleton<Manager>;
     };

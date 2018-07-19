@@ -727,8 +727,7 @@ bool Character::PutItemInTotalInventory(Item* item)
         item && 
         "Character::PutItemInTotalInventory(), item is null.");
 
-    //if (item->IsInDeathDropBox())
-    //    item->DeleteThisInDeathDropBox();
+    TotalInventory& inven = m_totalInventory;
 
     TAG_RES_STATIC    tag      = item->GetTagResStatic();
     TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(tag);
@@ -736,45 +735,62 @@ bool Character::PutItemInTotalInventory(Item* item)
     switch (category)
     {
     case TAG_ITEM_CATEGORY::Ammo:
-        if (createOrMergeItem(&(m_totalInventory.m_mapInventory), item))
-            return true;
-        else 
-            return false;
+        {
+            if (createOrMergeItem(&inven.m_mapInventory, item))
+            {
+            }
+            else
+            {
+                return false;
+            }
+        }
         break;
 
     case TAG_ITEM_CATEGORY::Attach:
     case TAG_ITEM_CATEGORY::Consumable:
-    {
-        if (tag == TAG_RES_STATIC::Bandage ||
-            tag == TAG_RES_STATIC::FirstAidKit)
         {
-            if (createOrMergeItem(&(m_totalInventory.m_mapInventory), item))
-                return true;
-            else
-                return false;
-        }
-        else
-        {
-            if (m_totalInventory.m_capacity - ItemInfo::GetCapacity(tag) >= 0)
+            if (tag == TAG_RES_STATIC::Bandage ||
+                tag == TAG_RES_STATIC::FirstAidKit)
             {
-                (m_totalInventory.m_mapInventory)[tag].push_back(item);
-
-                CurrentScene()()->RemoveObject(item);
-               
-                // OOTZ_FLAG : 네트워크 필드 -> 메드킷, 부착물
-                Communication()()->SendEventDestroyItem(item->GetName());
-                
-                m_totalInventory.m_capacity -= ItemInfo::GetCapacity(tag);
+                if (createOrMergeItem(&inven.m_mapInventory, item))
+                {
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
-                m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
-                return false;
+                const float capacity = ItemInfo::GetCapacity(tag);
+
+                if (inven.m_capacity - capacity >= 0.0f)
+                {
+                    inven.m_mapInventory[tag].push_back(item);
+                    inven.m_capacity -= capacity;
+
+                    if (item->IsInDeathDropBox())
+                    {
+                        const int boxID = item->GetDeathDropBoxIndex();
+                        item->DeleteThisInDeathDropBox();
+                        Communication()()->SendEventMoveItemBoxToInventory(m_index, boxID, item->GetName());
+                    }
+                    else
+                    {
+                        const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                        CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                        CurrentScene()()->RemoveObject(item);
+                        Communication()()->SendEventMoveItemFieldToInventory(m_index, item->GetName());
+                    }
+                }
+                else
+                {
+                    m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
+
+                    return false;
+                }
             }
         }
-
-        return true;
-    }
         break;
 
     case TAG_ITEM_CATEGORY::Armor:
@@ -786,13 +802,24 @@ bool Character::PutItemInTotalInventory(Item* item)
                 originItemName = m_totalInventory.m_pEquipArmor->GetName();
 
             const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipArmor, item);
-
-            // OOTZ_FLAG : 네트워크 아머 -> 필드
             if (dropped)
+            {
                 Communication()()->SendEventMoveItemArmorToField(m_index, originItemName);
+            }
 
-            // OOTZ_FLAG : 네트워크 필드 -> 아머
-            Communication()()->SendEventMoveItemFieldToArmor(m_index, item->GetName());
+            if (item->IsInDeathDropBox())
+            {
+                const int boxID = item->GetDeathDropBoxIndex();
+                item->DeleteThisInDeathDropBox();
+                Communication()()->SendEventMoveItemBoxToArmor(m_index, boxID, item->GetName());
+            }
+            else // in field
+            {
+                const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                CurrentScene()()->RemoveObject(item);
+                Communication()()->SendEventMoveItemFieldToArmor(m_index, item->GetName());
+            }
 
             m_isEatEquip = true;
         }
@@ -805,13 +832,24 @@ bool Character::PutItemInTotalInventory(Item* item)
                 originItemName = m_totalInventory.m_pEquipBack->GetName();
 
             const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipBack, item);
-
-            // OOTZ_FLAG : 네트워크 백 -> 필드
             if (dropped)
+            {
                 Communication()()->SendEventMoveItemBackToField(m_index, originItemName);
+            }
 
-            // OOTZ_FLAG : 네트워크 필드 -> 백
-            Communication()()->SendEventMoveItemFieldToBack(m_index, item->GetName());
+            if (item->IsInDeathDropBox())
+            {
+                const int boxID = item->GetDeathDropBoxIndex();
+                item->DeleteThisInDeathDropBox();
+                Communication()()->SendEventMoveItemBoxToBack(m_index, boxID, item->GetName());
+            }
+            else // in field
+            {
+                const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                CurrentScene()()->RemoveObject(item);
+                Communication()()->SendEventMoveItemFieldToBack(m_index, item->GetName());
+            }
 
             m_isEatEquip = true;
         }
@@ -826,13 +864,24 @@ bool Character::PutItemInTotalInventory(Item* item)
                 originItemName = m_totalInventory.m_pEquipHead->GetName();
 
             const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipHead, item);
-
-            // OOTZ_FLAG : 네트워크 헤드 -> 필드
             if (dropped)
+            {
                 Communication()()->SendEventMoveItemHeadToField(m_index, originItemName);
+            }
 
-            // OOTZ_FLAG : 네트워크 필드 -> 헤드
-            Communication()()->SendEventMoveItemFieldToHead(m_index, item->GetName());
+            if (item->IsInDeathDropBox())
+            {
+                const int boxID = item->GetDeathDropBoxIndex();
+                item->DeleteThisInDeathDropBox();
+                Communication()()->SendEventMoveItemBoxToHead(m_index, boxID, item->GetName());
+            }
+            else // in field
+            {
+                const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                CurrentScene()()->RemoveObject(item);
+                Communication()()->SendEventMoveItemFieldToHead(m_index, item->GetName());
+            }
 
             m_isEatEquip = true;
         }
@@ -849,13 +898,24 @@ bool Character::PutItemInTotalInventory(Item* item)
                     originItemName = m_totalInventory.m_pWeaponPrimary->GetName();
 
                 const bool dropped = checkOriginItem((Item**)&m_totalInventory.m_pWeaponPrimary, item);
-
-                // OOTZ_FLAG : 네트워크 프라이머리 -> 필드
                 if (dropped)
+                {
                     Communication()()->SendEventMoveItemPrimaryToField(m_index, originItemName);
+                }
 
-                // OOTZ_FLAG : 네트워크 필드 -> 프라이머리
-                Communication()()->SendEventMoveItemFieldToPrimary(m_index, item->GetName());
+                if (item->IsInDeathDropBox())
+                {
+                    const int boxID = item->GetDeathDropBoxIndex();
+                    item->DeleteThisInDeathDropBox();
+                    Communication()()->SendEventMoveItemBoxToPrimary(m_index, boxID, item->GetName());
+                }
+                else // in field
+                {
+                    const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                    CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                    CurrentScene()()->RemoveObject(item);
+                    Communication()()->SendEventMoveItemFieldToPrimary(m_index, item->GetName());
+                }
             }
             else
             {
@@ -864,13 +924,24 @@ bool Character::PutItemInTotalInventory(Item* item)
                     originItemName = m_totalInventory.m_pWeaponSecondary->GetName();
 
                 const bool dropped = checkOriginItem((Item**)&m_totalInventory.m_pWeaponSecondary, item);
-
-                // OOTZ_FLAG : 네트워크 세컨더리 -> 필드
                 if (dropped)
+                {
                     Communication()()->SendEventMoveItemSecondaryToField(m_index, originItemName);
+                }
 
-                // OOTZ_FLAG : 네트워크 필드 -> 세컨더리
-                Communication()()->SendEventMoveItemFieldToSecondary(m_index, item->GetName());
+                if (item->IsInDeathDropBox())
+                {
+                    const int boxID = item->GetDeathDropBoxIndex();
+                    item->DeleteThisInDeathDropBox();
+                    Communication()()->SendEventMoveItemBoxToSecondary(m_index, boxID, item->GetName());
+                }
+                else // in field
+                {
+                    const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                    CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                    CurrentScene()()->RemoveObject(item);
+                    Communication()()->SendEventMoveItemFieldToSecondary(m_index, item->GetName());
+                }
             }
         }
         break;
@@ -881,6 +952,7 @@ bool Character::PutItemInTotalInventory(Item* item)
     }
 
     return true;
+
     //For Debug
     ShowTotalInventory();
 }
@@ -891,42 +963,73 @@ bool Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
         - 자신의 용량만큼 캐릭터의 소지용량에서 제외된다
         - 소모품(Bandage, FirstAidKit), 탄약
     */
-    assert(map && item && "Character::CreateOrMergeItem(), argument is null.");
+    assert(
+        map && 
+        item && 
+        "Character::CreateOrMergeItem(), argument is null.");
 
     TAG_RES_STATIC tag = item->GetTagResStatic();
     auto it = map->find(tag);
     int count = item->GetCount();
+    const float capacity = ItemInfo::GetCapacity(tag);
 
-    if (m_totalInventory.m_capacity - count * ItemInfo::GetCapacity(tag) >= 0)
+    if (m_totalInventory.m_capacity - count * capacity >= 0.0f)
     {
         if (it == map->end())
         {
             //아이템이 없는 경우는 새로 생성한다
             (*map)[tag].push_back(item);
             item->SetCount(count);
-            CurrentScene()()->RemoveObject(item);
-            
-            // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
-            Communication()()->SendEventMoveItemFieldToInventory(m_index, item->GetName());
+            item->SetState(true);
+
+            if (item->IsInDeathDropBox())
+            {
+                const int boxID = item->GetDeathDropBoxIndex();
+                item->DeleteThisInDeathDropBox();
+                Communication()()->SendEventMoveItemBoxToInventory(m_index, boxID, item->GetName());
+            }
+            else // in field
+            {
+                const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                CurrentScene()()->RemoveObject(item);
+                Communication()()->SendEventMoveItemFieldToInventory(m_index, item->GetName());
+            }
         }
         else
         {
             //이미 인벤토리에 있는 경우, 기존 개수와 합친다
             auto origin_item = it->second.back();
             origin_item->SetCount(origin_item->GetCount() + count);
-            CurrentScene()()->Destroy(item);
 
-            // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
-            Communication()()->SendEventDestroyItem(item->GetName());
+            if (item->IsInDeathDropBox())
+            {
+                const int boxID = item->GetDeathDropBoxIndex();
+                item->DeleteThisInDeathDropBox();
+                Communication()()->SendEventDestroyItemInBox(m_index, boxID, item->GetName());
+            }
+            else // in field
+            {
+                const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                CurrentScene()()->Destroy(item);
+
+                // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
+                Communication()()->SendEventDestroyItem(item->GetName());
+            }
         }
-        m_totalInventory.m_capacity -= count * ItemInfo::GetCapacity(tag);
-        return true;
+        m_totalInventory.m_capacity -= count * capacity;
     }
     else
     {
-        m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
+        m_inGameUI.pInfoText->SetText(
+            "공간이 충분하지 않습니다!", 
+            m_inGameUI.pInfoTextShadow);
+
         return false;
     }
+
+    return true;
 }
 
 bool Character::checkOriginItem(Item** originItem, Item* newItem)
@@ -962,8 +1065,6 @@ bool Character::checkOriginItem(Item** originItem, Item* newItem)
         //용량을 늘린다
         m_totalInventory.m_capacity += ItemInfo::GetCapacityExtension(newItem->GetTagResStatic());
 
-        CurrentScene()()->RemoveObject(newItem);
-
         TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(newItem->GetTagResStatic());
         if (category == TAG_ITEM_CATEGORY::Armor ||
             category == TAG_ITEM_CATEGORY::Back ||
@@ -971,6 +1072,7 @@ bool Character::checkOriginItem(Item** originItem, Item* newItem)
             m_totalInventory.m_equipOnNum++;
 
         // eqiup
+        newItem->SetState(true);
         newItem->SetIsRenderEffectMesh(false);
         newItem->SetIsRenderSkinnedMesh(true);
 
