@@ -90,6 +90,9 @@ public:
         UIButtonWithItem* pUIPicked;
         UIButtonWithItem* m_pWeapon1;
         UIButtonWithItem* m_pWeapon2;
+        UIButtonWithItem* m_pUIArmor;
+        UIButtonWithItem* m_pUIHead;
+        UIButtonWithItem* m_pUIBack;
 
         Item* m_pHand; //손에 든 무기
         bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
@@ -133,6 +136,19 @@ public:
         void Render();
         bool IsOpened();
         void SetEquipUI();
+
+        void DropItem(Item** ppOriginItem);
+        int EquipItem(Item** ppOriginItem, Item* pNewItem);
+        void DropPrimary();
+        void EquipPrimary(Item* pNewItem);
+        void DropSecondary();
+        void EquipSecondary(Item* pNewItem);
+        void DropArmor();
+        void EquipArmor(Item* pNewItem);
+        void DropHead();
+        void EquipHead(Item* pNewItem);
+        void DropBack();
+        void EquipBack(Item* pNewItem);
 
          TotalInventory();
         ~TotalInventory();

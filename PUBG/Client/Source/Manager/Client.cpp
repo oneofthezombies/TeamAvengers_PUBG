@@ -546,6 +546,26 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+
+            int dropperID;
+            ss >> dropperID;
+
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Item* pItem = pScenePlay->FindItemWithName(itemName);
+            const std::vector<Character*> characters = 
+                pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == dropperID)
+                {
+                    Character::TotalInventory& inven = p->GetTotalInventory();
+                    inven.DropItem(&inven.m_pEquipHead);
+                    return;
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_ARMOR_TO_FIELD:
@@ -556,6 +576,26 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+
+            int dropperID;
+            ss >> dropperID;
+
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Item* pItem = pScenePlay->FindItemWithName(itemName);
+            const std::vector<Character*> characters =
+                pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == dropperID)
+                {
+                    Character::TotalInventory& inven = p->GetTotalInventory();
+                    inven.DropItem(&inven.m_pEquipArmor);
+                    return;
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BACK_TO_FIELD:
@@ -566,6 +606,26 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+
+            int dropperID;
+            ss >> dropperID;
+
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Item* pItem = pScenePlay->FindItemWithName(itemName);
+            const std::vector<Character*> characters =
+                pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == dropperID)
+                {
+                    Character::TotalInventory& inven = p->GetTotalInventory();
+                    inven.DropItem(&inven.m_pEquipBack);
+                    return;
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_FIELD:
@@ -576,6 +636,26 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+
+            int dropperID;
+            ss >> dropperID;
+
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Item* pItem = pScenePlay->FindItemWithName(itemName);
+            const std::vector<Character*> characters =
+                pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == dropperID)
+                {
+                    Character::TotalInventory& inven = p->GetTotalInventory();
+                    inven.DropItem(&inven.m_pWeaponPrimary);
+                    return;
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_FIELD:
@@ -586,6 +666,26 @@ void Communication::Manager::ReceiveMessage(
             std::string& eventMoveItemStr = parsedDesc.second;
 
             std::stringstream ss(eventMoveItemStr);
+
+            int dropperID;
+            ss >> dropperID;
+
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Item* pItem = pScenePlay->FindItemWithName(itemName);
+            const std::vector<Character*> characters =
+                pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == dropperID)
+                {
+                    Character::TotalInventory& inven = p->GetTotalInventory();
+                    inven.DropItem(&inven.m_pWeaponSecondary);
+                    return;
+                }
+            }
         }
         break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_HAND:
@@ -689,7 +789,6 @@ void Communication::Manager::ReceiveMessage(
 
             std::vector<std::pair<std::string, int>> consumes;
             std::string buf;
-            int count;
             while (std::getline(ss >> std::ws, buf))
             {
                 std::string name = buf;
@@ -1234,13 +1333,13 @@ void Communication::Manager::SendEventMoveItemPrimaryToField(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_FIELD,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_FIELD,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemSecondaryToField(
@@ -1249,13 +1348,13 @@ void Communication::Manager::SendEventMoveItemSecondaryToField(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_FIELD,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_FIELD,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemHeadToField(
@@ -1264,13 +1363,13 @@ void Communication::Manager::SendEventMoveItemHeadToField(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HEAD_TO_FIELD,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_HEAD_TO_FIELD,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemArmorToField(
@@ -1279,13 +1378,13 @@ void Communication::Manager::SendEventMoveItemArmorToField(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_ARMOR_TO_FIELD,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_ARMOR_TO_FIELD,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemBackToField(
@@ -1294,13 +1393,13 @@ void Communication::Manager::SendEventMoveItemBackToField(
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    //std::stringstream ss;
-    //ss << m_myInfo.ID << id << ' ' << itemName;
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName;
 
-    //m_pClient->Write(
-    //    Message::Create(
-    //        TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BACK_TO_FIELD,
-    //        ss.str()));
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BACK_TO_FIELD,
+            ss.str()));
 }
 
 void Communication::Manager::SendEventMoveItemPrimaryToHand(const int id)

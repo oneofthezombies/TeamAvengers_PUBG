@@ -79,16 +79,19 @@ void ScenePlay::setAloneMode()
 
     item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
     AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
     pPlayer->PutItemInTotalInventory(item);
     
     p = D3DXVECTOR3(20, 0, 10);
     item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
     AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
     pPlayer->PutItemInTotalInventory(item);
 
     p = D3DXVECTOR3(30, 0, 10);
     item = new Item(TAG_RES_STATIC::Back_Lv1, "Armor_Lv1_0", p, r, s);
     AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
     pPlayer->PutItemInTotalInventory(item);
 
     //p = D3DXVECTOR3(60, 0, 10);
