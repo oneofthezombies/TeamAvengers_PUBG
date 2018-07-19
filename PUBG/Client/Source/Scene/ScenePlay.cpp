@@ -327,8 +327,9 @@ void ScenePlay::OnInit()
     {
         m_TotalCellSpaces[i].pIndex = i;
     }
-
-    LoadObjectsFromFile("./Resource/save1.txt");
+    
+    LoadObjectsFromFile("./Resource/save.txt");
+    //LoadObjectsFromFile("./Resource/save1.txt");
 
     // No id received
     if (Communication()()->m_myInfo.ID == -1)
