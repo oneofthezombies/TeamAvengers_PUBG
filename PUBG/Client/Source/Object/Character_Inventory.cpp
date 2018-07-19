@@ -786,6 +786,8 @@ int Character::TotalInventory::EquipItem(Item** ppOriginItem, Item* pNewItem)
 
 void Character::TotalInventory::DropPrimary()
 {
+    if (!m_pWeaponPrimary) return;
+
     const std::string originItemName = m_pWeaponPrimary->GetName();
 
     DropItem(&m_pWeaponPrimary);
@@ -817,6 +819,8 @@ void Character::TotalInventory::EquipPrimary(Item* pNewItem)
 
 void Character::TotalInventory::DropSecondary()
 {
+    if (!m_pWeaponSecondary) return;
+
     const std::string originItemName = m_pWeaponSecondary->GetName();
 
     DropItem(&m_pWeaponSecondary);
@@ -848,6 +852,8 @@ void Character::TotalInventory::EquipSecondary(Item* pNewItem)
 
 void Character::TotalInventory::DropArmor()
 {
+    if (!m_pEquipArmor) return;
+
     const std::string originItemName = m_pEquipArmor->GetName();
 
     DropItem(&m_pEquipArmor);
@@ -879,6 +885,8 @@ void Character::TotalInventory::EquipArmor(Item* pNewItem)
 
 void Character::TotalInventory::DropHead()
 {
+    if (!m_pEquipHead) return;
+
     const std::string originItemName = m_pEquipHead->GetName();
 
     DropItem(&m_pEquipHead);
@@ -910,6 +918,8 @@ void Character::TotalInventory::EquipHead(Item* pNewItem)
 
 void Character::TotalInventory::DropBack()
 {
+    if (!m_pEquipBack) return;
+
     const std::string originItemName = m_pEquipBack->GetName();
 
     DropItem(&m_pEquipBack);
