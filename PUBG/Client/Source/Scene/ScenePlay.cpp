@@ -48,7 +48,7 @@ void ScenePlay::setAloneMode()
     Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    AddObject(new SkySphere);
+    //AddObject(new SkySphere);
 
 
     //For inventory Test
