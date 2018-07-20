@@ -4,9 +4,6 @@
 /*
 무기 장착 및 해제 애니메이션
 */
-/*
-무기 장착 및 해제 애니메이션
-*/
 void Character::setRifleOnHand(TAG_RIFLE tagRifle)
 {
     //총구 뒤쪽 카메라

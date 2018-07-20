@@ -521,7 +521,7 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
 
         //무기 들고 착지
     case TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard:
-        return 1.5f; //속도 올리면 애니메이션이 처음을 가리키는 문제점
+        return 1.2f; //속도 올리면 애니메이션이 처음을 가리키는 문제점
 
         //서다 -> 엎드리다
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Prone:
@@ -553,9 +553,11 @@ float TagAnimation::GetSpeed(const TAG_ANIM_WEAPON tag)
         return 0.83f;
 
     case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Start:
-    case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Loop:
     case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_End:
         return 0.95f;
+
+    case TAG_ANIM_WEAPON::Weapon_Kar98k_Reload_Loop:
+        return 0.9f;
 
     default:
         return 1.0f;
