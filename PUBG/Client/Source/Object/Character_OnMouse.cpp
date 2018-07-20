@@ -181,6 +181,8 @@ void Character::onMouse(
                                 if ((*it)->GetName() == itemName)
                                 {
                                     auto index = std::distance(items.begin(), it);
+                                    Item* pItem = items[index];
+                                    pItem->SetPosition(GetTransform()->GetPosition());
                                     inven.DropItem(&items[index]);
                                     it = items.erase(it);
                                 }
