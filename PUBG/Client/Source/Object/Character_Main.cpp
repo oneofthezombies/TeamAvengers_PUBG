@@ -464,6 +464,7 @@ void Character::updateMine()
         else
             fireModeStr = "단발";
 
+        m_inGameUI.m_infoTextCoolDown = m_inGameUI.INFO_TEXT_COOL_TIME;
         m_inGameUI.pInfoText->SetText("발사 모드 변경: " + fireModeStr, m_inGameUI.pInfoTextShadow);
     }
 
