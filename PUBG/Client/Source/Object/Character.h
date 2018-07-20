@@ -154,7 +154,6 @@ public:
         void EquipBack(Item* pNewItem);
 
         void ReleaseBullets(Item* pItem);
-        void DropBullets
 
          TotalInventory();
         ~TotalInventory();

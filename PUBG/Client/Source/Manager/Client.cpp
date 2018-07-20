@@ -705,9 +705,9 @@ void Communication::Manager::ReceiveMessage(
 
             std::string bulletCountStr;
             std::getline(ss >> std::ws, bulletCountStr);
+            const int bulletCount = std::stoi(bulletCountStr);
 
             ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
-            Item* pItem = pScenePlay->FindItemWithName(itemName);
             const std::vector<Character*> characters =
                 pScenePlay->GetCharacters();
             for (auto p : characters)
@@ -715,7 +715,25 @@ void Communication::Manager::ReceiveMessage(
                 if (p->GetIndex() == dropperID)
                 {
                     Character::TotalInventory& inven = p->GetTotalInventory();
-                    in
+                    auto& mapInven = inven.m_mapInventory;
+                    for (auto it = mapInven.begin(); it != mapInven.end(); ++it)
+                    {
+                        auto& items = it->second;
+                        for (auto it2 = items.begin(); it2 != items.end();)
+                        {
+                            if ((*it2)->GetName() == itemName)
+                            {
+                                auto index = std::distance(items.begin(), it2);
+                                inven.DropItem(&items[index]);
+                                it2 = items.erase(it2);
+                            }
+                            else
+                            {
+                                ++it2;
+                            }
+                        }
+                    }
+
                     return;
                 }
             }
