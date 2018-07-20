@@ -289,7 +289,8 @@ void Character::setReload()
                     Sound()()->addPlay(
                         TAG_SOUND::Qbz_Reload,
                         GetTransform()->GetPosition(),
-                        0.0f, FMOD_2D);
+                        0.0f, 
+                        FMOD_2D);
 
                     //총 자체 애니메이션
                     m_isNeedRifleAnim = true;
@@ -459,6 +460,8 @@ void Character::setReload()
                     }
                     else
                     {
+                        int numReload = m_totalInventory.m_numReload;
+
                         Sound()()->addPlay(
                             TAG_SOUND::Kar98_Reload0, 
                             GetTransform()->GetPosition(), 
@@ -477,14 +480,14 @@ void Character::setReload()
                             Item::DEFAULT_POSITION,
                             Item::DEFAULT_FINISH_EVENT_AGO_TIME,
                                    //Member Function Pointer, 객체의 포인터, 인자나열
-                            std::bind(&Item::OnKar98kReload, inven.m_pHand, m_totalInventory.m_numReload)
+                            std::bind(&Item::OnKar98kReload, inven.m_pHand, numReload)
                         );
                          
                         //캐릭터 애니메이션
                         if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
-                        {
-                            m_hasChangingState = true;                   
-                            setAnimation(
+                        {                                             
+                            m_hasChangingState = true;
+                            pAnimation->Set(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Base,
                                 true,
@@ -493,11 +496,19 @@ void Character::setReload()
                                 CharacterAnimation::DEFAULT_POSITION,
                                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                                 std::bind(&Character::onKar98kReload, this));
+
+                            setEquipAnimation(
+                                CharacterAnimation::BodyPart::UPPER,
+                                TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Base,
+                                true,
+                                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                                CharacterAnimation::DEFAULT_POSITION);
                         }
                         else if (m_stance == Stance::Prone)
                         {
                             m_hasChangingState = true;
-                            setAnimation(
+                            pAnimation->Set(
                                 CharacterAnimation::BodyPart::UPPER,
                                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Prone,
                                 true, //ok
@@ -505,7 +516,15 @@ void Character::setReload()
                                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                                 CharacterAnimation::DEFAULT_POSITION,
                                 0.3f, //ok
-                                std::bind(&Character::onKar98kReload, this));                       
+                                std::bind(&Character::onKar98kReload, this)); 
+
+                            setEquipAnimation(
+                                CharacterAnimation::BodyPart::UPPER,
+                                TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Start_Prone,
+                                true, //ok
+                                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                                CharacterAnimation::DEFAULT_POSITION);
                         }
                     }
                 }
@@ -1213,7 +1232,7 @@ Kar98k 재장전 애니메이션 관련
 void Character::onKar98kReloadEnd()
 {
     //캐릭터의 애니메이션
-    if (m_stance == Stance::Stand)
+    if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
     {
         setAnimation(
             CharacterAnimation::BodyPart::UPPER,
@@ -1262,9 +1281,9 @@ void Character::onKar98kReload()
     else
     {
         //캐릭터의 애니메이션
-        if (m_stance == Stance::Stand)
+        if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
         {
-            setAnimation(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Base,
                 false,
@@ -1273,10 +1292,18 @@ void Character::onKar98kReload()
                 CharacterAnimation::DEFAULT_POSITION,
                 CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
                 std::bind(&Character::onKar98kReload, this));
+
+            setEquipAnimation(
+                CharacterAnimation::BodyPart::UPPER,
+                TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Base,
+                false,
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_POSITION);
         }
         else if (m_stance == Stance::Prone)
         {
-            setAnimation(
+            pAnimation->Set(
                 CharacterAnimation::BodyPart::UPPER,
                 TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Prone,
                 true, //ok
@@ -1284,7 +1311,15 @@ void Character::onKar98kReload()
                 CharacterAnimation::DEFAULT_NEXT_WEIGHT,
                 CharacterAnimation::DEFAULT_POSITION,
                 0.3f, //ok
-                std::bind(&Character::onKar98kReload, this));        
+                std::bind(&Character::onKar98kReload, this));  
+
+            setEquipAnimation(
+                CharacterAnimation::BodyPart::UPPER,
+                TAG_ANIM_CHARACTER::Weapon_Kar98k_Reload_Loop_Prone,
+                true, //ok
+                CharacterAnimation::DEFAULT_BLENDING_TIME,
+                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+                CharacterAnimation::DEFAULT_POSITION);
         }
         m_totalInventory.m_numReload--;
     }
