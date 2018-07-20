@@ -1067,6 +1067,13 @@ pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_ANIM_CHARACTER 
                 fileName = "DBNO";
                 break;
             }
+
+            //6. ·Îºñ
+            {
+            case TAG_RES_ANIM_CHARACTER::Lobby:
+                fileName = "Lobby";
+                break;
+            }
         }
 
         default:

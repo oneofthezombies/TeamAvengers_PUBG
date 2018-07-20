@@ -178,6 +178,9 @@ enum class TAG_RES_ANIM_CHARACTER
 //5. 기절과 관련한 애니메이션
     DBNO,
 
+//6. 로비
+    Lobby,
+
 //COUNT
     COUNT
 };

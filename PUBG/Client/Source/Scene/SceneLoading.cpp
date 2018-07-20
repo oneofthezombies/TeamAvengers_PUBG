@@ -189,6 +189,8 @@ void SceneLoading::Load()
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Locomotion);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined);
 
+    addAnimation(TAG_RES_ANIM_CHARACTER::Lobby);
+
     // load animation FPP
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Combined_FPP);
     addAnimation(TAG_RES_ANIM_CHARACTER::Rifle_Combined_FPP);
@@ -202,7 +204,7 @@ void SceneLoading::Load()
 
     /*
     Unarmed_Combined.X 는 하단의 X파일들을 합친 것
-    - Lobby.X
+    //- Lobby.X -> 별도로 만듦
     - Unarmed_Idle.X
     - Unarmed_Transition.X
     - Unarmed_Attack.X
