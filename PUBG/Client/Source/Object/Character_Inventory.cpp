@@ -792,6 +792,7 @@ void Character::TotalInventory::DropPrimary()
 
     const std::string originItemName = m_pWeaponPrimary->GetName();
 
+    ReleaseBullets(m_pWeaponPrimary);
     DropItem(&m_pWeaponPrimary);
     Communication()()->SendEventMoveItemPrimaryToField(pCharacter->GetIndex(), originItemName);
 
@@ -825,6 +826,7 @@ void Character::TotalInventory::DropSecondary()
 
     const std::string originItemName = m_pWeaponSecondary->GetName();
 
+    ReleaseBullets(m_pWeaponSecondary);
     DropItem(&m_pWeaponSecondary);
     Communication()()->SendEventMoveItemSecondaryToField(pCharacter->GetIndex(), originItemName);
 
@@ -949,6 +951,45 @@ void Character::TotalInventory::EquipBack(Item* pNewItem)
     m_pUIBack->pUIImage = m_pEquipBack->GetUIImage();
     m_pUIBack->pItem = m_pEquipBack;
     m_pUIBack->SetIsActive(true);
+}
+
+void Character::TotalInventory::ReleaseBullets(Item* pItem)
+{
+    if (!pItem) return;
+
+    Item* pAmmo = nullptr;
+    const auto tag = pItem->GetTagResStatic();
+    if (tag == TAG_RES_STATIC::Kar98k)
+    {
+        auto& ammos = m_mapInventory[TAG_RES_STATIC::Ammo_7_62mm];
+
+        assert(
+            !ammos.empty() &&
+            "Character::TotalInventory::ReleaseBullets(), Ammo_7_62mm is empty");
+
+        pAmmo = ammos.back();
+    }
+    else if (tag == TAG_RES_STATIC::QBZ)
+    {
+        auto& ammos = m_mapInventory[TAG_RES_STATIC::Ammo_5_56mm];
+
+        assert(
+            !ammos.empty() &&
+            "Character::TotalInventory::ReleaseBullets(), Ammo_5_56mm is empty");
+
+        pAmmo = ammos.back();
+    }
+    else
+    {
+        // ÃÑÀÌ ¾Æ´Ô
+        return;
+    }
+
+    const int numBullet = pItem->GetNumBullet();
+    pItem->SetNumBullet(0);
+
+    const int numCount = pAmmo->GetCount();
+    pAmmo->SetCount(numCount + numBullet);
 }
 
 bool Character::PutItemInTotalInventory(Item* item)

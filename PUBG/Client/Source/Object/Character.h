@@ -152,6 +152,8 @@ public:
         void DropBack();
         void EquipBack(Item* pNewItem);
 
+        void ReleaseBullets(Item* pItem);
+
          TotalInventory();
         ~TotalInventory();
     };

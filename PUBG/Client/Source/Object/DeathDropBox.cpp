@@ -68,9 +68,15 @@ void DeathDropBox::setItems(Character* pCharacter)
         }
     };
 
+    inven.ReleaseBullets(inven.m_pHand);
     setItem(&inven.m_pHand);
+
+    inven.ReleaseBullets(inven.m_pWeaponPrimary);
     setItem(&inven.m_pWeaponPrimary);
+
+    inven.ReleaseBullets(inven.m_pWeaponSecondary);
     setItem(&inven.m_pWeaponSecondary);
+
     setItem(&inven.m_pEquipHead);
     setItem(&inven.m_pEquipArmor);
     setItem(&inven.m_pEquipBack);
