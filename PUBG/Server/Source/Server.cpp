@@ -382,6 +382,13 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_FIELD, description));
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BULLETS_TO_FIELD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            int& id = parsedDesc.first;
+            pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BULLETS_TO_FIELD, description));
+        }
+        break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_SECONDARY_TO_FIELD:
         {
             auto parsedDesc = Message::ParseDescription(description);

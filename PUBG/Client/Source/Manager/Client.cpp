@@ -688,6 +688,39 @@ void Communication::Manager::ReceiveMessage(
             }
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BULLETS_TO_FIELD:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+
+            int& id = parsedDesc.first;
+            std::string& eventMoveItemStr = parsedDesc.second;
+
+            std::stringstream ss(eventMoveItemStr);
+
+            int dropperID;
+            ss >> dropperID;
+
+            std::string itemName;
+            std::getline(ss >> std::ws, itemName);
+
+            std::string bulletCountStr;
+            std::getline(ss >> std::ws, bulletCountStr);
+
+            ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+            Item* pItem = pScenePlay->FindItemWithName(itemName);
+            const std::vector<Character*> characters =
+                pScenePlay->GetCharacters();
+            for (auto p : characters)
+            {
+                if (p->GetIndex() == dropperID)
+                {
+                    Character::TotalInventory& inven = p->GetTotalInventory();
+                    in
+                    return;
+                }
+            }
+        }
+        break;
     case TAG_REQUEST::SEND_EVENT_MOVE_ITEM_PRIMARY_TO_HAND:
         {
             auto parsedDesc = Message::ParseDescription(description);
@@ -1399,6 +1432,22 @@ void Communication::Manager::SendEventMoveItemBackToField(
     m_pClient->Write(
         Message::Create(
             TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BACK_TO_FIELD,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventMoveItemBulletsToField(
+    const int id, 
+    const std::string& itemName, 
+    const int count)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << id << ' ' << itemName << '\n' << count;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_MOVE_ITEM_BULLETS_TO_FIELD,
             ss.str()));
 }
 

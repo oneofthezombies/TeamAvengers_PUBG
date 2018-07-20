@@ -157,13 +157,13 @@ void Character::onMouse(
             }
 
             /////////////////////인벤토리 안에서
-            else if (tag == TAG_UI_POSITION::picked && 
+            else if (
+                tag == TAG_UI_POSITION::picked && 
                 pUIButtonWithItem->pItem->IsInInventory())
             {
                 const D3DXVECTOR3& pos = pUIButtonWithItem->GetPosition();
-                const auto cat =
-                    ItemInfo::GetItemCategory(
-                        pUIButtonWithItem->pItem->GetTagResStatic());
+                const auto tag = pUIButtonWithItem->pItem->GetTagResStatic();
+                const auto cat = ItemInfo::GetItemCategory(tag);
 
                 if (pos.x < TotalInventory::FIRST_LINE) // 필드에 놓는다
                 {
@@ -175,37 +175,46 @@ void Character::onMouse(
                     {
                     case TAG_ITEM_CATEGORY::Ammo:
                         {
-                            //TAG_RES_STATIC tag = pItem->GetTagResStatic();
-                            //std::vector<Item*>& items = inven.m_mapInventory[tag];
-                            //for (auto it = items.begin(); it != items.end(); ++it)
-                            //{
-                            //    if (*it == pItem)
-                            //    {
-                            //        items.erase(it);
-                            //        break;
-                            //    }
-                            //}
-                            //Communication()()->SendEventMoveItem
+                            std::vector<Item*>& items = inven.m_mapInventory[tag];
+                            for (auto it = items.begin(); it != items.end();)
+                            {
+                                if ((*it)->GetName() == itemName)
+                                {
+                                    auto index = std::distance(items.begin(), it);
+                                    inven.DropItem(&items[index]);
+                                    it = items.erase(it);
+                                }
+                                else
+                                {
+                                    ++it;
+                                }
+                            }
+
+                            Communication()()->SendEventMoveItemBulletsToField(m_index, itemName, pItem->GetCount());
                         }
                         break;
+
                     case TAG_ITEM_CATEGORY::Armor:
                         {
                             inven.DropItem(&pUIButtonWithItem->pItem);
                             Communication()()->SendEventMoveItemArmorToField(m_index, itemName);
                         }
                         break;
+
                     case TAG_ITEM_CATEGORY::Back:
                         {
                             inven.DropItem(&pUIButtonWithItem->pItem);
                             Communication()()->SendEventMoveItemBackToField(m_index, itemName);
                         }
                         break;
+
                     case TAG_ITEM_CATEGORY::Head:
                         {
                             inven.DropItem(&pUIButtonWithItem->pItem);
                             Communication()()->SendEventMoveItemHeadToField(m_index, itemName);
                         }
                         break;
+
                     case TAG_ITEM_CATEGORY::Rifle:
                         {
                             bool isHand = false;
