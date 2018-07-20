@@ -13,11 +13,6 @@
 
 void ScenePlay::setAloneMode()
 {
-    //BloodParticle* pBP = new BloodParticle();
-    //pBP->Init();
-    //AddObject(pBP);
-
-
     Communication()()->m_myInfo.ID = 0;
     const int myID = Communication()()->m_myInfo.ID;
     pPlayer = new Character(myID);
@@ -37,6 +32,7 @@ void ScenePlay::setAloneMode()
         AddObject(pOther);
     }
 
+    //old map
     Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(1900.0f, 200.0f, 1900.0f);
     Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
@@ -53,35 +49,34 @@ void ScenePlay::setAloneMode()
     Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    //Character* pOther = new Character(1);
-    //others.emplace_back(pOther);
-    //characters.emplace_back(pOther);
-    //AddObject(pOther);
-    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(600.0f, 100.0f, 600.0f);
+    
+    ////new map
+    //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f);
+    //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f);
     //Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     //Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
+    //Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f);
+    //Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    //Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f);
+    //Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    
+    
+    
     //AddObject(new SkySphere);
 
-    //TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(400.0f, 100.0f, 0.0f), Vector3::UP, Vector3::ONE * 0.7f);
-    //D3DXMATRIX m;
-    //D3DXQUATERNION qR;
-    //D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
-    //D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 2000.0f));
-    //tf->AddBoundingBox(m);
-    //AddObject(tf);
 
-    //tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 1000.0f), Vector3::UP, Vector3::ONE * 0.7f);
-    //D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
-    //D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 1000.0f));
-    //tf->AddBoundingBox(m);
-    //AddObject(tf);
-
-    //For inventory Test
-    Item* item = nullptr;
-    D3DXVECTOR3 p(10, 0, 10);
-    D3DXVECTOR3 r(0, 0, 0);
-    D3DXVECTOR3 s(1, 1, 1);
+    ////For inventory Test
+    //Item* item = nullptr;
+    //D3DXVECTOR3 r(0, 0, 0);
+    //D3DXVECTOR3 s(1, 1, 1);
 
     //item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
     //AddObject(item);
@@ -112,13 +107,13 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
-    //p = D3DXVECTOR3(170, 200, 130);
+    
     //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_0", p, r, s);
     //AddObject(item);
     //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    //p = D3DXVECTOR3(170, 200, 130);
-    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_1", p, r, s);
+    //
+    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, "Ammo_7_62mm_0", p, r, s);
     //AddObject(item);
     //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
@@ -127,10 +122,15 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    //p = D3DXVECTOR3(90, 200, 10);
     //item = new Item(TAG_RES_STATIC::QBZ, "QBZ_0", p, r, s);
     //AddObject(item);
     //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    //item = new Item(TAG_RES_STATIC::Kar98k,"Kar98k_0", p, r, s);
+    //AddObject(item);
+    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    
 
     //p = D3DXVECTOR3(70, 0, 30);
     //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
@@ -157,12 +157,9 @@ void ScenePlay::setAloneMode()
     //AddObject(item);
     //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    ////pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(100, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
-    //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
+
+
 
     //p = D3DXVECTOR3(110, 0, 10);
     //item = new Item(TAG_RES_STATIC::RedDot, p, r, s);
@@ -380,8 +377,8 @@ void ScenePlay::OnInit()
         m_TotalCellSpaces[i].pIndex = i;
     }
     
-    LoadObjectsFromFile("./Resource/save.txt");
-    //LoadObjectsFromFile("./Resource/save1.txt");
+    //LoadObjectsFromFile("./Resource/save.txt");
+    LoadObjectsFromFile("./Resource/save1.txt");
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
