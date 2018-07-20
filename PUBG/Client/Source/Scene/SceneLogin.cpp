@@ -66,6 +66,7 @@ void LoginButtonListener::OnMouseExit()
 
 void LoginButtonListener::OnMouseDown(const int key)
 {
+    Sound()()->Play(TAG_SOUND::ButtonClick, Vector3::ZERO, 1.0f, FMOD_2D);
 }
 
 void LoginButtonListener::OnMouseUp(const int key)

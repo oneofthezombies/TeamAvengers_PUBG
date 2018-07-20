@@ -52,7 +52,7 @@ void SoundManager::Init()
     AddSound(TAG_SOUND::Medicine_Bandage, "Resource/Sound/medicine/Bandage.mp3", FMOD_3D, false);
 
     AddSound(TAG_SOUND::Background, "Resource/Sound/Background/battleground_lobby.mp3", FMOD_3D, false);
-
+    AddSound(TAG_SOUND::ButtonClick, "Resource/Sound/button_click.mp3", FMOD_3D, false);
 }
 
 void SoundManager::Destroy()

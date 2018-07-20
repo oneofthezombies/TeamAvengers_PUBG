@@ -139,6 +139,8 @@ enum class TAG_SOUND
     Hand_Punch,
 
     Background,
+
+    ButtonClick,
 };
 
 enum class TAG_CHANNEL

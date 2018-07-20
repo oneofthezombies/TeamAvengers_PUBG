@@ -65,8 +65,8 @@
     <ClCompile Include="Source\Useful\Light.cpp" />
     <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
     <ClCompile Include="Source\Object\DeathDropBox.cpp" />
-    <ClCompile Include="SceneLobby.cpp" />
     <ClCompile Include="Source\Object\Character_OnHand.cpp" />
+    <ClCompile Include="Source\Scene\SceneLobby.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod64.dll" />
@@ -130,6 +130,6 @@
     <ClInclude Include="Source\Useful\Area.h" />
     <ClInclude Include="Source\UI\UITest.h" />
     <ClInclude Include="Source\Object\DeathDropBox.h" />
-    <ClInclude Include="SceneLobby.h" />
+    <ClInclude Include="Source\Scene\SceneLobby.h" />
   </ItemGroup>
 </Project>
