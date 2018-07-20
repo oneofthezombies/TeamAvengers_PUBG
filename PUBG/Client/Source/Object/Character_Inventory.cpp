@@ -959,27 +959,20 @@ void Character::TotalInventory::ReleaseBullets(Item* pItem)
 
     Item* pAmmo = nullptr;
     int numBullet = 0;
-    const auto tag = pItem->GetTagResStatic();
-    TAG_RES_STATIC tagBullet = TAG_RES_STATIC::COUNT;
-    if (tag == TAG_RES_STATIC::Kar98k)
+    const TAG_RES_STATIC tag = pItem->GetTagResStatic();
+    const TAG_ITEM_CATEGORY cat = ItemInfo::GetItemCategory(tag);
+    if (cat == TAG_ITEM_CATEGORY::Rifle)
     {
         numBullet = pItem->GetNumBullet();
         if (numBullet == 0) return;
-
-        tagBullet = TAG_RES_STATIC::Ammo_7_62mm;
-    }
-    else if (tag == TAG_RES_STATIC::QBZ)
-    {
-        numBullet = pItem->GetNumBullet();
-        if (numBullet == 0) return;
-
-        tagBullet = TAG_RES_STATIC::Ammo_5_56mm;
     }
     else
     {
         // 총이 아님
         return;
     }
+
+    const TAG_RES_STATIC tagBullet = ItemInfo::GetAmmoType(tag);
 
     if (!m_mapInventory[tagBullet].empty()) // 인벤토리에 총알 객체가 있을 때
     {
@@ -1243,13 +1236,12 @@ bool Character::createOrMergeItem(std::map<TAG_RES_STATIC, std::vector<Item*>>* 
         "Character::CreateOrMergeItem(), argument is null.");
 
     TAG_RES_STATIC tag = item->GetTagResStatic();
-    auto it = map->find(tag);
     int count = item->GetCount();
     const float capacity = ItemInfo::GetCapacity(tag);
 
     if (m_totalInventory.m_capacity - count * capacity >= 0.0f)
     {
-        if (it == map->end())
+        if ((*map)[tag].empty())
         {
             // 아이템이 없는 경우는 새로 생성한다
             (*map)[tag].push_back(item);
@@ -1273,7 +1265,7 @@ bool Character::createOrMergeItem(std::map<TAG_RES_STATIC, std::vector<Item*>>* 
         else
         {
             // 이미 인벤토리에 있는 경우, 기존 개수와 합친다
-            auto origin_item = it->second.back();
+            auto origin_item = (*map)[tag].back();
             origin_item->SetCount(origin_item->GetCount() + count);
             item->SetCount(0);
             m_totalInventory.m_empties[tag].emplace_back(item);

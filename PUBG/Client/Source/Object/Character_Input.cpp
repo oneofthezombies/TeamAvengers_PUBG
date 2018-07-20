@@ -243,6 +243,12 @@ void Character::setReload()
             auto it = inven.m_mapInventory.find(ammoType);
             if (it != inven.m_mapInventory.end())
             {
+                if (it->second.empty())
+                {
+                    cout << "인벤토리에 더이상 총알이 없어 ㅠㅠ" << endl;
+                    return;
+                }
+
                 int numBulletInInventory = (*it).second.back()->GetCount(); //인벤토리에 있는 총알 수
                 int numBulletNeedReload = magSize - numBulletCurrentLoad;   //장전할 총알 수 (장탄수 - 현재 장전된 총알 개수)
 
