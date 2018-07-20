@@ -580,7 +580,10 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
         auto it = inven.m_mapInventory.find(ammoType);
         if (it != inven.m_mapInventory.end())
         {
-            numBulletInInventory = (*it).second.back()->GetCount();
+            if (!it->second.empty())
+                numBulletInInventory = (*it).second.back()->GetCount();
+            else
+                numBulletInInventory = 0;
         }
         
         //장전이 안되어있다면 그림 & 텍스트 빨간색으로
