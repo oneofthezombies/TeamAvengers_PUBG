@@ -148,7 +148,7 @@ void SceneLoading::Load()
     //LoadParticleTexture("blood_hit_04", 16, D3DCOLOR_XRGB(0, 0, 0));
 
     // load effect meshs
-    //load(TAG_RES_STATIC::SkySphere);
+    load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
     //load(TAG_RES_STATIC::Armor_Lv1);
