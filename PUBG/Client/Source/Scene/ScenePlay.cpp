@@ -349,7 +349,28 @@ void ScenePlay::setWithOthersMode()
     //AddObject(item);
     //pPlayer->PutItemInTotalInventory(item);
 
+    // 빈 총알을 셋팅합니다. 이것은 총을 버릴 때 총에 들어있던 총알을 버리기 위해서 종종 필요합니다.
+    setEmptyBullets(&characters);
+}
 
+void ScenePlay::setEmptyBullets(std::vector<Character*>* OutCharacters)
+{
+    const int numEmpty = 5;
+    for (int ch_i = 0; ch_i < GameInfo::NUM_PLAYERS; ++ch_i)
+    {
+        for (int i = 0; i < numEmpty; ++i)
+        {
+            std::string name = "Ammo_5_56mm_for_empty_" + std::to_string(ch_i) + std::to_string(i);
+            Item* item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, Vector3::ZERO, Vector3::ZERO, Vector3::ONE);
+            item->SetCount(0);
+            (*OutCharacters)[ch_i]->GetTotalInventory().m_empties[item->GetTagResStatic()].emplace_back(item);
+
+            name = "Ammo_7_62mm_for_empty_" + std::to_string(ch_i) + std::to_string(i);
+            item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, Vector3::ZERO, Vector3::ZERO, Vector3::ONE);
+            item->SetCount(0);
+            (*OutCharacters)[ch_i]->GetTotalInventory().m_empties[item->GetTagResStatic()].emplace_back(item);
+        }
+    }
 }
 
 ScenePlay::ScenePlay()
