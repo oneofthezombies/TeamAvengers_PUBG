@@ -32,30 +32,51 @@ void ScenePlay::setAloneMode()
         AddObject(pOther);
     }
 
-    Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f);
+    //old map
+    Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(1900.0f, 200.0f, 1900.0f);
     Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f);
+    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(100.0f, 200.0f, 2000.0f);
     Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f);
+    Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(2000.0f, 200.0f, 100.0f);
     Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f);
+    Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(2000.0f, 200.0f, 2000.0f);
     Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
+    
+    ////new map
+    //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f);
+    //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f);
+    //Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    //Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f);
+    //Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    //Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f);
+    //Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    
+    
+    
     //AddObject(new SkySphere);
 
 
-    //For inventory Test
-    Item* item = nullptr;
-    D3DXVECTOR3 p(7000, 5000, 7000);
-    D3DXVECTOR3 r(0, 0, 0);
-    D3DXVECTOR3 s(1, 1, 1);
+    ////For inventory Test
+    //Item* item = nullptr;
+    //D3DXVECTOR3 r(0, 0, 0);
+    //D3DXVECTOR3 s(1, 1, 1);
 
     //item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
     //AddObject(item);
@@ -87,27 +108,27 @@ void ScenePlay::setAloneMode()
     //pPlayer->PutItemInTotalInventory(item);
 
     
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_0", p, r, s);
-    AddObject(item);
-    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_0", p, r, s);
+    //AddObject(item);
+    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    
-    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, "Ammo_7_62mm_0", p, r, s);
-    AddObject(item);
-    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    //
+    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, "Ammo_7_62mm_0", p, r, s);
+    //AddObject(item);
+    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
     //p = D3DXVECTOR3(170, 200, 130);
     //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_2", p, r, s);
     //AddObject(item);
     //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    item = new Item(TAG_RES_STATIC::QBZ, "QBZ_0", p, r, s);
-    AddObject(item);
-    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    //item = new Item(TAG_RES_STATIC::QBZ, "QBZ_0", p, r, s);
+    //AddObject(item);
+    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    item = new Item(TAG_RES_STATIC::Kar98k,"Kar98k_0", p, r, s);
-    AddObject(item);
-    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    //item = new Item(TAG_RES_STATIC::Kar98k,"Kar98k_0", p, r, s);
+    //AddObject(item);
+    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
     
 
@@ -356,8 +377,8 @@ void ScenePlay::OnInit()
         m_TotalCellSpaces[i].pIndex = i;
     }
     
-    LoadObjectsFromFile("./Resource/save.txt");
-    //LoadObjectsFromFile("./Resource/save1.txt");
+    //LoadObjectsFromFile("./Resource/save.txt");
+    LoadObjectsFromFile("./Resource/save1.txt");
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {

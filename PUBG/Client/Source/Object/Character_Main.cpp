@@ -74,19 +74,26 @@ Character::Character(const int index)
     }
 
 
-
+    //old map
+    int x = m_index / 2;
+    int z = m_index % 2;
+    const float factor(1900.0f);
     Transform* pTransform = GetTransform();
+    pTransform->SetPosition(D3DXVECTOR3(x*factor + 100.0f, 200.0f, z*factor + 100.0f));
+    if (m_index == 0)
+        pTransform->SetPosition(D3DXVECTOR3(1900.0f, 200.0f, 1900.0f));
 
-    
-    if(m_index==0)
-        pTransform->SetPosition(D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f));
-    if(m_index==1)
-        pTransform->SetPosition(D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f));
-    if (m_index == 2)
-        pTransform->SetPosition(D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f));
-    if (m_index == 3)
-        pTransform->SetPosition(D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f));
 
+    ////new map
+    //Transform* pTransform = GetTransform();
+    //if(m_index==0)
+    //    pTransform->SetPosition(D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f));
+    //if(m_index==1)
+    //    pTransform->SetPosition(D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f));
+    //if (m_index == 2)
+    //    pTransform->SetPosition(D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f));
+    //if (m_index == 3)
+    //    pTransform->SetPosition(D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f));
 
 
     pTransform->SetRotation(OFFSET_ROTATION);
