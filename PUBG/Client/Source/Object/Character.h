@@ -160,6 +160,21 @@ public:
         static const float HP_WIDTH;
         static const float HP_HEIGHT;
 
+        static const float AIM_BASE_X;  //640.0f
+        static const float AIM_BASE_Y;  //360.0f
+
+        static const float AIM_LEFT_X;  //640.0f - 11.9f - 7.0f
+        static const float AIM_LEFT_Y;
+        
+        static const float AIM_RIGHT_X; //640.0f + 11.9f
+        static const float AIM_RIGHT_Y;
+        
+        static const float AIM_UP_X;
+        static const float AIM_UP_Y;    //360.0f - 11.9f - 7.0f
+        
+        static const float AIM_DOWN_X;
+        static const float AIM_DOWN_Y;  //360.0f + 11.9f
+
         Character* pPlayer;
         string m_nickName;
         string m_killedNickName;
@@ -200,6 +215,13 @@ public:
 
         //map
         UIImage* pMapImg;
+
+        //aim
+        UIImage* pAimCircle;
+        UIImage* pAimLeftLine;
+        UIImage* pAimRightLine;
+        UIImage* pAimUpLine;
+        UIImage* pAimDownLine;
 
         //Text ====================
         //ammo

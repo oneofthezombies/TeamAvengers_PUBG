@@ -28,6 +28,21 @@ const float Character::InGameUI::EQUIP_GAP    = 3.0f;
 const float Character::InGameUI::HP_WIDTH     = 276.0f;
 const float Character::InGameUI::HP_HEIGHT    = 17.0f;
 
+const float Character::InGameUI::AIM_BASE_X   = 640.0f;
+const float Character::InGameUI::AIM_BASE_Y   = 360.0f;
+
+const float Character::InGameUI::AIM_LEFT_X   = 640.0f - 11.9f - 7.0f;
+const float Character::InGameUI::AIM_LEFT_Y   = 360.0f - 1.0f;
+
+const float Character::InGameUI::AIM_RIGHT_X  = 640.0f + 11.9f;
+const float Character::InGameUI::AIM_RIGHT_Y  = 360.0f - 1.0f;
+
+const float Character::InGameUI::AIM_UP_X     = 640.0f - 1.0f;
+const float Character::InGameUI::AIM_UP_Y     = 360.0f - 11.9f - 7.0f;
+
+const float Character::InGameUI::AIM_DOWN_X   = 640.0f - 1.0f;
+const float Character::InGameUI::AIM_DOWN_Y   = 360.0f + 11.9f;
+
 Character::InGameUI::InGameUI()
     : pPlayer(nullptr)
     , m_nickName("")
@@ -60,6 +75,12 @@ Character::InGameUI::InGameUI()
     , pKillNumUpBg(nullptr)
 
     , pMapImg(nullptr)
+
+    , pAimCircle(nullptr)
+    , pAimLeftLine(nullptr)
+    , pAimRightLine(nullptr)
+    , pAimUpLine(nullptr)
+    , pAimDownLine(nullptr)
 
     //Text ====================
     , pAmmoReloadText(nullptr)
@@ -121,52 +142,59 @@ void Character::InGameUI::Init(Character* pPlayer)
         layer2
     );
     
-    //aim
-    new UIImage(
+    //aim ======================================================
+    pAimCircle = new UIImage(
         "./Resource/UI/InGame/",
         "aim_circle.png",
-        D3DXVECTOR3(639.0f, 359.0f, 0.0f),
+        D3DXVECTOR3(AIM_BASE_X - 1.0f, AIM_BASE_Y - 1.0f, 0.0f),
         nullptr,
         pBackground
     );
+    pAimCircle->SetIsRender(false);
 
     //왼쪽 aim line
-    new UIImage(
+    pAimRightLine = pAimLeftLine = new UIImage(
         "./Resource/UI/InGame/",
         "aim_hor.png",
-        D3DXVECTOR3(640.0f - 11.9f - 7.0f, 359.0f, 0.0f),
+        D3DXVECTOR3(AIM_LEFT_X, AIM_LEFT_Y, 0.0f),
         nullptr,
         pBackground
     );
+    pAimRightLine->SetIsRender(false);
 
     //오른쪽 aim line
-    new UIImage(
+    pAimDownLine = pAimUpLine = new UIImage(
         "./Resource/UI/InGame/",
         "aim_hor.png",
-        D3DXVECTOR3(640.0f + 11.9f, 359.0f, 0.0f),
+        D3DXVECTOR3(AIM_RIGHT_X, AIM_RIGHT_Y, 0.0f),
         nullptr,
         pBackground
     );
+    pAimDownLine->SetIsRender(false);
 
     //위쪽 aim line
-    new UIImage(
+    pAimUpLine = new UIImage(
         "./Resource/UI/InGame/",
         "aim_ver.png",
-        D3DXVECTOR3(640.0f, 359.0f - 11.9f - 7.0f, 0.0f),
+        D3DXVECTOR3(AIM_UP_X, AIM_UP_Y, 0.0f),
         nullptr,
         pBackground
     );
+    pAimUpLine->SetIsRender(false);
 
     //아래쪽 aim line
-    new UIImage(
+    pAimDownLine = new UIImage(
         "./Resource/UI/InGame/",
         "aim_ver.png",
-        D3DXVECTOR3(640.0f, 359.0f + 11.9f, 0.0f),
+        D3DXVECTOR3(AIM_DOWN_X, AIM_DOWN_Y, 0.0f),
         nullptr,
         pBackground
     );
+    pAimDownLine->SetIsRender(false);
+    //=========================================================
 
-    //Compass
+
+    //Compass 
     pCompassBg = new UIImage(
         "./Resource/UI/InGame/",
         "compass_bg.png",
@@ -532,6 +560,24 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //무기착용 UI
     updateWeaponUI(inven);
+
+    //aim
+    if (inven.m_pHand)
+    {
+        pAimCircle->SetIsRender(true);
+        pAimLeftLine->SetIsRender(true);
+        pAimRightLine->SetIsRender(true);
+        pAimUpLine->SetIsRender(true);
+        pAimDownLine->SetIsRender(true);
+    }
+    else
+    {
+        pAimCircle->SetIsRender(false);
+        pAimLeftLine->SetIsRender(false);
+        pAimRightLine->SetIsRender(false);
+        pAimUpLine->SetIsRender(false);
+        pAimDownLine->SetIsRender(false);
+    }
 }
 
 void Character::InGameUI::SetRedToZero()
