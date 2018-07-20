@@ -724,6 +724,9 @@ void Communication::Manager::ReceiveMessage(
                             if ((*it2)->GetName() == itemName)
                             {
                                 auto index = std::distance(items.begin(), it2);
+                                Item* pItem = items[index];
+                                pItem->SetCount(bulletCount);
+                                pItem->SetPosition(p->GetTransform()->GetPosition());
                                 inven.DropItem(&items[index]);
                                 it2 = items.erase(it2);
                             }
