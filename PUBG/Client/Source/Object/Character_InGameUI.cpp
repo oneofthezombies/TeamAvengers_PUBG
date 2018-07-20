@@ -120,6 +120,15 @@ void Character::InGameUI::Init(Character* pPlayer)
         nullptr,
         layer2
     );
+    
+    //aim
+    new UIImage(
+        "./Resource/UI/InGame/",
+        "aim.png",
+        D3DXVECTOR3(617.5, 337.5, 0.0f),
+        nullptr,
+        pBackground
+    );
 
     //Compass
     pCompassBg = new UIImage(

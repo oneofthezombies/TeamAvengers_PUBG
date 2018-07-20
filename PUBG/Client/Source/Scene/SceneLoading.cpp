@@ -92,6 +92,7 @@ void SceneLoading::Load()
     load("./Resource/UI/InGame/", "weapons_gun_QBZ95_red.png");
 
     load("./Resource/UI/InGame/", "map_bg.png");
+    load("./Resource/UI/InGame/", "aim.png");
 
     //for compass UI test
     load("./Resource/UI/InGame/", "compass_bg_transparent.png");
