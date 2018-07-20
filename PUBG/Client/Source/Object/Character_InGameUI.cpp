@@ -124,8 +124,44 @@ void Character::InGameUI::Init(Character* pPlayer)
     //aim
     new UIImage(
         "./Resource/UI/InGame/",
-        "aim.png",
-        D3DXVECTOR3(617.5, 337.5, 0.0f),
+        "aim_circle.png",
+        D3DXVECTOR3(639.0f, 359.0f, 0.0f),
+        nullptr,
+        pBackground
+    );
+
+    //왼쪽 aim line
+    new UIImage(
+        "./Resource/UI/InGame/",
+        "aim_hor.png",
+        D3DXVECTOR3(640.0f - 11.9f - 7.0f, 359.0f, 0.0f),
+        nullptr,
+        pBackground
+    );
+
+    //오른쪽 aim line
+    new UIImage(
+        "./Resource/UI/InGame/",
+        "aim_hor.png",
+        D3DXVECTOR3(640.0f + 11.9f, 359.0f, 0.0f),
+        nullptr,
+        pBackground
+    );
+
+    //위쪽 aim line
+    new UIImage(
+        "./Resource/UI/InGame/",
+        "aim_ver.png",
+        D3DXVECTOR3(640.0f, 359.0f - 11.9f - 7.0f, 0.0f),
+        nullptr,
+        pBackground
+    );
+
+    //아래쪽 aim line
+    new UIImage(
+        "./Resource/UI/InGame/",
+        "aim_ver.png",
+        D3DXVECTOR3(640.0f, 359.0f + 11.9f, 0.0f),
         nullptr,
         pBackground
     );

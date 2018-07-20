@@ -93,6 +93,9 @@ void SceneLoading::Load()
 
     load("./Resource/UI/InGame/", "map_bg.png");
     load("./Resource/UI/InGame/", "aim.png");
+    load("./Resource/UI/InGame/", "aim_circle.png");
+    load("./Resource/UI/InGame/", "aim_ver.png");
+    load("./Resource/UI/InGame/", "aim_hor.png");
 
     //for compass UI test
     load("./Resource/UI/InGame/", "compass_bg_transparent.png");
