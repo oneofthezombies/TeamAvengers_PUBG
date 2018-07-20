@@ -100,7 +100,8 @@ public:
         bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
 
 
-        map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
+        std::map<TAG_RES_STATIC, std::vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
+        std::map<TAG_RES_STATIC, std::vector<Item*>> m_empties; // 탄약 개수가 0개인 총알 아이템을 넣는 곳
 
         //헬멧, 가방, 방탄조끼용
         Item* m_pEquipArmor;
@@ -574,7 +575,7 @@ private:
     
     //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
-    bool createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);
+    bool createOrMergeItem(std::map<TAG_RES_STATIC, std::vector<Item*>>* map, Item* item);
     //이미 아이템이 있는 경우, 그 아이템을 바닥에 떨구고 새아이템을 착용한다
     bool checkOriginItem(Item** originItem, Item* newItem);
 

@@ -276,6 +276,16 @@ void Character::setReload()
                 cout << "총에 장전된 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
                 cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
 
+                if (it->second.back()->GetCount() == 0)
+                {
+                    std::vector<Item*>& items = it->second;
+                    Item* pItem = items.back();
+                    auto tagBullet = pItem->GetTagResStatic();
+
+                    inven.m_empties[tagBullet].emplace_back(pItem);
+                    items.pop_back();
+                }
+
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
                     Sound()()->addPlay(TAG_SOUND::Qbz_Reload,

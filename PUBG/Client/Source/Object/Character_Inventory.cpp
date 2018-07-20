@@ -958,26 +958,22 @@ void Character::TotalInventory::ReleaseBullets(Item* pItem)
     if (!pItem) return;
 
     Item* pAmmo = nullptr;
+    int numBullet = 0;
     const auto tag = pItem->GetTagResStatic();
+    TAG_RES_STATIC tagBullet = TAG_RES_STATIC::COUNT;
     if (tag == TAG_RES_STATIC::Kar98k)
     {
-        auto& ammos = m_mapInventory[TAG_RES_STATIC::Ammo_7_62mm];
+        numBullet = pItem->GetNumBullet();
+        if (numBullet == 0) return;
 
-        assert(
-            !ammos.empty() &&
-            "Character::TotalInventory::ReleaseBullets(), Ammo_7_62mm is empty");
-
-        pAmmo = ammos.back();
+        tagBullet = TAG_RES_STATIC::Ammo_7_62mm;
     }
     else if (tag == TAG_RES_STATIC::QBZ)
     {
-        auto& ammos = m_mapInventory[TAG_RES_STATIC::Ammo_5_56mm];
+        numBullet = pItem->GetNumBullet();
+        if (numBullet == 0) return;
 
-        assert(
-            !ammos.empty() &&
-            "Character::TotalInventory::ReleaseBullets(), Ammo_5_56mm is empty");
-
-        pAmmo = ammos.back();
+        tagBullet = TAG_RES_STATIC::Ammo_5_56mm;
     }
     else
     {
@@ -985,7 +981,26 @@ void Character::TotalInventory::ReleaseBullets(Item* pItem)
         return;
     }
 
-    const int numBullet = pItem->GetNumBullet();
+    if (!m_mapInventory[tagBullet].empty()) // 인벤토리에 총알 객체가 있을 때
+    {
+        pAmmo = m_mapInventory[tagBullet].back();
+    }
+    else // 인벤토리에 총알 객체가 업을 때
+    {
+        if (!m_empties[tagBullet].empty())
+        {
+            pAmmo = m_empties[tagBullet].back();
+            m_empties[tagBullet].pop_back();
+            m_mapInventory[tagBullet].emplace_back(pAmmo);
+        }
+        else
+        {
+            assert(
+                false && 
+                "Character::TotalInventory::ReleaseBullets(), empties is empty");
+        }
+    }
+
     pItem->SetNumBullet(0);
 
     const int numCount = pAmmo->GetCount();
@@ -1216,7 +1231,7 @@ bool Character::PutItemInTotalInventory(Item* item)
     ShowTotalInventory();
 }
 
-bool Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item)
+bool Character::createOrMergeItem(std::map<TAG_RES_STATIC, std::vector<Item*>>* map, Item* item)
 {
     /*
         - 자신의 용량만큼 캐릭터의 소지용량에서 제외된다
@@ -1236,7 +1251,7 @@ bool Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
     {
         if (it == map->end())
         {
-            //아이템이 없는 경우는 새로 생성한다
+            // 아이템이 없는 경우는 새로 생성한다
             (*map)[tag].push_back(item);
             item->SetCount(count);
             item->SetIsInInventory(true);
@@ -1257,24 +1272,26 @@ bool Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item*
         }
         else
         {
-            //이미 인벤토리에 있는 경우, 기존 개수와 합친다
+            // 이미 인벤토리에 있는 경우, 기존 개수와 합친다
             auto origin_item = it->second.back();
             origin_item->SetCount(origin_item->GetCount() + count);
+            item->SetCount(0);
+            m_totalInventory.m_empties[tag].emplace_back(item);
 
             if (item->IsInDeathDropBox())
             {
                 const int boxID = item->GetDeathDropBoxIndex();
                 item->DeleteThisInDeathDropBox();
-                Communication()()->SendEventDestroyItemInBox(m_index, boxID, item->GetName());
+                Communication()()->SendEventMoveItemBoxToInventory(m_index, boxID, item->GetName());
             }
             else // in field
             {
                 const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
                 CurrentScene()()->ItemIntoInventory(cellIndex, item);
-                CurrentScene()()->Destroy(item);
+                CurrentScene()()->RemoveObject(item);
 
                 // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
-                Communication()()->SendEventDestroyItem(item->GetName());
+                Communication()()->SendEventMoveItemFieldToInventory(m_index, item->GetName());
             }
         }
         m_totalInventory.m_capacity -= count * capacity;
