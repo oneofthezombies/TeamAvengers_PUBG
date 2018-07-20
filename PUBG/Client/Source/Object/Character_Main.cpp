@@ -13,6 +13,8 @@
 #include "ScenePlay.h"
 #include "DeathDropBox.h"
 
+#include "UIText.h"
+
 const D3DXQUATERNION Character::OFFSET_ROTATION = 
     D3DXQUATERNION(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -454,6 +456,15 @@ void Character::updateMine()
     if (m_currentOnceKey._B && m_totalInventory.m_pHand !=NULL)
     {
         m_totalInventory.m_pHand->ChangeAuto();
+
+        string fireModeStr = "";
+        if (m_totalInventory.m_pHand->GetAuto() 
+            && m_totalInventory.m_pHand->GetTagResStatic() == TAG_RES_STATIC::QBZ)
+            fireModeStr = "연사";
+        else
+            fireModeStr = "단발";
+
+        m_inGameUI.pInfoText->SetText("발사 모드 변경: " + fireModeStr, m_inGameUI.pInfoTextShadow);
     }
 
     Sound()()->Listen(pos, getForward());
