@@ -268,6 +268,7 @@ public:
         void updateHpUI();
         void updateKillUI(const TotalInventory& inven);
         void updateEquipUI(const TotalInventory& inven);
+        void updateWeaponUI(const TotalInventory& inven);
     };
 
     struct GameOverUI : public IUIButtonOnMouseListener

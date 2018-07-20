@@ -414,40 +414,28 @@ void Character::InGameUI::Init(Character* pPlayer)
     vecKillLog.push_back(pKillLog4);
 
     //총
-    auto primaryWeaponBg = new UIImage(
-        "./Resource/UI/InGame/",
-        "weapons_bg.png",
-        PRIMARY_WEAPON_POS,
-        nullptr,
-        pBackground);
-
-    auto secondaryWeaponBg = new UIImage(
-        "./Resource/UI/InGame/",
-        "weapons_bg.png",
-        SECONDARY_WEAPON_POS,
-        nullptr,
-        pBackground);
-
     pQBZImg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_gun_QBZ95.png",
-        D3DXVECTOR3(28.0f, 0.0f, 0.0f),
+        D3DXVECTOR3(PRIMARY_WEAPON_POS.x + 28.0f, PRIMARY_WEAPON_POS.y, PRIMARY_WEAPON_POS.z),
         nullptr,
-        primaryWeaponBg);
-
+        pBackground);
+    pQBZImg->SetIsRender(false);
+    
     pKar98kImg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_gun_kar98k.png",
-        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+        SECONDARY_WEAPON_POS,
         nullptr,
-        secondaryWeaponBg);
+        pBackground);
+    pKar98kImg->SetIsRender(false);
 
     pQBZRedImg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_gun_QBZ95_red.png",
-        D3DXVECTOR3(28.0f, 0.0f, 0.0f),
+        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
         nullptr,
-        primaryWeaponBg);
+        pQBZImg);
     pQBZRedImg->SetIsRender(false);
 
     pKar98kRedImg = new UIImage(
@@ -455,7 +443,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "weapons_gun_kar98k_red.png",
         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
         nullptr,
-        secondaryWeaponBg);
+        pKar98kImg);
     pKar98kRedImg->SetIsRender(false);
 
     //맵
@@ -496,6 +484,9 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //장비 착용 관련 UI
     updateEquipUI(inven);
+
+    //무기착용 UI
+    updateWeaponUI(inven);
 }
 
 void Character::InGameUI::SetRedToZero()
@@ -684,8 +675,8 @@ void Character::InGameUI::updateKillUI(const TotalInventory& inven)
         pAmmoBg->SetIsRender(true);
         pMapImg->SetIsRender(true);
 
-        pQBZImg->SetIsRender(true);
-        pKar98kImg->SetIsRender(true);
+        //pQBZImg->SetIsRender(true);
+        //pKar98kImg->SetIsRender(true);
     }
 
     //킬 한 그 순간에 텍스트가 뜬다
@@ -823,5 +814,52 @@ void Character::InGameUI::updateEquipUI(const TotalInventory& inven)
         break;
         }
         pPlayer->SetIsEatEquip(false);
+    }
+}
+
+void Character::InGameUI::updateWeaponUI(const TotalInventory& inven)
+{
+    if (auto item = inven.m_pWeapon1->pItem)
+    {
+        if (!inven.isOpened)
+        {
+            //주무기
+            TAG_RES_STATIC tag = item->GetTagResStatic();
+            if (tag == TAG_RES_STATIC::Kar98k)
+            {
+                pKar98kImg->SetIsRender(true);
+                pKar98kImg->SetPosition(PRIMARY_WEAPON_POS);
+            }
+            else if (tag == TAG_RES_STATIC::QBZ)
+            {
+                pQBZImg->SetIsRender(true);
+                pQBZImg->SetPosition(D3DXVECTOR3(
+                    PRIMARY_WEAPON_POS.x + 28.0f,
+                    PRIMARY_WEAPON_POS.y,
+                    PRIMARY_WEAPON_POS.z));
+            }
+        }
+    }
+
+    if (auto item = inven.m_pWeapon2->pItem)
+    {
+        if (!inven.isOpened)
+        {
+            //보조무기
+            TAG_RES_STATIC tag = item->GetTagResStatic();
+            if (tag == TAG_RES_STATIC::Kar98k)
+            {
+                pKar98kImg->SetIsRender(true);
+                pKar98kImg->SetPosition(SECONDARY_WEAPON_POS);
+            }
+            else if (tag == TAG_RES_STATIC::QBZ)
+            {
+                pQBZImg->SetIsRender(true);
+                pQBZImg->SetPosition(D3DXVECTOR3(
+                    SECONDARY_WEAPON_POS.x + 28.0f,
+                    SECONDARY_WEAPON_POS.y,
+                    SECONDARY_WEAPON_POS.z));
+            }
+        }
     }
 }
