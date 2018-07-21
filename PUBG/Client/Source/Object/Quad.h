@@ -7,6 +7,7 @@ private:
     std::vector<WORD>      m_indices;
     LPDIRECT3DTEXTURE9     pTexture;
     LPD3DXEFFECT           pEffect;
+    LPD3DXMESH             m_pMesh;
 
 public:
              Quad();

@@ -69,8 +69,7 @@ VS_OUTPUT VS( VS_INPUT IN )
 
 float4  PS( VS_OUTPUT vout ) : COLOR 
 { 
-    float4 albedo = tex2D(Quad_Diffuse_Sampler, vout.TexCoord);
-    return float4(albedo.rgb, 1.0f);
+    return tex2D(Quad_Diffuse_Sampler, vout.TexCoord);
 }; 
 
 technique DefaultTechnique 

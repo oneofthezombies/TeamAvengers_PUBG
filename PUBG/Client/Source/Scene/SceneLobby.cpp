@@ -237,9 +237,8 @@ void SceneLobby::OnInit()
 
     pQuad = new Quad;
     pQuad->SetTexture(
-        "./Resource/",
-        "RandomLoading01.tga");
-    pQuad->SetScale(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
+        "./Resource/UI/Lobby/",
+        "lobby_bg.png");
     AddObject(pQuad);
 }
 
