@@ -9,6 +9,7 @@ class Bullet;
 class Item;
 class Character;
 class TerrainFeature;
+class DeathDropBox;
 
 struct BoxColliderInFile
 {
@@ -39,6 +40,7 @@ struct CellSpace
     std::set<IObject*>        pDoors;
     std::set<IObject*>        pWindows;
     std::set<Item*>           pItems;
+    std::set<DeathDropBox*>   pDeathDropBoxes;
 
     static const int DIMENSION = 4;
 };

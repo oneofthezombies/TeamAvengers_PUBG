@@ -965,7 +965,6 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             }
             break;
 
-
         //Inventory ==================================================
         case TAG_FONT::Inventory_Ground:
             {
@@ -1012,6 +1011,174 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
             }
             break;
 
+        //Loading ==================================================
+        case TAG_FONT::LoadingDesc:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                18, 9, FW_NORMAL, 1, false,
+                HANGEUL_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LoadingPercentage:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                100, 20, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LoadingText:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                40, 10, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+
+        //Login ==================================================
+        case TAG_FONT::LoginInput:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                32, 9, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LoginButton:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                40, 10, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+        //Lobby ==================================================
+        case TAG_FONT::LobbyMenu:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                32, 9, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LobbyMenuSmall:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                21, 7, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LobbyLeftSmall:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                14, 6, FW_NORMAL, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LobbyReady:
+        {
+            AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                52, 16, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Agency FB",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LobbyNickName:
+        {
+            AddFontResource(TEXT("Resource/Fonts/roboto_condensed_regular.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                24, 12, FW_BOLD, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "Roboto Condensed",
+                &m_fonts[tag]);
+        }
+        break;
+
+        case TAG_FONT::LobbyReadyNickName:
+        {
+            AddFontResource(TEXT("Resource/Fonts/SeoulNamsanM.ttf"));
+            hr = D3DXCreateFontA(
+                Device()(),
+                12, 6, FW_NORMAL, 1, false,
+                DEFAULT_CHARSET,
+                OUT_DEFAULT_PRECIS,
+                DEFAULT_QUALITY,
+                FF_DONTCARE,
+                "08서울남산체 M",
+                &m_fonts[tag]);
+        }
+        break;
 
         //InGameUI ==================================================
         case TAG_FONT::InGameAmmoReload:
@@ -1034,7 +1201,7 @@ LPD3DXFONT Resource::Manager::GetFont(const TAG_FONT tag)
                 AddFontResource(TEXT("Resource/Fonts/AgencyFBBold.ttf"));
                 hr = D3DXCreateFontA(
                     Device()(),
-                    18, 8, FW_SEMIBOLD, 1, false,
+                    22, 7, FW_SEMIBOLD, 1, false,
                     DEFAULT_CHARSET,
                     OUT_DEFAULT_PRECIS,
                     DEFAULT_QUALITY,

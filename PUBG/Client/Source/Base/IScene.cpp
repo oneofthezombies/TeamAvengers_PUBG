@@ -6,6 +6,7 @@
 #include "ResourceInfo.h"
 #include "Item.h"
 #include "HeightMap.h"
+#include "DeathDropBox.h"
 
 BoxColliderInFile::BoxColliderInFile()
 {
@@ -357,6 +358,8 @@ void IScene::InsertObjIntoTotalCellSpace(TAG_OBJECT tag, size_t index, IN IObjec
     case TAG_OBJECT::Item:
         m_TotalCellSpaces[index].pItems.emplace(static_cast<Item*>(obj));
         break;
+    case TAG_OBJECT::DeathDropBox:
+        m_TotalCellSpaces[index].pDeathDropBoxes.emplace(static_cast<DeathDropBox*>(obj));
     }
 
 }

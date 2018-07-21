@@ -22,8 +22,8 @@ SceneLogin::~SceneLogin()
 void SceneLogin::OnInit()
 {
     UIObject* root = new UIImage(
-        "./Resource/", 
-        "dedenne.png", 
+        "./Resource/UI/Login/", 
+        "login_bg.png", 
         Vector3::ZERO, 
         nullptr, 
         nullptr);
@@ -31,17 +31,17 @@ void SceneLogin::OnInit()
     UI()()->RegisterUIObject(root);
 
     UITextInputField* inputField = new UITextInputField(
-        D3DXVECTOR3(100.0f, 100.0f, 0.0f), 
-        "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
-        TAG_FONT::Default, D3DCOLOR_XRGB(0, 0, 0), root);
+        D3DXVECTOR3(386.0f, 325.5f, 0.0f), 
+        "./Resource/UI/Login/", "input_idle.png", "input_mouseover.png", "input_mouseover.png", 
+        TAG_FONT::LoginInput, D3DCOLOR_XRGB(255, 255, 255), root);
     inputField->SetText("127.0.0.1 ");
 
-    UIButton* button = new UIButton(D3DXVECTOR3(100.0f, 200.0f, 0.0f), 
-        "./Resource/", "input_field.png", "input_field.png", "input_field.png", 
+    UIButton* button = new UIButton(D3DXVECTOR3(580.13f, 419.42f, 0.0f), 
+        "./Resource/UI/Login/", "login_btn_idle.png", "login_btn_mouseover.png", "login_btn_mouseover.png", 
         &m_buttonListener, 
         root, 
-        Resource()()->GetFont(TAG_FONT::Default), "Connect", 
-        D3DCOLOR_XRGB(0, 0, 0));
+        Resource()()->GetFont(TAG_FONT::LoginButton), "CONNECT",
+        D3DCOLOR_XRGB(255, 255, 255));
 }
 
 void SceneLogin::OnUpdate()
@@ -86,7 +86,9 @@ void LoginButtonListener::OnMouseUp(const int key)
     c->Connect(host, port, nickname);
 
     UI()()->Destroy(GetHandle());
-    Scene()()->SetCurrentScene(TAG_SCENE::Play);
+    //Scene()()->SetCurrentScene(TAG_SCENE::Play);
+    //for test
+    Scene()()->SetCurrentScene(TAG_SCENE::Lobby);
 }
 
 void LoginButtonListener::OnMouseDrag(const int key)

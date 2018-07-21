@@ -80,6 +80,8 @@ public:
     {
         static const float DEFAULT_CAPACITY;
         static const int NUM_UI_DROPPED = 12;
+        static const float FIRST_LINE;
+        static const float SECOND_LINE;
 
         Character* pCharacter;
 
@@ -90,12 +92,16 @@ public:
         UIButtonWithItem* pUIPicked;
         UIButtonWithItem* m_pWeapon1;
         UIButtonWithItem* m_pWeapon2;
+        UIButtonWithItem* m_pUIArmor;
+        UIButtonWithItem* m_pUIHead;
+        UIButtonWithItem* m_pUIBack;
 
         Item* m_pHand; //손에 든 무기
         bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
 
 
-        map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
+        std::map<TAG_RES_STATIC, std::vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
+        std::map<TAG_RES_STATIC, std::vector<Item*>> m_empties; // 탄약 개수가 0개인 총알 아이템을 넣는 곳
 
         //헬멧, 가방, 방탄조끼용
         Item* m_pEquipArmor;
@@ -134,6 +140,21 @@ public:
         bool IsOpened();
         void SetEquipUI();
 
+        void DropItem(Item** ppOriginItem);
+        int EquipItem(Item** ppOriginItem, Item* pNewItem);
+        void DropPrimary();
+        void EquipPrimary(Item* pNewItem);
+        void DropSecondary();
+        void EquipSecondary(Item* pNewItem);
+        void DropArmor();
+        void EquipArmor(Item* pNewItem);
+        void DropHead();
+        void EquipHead(Item* pNewItem);
+        void DropBack();
+        void EquipBack(Item* pNewItem);
+
+        void ReleaseBullets(Item* pItem);
+
          TotalInventory();
         ~TotalInventory();
     };
@@ -147,6 +168,7 @@ public:
         static const D3DCOLOR WHITE_ALPHA;
         static const D3DCOLOR BLACK_ALPHA;
         static const D3DCOLOR GRAY_ALPHA;
+        static const D3DCOLOR GRAY_ALPHA2;
 
         static const D3DXVECTOR3 PRIMARY_WEAPON_POS;
         static const D3DXVECTOR3 SECONDARY_WEAPON_POS;
@@ -536,8 +558,6 @@ private:
     void rotateWaist(const float quantity);
     void rotateHead(const float quantity);
 
-    bool isMine() const;
-
     void setInfo();
 
     D3DXVECTOR3 getUp();
@@ -554,7 +574,7 @@ private:
     
     //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
-    bool createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);
+    bool createOrMergeItem(std::map<TAG_RES_STATIC, std::vector<Item*>>* map, Item* item);
     //이미 아이템이 있는 경우, 그 아이템을 바닥에 떨구고 새아이템을 착용한다
     bool checkOriginItem(Item** originItem, Item* newItem);
 
@@ -672,6 +692,7 @@ public:
     void OnCollisionStay (Collider* pOffence, Collider* pDefence);
     void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
+    bool IsMine() const;
     int GetIndex() const;
     string GetNickName() const;
     float GetCharacterHealth() const;
@@ -740,7 +761,7 @@ public:
     //        const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
 
-
+    void CreateDeathDropBox();
 
 
 /**************************** end public method ******************************/

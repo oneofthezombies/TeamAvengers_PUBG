@@ -9,6 +9,7 @@ enum class TAG_OBJECT
     Door,
     Window,
     Item,
+    Particle,
     DeathDropBox,
 };
 
@@ -65,6 +66,7 @@ enum class TAG_SCENE
 {
     Loading,
     Login,
+    Lobby,
     Play,
     CollisionTest,
 };
@@ -75,6 +77,20 @@ enum class TAG_FONT
     Inventory_Ground,
     Inventory_28,
     Inventory_NickName,
+
+    LoadingDesc,
+    LoadingPercentage,
+    LoadingText,
+
+    LoginInput,
+    LoginButton,
+
+    LobbyMenu,
+    LobbyMenuSmall,
+    LobbyLeftSmall,
+    LobbyReady,
+    LobbyNickName,
+    LobbyReadyNickName,
 
     InGameAmmoReload,
     InGameAmmoTotalNum,

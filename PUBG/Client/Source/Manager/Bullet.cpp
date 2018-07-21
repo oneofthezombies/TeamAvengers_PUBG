@@ -6,6 +6,7 @@
 #include "ItemInfo.h"
 #include "Item.h"
 #include "ScenePlay.h"
+#include "Ballistics.h"
 
 Bullet::Bullet()
     : IObject(TAG_OBJECT::Bullet)
@@ -34,14 +35,16 @@ Bullet::~Bullet()
 }
 Bullet::HitTargetInfo::HitTargetInfo()
     : pos(Vector3::ZERO)
+    , rot(Quaternion::IDENTITY)
     , tag_Weapon(TAG_RES_STATIC::COUNT)
     , tag_chrPart(TAG_COLLIDER_CHARACTER_PART::COUNT)
     , chr(nullptr)
 {
 }
 
-Bullet::HitTargetInfo::HitTargetInfo(D3DXVECTOR3 _pos, TAG_RES_STATIC _tag_Weapon, TAG_COLLIDER_CHARACTER_PART _tag_chrPart, Character* obj)
+Bullet::HitTargetInfo::HitTargetInfo(D3DXVECTOR3 _pos, D3DXQUATERNION _rot, TAG_RES_STATIC _tag_Weapon, TAG_COLLIDER_CHARACTER_PART _tag_chrPart, Character* obj)
     : pos(_pos)
+    , rot(_rot)
     , tag_Weapon(_tag_Weapon)
     , tag_chrPart(_tag_chrPart)
     , chr(obj)
@@ -56,8 +59,10 @@ void Bullet::OnUpdate()
      m_nextPos = m_curPos = pTr->GetPosition();
      //JHTODO
      m_nextPos += m_dir * m_Speed
-         /**ItemInfo::GetDropOffByDistance(1.0f,GetTagObject())*/ 
          * Time()()->GetDeltaTime();
+
+     //ballistic 으로 y값을 낮추자
+     m_nextPos.y += Ballistics::GetVarianceY(m_tag, 0.0f);
      
      Ray ray;
      ray.m_pos = m_curPos;
@@ -108,7 +113,13 @@ void Bullet::OnUpdate()
          if (minDist != std::numeric_limits<float>::max())
          {
              //vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
-             vecHitTargetInfo.emplace_back(HitTargetInfo((ray.m_pos + ray.m_dir * minDist), m_tag, TAG_COLLIDER_CHARACTER_PART::COUNT,nullptr));
+             vecHitTargetInfo.emplace_back(
+                 HitTargetInfo(
+                 (ray.m_pos + ray.m_dir * minDist), 
+                     tf->GetTransform()->GetRotation(),
+                     m_tag, 
+                     TAG_COLLIDER_CHARACTER_PART::COUNT,
+                     nullptr)); //terrain features 이니깐 
          }
      }
 
@@ -151,7 +162,13 @@ void Bullet::OnUpdate()
          if (minDist != std::numeric_limits<float>::max())
          {
              //vecTargetPos.emplace_back(ray.m_pos + ray.m_dir * minDist);//맞은 target들을 찾아낸다
-             vecHitTargetInfo.emplace_back(HitTargetInfo((ray.m_pos + ray.m_dir * minDist), m_tag, static_cast<TAG_COLLIDER_CHARACTER_PART>(otherHitPart), chr));
+             vecHitTargetInfo.emplace_back(
+                 HitTargetInfo(
+                 (ray.m_pos + ray.m_dir * minDist),
+                     chr->GetTransform()->GetRotation(),
+                     m_tag, 
+                     static_cast<TAG_COLLIDER_CHARACTER_PART>(otherHitPart), 
+                     chr));
          }
          else
          {
@@ -183,10 +200,13 @@ void Bullet::OnUpdate()
          //Communication()()-> 네트워크로 이 포지션을 줘서 모든 사람이 이곳에 맞았다는 것이 표시 되는 것을 보이도록 하자
          
 
-         
-         if (targetInfo.tag_chrPart != TAG_COLLIDER_CHARACTER_PART::COUNT) //케릭터에 맞은 것이라면
+         //케릭터에 맞은 것이라면
+         if (targetInfo.tag_chrPart != TAG_COLLIDER_CHARACTER_PART::COUNT) 
          {
-             //사람에게 맞는다면 피가 나도록
+             //사람에게 맞는다면 피가 나도록 blood Particel
+             ParticlePool()()->Hit_Blood(targetInfo.pos,targetInfo.rot);
+
+             //데미지
              const float damage
                  = ItemInfo::GetBaseDamage(targetInfo.tag_Weapon)//Base Weapon Damage
                  * ItemInfo::GetDropOffByDistance(shortestLength, targetInfo.tag_Weapon)//Damage drop-off by Distance
@@ -211,12 +231,17 @@ void Bullet::OnUpdate()
                  string weaponNameForKill = ItemInfo::GetName(inven.m_pHand->GetTagResStatic());
                  inGameUI.m_weaponNameForKill = weaponNameForKill;
              }
+
+
+
              Communication()()->SendEventMinusDamage(targetInfo.chr->GetIndex(), damage);
          }
+         //terrain features 에 맞은 것이라면 
          else
          {
-             //terrain features 에 맞은 것이라면 
+             
              //탄흔         //벽에 맞는다면 벽에 탄흔이 남도록
+             //ParticlePool()()->Hit_BulletHole(targetInfo.pos);
          }
 
          m_IsActive = false;
@@ -349,8 +374,6 @@ void _BulletPool::PrintNumBullet()
 
 void _BulletPool::Render()
 {
-//    if (!Collision()()->IsRender()) return;
-
     //hit 된 position에 구체 그리기
     D3DXMATRIX m;
     D3DXMatrixTransformation(
@@ -374,7 +397,6 @@ void _BulletPool::Render()
         D3DXCOLOR Red(1.0f, 0.f, 0.0f, 1.0f);
         pEffect->SetValue("Color", &Red, sizeof Red);
     });
-
 }
 
 Bullet* _BulletPool::Fire(

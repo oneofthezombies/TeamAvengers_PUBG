@@ -62,8 +62,8 @@ enum class TAG_RES_STATIC
     ContainerSmall_2,
 
         //- HayBale
-    HeyBale_1,
-    HeyBale_2,
+    HayBale_1,
+    HayBale_2,
 
         //- MetalBarrel
     MetalBarrel_Blue,

@@ -3,6 +3,7 @@
 struct CellSpace;
 class TerrainFeature;
 class Character;
+class DeathDropBox;
 
 class Area : public MemoryAllocator
 {
@@ -19,7 +20,8 @@ public:
     //std::vector<Bullet*>         GetBullets();
     std::vector<TerrainFeature*> GetTerrainFeatures();
     std::vector<Character*>      GetCharacters();
-    std::vector<Item*> GetItems();
+    std::vector<Item*>           GetItems();
+    std::vector<DeathDropBox*>   GetDeathDropBoxes();
     //void ItemIntoInventory(size_t index, Item* obj);
     bool checkValid(int v);
 };

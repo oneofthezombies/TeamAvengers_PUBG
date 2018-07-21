@@ -15,6 +15,7 @@ const D3DCOLOR Character::InGameUI::YELLOW      = D3DCOLOR_XRGB(245, 193, 26);
 const D3DCOLOR Character::InGameUI::WHITE_ALPHA = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f);
 const D3DCOLOR Character::InGameUI::BLACK_ALPHA = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.8f);
 const D3DCOLOR Character::InGameUI::GRAY_ALPHA  = D3DCOLOR_ARGB(100, 160, 160, 160);
+const D3DCOLOR Character::InGameUI::GRAY_ALPHA2 = D3DCOLOR_ARGB(200, 248, 248, 248);
 
 const D3DXVECTOR3 Character::InGameUI::PRIMARY_WEAPON_POS   = D3DXVECTOR3(970.0f, 670.0f, 0.0f);
 const D3DXVECTOR3 Character::InGameUI::SECONDARY_WEAPON_POS = D3DXVECTOR3(970.0f, 632.0f, 0.0f);
@@ -580,7 +581,10 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
         auto it = inven.m_mapInventory.find(ammoType);
         if (it != inven.m_mapInventory.end())
         {
-            numBulletInInventory = (*it).second.back()->GetCount();
+            if (!it->second.empty())
+                numBulletInInventory = (*it).second.back()->GetCount();
+            else
+                numBulletInInventory = 0;
         }
         
         //장전이 안되어있다면 그림 & 텍스트 빨간색으로

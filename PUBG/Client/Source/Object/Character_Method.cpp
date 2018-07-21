@@ -11,6 +11,7 @@
 #include "ScenePlay.h"
 #include "Ballistics.h"
 #include "TerrainFeature.h"
+#include "DeathDropBox.h"
 
 const float MovingFactor::UNARMED_RUN = 180.0f;
 const float MovingFactor::UNARMED_SPRINT = 260.0f;
@@ -171,7 +172,7 @@ void Character::setFramePtr()
 
 void Character::subscribeCollisionEvent()
 {
-    if (isMine())
+    if (IsMine())
     {
         auto tagBody = GetTagCollisionBody(m_index);
         for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
@@ -597,10 +598,7 @@ void Character::itemSphereCollisionInteraction()
         if (!Collision::HasCollision(m_boundingSphere, itm->GetBoundingSphere())) continue;
         //캐릭터와 Item의 spehre 가 충돌이 났다
 
-        di.emplace_back(itm);
-
         // UI로 F key가 나오게 하기 
-
 
         //Ray를 쏘아서 맞는 물건 먼저 먹기
         for (auto& rayItm : di)
@@ -619,57 +617,28 @@ void Character::itemSphereCollisionInteraction()
             if (m_currentOnceKey._F)
             {
                 PutItemInTotalInventory(rayItm); //inventory에 넣기
-                                                 //current scene 에서 지우기
-                pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
-
-                rayItm->SetState(true);
-                
-                if (m_totalInventory.m_pWeaponPrimary)
-                {
-                    m_totalInventory.m_pWeapon1->SetIsActive(true);
-                    m_totalInventory.m_pWeapon1->pUIImage =
-                        m_totalInventory.m_pWeaponPrimary->GetUIImage2();
-                    m_totalInventory.m_pWeapon1->pItem = 
-                        m_totalInventory.m_pWeaponPrimary;
-                }
-                if (m_totalInventory.m_pWeaponSecondary)
-                {
-                    m_totalInventory.m_pWeapon2->SetIsActive(true);
-                    m_totalInventory.m_pWeapon2->pUIImage = 
-                        m_totalInventory.m_pWeaponSecondary->GetUIImage2();
-                    m_totalInventory.m_pWeapon2->pItem = 
-                        m_totalInventory.m_pWeaponSecondary;
-                }
                 return;
             }
         }
 
-
         if (m_currentOnceKey._F)
         {
             PutItemInTotalInventory(itm); //inventory에 넣기
-            //current scene 에서 지우기
-            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
-            itm->SetState(true);
-
-            if (m_totalInventory.m_pWeaponPrimary)
-            {
-                m_totalInventory.m_pWeapon1->SetIsActive(true);
-                m_totalInventory.m_pWeapon1->pUIImage =
-                    m_totalInventory.m_pWeaponPrimary->GetUIImage2();
-                m_totalInventory.m_pWeapon1->pItem =
-                    m_totalInventory.m_pWeaponPrimary;
-            }
-            if (m_totalInventory.m_pWeaponSecondary)
-            {
-                m_totalInventory.m_pWeapon2->SetIsActive(true);
-                m_totalInventory.m_pWeapon2->pUIImage =
-                    m_totalInventory.m_pWeaponSecondary->GetUIImage2();
-                m_totalInventory.m_pWeapon2->pItem =
-                    m_totalInventory.m_pWeaponSecondary;
-            }
             return;
         }
+
+        di.emplace_back(itm);
+    }
+
+    auto deathDropboxes(pCurrentScene->m_NearArea.GetDeathDropBoxes());
+    for (auto box : deathDropboxes)
+    {
+        if (!Collision::HasCollision(
+            m_boundingSphere, 
+            box->GetBoundingSphere())) continue;
+
+        const auto& items = box->GetItems();
+        di.insert(di.end(), items.begin(), items.end());
     }
 
     //캐릭터 spehre안에 아이템이 없으면 모션을 캔슬했다 (앞으로 문열기 등 interaction에서 문제가 많은 코드) (이후에 바뀔것이다)
@@ -811,7 +780,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     
 }
 
-bool Character::isMine() const
+bool Character::IsMine() const
 {
     return m_index == Communication()()->m_myInfo.ID;
 }
@@ -1204,6 +1173,23 @@ const std::vector<BoundingBox>& Character::GetBoundingBoxes()
     return IObject::GetBoundingBoxes();
 }
 
+void Character::CreateDeathDropBox()
+{
+    ScenePlay* pScenePlay =
+        static_cast<ScenePlay*>(CurrentScene()());
+
+    DeathDropBox* pBox =
+        pScenePlay->GetDeathDropBox(m_index);
+
+    const D3DXVECTOR3 pos = GetTransform()->GetPosition();
+    pBox->Set(pos, this);
+
+    pScenePlay->InsertObjIntoTotalCellSpace(
+        TAG_OBJECT::DeathDropBox,
+        pScenePlay->GetCellIndex(pos),
+        pBox);
+}
+
 void Character::movementControl(OUT State* OutState)
 {
     //점프
@@ -1433,7 +1419,7 @@ void Character::MoveItemFieldToHead(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pEquipHead = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1443,7 +1429,7 @@ void Character::MoveItemFieldToArmor(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pEquipArmor = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1453,7 +1439,7 @@ void Character::MoveItemFieldToBack(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pEquipBack = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1463,7 +1449,7 @@ void Character::MoveItemFieldToPrimary(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pWeaponPrimary = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1473,7 +1459,7 @@ void Character::MoveItemFieldToSecondary(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pWeaponSecondary = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1483,7 +1469,7 @@ void Character::MoveItemFieldToInventory(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_mapInventory[pItem->GetTagResStatic()].emplace_back(pItem);
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
 }
 
