@@ -49,6 +49,26 @@ void Room::Echo(const int id, const Message& msg)
     }
 }
 
+bool Room::IsAllReady()
+{
+    for (auto& pi : m_roomInfo.playerInfos)
+    {
+        if (!pi.isReady)
+            return false;
+    }
+
+    return true;
+}
+
+void Room::StartPlay()
+{
+    Message msg = Message::Create(TAG_REQUEST::RECEIVE_EVENT_START_PLAY, "");
+    for (auto& p : m_participants)
+    {
+        p->Write(msg);
+    }
+}
+
 Participant::Participant(tcp::socket socket, Room* pRoom)
     : m_socket(std::move(socket))
     , m_myInfo()
@@ -298,6 +318,37 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             pRoom->m_roomInfo.playerInfos[isDeadID].isDead = isDeadInt ? true : false;
 
             pRoom->Echo(id, Message::Create(TAG_REQUEST::SEND_IS_DEAD, description));
+        }
+        break;
+    case TAG_REQUEST::SEND_IS_READY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& isReadyStr = parsedDesc.second;
+
+            std::stringstream ss(isReadyStr);
+            int isReadyID;
+            ss >> isReadyID;
+
+            pRoom->m_roomInfo.playerInfos[isReadyID].isReady = true;
+
+            if (pRoom->IsAllReady())
+            {
+                pRoom->StartPlay();
+            }
+        }
+        break;
+    case TAG_REQUEST::SEND_IS_NOT_READY:
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& isNotReadyStr = parsedDesc.second;
+
+            std::stringstream ss(isNotReadyStr);
+            int isNotReadyID;
+            ss >> isNotReadyID;
+
+            pRoom->m_roomInfo.playerInfos[isNotReadyID].isReady = false;
         }
         break;
     case TAG_REQUEST::SEND_EVENT_DESTROY_ITEM:

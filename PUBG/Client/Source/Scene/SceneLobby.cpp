@@ -3,6 +3,16 @@
 #include "UIImage.h"
 #include "UIText.h"
 
+const D3DXVECTOR3 SceneLobby::PLAYER_0_POSITION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+const D3DXVECTOR3 SceneLobby::PLAYER_1_POSITION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+const D3DXVECTOR3 SceneLobby::PLAYER_2_POSITION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+const D3DXVECTOR3 SceneLobby::PLAYER_3_POSITION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+const D3DXQUATERNION SceneLobby::PLAYER_0_ROTATION = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
+const D3DXQUATERNION SceneLobby::PLAYER_1_ROTATION = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
+const D3DXQUATERNION SceneLobby::PLAYER_2_ROTATION = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
+const D3DXQUATERNION SceneLobby::PLAYER_3_ROTATION = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
+
 SceneLobby::SceneLobby()
     : IScene()
     , m_pBackground(nullptr)
@@ -10,10 +20,8 @@ SceneLobby::SceneLobby()
 {
 }
 
-
 SceneLobby::~SceneLobby()
 {
-    UI()()->Destroy(m_pBackground);
 }
 
 void SceneLobby::OnInit()
@@ -228,7 +236,14 @@ void SceneLobby::OnUpdate()
 {
 }
 
+void SceneLobby::StartPlay()
+{
+    UI()()->Destroy(m_pBackground);
+    Scene()()->SetCurrentScene(TAG_SCENE::Play);
+}
+
 ReadyButtonListener::ReadyButtonListener()
+    : m_isReady(false)
 {
 }
 
@@ -251,10 +266,22 @@ void ReadyButtonListener::OnMouseDown(const int key)
 void ReadyButtonListener::OnMouseUp(const int key)
 {
     Sound()()->Play(TAG_SOUND::ButtonClick, Vector3::ZERO, 1.0f, FMOD_2D);
-    
-    //TODO: 레디가 모두 되면 플레이씬으로
-    UI()()->Destroy(GetHandle());
-    Scene()()->SetCurrentScene(TAG_SCENE::Play);
+
+    m_isReady = !m_isReady;
+
+    const int myID = Communication()()->m_myInfo.ID;
+    if (m_isReady)
+    {
+        // TODO : 내 캐릭터의 레디UI 켜기
+        Scene()()->GetPlayer()->SetReadyAnimation();
+        Communication()()->SendIsReady(myID);
+    }
+    else
+    {
+        // TODO : 내 캐릭터의 레디UI 끄기
+        Scene()()->GetPlayer()->SetNotReadyAnimation();
+        Communication()()->SendIsNotReady(myID);
+    }
 }
 
 void ReadyButtonListener::OnMouseDrag(const int key)

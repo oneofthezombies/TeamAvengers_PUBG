@@ -5,6 +5,7 @@
 #include "IObject.h"
 #include "Item.h"
 #include "DeathDropBox.h"
+#include "SceneLobby.h"
 
 void Client::Connect(const tcp::resolver::results_type& endpoints)
 {
@@ -1153,6 +1154,12 @@ void Communication::Manager::ReceiveMessage(
             SAFE_DELETE(pItem);
         }
         break;
+    case TAG_REQUEST::RECEIVE_EVENT_START_PLAY:
+        {
+            SceneLobby* pSceneLobby = static_cast<SceneLobby*>(CurrentScene()());
+            pSceneLobby->StartPlay();
+        }
+        break;
     }
 }
 
@@ -1693,6 +1700,8 @@ void Communication::Manager::SendIsDead(
     const int id, 
     bool isDead)
 {
+    if (m_playMode == PlayMode::ALONE) return;
+
     m_roomInfo.playerInfos[id].isDead = isDead;
     
     std::stringstream ss;
@@ -1701,6 +1710,32 @@ void Communication::Manager::SendIsDead(
     m_pClient->Write(
         Message::Create(
             TAG_REQUEST::SEND_IS_DEAD,
+            ss.str()));
+}
+
+void Communication::Manager::SendIsReady(const int characterID)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << characterID;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_IS_READY,
+            ss.str()));
+}
+
+void Communication::Manager::SendIsNotReady(const int characterID)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << characterID;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_IS_NOT_READY,
             ss.str()));
 }
 

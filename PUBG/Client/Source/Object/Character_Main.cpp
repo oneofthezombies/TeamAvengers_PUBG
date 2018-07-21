@@ -112,9 +112,7 @@ Character::Character(const int index)
 
     pAnimation = new CharacterAnimation(m_index);
     AddChild(pAnimation);
-    setAnimation(
-        CharacterAnimation::BodyPart::BOTH, 
-        TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    setupAnimation();
     
     setFramePtr();
 

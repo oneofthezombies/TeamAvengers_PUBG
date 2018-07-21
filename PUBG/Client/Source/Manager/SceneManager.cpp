@@ -6,10 +6,12 @@
 #include "ScenePlay.h"
 #include "SceneLoading.h"
 #include "SceneCollisionTest.h"
+#include "Character.h"
 
 SceneManager::SceneManager()
 	: Singleton<SceneManager>()
 	, pCurrentScene(nullptr)
+    , pPlayer(nullptr)
 {
 }
 
@@ -65,4 +67,41 @@ void SceneManager::SetCurrentScene(const TAG_SCENE tag)
 IScene* SceneManager::GetCurrentScene() const
 {
 	return pCurrentScene;
+}
+
+void SceneManager::SetupCharacters()
+{
+    m_characters.resize(GameInfo::NUM_PLAYERS);
+    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
+        m_characters[i] = new Character(i);
+}
+
+Character* SceneManager::GetPlayer()
+{
+    if (!pPlayer)
+    {
+        const int myID = Communication()()->m_myInfo.ID;
+        pPlayer = m_characters[myID];
+    }
+    return pPlayer;
+}
+
+const std::vector<Character*>& SceneManager::GetOthers()
+{
+    if (others.empty())
+    {
+        const int myID = Communication()()->m_myInfo.ID;
+        for (std::size_t i = 0; i < m_characters.size(); i++)
+        {
+            if (i == myID) continue;
+
+            others.emplace_back(m_characters[i]);
+        }
+    }
+    return others;
+}
+
+const std::vector<Character*>& SceneManager::GetCharacters() const
+{
+    return m_characters;
 }

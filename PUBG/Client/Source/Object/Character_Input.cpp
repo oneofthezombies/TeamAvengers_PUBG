@@ -1343,6 +1343,43 @@ void Character::onKar98kReload()
     }
 }
 
+void Character::setupAnimation()
+{
+    switch (m_index)
+    {
+    case 0:
+        {
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Lobby_P1_NotReady);
+        }
+        break;
+    case 1:
+        {
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Lobby_P2_NotReady);
+        }
+        break;
+    case 2:
+        {
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Lobby_P3_NotReady);
+        }
+        break;
+    case 3:
+        {
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                TAG_ANIM_CHARACTER::Lobby_P4_NotReady);
+        }
+        break;
+    default:
+        break;
+    }
+}
+
 //캐릭터 애니메이션  + 장비 애니메이션 싱크
 void Character::syncAnimation()
 {

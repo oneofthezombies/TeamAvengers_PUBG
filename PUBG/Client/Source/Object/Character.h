@@ -629,6 +629,7 @@ private:
     void onKar98kReloadEnd();
     void onKar98kReload();
 
+    void setupAnimation();
     void syncAnimation();
 
     void setAnimation(
@@ -791,6 +792,8 @@ public:
 
     void CreateDeathDropBox();
 
+    void SetReadyAnimation();
+    void SetNotReadyAnimation();
 
 /**************************** end public method ******************************/
 

@@ -1184,6 +1184,126 @@ void Character::CreateDeathDropBox()
         pBox);
 }
 
+void Character::SetReadyAnimation()
+{
+    auto setAnimation = [this](
+        const TAG_ANIM_CHARACTER anim,
+        const TAG_ANIM_CHARACTER nextAnim)
+    {
+        pAnimation->Set(
+            CharacterAnimation::BodyPart::BOTH,
+            anim,
+            true,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            [this, &nextAnim]()
+        {
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                nextAnim);
+        });
+    };
+
+    switch (m_index)
+    {
+    case 0:
+        {
+            setAnimation(
+                TAG_ANIM_CHARACTER::Lobby_P1_NotReady_Ready, 
+                TAG_ANIM_CHARACTER::Lobby_P1_Ready);
+        }
+        break;
+    case 1:
+        {
+            setAnimation(
+                TAG_ANIM_CHARACTER::Lobby_P2_NotReady_Ready,
+                TAG_ANIM_CHARACTER::Lobby_P2_Ready);
+        }
+        break;
+    case 2:
+        {
+            setAnimation(
+                TAG_ANIM_CHARACTER::Lobby_P3_NotReady_Ready,
+                TAG_ANIM_CHARACTER::Lobby_P3_Ready);
+        }
+        break;
+    case 3:
+        {
+            setAnimation(
+                TAG_ANIM_CHARACTER::Lobby_P4_NotReady_Ready,
+                TAG_ANIM_CHARACTER::Lobby_P4_Ready);
+        }
+        break;
+    default:
+        {
+            assert(false && "Character::SetReadyAnimation(), default case.");
+        }
+        break;
+    }
+}
+
+void Character::SetNotReadyAnimation()
+{
+    auto setAnimation = [this](
+        const TAG_ANIM_CHARACTER anim,
+        const TAG_ANIM_CHARACTER nextAnim)
+    {
+        pAnimation->Set(
+            CharacterAnimation::BodyPart::BOTH,
+            anim,
+            true,
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION,
+            CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
+            [this, &nextAnim]()
+        {
+            pAnimation->Set(
+                CharacterAnimation::BodyPart::BOTH,
+                nextAnim);
+        });
+    };
+
+    switch (m_index)
+    {
+    case 0:
+        {
+            setAnimation(
+                TAG_ANIM_CHARACTER::Lobby_P1_Ready_NotReady,
+                TAG_ANIM_CHARACTER::Lobby_P1_NotReady);
+        }
+        break;
+    case 1:
+        {
+            setAnimation(
+                TAG_ANIM_CHARACTER::Lobby_P2_Ready_NotReady,
+                TAG_ANIM_CHARACTER::Lobby_P2_NotReady);
+        }
+        break;
+    case 2:
+        {
+            setAnimation(
+                TAG_ANIM_CHARACTER::Lobby_P3_Ready_NotReady,
+                TAG_ANIM_CHARACTER::Lobby_P3_NotReady);
+        }
+        break;
+    case 3:
+        {
+            setAnimation(
+                TAG_ANIM_CHARACTER::Lobby_P4_Ready_NotReady,
+                TAG_ANIM_CHARACTER::Lobby_P4_NotReady);
+        }
+        break;
+    default:
+        {
+            assert(false && "Character::SetNotReadyAnimaion(), default case.");
+        }
+        break;
+    }
+}
+
 void Character::movementControl(OUT State* OutState)
 {
     //มกวม

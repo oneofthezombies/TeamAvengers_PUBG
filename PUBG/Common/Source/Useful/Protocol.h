@@ -55,6 +55,7 @@ struct GameInfo
         int            lowerAnimState;
         float          health;
         bool           isDead;
+        bool           isReady;
 
         PlayerInfo();
     };

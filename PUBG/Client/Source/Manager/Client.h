@@ -62,6 +62,9 @@ struct Communication
         void SendLowerAnimationIndex(const TAG_ANIM_CHARACTER tag);
         void SendIsDead(const int id, bool isDead);
 
+        void SendIsReady   (const int characterID);
+        void SendIsNotReady(const int characterID);
+
         //void SendEventFireBullet(Bullet* pBullet);
         void SendEventSound(const TAG_SOUND tag, const D3DXVECTOR3& p);
         void SendEventMinusDamage(const int id, const float damage);

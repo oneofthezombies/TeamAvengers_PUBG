@@ -48,6 +48,8 @@ public:
     int GetID(const std::string& nickname);
     std::vector<int> GetOthersID(const int myID);
     void Echo(const int id, const Message& msg);
+    bool IsAllReady();
+    void StartPlay();
 };
 
 class Server

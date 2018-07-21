@@ -6,6 +6,9 @@ class UIImage;
 
 class ReadyButtonListener : public IUIButtonOnMouseListener
 {
+private:
+    bool m_isReady;
+
 public:
     ReadyButtonListener();
     virtual ~ReadyButtonListener();
@@ -19,6 +22,17 @@ public:
 
 class SceneLobby : public IScene
 {
+public:
+    static const D3DXVECTOR3 PLAYER_0_POSITION;
+    static const D3DXVECTOR3 PLAYER_1_POSITION;
+    static const D3DXVECTOR3 PLAYER_2_POSITION;
+    static const D3DXVECTOR3 PLAYER_3_POSITION;
+
+    static const D3DXQUATERNION PLAYER_0_ROTATION;
+    static const D3DXQUATERNION PLAYER_1_ROTATION;
+    static const D3DXQUATERNION PLAYER_2_ROTATION;
+    static const D3DXQUATERNION PLAYER_3_ROTATION;
+
 private:
     UIImage* m_pBackground;
     ReadyButtonListener m_readyButtonListener;
@@ -29,5 +43,7 @@ public:
 
     virtual void OnInit() override;
     virtual void OnUpdate() override;
+
+    void StartPlay();
 };
 
