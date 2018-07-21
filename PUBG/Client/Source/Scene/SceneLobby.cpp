@@ -250,6 +250,8 @@ void ReadyButtonListener::OnMouseDown(const int key)
 
 void ReadyButtonListener::OnMouseUp(const int key)
 {
+    Sound()()->Play(TAG_SOUND::ButtonClick, Vector3::ZERO, 1.0f, FMOD_2D);
+    
     //TODO: 레디가 모두 되면 플레이씬으로
     UI()()->Destroy(GetHandle());
     Scene()()->SetCurrentScene(TAG_SCENE::Play);

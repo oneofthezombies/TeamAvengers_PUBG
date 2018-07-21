@@ -24,7 +24,6 @@ struct ItemInfo
     static float GetDropOffByDistance(const float distance, const TAG_RES_STATIC tag); //거리에 따른 대미지
     static float GetBulletFireCoolTime(const TAG_RES_STATIC tag); //연사간격
     
-    //..
 };
 
 struct CharacterInfo

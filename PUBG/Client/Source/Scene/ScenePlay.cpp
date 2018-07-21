@@ -10,6 +10,7 @@
 #include "UITest.h"
 #include "DeathDropBox.h"
 
+
 void ScenePlay::setAloneMode()
 {
     Communication()()->m_myInfo.ID = 0;
@@ -31,45 +32,40 @@ void ScenePlay::setAloneMode()
         AddObject(pOther);
     }
 
-    Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
-    Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Lobby_P1_NotReady); //TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1
-    Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Lobby_P1_NotReady);
+    //old map
+    Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(1900.0f, 200.0f, 1900.0f);
+    Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(200.0f, 200.0f, 308.0f);
-    Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Lobby_P2_NotReady);
-    Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Lobby_P2_NotReady);
+    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(100.0f, 200.0f, 2000.0f);
+    Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(4848.0f, 200.0f, 200.0f);
-    Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Lobby_P3_NotReady);
-    Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Lobby_P3_NotReady);
+    Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(2000.0f, 200.0f, 100.0f);
+    Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(4848.0f, 200.0f, 4848.0f);
-    Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Lobby_P4_NotReady);
-    Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Lobby_P4_NotReady);
+    Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(2000.0f, 200.0f, 2000.0f);
+    Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    //Character* pOther = new Character(1);
-    //others.emplace_back(pOther);
-    //characters.emplace_back(pOther);
-    //AddObject(pOther);
-    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(600.0f, 100.0f, 600.0f);
+    
+    ////new map
+    //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f);
+    //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f);
     //Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     //Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    //AddObject(new SkySphere);
+    //Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f);
+    //Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    //TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(400.0f, 100.0f, 0.0f), Vector3::UP, Vector3::ONE * 0.7f);
-    //D3DXMATRIX m;
-    //D3DXQUATERNION qR;
-    //D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
-    //D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 2000.0f));
-    //tf->AddBoundingBox(m);
-    //AddObject(tf);
-
-    //tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(300.0f, 100.0f, 1000.0f), Vector3::UP, Vector3::ONE * 0.7f);
-    //D3DXQuaternionRotationAxis(&qR, &Vector3::UP, 1.0f);
-    //D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &qR, &D3DXVECTOR3(300.0f, 100.0f, 1000.0f));
-    //tf->AddBoundingBox(m);
-    //AddObject(tf);
+    //Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f);
+    //Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    //Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
     //For inventory Test
     Item* item = nullptr;
@@ -77,101 +73,77 @@ void ScenePlay::setAloneMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    item = new Item(TAG_RES_STATIC::Head_Lv1, "Head_Lv1_0", p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
-    
-    p = D3DXVECTOR3(20, 0, 10);
-    item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
-
-    p = D3DXVECTOR3(30, 0, 10);
-    item = new Item(TAG_RES_STATIC::Back_Lv1, "Armor_Lv1_0", p, r, s);
-    AddObject(item);
-    pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(60, 0, 10);
-    //item = new Item(TAG_RES_STATIC::MedKit, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(60, 0, 10);
-    //item = new Item(TAG_RES_STATIC::MedKit, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(60, 0, 10);
-    //item = new Item(TAG_RES_STATIC::MedKit, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-    p = D3DXVECTOR3(170, 200, 130);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_0", p, r, s);
+    p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
+    string name = "Head_Lv1 " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Head_Lv1, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(170, 200, 130);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_1", p, r, s);
+    p = D3DXVECTOR3(300.0f, 200.0f, 200.0f);
+    name = "Armor_Lv1 " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Armor_Lv1, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(170, 200, 130);
-    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm_2", p, r, s);
+    p = D3DXVECTOR3(400.0f, 200.0f, 200.0f);
+    name = "Back_Lv1 " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Back_Lv1, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(90, 200, 10);
-    item = new Item(TAG_RES_STATIC::QBZ, "QBZ_0", p, r, s);
+    p = D3DXVECTOR3(500.0f, 200.0f, 200.0f);
+    name = "QBZ " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::QBZ, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    //p = D3DXVECTOR3(70, 0, 30);
-    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(600.0f, 200.0f, 200.0f);
+    name = "Ammo_5_56mm " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    //p = D3DXVECTOR3(80, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(700.0f, 200.0f, 200.0f);
+    name = "QBZ " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::QBZ, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    //p = D3DXVECTOR3(80, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(800.0f, 200.0f, 200.0f);
+    name = "Kar98k " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Kar98k, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    //p = D3DXVECTOR3(90, 200, 10);
-    //item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
-    //AddObject(item);
-    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    p = D3DXVECTOR3(900.0f, 200.0f, 200.0f);
+    name = "Kar98k " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::Kar98k, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    //p = D3DXVECTOR3(190, 200, 220);
-    //item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
-    //AddObject(item);
-    //InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+    p = D3DXVECTOR3(1000.0f, 200.0f, 200.0f);
+    name = "Ammo_5_56mm " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    ////pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(1100.0f, 200.0f, 200.0f);
+    name = "Ammo_5_56mm " + std::to_string(2);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    //p = D3DXVECTOR3(100, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(1200.0f, 200.0f, 200.0f);
+    name = "Ammo_7_62mm " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    //p = D3DXVECTOR3(110, 0, 10);
-    //item = new Item(TAG_RES_STATIC::RedDot, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(120, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Aimpoint2X, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(130, 0, 10);
-    //item = new Item(TAG_RES_STATIC::ACOG, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+    p = D3DXVECTOR3(1300.0f, 200.0f, 200.0f);
+    name = "Ammo_7_62mm " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 }
 
 void ScenePlay::setWithOthersMode()
@@ -190,28 +162,6 @@ void ScenePlay::setWithOthersMode()
     Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
     Light()()->SetTarget(pPlayer->GetTransform());
 
-    //p = D3DXVECTOR3(100, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Kar98k, "gun", p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(90, 0, 10);
-    //item = new Item(TAG_RES_STATIC::QBZ, "gun", p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-    //pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(20, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(30, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
         if (i == myID) continue;
@@ -220,28 +170,6 @@ void ScenePlay::setWithOthersMode()
         others.emplace_back(pOther);
         characters.emplace_back(pOther);
         AddObject(pOther);
-
-        //p = D3DXVECTOR3(100, 0, 10);
-        //item = new Item(TAG_RES_STATIC::Kar98k, "gun", p, r, s);
-        //AddObject(item);
-        //pOther->PutItemInTotalInventory(item);
-
-        //p = D3DXVECTOR3(90, 0, 10);
-        //item = new Item(TAG_RES_STATIC::QBZ, "gun", p, r, s);
-        //AddObject(item);
-        //pOther->PutItemInTotalInventory(item);
-
-        //pOther->PutItemInTotalInventory(item);
-
-        //p = D3DXVECTOR3(20, 0, 10);
-        //item = new Item(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1_0", p, r, s);
-        //AddObject(item);
-        //pOther->PutItemInTotalInventory(item);
-
-        //p = D3DXVECTOR3(30, 0, 10);
-        //item = new Item(TAG_RES_STATIC::Back_Lv1, "Back_Lv1_0", p, r, s);
-        //AddObject(item);
-        //pOther->PutItemInTotalInventory(item);
     }
 
     p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
@@ -262,15 +190,57 @@ void ScenePlay::setWithOthersMode()
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(90, 0, 10);
+    p = D3DXVECTOR3(500.0f, 200.0f, 200.0f);
     name = "QBZ " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::QBZ, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(70, 0, 10);
+    p = D3DXVECTOR3(600.0f, 200.0f, 200.0f);
     name = "Ammo_5_56mm " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(700.0f, 200.0f, 200.0f);
+    name = "QBZ " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::QBZ, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(800.0f, 200.0f, 200.0f);
+    name = "Kar98k " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Kar98k, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(900.0f, 200.0f, 200.0f);
+    name = "Kar98k " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::Kar98k, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(1000.0f, 200.0f, 200.0f);
+    name = "Ammo_5_56mm " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(1100.0f, 200.0f, 200.0f);
+    name = "Ammo_5_56mm " + std::to_string(2);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(1200.0f, 200.0f, 200.0f);
+    name = "Ammo_7_62mm " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(1300.0f, 200.0f, 200.0f);
+    name = "Ammo_7_62mm " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
@@ -298,37 +268,40 @@ void ScenePlay::setWithOthersMode()
     //tf->AddBoundingBox(m);
     //AddObject(tf);
 
+    // 빈 총알을 셋팅합니다. 이것은 총을 버릴 때 총에 들어있던 총알을 버리기 위해서 종종 필요합니다.
+    setEmptyBullets(&characters);
+}
 
+void ScenePlay::setEmptyBullets(std::vector<Character*>* OutCharacters)
+{
+    const int numEmpty = 5;
+    for (int ch_i = 0; ch_i < GameInfo::NUM_PLAYERS; ++ch_i)
+    {
+        for (int i = 0; i < numEmpty; ++i)
+        {
+            std::string name = "Ammo_5_56mm_for_empty_" + std::to_string(ch_i) + std::to_string(i);
+            Item* item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, Vector3::ZERO, Vector3::ZERO, Vector3::ONE);
+            item->SetCount(0);
 
-    //p = D3DXVECTOR3(70, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+            Character* pCharacter = nullptr;
+            for (auto pC : *OutCharacters)
+            {
+                if (pC->GetIndex() == ch_i)
+                {
+                    pCharacter = pC;
+                    break;
+                }
+            }
 
-    //for (int i = 0; i < 5; i++)
-    //{
-    //    p = D3DXVECTOR3(70, 0, 10);
-    //    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, p, r, s);
-    //    AddObject(item);
-    //    pPlayer->PutItemInTotalInventory(item);
-    //}
+            pCharacter->GetTotalInventory().m_empties[item->GetTagResStatic()].emplace_back(item);
 
-    //p = D3DXVECTOR3(80, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Ammo_7_62mm, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
+            name = "Ammo_7_62mm_for_empty_" + std::to_string(ch_i) + std::to_string(i);
+            item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, Vector3::ZERO, Vector3::ZERO, Vector3::ONE);
+            item->SetCount(0);
 
-    //p = D3DXVECTOR3(90, 0, 10);
-    //item = new Item(TAG_RES_STATIC::QBZ, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-    //p = D3DXVECTOR3(100, 0, 10);
-    //item = new Item(TAG_RES_STATIC::Kar98k, p, r, s);
-    //AddObject(item);
-    //pPlayer->PutItemInTotalInventory(item);
-
-
+            pCharacter->GetTotalInventory().m_empties[item->GetTagResStatic()].emplace_back(item);
+        }
+    }
 }
 
 ScenePlay::ScenePlay()
@@ -341,6 +314,14 @@ ScenePlay::ScenePlay()
 ScenePlay::~ScenePlay()
 {
     UI()()->Destroy(m_layer);
+
+    for (auto box : deathDropBoxes)
+    {
+        for (auto item : box->GetItems())
+        {
+            SAFE_DELETE(item);
+        }
+    }
 }
 
 void ScenePlay::OnInit()
@@ -359,6 +340,7 @@ void ScenePlay::OnInit()
     center.y = 720 / 2;
     ClientToScreen(g_hWnd, &center);
     SetCursorPos(center.x, center.y);
+    ShowCursor(false);
 
     //AddObject(new SkySphere);
     //AddObject(new Grid);
@@ -372,8 +354,9 @@ void ScenePlay::OnInit()
     {
         m_TotalCellSpaces[i].pIndex = i;
     }
-
-    LoadObjectsFromFile("./Resource/save.txt");
+    
+    //LoadObjectsFromFile("./Resource/save.txt");
+    //LoadObjectsFromFile("./Resource/save1.txt");
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
@@ -485,5 +468,8 @@ UIObject* ScenePlay::GetLayer(int layerIndex) const
     case 2: return m_layer->GetChild(1);
     case 3: return m_layer->GetChild(2);
     case 4: return m_layer->GetChild(3);
+    default:
+        return m_layer->GetChild(0);
+        assert(false && "ScenePlay::GetLayer(), default case.");
     }
 }

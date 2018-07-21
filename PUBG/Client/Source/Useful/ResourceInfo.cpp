@@ -218,14 +218,14 @@ pair<string, string> ResourceInfo::GetFileNameWithoutX(const TAG_RES_STATIC tag)
 
                 //- HayBale
                 {
-    case TAG_RES_STATIC::HeyBale_1:
+    case TAG_RES_STATIC::HayBale_1:
         filePath = "Map/Exterior/HayBale/";
-        fileName = "HeyBale_1";
+        fileName = "HayBale_1";
         break;
 
-    case TAG_RES_STATIC::HeyBale_2:
+    case TAG_RES_STATIC::HayBale_2:
         filePath = "Map/Exterior/HayBale/";
-        fileName = "HeyBale_2";
+        fileName = "HayBale_2";
         break;
                 }
 
@@ -699,14 +699,14 @@ pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_STATIC tag)
 
                 //- HayBale
                 {
-                case TAG_RES_STATIC::HeyBale_1:
+                case TAG_RES_STATIC::HayBale_1:
                     filePath = "Map/Exterior/HayBale/";
-                    fileName = "HeyBale_1";
+                    fileName = "HayBale_1";
                     break;
 
-                case TAG_RES_STATIC::HeyBale_2:
+                case TAG_RES_STATIC::HayBale_2:
                     filePath = "Map/Exterior/HayBale/";
-                    fileName = "HeyBale_2";
+                    fileName = "HayBale_2";
                     break;
                 }
 

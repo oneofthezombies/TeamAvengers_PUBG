@@ -14,6 +14,8 @@ using Event       = UIButtonWithItem::Event;
 using MouseButton = UIButtonWithItem::MouseButton;
 
 const float Character::TotalInventory::DEFAULT_CAPACITY = 70.0f;
+const float Character::TotalInventory::FIRST_LINE = 233.0f;
+const float Character::TotalInventory::SECOND_LINE = 500.0f;
 
 Character::TotalInventory::TotalInventory()
     : m_pHand(nullptr)
@@ -33,6 +35,9 @@ Character::TotalInventory::TotalInventory()
     , pUIPicked(nullptr)
     , m_pWeapon1(nullptr)
     , m_pWeapon2(nullptr)
+    , m_pUIArmor(nullptr)
+    , m_pUIHead(nullptr)
+    , m_pUIBack(nullptr)
     , m_stateClicked(false)
     , m_handState(TAG_RIFLE::None)
 
@@ -46,6 +51,10 @@ Character::TotalInventory::~TotalInventory()
 
     for (auto v : m_mapInventory)
         for (auto i : v.second)
+            SAFE_DELETE(i);
+
+    for (auto kv : m_empties)
+        for (auto i : kv.second)
             SAFE_DELETE(i);
 
     SAFE_DELETE(m_pEquipArmor);
@@ -140,6 +149,7 @@ void Character::TotalInventory::Destroy()
 
 void Character::TotalInventory::Open()
 {
+    ShowCursor(true);
     isOpened = true;
     // move ui to in screen
 
@@ -148,6 +158,8 @@ void Character::TotalInventory::Open()
 
 void Character::TotalInventory::Close()
 {
+    ShowCursor(false);
+
     isOpened = false;
     // move ui to out screen
     pBorder->SetIsRender(isOpened);
@@ -338,7 +350,7 @@ void Character::TotalInventory::SetEquipUI()
     //헬멧
     left = 440;
     top = 93;
-    auto u = new UIButtonWithItem(
+    m_pUIHead = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
             static_cast<float>(top), 0.0f),
@@ -360,7 +372,7 @@ void Character::TotalInventory::SetEquipUI()
     //가방
     left = 440;
     top = 248;
-     u = new UIButtonWithItem(
+    m_pUIBack = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
             static_cast<float>(top), 0.0f),
@@ -382,7 +394,7 @@ void Character::TotalInventory::SetEquipUI()
      //아머
     left = 440;
     top = 293;
-     u = new UIButtonWithItem(
+    m_pUIArmor = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
             static_cast<float>(top), 0.0f),
@@ -404,7 +416,7 @@ void Character::TotalInventory::SetEquipUI()
      //벨트
     left = 440;
     top = 337;
-     u = new UIButtonWithItem(
+    auto u = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
             static_cast<float>(top), 0.0f),
@@ -721,9 +733,329 @@ void Character::TotalInventory::SetEquipUI()
      //u->SetIsActive(false);
 }
 
+void Character::TotalInventory::DropItem(Item** ppOriginItem)
+{
+    Item* originItem = *ppOriginItem;
+
+    // 용량을 줄인다
+    TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(originItem->GetTagResStatic());
+    m_capacity -= ItemInfo::GetCapacityExtension(originItem->GetTagResStatic());
+    if (category == TAG_ITEM_CATEGORY::Armor ||
+        category == TAG_ITEM_CATEGORY::Back ||
+        category == TAG_ITEM_CATEGORY::Head)
+        m_equipOnNum--;
+        
+    // 아이템을 필드로
+    originItem->SetIsInInventory(false);
+    originItem->SetIsRenderEffectMesh(true);
+    originItem->SetIsRenderSkinnedMesh(false);
+    originItem->GetTransform()->SetPosition(pCharacter->GetTransform()->GetPosition());
+    originItem->GetTransform()->SetRotation(Vector3::ZERO);
+    originItem->GetTransform()->Update();
+
+    CurrentScene()()->AddObject(originItem);
+    const std::size_t cellIndex = CurrentScene()()->GetCellIndex(originItem->GetTransform()->GetPosition());
+    CurrentScene()()->InsertObjIntoTotalCellSpace(originItem->GetTagObject(), cellIndex, originItem);
+
+    *ppOriginItem = nullptr;
+}
+
+int Character::TotalInventory::EquipItem(Item** ppOriginItem, Item* pNewItem)
+{
+    // 용량을 늘린다
+    m_capacity += ItemInfo::GetCapacityExtension(pNewItem->GetTagResStatic());
+    TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(pNewItem->GetTagResStatic());
+    if (category == TAG_ITEM_CATEGORY::Armor ||
+        category == TAG_ITEM_CATEGORY::Back ||
+        category == TAG_ITEM_CATEGORY::Head)
+        m_equipOnNum++;
+
+    // 아이템을 낀다
+    pNewItem->SetIsInInventory(true);
+    pNewItem->SetIsRenderEffectMesh(false);
+    pNewItem->SetIsRenderSkinnedMesh(true);
+
+    *ppOriginItem = pNewItem;
+
+    if (pNewItem->IsInDeathDropBox())
+    {
+        const int boxID = pNewItem->GetDeathDropBoxIndex();
+        pNewItem->DeleteThisInDeathDropBox();
+
+        return boxID;
+    }
+    else // in field
+    {
+        const std::size_t cellIndex = CurrentScene()()->GetCellIndex(pNewItem->GetTransform()->GetPosition());
+        CurrentScene()()->ItemIntoInventory(cellIndex, pNewItem);
+        CurrentScene()()->RemoveObject(pNewItem);
+
+        return -1;
+    }
+}
+
+void Character::TotalInventory::DropPrimary()
+{
+    if (!m_pWeaponPrimary) return;
+
+    const std::string originItemName = m_pWeaponPrimary->GetName();
+
+    ReleaseBullets(m_pWeaponPrimary);
+    DropItem(&m_pWeaponPrimary);
+    Communication()()->SendEventMoveItemPrimaryToField(pCharacter->GetIndex(), originItemName);
+
+    // ui 빼기
+    m_pWeapon1->pUIImage = nullptr;
+    m_pWeapon1->pItem = nullptr;
+    m_pWeapon1->SetIsActive(false);
+}
+
+void Character::TotalInventory::EquipPrimary(Item* pNewItem)
+{
+    const int boxID = EquipItem(&m_pWeaponPrimary, pNewItem);
+    if (boxID > -1) // in box
+    {
+        Communication()()->SendEventMoveItemBoxToPrimary(pCharacter->GetIndex(), boxID, pNewItem->GetName());
+    }
+    else // in field
+    {
+        Communication()()->SendEventMoveItemFieldToPrimary(pCharacter->GetIndex(), pNewItem->GetName());
+    }
+
+    // ui 끼우기
+    m_pWeapon1->pUIImage = m_pWeaponPrimary->GetUIImage2();
+    m_pWeapon1->pItem = m_pWeaponPrimary;
+    m_pWeapon1->SetIsActive(true);
+}
+
+void Character::TotalInventory::DropSecondary()
+{
+    if (!m_pWeaponSecondary) return;
+
+    const std::string originItemName = m_pWeaponSecondary->GetName();
+
+    ReleaseBullets(m_pWeaponSecondary);
+    DropItem(&m_pWeaponSecondary);
+    Communication()()->SendEventMoveItemSecondaryToField(pCharacter->GetIndex(), originItemName);
+
+    // ui 빼기
+    m_pWeapon2->pUIImage = nullptr;
+    m_pWeapon2->pItem = nullptr;
+    m_pWeapon2->SetIsActive(false);
+}
+
+void Character::TotalInventory::EquipSecondary(Item* pNewItem)
+{
+    const int boxID = EquipItem(&m_pWeaponSecondary, pNewItem);
+    if (boxID > -1) // in box
+    {
+        Communication()()->SendEventMoveItemBoxToSecondary(pCharacter->GetIndex(), boxID, pNewItem->GetName());
+    }
+    else // in field
+    {
+        Communication()()->SendEventMoveItemFieldToSecondary(pCharacter->GetIndex(), pNewItem->GetName());
+    }
+
+    // ui 끼우기
+    m_pWeapon2->pUIImage = m_pWeaponSecondary->GetUIImage2();
+    m_pWeapon2->pItem = m_pWeaponSecondary;
+    m_pWeapon2->SetIsActive(true);
+}
+
+void Character::TotalInventory::DropArmor()
+{
+    if (!m_pEquipArmor) return;
+
+    m_pEquipArmor->SetIsRenderUIImage(false);
+
+    const std::string originItemName = m_pEquipArmor->GetName();
+
+    DropItem(&m_pEquipArmor);
+    Communication()()->SendEventMoveItemArmorToField(pCharacter->GetIndex(), originItemName);
+
+    // ui 빼기
+    m_pUIArmor->pUIImage = nullptr;
+    m_pUIArmor->pItem = nullptr;
+    m_pUIArmor->SetIsActive(false);
+}
+
+void Character::TotalInventory::EquipArmor(Item* pNewItem)
+{
+    const int boxID = EquipItem(&m_pEquipArmor, pNewItem);
+    if (boxID > -1) // in box
+    {
+        Communication()()->SendEventMoveItemBoxToArmor(pCharacter->GetIndex(), boxID, pNewItem->GetName());
+    }
+    else // in field
+    {
+        Communication()()->SendEventMoveItemFieldToArmor(pCharacter->GetIndex(), pNewItem->GetName());
+    }
+
+    // ui 끼우기
+    m_pEquipArmor->SetIsRenderUIImage(true);
+    m_pUIArmor->pUIImage = m_pEquipArmor->GetUIImage();
+    m_pUIArmor->pItem = m_pEquipArmor;
+    m_pUIArmor->SetIsActive(true);
+}
+
+void Character::TotalInventory::DropHead()
+{
+    if (!m_pEquipHead) return;
+
+    m_pEquipHead->SetIsRenderUIImage(false);
+
+    const std::string originItemName = m_pEquipHead->GetName();
+
+    DropItem(&m_pEquipHead);
+    Communication()()->SendEventMoveItemHeadToField(pCharacter->GetIndex(), originItemName);
+
+    // ui 빼기
+    m_pUIHead->pUIImage = nullptr;
+    m_pUIHead->pItem = nullptr;
+    m_pUIHead->SetIsActive(false);
+}
+
+void Character::TotalInventory::EquipHead(Item* pNewItem)
+{
+    const int boxID = EquipItem(&m_pEquipHead, pNewItem);
+    if (boxID > -1) // in box
+    {
+        Communication()()->SendEventMoveItemBoxToHead(pCharacter->GetIndex(), boxID, pNewItem->GetName());
+    }
+    else // in field
+    {
+        Communication()()->SendEventMoveItemFieldToHead(pCharacter->GetIndex(), pNewItem->GetName());
+    }
+
+    // ui 끼우기
+    m_pEquipHead->SetIsRenderUIImage(true);
+    m_pUIHead->pUIImage = m_pEquipHead->GetUIImage();
+    m_pUIHead->pItem = m_pEquipHead;
+    m_pUIHead->SetIsActive(true);
+}
+
+void Character::TotalInventory::DropBack()
+{
+    if (!m_pEquipBack) return;
+
+    m_pEquipBack->SetIsRenderUIImage(false);
+
+    const std::string originItemName = m_pEquipBack->GetName();
+
+    DropItem(&m_pEquipBack);
+    Communication()()->SendEventMoveItemBackToField(pCharacter->GetIndex(), originItemName);
+
+    // ui 빼기
+    m_pUIBack->pUIImage = nullptr;
+    m_pUIBack->pItem = nullptr;
+    m_pUIBack->SetIsActive(false);
+}
+
+void Character::TotalInventory::EquipBack(Item* pNewItem)
+{
+    const int boxID = EquipItem(&m_pEquipBack, pNewItem);
+    if (boxID > -1) // in box
+    {
+        Communication()()->SendEventMoveItemBoxToBack(pCharacter->GetIndex(), boxID, pNewItem->GetName());
+    }
+    else // in field
+    {
+        Communication()()->SendEventMoveItemFieldToBack(pCharacter->GetIndex(), pNewItem->GetName());
+    }
+
+    // ui 끼우기
+    m_pEquipBack->SetIsRenderUIImage(true);
+    m_pUIBack->pUIImage = m_pEquipBack->GetUIImage();
+    m_pUIBack->pItem = m_pEquipBack;
+    m_pUIBack->SetIsActive(true);
+}
+
+void Character::TotalInventory::ReleaseBullets(Item* pItem)
+{
+    if (!pItem) return;
+
+    Item* pAmmo = nullptr;
+    int numBullet = 0;
+    const TAG_RES_STATIC tag = pItem->GetTagResStatic();
+    const TAG_ITEM_CATEGORY cat = ItemInfo::GetItemCategory(tag);
+    if (cat == TAG_ITEM_CATEGORY::Rifle)
+    {
+        numBullet = pItem->GetNumBullet();
+        if (numBullet == 0) return;
+    }
+    else
+    {
+        // 총이 아님
+        return;
+    }
+
+    const TAG_RES_STATIC tagBullet = ItemInfo::GetAmmoType(tag);
+    const float bulletCapacity = ItemInfo::GetCapacity(tagBullet);
+    const float subtractingCapacity = bulletCapacity * numBullet;
+    const float nextCapacity = m_capacity - subtractingCapacity;
+    int numOverBullets = 0;
+    if (nextCapacity < 0.0f)
+    {
+        const float overCapacity = -nextCapacity;
+        numOverBullets = static_cast<int>(overCapacity / bulletCapacity);
+
+        assert(!m_empties[tagBullet].empty() && "Character::TotalInventory::ReleaseBullets(), empties is empty, need more empties");
+
+        pAmmo = m_empties[tagBullet].back();
+        m_empties[tagBullet].pop_back();
+
+        pAmmo->SetCount(numOverBullets);
+
+        pAmmo->SetIsRenderEffectMesh(true);
+        pAmmo->SetPosition(pCharacter->GetTransform()->GetPosition());
+        pAmmo->GetTransform()->SetRotation(Vector3::ZERO);
+        pAmmo->GetTransform()->Update();
+
+        CurrentScene()()->AddObject(pAmmo);
+        const std::size_t cellIndex = CurrentScene()()->GetCellIndex(pAmmo->GetTransform()->GetPosition());
+        CurrentScene()()->InsertObjIntoTotalCellSpace(pAmmo->GetTagObject(), cellIndex, pAmmo);
+        Communication()()->SendEventMoveItemBulletsToField(pCharacter->GetIndex(), pAmmo->GetName(), numOverBullets);
+    }
+
+    numBullet -= numOverBullets;
+
+    if (!m_mapInventory[tagBullet].empty()) // 인벤토리에 총알 객체가 있을 때
+    {
+        pAmmo = m_mapInventory[tagBullet].back();
+    }
+    else // 인벤토리에 총알 객체가 없을 때
+    {
+        if (!m_empties[tagBullet].empty())
+        {
+            pAmmo = m_empties[tagBullet].back();
+            m_empties[tagBullet].pop_back();
+
+            m_mapInventory[tagBullet].emplace_back(pAmmo);
+            pAmmo->SetIsInInventory(true);
+        }
+        else
+        {
+            assert(
+                false && 
+                "Character::TotalInventory::ReleaseBullets(), empties is empty");
+        }
+    }
+
+    pItem->SetNumBullet(0);
+
+    const int numCount = pAmmo->GetCount();
+    pAmmo->SetCount(numCount + numBullet);
+
+    m_capacity -= ItemInfo::GetCapacity(tagBullet) * numBullet;
+}
+
 bool Character::PutItemInTotalInventory(Item* item)
 {
-    assert(item && "Character::PutItemInTotalInventory(), item is null.");
+    assert(
+        item && 
+        "Character::PutItemInTotalInventory(), item is null.");
+
+    TotalInventory& inven = m_totalInventory;
 
     TAG_RES_STATIC    tag      = item->GetTagResStatic();
     TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(tag);
@@ -731,63 +1063,70 @@ bool Character::PutItemInTotalInventory(Item* item)
     switch (category)
     {
     case TAG_ITEM_CATEGORY::Ammo:
-        if (createOrMergeItem(&(m_totalInventory.m_mapInventory), item))
-            return true;
-        else 
-            return false;
+        {
+            if (createOrMergeItem(&inven.m_mapInventory, item))
+            {
+            }
+            else
+            {
+                return false;
+            }
+        }
         break;
 
     case TAG_ITEM_CATEGORY::Attach:
     case TAG_ITEM_CATEGORY::Consumable:
-    {
-        if (tag == TAG_RES_STATIC::Bandage ||
-            tag == TAG_RES_STATIC::FirstAidKit)
         {
-            if (createOrMergeItem(&(m_totalInventory.m_mapInventory), item))
-                return true;
-            else
-                return false;
-        }
-        else
-        {
-            if (m_totalInventory.m_capacity - ItemInfo::GetCapacity(tag) >= 0)
+            if (tag == TAG_RES_STATIC::Bandage ||
+                tag == TAG_RES_STATIC::FirstAidKit)
             {
-                (m_totalInventory.m_mapInventory)[tag].push_back(item);
-
-                CurrentScene()()->RemoveObject(item);
-               
-                // OOTZ_FLAG : 네트워크 필드 -> 메드킷, 부착물
-                Communication()()->SendEventDestroyItem(item->GetName());
-                
-                m_totalInventory.m_capacity -= ItemInfo::GetCapacity(tag);
+                if (createOrMergeItem(&inven.m_mapInventory, item))
+                {
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
+            else // attach, medkit
             {
-                m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
-                return false;
+                const float capacity = ItemInfo::GetCapacity(tag);
+
+                if (inven.m_capacity - capacity >= 0.0f)
+                {
+                    inven.m_mapInventory[tag].push_back(item);
+                    inven.m_capacity -= capacity;
+
+                    if (item->IsInDeathDropBox())
+                    {
+                        const int boxID = item->GetDeathDropBoxIndex();
+                        item->DeleteThisInDeathDropBox();
+                        Communication()()->SendEventMoveItemBoxToInventory(m_index, boxID, item->GetName());
+                    }
+                    else
+                    {
+                        const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                        CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                        CurrentScene()()->RemoveObject(item);
+                        Communication()()->SendEventMoveItemFieldToInventory(m_index, item->GetName());
+                    }
+                }
+                else
+                {
+                    m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
+
+                    return false;
+                }
             }
         }
-
-        return true;
-    }
         break;
 
     case TAG_ITEM_CATEGORY::Armor:
         {
             //TODO: 피해감소량 적용
 
-            std::string originItemName("");
-            if (m_totalInventory.m_pEquipArmor)
-                originItemName = m_totalInventory.m_pEquipArmor->GetName();
-
-            const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipArmor, item);
-
-            // OOTZ_FLAG : 네트워크 아머 -> 필드
-            if (dropped)
-                Communication()()->SendEventMoveItemArmorToField(m_index, originItemName);
-
-            // OOTZ_FLAG : 네트워크 필드 -> 아머
-            Communication()()->SendEventMoveItemFieldToArmor(m_index, item->GetName());
+            inven.DropArmor();
+            inven.EquipArmor(item);
 
             m_isEatEquip = true;
         }
@@ -795,18 +1134,8 @@ bool Character::PutItemInTotalInventory(Item* item)
 
     case TAG_ITEM_CATEGORY::Back:
         {
-            std::string originItemName("");
-            if (m_totalInventory.m_pEquipBack)
-                originItemName = m_totalInventory.m_pEquipBack->GetName();
-
-            const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipBack, item);
-
-            // OOTZ_FLAG : 네트워크 백 -> 필드
-            if (dropped)
-                Communication()()->SendEventMoveItemBackToField(m_index, originItemName);
-
-            // OOTZ_FLAG : 네트워크 필드 -> 백
-            Communication()()->SendEventMoveItemFieldToBack(m_index, item->GetName());
+            inven.DropBack();
+            inven.EquipBack(item);
 
             m_isEatEquip = true;
         }
@@ -816,18 +1145,8 @@ bool Character::PutItemInTotalInventory(Item* item)
         {
             //TODO: 피해감소량 적용
 
-            std::string originItemName("");
-            if (m_totalInventory.m_pEquipHead)
-                originItemName = m_totalInventory.m_pEquipHead->GetName();
-
-            const bool dropped = checkOriginItem(&m_totalInventory.m_pEquipHead, item);
-
-            // OOTZ_FLAG : 네트워크 헤드 -> 필드
-            if (dropped)
-                Communication()()->SendEventMoveItemHeadToField(m_index, originItemName);
-
-            // OOTZ_FLAG : 네트워크 필드 -> 헤드
-            Communication()()->SendEventMoveItemFieldToHead(m_index, item->GetName());
+            inven.DropHead();
+            inven.EquipHead(item);
 
             m_isEatEquip = true;
         }
@@ -836,36 +1155,109 @@ bool Character::PutItemInTotalInventory(Item* item)
     case TAG_ITEM_CATEGORY::Rifle:
         //TODO: 무기창의 어느부분에 넣느냐에 따라서 달라짐
         {
-            if(!m_totalInventory.m_pWeaponPrimary &&
-                !(m_totalInventory.m_handState==TAG_RIFLE::Primary))
+            if (inven.m_pHand) // 손에 총을 들고 있을 때
             {
-                std::string originItemName("");
-                if (m_totalInventory.m_pWeaponPrimary)
-                    originItemName = m_totalInventory.m_pWeaponPrimary->GetName();
+                if (inven.m_handState == TAG_RIFLE::Primary) // 그 총이 프라이머리에서 꺼낸 것일 때
+                {
+                    if (inven.m_pWeaponSecondary) // 세컨더리에 총이 있다면 
+                    {
+                        MoveItemHandToPrimary();
+                        Communication()()->SendEventMoveItemHandToPrimary(m_index);
 
-                const bool dropped = checkOriginItem((Item**)&m_totalInventory.m_pWeaponPrimary, item);
+                        inven.DropPrimary();
+                        inven.pTempSaveWeaponForX = nullptr;
 
-                // OOTZ_FLAG : 네트워크 프라이머리 -> 필드
-                if (dropped)
-                    Communication()()->SendEventMoveItemPrimaryToField(m_index, originItemName);
+                        inven.EquipPrimary(item);
+                        inven.pTempSaveWeaponForX = item;
 
-                // OOTZ_FLAG : 네트워크 필드 -> 프라이머리
-                Communication()()->SendEventMoveItemFieldToPrimary(m_index, item->GetName());
+                        MoveItemPrimaryToHand();
+                        Communication()()->SendEventMoveItemPrimaryToHand(m_index);
+                    }
+                    else
+                    {
+                        inven.EquipSecondary(item);
+                    }
+                }
+                else if (inven.m_handState == TAG_RIFLE::Secondary) // 그 총이 세컨더리에서 꺼닌 것일 때
+                {
+                    if (inven.m_pWeaponPrimary) // 프라이머리에 총이 있다면
+                    {
+                        MoveItemHandToSecondary();
+                        Communication()()->SendEventMoveItemHandToSecondary(m_index);
+
+                        inven.DropSecondary();
+                        inven.pTempSaveWeaponForX = nullptr;
+
+                        inven.EquipSecondary(item);
+                        inven.pTempSaveWeaponForX = item;
+
+                        MoveItemSecondaryToHand();
+                        Communication()()->SendEventMoveItemSecondaryToHand(m_index);
+                    }
+                    else
+                    {
+                        inven.EquipPrimary(item);
+                    }
+                }
+                else // None
+                {
+                    assert(
+                        false && 
+                        "Character::PutItemInTotalInventory(), hand state == None");
+                }
             }
-            else
+            else // 총을 들고 있지 않을 때
             {
-                std::string originItemName("");
-                if (m_totalInventory.m_pWeaponSecondary)
-                    originItemName = m_totalInventory.m_pWeaponSecondary->GetName();
+                if (inven.m_pWeaponPrimary && 
+                    inven.m_pWeaponSecondary) // 프라이머리, 세컨더리 둘 다 총이 있을 때
+                {
+                    if (inven.pTempSaveWeaponForX) // 총을 들었던 적이 있을 때
+                    {
+                        const std::string saveName = inven.pTempSaveWeaponForX->GetName();
+                        const std::string primaryName = inven.m_pWeaponPrimary->GetName();
+                        const std::string secondaryName = inven.m_pWeaponSecondary->GetName();
+                        
+                        if (saveName == primaryName) // 들었던 적이 있는 총이 프라이머리 총일 때
+                        {
+                            inven.DropPrimary();
+                            inven.pTempSaveWeaponForX = nullptr;
 
-                const bool dropped = checkOriginItem((Item**)&m_totalInventory.m_pWeaponSecondary, item);
+                            inven.EquipPrimary(item);
+                            inven.pTempSaveWeaponForX = item;
+                        }
+                        else if (saveName == secondaryName) // 들었던 적이 있는 총이 세컨더리 총일 때
+                        {
+                            inven.DropSecondary();
+                            inven.pTempSaveWeaponForX = nullptr;
 
-                // OOTZ_FLAG : 네트워크 세컨더리 -> 필드
-                if (dropped)
-                    Communication()()->SendEventMoveItemSecondaryToField(m_index, originItemName);
-
-                // OOTZ_FLAG : 네트워크 필드 -> 세컨더리
-                Communication()()->SendEventMoveItemFieldToSecondary(m_index, item->GetName());
+                            inven.EquipSecondary(item);
+                            inven.pTempSaveWeaponForX = item;
+                        }
+                        else // 들었던 적이 있는 총이 프라이머리, 세컨더리 총이 아닐 때
+                        {
+                            assert(
+                                false && 
+                                "Character::PutItemInTotalInventory(), saveName != primaryName, secondaryName");
+                        }
+                    }
+                    else // 총을 들었던 적이 없을 때 /* 기존 배그에 없는 추가한 예외처리 */
+                    {
+                        inven.DropPrimary();
+                        inven.EquipPrimary(item);
+                    }
+                }
+                else if (inven.m_pWeaponPrimary) // 프라이머리에만 총이 있을 때
+                {
+                    inven.EquipSecondary(item);
+                }
+                else if (inven.m_pWeaponSecondary) // 세컨더리에만 총이 있을 때
+                {
+                    inven.EquipPrimary(item);
+                }
+                else // 프라이머리, 세컨더리 둘 다 총이 없을 때
+                {
+                    inven.EquipPrimary(item);
+                }
             }
         }
         break;
@@ -876,52 +1268,85 @@ bool Character::PutItemInTotalInventory(Item* item)
     }
 
     return true;
+
     //For Debug
     ShowTotalInventory();
 }
 
-bool Character::createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item)
+bool Character::createOrMergeItem(std::map<TAG_RES_STATIC, std::vector<Item*>>* map, Item* item)
 {
     /*
         - 자신의 용량만큼 캐릭터의 소지용량에서 제외된다
         - 소모품(Bandage, FirstAidKit), 탄약
     */
-    assert(map && item && "Character::CreateOrMergeItem(), argument is null.");
+    assert(
+        map && 
+        item && 
+        "Character::CreateOrMergeItem(), argument is null.");
 
     TAG_RES_STATIC tag = item->GetTagResStatic();
-    auto it = map->find(tag);
     int count = item->GetCount();
+    const float capacity = ItemInfo::GetCapacity(tag);
 
-    if (m_totalInventory.m_capacity - count * ItemInfo::GetCapacity(tag) >= 0)
+    if (m_totalInventory.m_capacity - count * capacity >= 0.0f)
     {
-        if (it == map->end())
+        if ((*map)[tag].empty())
         {
-            //아이템이 없는 경우는 새로 생성한다
+            // 아이템이 없는 경우는 새로 생성한다
             (*map)[tag].push_back(item);
             item->SetCount(count);
-            CurrentScene()()->RemoveObject(item);
-            
-            // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
-            Communication()()->SendEventMoveItemFieldToInventory(m_index, item->GetName());
+            item->SetIsInInventory(true);
+
+            if (item->IsInDeathDropBox())
+            {
+                const int boxID = item->GetDeathDropBoxIndex();
+                item->DeleteThisInDeathDropBox();
+                Communication()()->SendEventMoveItemBoxToInventory(m_index, boxID, item->GetName());
+            }
+            else // in field
+            {
+                const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                CurrentScene()()->RemoveObject(item);
+                Communication()()->SendEventMoveItemFieldToInventory(m_index, item->GetName());
+            }
         }
         else
         {
-            //이미 인벤토리에 있는 경우, 기존 개수와 합친다
-            auto origin_item = it->second.back();
+            // 이미 인벤토리에 있는 경우, 기존 개수와 합친다
+            auto origin_item = (*map)[tag].back();
             origin_item->SetCount(origin_item->GetCount() + count);
-            CurrentScene()()->Destroy(item);
+            item->SetCount(0);
+            m_totalInventory.m_empties[tag].emplace_back(item);
 
-            // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
-            Communication()()->SendEventDestroyItem(item->GetName());
+            if (item->IsInDeathDropBox())
+            {
+                const int boxID = item->GetDeathDropBoxIndex();
+                item->DeleteThisInDeathDropBox();
+                Communication()()->SendEventMoveItemBoxToInventory(m_index, boxID, item->GetName());
+            }
+            else // in field
+            {
+                const std::size_t cellIndex = CurrentScene()()->GetCellIndex(item->GetTransform()->GetPosition());
+                CurrentScene()()->ItemIntoInventory(cellIndex, item);
+                CurrentScene()()->RemoveObject(item);
+
+                // OOTZ_FLAG : 네트워크 필드 -> 밴디지, 퍼스트에이드키트, 탄약
+                Communication()()->SendEventMoveItemFieldToInventory(m_index, item->GetName());
+            }
         }
-        m_totalInventory.m_capacity -= count * ItemInfo::GetCapacity(tag);
-        return true;
+        m_totalInventory.m_capacity -= count * capacity;
     }
     else
     {
-        m_inGameUI.pInfoText->SetText("공간이 충분하지 않습니다!", m_inGameUI.pInfoTextShadow);
+        m_inGameUI.pInfoText->SetText(
+            "공간이 충분하지 않습니다!", 
+            m_inGameUI.pInfoTextShadow);
+
         return false;
     }
+
+    return true;
 }
 
 bool Character::checkOriginItem(Item** originItem, Item* newItem)
@@ -931,22 +1356,24 @@ bool Character::checkOriginItem(Item** originItem, Item* newItem)
         - 소지용량에 영향을 끼치지 않으면서, 템에따라 용량을 늘린다(조끼, 배낭)
     */
     assert(newItem && "Character::checkOriginItem(), argument is null.");
-    if (*originItem)
+
+    if (*originItem) // 기존에 아이템이 있으면
     {
         TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory((*originItem)->GetTagResStatic());
 
-        (*originItem)->SetIsRenderEffectMesh(true);
         //TODO: 바닥에 떨군다
+        Item* pItem = *originItem;
+        pItem->SetIsRenderEffectMesh(true);
+        pItem->SetIsRenderSkinnedMesh(false);
+        pItem->GetTransform()->SetRotation(Vector3::ZERO);
+        pItem->GetTransform()->Update();
+
         //용량을 줄인다
         m_totalInventory.m_capacity -= ItemInfo::GetCapacityExtension(newItem->GetTagResStatic());
         if (category == TAG_ITEM_CATEGORY::Armor ||
             category == TAG_ITEM_CATEGORY::Back  ||
             category == TAG_ITEM_CATEGORY::Head)
             m_totalInventory.m_equipOnNum--;
-
-        // 재설계
-        // TODO : 승훈
-                
 
         return true;
     }
@@ -957,8 +1384,6 @@ bool Character::checkOriginItem(Item** originItem, Item* newItem)
         //용량을 늘린다
         m_totalInventory.m_capacity += ItemInfo::GetCapacityExtension(newItem->GetTagResStatic());
 
-        CurrentScene()()->RemoveObject(newItem);
-
         TAG_ITEM_CATEGORY category = ItemInfo::GetItemCategory(newItem->GetTagResStatic());
         if (category == TAG_ITEM_CATEGORY::Armor ||
             category == TAG_ITEM_CATEGORY::Back ||
@@ -966,6 +1391,7 @@ bool Character::checkOriginItem(Item** originItem, Item* newItem)
             m_totalInventory.m_equipOnNum++;
 
         // eqiup
+        newItem->SetIsInInventory(true);
         newItem->SetIsRenderEffectMesh(false);
         newItem->SetIsRenderSkinnedMesh(true);
 
@@ -1202,347 +1628,3 @@ void Character::ShowTotalInventory()
     }
 }
 
-void Character::onMouse(
-    const Event event, 
-    const MouseButton button, 
-    UIButtonWithItem* pUIButtonWithItem)
-{
-    assert(pUIButtonWithItem && "Character::onMouse() button is null.");
-
-    auto& ti = m_totalInventory;
-    const auto tag = pUIButtonWithItem->m_tagUIPosition;
-
-    if (button == MouseButton::LEFT)
-    {
-        if (event == Event::DOWN && !ti.m_stateClicked)
-        {
-            if (UIPosition::IsDropped(tag)|| UIPosition::IsInven(tag))
-            {
-                // 좌표
-                POINT mouse;
-                GetCursorPos(&mouse);
-                ScreenToClient(g_hWnd, &mouse);
-
-                ti.pUIPicked->SetPosition(
-                    D3DXVECTOR3(
-                        static_cast<float>(mouse.x - 21),
-                        static_cast<float>(mouse.y - 21), 0.0f));
-                ti.pUIPicked->pItem = pUIButtonWithItem->pItem;
-
-                UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage();
-                UIImage* pPickedImage = static_cast<UIImage*>(ti.pUIPicked->GetChild(0));
-
-                pPickedImage->SetTexture(pItemImage->GetTexture());
-                pPickedImage->SetSize(pItemImage->GetSize());
-
-                if (ItemInfo::GetItemCategory(ti.pUIPicked->pItem->GetTagResStatic()) == TAG_ITEM_CATEGORY::Rifle)
-                {
-                    ti.m_pWeapon1->SetIsActive(true);
-                    ti.m_pWeapon2->SetIsActive(true);
-                }
-            }
-            //if(UIPosition::IsInven(tag))
-
-            if (tag == TAG_UI_POSITION::Weapon1)
-            {
-                POINT mouse;
-                GetCursorPos(&mouse);
-                ScreenToClient(g_hWnd, &mouse);
-
-                ti.pUIPicked->SetPosition(
-                    D3DXVECTOR3(
-                        static_cast<float>(mouse.x - 21),
-                        static_cast<float>(mouse.y - 21), 0.0f));
-                ti.pUIPicked->pItem = pUIButtonWithItem->pItem;
-
-                UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage();
-                UIImage* pPickedImage = static_cast<UIImage*>(ti.pUIPicked->GetChild(0));
-
-                pPickedImage->SetTexture(pItemImage->GetTexture());
-                pPickedImage->SetSize(pItemImage->GetSize());
-            }
-            else if (tag == TAG_UI_POSITION::Weapon2)
-            {
-                POINT mouse;
-                GetCursorPos(&mouse);
-                ScreenToClient(g_hWnd, &mouse);
-
-                ti.pUIPicked->SetPosition(
-                    D3DXVECTOR3(
-                        static_cast<float>(mouse.x - 21),
-                        static_cast<float>(mouse.y - 21), 0.0f));
-                ti.pUIPicked->pItem = pUIButtonWithItem->pItem;
-
-                UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage();
-                UIImage* pPickedImage = static_cast<UIImage*>(ti.pUIPicked->GetChild(0));
-
-                pPickedImage->SetTexture(pItemImage->GetTexture());
-                pPickedImage->SetSize(pItemImage->GetSize());
-            }
-            ti.m_stateClicked = true;
-
-        }
-
-        if (event == Event::DRAG)
-        {
-            if (tag == TAG_UI_POSITION::picked)
-            {
-                POINT mouse;
-                GetCursorPos(&mouse);
-                ScreenToClient(g_hWnd, &mouse);
-
-                ti.pUIPicked->SetPosition(
-                    D3DXVECTOR3(
-                        static_cast<float>(mouse.x - 21),
-                        static_cast<float>(mouse.y - 21), 0.0f));
-            }
-        }
-
-        if (event == Event::UP)
-        {
-            if (tag == TAG_UI_POSITION::picked 
-                && !pUIButtonWithItem->pItem->GetState())
-            {
-                const D3DXVECTOR3& pos = pUIButtonWithItem->GetPosition();
-                const auto cat =
-                    ItemInfo::GetItemCategory(
-                        pUIButtonWithItem->pItem->GetTagResStatic());
-
-                // 드롭드 인벤 구분선 위치
-                const float firstLine = 233.0f;
-                // TODO : 인벤 장착 구분선 위치 조정해야 함
-                const float secondLine = 500.0f;
-                if (pos.x < firstLine)
-                {
-                }
-                else if (pos.x < secondLine)
-                {
-                    switch (cat)
-                    {
-                        case TAG_ITEM_CATEGORY::Ammo:
-                        {
-                            Item* pItem = pUIButtonWithItem->pItem;
-                            if (PutItemInTotalInventory(pItem))
-                            {
-                                pItem->SetState(true);
-                                CurrentScene()()->ItemIntoInventory(
-                                    CurrentScene()()->GetCellIndex(
-                                        pItem->GetTransform()->GetPosition()),
-                                    pItem);
-                            }
-                        }
-                        break;
-
-                        case TAG_ITEM_CATEGORY::Rifle:
-                        {
-                            Item* pItem = pUIButtonWithItem->pItem;
-                            if (PutItemInTotalInventory(pItem))
-                            {
-                                pItem->SetState(true);
-                                CurrentScene()()->ItemIntoInventory(
-                                    CurrentScene()()->GetCellIndex(
-                                        pItem->GetTransform()->GetPosition()),
-                                    pItem);
-                                /*UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage2();*/
-
-                                //웨폰 버튼.
-                                if (ti.m_pWeaponPrimary)
-                                {
-                                    ti.m_pWeapon1->pUIImage = ti.m_pWeaponPrimary->GetUIImage2();
-                                    ti.m_pWeapon1->pItem = ti.m_pWeaponPrimary;
-                                }
-
-                                if (ti.m_pWeaponSecondary)
-                                {
-                                    ti.m_pWeapon2->pUIImage = ti.m_pWeaponSecondary->GetUIImage2();
-                                    ti.m_pWeapon2->pItem = ti.m_pWeaponSecondary;
-                                }
-                            }
-                            
-                        }
-                        break;
-                    }
-                }
-                else    //3번째 장비 착용창.
-                {
-                    switch (cat)
-                    {
-                    case TAG_ITEM_CATEGORY::Ammo:
-                    {
-                        //Item* pItem = pUIButtonWithItem->pItem;
-                        //PutItemInTotalInventory(pItem);
-                        //pItem->SetState(true);
-                        //CurrentScene()()->ItemIntoInventory(
-                        //    CurrentScene()()->GetCellIndex(
-                        //        pItem->GetTransform()->GetPosition()),
-                        //    pItem);
-                    }
-                    break;
-                    /*case TAG_ITEM_CATEGORY::Rifle:
-                    {
-                        Item* pItem = pUIButtonWithItem->pItem;
-                        PutItemInTotalInventory(pItem);
-                        pItem->SetState(true);
-                        CurrentScene()()->ItemIntoInventory(
-                            CurrentScene()()->GetCellIndex(
-                                pItem->GetTransform()->GetPosition()),
-                            pItem);
-                        UIImage* pItemImage = pUIButtonWithItem->pItem->GetUIImage2();
-                        ti.m_pWeapon1->pUIImage = pItemImage;
-                        ti.m_pWeapon1->pItem = pItem;
-
-                    }*/
-                    break;
-                    }
-                }
-                const float max = std::numeric_limits<float>::max();
-                pUIButtonWithItem->SetPosition(Vector3::ONE * max);
-            }
-            /////////////////////인벤토리 안에서
-            else if (tag == TAG_UI_POSITION::picked
-                && pUIButtonWithItem->pItem->GetState())
-            {
-                const D3DXVECTOR3& pos = pUIButtonWithItem->GetPosition();
-                const auto cat =
-                    ItemInfo::GetItemCategory(
-                        pUIButtonWithItem->pItem->GetTagResStatic());
-
-                // 드롭드 인벤 구분선 위치
-                const float firstLine = 233.0f;
-                // TODO : 인벤 장착 구분선 위치 조정해야 함
-                const float secondLine = 500.0f;
-                if (pos.x < firstLine)
-                {
-                    Item* pItem = pUIButtonWithItem->pItem;
-                    
-                    pItem->SetState(false);
-                    D3DXVECTOR3 p = m_totalInventory.pCharacter->GetTransform()->GetPosition();
-                    CurrentScene()()->AddObject(pItem);
-                    CurrentScene()()->InsertObjIntoTotalCellSpace(
-                        TAG_OBJECT::Item, 
-                        CurrentScene()()->GetCellIndex(p), 
-                        pItem);
-
-                    pItem->SetPosition(D3DXVECTOR3(p.x,p.y+20,p.z));
-
-                    TAG_RES_STATIC tag = pItem->GetTagResStatic();
-                    std::vector<Item*>& items = ti.m_mapInventory[tag];
-                    for (auto it = items.begin(); it != items.end(); ++it)
-                    {
-                        if (*it == pItem)
-                        {
-                            items.erase(it);
-                            break;
-                        }
-                    }
-
-                    pItem->GetTransform()->Update();
-
-                    switch (cat)
-                    {
-                    case TAG_ITEM_CATEGORY::Rifle:
-                        {
-                            //if()
-                            //바닥에 떨구면 Effect
-                            pItem->SetIsRenderSkinnedMesh(false);
-                            pItem->SetIsRenderEffectMesh(true);
-                            pItem->GetTransform()->SetRotation(Vector3::ZERO);
-                            pItem->GetTransform()->Update();
-                            
-                            if (pItem == ti.m_pWeapon1->pItem)
-                            {
-                                ti.m_pWeapon1->pUIImage = nullptr;
-                                ti.m_pWeapon1->pItem = nullptr;
-                                ti.m_pWeaponPrimary = nullptr;
-                                if (ti.m_handState == TAG_RIFLE::Primary)
-                                {
-                                    ti.m_handState = TAG_RIFLE::None;
-                                    ti.pTempSaveWeaponForX = nullptr;
-                                }
-
-                                // OOTZ_FLAG : 네트워크 프라이머리 -> 필드
-                            }
-                            else if(pItem == ti.m_pWeapon2->pItem)
-                            {
-                                ti.m_pWeapon2->pUIImage = nullptr;
-                                ti.m_pWeapon2->pItem = nullptr;
-                                ti.m_pWeaponSecondary = nullptr;
-                                if (ti.m_handState == TAG_RIFLE::Secondary)
-                                {
-                                    ti.m_handState = TAG_RIFLE::None;
-                                    ti.pTempSaveWeaponForX = nullptr;
-                                }
-
-                                // OOTZ_FLAG : 네트워크 세컨더리 -> 필드
-                            }
-
-                            //손에 장착 되어있는 아이템이 클릭한 아이템이랑 같다면 
-                            if (pItem == ti.m_pHand)
-                            {
-                                ti.m_pHand = nullptr;
-                                ti.m_handState = TAG_RIFLE::None;
-                                ti.pTempSaveWeaponForX = nullptr;
-                                m_attacking = Attacking::Unarmed;
-
-                                //캐릭터 애니메이션
-                                {
-
-                                    TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
-                                    if (m_stance == Stance::Stand)
-                                        tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1;
-                                    else if (m_stance == Stance::Crouch)
-                                        tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Idling_1;
-                                    else if (m_stance == Stance::Prone)
-                                        tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Prone_Idling_1;
-                                    assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && " Character::onMouse(), COUNT");
-
-                                    setAnimation(
-                                        CharacterAnimation::BodyPart::BOTH,
-                                        tagAnim,
-                                        true);
-                                }
-
-                                // OOTZ_FLAG : 네트워크 핸드 -> 필드
-                            }
-
-
-                            
-                        }
-                        break;
-
-                    default:
-                        break;
-                    }
-                    //pItem->
-                }
-                else if (pos.x < secondLine)
-                {
-                }
-                else
-                {
-                    switch (cat)
-                    {
-                    case TAG_ITEM_CATEGORY::Ammo:
-                    {
-
-                    }
-                    break;
-                    }
-                }
-                const float max = std::numeric_limits<float>::max();
-                pUIButtonWithItem->SetPosition(Vector3::ONE * max);
-            }
-            if (ti.m_pWeaponPrimary == nullptr && !(ti.m_handState == TAG_RIFLE::Primary))
-            {
-                ti.m_pWeapon1->SetIsActive(false);
-            }
-            if (ti.m_pWeaponSecondary == nullptr && !(ti.m_handState==TAG_RIFLE::Secondary)
-                /*&& ti.m_pHand == nullptr*/)
-            {
-                ti.m_pWeapon2->SetIsActive(false);
-            }
-            ti.m_stateClicked = false;
-        }
-    }
-   
-}

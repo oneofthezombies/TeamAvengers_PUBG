@@ -80,6 +80,8 @@ public:
     {
         static const float DEFAULT_CAPACITY;
         static const int NUM_UI_DROPPED = 12;
+        static const float FIRST_LINE;
+        static const float SECOND_LINE;
 
         Character* pCharacter;
 
@@ -90,12 +92,16 @@ public:
         UIButtonWithItem* pUIPicked;
         UIButtonWithItem* m_pWeapon1;
         UIButtonWithItem* m_pWeapon2;
+        UIButtonWithItem* m_pUIArmor;
+        UIButtonWithItem* m_pUIHead;
+        UIButtonWithItem* m_pUIBack;
 
         Item* m_pHand; //손에 든 무기
         bool  m_isOnBodyAnimationEnd; //해제 애니메이션이 끝났는지
 
 
-        map<TAG_RES_STATIC, vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
+        std::map<TAG_RES_STATIC, std::vector<Item*>> m_mapInventory; //탄약, 소모품, 총기부착물용
+        std::map<TAG_RES_STATIC, std::vector<Item*>> m_empties; // 탄약 개수가 0개인 총알 아이템을 넣는 곳
 
         //헬멧, 가방, 방탄조끼용
         Item* m_pEquipArmor;
@@ -134,6 +140,21 @@ public:
         bool IsOpened();
         void SetEquipUI();
 
+        void DropItem(Item** ppOriginItem);
+        int EquipItem(Item** ppOriginItem, Item* pNewItem);
+        void DropPrimary();
+        void EquipPrimary(Item* pNewItem);
+        void DropSecondary();
+        void EquipSecondary(Item* pNewItem);
+        void DropArmor();
+        void EquipArmor(Item* pNewItem);
+        void DropHead();
+        void EquipHead(Item* pNewItem);
+        void DropBack();
+        void EquipBack(Item* pNewItem);
+
+        void ReleaseBullets(Item* pItem);
+
          TotalInventory();
         ~TotalInventory();
     };
@@ -159,6 +180,21 @@ public:
 
         static const float HP_WIDTH;
         static const float HP_HEIGHT;
+
+        static const float AIM_BASE_X;  //640.0f
+        static const float AIM_BASE_Y;  //360.0f
+
+        static const float AIM_LEFT_X;  //640.0f - 11.9f - 7.0f
+        static const float AIM_LEFT_Y;
+        
+        static const float AIM_RIGHT_X; //640.0f + 11.9f
+        static const float AIM_RIGHT_Y;
+        
+        static const float AIM_UP_X;
+        static const float AIM_UP_Y;    //360.0f - 11.9f - 7.0f
+        
+        static const float AIM_DOWN_X;
+        static const float AIM_DOWN_Y;  //360.0f + 11.9f
 
         Character* pPlayer;
         string m_nickName;
@@ -200,6 +236,13 @@ public:
 
         //map
         UIImage* pMapImg;
+
+        //aim
+        UIImage* pAimCircle;
+        UIImage* pAimLeftLine;
+        UIImage* pAimRightLine;
+        UIImage* pAimUpLine;
+        UIImage* pAimDownLine;
 
         //Text ====================
         //ammo
@@ -244,6 +287,8 @@ public:
 
         bool m_isKill;
 
+        float m_sumUp;
+
         InGameUI();
         ~InGameUI();
 
@@ -268,6 +313,7 @@ public:
         void updateHpUI();
         void updateKillUI(const TotalInventory& inven);
         void updateEquipUI(const TotalInventory& inven);
+        void updateWeaponUI(const TotalInventory& inven);
     };
 
     struct GameOverUI : public IUIButtonOnMouseListener
@@ -537,8 +583,6 @@ private:
     void rotateWaist(const float quantity);
     void rotateHead(const float quantity);
 
-    bool isMine() const;
-
     void setInfo();
 
     D3DXVECTOR3 getUp();
@@ -555,7 +599,7 @@ private:
     
     //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
-    bool createOrMergeItem(map<TAG_RES_STATIC, vector<Item*>>* map, Item* item);
+    bool createOrMergeItem(std::map<TAG_RES_STATIC, std::vector<Item*>>* map, Item* item);
     //이미 아이템이 있는 경우, 그 아이템을 바닥에 떨구고 새아이템을 착용한다
     bool checkOriginItem(Item** originItem, Item* newItem);
 
@@ -574,6 +618,8 @@ private:
     void setJump();
 
     void setRifleOnHand(TAG_RIFLE tagRifle);
+    void setRifleOnHandCharacter(TAG_RIFLE tagRifle);
+    void setRifleOnHandEquip(TAG_RIFLE tagRifle);
     void setRifleOnBody(TAG_RIFLE tagRifle);
 
     void setStandTo(Stance stance);
@@ -673,6 +719,7 @@ public:
     void OnCollisionStay (Collider* pOffence, Collider* pDefence);
     void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
+    bool IsMine() const;
     int GetIndex() const;
     string GetNickName() const;
     float GetCharacterHealth() const;
@@ -737,11 +784,12 @@ public:
 
     InGameUI& GetInGameUI();
     TotalInventory& GetTotalInventory();
+    WaitBackAction& GetWaitBackAction();
 
     //        const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
 
-
+    void CreateDeathDropBox();
 
 
 /**************************** end public method ******************************/

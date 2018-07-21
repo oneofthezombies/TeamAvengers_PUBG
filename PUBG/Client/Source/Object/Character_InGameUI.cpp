@@ -28,6 +28,21 @@ const float Character::InGameUI::EQUIP_GAP    = 3.0f;
 const float Character::InGameUI::HP_WIDTH     = 276.0f;
 const float Character::InGameUI::HP_HEIGHT    = 17.0f;
 
+const float Character::InGameUI::AIM_BASE_X   = 640.0f;
+const float Character::InGameUI::AIM_BASE_Y   = 360.0f;
+
+const float Character::InGameUI::AIM_LEFT_X   = 640.0f - 11.9f - 7.0f;
+const float Character::InGameUI::AIM_LEFT_Y   = 360.0f - 1.0f;
+
+const float Character::InGameUI::AIM_RIGHT_X  = 640.0f + 11.9f;
+const float Character::InGameUI::AIM_RIGHT_Y  = 360.0f - 1.0f;
+
+const float Character::InGameUI::AIM_UP_X     = 640.0f - 1.0f;
+const float Character::InGameUI::AIM_UP_Y     = 360.0f - 11.9f - 7.0f;
+
+const float Character::InGameUI::AIM_DOWN_X   = 640.0f - 1.0f;
+const float Character::InGameUI::AIM_DOWN_Y   = 360.0f + 11.9f;
+
 Character::InGameUI::InGameUI()
     : pPlayer(nullptr)
     , m_nickName("")
@@ -61,6 +76,12 @@ Character::InGameUI::InGameUI()
 
     , pMapImg(nullptr)
 
+    , pAimCircle(nullptr)
+    , pAimLeftLine(nullptr)
+    , pAimRightLine(nullptr)
+    , pAimUpLine(nullptr)
+    , pAimDownLine(nullptr)
+
     //Text ====================
     , pAmmoReloadText(nullptr)
     , pAmmoNumText(nullptr)
@@ -93,6 +114,8 @@ Character::InGameUI::InGameUI()
     , m_killUpCoolDown(0.0f)
 
     , m_isKill(false)
+
+    , m_sumUp(0.0f)
 {
 }
 
@@ -120,8 +143,60 @@ void Character::InGameUI::Init(Character* pPlayer)
         nullptr,
         layer2
     );
+    
+    //aim ======================================================
+    pAimCircle = new UIImage(
+        "./Resource/UI/InGame/",
+        "aim_circle.png",
+        D3DXVECTOR3(AIM_BASE_X - 1.0f, AIM_BASE_Y - 1.0f, 0.0f),
+        nullptr,
+        pBackground
+    );
+    pAimCircle->SetIsRender(false);
 
-    //Compass
+    //왼쪽 aim line
+    pAimLeftLine = pAimLeftLine = new UIImage(
+        "./Resource/UI/InGame/",
+        "aim_hor.png",
+        D3DXVECTOR3(AIM_LEFT_X, AIM_LEFT_Y, 0.0f),
+        nullptr,
+        pBackground
+    );
+    pAimLeftLine->SetIsRender(false);
+
+    //오른쪽 aim line
+    pAimRightLine = pAimUpLine = new UIImage(
+        "./Resource/UI/InGame/",
+        "aim_hor.png",
+        D3DXVECTOR3(AIM_RIGHT_X, AIM_RIGHT_Y, 0.0f),
+        nullptr,
+        pBackground
+    );
+    pAimRightLine->SetIsRender(false);
+
+    //위쪽 aim line
+    pAimUpLine = new UIImage(
+        "./Resource/UI/InGame/",
+        "aim_ver.png",
+        D3DXVECTOR3(AIM_UP_X, AIM_UP_Y, 0.0f),
+        nullptr,
+        pBackground
+    );
+    pAimUpLine->SetIsRender(false);
+
+    //아래쪽 aim line
+    pAimDownLine = new UIImage(
+        "./Resource/UI/InGame/",
+        "aim_ver.png",
+        D3DXVECTOR3(AIM_DOWN_X, AIM_DOWN_Y, 0.0f),
+        nullptr,
+        pBackground
+    );
+    pAimDownLine->SetIsRender(false);
+    //=========================================================
+
+
+    //Compass 
     pCompassBg = new UIImage(
         "./Resource/UI/InGame/",
         "compass_bg.png",
@@ -414,40 +489,28 @@ void Character::InGameUI::Init(Character* pPlayer)
     vecKillLog.push_back(pKillLog4);
 
     //총
-    auto primaryWeaponBg = new UIImage(
-        "./Resource/UI/InGame/",
-        "weapons_bg.png",
-        PRIMARY_WEAPON_POS,
-        nullptr,
-        pBackground);
-
-    auto secondaryWeaponBg = new UIImage(
-        "./Resource/UI/InGame/",
-        "weapons_bg.png",
-        SECONDARY_WEAPON_POS,
-        nullptr,
-        pBackground);
-
     pQBZImg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_gun_QBZ95.png",
-        D3DXVECTOR3(28.0f, 0.0f, 0.0f),
+        D3DXVECTOR3(PRIMARY_WEAPON_POS.x + 28.0f, PRIMARY_WEAPON_POS.y, PRIMARY_WEAPON_POS.z),
         nullptr,
-        primaryWeaponBg);
-
+        pBackground);
+    pQBZImg->SetIsRender(false);
+    
     pKar98kImg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_gun_kar98k.png",
-        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+        SECONDARY_WEAPON_POS,
         nullptr,
-        secondaryWeaponBg);
+        pBackground);
+    pKar98kImg->SetIsRender(false);
 
     pQBZRedImg = new UIImage(
         "./Resource/UI/InGame/",
         "weapons_gun_QBZ95_red.png",
-        D3DXVECTOR3(28.0f, 0.0f, 0.0f),
+        D3DXVECTOR3(0.0f, 0.0f, 0.0f),
         nullptr,
-        primaryWeaponBg);
+        pQBZImg);
     pQBZRedImg->SetIsRender(false);
 
     pKar98kRedImg = new UIImage(
@@ -455,7 +518,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         "weapons_gun_kar98k_red.png",
         D3DXVECTOR3(0.0f, 0.0f, 0.0f),
         nullptr,
-        secondaryWeaponBg);
+        pKar98kImg);
     pKar98kRedImg->SetIsRender(false);
 
     //맵
@@ -496,6 +559,90 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //장비 착용 관련 UI
     updateEquipUI(inven);
+
+    //무기착용 UI
+    updateWeaponUI(inven);
+
+    //aim
+    if (inven.m_pHand && !inven.isOpened)
+    {
+        pAimCircle->SetIsRender(true);
+        pAimLeftLine->SetIsRender(true);
+        pAimRightLine->SetIsRender(true);
+        pAimUpLine->SetIsRender(true);
+        pAimDownLine->SetIsRender(true);
+        
+        //여기서부터
+        //에임 벌어지는거 하면댐
+        auto& backAction = pPlayer->GetWaitBackAction();
+        if (backAction.Ing)
+        {
+            if (backAction.Up)
+            {
+                m_sumUp += backAction.curValX * 0.5f * 1000.0f;
+                cout << "backAction: true" << endl;
+                cout << "curValX_sumUp: " << backAction.curValX * 0.5f * 1000.0f << endl;
+                cout << "sumDown: " << m_sumUp << endl;
+                if (m_sumUp >= 50.0f)
+                    m_sumUp = 50.0f;
+
+                pAimLeftLine->SetPosition(D3DXVECTOR3(
+                    AIM_LEFT_X - m_sumUp,
+                    AIM_LEFT_Y,
+                    0.0f));
+
+                pAimRightLine->SetPosition(D3DXVECTOR3(
+                    AIM_RIGHT_X + m_sumUp,
+                    AIM_RIGHT_Y,
+                    0.0f));
+
+                pAimUpLine->SetPosition(D3DXVECTOR3(
+                    AIM_UP_X,
+                    AIM_UP_Y - m_sumUp,
+                    0.0f));
+
+                pAimDownLine->SetPosition(D3DXVECTOR3(
+                    AIM_DOWN_X,
+                    AIM_DOWN_Y + m_sumUp,
+                    0.0f));
+            }
+            else //backAction.Up == false
+            {
+                pAimLeftLine->SetPosition(D3DXVECTOR3(
+                    AIM_LEFT_X,
+                    AIM_LEFT_Y,
+                    0.0f));
+
+                pAimRightLine->SetPosition(D3DXVECTOR3(
+                    AIM_RIGHT_X,
+                    AIM_RIGHT_Y,
+                    0.0f));
+
+                pAimUpLine->SetPosition(D3DXVECTOR3(
+                    AIM_UP_X,
+                    AIM_UP_Y,
+                    0.0f));
+
+                pAimDownLine->SetPosition(D3DXVECTOR3(
+                    AIM_DOWN_X,
+                    AIM_DOWN_Y,
+                    0.0f));
+
+                m_sumUp = 0.0f;
+            }
+        }
+        else //backAction.Ing == false
+        {
+        }
+    }
+    else
+    {
+        pAimCircle->SetIsRender(false);
+        pAimLeftLine->SetIsRender(false);
+        pAimRightLine->SetIsRender(false);
+        pAimUpLine->SetIsRender(false);
+        pAimDownLine->SetIsRender(false);
+    }
 }
 
 void Character::InGameUI::SetRedToZero()
@@ -581,7 +728,10 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
         auto it = inven.m_mapInventory.find(ammoType);
         if (it != inven.m_mapInventory.end())
         {
-            numBulletInInventory = (*it).second.back()->GetCount();
+            if (!it->second.empty())
+                numBulletInInventory = (*it).second.back()->GetCount();
+            else
+                numBulletInInventory = 0;
         }
         
         //장전이 안되어있다면 그림 & 텍스트 빨간색으로
@@ -684,8 +834,8 @@ void Character::InGameUI::updateKillUI(const TotalInventory& inven)
         pAmmoBg->SetIsRender(true);
         pMapImg->SetIsRender(true);
 
-        pQBZImg->SetIsRender(true);
-        pKar98kImg->SetIsRender(true);
+        //pQBZImg->SetIsRender(true);
+        //pKar98kImg->SetIsRender(true);
     }
 
     //킬 한 그 순간에 텍스트가 뜬다
@@ -823,5 +973,52 @@ void Character::InGameUI::updateEquipUI(const TotalInventory& inven)
         break;
         }
         pPlayer->SetIsEatEquip(false);
+    }
+}
+
+void Character::InGameUI::updateWeaponUI(const TotalInventory& inven)
+{
+    if (auto item = inven.m_pWeapon1->pItem)
+    {
+        if (!inven.isOpened)
+        {
+            //주무기
+            TAG_RES_STATIC tag = item->GetTagResStatic();
+            if (tag == TAG_RES_STATIC::Kar98k)
+            {
+                pKar98kImg->SetIsRender(true);
+                pKar98kImg->SetPosition(PRIMARY_WEAPON_POS);
+            }
+            else if (tag == TAG_RES_STATIC::QBZ)
+            {
+                pQBZImg->SetIsRender(true);
+                pQBZImg->SetPosition(D3DXVECTOR3(
+                    PRIMARY_WEAPON_POS.x + 28.0f,
+                    PRIMARY_WEAPON_POS.y,
+                    PRIMARY_WEAPON_POS.z));
+            }
+        }
+    }
+
+    if (auto item = inven.m_pWeapon2->pItem)
+    {
+        if (!inven.isOpened)
+        {
+            //보조무기
+            TAG_RES_STATIC tag = item->GetTagResStatic();
+            if (tag == TAG_RES_STATIC::Kar98k)
+            {
+                pKar98kImg->SetIsRender(true);
+                pKar98kImg->SetPosition(SECONDARY_WEAPON_POS);
+            }
+            else if (tag == TAG_RES_STATIC::QBZ)
+            {
+                pQBZImg->SetIsRender(true);
+                pQBZImg->SetPosition(D3DXVECTOR3(
+                    SECONDARY_WEAPON_POS.x + 28.0f,
+                    SECONDARY_WEAPON_POS.y,
+                    SECONDARY_WEAPON_POS.z));
+            }
+        }
     }
 }

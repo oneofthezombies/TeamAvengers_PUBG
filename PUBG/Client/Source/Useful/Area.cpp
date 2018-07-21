@@ -111,6 +111,17 @@ std::vector<Item*> Area::GetItems()
     return vItems;
 }
 
+std::vector<DeathDropBox*> Area::GetDeathDropBoxes()
+{
+    std::vector<DeathDropBox*> boxes;
+    for (std::size_t i = 0; i < m_cellspaces.size(); ++i)
+    {
+        auto& set = m_cellspaces[i]->pDeathDropBoxes;
+        boxes.insert(boxes.end(), set.begin(), set.end());
+    }
+    return boxes;
+}
+
 //void Area::ItemIntoInventory(size_t index, Item * obj)
 //{
 //    auto search = m_cellspaces[index]->pItems.find(obj);

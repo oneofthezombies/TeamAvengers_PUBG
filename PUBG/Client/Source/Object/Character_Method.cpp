@@ -11,6 +11,7 @@
 #include "ScenePlay.h"
 #include "Ballistics.h"
 #include "TerrainFeature.h"
+#include "DeathDropBox.h"
 
 const float MovingFactor::UNARMED_RUN = 180.0f;
 const float MovingFactor::UNARMED_SPRINT = 260.0f;
@@ -171,7 +172,7 @@ void Character::setFramePtr()
 
 void Character::subscribeCollisionEvent()
 {
-    if (isMine())
+    if (IsMine())
     {
         auto tagBody = GetTagCollisionBody(m_index);
         for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
@@ -597,10 +598,7 @@ void Character::itemSphereCollisionInteraction()
         if (!Collision::HasCollision(m_boundingSphere, itm->GetBoundingSphere())) continue;
         //캐릭터와 Item의 spehre 가 충돌이 났다
 
-        di.emplace_back(itm);
-
         // UI로 F key가 나오게 하기 
-
 
         //Ray를 쏘아서 맞는 물건 먼저 먹기
         for (auto& rayItm : di)
@@ -619,57 +617,28 @@ void Character::itemSphereCollisionInteraction()
             if (m_currentOnceKey._F)
             {
                 PutItemInTotalInventory(rayItm); //inventory에 넣기
-                                                 //current scene 에서 지우기
-                pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
-
-                rayItm->SetState(true);
-                
-                if (m_totalInventory.m_pWeaponPrimary)
-                {
-                    m_totalInventory.m_pWeapon1->SetIsActive(true);
-                    m_totalInventory.m_pWeapon1->pUIImage =
-                        m_totalInventory.m_pWeaponPrimary->GetUIImage2();
-                    m_totalInventory.m_pWeapon1->pItem = 
-                        m_totalInventory.m_pWeaponPrimary;
-                }
-                if (m_totalInventory.m_pWeaponSecondary)
-                {
-                    m_totalInventory.m_pWeapon2->SetIsActive(true);
-                    m_totalInventory.m_pWeapon2->pUIImage = 
-                        m_totalInventory.m_pWeaponSecondary->GetUIImage2();
-                    m_totalInventory.m_pWeapon2->pItem = 
-                        m_totalInventory.m_pWeaponSecondary;
-                }
                 return;
             }
         }
 
-
         if (m_currentOnceKey._F)
         {
             PutItemInTotalInventory(itm); //inventory에 넣기
-            //current scene 에서 지우기
-            pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
-            itm->SetState(true);
-
-            if (m_totalInventory.m_pWeaponPrimary)
-            {
-                m_totalInventory.m_pWeapon1->SetIsActive(true);
-                m_totalInventory.m_pWeapon1->pUIImage =
-                    m_totalInventory.m_pWeaponPrimary->GetUIImage2();
-                m_totalInventory.m_pWeapon1->pItem =
-                    m_totalInventory.m_pWeaponPrimary;
-            }
-            if (m_totalInventory.m_pWeaponSecondary)
-            {
-                m_totalInventory.m_pWeapon2->SetIsActive(true);
-                m_totalInventory.m_pWeapon2->pUIImage =
-                    m_totalInventory.m_pWeaponSecondary->GetUIImage2();
-                m_totalInventory.m_pWeapon2->pItem =
-                    m_totalInventory.m_pWeaponSecondary;
-            }
             return;
         }
+
+        di.emplace_back(itm);
+    }
+
+    auto deathDropboxes(pCurrentScene->m_NearArea.GetDeathDropBoxes());
+    for (auto box : deathDropboxes)
+    {
+        if (!Collision::HasCollision(
+            m_boundingSphere, 
+            box->GetBoundingSphere())) continue;
+
+        const auto& items = box->GetItems();
+        di.insert(di.end(), items.begin(), items.end());
     }
 
     //캐릭터 spehre안에 아이템이 없으면 모션을 캔슬했다 (앞으로 문열기 등 interaction에서 문제가 많은 코드) (이후에 바뀔것이다)
@@ -790,9 +759,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
         *OutRotation *= q;
         //--------
 
-
         m_rotationForCamera.x += -mouseInput->pitch;
-
 
         // reset rotFotCameraTP
         if (tempBool)
@@ -806,12 +773,10 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     if (m_rotationForCamera.x < -1.0f)
         m_rotationForCamera.x = -1.0f;
     else if (m_rotationForCamera.x > 1.0f)
-        m_rotationForCamera.x = 1.0f;
-
-    
+        m_rotationForCamera.x = 1.0f;    
 }
 
-bool Character::isMine() const
+bool Character::IsMine() const
 {
     return m_index == Communication()()->m_myInfo.ID;
 }
@@ -916,97 +881,97 @@ void Character::RifleShooting() //bullet 객체에 대한
     switch (inven.m_pHand->GetTagResStatic())
     {
     case TAG_RES_STATIC::QBZ:
-        {
-            BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_RES_STATIC::QBZ);
-            Sound()()->Play(TAG_SOUND::Qbz_NormalShoot,
-                GetTransform()->GetPosition(),
-                1.0f, FMOD_2D);
-            Communication()()->SendEventSound(TAG_SOUND::Qbz_NormalShoot, GetTransform()->GetPosition());
-            
-            //총 자체 애니메이션
-            m_isNeedRifleAnim = true;
-            inven.m_pHand->Set
-            (
-                TAG_ANIM_WEAPON::Weapon_QBZ_Fire,
-                false,
-                Item::DEFAULT_BLENDING_TIME,
-                Item::DEFAULT_NEXT_WEIGHT,
-                Item::DEFAULT_POSITION,
-                Item::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this, &inven]() {
-                inven.m_pHand->Set(
-                    TAG_ANIM_WEAPON::Weapon_QBZ_Idle,
-                    false);
-                m_isNeedRifleAnim = false;
-            });
-        }
+    {
+        BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_RES_STATIC::QBZ);
+        Sound()()->Play(TAG_SOUND::Qbz_NormalShoot,
+            GetTransform()->GetPosition(),
+            1.0f, FMOD_2D);
+        Communication()()->SendEventSound(TAG_SOUND::Qbz_NormalShoot, GetTransform()->GetPosition());
+
+        //총 자체 애니메이션
+        m_isNeedRifleAnim = true;
+        inven.m_pHand->Set
+        (
+            TAG_ANIM_WEAPON::Weapon_QBZ_Fire,
+            false,
+            Item::DEFAULT_BLENDING_TIME,
+            Item::DEFAULT_NEXT_WEIGHT,
+            Item::DEFAULT_POSITION,
+            Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+            [this, &inven]() {
+            inven.m_pHand->Set(
+                TAG_ANIM_WEAPON::Weapon_QBZ_Idle,
+                false);
+            m_isNeedRifleAnim = false;
+        });
+    }
     break;
 
     case TAG_RES_STATIC::Kar98k:
+    {
+        BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_RES_STATIC::Kar98k);
+        Sound()()->Play(TAG_SOUND::Kar98_NormalShoot,
+            GetTransform()->GetPosition(),
+            1.0f, FMOD_2D);
+        Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove0,
+            GetTransform()->GetPosition(),
+            0.3f, FMOD_2D);
+        Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove1,
+            GetTransform()->GetPosition(),
+            0.8f, FMOD_2D);
+        Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove2,
+            GetTransform()->GetPosition(),
+            1.0f, FMOD_2D);
+
+        Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, GetTransform()->GetPosition());
+
+        //Kar98k BoltAction Animation
+        TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+        if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
+            tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Base;
+        else if (m_stance == Stance::Prone)
+            tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone;
+
+        assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::RifleShooting(), tagAnim is COUNT");
+
+        m_hasChangingState = true;
+
+        //총 자체 애니메이션
+        m_isNeedRifleAnim = true;
+        inven.m_pHand->Set
+        (
+            TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_1,
+            false,
+            Item::DEFAULT_BLENDING_TIME,
+            Item::DEFAULT_NEXT_WEIGHT,
+            Item::DEFAULT_POSITION,
+            Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+            [this, &inven]() {
+            inven.m_pHand->Set(
+                TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
+                false);
+            m_isNeedRifleAnim = false;
+        });
+
+        //캐릭터의 애니메이션
+        setAnimation(
+            CharacterAnimation::BodyPart::UPPER,
+            tagAnim,
+            true, //ok
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION,
+            0.3f, //ok
+            [this]()
         {
-            BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_RES_STATIC::Kar98k);
-            Sound()()->Play(TAG_SOUND::Kar98_NormalShoot,
-                GetTransform()->GetPosition(),
-                1.0f, FMOD_2D); 
-            Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove0,
-                GetTransform()->GetPosition(),
-                0.3f, FMOD_2D);
-            Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove1,
-                GetTransform()->GetPosition(),
-                0.8f, FMOD_2D);
-            Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove2,
-                GetTransform()->GetPosition(),
-                1.0f, FMOD_2D);
-
-            Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, GetTransform()->GetPosition());
-
-            //Kar98k BoltAction Animation
-            TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
-            if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
-                tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Base;
-            else if (m_stance == Stance::Prone)
-                tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone;
-
-            assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::RifleShooting(), tagAnim is COUNT");
-
-            m_hasChangingState = true;
-
-            //총 자체 애니메이션
-            m_isNeedRifleAnim = true;
-            inven.m_pHand->Set
-            (
-                TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_1,
-                false,
-                Item::DEFAULT_BLENDING_TIME,
-                Item::DEFAULT_NEXT_WEIGHT,
-                Item::DEFAULT_POSITION,
-                Item::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this, &inven]() {
-                inven.m_pHand->Set(
-                    TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
-                    false);
-                m_isNeedRifleAnim = false;
-            });
-
-            //캐릭터의 애니메이션
+            m_hasChangingState = false;
             setAnimation(
-                CharacterAnimation::BodyPart::UPPER,
-                tagAnim,
-                true, //ok
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_POSITION,
-                0.3f, //ok
-                [this]()
-            {
-                m_hasChangingState = false;
-                setAnimation(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    true,
-                    0.3f);
-            });
-        }
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                true,
+                0.3f);
+        });
+    }
     break;
     }
     D3DXQUATERNION rot = (GetTransform())->GetRotation();
@@ -1019,7 +984,7 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
 
     int numBullet = inven.m_pHand->GetNumBullet();
     inven.m_pHand->SetNumBullet(--numBullet);
-    cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
+    //cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
 
     //Goal : get Fire starting position , get fire direction
 
@@ -1028,8 +993,8 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
 
     D3DXMATRIX mat
         = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
-        * m_framePtr.pHandGun->CombinedTransformationMatrix // hand gun space matrix
-        * GetTransform()->GetTransformationMatrix();    //character world matrix
+        * m_framePtr.pHandGun->CombinedTransformationMatrix          // hand gun space matrix
+        * GetTransform()->GetTransformationMatrix();                 //character world matrix
 
     D3DXVECTOR3 bulletFirePos = Matrix::GetTranslation(mat);
 
@@ -1106,8 +1071,6 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
             Communication()()->SendEventMinusDamage(o->GetIndex(), damage);
         }
     }
-
-
 
     ////이 함수는 가장 가까운 Object를 찾아서 
 
@@ -1204,10 +1167,27 @@ const std::vector<BoundingBox>& Character::GetBoundingBoxes()
     return IObject::GetBoundingBoxes();
 }
 
+void Character::CreateDeathDropBox()
+{
+    ScenePlay* pScenePlay =
+        static_cast<ScenePlay*>(CurrentScene()());
+
+    DeathDropBox* pBox =
+        pScenePlay->GetDeathDropBox(m_index);
+
+    const D3DXVECTOR3 pos = GetTransform()->GetPosition();
+    pBox->Set(pos, this);
+
+    pScenePlay->InsertObjIntoTotalCellSpace(
+        TAG_OBJECT::DeathDropBox,
+        pScenePlay->GetCellIndex(pos),
+        pBox);
+}
+
 void Character::movementControl(OUT State* OutState)
 {
     //점프
-    if (m_currentOnceKey._Space && m_stance == Stance::Stand)
+    if (m_currentOnceKey._Space && m_stance == Stance::Stand && m_hasChangingState == false)
     {
         m_Jump.isJumping = true;
     }
@@ -1428,12 +1408,17 @@ Character::TotalInventory& Character::GetTotalInventory()
     return m_totalInventory;
 }
 
+Character::WaitBackAction& Character::GetWaitBackAction()
+{
+    return m_backAction;
+}
+
 void Character::MoveItemFieldToHead(Item* pItem)
 {
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pEquipHead = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1443,7 +1428,7 @@ void Character::MoveItemFieldToArmor(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pEquipArmor = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1453,7 +1438,7 @@ void Character::MoveItemFieldToBack(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pEquipBack = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1463,7 +1448,7 @@ void Character::MoveItemFieldToPrimary(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pWeaponPrimary = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1473,7 +1458,7 @@ void Character::MoveItemFieldToSecondary(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_pWeaponSecondary = pItem;
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
     pItem->SetIsRenderSkinnedMesh(true);
 }
@@ -1483,7 +1468,7 @@ void Character::MoveItemFieldToInventory(Item* pItem)
     TotalInventory& inven = m_totalInventory;
 
     inven.m_mapInventory[pItem->GetTagResStatic()].emplace_back(pItem);
-    pItem->SetState(true);
+    pItem->SetIsInInventory(true);
     pItem->SetIsRenderEffectMesh(false);
 }
 
