@@ -622,22 +622,22 @@ void Character::itemSphereCollisionInteraction()
 
                 //rayItm->SetIsInInventory(true);
                 
-                if (m_totalInventory.m_pWeaponPrimary)
-                {
-                    m_totalInventory.m_pWeapon1->SetIsActive(true);
-                    m_totalInventory.m_pWeapon1->pUIImage =
-                        m_totalInventory.m_pWeaponPrimary->GetUIImage2();
-                    m_totalInventory.m_pWeapon1->pItem = 
-                        m_totalInventory.m_pWeaponPrimary;
-                }
-                if (m_totalInventory.m_pWeaponSecondary)
-                {
-                    m_totalInventory.m_pWeapon2->SetIsActive(true);
-                    m_totalInventory.m_pWeapon2->pUIImage = 
-                        m_totalInventory.m_pWeaponSecondary->GetUIImage2();
-                    m_totalInventory.m_pWeapon2->pItem = 
-                        m_totalInventory.m_pWeaponSecondary;
-                }
+                //if (m_totalInventory.m_pWeaponPrimary)
+                //{
+                //    m_totalInventory.m_pWeapon1->SetIsActive(true);
+                //    m_totalInventory.m_pWeapon1->pUIImage =
+                //        m_totalInventory.m_pWeaponPrimary->GetUIImage2();
+                //    m_totalInventory.m_pWeapon1->pItem = 
+                //        m_totalInventory.m_pWeaponPrimary;
+                //}
+                //if (m_totalInventory.m_pWeaponSecondary)
+                //{
+                //    m_totalInventory.m_pWeapon2->SetIsActive(true);
+                //    m_totalInventory.m_pWeapon2->pUIImage = 
+                //        m_totalInventory.m_pWeaponSecondary->GetUIImage2();
+                //    m_totalInventory.m_pWeapon2->pItem = 
+                //        m_totalInventory.m_pWeaponSecondary;
+                //}
                 return;
             }
         }
@@ -649,22 +649,22 @@ void Character::itemSphereCollisionInteraction()
             //pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
             //itm->SetIsInInventory(true);
 
-            if (m_totalInventory.m_pWeaponPrimary)
-            {
-                m_totalInventory.m_pWeapon1->SetIsActive(true);
-                m_totalInventory.m_pWeapon1->pUIImage =
-                    m_totalInventory.m_pWeaponPrimary->GetUIImage2();
-                m_totalInventory.m_pWeapon1->pItem =
-                    m_totalInventory.m_pWeaponPrimary;
-            }
-            if (m_totalInventory.m_pWeaponSecondary)
-            {
-                m_totalInventory.m_pWeapon2->SetIsActive(true);
-                m_totalInventory.m_pWeapon2->pUIImage =
-                    m_totalInventory.m_pWeaponSecondary->GetUIImage2();
-                m_totalInventory.m_pWeapon2->pItem =
-                    m_totalInventory.m_pWeaponSecondary;
-            }
+            //if (m_totalInventory.m_pWeaponPrimary)
+            //{
+            //    m_totalInventory.m_pWeapon1->SetIsActive(true);
+            //    m_totalInventory.m_pWeapon1->pUIImage =
+            //        m_totalInventory.m_pWeaponPrimary->GetUIImage2();
+            //    m_totalInventory.m_pWeapon1->pItem =
+            //        m_totalInventory.m_pWeaponPrimary;
+            //}
+            //if (m_totalInventory.m_pWeaponSecondary)
+            //{
+            //    m_totalInventory.m_pWeapon2->SetIsActive(true);
+            //    m_totalInventory.m_pWeapon2->pUIImage =
+            //        m_totalInventory.m_pWeaponSecondary->GetUIImage2();
+            //    m_totalInventory.m_pWeapon2->pItem =
+            //        m_totalInventory.m_pWeaponSecondary;
+            //}
             return;
         }
 
