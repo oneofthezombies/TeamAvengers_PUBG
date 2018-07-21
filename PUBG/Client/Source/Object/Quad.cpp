@@ -24,8 +24,6 @@ Quad::Quad()
     m_indices[3] = 0;
     m_indices[4] = 2;
     m_indices[5] = 3;
-
-    pEffect = Resource()()->GetEffect("./Resource/", "Quad.fx");
 }
 
 Quad::~Quad()
@@ -39,7 +37,7 @@ void Quad::OnUpdate()
 void Quad::OnRender()
 {
     Shader::Draw(
-        pEffect, 
+        Resource()()->GetEffect("./Resource/", "Quad.fx"),
         nullptr, 
         [this](LPD3DXEFFECT pEffect) 
     {
