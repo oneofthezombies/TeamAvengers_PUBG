@@ -14,7 +14,7 @@ Quad::Quad()
     m_vertices[1].t = D3DXVECTOR2(0.0f, 0.0f);
     m_vertices[2].p = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
     m_vertices[2].t = D3DXVECTOR2(1.0f, 0.0f);
-    m_vertices[3].p = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+    m_vertices[3].p = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
     m_vertices[3].t = D3DXVECTOR2(1.0f, 1.0f);
 
     m_indices.resize(6);
@@ -24,6 +24,8 @@ Quad::Quad()
     m_indices[3] = 0;
     m_indices[4] = 2;
     m_indices[5] = 3;
+
+    GetTransform()->SetRotation(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 }
 
 Quad::~Quad()
