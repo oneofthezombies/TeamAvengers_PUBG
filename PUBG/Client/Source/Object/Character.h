@@ -538,8 +538,8 @@ private:
 
     // for character x character collision
     BoundingBox m_bBox;
-    //BoundingSphere m_bSphereSlidingCollision;
-
+    bool  m_isCollidedWithBox;
+    float m_adjust_Y_onCollision;
     float m_stepDistance;
 
 /**************************** end member variable ****************************/

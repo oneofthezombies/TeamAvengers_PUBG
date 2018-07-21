@@ -173,8 +173,6 @@ void Character::OnUpdate()
     updateMine();
     updateOther();
 
-    Debug << "------current cell space ------ : " << m_cellIndex << endl;
-    
 
     // update
     GetTransform()->Update();      // set characters world
@@ -349,6 +347,7 @@ void Character::updateMine()
     //Terrain과의 충돌체크
     //terrainFeaturesCollisionInteraction(&destState);
     terrainFeaturesCollisionInteraction(&destState);
+    
     //Item 과의 충돌체크
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////
@@ -492,12 +491,12 @@ void Character::updateMine()
     //    BulletPool()()->Fire(Communication()()->m_myInfo,pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_RES_STATIC::QBZ);
     //}
 
-    ForDebug();
-    Debug << "current        position : " << pos << "\n\n"
-        << "current upper animation : "
-        << pAnimation->GetUpperAnimationName() << '\n'
-        << "current lower animation : "
-        << pAnimation->GetLowerAnimationName() << "\n\n";
+    //ForDebug();
+    //Debug << "current        position : " << pos << "\n\n"
+    //    << "current upper animation : "
+    //    << pAnimation->GetUpperAnimationName() << '\n'
+    //    << "current lower animation : "
+    //    << pAnimation->GetLowerAnimationName() << "\n\n";
 
     //여기
     //for InGameUI

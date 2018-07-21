@@ -41,6 +41,7 @@ void IScene::Init()
 
 void IScene::Update()
 {
+
 	for (auto& o : m_objects)
 		if (o) o->Update();
 
@@ -111,18 +112,6 @@ void IScene::LoadObjectsFromFile(const std::string& fullPath)
 
     for (auto o : objs)
     {
-        //cout << static_cast<int>(o.m_tagResStatic) << '\n';
-        //cout << o.m_name << '\n';
-        //cout << o.m_position << '\n';
-        //cout << o.m_rotation << '\n';
-        //cout << o.m_scale << '\n';
-
-        //for (auto b : o.m_boxColliders)
-        //{
-        //    cout << b.m_transform << '\n';
-        //}
-
-
         //degrees to radians
         o.m_rotation = D3DXToRadian(o.m_rotation);
 
