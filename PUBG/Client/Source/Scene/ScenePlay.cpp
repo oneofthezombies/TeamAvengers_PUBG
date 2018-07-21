@@ -32,40 +32,40 @@ void ScenePlay::setAloneMode()
         AddObject(pOther);
     }
 
-    //old map
-    Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(1900.0f, 200.0f, 1900.0f);
-    Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(100.0f, 200.0f, 2000.0f);
-    Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(2000.0f, 200.0f, 100.0f);
-    Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(2000.0f, 200.0f, 2000.0f);
-    Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    
-    ////new map
-    //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f);
+    ////old map
+    //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(1900.0f, 200.0f, 1900.0f);
     //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     //Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f);
+    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(100.0f, 200.0f, 2000.0f);
     //Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     //Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    //Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f);
+    //Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(2000.0f, 200.0f, 100.0f);
     //Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     //Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
-    //Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f);
+    //Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(2000.0f, 200.0f, 2000.0f);
     //Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     //Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    
+    //new map
+    Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f);
+    Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f);
+    Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f);
+    Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+
+    Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f);
+    Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
+    Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
 
     //For inventory Test
     Item* item = nullptr;
@@ -355,7 +355,7 @@ void ScenePlay::OnInit()
         m_TotalCellSpaces[i].pIndex = i;
     }
     
-    //LoadObjectsFromFile("./Resource/save.txt");
+    LoadObjectsFromFile("./Resource/save.txt");
     //LoadObjectsFromFile("./Resource/save1.txt");
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)

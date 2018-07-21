@@ -173,27 +173,27 @@ void SceneLoading::Load()
     
 
     ////Map Buildings load
-    //load(TAG_RES_STATIC::AbandonedTownHall);
-    //load(TAG_RES_STATIC::Church);
-    //load(TAG_RES_STATIC::Museum);
-    //load(TAG_RES_STATIC::OldWoodenShed_1);
-    //load(TAG_RES_STATIC::OldWoodenShed_2);
-    //load(TAG_RES_STATIC::OldWoodenShed_3);
-    //load(TAG_RES_STATIC::PoliceStation);
+    load(TAG_RES_STATIC::AbandonedTownHall);
+    load(TAG_RES_STATIC::Church);
+    load(TAG_RES_STATIC::Museum);
+    load(TAG_RES_STATIC::OldWoodenShed_1);
+    load(TAG_RES_STATIC::OldWoodenShed_2);
+    load(TAG_RES_STATIC::OldWoodenShed_3);
+    load(TAG_RES_STATIC::PoliceStation);
     load(TAG_RES_STATIC::WareHouse_A);
-    //load(TAG_RES_STATIC::WareHouse_B);
+    load(TAG_RES_STATIC::WareHouse_B);
 
-    //load(TAG_RES_STATIC::ContainerBox_A);
-    //load(TAG_RES_STATIC::ContainerBox_B);
-    //load(TAG_RES_STATIC::ContainerSmall_1);
-    //load(TAG_RES_STATIC::ContainerSmall_2);
+    load(TAG_RES_STATIC::ContainerBox_A);
+    load(TAG_RES_STATIC::ContainerBox_B);
+    load(TAG_RES_STATIC::ContainerSmall_1);
+    load(TAG_RES_STATIC::ContainerSmall_2);
 
-    //load(TAG_RES_STATIC::HayBale_1);
-    //load(TAG_RES_STATIC::HayBale_2);
+    load(TAG_RES_STATIC::HayBale_1);
+    load(TAG_RES_STATIC::HayBale_2);
 
-    //load(TAG_RES_STATIC::Silo_A);
-    //load(TAG_RES_STATIC::Silo_B);
-    //load(TAG_RES_STATIC::Lighthouse);
+    load(TAG_RES_STATIC::Silo_A);
+    load(TAG_RES_STATIC::Silo_B);
+    load(TAG_RES_STATIC::Lighthouse);
 
     //Map buildings end
 
