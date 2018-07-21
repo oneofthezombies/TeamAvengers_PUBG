@@ -973,6 +973,21 @@ void Character::TotalInventory::ReleaseBullets(Item* pItem)
     }
 
     const TAG_RES_STATIC tagBullet = ItemInfo::GetAmmoType(tag);
+    //const float bulletCapacity = ItemInfo::GetCapacity(tagBullet);
+    //const float subtractingCapacity = bulletCapacity * numBullet;
+    //const float nextCapacity = m_capacity - subtractingCapacity;
+    //if (nextCapacity < 0.0f)
+    //{
+    //    const float overCapacity = -nextCapacity;
+    //    const float numOverBullets = overCapacity / bulletCapacity;
+
+    //    assert(m_empties[tagBullet].empty() && "Character::TotalInventory::ReleaseBullets(), empties is empty, need more empties");
+
+    //    pAmmo = m_empties[tagBullet].back();
+    //    m_empties[tagBullet].pop_back();
+    //    pAmmo->SetPosition(pCharacter->GetTransform()->GetPosition());
+    //    DropItem(&pAmmo);
+    //}
 
     if (!m_mapInventory[tagBullet].empty()) // 인벤토리에 총알 객체가 있을 때
     {
@@ -984,7 +999,9 @@ void Character::TotalInventory::ReleaseBullets(Item* pItem)
         {
             pAmmo = m_empties[tagBullet].back();
             m_empties[tagBullet].pop_back();
+
             m_mapInventory[tagBullet].emplace_back(pAmmo);
+            pAmmo->SetIsInInventory(true);
         }
         else
         {
@@ -998,6 +1015,8 @@ void Character::TotalInventory::ReleaseBullets(Item* pItem)
 
     const int numCount = pAmmo->GetCount();
     pAmmo->SetCount(numCount + numBullet);
+
+    m_capacity -= ItemInfo::GetCapacity(tagBullet) * numBullet;
 }
 
 bool Character::PutItemInTotalInventory(Item* item)

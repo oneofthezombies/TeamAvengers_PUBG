@@ -282,6 +282,8 @@ void Character::setReload()
                 cout << "총에 장전된 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
                 cout << "인벤토리에 남아있는 총알 개수: " << (*it).second.back()->GetCount() << "\n";
 
+                inven.m_capacity += inven.m_numReload * ItemInfo::GetCapacity(ammoType);
+
                 if (it->second.back()->GetCount() == 0)
                 {
                     std::vector<Item*>& items = it->second;
