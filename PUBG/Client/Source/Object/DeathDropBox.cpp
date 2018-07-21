@@ -1,16 +1,19 @@
 #include "stdafx.h"
 #include "DeathDropBox.h"
 #include "EffectMeshRenderer.h"
+#include "Item.h"
 
 DeathDropBox::DeathDropBox()
     : IObject(TAG_OBJECT::DeathDropBox)
     , pEffectMeshRenderer(nullptr)
+    , m_index(-1)
 {
-    pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
-    pEffectMeshRenderer->SetEffectMesh(TAG_RES_STATIC::DeathDropBox);
-
     const float max = std::numeric_limits<float>::max();
     GetTransform()->SetPosition(Vector3::ONE * max);
+
+    pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
+    pEffectMeshRenderer->SetEffectMesh(TAG_RES_STATIC::DeathDropBox);
+    m_boundingSphere = pEffectMeshRenderer->GetBoundingSphere();
 }
 
 DeathDropBox::~DeathDropBox()
@@ -35,58 +38,104 @@ void DeathDropBox::OnRender()
     m_boundingSphere.Render();
 }
 
-void DeathDropBox::SetPosition(const D3DXVECTOR3& position)
+void DeathDropBox::Set(const D3DXVECTOR3& position, Character* pCharacter)
+{
+    setPosition(position);
+    setItems(pCharacter);
+
+    m_index = pCharacter->GetIndex();
+}
+
+void DeathDropBox::setPosition(const D3DXVECTOR3& position)
 {
     GetTransform()->SetPosition(position);
     GetTransform()->Update();
 }
 
-void DeathDropBox::SetItems(Character* pCharacter)
+void DeathDropBox::setItems(Character* pCharacter)
 {
     Character::TotalInventory& inven = 
         pCharacter->GetTotalInventory();
 
-    if (inven.m_pHand)
+    auto setItem = [this](Item** ppItem)
     {
-        m_items.emplace_back(inven.m_pHand);
-        inven.m_pHand = nullptr;
-    }
+        if (ppItem && *ppItem)
+        {
+            (*ppItem)->SetDeathDropBox(this);
+            (*ppItem)->SetIsInInventory(false);
+            m_items.emplace_back(*ppItem);
+            *ppItem = nullptr;
+        }
+    };
 
-    if (inven.m_pWeaponPrimary)
-    {
-        m_items.emplace_back(inven.m_pWeaponPrimary);
-        inven.m_pWeaponPrimary = nullptr;
-    }
+    inven.ReleaseBullets(inven.m_pHand);
+    setItem(&inven.m_pHand);
 
-    if (inven.m_pWeaponSecondary)
-    {
-        m_items.emplace_back(inven.m_pWeaponSecondary);
-        inven.m_pWeaponSecondary = nullptr;
-    }
+    inven.ReleaseBullets(inven.m_pWeaponPrimary);
+    setItem(&inven.m_pWeaponPrimary);
 
-    if (inven.m_pEquipHead)
-    {
-        m_items.emplace_back(inven.m_pEquipHead);
-        inven.m_pEquipHead = nullptr;
-    }
+    inven.ReleaseBullets(inven.m_pWeaponSecondary);
+    setItem(&inven.m_pWeaponSecondary);
 
-    if (inven.m_pEquipArmor)
-    {
-        m_items.emplace_back(inven.m_pEquipArmor);
-        inven.m_pEquipArmor = nullptr;
-    }
-
-    if (inven.m_pEquipBack)
-    {
-        m_items.emplace_back(inven.m_pEquipBack);
-        inven.m_pEquipBack = nullptr;
-    }
+    setItem(&inven.m_pEquipHead);
+    setItem(&inven.m_pEquipArmor);
+    setItem(&inven.m_pEquipBack);
 
     for (auto& kv : inven.m_mapInventory)
     {
         std::vector<Item*>& items = kv.second;
-        m_items.insert(m_items.end(), items.begin(), items.end());
-
+        for (Item* p : items)
+        {
+            p->SetDeathDropBox(this);
+            p->SetIsInInventory(false);
+            m_items.emplace_back(p);
+        }
         items.clear();
     }
+}
+
+void DeathDropBox::DeleteThisItem(Item* pItem)
+{
+    assert(pItem && "DeathDropBox::DeleteThisItem()");
+
+    for (auto it = m_items.begin(); it != m_items.end();)
+    {
+        if (*it == pItem)
+        {
+            it = m_items.erase(it);
+            return;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
+Item* DeathDropBox::FindItem(const std::string& itemName)
+{
+    for (auto it = m_items.begin(); it != m_items.end();)
+    {
+        if ((*it)->GetName() == itemName)
+        {
+            Item* pItem = *it;
+            return pItem;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    return nullptr;
+}
+
+const std::vector<Item*>& DeathDropBox::GetItems() const
+{
+    return m_items;
+}
+
+int DeathDropBox::GetIndex() const
+{
+    return m_index;
 }
