@@ -863,7 +863,7 @@ void Character::RifleShooting() //bullet 객체에 대한
     //bullet 갯수 만큼 조정
     int numBullet = inven.m_pHand->GetNumBullet();
     inven.m_pHand->SetNumBullet(--numBullet);
-    //cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
+    cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
     //bullet이 나가는 포지션 구하기
     D3DXMATRIX mat
         = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
@@ -881,105 +881,97 @@ void Character::RifleShooting() //bullet 객체에 대한
     switch (inven.m_pHand->GetTagResStatic())
     {
     case TAG_RES_STATIC::QBZ:
-        {
-            BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_RES_STATIC::QBZ);
-            Sound()()->Play(TAG_SOUND::Qbz_NormalShoot,
-                GetTransform()->GetPosition(),
-                1.0f, FMOD_2D);
-            Communication()()->SendEventSound(TAG_SOUND::Qbz_NormalShoot, GetTransform()->GetPosition());
-            
-            //총 자체 애니메이션
-            m_hasChangingState = true;
-            m_isNeedRifleAnim = true;
-            inven.m_pHand->Set
-            (
-                TAG_ANIM_WEAPON::Weapon_QBZ_Fire,
-                false,
-                Item::DEFAULT_BLENDING_TIME,
-                Item::DEFAULT_NEXT_WEIGHT,
-                Item::DEFAULT_POSITION,
-                Item::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this, &inven]() {
+    {
+        BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::QBZ), ItemInfo::GetBaseDamage(TAG_RES_STATIC::QBZ), TAG_RES_STATIC::QBZ);
+        Sound()()->Play(TAG_SOUND::Qbz_NormalShoot,
+            GetTransform()->GetPosition(),
+            1.0f, FMOD_2D);
+        Communication()()->SendEventSound(TAG_SOUND::Qbz_NormalShoot, GetTransform()->GetPosition());
 
-                m_hasChangingState = false;
-
-                inven.m_pHand->Set(
-                    TAG_ANIM_WEAPON::Weapon_QBZ_Idle,
-                    false);
-
-                m_isNeedRifleAnim = false;
-            });
-        }
+        //총 자체 애니메이션
+        m_isNeedRifleAnim = true;
+        inven.m_pHand->Set
+        (
+            TAG_ANIM_WEAPON::Weapon_QBZ_Fire,
+            false,
+            Item::DEFAULT_BLENDING_TIME,
+            Item::DEFAULT_NEXT_WEIGHT,
+            Item::DEFAULT_POSITION,
+            Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+            [this, &inven]() {
+            inven.m_pHand->Set(
+                TAG_ANIM_WEAPON::Weapon_QBZ_Idle,
+                false);
+            m_isNeedRifleAnim = false;
+        });
+    }
     break;
 
     case TAG_RES_STATIC::Kar98k:
+    {
+        BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_RES_STATIC::Kar98k);
+        Sound()()->Play(TAG_SOUND::Kar98_NormalShoot,
+            GetTransform()->GetPosition(),
+            1.0f, FMOD_2D);
+        Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove0,
+            GetTransform()->GetPosition(),
+            0.3f, FMOD_2D);
+        Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove1,
+            GetTransform()->GetPosition(),
+            0.8f, FMOD_2D);
+        Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove2,
+            GetTransform()->GetPosition(),
+            1.0f, FMOD_2D);
+
+        Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, GetTransform()->GetPosition());
+
+        //Kar98k BoltAction Animation
+        TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
+        if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
+            tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Base;
+        else if (m_stance == Stance::Prone)
+            tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone;
+
+        assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::RifleShooting(), tagAnim is COUNT");
+
+        m_hasChangingState = true;
+
+        //총 자체 애니메이션
+        m_isNeedRifleAnim = true;
+        inven.m_pHand->Set
+        (
+            TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_1,
+            false,
+            Item::DEFAULT_BLENDING_TIME,
+            Item::DEFAULT_NEXT_WEIGHT,
+            Item::DEFAULT_POSITION,
+            Item::DEFAULT_FINISH_EVENT_AGO_TIME,
+            [this, &inven]() {
+            inven.m_pHand->Set(
+                TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
+                false);
+            m_isNeedRifleAnim = false;
+        });
+
+        //캐릭터의 애니메이션
+        setAnimation(
+            CharacterAnimation::BodyPart::UPPER,
+            tagAnim,
+            true, //ok
+            CharacterAnimation::DEFAULT_BLENDING_TIME,
+            CharacterAnimation::DEFAULT_NEXT_WEIGHT,
+            CharacterAnimation::DEFAULT_POSITION,
+            0.3f, //ok
+            [this]()
         {
-            BulletPool()()->Fire(Communication()()->m_myInfo, bulletFirePos, bulletDir, ItemInfo::GetInitialBulletSpeed(TAG_RES_STATIC::Kar98k), ItemInfo::GetBaseDamage(TAG_RES_STATIC::Kar98k), TAG_RES_STATIC::Kar98k);
-            Sound()()->Play(TAG_SOUND::Kar98_NormalShoot,
-                GetTransform()->GetPosition(),
-                1.0f, FMOD_2D); 
-            Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove0,
-                GetTransform()->GetPosition(),
-                0.3f, FMOD_2D);
-            Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove1,
-                GetTransform()->GetPosition(),
-                0.8f, FMOD_2D);
-            Sound()()->addPlay(TAG_SOUND::Kar98_BoltMove2,
-                GetTransform()->GetPosition(),
-                1.0f, FMOD_2D);
-
-            Communication()()->SendEventSound(TAG_SOUND::Kar98_NormalShoot, GetTransform()->GetPosition());
-
-            //Kar98k BoltAction Animation
-            TAG_ANIM_CHARACTER tagAnim = TAG_ANIM_CHARACTER::COUNT;
-            if (m_stance == Stance::Stand || m_stance == Stance::Crouch)
-                tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Base;
-            else if (m_stance == Stance::Prone)
-                tagAnim = TAG_ANIM_CHARACTER::Weapon_Kar98k_BoltAction_1_Prone;
-
-            assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::RifleShooting(), tagAnim is COUNT");
-
-            //총 자체 애니메이션
-            m_hasChangingState = true;
-            m_isNeedRifleAnim = true;
-            inven.m_pHand->Set
-            (
-                TAG_ANIM_WEAPON::Weapon_Kar98k_BoltAction_1,
-                false,
-                Item::DEFAULT_BLENDING_TIME,
-                Item::DEFAULT_NEXT_WEIGHT,
-                Item::DEFAULT_POSITION,
-                Item::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this, &inven]() {
-
-                m_hasChangingState = false;
-
-                inven.m_pHand->Set(
-                    TAG_ANIM_WEAPON::Weapon_Kar98k_Idle,
-                    false);
-
-                m_isNeedRifleAnim = false;
-            });
-
-            //캐릭터의 애니메이션
-            m_hasChangingState = true;
+            m_hasChangingState = false;
             setAnimation(
-                CharacterAnimation::BodyPart::UPPER,
-                tagAnim,
-                true, //ok
-                CharacterAnimation::DEFAULT_BLENDING_TIME,
-                CharacterAnimation::DEFAULT_NEXT_WEIGHT,
-                CharacterAnimation::DEFAULT_POSITION,
-                CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-                [this]()
-            {
-                m_hasChangingState = false;
-                setAnimation(
-                    CharacterAnimation::BodyPart::BOTH,
-                    m_lowerAnimState,
-                    false);
-            });
-        }
+                CharacterAnimation::BodyPart::BOTH,
+                m_lowerAnimState,
+                true,
+                0.3f);
+        });
+    }
     break;
     }
     D3DXQUATERNION rot = (GetTransform())->GetRotation();
