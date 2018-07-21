@@ -114,6 +114,8 @@ Character::InGameUI::InGameUI()
     , m_killUpCoolDown(0.0f)
 
     , m_isKill(false)
+
+    , m_sum(0.0f)
 {
 }
 
@@ -153,24 +155,24 @@ void Character::InGameUI::Init(Character* pPlayer)
     pAimCircle->SetIsRender(false);
 
     //왼쪽 aim line
-    pAimRightLine = pAimLeftLine = new UIImage(
+    pAimLeftLine = pAimLeftLine = new UIImage(
         "./Resource/UI/InGame/",
         "aim_hor.png",
         D3DXVECTOR3(AIM_LEFT_X, AIM_LEFT_Y, 0.0f),
         nullptr,
         pBackground
     );
-    pAimRightLine->SetIsRender(false);
+    pAimLeftLine->SetIsRender(false);
 
     //오른쪽 aim line
-    pAimDownLine = pAimUpLine = new UIImage(
+    pAimRightLine = pAimUpLine = new UIImage(
         "./Resource/UI/InGame/",
         "aim_hor.png",
         D3DXVECTOR3(AIM_RIGHT_X, AIM_RIGHT_Y, 0.0f),
         nullptr,
         pBackground
     );
-    pAimDownLine->SetIsRender(false);
+    pAimRightLine->SetIsRender(false);
 
     //위쪽 aim line
     pAimUpLine = new UIImage(
@@ -562,13 +564,56 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     updateWeaponUI(inven);
 
     //aim
-    if (inven.m_pHand)
+    if (inven.m_pHand && !inven.isOpened)
     {
         pAimCircle->SetIsRender(true);
         pAimLeftLine->SetIsRender(true);
         pAimRightLine->SetIsRender(true);
         pAimUpLine->SetIsRender(true);
         pAimDownLine->SetIsRender(true);
+        
+        //여기서부터
+        //에임 벌어지는거 하면댐
+        auto& backAction = pPlayer->GetWaitBackAction();
+        if (backAction.Ing)
+        {
+            m_sum += backAction.curValX * 1000.0f;
+            if (backAction.Up)
+            {
+                cout << "backAction: true" << endl;
+                cout << "curValX: " << backAction.curValX * 1000.0f << endl;
+                cout << "sum: " << m_sum << endl;
+
+                pAimLeftLine->SetPosition(D3DXVECTOR3(
+                    AIM_LEFT_X - m_sum,
+                    AIM_LEFT_Y,
+                    0.0f));
+
+                pAimRightLine->SetPosition(D3DXVECTOR3(
+                    AIM_RIGHT_X + m_sum,
+                    AIM_RIGHT_Y,
+                    0.0f));
+
+                pAimUpLine->SetPosition(D3DXVECTOR3(
+                    AIM_UP_X,
+                    AIM_UP_Y - m_sum,
+                    0.0f));
+
+                pAimDownLine->SetPosition(D3DXVECTOR3(
+                    AIM_DOWN_X,
+                    AIM_DOWN_Y + m_sum,
+                    0.0f));
+            }
+            else
+            {
+                cout << "backAction: false" << endl;
+                m_sum = 0.0f;
+            }
+        }
+        else //backAction.Ing == false
+        {
+
+        }
     }
     else
     {

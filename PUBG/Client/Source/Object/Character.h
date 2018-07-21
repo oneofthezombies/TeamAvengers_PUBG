@@ -266,6 +266,8 @@ public:
 
         bool m_isKill;
 
+        float m_sum;
+
         InGameUI();
         ~InGameUI();
 
@@ -762,6 +764,7 @@ public:
 
     InGameUI& GetInGameUI();
     TotalInventory& GetTotalInventory();
+    WaitBackAction& GetWaitBackAction();
 
     //        const BoundingBox&              GetBoundingBox();
     virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;

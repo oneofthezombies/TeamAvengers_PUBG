@@ -1430,6 +1430,11 @@ Character::TotalInventory& Character::GetTotalInventory()
     return m_totalInventory;
 }
 
+Character::WaitBackAction& Character::GetWaitBackAction()
+{
+    return m_backAction;
+}
+
 void Character::MoveItemFieldToHead(Item* pItem)
 {
     TotalInventory& inven = m_totalInventory;
