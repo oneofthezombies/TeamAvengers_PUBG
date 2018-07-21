@@ -863,6 +863,8 @@ void Character::TotalInventory::DropArmor()
 {
     if (!m_pEquipArmor) return;
 
+    m_pEquipArmor->SetIsRenderUIImage(false);
+
     const std::string originItemName = m_pEquipArmor->GetName();
 
     DropItem(&m_pEquipArmor);
@@ -887,6 +889,7 @@ void Character::TotalInventory::EquipArmor(Item* pNewItem)
     }
 
     // ui ³¢¿ì±â
+    m_pEquipArmor->SetIsRenderUIImage(true);
     m_pUIArmor->pUIImage = m_pEquipArmor->GetUIImage();
     m_pUIArmor->pItem = m_pEquipArmor;
     m_pUIArmor->SetIsActive(true);
@@ -895,6 +898,8 @@ void Character::TotalInventory::EquipArmor(Item* pNewItem)
 void Character::TotalInventory::DropHead()
 {
     if (!m_pEquipHead) return;
+
+    m_pEquipHead->SetIsRenderUIImage(false);
 
     const std::string originItemName = m_pEquipHead->GetName();
 
@@ -920,6 +925,7 @@ void Character::TotalInventory::EquipHead(Item* pNewItem)
     }
 
     // ui ³¢¿ì±â
+    m_pEquipHead->SetIsRenderUIImage(true);
     m_pUIHead->pUIImage = m_pEquipHead->GetUIImage();
     m_pUIHead->pItem = m_pEquipHead;
     m_pUIHead->SetIsActive(true);
@@ -928,6 +934,8 @@ void Character::TotalInventory::EquipHead(Item* pNewItem)
 void Character::TotalInventory::DropBack()
 {
     if (!m_pEquipBack) return;
+
+    m_pEquipBack->SetIsRenderUIImage(false);
 
     const std::string originItemName = m_pEquipBack->GetName();
 
@@ -953,6 +961,7 @@ void Character::TotalInventory::EquipBack(Item* pNewItem)
     }
 
     // ui ³¢¿ì±â
+    m_pEquipBack->SetIsRenderUIImage(true);
     m_pUIBack->pUIImage = m_pEquipBack->GetUIImage();
     m_pUIBack->pItem = m_pEquipBack;
     m_pUIBack->SetIsActive(true);
