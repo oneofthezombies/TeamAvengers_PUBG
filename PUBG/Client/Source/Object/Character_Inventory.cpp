@@ -13,8 +13,7 @@
 using Event       = UIButtonWithItem::Event;
 using MouseButton = UIButtonWithItem::MouseButton;
 
-//const float Character::TotalInventory::DEFAULT_CAPACITY = 70.0f;
-const float Character::TotalInventory::DEFAULT_CAPACITY = 15.0f;
+const float Character::TotalInventory::DEFAULT_CAPACITY = 70.0f;
 const float Character::TotalInventory::FIRST_LINE = 233.0f;
 const float Character::TotalInventory::SECOND_LINE = 500.0f;
 
