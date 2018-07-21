@@ -61,6 +61,7 @@ void Quad::OnUpdate()
     }
 
     GetTransform()->SetPosition(pos);
+    GetTransform()->Update();
 }
 
 void Quad::OnRender()

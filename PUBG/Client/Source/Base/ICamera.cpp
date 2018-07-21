@@ -542,7 +542,7 @@ void CameraLobby::Reset()
 {
     m_rotation = Vector3::ZERO;
     m_fovY = D3DX_PI * 0.5f;
-    m_position = D3DXVECTOR3(0.0f, 160.0f, -350.0f);
+    m_position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 void CameraLobby::Update()
