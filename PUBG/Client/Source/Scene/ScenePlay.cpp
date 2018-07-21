@@ -255,6 +255,30 @@ void ScenePlay::setWithOthersMode()
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
+    p = D3DXVECTOR3(1000.0f, 200.0f, 200.0f);
+    name = "Ammo_5_56mm " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(1100.0f, 200.0f, 200.0f);
+    name = "Ammo_5_56mm " + std::to_string(2);
+    item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(1200.0f, 200.0f, 200.0f);
+    name = "Ammo_7_62mm " + std::to_string(0);
+    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    p = D3DXVECTOR3(1300.0f, 200.0f, 200.0f);
+    name = "Ammo_7_62mm " + std::to_string(1);
+    item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, p, r, s);
+    AddObject(item);
+    InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
     //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
     //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
     //Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
@@ -367,7 +391,7 @@ void ScenePlay::OnInit()
     }
     
     //LoadObjectsFromFile("./Resource/save.txt");
-    LoadObjectsFromFile("./Resource/save1.txt");
+    //LoadObjectsFromFile("./Resource/save1.txt");
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
     {
