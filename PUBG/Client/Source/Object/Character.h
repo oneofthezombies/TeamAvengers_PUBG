@@ -287,7 +287,7 @@ public:
 
         bool m_isKill;
 
-        float m_sum;
+        float m_sumUp;
 
         InGameUI();
         ~InGameUI();

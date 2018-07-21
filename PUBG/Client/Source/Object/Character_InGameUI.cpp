@@ -115,7 +115,7 @@ Character::InGameUI::InGameUI()
 
     , m_isKill(false)
 
-    , m_sum(0.0f)
+    , m_sumUp(0.0f)
 {
 }
 
@@ -577,42 +577,62 @@ void Character::InGameUI::Update(const TotalInventory& inven)
         auto& backAction = pPlayer->GetWaitBackAction();
         if (backAction.Ing)
         {
-            m_sum += backAction.curValX * 1000.0f;
             if (backAction.Up)
             {
+                m_sumUp += backAction.curValX * 0.5f * 1000.0f;
                 cout << "backAction: true" << endl;
-                cout << "curValX: " << backAction.curValX * 1000.0f << endl;
-                cout << "sum: " << m_sum << endl;
+                cout << "curValX_sumUp: " << backAction.curValX * 0.5f * 1000.0f << endl;
+                cout << "sumDown: " << m_sumUp << endl;
+                if (m_sumUp >= 50.0f)
+                    m_sumUp = 50.0f;
 
                 pAimLeftLine->SetPosition(D3DXVECTOR3(
-                    AIM_LEFT_X - m_sum,
+                    AIM_LEFT_X - m_sumUp,
                     AIM_LEFT_Y,
                     0.0f));
 
                 pAimRightLine->SetPosition(D3DXVECTOR3(
-                    AIM_RIGHT_X + m_sum,
+                    AIM_RIGHT_X + m_sumUp,
                     AIM_RIGHT_Y,
                     0.0f));
 
                 pAimUpLine->SetPosition(D3DXVECTOR3(
                     AIM_UP_X,
-                    AIM_UP_Y - m_sum,
+                    AIM_UP_Y - m_sumUp,
                     0.0f));
 
                 pAimDownLine->SetPosition(D3DXVECTOR3(
                     AIM_DOWN_X,
-                    AIM_DOWN_Y + m_sum,
+                    AIM_DOWN_Y + m_sumUp,
                     0.0f));
             }
-            else
+            else //backAction.Up == false
             {
-                cout << "backAction: false" << endl;
-                m_sum = 0.0f;
+                pAimLeftLine->SetPosition(D3DXVECTOR3(
+                    AIM_LEFT_X,
+                    AIM_LEFT_Y,
+                    0.0f));
+
+                pAimRightLine->SetPosition(D3DXVECTOR3(
+                    AIM_RIGHT_X,
+                    AIM_RIGHT_Y,
+                    0.0f));
+
+                pAimUpLine->SetPosition(D3DXVECTOR3(
+                    AIM_UP_X,
+                    AIM_UP_Y,
+                    0.0f));
+
+                pAimDownLine->SetPosition(D3DXVECTOR3(
+                    AIM_DOWN_X,
+                    AIM_DOWN_Y,
+                    0.0f));
+
+                m_sumUp = 0.0f;
             }
         }
         else //backAction.Ing == false
         {
-
         }
     }
     else
