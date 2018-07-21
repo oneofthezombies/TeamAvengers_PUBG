@@ -16,6 +16,7 @@ float Ballistics::GetVarianceY(const TAG_RES_STATIC tag, const float distance)
         }
         break;
     default:
+        return 0.0f;
         assert(false && "Ballistics::GetVarianceY(), default tag ");
     }
     
