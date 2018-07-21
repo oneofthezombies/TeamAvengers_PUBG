@@ -746,6 +746,7 @@ void Character::TotalInventory::DropItem(Item** ppOriginItem)
     originItem->SetIsInInventory(false);
     originItem->SetIsRenderEffectMesh(true);
     originItem->SetIsRenderSkinnedMesh(false);
+    originItem->GetTransform()->SetPosition(pCharacter->GetTransform()->GetPosition());
     originItem->GetTransform()->SetRotation(Vector3::ZERO);
     originItem->GetTransform()->Update();
 
