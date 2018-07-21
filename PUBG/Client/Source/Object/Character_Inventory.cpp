@@ -993,7 +993,7 @@ void Character::TotalInventory::ReleaseBullets(Item* pItem)
     {
         pAmmo = m_mapInventory[tagBullet].back();
     }
-    else // 인벤토리에 총알 객체가 업을 때
+    else // 인벤토리에 총알 객체가 없을 때
     {
         if (!m_empties[tagBullet].empty())
         {
