@@ -983,7 +983,7 @@ void Character::TotalInventory::ReleaseBullets(Item* pItem)
         const float overCapacity = -nextCapacity;
         numOverBullets = static_cast<int>(overCapacity / bulletCapacity);
 
-        assert(m_empties[tagBullet].empty() && "Character::TotalInventory::ReleaseBullets(), empties is empty, need more empties");
+        assert(!m_empties[tagBullet].empty() && "Character::TotalInventory::ReleaseBullets(), empties is empty, need more empties");
 
         pAmmo = m_empties[tagBullet].back();
         m_empties[tagBullet].pop_back();
