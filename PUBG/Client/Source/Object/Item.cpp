@@ -179,7 +179,7 @@ void Item::setup(const TAG_RES_STATIC tag)
 
             const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
             m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
-            m_pUIImage->SetIsRender(false);
+            m_pUIImage->SetIsRender(true);
             pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
                 D3DXVECTOR2(100.0f, 20.0f),
                 "",
@@ -222,7 +222,7 @@ void Item::setup(const TAG_RES_STATIC tag)
 
             const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
             m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
-            m_pUIImage->SetIsRender(false);
+            m_pUIImage->SetIsRender(true);
             pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
                 D3DXVECTOR2(100.0f, 20.0f),
                 "",
@@ -266,7 +266,7 @@ void Item::setup(const TAG_RES_STATIC tag)
 
             const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
             m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
-            m_pUIImage->SetIsRender(false);
+            m_pUIImage->SetIsRender(true);
             pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
                 D3DXVECTOR2(100.0f, 20.0f),
                 "",
