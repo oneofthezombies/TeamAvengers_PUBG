@@ -53,6 +53,10 @@ Character::TotalInventory::~TotalInventory()
         for (auto i : v.second)
             SAFE_DELETE(i);
 
+    for (auto kv : m_empties)
+        for (auto i : kv.second)
+            SAFE_DELETE(i);
+
     SAFE_DELETE(m_pEquipArmor);
     SAFE_DELETE(m_pEquipBack);
     SAFE_DELETE(m_pEquipHead);
