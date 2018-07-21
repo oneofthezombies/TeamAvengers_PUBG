@@ -466,75 +466,19 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
                 D3DXVECTOR3 destDir(destState->position.x - currPos.x, destState->position.y - currPos.y, destState->position.z - currPos.z);
                 D3DXVec3Normalize(&destDir, &destDir);
 
-                {
-
-
-                ////나에서 Obstacle의 center을 향하는 방향의 단위 normal dir
-                //D3DXVECTOR3 dirTowardsObstacle = (others.position + others.center) - currPos;
-                //dirTowardsObstacle.y = 0.0f;
-                //D3DXVec3Normalize(&dirTowardsObstacle, &dirTowardsObstacle);
-
-                ////Obstacle의 6개의 normal 방향
-                //D3DXVECTOR3 normals[6];
-                //normals[0] = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-                //normals[1] = D3DXVECTOR3(0.0f, 0.0f, 1.0f );
-                //normals[2] = D3DXVECTOR3(0.0f, -1.0f, 0.0f );
-                //normals[3] = D3DXVECTOR3(0.0f, 1.0f, 0.0f );
-                //normals[4] = D3DXVECTOR3(-1.0f, 0.0f, 0.0f );
-                //normals[5] = D3DXVECTOR3( 1.0f, 0.0f, 0.0f );
-
-                ////Obstacle이 돌아가 있다면 rotation 시켜주자 (바꿔주는 부분은 아래 for 문에서)
-                //D3DXMATRIX matR;
-                //D3DXMatrixRotationQuaternion(&matR, &others.rotation);
-
-                //float smallest = FLT_MAX;
-                //int save = -1;
-                //for (int i = 0; i < 6; i++)
-                //{
-                //    D3DXVec3TransformNormal(&normals[i], &normals[i], &matR);
-                //    D3DXVec3Normalize(&normals[i], &normals[i]);
-
-                //    float res = D3DXVec3Dot(&normals[i], &dirTowardsObstacle);
-                //    if (smallest>res)
-                //    {
-                //        smallest = res;
-                //        save = i;
-                //    }
-                //}
-                //save = 0;
-                //방향이 toward obstacle 이라면
-                //if (D3DXVec3Dot(&destDir, &dirTowardsObstacle) <= 0.0f)
-                }
-                
                 //std::vector<D3DXVECTOR3> ns = Collision::GetCollidedNormal(m_bBox.center + m_bBox.position, others);
                 D3DXVECTOR3 normal = Collision::GetCollidedNormal2(m_bBox.center + m_bBox.position, others);
                 
+                D3DXVECTOR3 towardsBoxDir = (others.position+others.center) - currPos;
+                towardsBoxDir.y = 0;
+                D3DXVec3Normalize(&towardsBoxDir,&towardsBoxDir);
 
-
-
+                
+                if (D3DXVec3Dot(&destDir, &-normal) > 0.0f)
                 {
-                    //bool isCC = false;
-                    //D3DXVECTOR3 t = Vector3::ZERO;
-                    //for (auto n : ns)
-                    //{
-                    //    D3DXVECTOR3 ret = D3DXVec3Dot(&destDir, &n)*n;
-
-                    //    if (D3DXVec3Dot(&n, &ret) < 0.0f)
-                    //    {
-                    //        isCC = true;
-                    //    }
-
-                    //    t += ret;
-                    //}
-
-                    //if (isCC)
-                    //{
-                    //    D3DXVECTOR3 slidingVector = destDir - t;
-                    //    destState->position = currPos + slidingVector;
-                    //}
-
+                    D3DXVECTOR3 slidingVector = destDir - D3DXVec3Dot(&destDir, &normal)*normal;
+                    destState->position = currPos + slidingVector;
                 }
-                                
 
             }
         }
