@@ -130,7 +130,7 @@ public:
         TAG_RIFLE m_handState;
 
         ////////////ÇÔ¼ö
-        void Init();
+        void Init(Character* pChracter);
         void Destroy();
 
         void Open();
@@ -794,6 +794,7 @@ public:
 
     void SetReadyAnimation();
     void SetNotReadyAnimation();
+    void InitScenePlay();
 
 /**************************** end public method ******************************/
 

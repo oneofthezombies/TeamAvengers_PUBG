@@ -1304,6 +1304,10 @@ void Character::SetNotReadyAnimation()
     }
 }
 
+void Character::InitScenePlay()
+{
+}
+
 void Character::movementControl(OUT State* OutState)
 {
     //มกวม

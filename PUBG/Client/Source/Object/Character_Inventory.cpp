@@ -65,8 +65,10 @@ Character::TotalInventory::~TotalInventory()
     SAFE_DELETE(m_pWeaponSecondary);
 }
 
-void Character::TotalInventory::Init()
+void Character::TotalInventory::Init(Character* pCharacter)
 {
+    this->pCharacter = pCharacter;
+
     ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
     UIObject* layer1 = scenePlay->GetLayer(1);
 
