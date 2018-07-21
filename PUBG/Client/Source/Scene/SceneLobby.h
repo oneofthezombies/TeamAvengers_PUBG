@@ -1,9 +1,9 @@
 #pragma once
 #include "IScene.h"
 #include "UIButton.h"
-#include "Quad.h"
 
 class UIImage;
+class Quad;
 
 class ReadyButtonListener : public IUIButtonOnMouseListener
 {
@@ -37,7 +37,7 @@ public:
 private:
     UIImage* m_pBackground;
     ReadyButtonListener m_readyButtonListener;
-    Quad m_quad;
+    Quad* pQuad;
 
 public:
     SceneLobby();

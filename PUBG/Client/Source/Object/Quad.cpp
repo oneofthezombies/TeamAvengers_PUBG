@@ -10,22 +10,23 @@ Quad::Quad()
     m_vertices.resize(4);
     m_vertices[0].p = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);
     m_vertices[0].t = D3DXVECTOR2(0.0f, 1.0f);
+
     m_vertices[1].p = D3DXVECTOR3(-1.0f, 1.0f, 0.0f);
     m_vertices[1].t = D3DXVECTOR2(0.0f, 0.0f);
+
     m_vertices[2].p = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
     m_vertices[2].t = D3DXVECTOR2(1.0f, 0.0f);
-    m_vertices[3].p = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
+
+    m_vertices[3].p = D3DXVECTOR3(1.0f, -1.0f, 0.0f);
     m_vertices[3].t = D3DXVECTOR2(1.0f, 1.0f);
 
     m_indices.resize(6);
     m_indices[0] = 0;
     m_indices[1] = 1;
     m_indices[2] = 2;
-    m_indices[3] = 0;
-    m_indices[4] = 2;
-    m_indices[5] = 3;
-
-    GetTransform()->SetRotation(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
+    m_indices[3] = 3;
+    m_indices[4] = 0;
+    m_indices[5] = 2;
 }
 
 Quad::~Quad()
@@ -84,12 +85,12 @@ void Quad::OnRender()
         Device()()->DrawIndexedPrimitiveUP(
             D3DPT_TRIANGLELIST, 
             0, 
-            static_cast<UINT>(m_vertices.size()), 
-            static_cast<UINT>(m_indices.size() / 3),
-            m_indices.data(), 
+            4, 
+            2,
+            &m_indices[0], 
             D3DFMT_INDEX16, 
-            m_vertices.data(), 
-            sizeof m_vertices.front());
+            &m_vertices[0], 
+            sizeof VERTEX_PT);
     });
 }
 

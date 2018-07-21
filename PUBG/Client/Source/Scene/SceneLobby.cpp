@@ -2,6 +2,7 @@
 #include "SceneLobby.h"
 #include "UIImage.h"
 #include "UIText.h"
+#include "Quad.h"
 
 const D3DXVECTOR3 SceneLobby::PLAYER_0_POSITION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 const D3DXVECTOR3 SceneLobby::PLAYER_1_POSITION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -17,6 +18,7 @@ SceneLobby::SceneLobby()
     : IScene()
     , m_pBackground(nullptr)
     , m_readyButtonListener()
+    , pQuad(nullptr)
 {
 }
 
@@ -233,11 +235,12 @@ void SceneLobby::OnInit()
 
     AddCharacters();
 
-    m_quad.SetTexture(
-        "./Resource/UI/Lobby/",
-        "lobby_bg.png");
-    m_quad.SetScale(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
-    AddObject(&m_quad);
+    pQuad = new Quad;
+    pQuad->SetTexture(
+        "./Resource/",
+        "RandomLoading01.tga");
+    pQuad->SetScale(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
+    AddObject(pQuad);
 }
 
 void SceneLobby::OnUpdate()
