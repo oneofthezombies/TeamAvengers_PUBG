@@ -158,52 +158,52 @@ Character::~Character()
 
 void Character::OnUpdate()
 {
-    const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
+    //const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
 
-    if (receivedHealth < m_health)
-    {
-        m_health = receivedHealth;
-        m_isDamaged = true;
-    }
-    m_isDead = Communication()()->m_roomInfo.playerInfos[m_index].isDead;
+    //if (receivedHealth < m_health)
+    //{
+    //    m_health = receivedHealth;
+    //    m_isDamaged = true;
+    //}
+    //m_isDead = Communication()()->m_roomInfo.playerInfos[m_index].isDead;
 
-    updateMine();
-    updateOther();
+    //updateMine();
+    //updateOther();
 
-    Debug << "------current cell space ------ : " << m_cellIndex << endl;
-    
+    //Debug << "------current cell space ------ : " << m_cellIndex << endl;
+    //
 
-    // update
-    GetTransform()->Update();      // set characters world
-    pAnimation->UpdateAnimation(); // set characters local
-    updateBone();                  // modified characters local
-    pAnimation->UpdateModel();     // set characters model
+    //// update
+    //GetTransform()->Update();      // set characters world
+    //pAnimation->UpdateAnimation(); // set characters local
+    //updateBone();                  // modified characters local
+    //pAnimation->UpdateModel();     // set characters model
 
-    // 캐릭터와 장비 애니메이션 씽크
-    syncAnimation();
+    //// 캐릭터와 장비 애니메이션 씽크
+    //syncAnimation();
 
-    // set item animation, item model here
-    updateTotalInventory();
+    //// set item animation, item model here
+    //updateTotalInventory();
 
-    // bounding sphere move to character position
-    m_boundingSphere.position = GetTransform()->GetPosition();
+    //// bounding sphere move to character position
+    //m_boundingSphere.position = GetTransform()->GetPosition();
 
-    //m_bSphereSlidingCollision.position = GetTransform()->GetPosition();
-    m_bBox.position = GetTransform()->GetPosition();
-    m_bBox.rotation = GetTransform()->GetRotation();
+    ////m_bSphereSlidingCollision.position = GetTransform()->GetPosition();
+    //m_bBox.position = GetTransform()->GetPosition();
+    //m_bBox.rotation = GetTransform()->GetRotation();
 
-    for (auto pPart : m_characterParts)
-        pPart->Update();
+    //for (auto pPart : m_characterParts)
+    //    pPart->Update();
 
-    if (IsFire())
-        RifleShooting();
-        
-    Shader()()->AddShadowSource(
-        GetTransform()->GetTransformationMatrix(), 
-        pAnimation->GetSkinnedMesh());
+    //if (IsFire())
+    //    RifleShooting();
+    //    
+    //Shader()()->AddShadowSource(
+    //    GetTransform()->GetTransformationMatrix(), 
+    //    pAnimation->GetSkinnedMesh());
 
-    // communication
-    communicate();
+    //// communication
+    //communicate();
 }
 
 void Character::OnRender()
