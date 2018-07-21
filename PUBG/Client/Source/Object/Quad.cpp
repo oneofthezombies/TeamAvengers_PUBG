@@ -32,6 +32,35 @@ Quad::~Quad()
 
 void Quad::OnUpdate()
 {
+    D3DXVECTOR3 pos = GetTransform()->GetPosition();
+    const float speed = 0.5f;
+
+    if (Input()()->IsStayKeyDown('W'))
+    {
+        pos.z += speed;
+    }
+    if (Input()()->IsStayKeyDown('S'))
+    {
+        pos.z -= speed;
+    }
+    if (Input()()->IsStayKeyDown('A'))
+    {
+        pos.x -= speed;
+    }
+    if (Input()()->IsStayKeyDown('D'))
+    {
+        pos.x += speed;
+    }
+    if (Input()()->IsStayKeyDown('Q'))
+    {
+        pos.y -= speed;
+    }
+    if (Input()()->IsStayKeyDown('E'))
+    {
+        pos.y += speed;
+    }
+
+    GetTransform()->SetPosition(pos);
 }
 
 void Quad::OnRender()
