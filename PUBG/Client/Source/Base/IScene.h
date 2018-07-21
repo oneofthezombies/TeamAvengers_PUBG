@@ -34,7 +34,6 @@ struct CellSpace
 {
     size_t                    pIndex;
     std::set<TerrainFeature*> pTerrainFeatures;
-    //std::set<Bullet*>         pBullets;
     std::set<Character*>      pCharacters;
     std::set<IObject*>        pDoors;
     std::set<IObject*>        pWindows;
@@ -55,7 +54,8 @@ protected:
 public:
     Area                    m_NearArea;
     Area                    m_RayArea;
-    Area                    m_BulletArea;
+    
+    
 
     IScene();
 

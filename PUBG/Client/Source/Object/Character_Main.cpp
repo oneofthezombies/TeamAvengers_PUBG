@@ -171,8 +171,6 @@ void Character::OnUpdate()
     updateMine();
     updateOther();
 
-    Debug << "------current cell space ------ : " << m_cellIndex << endl;
-    
 
     // update
     GetTransform()->Update();      // set characters world
@@ -479,12 +477,12 @@ void Character::updateMine()
     //    BulletPool()()->Fire(Communication()()->m_myInfo,pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_RES_STATIC::QBZ);
     //}
 
-    ForDebug();
-    Debug << "current        position : " << pos << "\n\n"
-        << "current upper animation : "
-        << pAnimation->GetUpperAnimationName() << '\n'
-        << "current lower animation : "
-        << pAnimation->GetLowerAnimationName() << "\n\n";
+    //ForDebug();
+    //Debug << "current        position : " << pos << "\n\n"
+    //    << "current upper animation : "
+    //    << pAnimation->GetUpperAnimationName() << '\n'
+    //    << "current lower animation : "
+    //    << pAnimation->GetLowerAnimationName() << "\n\n";
 
     //¿©±â
     //for InGameUI
