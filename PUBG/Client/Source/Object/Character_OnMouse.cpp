@@ -70,7 +70,10 @@ void Character::onMouse(
                 pPickedImage->SetTexture(pItemImage->GetTexture());
                 pPickedImage->SetSize(pItemImage->GetSize());
             }
-            else if (tag == TAG_UI_POSITION::Weapon2)
+            else if (tag == TAG_UI_POSITION::Weapon2 ||
+                tag == TAG_UI_POSITION::Armor ||
+                tag == TAG_UI_POSITION::Bag ||
+                tag == TAG_UI_POSITION::Helmat)
             {
                 POINT mouse = Mouse::GetPosition();
 
@@ -86,6 +89,7 @@ void Character::onMouse(
                 pPickedImage->SetTexture(pItemImage->GetTexture());
                 pPickedImage->SetSize(pItemImage->GetSize());
             }
+          
             inven.m_stateClicked = true;
 
         }
@@ -198,22 +202,34 @@ void Character::onMouse(
 
                     case TAG_ITEM_CATEGORY::Armor:
                         {
-                            inven.DropItem(&pUIButtonWithItem->pItem);
+                            //inven.DropItem(&pUIButtonWithItem->pItem);
+                            inven.DropArmor();
+                            inven.m_pUIArmor->pUIImage = nullptr;
+                            inven.m_pUIArmor->pItem = nullptr;
+                            inven.m_pUIArmor->SetIsActive(false);
+                            
                             Communication()()->SendEventMoveItemArmorToField(m_index, itemName);
+                            
                         }
                         break;
 
                     case TAG_ITEM_CATEGORY::Back:
                         {
-                            inven.DropItem(&pUIButtonWithItem->pItem);
+                            inven.DropBack();
                             Communication()()->SendEventMoveItemBackToField(m_index, itemName);
+                            inven.m_pUIBack->pUIImage = nullptr;
+                            inven.m_pUIBack->pItem = nullptr;
+                            inven.m_pUIBack->SetIsActive(false);
                         }
                         break;
 
                     case TAG_ITEM_CATEGORY::Head:
                         {
-                            inven.DropItem(&pUIButtonWithItem->pItem);
+                            inven.DropHead();
                             Communication()()->SendEventMoveItemHeadToField(m_index, itemName);
+                            inven.m_pUIHead->pUIImage = nullptr;
+                            inven.m_pUIHead->pItem = nullptr;
+                            inven.m_pUIHead->SetIsActive(false);
                         }
                         break;
 

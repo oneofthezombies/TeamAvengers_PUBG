@@ -205,10 +205,14 @@ void Character::TotalInventory::Update()
             pUI->pItem = pItem;
             pUI->m_tagUIPosition = UIPosition::GetTag(TAG_UI_POSITION::dropped_0, idx);
             pUI->pUIImage = pItem->GetUIImage();
-            //pUI->SetText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
-            //    string(ItemInfo::GetName(pItem->GetTagResStatic()) +"   "+ to_string(pItem->GetCount())),
-            //    D3DCOLOR_XRGB(255, 255, 255));
-            pItem->GetUIText()->SetText(string(ItemInfo::GetName(pItem->GetTagResStatic()) + "   " + to_string(pItem->GetCount())));
+            if (ItemInfo::GetItemCategory(pItem->GetTagResStatic()) == TAG_ITEM_CATEGORY::Ammo)
+            {
+                pItem->GetUIText()->SetText(string(ItemInfo::GetName(pItem->GetTagResStatic()) + "   " + to_string(pItem->GetCount())));
+            }
+            else
+            {
+                pItem->GetUIText()->SetText(string(ItemInfo::GetName(pItem->GetTagResStatic())));
+            }
             pUI->SetIsActive(true);
         }
         // end set ui dropped
@@ -233,7 +237,14 @@ void Character::TotalInventory::Update()
                 pUI->pItem = item;
                 pUI->m_tagUIPosition = UIPosition::GetTag(TAG_UI_POSITION::inven_0, idx);
                 pUI->pUIImage = item->GetUIImage();
-                item->GetUIText()->SetText(string(ItemInfo::GetName(item->GetTagResStatic()) + "   " + to_string(item->GetCount())));
+                if (ItemInfo::GetItemCategory(item->GetTagResStatic()) == TAG_ITEM_CATEGORY::Ammo)
+                {
+                    item->GetUIText()->SetText(string(ItemInfo::GetName(item->GetTagResStatic()) + "   " + to_string(item->GetCount())));
+                }
+                else
+                {
+                    item->GetUIText()->SetText(string(ItemInfo::GetName(item->GetTagResStatic())));
+                }
                 pUI->SetIsActive(true);
                 idx++;
             }
@@ -342,7 +353,6 @@ void Character::TotalInventory::SetEquipUI()
                 std::placeholders::_1,
                 std::placeholders::_2,
                 std::placeholders::_3));
-
         u->SetIsActive(false);
     }
 
@@ -350,6 +360,12 @@ void Character::TotalInventory::SetEquipUI()
     //Çï¸ä
     left = 440;
     top = 93;
+    new UIImage("./Resource/UI/Inventory/Basic/",
+        "Equip_no.png", D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        nullptr, pBorder);
+
     m_pUIHead = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
@@ -367,11 +383,17 @@ void Character::TotalInventory::SetEquipUI()
             std::placeholders::_1,
             std::placeholders::_2,
             std::placeholders::_3));
-    //u->SetIsActive(false);
+    m_pUIHead->SetIsActive(false);
 
     //°¡¹æ
     left = 440;
     top = 248;
+    new UIImage("./Resource/UI/Inventory/Basic/",
+        "Equip_no.png", D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        nullptr, pBorder);
+
     m_pUIBack = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
@@ -389,11 +411,17 @@ void Character::TotalInventory::SetEquipUI()
             std::placeholders::_1,
             std::placeholders::_2,
             std::placeholders::_3));
-    //u->SetIsActive(false);
+    m_pUIBack->SetIsActive(false);
 
      //¾Æ¸Ó
     left = 440;
     top = 293;
+    new UIImage("./Resource/UI/Inventory/Basic/",
+        "Equip_no.png", D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        nullptr, pBorder);
+
     m_pUIArmor = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
@@ -411,10 +439,10 @@ void Character::TotalInventory::SetEquipUI()
             std::placeholders::_1,
             std::placeholders::_2,
             std::placeholders::_3));
-    //u->SetIsActive(false);
+    m_pUIArmor->SetIsActive(false);
 
      //º§Æ®
-    left = 440;
+    /*left = 440;
     top = 337;
     auto u = new UIButtonWithItem(
         D3DXVECTOR3(
@@ -432,7 +460,7 @@ void Character::TotalInventory::SetEquipUI()
             pCharacter,
             std::placeholders::_1,
             std::placeholders::_2,
-            std::placeholders::_3));
+            std::placeholders::_3));*/
     //u->SetIsActive(false);
 
 
@@ -504,7 +532,7 @@ void Character::TotalInventory::SetEquipUI()
      //¹«±â ½½·Ô 3
      left = 870;
      top = 375;
-     u = new UIButtonWithItem(
+     auto u = new UIButtonWithItem(
          D3DXVECTOR3(
              static_cast<float>(left),
              static_cast<float>(top), 0.0f),
@@ -892,10 +920,11 @@ void Character::TotalInventory::EquipArmor(Item* pNewItem)
     }
 
     // ui ³¢¿ì±â
-    m_pEquipArmor->SetIsRenderUIImage(true);
+
     m_pUIArmor->pUIImage = m_pEquipArmor->GetUIImage();
     m_pUIArmor->pItem = m_pEquipArmor;
     m_pUIArmor->SetIsActive(true);
+    m_pEquipArmor->GetUIText()->SetText("");
 }
 
 void Character::TotalInventory::DropHead()
@@ -928,10 +957,10 @@ void Character::TotalInventory::EquipHead(Item* pNewItem)
     }
 
     // ui ³¢¿ì±â
-    m_pEquipHead->SetIsRenderUIImage(true);
     m_pUIHead->pUIImage = m_pEquipHead->GetUIImage();
     m_pUIHead->pItem = m_pEquipHead;
     m_pUIHead->SetIsActive(true);
+    m_pEquipHead->GetUIText()->SetText("");
 }
 
 void Character::TotalInventory::DropBack()
@@ -964,10 +993,10 @@ void Character::TotalInventory::EquipBack(Item* pNewItem)
     }
 
     // ui ³¢¿ì±â
-    m_pEquipBack->SetIsRenderUIImage(true);
     m_pUIBack->pUIImage = m_pEquipBack->GetUIImage();
     m_pUIBack->pItem = m_pEquipBack;
     m_pUIBack->SetIsActive(true);
+    m_pEquipBack->GetUIText()->SetText("");
 }
 
 void Character::TotalInventory::ReleaseBullets(Item* pItem)
