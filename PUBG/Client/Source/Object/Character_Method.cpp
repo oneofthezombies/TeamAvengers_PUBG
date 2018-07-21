@@ -617,27 +617,6 @@ void Character::itemSphereCollisionInteraction()
             if (m_currentOnceKey._F)
             {
                 PutItemInTotalInventory(rayItm); //inventory에 넣기
-                                                 //current scene 에서 지우기
-                //pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
-
-                //rayItm->SetIsInInventory(true);
-                
-                //if (m_totalInventory.m_pWeaponPrimary)
-                //{
-                //    m_totalInventory.m_pWeapon1->SetIsActive(true);
-                //    m_totalInventory.m_pWeapon1->pUIImage =
-                //        m_totalInventory.m_pWeaponPrimary->GetUIImage2();
-                //    m_totalInventory.m_pWeapon1->pItem = 
-                //        m_totalInventory.m_pWeaponPrimary;
-                //}
-                //if (m_totalInventory.m_pWeaponSecondary)
-                //{
-                //    m_totalInventory.m_pWeapon2->SetIsActive(true);
-                //    m_totalInventory.m_pWeapon2->pUIImage = 
-                //        m_totalInventory.m_pWeaponSecondary->GetUIImage2();
-                //    m_totalInventory.m_pWeapon2->pItem = 
-                //        m_totalInventory.m_pWeaponSecondary;
-                //}
                 return;
             }
         }
@@ -645,26 +624,6 @@ void Character::itemSphereCollisionInteraction()
         if (m_currentOnceKey._F)
         {
             PutItemInTotalInventory(itm); //inventory에 넣기
-            //current scene 에서 지우기
-            //pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(itm->GetTransform()->GetPosition()), itm);
-            //itm->SetIsInInventory(true);
-
-            //if (m_totalInventory.m_pWeaponPrimary)
-            //{
-            //    m_totalInventory.m_pWeapon1->SetIsActive(true);
-            //    m_totalInventory.m_pWeapon1->pUIImage =
-            //        m_totalInventory.m_pWeaponPrimary->GetUIImage2();
-            //    m_totalInventory.m_pWeapon1->pItem =
-            //        m_totalInventory.m_pWeaponPrimary;
-            //}
-            //if (m_totalInventory.m_pWeaponSecondary)
-            //{
-            //    m_totalInventory.m_pWeapon2->SetIsActive(true);
-            //    m_totalInventory.m_pWeapon2->pUIImage =
-            //        m_totalInventory.m_pWeaponSecondary->GetUIImage2();
-            //    m_totalInventory.m_pWeapon2->pItem =
-            //        m_totalInventory.m_pWeaponSecondary;
-            //}
             return;
         }
 
