@@ -741,7 +741,7 @@ void Character::TotalInventory::DropItem(Item** ppOriginItem)
         category == TAG_ITEM_CATEGORY::Back ||
         category == TAG_ITEM_CATEGORY::Head)
         m_equipOnNum--;
-
+        
     // 아이템을 필드로
     originItem->SetIsInInventory(false);
     originItem->SetIsRenderEffectMesh(true);
