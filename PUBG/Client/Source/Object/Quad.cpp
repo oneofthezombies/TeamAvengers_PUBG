@@ -94,6 +94,7 @@ void Quad::OnRender()
 void Quad::SetTexture(const std::string& path, const std::string& filename)
 {
     pTexture = Resource()()->GetTexture(path, filename);
+    assert(pTexture && "Quad::SetTexture(), texture is null.");
 }
 
 void Quad::SetPosition(const D3DXVECTOR3& p)
