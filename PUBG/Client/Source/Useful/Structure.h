@@ -6,6 +6,16 @@ class UIText;
 
 //struct ResourceContainer;
 
+struct VERTEX_PT
+{
+    D3DXVECTOR3 p;
+    D3DXVECTOR2 t;
+
+    VERTEX_PT();
+
+    enum { FVF = D3DFVF_XYZ | D3DFVF_TEX1 };
+};
+
 struct VERTEX_RHWC
 {
     D3DXVECTOR4 p;

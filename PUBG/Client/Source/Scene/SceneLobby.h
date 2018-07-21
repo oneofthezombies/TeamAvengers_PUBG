@@ -1,6 +1,7 @@
 #pragma once
 #include "IScene.h"
 #include "UIButton.h"
+#include "Quad.h"
 
 class UIImage;
 
@@ -36,6 +37,7 @@ public:
 private:
     UIImage* m_pBackground;
     ReadyButtonListener m_readyButtonListener;
+    Quad m_quad;
 
 public:
     SceneLobby();
@@ -45,5 +47,7 @@ public:
     virtual void OnUpdate() override;
 
     void StartPlay();
+    void AddCharacters();
+    void RemoveCharacters();
 };
 

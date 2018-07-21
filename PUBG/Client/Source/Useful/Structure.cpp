@@ -2,6 +2,12 @@
 #include "Structure.h"
 #include "Light.h"
 
+VERTEX_PT::VERTEX_PT()
+    : p(Vector3::ZERO)
+    , t(D3DXVECTOR2(0.0f, 0.0f))
+{
+}
+
 VERTEX_RHWC::VERTEX_RHWC()
     : p(0.0f, 0.0f, 0.0f, 0.0f)
     , c(D3DCOLOR_XRGB(0, 0, 0))

@@ -34,6 +34,9 @@ void SceneManager::Init()
 
 void SceneManager::Destroy()
 {
+    for (auto& c : m_characters)
+        SAFE_DELETE(c);
+
 	for (auto& s : m_scenes)
         SAFE_DELETE(s.second);
 }

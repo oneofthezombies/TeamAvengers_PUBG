@@ -1136,6 +1136,9 @@ void SceneLoading::addHeightmapResource()
         "./Resource/Heightmap/", 
         "Heightmap.jpg", 
         pResourceContainer);
+
+    Resource::Async::CreateEffect("./Resource/", "Quad.fx", pResourceContainer);
+
     Resource()()->AddResource(pResourceContainer);
 }
 

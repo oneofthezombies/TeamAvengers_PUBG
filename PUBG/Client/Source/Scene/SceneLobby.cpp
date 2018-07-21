@@ -28,7 +28,7 @@ void SceneLobby::OnInit()
 {
     m_pBackground = new UIImage(
         "./Resource/UI/Lobby/",
-        "lobby_bg.png", //"transparent_1280_720",
+        "transparent_1280_720",
         Vector3::ZERO,
         nullptr,
         nullptr
@@ -230,6 +230,14 @@ void SceneLobby::OnInit()
         readyNickNameBg);
     readyNickNameText->SetDrawTextFormat(DT_LEFT);
     readyNickNameText->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
+
+    AddCharacters();
+
+    m_quad.SetTexture(
+        "./Resource/UI/Lobby/",
+        "lobby_bg.png");
+    m_quad.SetScale(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
+    AddObject(&m_quad);
 }
 
 void SceneLobby::OnUpdate()
@@ -239,7 +247,20 @@ void SceneLobby::OnUpdate()
 void SceneLobby::StartPlay()
 {
     UI()()->Destroy(m_pBackground);
+    RemoveCharacters();
     Scene()()->SetCurrentScene(TAG_SCENE::Play);
+}
+
+void SceneLobby::AddCharacters()
+{
+    for (auto c : Scene()()->GetCharacters())
+        AddObject(c);
+}
+
+void SceneLobby::RemoveCharacters()
+{
+    for (auto c : Scene()()->GetCharacters())
+        RemoveObject(c);
 }
 
 ReadyButtonListener::ReadyButtonListener()
