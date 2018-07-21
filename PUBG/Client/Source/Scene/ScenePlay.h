@@ -16,6 +16,7 @@ private:
 
     void setAloneMode();
     void setWithOthersMode();
+    void setEmptyBullets(std::vector<Character*>* OutCharacters);
 
 public:
     ScenePlay();

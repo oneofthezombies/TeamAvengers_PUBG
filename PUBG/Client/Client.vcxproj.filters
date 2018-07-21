@@ -68,6 +68,8 @@
     <ClCompile Include="Source\Object\DeathDropBox.cpp" />
     <ClCompile Include="Source\Object\Character_OnHand.cpp" />
     <ClCompile Include="Source\Scene\SceneLobby.cpp" />
+    <ClCompile Include="Source\Object\Character_OnMouse.cpp" />
+    <ClCompile Include="Source\Useful\UsefulClientOnly.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod64.dll" />
@@ -133,5 +135,6 @@
     <ClInclude Include="Source\Object\DeathDropBox.h" />
     <ClInclude Include="Source\Scene\SceneLobby.h" />
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="Source\Useful\UsefulClientOnly.h" />
   </ItemGroup>
 </Project>

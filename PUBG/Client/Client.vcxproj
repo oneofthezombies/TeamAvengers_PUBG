@@ -139,6 +139,7 @@
     <ClCompile Include="Source\Scene\SceneLobby.cpp" />
     <ClCompile Include="Source\Object\Character_OnHand.cpp" />
     <ClCompile Include="Source\Object\Character_GameOverUI.cpp" />
+    <ClCompile Include="Source\Object\Character_OnMouse.cpp" />
     <ClCompile Include="Source\Object\DeathDropBox.cpp" />
     <ClCompile Include="Source\UI\UITest.cpp" />
     <ClCompile Include="Source\Useful\Area.cpp" />
@@ -200,6 +201,7 @@
     <ClCompile Include="Source\UI\UITextInputField.cpp" />
     <ClCompile Include="Source\Useful\TagAnimation.cpp" />
     <ClCompile Include="Source\Useful\TagUIPosition.cpp" />
+    <ClCompile Include="Source\Useful\UsefulClientOnly.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -266,6 +268,7 @@
     <ClInclude Include="Source\Useful\TagResource.h" />
     <ClInclude Include="Source\Useful\TagAnimation.h" />
     <ClInclude Include="Source\Useful\TagUIPosition.h" />
+    <ClInclude Include="Source\Useful\UsefulClientOnly.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

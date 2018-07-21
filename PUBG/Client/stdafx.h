@@ -21,6 +21,7 @@
 // end debug
 
 // math and usefuls
+#include "UsefulClientOnly.h"
 #include "Ray.h"
 #include "Collision.h"        // has Collision    ()()
 #include "Light.h"
@@ -43,9 +44,9 @@
                               //     CurrentCamera()()
 #include "Client.h"           // has Communication()()
 #include "Bullet.h"           // has BulletPool   ()()
-#include "Particle.h"         // has ParticlePool ()()
 #include "DebugManager.h"     // has DebugMgr     ()()
                               //     macro Debug
+#include "Particle.h"         // has ParticlePool ()()
 
 #include "IScene.h"
 #include "ICamera.h"           

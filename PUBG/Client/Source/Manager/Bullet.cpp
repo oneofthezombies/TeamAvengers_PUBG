@@ -397,7 +397,6 @@ void _BulletPool::Render()
         D3DXCOLOR Red(1.0f, 0.f, 0.0f, 1.0f);
         pEffect->SetValue("Color", &Red, sizeof Red);
     });
-
 }
 
 Bullet* _BulletPool::Fire(
