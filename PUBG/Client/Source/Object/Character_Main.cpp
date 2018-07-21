@@ -98,10 +98,6 @@ Character::Character(const int index)
 
     pTransform->SetRotation(OFFSET_ROTATION);
 
-    IScene* CS = CurrentScene()();
-    m_cellIndex = CS->GetCellIndex(pTransform->GetPosition());                   //캐릭터의 pos에 따라 알맞은 area에 넣어주기
-    CS->InsertObjIntoTotalCellSpace(TAG_OBJECT::Character, m_cellIndex, this);   //Object 를 TotalCellSpace(Area)에 넣기
-
     //putting character into TotalCellSpace
     IScene* CS = CurrentScene()();
     m_cellIndex = CS->GetCellIndex(pTransform->GetPosition());                   //캐릭터의 pos에 따라 알맞은 area에 넣어주기
