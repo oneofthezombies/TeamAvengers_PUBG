@@ -492,8 +492,8 @@ private:
 
     // for character x character collision
     BoundingBox m_bBox;
-    //BoundingSphere m_bSphereSlidingCollision;
-
+    float addY;
+    bool  onBox;
     float m_stepDistance;
 
 /**************************** end member variable ****************************/

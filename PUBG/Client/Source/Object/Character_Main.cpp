@@ -343,6 +343,7 @@ void Character::updateMine()
     //Terrain과의 충돌체크
     //terrainFeaturesCollisionInteraction(&destState);
     terrainFeaturesCollisionInteraction(&destState);
+    
     //Item 과의 충돌체크
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////
