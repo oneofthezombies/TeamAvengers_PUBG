@@ -314,8 +314,8 @@ void Character::backAction(D3DXQUATERNION* OutRotation, int virtical, int horizo
 
 void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
 {
-    addY = 0.0f;
-    onBox = false;
+    m_adjust_Y_onCollision = 0.0f;
+    m_isCollidedWithBox = false;
     IScene* pCurrentScene = CurrentScene()();
     bool hasCollision = false;
     auto tfs(pCurrentScene->m_NearArea.GetTerrainFeatures());
@@ -401,8 +401,8 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
             int i = 0;
         }
     }
-    addY = destState->position.y;
-    onBox = hasCollision;
+    m_adjust_Y_onCollision = destState->position.y;
+    m_isCollidedWithBox = hasCollision;
 
 }
 void Character::itemSphereCollisionInteraction()
@@ -696,11 +696,15 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         }
         else
         {
-            targetPos.y = height;
+            //만약 character발 아래 collider 가 있다면
+            if (m_isCollidedWithBox)
+                targetPos.y = m_adjust_Y_onCollision;
+            else
+                targetPos.y = height;
         }
     }
-    if (onBox)
-        targetPos.y = addY;
+
+
     *pOut = targetPos;
 }
 
