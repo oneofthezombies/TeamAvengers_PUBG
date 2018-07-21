@@ -66,7 +66,7 @@ Character::Character(const int index)
     , m_stepDistance(0.0f)
 {
     m_totalInventory.pCharacter = this;
-    if (isMine())
+    if (IsMine())
     {
         m_inGameUI.Init(this);
         m_totalInventory.Init();
@@ -94,7 +94,7 @@ Character::Character(const int index)
     m_cellIndex = CS->GetCellIndex(pTransform->GetPosition());                   //캐릭터의 pos에 따라 알맞은 area에 넣어주기
     CS->InsertObjIntoTotalCellSpace(TAG_OBJECT::Character, m_cellIndex, this);   //Object 를 TotalCellSpace(Area)에 넣기
     
-    if (isMine())
+    if (IsMine())
     {
         CS->m_NearArea.CreateNearArea(m_cellIndex);                                  //Near Area 계산
     }
@@ -121,7 +121,7 @@ Character::Character(const int index)
 
     subscribeCollisionEvent();
 
-    if (isMine())
+    if (IsMine())
     {
         setInfo();
         Camera()()->SetTarget(&m_info);
@@ -142,7 +142,7 @@ Character::~Character()
         SAFE_DELETE(p);
     }
 
-    if (isMine())
+    if (IsMine())
     {
         m_totalInventory.Destroy();
     }
@@ -263,7 +263,7 @@ void Character::OnRender()
 
 void Character::updateMine()
 {
-    if (!isMine()) return;
+    if (!IsMine()) return;
 
     if (m_isGameOver)
     {
@@ -484,7 +484,7 @@ void Character::updateMine()
 
 void Character::updateOther()
 {
-    if (isMine()) return;
+    if (IsMine()) return;
 
     auto pInput = Input()();
     auto pCom   = Communication()();

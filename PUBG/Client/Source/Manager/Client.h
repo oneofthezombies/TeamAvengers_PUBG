@@ -93,6 +93,7 @@ struct Communication
         void SendEventMoveItemBoxToHead     (const int characterID, const int boxID, const std::string& itemName);
         void SendEventMoveItemBoxToArmor    (const int characterID, const int boxID, const std::string& itemName);
         void SendEventMoveItemBoxToBack     (const int characterID, const int boxID, const std::string& itemName);
+        
         void SendEventDestroyItemInBox      (const int characterID, const int boxID, const std::string& itemName);
 
         friend Singleton<Manager>;

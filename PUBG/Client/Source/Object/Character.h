@@ -557,8 +557,6 @@ private:
     void rotateWaist(const float quantity);
     void rotateHead(const float quantity);
 
-    bool isMine() const;
-
     void setInfo();
 
     D3DXVECTOR3 getUp();
@@ -693,6 +691,7 @@ public:
     void OnCollisionStay (Collider* pOffence, Collider* pDefence);
     void OnCollisionExit (Collider* pOffence, Collider* pDefence);
 
+    bool IsMine() const;
     int GetIndex() const;
     string GetNickName() const;
     float GetCharacterHealth() const;

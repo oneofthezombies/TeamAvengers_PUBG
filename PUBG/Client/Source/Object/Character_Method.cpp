@@ -172,7 +172,7 @@ void Character::setFramePtr()
 
 void Character::subscribeCollisionEvent()
 {
-    if (isMine())
+    if (IsMine())
     {
         auto tagBody = GetTagCollisionBody(m_index);
         for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
@@ -821,7 +821,7 @@ void Character::cameraCharacterRotation(const float dt, D3DXQUATERNION* OutRotat
     
 }
 
-bool Character::isMine() const
+bool Character::IsMine() const
 {
     return m_index == Communication()()->m_myInfo.ID;
 }

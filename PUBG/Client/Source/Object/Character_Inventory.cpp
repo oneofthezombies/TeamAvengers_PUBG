@@ -13,7 +13,8 @@
 using Event       = UIButtonWithItem::Event;
 using MouseButton = UIButtonWithItem::MouseButton;
 
-const float Character::TotalInventory::DEFAULT_CAPACITY = 70.0f;
+//const float Character::TotalInventory::DEFAULT_CAPACITY = 70.0f;
+const float Character::TotalInventory::DEFAULT_CAPACITY = 15.0f;
 const float Character::TotalInventory::FIRST_LINE = 233.0f;
 const float Character::TotalInventory::SECOND_LINE = 500.0f;
 
@@ -973,21 +974,34 @@ void Character::TotalInventory::ReleaseBullets(Item* pItem)
     }
 
     const TAG_RES_STATIC tagBullet = ItemInfo::GetAmmoType(tag);
-    //const float bulletCapacity = ItemInfo::GetCapacity(tagBullet);
-    //const float subtractingCapacity = bulletCapacity * numBullet;
-    //const float nextCapacity = m_capacity - subtractingCapacity;
-    //if (nextCapacity < 0.0f)
-    //{
-    //    const float overCapacity = -nextCapacity;
-    //    const float numOverBullets = overCapacity / bulletCapacity;
+    const float bulletCapacity = ItemInfo::GetCapacity(tagBullet);
+    const float subtractingCapacity = bulletCapacity * numBullet;
+    const float nextCapacity = m_capacity - subtractingCapacity;
+    int numOverBullets = 0;
+    if (nextCapacity < 0.0f)
+    {
+        const float overCapacity = -nextCapacity;
+        numOverBullets = static_cast<int>(overCapacity / bulletCapacity);
 
-    //    assert(m_empties[tagBullet].empty() && "Character::TotalInventory::ReleaseBullets(), empties is empty, need more empties");
+        assert(m_empties[tagBullet].empty() && "Character::TotalInventory::ReleaseBullets(), empties is empty, need more empties");
 
-    //    pAmmo = m_empties[tagBullet].back();
-    //    m_empties[tagBullet].pop_back();
-    //    pAmmo->SetPosition(pCharacter->GetTransform()->GetPosition());
-    //    DropItem(&pAmmo);
-    //}
+        pAmmo = m_empties[tagBullet].back();
+        m_empties[tagBullet].pop_back();
+
+        pAmmo->SetCount(numOverBullets);
+
+        pAmmo->SetIsRenderEffectMesh(true);
+        pAmmo->SetPosition(pCharacter->GetTransform()->GetPosition());
+        pAmmo->GetTransform()->SetRotation(Vector3::ZERO);
+        pAmmo->GetTransform()->Update();
+
+        CurrentScene()()->AddObject(pAmmo);
+        const std::size_t cellIndex = CurrentScene()()->GetCellIndex(pAmmo->GetTransform()->GetPosition());
+        CurrentScene()()->InsertObjIntoTotalCellSpace(pAmmo->GetTagObject(), cellIndex, pAmmo);
+        Communication()()->SendEventMoveItemBulletsToField(pCharacter->GetIndex(), pAmmo->GetName(), numOverBullets);
+    }
+
+    numBullet -= numOverBullets;
 
     if (!m_mapInventory[tagBullet].empty()) // 인벤토리에 총알 객체가 있을 때
     {

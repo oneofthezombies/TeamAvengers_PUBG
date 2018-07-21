@@ -363,12 +363,15 @@ void ScenePlay::setEmptyBullets(std::vector<Character*>* OutCharacters)
             std::string name = "Ammo_5_56mm_for_empty_" + std::to_string(ch_i) + std::to_string(i);
             Item* item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, Vector3::ZERO, Vector3::ZERO, Vector3::ONE);
             item->SetCount(0);
-            (*OutCharacters)[ch_i]->GetTotalInventory().m_empties[item->GetTagResStatic()].emplace_back(item);
+
+            Character* pCharacter = (*OutCharacters)[ch_i];
+            pCharacter->GetTotalInventory().m_empties[item->GetTagResStatic()].emplace_back(item);
 
             name = "Ammo_7_62mm_for_empty_" + std::to_string(ch_i) + std::to_string(i);
             item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, Vector3::ZERO, Vector3::ZERO, Vector3::ONE);
             item->SetCount(0);
-            (*OutCharacters)[ch_i]->GetTotalInventory().m_empties[item->GetTagResStatic()].emplace_back(item);
+
+            pCharacter->GetTotalInventory().m_empties[item->GetTagResStatic()].emplace_back(item);
         }
     }
 }

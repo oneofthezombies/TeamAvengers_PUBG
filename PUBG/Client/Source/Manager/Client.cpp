@@ -716,6 +716,7 @@ void Communication::Manager::ReceiveMessage(
                 {
                     Character::TotalInventory& inven = p->GetTotalInventory();
                     auto& mapInven = inven.m_mapInventory;
+                    bool isDropped = false;
                     for (auto it = mapInven.begin(); it != mapInven.end(); ++it)
                     {
                         auto& items = it->second;
@@ -729,10 +730,37 @@ void Communication::Manager::ReceiveMessage(
                                 pItem->SetPosition(p->GetTransform()->GetPosition());
                                 inven.DropItem(&items[index]);
                                 it2 = items.erase(it2);
+                                isDropped = true;
                             }
                             else
                             {
                                 ++it2;
+                            }
+                        }
+                    }
+
+                    if (!isDropped)
+                    {
+                        auto& empties = inven.m_empties;
+                        for (auto it = empties.begin(); it != empties.end(); ++it)
+                        {
+                            auto& items = it->second;
+                            for (auto it2 = items.begin(); it2 != items.end();)
+                            {
+                                if ((*it2)->GetName() == itemName)
+                                {
+                                    auto index = std::distance(items.begin(), it2);
+                                    Item* pItem = items[index];
+                                    pItem->SetCount(bulletCount);
+                                    pItem->SetPosition(p->GetTransform()->GetPosition());
+                                    inven.DropItem(&items[index]);
+                                    it2 = items.erase(it2);
+                                    isDropped = true;
+                                }
+                                else
+                                {
+                                    ++it2;
+                                }
                             }
                         }
                     }
