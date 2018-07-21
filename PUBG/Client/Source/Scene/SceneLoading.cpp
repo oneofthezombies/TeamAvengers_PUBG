@@ -148,12 +148,12 @@ void SceneLoading::Load()
     //LoadParticleTexture("blood_hit_04", 16, D3DCOLOR_XRGB(0, 0, 0));
 
     // load effect meshs
-    //load(TAG_RES_STATIC::SkySphere);
+    load(TAG_RES_STATIC::SkySphere);
     load(TAG_RES_STATIC::Ammo_5_56mm);
     load(TAG_RES_STATIC::Ammo_7_62mm);
-    //load(TAG_RES_STATIC::Armor_Lv1);
-    //load(TAG_RES_STATIC::Back_Lv1);
-    //load(TAG_RES_STATIC::Head_Lv1);
+    load(TAG_RES_STATIC::Armor_Lv1);
+    load(TAG_RES_STATIC::Back_Lv1);
+    load(TAG_RES_STATIC::Head_Lv1);
     load(TAG_RES_STATIC::QBZ);
     load(TAG_RES_STATIC::Kar98k);
 
@@ -165,7 +165,7 @@ void SceneLoading::Load()
     //load(TAG_RES_STATIC::Aimpoint2X);
     //load(TAG_RES_STATIC::ACOG);
 
-    //load(TAG_RES_STATIC::Rock_1);
+    load(TAG_RES_STATIC::Rock_1);
     
 
     ////Map Buildings load
@@ -198,11 +198,11 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::DeathDropBox);
 
     // load skined meshs
-    const int numQBZ = 1;
+    const int numQBZ = 8;
     for (int i = 0; i < numQBZ; ++i)
         load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
-    const int numKar98k = 1;
+    const int numKar98k = 8;
     for (int i = 0; i < numKar98k; ++i)
         load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
@@ -210,18 +210,18 @@ void SceneLoading::Load()
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
         load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
-    //// load equipment
-    //const int numArmor = 4;
-    //for (int i = 0; i < numArmor; ++i)
-    //    load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
+    // load equipment
+    const int numArmor = 4;
+    for (int i = 0; i < numArmor; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
 
-    //const int numBack = 4;
-    //for (int i = 0; i < numBack; ++i)
-    //    load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
+    const int numBack = 4;
+    for (int i = 0; i < numBack; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
 
-    //const int numHead = 4;
-    //for (int i = 0; i < numHead; ++i)
-    //    load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
+    const int numHead = 4;
+    for (int i = 0; i < numHead; ++i)
+        load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
     // load animation
     addAnimation(TAG_RES_ANIM_CHARACTER::Unarmed_Locomotion);
