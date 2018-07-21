@@ -479,5 +479,8 @@ UIObject* ScenePlay::GetLayer(int layerIndex) const
     case 2: return m_layer->GetChild(1);
     case 3: return m_layer->GetChild(2);
     case 4: return m_layer->GetChild(3);
+    default:
+        return m_layer->GetChild(0);
+        assert(false && "ScenePlay::GetLayer(), default case.");
     }
 }
