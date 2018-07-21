@@ -160,7 +160,8 @@ enum class TAG_CAMERA
     Third_Person,
     KyunChak,
     Scope2X,
-    OnGun
+    OnGun,
+    Lobby
 };
 
 enum class TAG_ITEM_CATEGORY

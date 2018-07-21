@@ -153,3 +153,17 @@ public:
     virtual void Update() override;
     virtual void Render() override;
 };
+
+class CameraLobby : public ICamera
+{
+private:
+    D3DXVECTOR3 m_rotation;
+    D3DXVECTOR3 m_position;
+
+public:
+             CameraLobby();
+    virtual ~CameraLobby();
+
+    virtual void Reset() override;
+    virtual void Update() override;
+};
