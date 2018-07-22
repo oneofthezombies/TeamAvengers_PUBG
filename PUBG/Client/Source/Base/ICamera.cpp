@@ -548,22 +548,22 @@ void CameraLobby::Reset()
 
 void CameraLobby::Update()
 {
-    const float factor = 2.f;
+    //const float factor = 2.f;
 
-    InputManager* pInput = Input()();
+    //InputManager* pInput = Input()();
 
-    Debug << endl;
-    Debug << "     앞(U)상(I)뒤(O)    " << endl;
-    Debug << " 좌(J)    하(K)    우(L)" << endl;
+    //Debug << endl;
+    //Debug << "     앞(U)상(I)뒤(O)    " << endl;
+    //Debug << " 좌(J)    하(K)    우(L)" << endl;
 
-    if (pInput->IsStayKeyDown('K')) { m_position.y -= factor; }
-    if (pInput->IsStayKeyDown('I')) { m_position.y += factor; }
-    if (pInput->IsStayKeyDown('J')) { m_position.x -= factor; }
-    if (pInput->IsStayKeyDown('L')) { m_position.x += factor; }
-    if (pInput->IsStayKeyDown('O')) { m_position.z -= factor; }
-    if (pInput->IsStayKeyDown('U')) { m_position.z += factor; }
+    //if (pInput->IsStayKeyDown('K')) { m_position.y -= factor; }
+    //if (pInput->IsStayKeyDown('I')) { m_position.y += factor; }
+    //if (pInput->IsStayKeyDown('J')) { m_position.x -= factor; }
+    //if (pInput->IsStayKeyDown('L')) { m_position.x += factor; }
+    //if (pInput->IsStayKeyDown('O')) { m_position.z -= factor; }
+    //if (pInput->IsStayKeyDown('U')) { m_position.z += factor; }
 
-    Debug << "CameraLobby Position : " << m_position << endl;
+    //Debug << "CameraLobby Position : " << m_position << endl;
 
     D3DXMATRIX t;
     D3DXMatrixTranslation(&t, m_position.x, m_position.y, m_position.z);
