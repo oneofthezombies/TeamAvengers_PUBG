@@ -315,9 +315,6 @@ void ScenePlay::OnInit()
     SetCursorPos(center.x, center.y);
     ShowCursor(false);
 
-    //AddObject(new SkySphere);
-    //AddObject(new Grid);
-
     SetHeightMap(new HeightMap);
 
     //cell space partitioning
@@ -391,7 +388,10 @@ void ScenePlay::OnUpdate()
     //    Sound()()->Play(static_cast<TAG_SOUND>(testi), Vector3::ZERO, 1.0f, FMOD_2D);
     //}
 
-    Shader()()->AddShadowSource(Matrix::IDENTITY, pHeightMap->GetMesh(), 0);
+    if (pHeightMap)
+    {
+        Shader()()->AddShadowSource(Matrix::IDENTITY, pHeightMap->GetMesh(), 0);
+    }
 
     for (auto c : GetCharacters())
     {
