@@ -1352,6 +1352,8 @@ void Character::InitScenePlay()
         m_rotationForCamera = Vector3::ZERO;
         Camera()()->SetCurrentCamera(TAG_CAMERA::Third_Person);
     }
+
+    pAnimation->Set(CharacterAnimation::BodyPart::BOTH, TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1, false);
 }
 
 void Character::movementControl(OUT State* OutState)
