@@ -434,8 +434,6 @@ void SceneLobby::StartPlay()
     UI()()->Destroy(m_pBackground);
     RemoveCharacters();
     Scene()()->SetCurrentScene(TAG_SCENE::Play);
-
-    Sleep(1000);
 }
 
 void SceneLobby::AddCharacters()
