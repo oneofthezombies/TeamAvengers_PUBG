@@ -214,20 +214,25 @@ void Character::OnRender()
         m_boundingSphere.center + m_boundingSphere.position, 
         m_boundingSphere.radius))
     {
-        pAnimation->Render(
-
-            /* 여기 월드 인자는 레거시임. 밑 셋매트릭스에 변화를 적용시켜야 함 */
-            /*m_framePtr.pWaist->CombinedTransformationMatrix
-            **/ GetTransform()->GetTransformationMatrix(),
-
-            [this](LPD3DXEFFECT pEffect)
+        //distance culling
+        D3DXVECTOR3 vlength = (m_boundingSphere.center + m_boundingSphere.position) - CurrentCamera()()->GetPosition();
+        if (D3DXVec3Length(&vlength) < 10000.0f)
         {
-            pEffect->SetMatrix(
-                Shader::World,
-                &GetTransform()->GetTransformationMatrix());
-        });
+            pAnimation->Render(
 
-        renderTotalInventory();
+                /* 여기 월드 인자는 레거시임. 밑 셋매트릭스에 변화를 적용시켜야 함 */
+                /*m_framePtr.pWaist->CombinedTransformationMatrix
+                **/ GetTransform()->GetTransformationMatrix(),
+
+                [this](LPD3DXEFFECT pEffect)
+            {
+                pEffect->SetMatrix(
+                    Shader::World,
+                    &GetTransform()->GetTransformationMatrix());
+            });
+
+            renderTotalInventory();
+        }
     }
 
     // render collision shapes
