@@ -58,6 +58,7 @@ void Character::GameOverUI::Init(Character* pPlayer)
         Vector3::ZERO,
         nullptr,
         layer4);
+    pBackgroundImg->SetIsRender(false);
     
     auto nickName = new UIText(
         Resource()()->GetFont(TAG_FONT::GameOverNickName),
@@ -201,8 +202,6 @@ void Character::GameOverUI::Init(Character* pPlayer)
         pBackgroundImg,
         Resource()()->GetFont(TAG_FONT::GameOverLobby), "",
         D3DCOLOR_XRGB(0, 0, 0));
-
-    pBackgroundImg->SetIsRender(false);
 }
 
 void Character::GameOverUI::Update()
