@@ -649,7 +649,12 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;
-            targetPos.y = height;
+
+            //만약 character발 아래 collider 가 있다면
+            if (m_isCollidedWithBox)
+                targetPos.y = m_adjust_Y_onCollision;
+            else
+                targetPos.y = height;
         }
     }
     else //when no jump
