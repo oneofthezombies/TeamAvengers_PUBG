@@ -373,14 +373,14 @@ void SceneLobby::OnUpdate()
         if (prev == false && 
             curr == true)
         {
-            // TODO : 내 캐릭터의 레디UI 켜기
+            m_forReady[i].pReadyCheck->SetIsRender(true);
             characters[i]->SetReadyAnimation();
         }
 
         if (prev == true && 
             curr == false)
         {
-            // TODO : 내 캐릭터의 레디UI 끄기
+            m_forReady[i].pReadyCheck->SetIsRender(false);
             characters[i]->SetNotReadyAnimation();
         }
 
@@ -395,33 +395,34 @@ void SceneLobby::OnUpdate()
         if (prev < 0 && 
             curr >= 0)
         {
+            m_forReady[i].pNickname->SetText(pis[i].nickname);
+            m_forReady[i].pBackground->SetIsRender(true);
+
             switch (i)
             {
             case 0:
                 {
                     characters[0]->GetTransform()->SetPosition(D3DXVECTOR3(899.0f, 48.0f, 0.0f));
-                    characters[0]->GetTransform()->Update();
                 }
                 break;
             case 1:
                 {
                     characters[1]->GetTransform()->SetPosition(D3DXVECTOR3(1076.0f, 40.5f, 35.0f));
-                    characters[1]->GetTransform()->Update();
                 }
                 break;
             case 2:
                 {
                     characters[2]->GetTransform()->SetPosition(D3DXVECTOR3(1011.0f, 36.0f, 114.0f));
-                    characters[2]->GetTransform()->Update();
                 }
                 break;
             case 3:
                 {
                     characters[3]->GetTransform()->SetPosition(D3DXVECTOR3(1216.5f, 38.0f, 75.0f));
-                    characters[3]->GetTransform()->Update();
                 }
                 break;
             }
+
+            characters[i]->GetTransform()->Update();
         }
 
         prev = curr;
