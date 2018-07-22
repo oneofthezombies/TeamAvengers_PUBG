@@ -46,6 +46,7 @@ private:
     std::array<bool, GameInfo::NUM_PLAYERS> m_isReadys;
 
     std::array<ForReady, GameInfo::NUM_PLAYERS> m_forReady;
+    bool m_isStartPlay;
 
 public:
     SceneLobby();

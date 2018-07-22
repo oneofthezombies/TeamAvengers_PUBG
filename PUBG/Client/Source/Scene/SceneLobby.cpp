@@ -21,6 +21,7 @@ SceneLobby::SceneLobby()
     , m_pBackground(nullptr)
     , m_readyButtonListener()
     , pQuad(nullptr)
+    , m_isStartPlay(false)
 {
     for (auto& i : m_isReadys)
         i = false;
@@ -360,6 +361,14 @@ void SceneLobby::OnInit()
 
 void SceneLobby::OnUpdate()
 {
+    if (m_isStartPlay)
+    {
+        UI()()->Destroy(m_pBackground);
+        RemoveCharacters();
+        Scene()()->SetCurrentScene(TAG_SCENE::Play);
+        return;
+    }
+
     const std::vector<Character*>& characters = Scene()()->GetCharacters();
     auto& pis = Communication()()->m_roomInfo.playerInfos;
 
@@ -431,9 +440,7 @@ void SceneLobby::OnUpdate()
 
 void SceneLobby::StartPlay()
 {
-    UI()()->Destroy(m_pBackground);
-    RemoveCharacters();
-    Scene()()->SetCurrentScene(TAG_SCENE::Play);
+    m_isStartPlay = true;
 }
 
 void SceneLobby::AddCharacters()
