@@ -214,31 +214,124 @@ void SceneLobby::OnInit()
     nickNameText->SetDrawTextFormat(DT_LEFT);
     nickNameText->SetPosition(D3DXVECTOR3(1132.5f, 24.0f, 0.0f));
 
-    //레디 닉네임 (이런식으로 4명 캐릭터한테 붙이면됨)
-    auto readyNickNameBg = new UIImage(
+    //For Ready ============================================ 
+
+    //닉네임 배경
+    m_forReady[0].pBackground = new UIImage(
         "./Resource/UI/Lobby/",
         "ready_nickname_bg.png",
-        D3DXVECTOR3(656.0f, 356.0f, 0.0f),
+        D3DXVECTOR3(442.0f, 312.0f, 0.0f),
         nullptr,
         m_pBackground
     );
 
-    new UIImage(
+    m_forReady[1].pBackground = new UIImage(
+        "./Resource/UI/Lobby/",
+        "ready_nickname_bg.png",
+        D3DXVECTOR3(820.0f, 341.0f, 0.0f),
+        nullptr,
+        m_pBackground
+    );
+    
+    m_forReady[2].pBackground = new UIImage(
+        "./Resource/UI/Lobby/",
+        "ready_nickname_bg.png",
+        D3DXVECTOR3(663.0f, 335.0f, 0.0f),
+        nullptr,
+        m_pBackground
+    );
+
+    m_forReady[3].pBackground = new UIImage(
+        "./Resource/UI/Lobby/",
+        "ready_nickname_bg.png",
+        D3DXVECTOR3(970.0f, 345.0f, 0.0f),
+        nullptr,
+        m_pBackground
+    );
+
+    //레디 체크 UI
+    m_forReady[0].pReadyCheck = new UIImage(
         "./Resource/UI/Lobby/",
         "ready_check.png",
         D3DXVECTOR3(5.0f, 2.0f, 0.0f),
         nullptr,
-        readyNickNameBg
+        m_forReady[0].pBackground
     );
 
-    auto readyNickNameText = new UIText(
+    m_forReady[1].pReadyCheck = new UIImage(
+        "./Resource/UI/Lobby/",
+        "ready_check.png",
+        D3DXVECTOR3(5.0f, 2.0f, 0.0f),
+        nullptr,
+        m_forReady[1].pBackground
+    );
+
+    m_forReady[2].pReadyCheck = new UIImage(
+        "./Resource/UI/Lobby/",
+        "ready_check.png",
+        D3DXVECTOR3(5.0f, 2.0f, 0.0f),
+        nullptr,
+        m_forReady[2].pBackground
+    );
+
+    m_forReady[3].pReadyCheck = new UIImage(
+        "./Resource/UI/Lobby/",
+        "ready_check.png",
+        D3DXVECTOR3(5.0f, 2.0f, 0.0f),
+        nullptr,
+        m_forReady[3].pBackground
+    );
+
+    //캐릭터 닉네임
+    m_forReady[0].pNickname = new UIText(
         Resource()()->GetFont(TAG_FONT::LobbyReadyNickName),
         D3DXVECTOR2(200.0f, 30.0f),
-        "hellowoori",
+        "p1",
         Character::InGameUI::WHITE,
-        readyNickNameBg);
-    readyNickNameText->SetDrawTextFormat(DT_LEFT);
-    readyNickNameText->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
+        m_forReady[0].pBackground);
+    m_forReady[0].pNickname->SetDrawTextFormat(DT_LEFT);
+    m_forReady[0].pNickname->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
+
+    m_forReady[1].pNickname = new UIText(
+        Resource()()->GetFont(TAG_FONT::LobbyReadyNickName),
+        D3DXVECTOR2(200.0f, 30.0f),
+        "p2",
+        Character::InGameUI::WHITE,
+        m_forReady[1].pBackground);
+    m_forReady[1].pNickname->SetDrawTextFormat(DT_LEFT);
+    m_forReady[1].pNickname->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
+
+    m_forReady[2].pNickname = new UIText(
+        Resource()()->GetFont(TAG_FONT::LobbyReadyNickName),
+        D3DXVECTOR2(200.0f, 30.0f),
+        "p3",
+        Character::InGameUI::WHITE,
+        m_forReady[2].pBackground);
+    m_forReady[2].pNickname->SetDrawTextFormat(DT_LEFT);
+    m_forReady[2].pNickname->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
+
+    m_forReady[3].pNickname = new UIText(
+        Resource()()->GetFont(TAG_FONT::LobbyReadyNickName),
+        D3DXVECTOR2(200.0f, 30.0f),
+        "p4",
+        Character::InGameUI::WHITE,
+        m_forReady[3].pBackground);
+    m_forReady[3].pNickname->SetDrawTextFormat(DT_LEFT);
+    m_forReady[3].pNickname->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
+
+    //캐릭터가 들어와야 보이게
+    m_forReady[0].pBackground->SetIsRender(false);
+    m_forReady[1].pBackground->SetIsRender(false);
+    m_forReady[2].pBackground->SetIsRender(false);
+    m_forReady[3].pBackground->SetIsRender(false);
+
+    //캐릭터가 레디를 해야 보이게
+    m_forReady[0].pReadyCheck->SetIsRender(false);
+    m_forReady[1].pReadyCheck->SetIsRender(false);
+    m_forReady[2].pReadyCheck->SetIsRender(false);
+    m_forReady[3].pReadyCheck->SetIsRender(false);
+
+    //============================================ For Ready
 
     AddCharacters();
 

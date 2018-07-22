@@ -20,6 +20,13 @@ public:
 
 class SceneLobby : public IScene
 {
+    struct ForReady
+    {
+        UIImage* pBackground;
+        UIImage* pReadyCheck;
+        UIText*  pNickname;
+    };
+
 public:
     static const D3DXVECTOR3 PLAYER_0_POSITION;
     static const D3DXVECTOR3 PLAYER_1_POSITION;
@@ -37,6 +44,8 @@ private:
     Quad* pQuad;
     std::array<int,  GameInfo::NUM_PLAYERS> m_IDs;
     std::array<bool, GameInfo::NUM_PLAYERS> m_isReadys;
+
+    std::array<ForReady, GameInfo::NUM_PLAYERS> m_forReady;
 
 public:
     SceneLobby();
