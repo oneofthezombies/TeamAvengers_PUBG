@@ -37,21 +37,24 @@ void CameraManager::Update()
 {
     InputManager*  pInput = Input()();
 
-    //Debug camera
-    if (pInput->IsOnceKeyDown('P'))
+    if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::Lobby)
     {
-        if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::Default)
-            SetCurrentCamera(TAG_CAMERA::Default);
-        else
-            SetCurrentCamera(TAG_CAMERA::Third_Person);
-    }
-    //시점 변환
-    if (pInput->IsOnceKeyDown('V'))
-    {
-        if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::Third_Person)
-            SetCurrentCamera(TAG_CAMERA::Third_Person);
-        else
-            SetCurrentCamera(TAG_CAMERA::First_Person);
+        //Debug camera
+        if (pInput->IsOnceKeyDown('P'))
+        {
+            if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::Default)
+                SetCurrentCamera(TAG_CAMERA::Default);
+            else
+                SetCurrentCamera(TAG_CAMERA::Third_Person);
+        }
+        //시점 변환
+        if (pInput->IsOnceKeyDown('V'))
+        {
+            if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::Third_Person)
+                SetCurrentCamera(TAG_CAMERA::Third_Person);
+            else
+                SetCurrentCamera(TAG_CAMERA::First_Person);
+        }
     }
 
     //if (pInput->IsOnceKeyDown('L'))
