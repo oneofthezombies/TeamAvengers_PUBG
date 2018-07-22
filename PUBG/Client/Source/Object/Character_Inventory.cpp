@@ -79,6 +79,7 @@ void Character::TotalInventory::Init(Character* pCharacter)
         Vector3::ZERO,
         nullptr,
         layer1);
+    pBorder->SetIsRender(false);
 
     //캐릭터 닉네임 텍스트
     string nickName = Communication()()->m_myInfo.nickname;
@@ -139,8 +140,6 @@ void Character::TotalInventory::Init(Character* pCharacter)
         pBorder);
 
     SetEquipUI();
-
-    pBorder->SetIsRender(false);
 }
 
 void Character::TotalInventory::Destroy()
