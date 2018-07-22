@@ -689,7 +689,7 @@ void Item::OnKar98kReloadEnd()
         FMOD_2D);
     Sound()()->addPlay(TAG_SOUND::Kar98_Reload3, 
         GetTransform()->GetPosition(), 
-        0.4f,
+        0.5f,
         FMOD_2D);
 
     Set(

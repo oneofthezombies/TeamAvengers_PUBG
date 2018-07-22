@@ -167,6 +167,7 @@ void Character::OnUpdate()
     {
         m_health = receivedHealth;
         m_isDamaged = true;
+        Sound()()->Play(TAG_SOUND::Female_Hurt, Vector3::ZERO, 1.0f, FMOD_2D);
     }
     m_isDead = Communication()()->m_roomInfo.playerInfos[m_index].isDead;
 

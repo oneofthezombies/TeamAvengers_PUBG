@@ -129,9 +129,6 @@ void Character::onMouse(
                 pPickedImage->SetTexture(pItemImage->GetTexture());
                 pPickedImage->SetSize(pItemImage->GetSize());
             }
-          
-            inven.m_stateClicked = true;
-
         }
 
         if (event == Event::DRAG)
@@ -227,8 +224,10 @@ void Character::onMouse(
                                     auto index = std::distance(items.begin(), it);
                                     Item* pItem = items[index];
                                     pItem->SetPosition(GetTransform()->GetPosition());
+                                    inven.m_capacity += ItemInfo::GetCapacity(tag) * pItem->GetCount();
                                     inven.DropItem(&items[index]);
                                     it = items.erase(it);
+                                    cout << inven.m_capacity << endl;
                                 }
                                 else
                                 {
@@ -353,9 +352,11 @@ void Character::onMouse(
                         break;
                     }
                 }
+
                 const float max = std::numeric_limits<float>::max();
                 pUIButtonWithItem->SetPosition(Vector3::ONE * max);
             }
+            Sound()()->Play(TAG_SOUND::UI_InputItem, Vector3::ZERO, 0.3f, FMOD_2D);
 
             //if (inven.m_pWeaponPrimary == nullptr && !(inven.m_handState == TAG_RIFLE::Primary))
             //{

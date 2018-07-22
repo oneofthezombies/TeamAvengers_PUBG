@@ -41,7 +41,7 @@ void SoundManager::Init()
     AddSound(TAG_SOUND::Kar98_Reload3, "Resource/Sound/kar98/Kar98_Reload3.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Qbz_NormalShoot, "Resource/Sound/qbz/Qbz_NormalShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Qbz_BoltMove76, "Resource/Sound/qbz/Qbz_BoltMove76.mp3", FMOD_3D, false);
-    AddSound(TAG_SOUND::Qbz_Reload, "Resource/Sound/qbz/Qbz_Reload.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Qbz_Reload, "Resource/Sound/qbz/Qbz_Reload2.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Qbz_FakeShoot, "Resource/Sound/qbz/Qbz_FakeShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Qbz_SilenceShoot, "Resource/Sound/qbz/Qbz_SilenceShoot.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Bullet_Miss, "Resource/Sound/Bullet/miss.mp3", FMOD_3D, false);
@@ -50,9 +50,13 @@ void SoundManager::Init()
     AddSound(TAG_SOUND::Hand_Punch, "Resource/Sound/Hand/Punch.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Medicine_Bandage, "Resource/Sound/medicine/Bandage.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Medicine_Bandage, "Resource/Sound/medicine/Bandage.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Female_Hurt, "Resource/Sound/Character/hurt_female.mp3", FMOD_3D, false);
+    
+    //UI
+    AddSound(TAG_SOUND::ButtonClick, "Resource/Sound/UI/button_click.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::UI_InputItem, "Resource/Sound/UI/put_in.mp3", FMOD_3D, false);
 
     AddSound(TAG_SOUND::Background, "Resource/Sound/Background/battleground_lobby.mp3", FMOD_3D, false);
-    AddSound(TAG_SOUND::ButtonClick, "Resource/Sound/UI/button_click.mp3", FMOD_3D, false);
 }
 
 void SoundManager::Destroy()

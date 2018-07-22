@@ -138,10 +138,13 @@ enum class TAG_SOUND
     FootStep,
     Medicine_Bandage,
     Hand_Punch,
+    Female_Hurt,
+    ButtonClick,
+    UI_InputItem,
+    
+
 
     Background,
-
-    ButtonClick,
 };
 
 enum class TAG_CHANNEL
