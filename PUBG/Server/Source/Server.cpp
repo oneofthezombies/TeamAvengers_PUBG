@@ -84,6 +84,8 @@ bool Room::IsAllReady()
 
 void Room::StartPlay()
 {
+    cout << "StartPlay\n";
+
     Message msg = Message::Create(TAG_REQUEST::RECEIVE_EVENT_START_PLAY, "");
     for (auto& p : m_participants)
     {
@@ -394,13 +396,15 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
 
             pRoom->m_roomInfo.playerInfos[isReadyID].isReady = true;
 
-            pRoom->Echo(
-                id, 
-                Message::Create(TAG_REQUEST::SEND_IS_READY, description));
-
             if (pRoom->IsAllReady())
             {
                 pRoom->StartPlay();
+            }
+            else
+            {
+                pRoom->Echo(
+                    id,
+                    Message::Create(TAG_REQUEST::SEND_IS_READY, description));
             }
         }
         break;
