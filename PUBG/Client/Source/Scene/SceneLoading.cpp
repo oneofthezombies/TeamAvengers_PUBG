@@ -169,31 +169,73 @@ void SceneLoading::Load()
     //load(TAG_RES_STATIC::Aimpoint2X);
     //load(TAG_RES_STATIC::ACOG);
 
-    load(TAG_RES_STATIC::Rock_1);
-    
+        
 
     ////Map Buildings load
-    load(TAG_RES_STATIC::AbandonedTownHall);
-    load(TAG_RES_STATIC::Church);
-    load(TAG_RES_STATIC::Museum);
-    load(TAG_RES_STATIC::OldWoodenShed_1);
-    load(TAG_RES_STATIC::OldWoodenShed_2);
-    load(TAG_RES_STATIC::OldWoodenShed_3);
-    load(TAG_RES_STATIC::PoliceStation);
-    load(TAG_RES_STATIC::WareHouse_A);
-    load(TAG_RES_STATIC::WareHouse_B);
+    //buildings (사용함)
+     load(TAG_RES_STATIC::AbandonedTownHall); 
+     load(TAG_RES_STATIC::Church           );
+     //load(TAG_RES_STATIC::Museum           );
+     load(TAG_RES_STATIC::OldWoodenShed_1  );
+     load(TAG_RES_STATIC::OldWoodenShed_2  );
+     load(TAG_RES_STATIC::OldWoodenShed_3  );
+     //load(TAG_RES_STATIC::PoliceStation    );
+     load(TAG_RES_STATIC::WareHouse_A      );
+     load(TAG_RES_STATIC::WareHouse_B      );
+    
+     ////Exterior
+    
+    
+     load(TAG_RES_STATIC::BrokenTractorGunnyBag);// (우리_사용함)
 
-    load(TAG_RES_STATIC::ContainerBox_A);
-    load(TAG_RES_STATIC::ContainerBox_B);
-    load(TAG_RES_STATIC::ContainerSmall_1);
-    load(TAG_RES_STATIC::ContainerSmall_2);
 
-    load(TAG_RES_STATIC::HayBale_1);
-    load(TAG_RES_STATIC::HayBale_2);
+     //-Container (사용함)
+    load(TAG_RES_STATIC::ContainerBox_A     );
+    load(TAG_RES_STATIC::ContainerBox_B     );
+    load(TAG_RES_STATIC::ContainerSmall_1   );
+    load(TAG_RES_STATIC::ContainerSmall_2   );
 
-    load(TAG_RES_STATIC::Silo_A);
-    load(TAG_RES_STATIC::Silo_B);
-    load(TAG_RES_STATIC::Lighthouse);
+     //- HayBale (사용함)
+     load(TAG_RES_STATIC::HayBale_1  );
+     load(TAG_RES_STATIC::HayBale_2  );
+    
+    
+     ////- PicketFence (우리_사용함)
+     load(TAG_RES_STATIC::PicketFence_Short_A   );
+     load(TAG_RES_STATIC::PicketFence_Short_B   );
+     load(TAG_RES_STATIC::PicketFence_Short_C   );
+    
+    
+    
+     ////- SandBag (우리_사용함)
+     load(TAG_RES_STATIC::Sandbag_1     );
+     load(TAG_RES_STATIC::Sandbag_2     );
+    
+     ////- Silo   (사용함)
+    load(TAG_RES_STATIC::Silo_A           );
+    load(TAG_RES_STATIC::Silo_B           );
+    load(TAG_RES_STATIC::Lighthouse       );
+    
+     ////////- Etc
+    
+        load(TAG_RES_STATIC::TableSet);//(우리_사용함)
+    
+    
+     //////Vegetation
+     //////- Bush (우리_사용함)
+     load(TAG_RES_STATIC::DeadGrass);
+     load(TAG_RES_STATIC::Dogwood  );
+    
+     ////- Grass (우리_사용함)
+     load(TAG_RES_STATIC::Grass_1);
+     load(TAG_RES_STATIC::Grass_2);
+    
+     
+     ////- Tree (우리_사용함)
+     load(TAG_RES_STATIC::AlaskaCedar       );
+     load(TAG_RES_STATIC::AmericanElem      );
+     load(TAG_RES_STATIC::LondonPlane       );
+
 
     //Map buildings end
 
