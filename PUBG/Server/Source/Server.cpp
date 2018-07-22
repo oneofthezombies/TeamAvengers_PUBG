@@ -241,6 +241,8 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
                 Message::Create(
                     TAG_REQUEST::SEND_ID, 
                     description));
+
+            pRoom->SendPlayerInfos(id);
         }
         break;
     case TAG_REQUEST::SEND_NICKNAME:
@@ -256,8 +258,6 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
                 Message::Create(
                     TAG_REQUEST::SEND_NICKNAME, 
                     description));
-
-            pRoom->SendPlayerInfos(id);
         }
         break;
     case TAG_REQUEST::SEND_POSITION_AND_ROTATION:

@@ -200,7 +200,7 @@ void Communication::Manager::ReceiveMessage(
             m_roomInfo.playerInfos[m_myInfo.ID].nickname = m_myInfo.nickname;
 
             SendNickname(m_myInfo.nickname);
-            //SendID(m_myInfo.ID);
+            SendID(m_myInfo.ID);
         }
         break;
     case TAG_REQUEST::SEND_ID:
