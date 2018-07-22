@@ -10,7 +10,7 @@ enum CHILD
 };
 
 SceneLogin::SceneLogin()
-    : IScene()
+    : IScene(TAG_SCENE::Login)
     , m_buttonListener()
 {
 }

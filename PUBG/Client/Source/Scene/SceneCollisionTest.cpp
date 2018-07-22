@@ -120,7 +120,7 @@ void SampleControllableCollisionBox::OnUpdate()
 
 
 SceneCollisionTest::SceneCollisionTest()
-    : IScene()
+    : IScene(TAG_SCENE::CollisionTest)
 {
 }
 

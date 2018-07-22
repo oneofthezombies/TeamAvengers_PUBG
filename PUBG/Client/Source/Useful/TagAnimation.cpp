@@ -54,10 +54,10 @@ std::string TagAnimation::GetString(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Lobby_P3_Ready:          return "Lobby_P3_Ready";
     case TAG_ANIM_CHARACTER::Lobby_P3_Ready_NotReady: return "Lobby_P3_Ready_NotReady";
 
-    case TAG_ANIM_CHARACTER::Lobby_P4_NotReady:       return "Lobby_P3_NotReady";
-    case TAG_ANIM_CHARACTER::Lobby_P4_NotReady_Ready: return "Lobby_P3_NotReady_Ready";
-    case TAG_ANIM_CHARACTER::Lobby_P4_Ready:          return "Lobby_P3_Ready";
-    case TAG_ANIM_CHARACTER::Lobby_P4_Ready_NotReady: return "Lobby_P3_Ready_NotReady";
+    case TAG_ANIM_CHARACTER::Lobby_P4_NotReady:       return "Lobby_P4_NotReady";
+    case TAG_ANIM_CHARACTER::Lobby_P4_NotReady_Ready: return "Lobby_P4_NotReady_Ready";
+    case TAG_ANIM_CHARACTER::Lobby_P4_Ready:          return "Lobby_P4_Ready";
+    case TAG_ANIM_CHARACTER::Lobby_P4_Ready_NotReady: return "Lobby_P4_Ready_NotReady";
             
     //1. 해당무기를 들고있을 때 캐릭터의 애니메이션
     //Weapon_QBZ_Characert(6)
@@ -554,6 +554,27 @@ float TagAnimation::GetSpeed(const TAG_ANIM_CHARACTER tag)
     case TAG_ANIM_CHARACTER::Unarmed_Combat_Crouch_Prone:
     case TAG_ANIM_CHARACTER::Rifle_Combat_Crouch_Base_Prone:
         return 1.0f; //속도 올리면 애니메이션이 처음을 가리키는 문제점
+
+    case TAG_ANIM_CHARACTER::Lobby_P1_NotReady:       
+    case TAG_ANIM_CHARACTER::Lobby_P1_NotReady_Ready: 
+    case TAG_ANIM_CHARACTER::Lobby_P1_Ready:          
+    case TAG_ANIM_CHARACTER::Lobby_P1_Ready_NotReady: 
+
+    case TAG_ANIM_CHARACTER::Lobby_P2_NotReady:       
+    case TAG_ANIM_CHARACTER::Lobby_P2_NotReady_Ready: 
+    case TAG_ANIM_CHARACTER::Lobby_P2_Ready:          
+    case TAG_ANIM_CHARACTER::Lobby_P2_Ready_NotReady: 
+
+    case TAG_ANIM_CHARACTER::Lobby_P3_NotReady:       
+    case TAG_ANIM_CHARACTER::Lobby_P3_NotReady_Ready: 
+    case TAG_ANIM_CHARACTER::Lobby_P3_Ready:          
+    case TAG_ANIM_CHARACTER::Lobby_P3_Ready_NotReady: 
+
+    case TAG_ANIM_CHARACTER::Lobby_P4_NotReady:       
+    case TAG_ANIM_CHARACTER::Lobby_P4_NotReady_Ready: 
+    case TAG_ANIM_CHARACTER::Lobby_P4_Ready:          
+    case TAG_ANIM_CHARACTER::Lobby_P4_Ready_NotReady: 
+        return 0.8f;
 
     default:
         return 1.0f;

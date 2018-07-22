@@ -50,6 +50,7 @@ public:
     void Echo(const int id, const Message& msg);
     bool IsAllReady();
     void StartPlay();
+    void SendPlayerInfos(const int receiveID);
 };
 
 class Server

@@ -158,6 +158,15 @@ Character::~Character()
 
 void Character::OnUpdate()
 {
+    if (CurrentScene()()->GetTagScene() == TAG_SCENE::Lobby)
+    {
+
+    }
+    else if (CurrentScene()()->GetTagScene() == TAG_SCENE::Play)
+    {
+
+    }
+
     //const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
 
     //if (receivedHealth < m_health)
@@ -173,11 +182,11 @@ void Character::OnUpdate()
     //Debug << "------current cell space ------ : " << m_cellIndex << endl;
     //
 
-    //// update
-    //GetTransform()->Update();      // set characters world
-    //pAnimation->UpdateAnimation(); // set characters local
-    //updateBone();                  // modified characters local
-    //pAnimation->UpdateModel();     // set characters model
+    // update
+    GetTransform()->Update();      // set characters world
+    pAnimation->UpdateAnimation(); // set characters local
+    updateBone();                  // modified characters local
+    pAnimation->UpdateModel();     // set characters model
 
     //// 캐릭터와 장비 애니메이션 씽크
     //syncAnimation();
@@ -185,8 +194,8 @@ void Character::OnUpdate()
     //// set item animation, item model here
     //updateTotalInventory();
 
-    //// bounding sphere move to character position
-    //m_boundingSphere.position = GetTransform()->GetPosition();
+    // bounding sphere move to character position
+    m_boundingSphere.position = GetTransform()->GetPosition();
 
     ////m_bSphereSlidingCollision.position = GetTransform()->GetPosition();
     //m_bBox.position = GetTransform()->GetPosition();
@@ -197,10 +206,10 @@ void Character::OnUpdate()
 
     //if (IsFire())
     //    RifleShooting();
-    //    
-    //Shader()()->AddShadowSource(
-    //    GetTransform()->GetTransformationMatrix(), 
-    //    pAnimation->GetSkinnedMesh());
+
+    Shader()()->AddShadowSource(
+        GetTransform()->GetTransformationMatrix(), 
+        pAnimation->GetSkinnedMesh());
 
     //// communication
     //communicate();

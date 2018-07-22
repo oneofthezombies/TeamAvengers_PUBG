@@ -19,7 +19,6 @@ void ScenePlay::setAloneMode()
     characters.emplace_back(pPlayer);
     AddObject(pPlayer);
 
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
     Light()()->SetTarget(pPlayer->GetTransform());
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
@@ -305,7 +304,7 @@ void ScenePlay::setEmptyBullets(std::vector<Character*>* OutCharacters)
 }
 
 ScenePlay::ScenePlay()
-    : IScene()
+    : IScene(TAG_SCENE::Play)
     , pPlayer(nullptr)
     , m_layer(nullptr)
 {

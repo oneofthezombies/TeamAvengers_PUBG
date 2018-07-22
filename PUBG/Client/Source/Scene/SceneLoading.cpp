@@ -739,7 +739,7 @@ void SceneLoading::LoadParticleTexture(const string fileName, const int maxIndex
 }
 
 SceneLoading::SceneLoading()
-    : IScene()
+    : IScene(TAG_SCENE::Loading)
     , m_isDoneEquipments(false)
     , m_isFinished(false)
     , m_numAddedAnim(0)

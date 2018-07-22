@@ -69,6 +69,30 @@ void Room::StartPlay()
     }
 }
 
+void Room::SendPlayerInfos(const int receiveID)
+{
+    GameInfo::PlayerInfo& p0 = m_roomInfo.playerInfos[0];
+    GameInfo::PlayerInfo& p1 = m_roomInfo.playerInfos[1];
+    GameInfo::PlayerInfo& p2 = m_roomInfo.playerInfos[2];
+    GameInfo::PlayerInfo& p3 = m_roomInfo.playerInfos[3];
+
+    std::stringstream ss;
+    ss << p0.ID << p0.nickname << p0.isReady ? 1 : 0;
+    ss << p1.ID << p1.nickname << p1.isReady ? 1 : 0;
+    ss << p2.ID << p2.nickname << p2.isReady ? 1 : 0;
+    ss << p3.ID << p3.nickname << p3.isReady ? 1 : 0;
+
+    Message msg = Message::Create(TAG_REQUEST::RECEIVE_EVENT_PLAYER_INFOS, ss.str());
+    for (auto& p : m_participants)
+    {
+        if (p->m_myInfo.ID == receiveID)
+        {
+            p->Write(msg);
+            break;
+        }
+    }
+}
+
 Participant::Participant(tcp::socket socket, Room* pRoom)
     : m_socket(std::move(socket))
     , m_myInfo()
@@ -196,6 +220,8 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
                 Message::Create(
                     TAG_REQUEST::SEND_NICKNAME, 
                     description));
+
+            pRoom->SendPlayerInfos(id);
         }
         break;
     case TAG_REQUEST::SEND_POSITION_AND_ROTATION:

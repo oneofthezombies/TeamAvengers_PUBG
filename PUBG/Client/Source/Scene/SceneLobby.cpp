@@ -3,6 +3,8 @@
 #include "UIImage.h"
 #include "UIText.h"
 #include "Quad.h"
+#include "Character.h"
+#include "ComponentTransform.h"
 
 const D3DXVECTOR3 SceneLobby::PLAYER_0_POSITION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 const D3DXVECTOR3 SceneLobby::PLAYER_1_POSITION = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -15,11 +17,16 @@ const D3DXQUATERNION SceneLobby::PLAYER_2_ROTATION = D3DXQUATERNION(0.0f, 0.0f, 
 const D3DXQUATERNION SceneLobby::PLAYER_3_ROTATION = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
 
 SceneLobby::SceneLobby()
-    : IScene()
+    : IScene(TAG_SCENE::Lobby)
     , m_pBackground(nullptr)
     , m_readyButtonListener()
     , pQuad(nullptr)
 {
+    for (auto& i : m_isReadys)
+        i = false;
+
+    for (auto& i : m_IDs)
+        i = -1;
 }
 
 SceneLobby::~SceneLobby()
@@ -239,11 +246,93 @@ void SceneLobby::OnInit()
     pQuad->SetTexture(
         "./Resource/UI/Lobby/",
         "lobby_bg.png");
+    pQuad->SetPosition(D3DXVECTOR3(970.5f, 146.5f, 193.0f));
+    pQuad->SetScale(D3DXVECTOR3(640.0f, 360.0f, 0.0f));
     AddObject(pQuad);
+
+    const std::vector<Character*>& characters = Scene()()->GetCharacters();
+
+    //characters[0]->GetTransform()->SetPosition(D3DXVECTOR3(899.0f, 48.0f, 0.0f));
+    //characters[0]->GetTransform()->Update();
+    //characters[1]->GetTransform()->SetPosition(D3DXVECTOR3(1076.0f, 40.5f, 35.0f));
+    //characters[1]->GetTransform()->Update();
+    //characters[2]->GetTransform()->SetPosition(D3DXVECTOR3(1011.0f, 36.0f, 114.0f));
+    //characters[2]->GetTransform()->Update();
+    //characters[3]->GetTransform()->SetPosition(D3DXVECTOR3(1216.5f, 38.0f, 75.0f));
+    //characters[3]->GetTransform()->Update();
+
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-200.0f, 200.0f, -100.0f));
+    Light()()->SetTarget(characters[0]->GetTransform());
 }
 
 void SceneLobby::OnUpdate()
 {
+    const std::vector<Character*>& characters = Scene()()->GetCharacters();
+    auto& pis = Communication()()->m_roomInfo.playerInfos;
+
+    for (std::size_t i = 0; i < pis.size(); i++)
+    {
+        if (pis[i].ID < 0) continue;
+
+        bool& prev = m_isReadys[i];
+        bool  curr = pis[i].isReady;
+        
+        if (prev == false && 
+            curr == true)
+        {
+            // TODO : 내 캐릭터의 레디UI 켜기
+            characters[i]->SetReadyAnimation();
+        }
+
+        if (prev == true && 
+            curr == false)
+        {
+            // TODO : 내 캐릭터의 레디UI 끄기
+            characters[i]->SetNotReadyAnimation();
+        }
+
+        prev = curr;
+    }
+
+    for (std::size_t i = 0; i < pis.size(); i++)
+    {
+        int& prev = m_IDs[i];
+        int  curr = pis[i].ID;
+
+        if (prev < 0 && 
+            curr >= 0)
+        {
+            switch (i)
+            {
+            case 0:
+                {
+                    characters[0]->GetTransform()->SetPosition(D3DXVECTOR3(899.0f, 48.0f, 0.0f));
+                    characters[0]->GetTransform()->Update();
+                }
+                break;
+            case 1:
+                {
+                    characters[1]->GetTransform()->SetPosition(D3DXVECTOR3(1076.0f, 40.5f, 35.0f));
+                    characters[1]->GetTransform()->Update();
+                }
+                break;
+            case 2:
+                {
+                    characters[2]->GetTransform()->SetPosition(D3DXVECTOR3(1011.0f, 36.0f, 114.0f));
+                    characters[2]->GetTransform()->Update();
+                }
+                break;
+            case 3:
+                {
+                    characters[3]->GetTransform()->SetPosition(D3DXVECTOR3(1216.5f, 38.0f, 75.0f));
+                    characters[3]->GetTransform()->Update();
+                }
+                break;
+            }
+        }
+
+        prev = curr;
+    }
 }
 
 void SceneLobby::StartPlay()
@@ -266,7 +355,6 @@ void SceneLobby::RemoveCharacters()
 }
 
 ReadyButtonListener::ReadyButtonListener()
-    : m_isReady(false)
 {
 }
 
@@ -290,19 +378,17 @@ void ReadyButtonListener::OnMouseUp(const int key)
 {
     Sound()()->Play(TAG_SOUND::ButtonClick, Vector3::ZERO, 1.0f, FMOD_2D);
 
-    m_isReady = !m_isReady;
-
     const int myID = Communication()()->m_myInfo.ID;
-    if (m_isReady)
+    bool& myIsReady = Communication()()->m_roomInfo.playerInfos[myID].isReady;
+
+    myIsReady = !myIsReady;
+
+    if (myIsReady)
     {
-        // TODO : 내 캐릭터의 레디UI 켜기
-        Scene()()->GetPlayer()->SetReadyAnimation();
         Communication()()->SendIsReady(myID);
     }
     else
     {
-        // TODO : 내 캐릭터의 레디UI 끄기
-        Scene()()->GetPlayer()->SetNotReadyAnimation();
         Communication()()->SendIsNotReady(myID);
     }
 }

@@ -9,16 +9,16 @@ Quad::Quad()
     , m_pMesh(nullptr)
 {
     m_vertices.resize(4);
-    m_vertices[0].p = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_vertices[0].p = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);
     m_vertices[0].t = D3DXVECTOR2(0.0f, 1.0f);
 
-    m_vertices[1].p = D3DXVECTOR3(0.0f, 720.0f, 0.0f);
+    m_vertices[1].p = D3DXVECTOR3(-1.0f, 1.0f, 0.0f);
     m_vertices[1].t = D3DXVECTOR2(0.0f, 0.0f);
 
-    m_vertices[2].p = D3DXVECTOR3(1280.0f, 720.0f, 0.0f);
+    m_vertices[2].p = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
     m_vertices[2].t = D3DXVECTOR2(1.0f, 0.0f);
 
-    m_vertices[3].p = D3DXVECTOR3(1280.0f, 0.0f, 0.0f);
+    m_vertices[3].p = D3DXVECTOR3(1.0f, -1.0f, 0.0f);
     m_vertices[3].t = D3DXVECTOR2(1.0f, 1.0f);
 
     m_indices.resize(6);

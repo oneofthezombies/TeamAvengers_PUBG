@@ -1193,16 +1193,16 @@ void Character::SetReadyAnimation()
         pAnimation->Set(
             CharacterAnimation::BodyPart::BOTH,
             anim,
-            true,
+            false,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_POSITION,
             CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-            [this, &nextAnim]()
+            [this, nextAnim]()
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
-                nextAnim);
+                nextAnim, false);
         });
     };
 
@@ -1253,16 +1253,16 @@ void Character::SetNotReadyAnimation()
         pAnimation->Set(
             CharacterAnimation::BodyPart::BOTH,
             anim,
-            true,
+            false,
             CharacterAnimation::DEFAULT_BLENDING_TIME,
             CharacterAnimation::DEFAULT_NEXT_WEIGHT,
             CharacterAnimation::DEFAULT_POSITION,
             CharacterAnimation::DEFAULT_FINISH_EVENT_AGO_TIME,
-            [this, &nextAnim]()
+            [this, nextAnim]()
         {
             pAnimation->Set(
                 CharacterAnimation::BodyPart::BOTH,
-                nextAnim);
+                nextAnim, false);
         });
     };
 

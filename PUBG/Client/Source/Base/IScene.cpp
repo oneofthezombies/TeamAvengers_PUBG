@@ -22,9 +22,10 @@ ObjectInFile::ObjectInFile()
 {
 }
 
-IScene::IScene()
+IScene::IScene(const TAG_SCENE tagScene)
     : MemoryAllocator()
     , pHeightMap(nullptr)
+    , m_tagScene(tagScene)
 {
 }
 
@@ -77,6 +78,11 @@ void IScene::Destroy(IObject* p, const float t)
 	if (search != m_toDeleteObjects.end()) return;
 
 	m_toDeleteObjects.emplace(p, t);
+}
+
+TAG_SCENE IScene::GetTagScene() const
+{
+    return m_tagScene;
 }
 
 void IScene::LoadObjectsFromFile(const std::string& fullPath)

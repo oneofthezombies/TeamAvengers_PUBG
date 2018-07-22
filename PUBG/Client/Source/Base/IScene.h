@@ -48,18 +48,20 @@ struct CellSpace
 class IScene : public MemoryAllocator
 {
 private:
-    unordered_set<IObject*>        m_objects;
-    unordered_map<IObject*, float> m_toDeleteObjects;
+          std::set<IObject*>        m_objects;
+          std::map<IObject*, float> m_toDeleteObjects;
+    const TAG_SCENE                 m_tagScene;
 
 protected:
     HeightMap*              pHeightMap;
     std::vector<CellSpace>  m_TotalCellSpaces;
+
 public:
     Area                    m_NearArea;
     Area                    m_RayArea;
     Area                    m_BulletArea;
 
-    IScene();
+    IScene(const TAG_SCENE tagScene);
 
 	void updateToDeleteObjects();
     HRESULT parseObjectInFile(std::ifstream& fin, ObjectInFile* Out);
@@ -76,6 +78,8 @@ public:
     void AddObject(IObject* p);
     void RemoveObject(IObject* p);
 	void Destroy(IObject* p, const float t = 0.0f);
+
+    TAG_SCENE GetTagScene() const;
 
     void LoadObjectsFromFile(const std::string& fullPath);
     IObject* FindWithTag(const TAG_OBJECT tag);

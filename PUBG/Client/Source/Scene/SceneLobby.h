@@ -7,9 +7,6 @@ class Quad;
 
 class ReadyButtonListener : public IUIButtonOnMouseListener
 {
-private:
-    bool m_isReady;
-
 public:
     ReadyButtonListener();
     virtual ~ReadyButtonListener();
@@ -38,6 +35,8 @@ private:
     UIImage* m_pBackground;
     ReadyButtonListener m_readyButtonListener;
     Quad* pQuad;
+    std::array<int,  GameInfo::NUM_PLAYERS> m_IDs;
+    std::array<bool, GameInfo::NUM_PLAYERS> m_isReadys;
 
 public:
     SceneLobby();

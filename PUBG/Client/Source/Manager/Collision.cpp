@@ -177,7 +177,7 @@ BoundingBox BoundingBox::Create(const D3DXMATRIX& transformationMatrix)
 
 Collision::Manager::Manager()
     : Singleton<Collision::Manager>()
-    , m_isRender(true)
+    , m_isRender(false)
 {
 }
 

@@ -208,6 +208,7 @@ void CharacterAnimation::Set(
             position,
             finishEventAgoTime,
             finishEvent);
+
         if (static_cast<Character*>(GetParent())->GetIndex() == Communication()()->m_myInfo.ID)
             Communication()()->SendLowerAnimationIndex(tag);
     }

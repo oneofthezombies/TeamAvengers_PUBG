@@ -282,6 +282,32 @@ void Communication::Manager::ReceiveMessage(
             m_roomInfo.playerInfos[isDeadID].isDead = isDeadInt ? true : false;
         }
         break;
+    case TAG_REQUEST::SEND_IS_READY:
+        {
+            std::pair<int, std::string> parsedDesc = Message::ParseDescription(description);
+            int id = parsedDesc.first;
+            std::string& isReadyStr = parsedDesc.second;
+
+            std::stringstream ss(isReadyStr);
+            int isReadyID;
+            ss >> isReadyID;
+
+            m_roomInfo.playerInfos[isReadyID].isReady = true;
+        }
+        break;
+    case TAG_REQUEST::SEND_IS_NOT_READY:
+        {
+            std::pair<int, std::string> parsedDesc = Message::ParseDescription(description);
+            int id = parsedDesc.first;
+            std::string& isNotReadyStr = parsedDesc.second;
+
+            std::stringstream ss(isNotReadyStr);
+            int isNotReadyID;
+            ss >> isNotReadyID;
+
+            m_roomInfo.playerInfos[isNotReadyID].isReady = false;
+        }
+        break;
     //case TAG_REQUEST::SEND_EVENT_FIRE_BULLET:
     //    {
     //        auto parsedDesc = Message::ParseDescription(description);
@@ -1160,6 +1186,35 @@ void Communication::Manager::ReceiveMessage(
             pSceneLobby->StartPlay();
         }
         break;
+    case TAG_REQUEST::RECEIVE_EVENT_PLAYER_INFOS:
+        {
+            std::pair<int, std::string> parsedDesc = 
+                Message::ParseDescription(description);
+
+            int id = parsedDesc.first;
+            std::string& eventPlayerInfosStr = parsedDesc.second;
+
+            GameInfo::PlayerInfo& p0 = m_roomInfo.playerInfos[0];
+            GameInfo::PlayerInfo& p1 = m_roomInfo.playerInfos[1];
+            GameInfo::PlayerInfo& p2 = m_roomInfo.playerInfos[2];
+            GameInfo::PlayerInfo& p3 = m_roomInfo.playerInfos[3];
+            
+            std::array<int, GameInfo::NUM_PLAYERS> isReadys;
+
+            std::stringstream ss;
+            ss >> p0.ID >> p0.nickname >> isReadys[0]; 
+            isReadys[0] ? p0.isReady = true : p0.isReady = false;
+
+            ss >> p1.ID >> p1.nickname >> isReadys[1];
+            isReadys[1] ? p1.isReady = true : p1.isReady = false;
+
+            ss >> p2.ID >> p2.nickname >> isReadys[2];
+            isReadys[2] ? p2.isReady = true : p2.isReady = false;
+
+            ss >> p3.ID >> p3.nickname >> isReadys[3];
+            isReadys[3] ? p3.isReady = true : p3.isReady = false;
+        }
+        break;
     }
 }
 
@@ -1717,6 +1772,8 @@ void Communication::Manager::SendIsReady(const int characterID)
 {
     if (m_playMode == PlayMode::ALONE) return;
 
+    m_roomInfo.playerInfos[characterID].isReady = true;
+
     std::stringstream ss;
     ss << m_myInfo.ID << characterID;
 
@@ -1729,6 +1786,8 @@ void Communication::Manager::SendIsReady(const int characterID)
 void Communication::Manager::SendIsNotReady(const int characterID)
 {
     if (m_playMode == PlayMode::ALONE) return;
+
+    m_roomInfo.playerInfos[characterID].isReady = false;
 
     std::stringstream ss;
     ss << m_myInfo.ID << characterID;
