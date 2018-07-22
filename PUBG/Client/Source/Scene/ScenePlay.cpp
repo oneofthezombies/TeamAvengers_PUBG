@@ -9,7 +9,7 @@
 #include "ComponentTransform.h"
 #include "UITest.h"
 #include "DeathDropBox.h"
-
+#include "UIImage.h"
 
 void ScenePlay::setAloneMode()
 {
@@ -140,7 +140,7 @@ void ScenePlay::setWithOthersMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1000.0f, 2300.0f, -1000.0f));
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
 
@@ -281,6 +281,9 @@ void ScenePlay::setEmptyBullets()
 ScenePlay::ScenePlay()
     : IScene(TAG_SCENE::Play)
     , m_layer(nullptr)
+    , m_coolDown(0.0f)
+    , m_coolTime(1.0f)
+    , pSplash(nullptr)
 {
 }
 
@@ -351,7 +354,8 @@ void ScenePlay::OnInit()
 
     Sound()()->Stop(0);
 
-    
+    pSplash = new UIImage("./Resource/", "LoadingScreen.tga", Vector3::ZERO, nullptr, m_layer);
+    m_coolDown = m_coolTime;
 }
 
 void ScenePlay::OnUpdate()
@@ -389,6 +393,16 @@ void ScenePlay::OnUpdate()
     //    }
     //    Sound()()->Play(static_cast<TAG_SOUND>(testi), Vector3::ZERO, 1.0f, FMOD_2D);
     //}
+
+    if (pSplash->IsRender())
+    {
+        const float dt = Time()()->GetDeltaTime();
+        m_coolDown -= dt;
+        if (m_coolDown <= 0.0f)
+        {
+            pSplash->SetIsRender(false);
+        }
+    }
 
     if (pHeightMap)
     {

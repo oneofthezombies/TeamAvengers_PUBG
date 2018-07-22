@@ -3,13 +3,18 @@
 #include "Character.h"
 
 class DeathDropBox;
+class UIImage;
 
 class ScenePlay : public IScene
 {
 private:
     std::vector<DeathDropBox*> deathDropBoxes;
     UIObject* m_layer;
+    const float m_coolTime;
+    float m_coolDown;
+    UIImage* pSplash;
 
+private:
     void setAloneMode();
     void setWithOthersMode();
     void setEmptyBullets();
