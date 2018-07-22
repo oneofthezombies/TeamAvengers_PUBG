@@ -202,11 +202,11 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::DeathDropBox);
 
     // load skined meshs
-    const int numQBZ = 1;
+    const int numQBZ = 8;
     for (int i = 0; i < numQBZ; ++i)
         load(TAG_RES_ANIM_WEAPON::QBZ_Anim);
 
-    const int numKar98k = 1;
+    const int numKar98k = 8;
     for (int i = 0; i < numKar98k; ++i)
         load(TAG_RES_ANIM_WEAPON::Kar98k_Anim);
 
@@ -215,15 +215,15 @@ void SceneLoading::Load()
         load(TAG_RES_ANIM_CHARACTER::Unarmed_Jump);
 
     // load equipment
-    const int numArmor = 1;
+    const int numArmor = 4;
     for (int i = 0; i < numArmor; ++i)
         load(TAG_RES_ANIM_EQUIPMENT::Armor_Lv1_Anim);
 
-    const int numBack = 1;
+    const int numBack = 4;
     for (int i = 0; i < numBack; ++i)
         load(TAG_RES_ANIM_EQUIPMENT::Back_Lv1_Anim);
 
-    const int numHead = 1;
+    const int numHead = 4;
     for (int i = 0; i < numHead; ++i)
         load(TAG_RES_ANIM_EQUIPMENT::Head_Lv1_Anim);
 
