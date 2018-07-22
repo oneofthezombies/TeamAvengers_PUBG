@@ -82,12 +82,16 @@ void Room::SendPlayerInfos(const int receiveID)
     ss << p2.ID << p2.nickname << p2.isReady ? 1 : 0;
     ss << p3.ID << p3.nickname << p3.isReady ? 1 : 0;
 
-    Message msg = Message::Create(TAG_REQUEST::RECEIVE_EVENT_PLAYER_INFOS, ss.str());
     for (auto& p : m_participants)
     {
         if (p->m_myInfo.ID == receiveID)
         {
-            p->Write(msg);
+            cout << "Send~\n";
+
+            p->Write(
+                Message::Create(
+                    TAG_REQUEST::RECEIVE_EVENT_PLAYER_INFOS, 
+                    ss.str()));
             break;
         }
     }
