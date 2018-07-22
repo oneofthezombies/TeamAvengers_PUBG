@@ -23,7 +23,47 @@ void Character::onMouse(
 
     Character::TotalInventory& inven = m_totalInventory;
     const TAG_UI_POSITION tag = pUIButtonWithItem->m_tagUIPosition;
+    if (button == MouseButton::IDLE)
+    {
+        if (event == Event::ENTER &&
+            !inven.m_stateClicked)
+        {
+            Item* pItem = pUIButtonWithItem->pItem;
+            if (UIPosition::IsDropped(tag) ||
+                UIPosition::IsInven(tag))
+            {
+                POINT mouse = Mouse::GetPosition();
+                //inven.m_pDescriptionBorder->SetIsRender(true);
+                inven.m_pDescriptionBorder->SetPosition(
+                    D3DXVECTOR3(
+                        static_cast<float>(mouse.x),
+                        static_cast<float>(mouse.y), 0.0f));
+                inven.m_pDescriptionText->SetText(ItemInfo::GetDescription(pItem->GetTagResStatic()));
+                inven.m_pDescriptionName->SetText(ItemInfo::GetName(pItem->GetTagResStatic()));
+                inven.m_pDescriptionNum->SetText("¿ë·® : " + to_string(pItem->GetCount()));
 
+            }
+        }
+
+        if (event == Event::EXIT &&
+            !inven.m_stateClicked)
+        {
+            //inven.m_pDescriptionBorder->SetIsRender(true);
+
+            const float max = std::numeric_limits<float>::max();
+            inven.m_pDescriptionBorder->SetPosition(Vector3::ONE * max);
+        }
+
+        if (event == Event::DRAG &&
+            !inven.m_stateClicked)
+        {
+            POINT mouse = Mouse::GetPosition();
+            inven.m_pDescriptionBorder->SetPosition(
+                D3DXVECTOR3(
+                    static_cast<float>(mouse.x),
+                    static_cast<float>(mouse.y), 0.0f));
+        }
+    }
     if (button == MouseButton::LEFT)
     {
         if (event == Event::DOWN && 

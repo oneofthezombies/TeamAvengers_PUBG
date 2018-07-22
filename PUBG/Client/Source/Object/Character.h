@@ -86,7 +86,11 @@ public:
         Character* pCharacter;
 
         UIImage* pBorder;
-        UIText*  m_Text;
+        UIImage* m_pDescriptionBorder;
+        UIText*  m_pDescriptionText;
+        UIText*  m_pDescriptionName;
+        UIText*  m_pDescriptionNum;
+
         std::vector<UIButtonWithItem*> m_uiDroped;
         std::vector<UIButtonWithItem*> m_uiInven;
         UIButtonWithItem* pUIPicked;

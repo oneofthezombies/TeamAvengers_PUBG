@@ -268,6 +268,41 @@ bool Character::TotalInventory::IsOpened()
 
 void Character::TotalInventory::SetEquipUI()
 {
+
+    ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    UIObject* layer3 = scenePlay->GetLayer(3);
+    const float max = std::numeric_limits<float>::max();
+
+    //디스크립트 볼더
+    m_pDescriptionBorder = new UIImage("./Resource/UI/Inventory/Basic/", "ItemDescription.png",
+        Vector3::ONE * max, nullptr, layer3);
+    D3DXVECTOR2 tDesSize = m_pDescriptionBorder->GetSize();
+    m_pDescriptionBorder->SetIsRender(true);
+
+    //디스크립트 이미지 텍스트
+    //디스크립션
+    m_pDescriptionText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground)
+        , D3DXVECTOR2(tDesSize.x-10,tDesSize.y-10), ""
+        , D3DCOLOR_XRGB(0, 0, 0)
+        , m_pDescriptionBorder);
+    m_pDescriptionText->SetDrawTextFormat(DT_WORDBREAK | DT_LEFT);
+    m_pDescriptionText->SetPosition(D3DXVECTOR3(5.0f, 110.0f, 0.f));
+    //총기 이름
+    m_pDescriptionName = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_NickName)
+        , D3DXVECTOR2(tDesSize.x - 10, tDesSize.y - 10), ""
+        , D3DCOLOR_XRGB(0, 0, 0)
+        , m_pDescriptionBorder);
+    m_pDescriptionName->SetDrawTextFormat(DT_WORDBREAK | DT_LEFT);
+    m_pDescriptionName->SetPosition(D3DXVECTOR3(5.0f, 5.0f, 0.f));
+    //해당 용품 갯수
+    m_pDescriptionNum = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground)
+        , D3DXVECTOR2(tDesSize.x - 10, tDesSize.y - 10), ""
+        , D3DCOLOR_XRGB(0, 0, 0)
+        , m_pDescriptionBorder);
+    m_pDescriptionNum->SetDrawTextFormat(DT_WORDBREAK | DT_LEFT);
+    m_pDescriptionNum->SetPosition(D3DXVECTOR3(130.0f, 170.0f, 0.f));
+
+
     // 드롭드 칸 이미지
     int left = 74;
     int top = 92;
@@ -303,10 +338,10 @@ void Character::TotalInventory::SetEquipUI()
     }
 
     // 픽된 아이템 이미지
-    ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
-    UIObject* layer3 = scenePlay->GetLayer(3);
+    //ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    //UIObject* layer3 = scenePlay->GetLayer(3);
 
-    const float max = std::numeric_limits<float>::max();
+    //const float max = std::numeric_limits<float>::max();
     pUIPicked = new UIButtonWithItem(
         Vector3::ONE * max,
         "./Resource/UI/Inventory/Basic/",
