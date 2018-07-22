@@ -5,7 +5,7 @@ struct Shader
     class Manager : public Singleton<Manager>
     {
     public: 
-        static const int SHADOWMAP_DIMENSION = 2048;
+        static const int SHADOWMAP_DIMENSION = 4096;
 
     private:
         LPD3DXEFFECT       pCreateShadow;

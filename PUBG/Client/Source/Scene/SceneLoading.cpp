@@ -28,6 +28,7 @@ void SceneLoading::Load()
 
     load("./Resource/", "dedenne.png");
     load("./Resource/", "RandomLoading01.tga");
+    load("./Resource/", "LoadingScreen.tga");
     load("./Resource/UI/Inventory/Basic/", "black_1280_720_70.png");
     load("./Resource/UI/Inventory/Character/", "Female.png", D3DCOLOR_XRGB(188, 188, 188));
     load("./Resource/UI/Inventory/Basic/", "line.png");

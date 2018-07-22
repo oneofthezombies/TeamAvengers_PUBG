@@ -24,7 +24,7 @@ string ShadowMapping_CreateShadow_Model : ModelData = "..\\..\\..\\..\\..\\..\\.
 
 texture ShadowMap_Tex : RenderColorTarget
 <
-   float2 RenderTargetDimensions = {2048,2048};
+   float2 RenderTargetDimensions = {4096,4096};
    string Format="D3DFMT_R32F";
    float  ClearDepth=1.000000;
    int    ClearColor=-1;
