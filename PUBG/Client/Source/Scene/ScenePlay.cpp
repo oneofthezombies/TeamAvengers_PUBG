@@ -351,7 +351,7 @@ void ScenePlay::OnInit()
 
     Sound()()->Stop(0);
 
-    Sleep(5000);
+    Sleep(1000);
 }
 
 void ScenePlay::OnUpdate()
