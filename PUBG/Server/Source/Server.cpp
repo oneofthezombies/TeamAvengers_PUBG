@@ -51,13 +51,35 @@ void Room::Echo(const int id, const Message& msg)
 
 bool Room::IsAllReady()
 {
+    // for debug
+    static int count = 0;
+
+    count = 0;
     for (auto& pi : m_roomInfo.playerInfos)
     {
-        if (!pi.isReady)
-            return false;
+        if (pi.isReady)
+        {
+            count++;
+        }
     }
 
-    return true;
+    if (count == 2)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+    //// origin code
+    //for (auto& pi : m_roomInfo.playerInfos)
+    //{
+    //    if (!pi.isReady)
+    //        return false;
+    //}
+
+    //return true;
 }
 
 void Room::StartPlay()
@@ -393,6 +415,10 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
             ss >> isNotReadyID;
 
             pRoom->m_roomInfo.playerInfos[isNotReadyID].isReady = false;
+
+            pRoom->Echo(
+                id,
+                Message::Create(TAG_REQUEST::SEND_IS_NOT_READY, description));
         }
         break;
     case TAG_REQUEST::SEND_EVENT_DESTROY_ITEM:
