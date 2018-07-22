@@ -253,7 +253,7 @@ void SceneLobby::OnInit()
     m_forReady[0].pReadyCheck = new UIImage(
         "./Resource/UI/Lobby/",
         "ready_check.png",
-        D3DXVECTOR3(5.0f, 2.0f, 0.0f),
+        D3DXVECTOR3(62.0f, 2.0f, 0.0f),
         nullptr,
         m_forReady[0].pBackground
     );
@@ -261,7 +261,7 @@ void SceneLobby::OnInit()
     m_forReady[1].pReadyCheck = new UIImage(
         "./Resource/UI/Lobby/",
         "ready_check.png",
-        D3DXVECTOR3(5.0f, 2.0f, 0.0f),
+        D3DXVECTOR3(62.0f, 2.0f, 0.0f),
         nullptr,
         m_forReady[1].pBackground
     );
@@ -269,7 +269,7 @@ void SceneLobby::OnInit()
     m_forReady[2].pReadyCheck = new UIImage(
         "./Resource/UI/Lobby/",
         "ready_check.png",
-        D3DXVECTOR3(5.0f, 2.0f, 0.0f),
+        D3DXVECTOR3(62.0f, 2.0f, 0.0f),
         nullptr,
         m_forReady[2].pBackground
     );
@@ -277,7 +277,7 @@ void SceneLobby::OnInit()
     m_forReady[3].pReadyCheck = new UIImage(
         "./Resource/UI/Lobby/",
         "ready_check.png",
-        D3DXVECTOR3(5.0f, 2.0f, 0.0f),
+        D3DXVECTOR3(62.0f, 2.0f, 0.0f),
         nullptr,
         m_forReady[3].pBackground
     );
@@ -290,7 +290,7 @@ void SceneLobby::OnInit()
         Character::InGameUI::WHITE,
         m_forReady[0].pBackground);
     m_forReady[0].pNickname->SetDrawTextFormat(DT_LEFT);
-    m_forReady[0].pNickname->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
+    m_forReady[0].pNickname->SetPosition(D3DXVECTOR3(6.0f, 3.0f, 0.0f));
 
     m_forReady[1].pNickname = new UIText(
         Resource()()->GetFont(TAG_FONT::LobbyReadyNickName),
@@ -299,7 +299,7 @@ void SceneLobby::OnInit()
         Character::InGameUI::WHITE,
         m_forReady[1].pBackground);
     m_forReady[1].pNickname->SetDrawTextFormat(DT_LEFT);
-    m_forReady[1].pNickname->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
+    m_forReady[1].pNickname->SetPosition(D3DXVECTOR3(6.0f, 3.0f, 0.0f));
 
     m_forReady[2].pNickname = new UIText(
         Resource()()->GetFont(TAG_FONT::LobbyReadyNickName),
@@ -308,7 +308,7 @@ void SceneLobby::OnInit()
         Character::InGameUI::WHITE,
         m_forReady[2].pBackground);
     m_forReady[2].pNickname->SetDrawTextFormat(DT_LEFT);
-    m_forReady[2].pNickname->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
+    m_forReady[2].pNickname->SetPosition(D3DXVECTOR3(6.0f, 3.0f, 0.0f));
 
     m_forReady[3].pNickname = new UIText(
         Resource()()->GetFont(TAG_FONT::LobbyReadyNickName),
@@ -317,7 +317,7 @@ void SceneLobby::OnInit()
         Character::InGameUI::WHITE,
         m_forReady[3].pBackground);
     m_forReady[3].pNickname->SetDrawTextFormat(DT_LEFT);
-    m_forReady[3].pNickname->SetPosition(D3DXVECTOR3(22.0f, 3.0f, 0.0f));
+    m_forReady[3].pNickname->SetPosition(D3DXVECTOR3(6.0f, 3.0f, 0.0f));
 
     //캐릭터가 들어와야 보이게
     m_forReady[0].pBackground->SetIsRender(false);
