@@ -199,6 +199,8 @@ void SceneLoading::Load()
     //load(TAG_RES_STATIC::Silo_B);
     //load(TAG_RES_STATIC::Lighthouse);
 
+    //load(TAG_RES_STATIC::AmericanElem);
+
     //Map buildings end
 
 
