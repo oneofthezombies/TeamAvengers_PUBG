@@ -140,7 +140,7 @@ void ScenePlay::setWithOthersMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 1300.0f, -1500.0f));
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
 
