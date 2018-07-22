@@ -18,16 +18,6 @@ void ScenePlay::setAloneMode()
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
 
-    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
-    {
-        if (i == myID) continue;
-
-        Character* pOther = new Character(i);
-        others.emplace_back(pOther);
-        characters.emplace_back(pOther);
-        AddObject(pOther);
-    }
-
     ////old map
     //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(1900.0f, 200.0f, 1900.0f);
     //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
