@@ -489,7 +489,7 @@ void SceneLoading::load(
                     xFilename, 
                     colorKey)));
 
-        //++m_numTotalTasks;
+        ++m_numTotalTasks;
     }
 }
 
