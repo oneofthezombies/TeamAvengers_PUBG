@@ -198,11 +198,15 @@ void Character::OnUpdate()
 
     if (IsFire())
         RifleShooting();
-        
-    Shader()()->AddShadowSource(
-        GetTransform()->GetTransformationMatrix(), 
-        pAnimation->GetSkinnedMesh());
-
+    
+    //distance culling
+    D3DXVECTOR3 vLength = GetTransform()->GetPosition() - CurrentCamera()()->GetPosition();
+    if (D3DXVec3Length(&vLength) < 5000.0f)
+    {
+        Shader()()->AddShadowSource(
+            GetTransform()->GetTransformationMatrix(),
+            pAnimation->GetSkinnedMesh());
+    }
     // communication
     communicate();
 }

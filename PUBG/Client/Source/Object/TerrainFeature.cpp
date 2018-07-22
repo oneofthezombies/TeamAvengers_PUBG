@@ -37,9 +37,15 @@ TerrainFeature::~TerrainFeature()
 
 void TerrainFeature::OnUpdate()
 {
-    Shader()()->AddShadowSource(
-        GetTransform()->GetTransformationMatrix(), 
-        pEffectMeshRenderer->GetEffectMesh());
+    //distance culling
+    D3DXVECTOR3 vLength = GetTransform()->GetPosition() - CurrentCamera()()->GetPosition();
+    if (D3DXVec3Length(&vLength) < 5000.0f)
+    {
+        Shader()()->AddShadowSource(
+            GetTransform()->GetTransformationMatrix(),
+            pEffectMeshRenderer->GetEffectMesh());
+    }
+    
 }
 
 void TerrainFeature::OnRender()
