@@ -1350,6 +1350,7 @@ void Character::InitScenePlay()
         setInfo();
         Camera()()->SetTarget(&m_info);
         m_rotationForCamera = Vector3::ZERO;
+        Camera()()->SetCurrentCamera(TAG_CAMERA::Third_Person);
     }
 }
 
