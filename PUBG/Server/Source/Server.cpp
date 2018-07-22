@@ -372,6 +372,10 @@ void Participant::ReceiveMessage(const TAG_REQUEST tag,
 
             pRoom->m_roomInfo.playerInfos[isReadyID].isReady = true;
 
+            pRoom->Echo(
+                id, 
+                Message::Create(TAG_REQUEST::SEND_IS_READY, description));
+
             if (pRoom->IsAllReady())
             {
                 pRoom->StartPlay();
