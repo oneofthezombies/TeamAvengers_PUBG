@@ -51,35 +51,35 @@ void Room::Echo(const int id, const Message& msg)
 
 bool Room::IsAllReady()
 {
-    // for debug
-    static int count = 0;
+    //// for debug
+    //static int count = 0;
 
-    count = 0;
-    for (auto& pi : m_roomInfo.playerInfos)
-    {
-        if (pi.isReady)
-        {
-            count++;
-        }
-    }
-
-    if (count == 2)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-
-    //// origin code
+    //count = 0;
     //for (auto& pi : m_roomInfo.playerInfos)
     //{
-    //    if (!pi.isReady)
-    //        return false;
+    //    if (pi.isReady)
+    //    {
+    //        count++;
+    //    }
     //}
 
-    //return true;
+    //if (count == 2)
+    //{
+    //    return true;
+    //}
+    //else
+    //{
+    //    return false;
+    //}
+
+    // origin code
+    for (auto& pi : m_roomInfo.playerInfos)
+    {
+        if (!pi.isReady)
+            return false;
+    }
+
+    return true;
 }
 
 void Room::StartPlay()
