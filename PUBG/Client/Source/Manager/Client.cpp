@@ -1201,7 +1201,7 @@ void Communication::Manager::ReceiveMessage(
             
             std::array<int, GameInfo::NUM_PLAYERS> isReadys;
 
-            std::stringstream ss;
+            std::stringstream ss(eventPlayerInfosStr);
             ss >> p0.ID >> p0.nickname >> isReadys[0]; 
             isReadys[0] ? p0.isReady = true : p0.isReady = false;
 

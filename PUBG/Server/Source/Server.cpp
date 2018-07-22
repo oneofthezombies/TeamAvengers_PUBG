@@ -83,6 +83,7 @@ void Room::SendPlayerInfos(const int receiveID)
     cout << std::boolalpha << p3.isReady << '\n';
 
     std::stringstream ss;
+    ss << receiveID;
     ss << p0.ID << ' ' << p0.nickname << ' ' << (p0.isReady ? 1 : 0) << ' ';
     ss << p1.ID << ' ' << p1.nickname << ' ' << (p1.isReady ? 1 : 0) << ' ';
     ss << p2.ID << ' ' << p2.nickname << ' ' << (p2.isReady ? 1 : 0) << ' ';
