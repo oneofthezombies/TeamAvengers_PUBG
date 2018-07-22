@@ -120,7 +120,7 @@ void Room::SendPlayerInfos(const int receiveID)
     {
         if (p->m_myInfo.ID == receiveID)
         {
-            //cout << "Send~ to" << receiveID << endl;
+            cout << "Send~ to " << receiveID << endl;
 
             p->Write(
                 Message::Create(
