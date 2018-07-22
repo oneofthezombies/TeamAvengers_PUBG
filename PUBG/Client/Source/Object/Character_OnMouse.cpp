@@ -23,7 +23,47 @@ void Character::onMouse(
 
     Character::TotalInventory& inven = m_totalInventory;
     const TAG_UI_POSITION tag = pUIButtonWithItem->m_tagUIPosition;
+    if (button == MouseButton::IDLE)
+    {
+        if (event == Event::ENTER &&
+            !inven.m_stateClicked)
+        {
+            Item* pItem = pUIButtonWithItem->pItem;
+            if (UIPosition::IsDropped(tag) ||
+                UIPosition::IsInven(tag))
+            {
+                POINT mouse = Mouse::GetPosition();
+                //inven.m_pDescriptionBorder->SetIsRender(true);
+                inven.m_pDescriptionBorder->SetPosition(
+                    D3DXVECTOR3(
+                        static_cast<float>(mouse.x),
+                        static_cast<float>(mouse.y), 0.0f));
+                inven.m_pDescriptionText->SetText(ItemInfo::GetDescription(pItem->GetTagResStatic()));
+                inven.m_pDescriptionName->SetText(ItemInfo::GetName(pItem->GetTagResStatic()));
+                inven.m_pDescriptionNum->SetText("¿ë·® : " + to_string(pItem->GetCount()));
 
+            }
+        }
+
+        if (event == Event::EXIT &&
+            !inven.m_stateClicked)
+        {
+            //inven.m_pDescriptionBorder->SetIsRender(true);
+
+            const float max = std::numeric_limits<float>::max();
+            inven.m_pDescriptionBorder->SetPosition(Vector3::ONE * max);
+        }
+
+        if (event == Event::DRAG &&
+            !inven.m_stateClicked)
+        {
+            POINT mouse = Mouse::GetPosition();
+            inven.m_pDescriptionBorder->SetPosition(
+                D3DXVECTOR3(
+                    static_cast<float>(mouse.x),
+                    static_cast<float>(mouse.y), 0.0f));
+        }
+    }
     if (button == MouseButton::LEFT)
     {
         if (event == Event::DOWN && 
@@ -70,7 +110,10 @@ void Character::onMouse(
                 pPickedImage->SetTexture(pItemImage->GetTexture());
                 pPickedImage->SetSize(pItemImage->GetSize());
             }
-            else if (tag == TAG_UI_POSITION::Weapon2)
+            else if (tag == TAG_UI_POSITION::Weapon2 ||
+                tag == TAG_UI_POSITION::Armor ||
+                tag == TAG_UI_POSITION::Bag ||
+                tag == TAG_UI_POSITION::Helmat)
             {
                 POINT mouse = Mouse::GetPosition();
 
@@ -86,8 +129,6 @@ void Character::onMouse(
                 pPickedImage->SetTexture(pItemImage->GetTexture());
                 pPickedImage->SetSize(pItemImage->GetSize());
             }
-            inven.m_stateClicked = true;
-
         }
 
         if (event == Event::DRAG)
@@ -183,8 +224,10 @@ void Character::onMouse(
                                     auto index = std::distance(items.begin(), it);
                                     Item* pItem = items[index];
                                     pItem->SetPosition(GetTransform()->GetPosition());
+                                    inven.m_capacity += ItemInfo::GetCapacity(tag) * pItem->GetCount();
                                     inven.DropItem(&items[index]);
                                     it = items.erase(it);
+                                    cout << inven.m_capacity << endl;
                                 }
                                 else
                                 {
@@ -198,22 +241,34 @@ void Character::onMouse(
 
                     case TAG_ITEM_CATEGORY::Armor:
                         {
-                            inven.DropItem(&pUIButtonWithItem->pItem);
+                            //inven.DropItem(&pUIButtonWithItem->pItem);
+                            inven.DropArmor();
+                            inven.m_pUIArmor->pUIImage = nullptr;
+                            inven.m_pUIArmor->pItem = nullptr;
+                            inven.m_pUIArmor->SetIsActive(false);
+                            
                             Communication()()->SendEventMoveItemArmorToField(m_index, itemName);
+                            
                         }
                         break;
 
                     case TAG_ITEM_CATEGORY::Back:
                         {
-                            inven.DropItem(&pUIButtonWithItem->pItem);
+                            inven.DropBack();
                             Communication()()->SendEventMoveItemBackToField(m_index, itemName);
+                            inven.m_pUIBack->pUIImage = nullptr;
+                            inven.m_pUIBack->pItem = nullptr;
+                            inven.m_pUIBack->SetIsActive(false);
                         }
                         break;
 
                     case TAG_ITEM_CATEGORY::Head:
                         {
-                            inven.DropItem(&pUIButtonWithItem->pItem);
+                            inven.DropHead();
                             Communication()()->SendEventMoveItemHeadToField(m_index, itemName);
+                            inven.m_pUIHead->pUIImage = nullptr;
+                            inven.m_pUIHead->pItem = nullptr;
+                            inven.m_pUIHead->SetIsActive(false);
                         }
                         break;
 
@@ -297,9 +352,11 @@ void Character::onMouse(
                         break;
                     }
                 }
+
                 const float max = std::numeric_limits<float>::max();
                 pUIButtonWithItem->SetPosition(Vector3::ONE * max);
             }
+            Sound()()->Play(TAG_SOUND::UI_InputItem, Vector3::ZERO, 0.3f, FMOD_2D);
 
             //if (inven.m_pWeaponPrimary == nullptr && !(inven.m_handState == TAG_RIFLE::Primary))
             //{

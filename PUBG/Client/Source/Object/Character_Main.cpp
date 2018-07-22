@@ -116,12 +116,13 @@ void Character::OnUpdate()
     {
         const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
 
-        if (receivedHealth < m_health)
-        {
-            m_health = receivedHealth;
-            m_isDamaged = true;
-        }
-        m_isDead = Communication()()->m_roomInfo.playerInfos[m_index].isDead;
+    if (receivedHealth < m_health)
+    {
+        m_health = receivedHealth;
+        m_isDamaged = true;
+        Sound()()->Play(TAG_SOUND::Female_Hurt, Vector3::ZERO, 1.0f, FMOD_2D);
+    }
+    m_isDead = Communication()()->m_roomInfo.playerInfos[m_index].isDead;
 
         updateMine();
         updateOther();
@@ -311,6 +312,7 @@ void Character::updateMine()
     //Terrain과의 충돌체크
     //terrainFeaturesCollisionInteraction(&destState);
     terrainFeaturesCollisionInteraction(&destState);
+    
     //Item 과의 충돌체크
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)
     ////////////충돌 체크 Area/////////////////////
@@ -454,12 +456,12 @@ void Character::updateMine()
     //    BulletPool()()->Fire(Communication()()->m_myInfo,pos + getForward() * 100.0f, getBackward(), 0.1f, 1.0f, TAG_RES_STATIC::QBZ);
     //}
 
-    ForDebug();
-    Debug << "current        position : " << pos << "\n\n"
-        << "current upper animation : "
-        << pAnimation->GetUpperAnimationName() << '\n'
-        << "current lower animation : "
-        << pAnimation->GetLowerAnimationName() << "\n\n";
+    //ForDebug();
+    //Debug << "current        position : " << pos << "\n\n"
+    //    << "current upper animation : "
+    //    << pAnimation->GetUpperAnimationName() << '\n'
+    //    << "current lower animation : "
+    //    << pAnimation->GetLowerAnimationName() << "\n\n";
 
     //여기
     //for InGameUI

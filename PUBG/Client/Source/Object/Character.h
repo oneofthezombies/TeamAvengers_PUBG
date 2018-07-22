@@ -86,7 +86,11 @@ public:
         Character* pCharacter;
 
         UIImage* pBorder;
-        UIText*  m_Text;
+        UIImage* m_pDescriptionBorder;
+        UIText*  m_pDescriptionText;
+        UIText*  m_pDescriptionName;
+        UIText*  m_pDescriptionNum;
+
         std::vector<UIButtonWithItem*> m_uiDroped;
         std::vector<UIButtonWithItem*> m_uiInven;
         UIButtonWithItem* pUIPicked;
@@ -538,8 +542,8 @@ private:
 
     // for character x character collision
     BoundingBox m_bBox;
-    //BoundingSphere m_bSphereSlidingCollision;
-
+    bool  m_isCollidedWithBox;
+    float m_adjust_Y_onCollision;
     float m_stepDistance;
 
 /**************************** end member variable ****************************/

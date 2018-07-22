@@ -61,6 +61,8 @@ void SceneLoading::Load()
     load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Back_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
     load("./Resource/UI/Inventory/Item/Equipment/", "icon_equipment_Head_Lv1.png", D3DCOLOR_XRGB(0, 0, 0));
 
+    load("./Resource/UI/Inventory/Basic/", "ItemDescription.png");
+
 
     //for InGameUI
     load("./Resource/UI/InGame/", "transparent_1280_720.png");

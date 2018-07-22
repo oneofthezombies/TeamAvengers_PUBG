@@ -54,9 +54,9 @@ string ItemInfo::GetName(const TAG_RES_STATIC tag)
     case TAG_RES_STATIC::MedKit: return "Med Kit";
 
         //Equipment
-    case TAG_RES_STATIC::Armor_Lv1: return "Police Vest (Level 1)";
-    case TAG_RES_STATIC::Back_Lv1: return  "Backpack (Level 1)";
-    case TAG_RES_STATIC::Head_Lv1: return  "Motocycle Helmet (Level 1)";
+    case TAG_RES_STATIC::Armor_Lv1: return "Vest (Lv 1)";
+    case TAG_RES_STATIC::Back_Lv1: return  "Backpack (Lv 1)";
+    case TAG_RES_STATIC::Head_Lv1: return  "Helmet (Lv 1)";
 
         //Weapon
     case TAG_RES_STATIC::QBZ: return "QBZ";

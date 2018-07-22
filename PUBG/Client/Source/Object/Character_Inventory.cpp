@@ -206,10 +206,14 @@ void Character::TotalInventory::Update()
             pUI->pItem = pItem;
             pUI->m_tagUIPosition = UIPosition::GetTag(TAG_UI_POSITION::dropped_0, idx);
             pUI->pUIImage = pItem->GetUIImage();
-            //pUI->SetText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
-            //    string(ItemInfo::GetName(pItem->GetTagResStatic()) +"   "+ to_string(pItem->GetCount())),
-            //    D3DCOLOR_XRGB(255, 255, 255));
-            pItem->GetUIText()->SetText(string(ItemInfo::GetName(pItem->GetTagResStatic()) + "   " + to_string(pItem->GetCount())));
+            if (ItemInfo::GetItemCategory(pItem->GetTagResStatic()) == TAG_ITEM_CATEGORY::Ammo)
+            {
+                pItem->GetUIText()->SetText(string(ItemInfo::GetName(pItem->GetTagResStatic()) + "   " + to_string(pItem->GetCount())));
+            }
+            else
+            {
+                pItem->GetUIText()->SetText(string(ItemInfo::GetName(pItem->GetTagResStatic())));
+            }
             pUI->SetIsActive(true);
         }
         // end set ui dropped
@@ -234,7 +238,14 @@ void Character::TotalInventory::Update()
                 pUI->pItem = item;
                 pUI->m_tagUIPosition = UIPosition::GetTag(TAG_UI_POSITION::inven_0, idx);
                 pUI->pUIImage = item->GetUIImage();
-                item->GetUIText()->SetText(string(ItemInfo::GetName(item->GetTagResStatic()) + "   " + to_string(item->GetCount())));
+                if (ItemInfo::GetItemCategory(item->GetTagResStatic()) == TAG_ITEM_CATEGORY::Ammo)
+                {
+                    item->GetUIText()->SetText(string(ItemInfo::GetName(item->GetTagResStatic()) + "   " + to_string(item->GetCount())));
+                }
+                else
+                {
+                    item->GetUIText()->SetText(string(ItemInfo::GetName(item->GetTagResStatic())));
+                }
                 pUI->SetIsActive(true);
                 idx++;
             }
@@ -258,6 +269,41 @@ bool Character::TotalInventory::IsOpened()
 
 void Character::TotalInventory::SetEquipUI()
 {
+
+    ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    UIObject* layer3 = scenePlay->GetLayer(3);
+    const float max = std::numeric_limits<float>::max();
+
+    //디스크립트 볼더
+    m_pDescriptionBorder = new UIImage("./Resource/UI/Inventory/Basic/", "ItemDescription.png",
+        Vector3::ONE * max, nullptr, layer3);
+    D3DXVECTOR2 tDesSize = m_pDescriptionBorder->GetSize();
+    m_pDescriptionBorder->SetIsRender(true);
+
+    //디스크립트 이미지 텍스트
+    //디스크립션
+    m_pDescriptionText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground)
+        , D3DXVECTOR2(tDesSize.x-10,tDesSize.y-10), ""
+        , D3DCOLOR_XRGB(0, 0, 0)
+        , m_pDescriptionBorder);
+    m_pDescriptionText->SetDrawTextFormat(DT_WORDBREAK | DT_LEFT);
+    m_pDescriptionText->SetPosition(D3DXVECTOR3(5.0f, 110.0f, 0.f));
+    //총기 이름
+    m_pDescriptionName = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_NickName)
+        , D3DXVECTOR2(tDesSize.x - 10, tDesSize.y - 10), ""
+        , D3DCOLOR_XRGB(0, 0, 0)
+        , m_pDescriptionBorder);
+    m_pDescriptionName->SetDrawTextFormat(DT_WORDBREAK | DT_LEFT);
+    m_pDescriptionName->SetPosition(D3DXVECTOR3(5.0f, 5.0f, 0.f));
+    //해당 용품 갯수
+    m_pDescriptionNum = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground)
+        , D3DXVECTOR2(tDesSize.x - 10, tDesSize.y - 10), ""
+        , D3DCOLOR_XRGB(0, 0, 0)
+        , m_pDescriptionBorder);
+    m_pDescriptionNum->SetDrawTextFormat(DT_WORDBREAK | DT_LEFT);
+    m_pDescriptionNum->SetPosition(D3DXVECTOR3(130.0f, 170.0f, 0.f));
+
+
     // 드롭드 칸 이미지
     int left = 74;
     int top = 92;
@@ -293,10 +339,10 @@ void Character::TotalInventory::SetEquipUI()
     }
 
     // 픽된 아이템 이미지
-    ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
-    UIObject* layer3 = scenePlay->GetLayer(3);
+    //ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    //UIObject* layer3 = scenePlay->GetLayer(3);
 
-    const float max = std::numeric_limits<float>::max();
+    //const float max = std::numeric_limits<float>::max();
     pUIPicked = new UIButtonWithItem(
         Vector3::ONE * max,
         "./Resource/UI/Inventory/Basic/",
@@ -343,7 +389,6 @@ void Character::TotalInventory::SetEquipUI()
                 std::placeholders::_1,
                 std::placeholders::_2,
                 std::placeholders::_3));
-
         u->SetIsActive(false);
     }
 
@@ -351,6 +396,12 @@ void Character::TotalInventory::SetEquipUI()
     //헬멧
     left = 440;
     top = 93;
+    new UIImage("./Resource/UI/Inventory/Basic/",
+        "Equip_no.png", D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        nullptr, pBorder);
+
     m_pUIHead = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
@@ -368,11 +419,17 @@ void Character::TotalInventory::SetEquipUI()
             std::placeholders::_1,
             std::placeholders::_2,
             std::placeholders::_3));
-    //u->SetIsActive(false);
+    m_pUIHead->SetIsActive(false);
 
     //가방
     left = 440;
     top = 248;
+    new UIImage("./Resource/UI/Inventory/Basic/",
+        "Equip_no.png", D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        nullptr, pBorder);
+
     m_pUIBack = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
@@ -390,11 +447,17 @@ void Character::TotalInventory::SetEquipUI()
             std::placeholders::_1,
             std::placeholders::_2,
             std::placeholders::_3));
-    //u->SetIsActive(false);
+    m_pUIBack->SetIsActive(false);
 
      //아머
     left = 440;
     top = 293;
+    new UIImage("./Resource/UI/Inventory/Basic/",
+        "Equip_no.png", D3DXVECTOR3(
+            static_cast<float>(left),
+            static_cast<float>(top), 0.0f),
+        nullptr, pBorder);
+
     m_pUIArmor = new UIButtonWithItem(
         D3DXVECTOR3(
             static_cast<float>(left),
@@ -412,10 +475,10 @@ void Character::TotalInventory::SetEquipUI()
             std::placeholders::_1,
             std::placeholders::_2,
             std::placeholders::_3));
-    //u->SetIsActive(false);
+    m_pUIArmor->SetIsActive(false);
 
      //벨트
-    left = 440;
+    /*left = 440;
     top = 337;
     auto u = new UIButtonWithItem(
         D3DXVECTOR3(
@@ -433,7 +496,7 @@ void Character::TotalInventory::SetEquipUI()
             pCharacter,
             std::placeholders::_1,
             std::placeholders::_2,
-            std::placeholders::_3));
+            std::placeholders::_3));*/
     //u->SetIsActive(false);
 
 
@@ -505,7 +568,7 @@ void Character::TotalInventory::SetEquipUI()
      //무기 슬롯 3
      left = 870;
      top = 375;
-     u = new UIButtonWithItem(
+     auto u = new UIButtonWithItem(
          D3DXVECTOR3(
              static_cast<float>(left),
              static_cast<float>(top), 0.0f),
@@ -893,10 +956,11 @@ void Character::TotalInventory::EquipArmor(Item* pNewItem)
     }
 
     // ui 끼우기
-    m_pEquipArmor->SetIsRenderUIImage(true);
+
     m_pUIArmor->pUIImage = m_pEquipArmor->GetUIImage();
     m_pUIArmor->pItem = m_pEquipArmor;
     m_pUIArmor->SetIsActive(true);
+    m_pEquipArmor->GetUIText()->SetText("");
 }
 
 void Character::TotalInventory::DropHead()
@@ -929,10 +993,10 @@ void Character::TotalInventory::EquipHead(Item* pNewItem)
     }
 
     // ui 끼우기
-    m_pEquipHead->SetIsRenderUIImage(true);
     m_pUIHead->pUIImage = m_pEquipHead->GetUIImage();
     m_pUIHead->pItem = m_pEquipHead;
     m_pUIHead->SetIsActive(true);
+    m_pEquipHead->GetUIText()->SetText("");
 }
 
 void Character::TotalInventory::DropBack()
@@ -965,10 +1029,10 @@ void Character::TotalInventory::EquipBack(Item* pNewItem)
     }
 
     // ui 끼우기
-    m_pEquipBack->SetIsRenderUIImage(true);
     m_pUIBack->pUIImage = m_pEquipBack->GetUIImage();
     m_pUIBack->pItem = m_pEquipBack;
     m_pUIBack->SetIsActive(true);
+    m_pEquipBack->GetUIText()->SetText("");
 }
 
 void Character::TotalInventory::ReleaseBullets(Item* pItem)

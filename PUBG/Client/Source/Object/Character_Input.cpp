@@ -304,10 +304,10 @@ void Character::setReload()
 
                 if (tag == TAG_RES_STATIC::QBZ)
                 {
-                    Sound()()->addPlay(
+                    Sound()()->Play(
                         TAG_SOUND::Qbz_Reload,
                         GetTransform()->GetPosition(),
-                        0.0f, 
+                        4.0f,
                         FMOD_2D);
 
                     //총 자체 애니메이션
@@ -384,22 +384,22 @@ void Character::setReload()
                         Sound()()->addPlay(
                             TAG_SOUND::Kar98_Reload0, 
                             GetTransform()->GetPosition(), 
-                            0.3f,
+                            0.5f,
                             FMOD_2D);
                         Sound()()->addPlay(
                             TAG_SOUND::Kar98_Reload1, 
                             GetTransform()->GetPosition(), 
-                            2.4f,
+                            2.0f,
                             FMOD_2D);
                         Sound()()->addPlay(
                             TAG_SOUND::Kar98_Reload2, 
                             GetTransform()->GetPosition(), 
-                            2.5f,
+                            2.3f,
                             FMOD_2D);
                         Sound()()->addPlay(
                             TAG_SOUND::Kar98_Reload3, 
                             GetTransform()->GetPosition(), 
-                            2.9f,
+                            3.1f,
                             FMOD_2D);
 
                         TAG_ANIM_WEAPON tagAnim = TAG_ANIM_WEAPON::COUNT;
@@ -483,7 +483,7 @@ void Character::setReload()
                         Sound()()->addPlay(
                             TAG_SOUND::Kar98_Reload0, 
                             GetTransform()->GetPosition(), 
-                            0.0f,
+                            0.5f,
                             FMOD_2D);
 
                         //총 자체 애니메이션

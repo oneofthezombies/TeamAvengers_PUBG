@@ -179,7 +179,7 @@ void Item::setup(const TAG_RES_STATIC tag)
 
             const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
             m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
-            m_pUIImage->SetIsRender(false);
+            m_pUIImage->SetIsRender(true);
             pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
                 D3DXVECTOR2(100.0f, 20.0f),
                 "",
@@ -222,7 +222,7 @@ void Item::setup(const TAG_RES_STATIC tag)
 
             const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
             m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
-            m_pUIImage->SetIsRender(false);
+            m_pUIImage->SetIsRender(true);
             pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
                 D3DXVECTOR2(100.0f, 20.0f),
                 "",
@@ -266,7 +266,7 @@ void Item::setup(const TAG_RES_STATIC tag)
 
             const auto pathName2 = ResourceInfo::GetUIPathFileName(tag);
             m_pUIImage = new UIImage(pathName2.first, pathName2.second, Vector3::ZERO, this, nullptr);
-            m_pUIImage->SetIsRender(false);
+            m_pUIImage->SetIsRender(true);
             pUIText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground),
                 D3DXVECTOR2(100.0f, 20.0f),
                 "",
@@ -689,7 +689,7 @@ void Item::OnKar98kReloadEnd()
         FMOD_2D);
     Sound()()->addPlay(TAG_SOUND::Kar98_Reload3, 
         GetTransform()->GetPosition(), 
-        0.4f,
+        0.5f,
         FMOD_2D);
 
     Set(
