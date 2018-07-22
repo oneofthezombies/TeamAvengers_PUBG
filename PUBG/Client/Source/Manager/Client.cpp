@@ -196,8 +196,11 @@ void Communication::Manager::ReceiveMessage(
 
             ReceiveID(id);
             
-            SendID(m_myInfo.ID);
+            m_roomInfo.playerInfos[id].ID = id;
+            m_roomInfo.playerInfos[m_myInfo.ID].nickname = m_myInfo.nickname;
+
             SendNickname(m_myInfo.nickname);
+            //SendID(m_myInfo.ID);
         }
         break;
     case TAG_REQUEST::SEND_ID:
@@ -1230,16 +1233,12 @@ void Communication::Manager::SendID(const int id)
 {
     if (m_playMode == PlayMode::ALONE) return;
 
-    m_roomInfo.playerInfos[id].ID = id;
-
     m_pClient->Write(Message::Create(TAG_REQUEST::SEND_ID, to_string(id)));
 }
 
 void Communication::Manager::SendNickname(const string& nickname)
 {
     if (m_playMode == PlayMode::ALONE) return;
-
-    m_roomInfo.playerInfos[m_myInfo.ID].nickname = nickname;
 
     stringstream ss;
     ss << m_myInfo.ID << nickname;
