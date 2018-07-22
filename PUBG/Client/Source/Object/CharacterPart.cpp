@@ -341,7 +341,7 @@ void CharacterPart::OnUpdate()
             m_frames[2]->CombinedTransformationMatrix);
         auto center = (top + bottom) * 0.5f;
         model = m_frames[2]->CombinedTransformationMatrix;
-        model._41 = center.x - 9.0f;
+        model._41 = center.x;
         model._42 = center.y;
         model._43 = center.z;
     }
