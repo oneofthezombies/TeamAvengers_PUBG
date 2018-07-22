@@ -14,8 +14,8 @@ private:
 	unordered_map<TAG_SCENE, IScene*> m_scenes;
 	IScene*                           pCurrentScene;
     std::vector<Character*>           m_characters;
-    Character* pPlayer;
-    std::vector<Character*> others;
+    Character*                        pPlayer;
+    std::vector<Character*>           others;
 
              SceneManager();
 	virtual ~SceneManager();

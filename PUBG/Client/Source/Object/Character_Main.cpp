@@ -67,48 +67,6 @@ Character::Character(const int index)
     , m_otherHitPart(0)
     , m_stepDistance(0.0f)
 {
-    //if (IsMine())
-    //{
-    //    m_inGameUI.Init(this);
-    //    m_totalInventory.Init(this);
-    //    m_gameOverUI.Init(this);
-    //}
-
-
-    ////old map
-    //int x = m_index / 2;
-    //int z = m_index % 2;
-    //const float factor(1900.0f);
-    //Transform* pTransform = GetTransform();
-    //pTransform->SetPosition(D3DXVECTOR3(x*factor + 100.0f, 200.0f, z*factor + 100.0f));
-    //if (m_index == 0)
-    //    pTransform->SetPosition(D3DXVECTOR3(1900.0f, 200.0f, 1900.0f));
-
-
-    ////new map
-    //Transform* pTransform = GetTransform();
-    //if(m_index==0)
-    //    pTransform->SetPosition(D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f));
-    //if(m_index==1)
-    //    pTransform->SetPosition(D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f));
-    //if (m_index == 2)
-    //    pTransform->SetPosition(D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f));
-    //if (m_index == 3)
-    //    pTransform->SetPosition(D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f));
-
-
-    //pTransform->SetRotation(OFFSET_ROTATION);
-
-    ////putting character into TotalCellSpace
-    //IScene* CS = CurrentScene()();
-    //m_cellIndex = CS->GetCellIndex(pTransform->GetPosition());                   //캐릭터의 pos에 따라 알맞은 area에 넣어주기
-    //CS->InsertObjIntoTotalCellSpace(TAG_OBJECT::Character, m_cellIndex, this);   //Object 를 TotalCellSpace(Area)에 넣기
-    //
-    //if (IsMine())
-    //{
-    //    CS->m_NearArea.CreateNearArea(m_cellIndex);                                  //Near Area 계산
-    //}
-
     pAnimation = new CharacterAnimation(m_index);
     AddChild(pAnimation);
     setupAnimation();
@@ -129,16 +87,10 @@ Character::Character(const int index)
 
     subscribeCollisionEvent();
 
-    //if (IsMine())
-    //{
-    //    setInfo();
-    //    Camera()()->SetTarget(&m_info);
-    //    m_rotationForCamera = Vector3::ZERO;
-    //}
-
     pOtherHitPositionMesh = Resource()()->GetBoundingSphereMesh();
 
     m_bBox = BoundingBox::Create(D3DXVECTOR3(-20.0f, 0.0f, -20.0f), D3DXVECTOR3(20.0f, 170.0f, 20.0f));
+
     //m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
     
 }
@@ -158,29 +110,24 @@ Character::~Character()
 
 void Character::OnUpdate()
 {
-    if (CurrentScene()()->GetTagScene() == TAG_SCENE::Lobby)
+    TAG_SCENE tagScene = CurrentScene()()->GetTagScene();
+
+    if (tagScene == TAG_SCENE::Play)
     {
+        const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
 
+        if (receivedHealth < m_health)
+        {
+            m_health = receivedHealth;
+            m_isDamaged = true;
+        }
+        m_isDead = Communication()()->m_roomInfo.playerInfos[m_index].isDead;
+
+        updateMine();
+        updateOther();
+
+        Debug << "------current cell space ------ : " << m_cellIndex << endl;
     }
-    else if (CurrentScene()()->GetTagScene() == TAG_SCENE::Play)
-    {
-
-    }
-
-    //const float receivedHealth = Communication()()->m_roomInfo.playerInfos[m_index].health;
-
-    //if (receivedHealth < m_health)
-    //{
-    //    m_health = receivedHealth;
-    //    m_isDamaged = true;
-    //}
-    //m_isDead = Communication()()->m_roomInfo.playerInfos[m_index].isDead;
-
-    //updateMine();
-    //updateOther();
-
-    //Debug << "------current cell space ------ : " << m_cellIndex << endl;
-    //
 
     // update
     GetTransform()->Update();      // set characters world
@@ -188,31 +135,40 @@ void Character::OnUpdate()
     updateBone();                  // modified characters local
     pAnimation->UpdateModel();     // set characters model
 
-    //// 캐릭터와 장비 애니메이션 씽크
-    //syncAnimation();
+    if (tagScene == TAG_SCENE::Play)
+    {
+        // 캐릭터와 장비 애니메이션 씽크
+        syncAnimation();
 
-    //// set item animation, item model here
-    //updateTotalInventory();
+        // set item animation, item model here
+        updateTotalInventory();
+    }
 
     // bounding sphere move to character position
     m_boundingSphere.position = GetTransform()->GetPosition();
 
-    ////m_bSphereSlidingCollision.position = GetTransform()->GetPosition();
-    //m_bBox.position = GetTransform()->GetPosition();
-    //m_bBox.rotation = GetTransform()->GetRotation();
+    if (tagScene == TAG_SCENE::Play)
+    {
+        //m_bSphereSlidingCollision.position = GetTransform()->GetPosition();
+        m_bBox.position = GetTransform()->GetPosition();
+        m_bBox.rotation = GetTransform()->GetRotation();
 
-    //for (auto pPart : m_characterParts)
-    //    pPart->Update();
+        for (auto pPart : m_characterParts)
+            pPart->Update();
 
-    //if (IsFire())
-    //    RifleShooting();
+        if (IsFire())
+            RifleShooting();
+    }
 
     Shader()()->AddShadowSource(
         GetTransform()->GetTransformationMatrix(), 
         pAnimation->GetSkinnedMesh());
 
-    //// communication
-    //communicate();
+    if (tagScene == TAG_SCENE::Play)
+    {
+        // communication
+        communicate();
+    }
 }
 
 void Character::OnRender()

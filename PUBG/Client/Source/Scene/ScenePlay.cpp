@@ -15,21 +15,8 @@ void ScenePlay::setAloneMode()
 {
     Communication()()->m_myInfo.ID = 0;
     const int myID = Communication()()->m_myInfo.ID;
-    pPlayer = new Character(myID);
-    characters.emplace_back(pPlayer);
-    AddObject(pPlayer);
-
+    Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
-
-    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
-    {
-        if (i == myID) continue;
-
-        Character* pOther = new Character(i);
-        others.emplace_back(pOther);
-        characters.emplace_back(pOther);
-        AddObject(pOther);
-    }
 
     //old map
     Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(1900.0f, 200.0f, 1900.0f);
@@ -153,23 +140,9 @@ void ScenePlay::setWithOthersMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    const int myID = Communication()()->m_myInfo.ID;
-    pPlayer = new Character(myID);
-    characters.emplace_back(pPlayer);
-    AddObject(pPlayer);
-
     Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-500.0f, 1000.0f, -500.0f));
+    Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
-
-    for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
-    {
-        if (i == myID) continue;
-
-        Character* pOther = new Character(i);
-        others.emplace_back(pOther);
-        characters.emplace_back(pOther);
-        AddObject(pOther);
-    }
 
     p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
     string name = "Head_Lv1 " + std::to_string(0);
@@ -268,11 +241,13 @@ void ScenePlay::setWithOthersMode()
     //AddObject(tf);
 
     // 빈 총알을 셋팅합니다. 이것은 총을 버릴 때 총에 들어있던 총알을 버리기 위해서 종종 필요합니다.
-    setEmptyBullets(&characters);
+    setEmptyBullets();
 }
 
-void ScenePlay::setEmptyBullets(std::vector<Character*>* OutCharacters)
+void ScenePlay::setEmptyBullets()
 {
+    std::vector<Character*> characters = GetCharacters();
+
     const int numEmpty = 5;
     for (int ch_i = 0; ch_i < GameInfo::NUM_PLAYERS; ++ch_i)
     {
@@ -283,7 +258,7 @@ void ScenePlay::setEmptyBullets(std::vector<Character*>* OutCharacters)
             item->SetCount(0);
 
             Character* pCharacter = nullptr;
-            for (auto pC : *OutCharacters)
+            for (auto pC : characters)
             {
                 if (pC->GetIndex() == ch_i)
                 {
@@ -305,7 +280,6 @@ void ScenePlay::setEmptyBullets(std::vector<Character*>* OutCharacters)
 
 ScenePlay::ScenePlay()
     : IScene(TAG_SCENE::Play)
-    , pPlayer(nullptr)
     , m_layer(nullptr)
 {
 }
@@ -364,6 +338,8 @@ void ScenePlay::OnInit()
         AddObject(pBox);
     }
 
+    AddCharacters();
+
     // No id received
     if (Communication()()->m_myInfo.ID == -1)
     {
@@ -394,44 +370,44 @@ void ScenePlay::OnUpdate()
     레이,
     */
 
-    static int testi;
+    //static int testi;
 
-    if (Input()()->IsOnceKeyDown(VK_LEFT))
-    {
-        testi--;
-        if (testi < 1)
-        {
-            testi = 1;
-        }
-        Sound()()->Play(static_cast<TAG_SOUND>(testi), Vector3::ZERO, 1.0f, FMOD_2D);
-    }
-    if (Input()()->IsOnceKeyDown(VK_RIGHT))
-    {
-        testi++;
-        if (testi > static_cast<int>(TAG_SOUND::Background))
-        {
-            testi = 21;
-        }
-        Sound()()->Play(static_cast<TAG_SOUND>(testi), Vector3::ZERO, 1.0f, FMOD_2D);
-    }
+    //if (Input()()->IsOnceKeyDown(VK_LEFT))
+    //{
+    //    testi--;
+    //    if (testi < 1)
+    //    {
+    //        testi = 1;
+    //    }
+    //    Sound()()->Play(static_cast<TAG_SOUND>(testi), Vector3::ZERO, 1.0f, FMOD_2D);
+    //}
+    //if (Input()()->IsOnceKeyDown(VK_RIGHT))
+    //{
+    //    testi++;
+    //    if (testi > static_cast<int>(TAG_SOUND::Background))
+    //    {
+    //        testi = 21;
+    //    }
+    //    Sound()()->Play(static_cast<TAG_SOUND>(testi), Vector3::ZERO, 1.0f, FMOD_2D);
+    //}
 
     Shader()()->AddShadowSource(Matrix::IDENTITY, pHeightMap->GetMesh(), 0);
 
-    for (auto c : characters)
+    for (auto c : GetCharacters())
     {
         Debug << "Character " << c->GetIndex() << " hp : " << c->GetCharacterHealth() << '\n';
     }
 }
 
-const std::vector<Character*> ScenePlay::GetOthers() const
+const std::vector<Character*>& ScenePlay::GetOthers() const
 {
-    return others;
+    return Scene()()->GetOthers();
 }
 
 int ScenePlay::GetSurvivors() const
 {
     int survivalNum = 0;
-    for (auto c : characters)
+    for (auto c : GetCharacters())
     {
         if (c->GetCharacterIsDead() == false)
             survivalNum++;
@@ -441,12 +417,12 @@ int ScenePlay::GetSurvivors() const
 
 Character* ScenePlay::GetPlayer() const
 {
-    return pPlayer;
+    return Scene()()->GetPlayer();
 }
 
 const std::vector<Character*>& ScenePlay::GetCharacters() const
 {
-    return characters;
+    return Scene()()->GetCharacters();
 }
 
 DeathDropBox* ScenePlay::GetDeathDropBox(const std::size_t index)
@@ -470,5 +446,14 @@ UIObject* ScenePlay::GetLayer(int layerIndex) const
     default:
         return m_layer->GetChild(0);
         assert(false && "ScenePlay::GetLayer(), default case.");
+    }
+}
+
+void ScenePlay::AddCharacters()
+{
+    for (auto c : Scene()()->GetCharacters())
+    {
+        c->InitScenePlay();
+        AddObject(c);
     }
 }

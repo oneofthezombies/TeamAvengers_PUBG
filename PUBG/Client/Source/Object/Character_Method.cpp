@@ -1306,6 +1306,51 @@ void Character::SetNotReadyAnimation()
 
 void Character::InitScenePlay()
 {
+    Transform* pTransform = GetTransform();
+    pTransform->SetRotation(OFFSET_ROTATION);
+
+    if (IsMine())
+    {
+        m_inGameUI.Init(this);
+        m_totalInventory.Init(this);
+        m_gameOverUI.Init(this);
+    }
+
+    //old map
+    int x = m_index / 2;
+    int z = m_index % 2;
+    const float factor(1900.0f);
+    pTransform->SetPosition(D3DXVECTOR3(x*factor + 100.0f, 200.0f, z*factor + 100.0f));
+    if (m_index == 0)
+        pTransform->SetPosition(D3DXVECTOR3(1900.0f, 200.0f, 1900.0f));
+
+    ////new map
+    //Transform* pTransform = GetTransform();
+    //if(m_index==0)
+    //    pTransform->SetPosition(D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f));
+    //if(m_index==1)
+    //    pTransform->SetPosition(D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f));
+    //if (m_index == 2)
+    //    pTransform->SetPosition(D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f));
+    //if (m_index == 3)
+    //    pTransform->SetPosition(D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f));
+
+    //putting character into TotalCellSpace
+    IScene* CS = CurrentScene()();
+    m_cellIndex = CS->GetCellIndex(pTransform->GetPosition());                   //캐릭터의 pos에 따라 알맞은 area에 넣어주기
+    CS->InsertObjIntoTotalCellSpace(TAG_OBJECT::Character, m_cellIndex, this);   //Object 를 TotalCellSpace(Area)에 넣기
+    
+    if (IsMine())
+    {
+        CS->m_NearArea.CreateNearArea(m_cellIndex);                                  //Near Area 계산
+    }
+
+    if (IsMine())
+    {
+        setInfo();
+        Camera()()->SetTarget(&m_info);
+        m_rotationForCamera = Vector3::ZERO;
+    }
 }
 
 void Character::movementControl(OUT State* OutState)
