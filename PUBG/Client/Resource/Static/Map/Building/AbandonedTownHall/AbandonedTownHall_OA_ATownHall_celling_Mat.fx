@@ -32,6 +32,29 @@ sampler2D ShadowSampler = sampler_state
 };
 
 /*** dependency block ***/
+texture C__Users_user_Desktop_Resource_Map_Building_Church_Textures__Concrete_Ceiling_01_D_tga;
+texture C__Users_user_Desktop_Resource_Map_Building_Church_Textures__Concrete_Ceiling_01_N_tga;
+
+sampler2D C__Users_user_Desktop_Resource_Map_Building_Church_Textures__Concrete_Ceiling_01_D_tgaSampler = sampler_state  // TexCoord0 
+{
+    Texture = <C__Users_user_Desktop_Resource_Map_Building_Church_Textures__Concrete_Ceiling_01_D_tga>;
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+
+sampler2D C__Users_user_Desktop_Resource_Map_Building_Church_Textures__Concrete_Ceiling_01_N_tgaSampler = sampler_state  // TexCoord0 
+{
+    Texture = <C__Users_user_Desktop_Resource_Map_Building_Church_Textures__Concrete_Ceiling_01_N_tga>;
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+/*** dependency block ***/
 
 struct VS_INPUT
 {
@@ -83,7 +106,7 @@ VS_OUTPUT VS(VS_INPUT vin)
 
 float4  PS(VS_OUTPUT vout) : COLOR
 {
-    float3 tangentNormal = tex2D(C__Users_user_Desktop_Resource_Item_Equipment_Back_Lv1_Textures__F_Back_E_01_N_tgaSampler, vout.TexCoord).xyz;
+    float3 tangentNormal = tex2D(C__Users_user_Desktop_Resource_Map_Building_Church_Textures__Concrete_Ceiling_01_N_tgaSampler, vout.TexCoord).xyz;
     tangentNormal = normalize(tangentNormal * 2 - 1);
 
     float3x3 TBN = float3x3(normalize(vout.Tangent),
@@ -93,7 +116,7 @@ float4  PS(VS_OUTPUT vout) : COLOR
 
     float3 worldNormal = mul(TBN, tangentNormal);
 
-    float4 albedo = tex2D(C__Users_user_Desktop_Resource_Item_Equipment_Back_Lv1_Textures__F_Back_E_01_D_tgaSampler, vout.TexCoord);
+    float4 albedo = tex2D(C__Users_user_Desktop_Resource_Map_Building_Church_Textures__Concrete_Ceiling_01_D_tgaSampler, vout.TexCoord);
     float3 lightDir = normalize(vout.LightDirection);
     float3 diffuse = saturate(dot(worldNormal, -lightDir));
     diffuse = max(float3(0.3f, 0.3f, 0.3f), diffuse);

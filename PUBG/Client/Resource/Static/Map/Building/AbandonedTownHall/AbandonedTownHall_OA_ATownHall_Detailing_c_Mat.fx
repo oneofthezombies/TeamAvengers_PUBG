@@ -106,7 +106,7 @@ VS_OUTPUT VS(VS_INPUT vin)
 
 float4  PS(VS_OUTPUT vout) : COLOR
 {
-    float3 tangentNormal = tex2D(C__Users_user_Desktop_Resource_Map_Building_AbandonedTownHall_AbandonedTownHall_OA_Textures__ATownHall_Molding_a_N_tga, vout.TexCoord).xyz;
+    float3 tangentNormal = tex2D(C__Users_user_Desktop_Resource_Map_Building_AbandonedTownHall_AbandonedTownHall_OA_Textures__ATownHall_Molding_a_N_tgaSampler, vout.TexCoord).xyz;
     tangentNormal = normalize(tangentNormal * 2 - 1);
 
     float3x3 TBN = float3x3(normalize(vout.Tangent),
@@ -116,7 +116,7 @@ float4  PS(VS_OUTPUT vout) : COLOR
 
     float3 worldNormal = mul(TBN, tangentNormal);
 
-    float4 albedo = tex2D(C__Users_user_Desktop_Resource_Map_Building_AbandonedTownHall_AbandonedTownHall_OA_Textures__ATownHall_Molding_a1_D_tga, vout.TexCoord);
+    float4 albedo = tex2D(C__Users_user_Desktop_Resource_Map_Building_AbandonedTownHall_AbandonedTownHall_OA_Textures__ATownHall_Molding_a1_D_tgaSampler, vout.TexCoord);
     float3 lightDir = normalize(vout.LightDirection);
     float3 diffuse = saturate(dot(worldNormal, -lightDir));
     diffuse = max(float3(0.3f, 0.3f, 0.3f), diffuse);
