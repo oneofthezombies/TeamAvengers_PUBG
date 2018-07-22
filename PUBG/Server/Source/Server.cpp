@@ -76,17 +76,23 @@ void Room::SendPlayerInfos(const int receiveID)
     GameInfo::PlayerInfo& p2 = m_roomInfo.playerInfos[2];
     GameInfo::PlayerInfo& p3 = m_roomInfo.playerInfos[3];
 
+    cout << "isReady list [0..3] : \n";
+    cout << std::boolalpha << p0.isReady << ' ';
+    cout << std::boolalpha << p1.isReady << ' ';
+    cout << std::boolalpha << p2.isReady << ' ';
+    cout << std::boolalpha << p3.isReady << '\n';
+
     std::stringstream ss;
-    ss << p0.ID << p0.nickname << p0.isReady ? 1 : 0;
-    ss << p1.ID << p1.nickname << p1.isReady ? 1 : 0;
-    ss << p2.ID << p2.nickname << p2.isReady ? 1 : 0;
-    ss << p3.ID << p3.nickname << p3.isReady ? 1 : 0;
+    ss << p0.ID << ' ' << p0.nickname << ' ' << (p0.isReady ? 1 : 0) << ' ';
+    ss << p1.ID << ' ' << p1.nickname << ' ' << (p1.isReady ? 1 : 0) << ' ';
+    ss << p2.ID << ' ' << p2.nickname << ' ' << (p2.isReady ? 1 : 0) << ' ';
+    ss << p3.ID << ' ' << p3.nickname << ' ' << (p3.isReady ? 1 : 0);
 
     for (auto& p : m_participants)
     {
         if (p->m_myInfo.ID == receiveID)
         {
-            cout << "Send~\n";
+            cout << "Send~ to" << receiveID << endl;
 
             p->Write(
                 Message::Create(
