@@ -7,50 +7,49 @@
 HeightMap::HeightMap()
 	: IMap()
     , m_pMesh(NULL)
-    //, m_testSphereMesh(NULL)
 {
-    ////------------------HeightMap------------------
-    ////old map
-    D3DXMATRIXA16 matS, matT;
-    D3DXMatrixScaling(&matS, 30.0f, 1.0f, 30.0f);
-    D3DXMatrixTranslation(&matT, 0.0f, 0.0f, 0.0f);
-    m_matWorld = matS * matT;
-
-    SetDimension(257);
-    Load(_T("./Resource/Heightmap/Heightmap.raw"), &m_matWorld);
-
-    SetSurface();
-
-    Resource()()->GetEffect(
-        "./Resource/Heightmap/", 
-        "Heightmap.fx")->
-        SetTexture(
-            "Heightmap_Diffuse_Tex", 
-            Resource()()->GetTexture(
-                "./Resource/Heightmap/", 
-                "Heightmap.jpg"));
-    ////---------------------------------------------------------
-
-
-
-    //////new map-------------------------------------------
+    //////------------------HeightMap------------------
+    //////old map
     //D3DXMATRIXA16 matS, matT;
-    //D3DXMatrixScaling(&matS, 100.0f, 50.0f, 100.0f);
+    //D3DXMatrixScaling(&matS, 30.0f, 1.0f, 30.0f);
     //D3DXMatrixTranslation(&matT, 0.0f, 0.0f, 0.0f);
     //m_matWorld = matS * matT;
 
-    //SetDimension(256);
-    //Load(_T("./Resource/Heightmap/testing/HeightMap_128.raw"), &m_matWorld);
+    //SetDimension(257);
+    //Load(_T("./Resource/Heightmap/Heightmap.raw"), &m_matWorld);
+
+    //SetSurface();
 
     //Resource()()->GetEffect(
-    //    "./Resource/Heightmap/",
+    //    "./Resource/Heightmap/", 
     //    "Heightmap.fx")->
     //    SetTexture(
-    //        "Heightmap_Diffuse_Tex",
+    //        "Heightmap_Diffuse_Tex", 
     //        Resource()()->GetTexture(
-    //            "./Resource/Heightmap/",
+    //            "./Resource/Heightmap/", 
     //            "Heightmap.jpg"));
-    //////---------------------------------------------------
+    //////---------------------------------------------------------
+
+
+
+    ////new map-------------------------------------------
+    D3DXMATRIXA16 matS, matT;
+    D3DXMatrixScaling(&matS, 100.0f, 50.0f, 100.0f);
+    D3DXMatrixTranslation(&matT, 0.0f, 0.0f, 0.0f);
+    m_matWorld = matS * matT;
+
+    SetDimension(256);
+    Load(_T("./Resource/Heightmap/testing/HeightMap_128.raw"), &m_matWorld);
+
+    Resource()()->GetEffect(
+        "./Resource/Heightmap/",
+        "Heightmap.fx")->
+        SetTexture(
+            "Heightmap_Diffuse_Tex",
+            Resource()()->GetTexture(
+                "./Resource/Heightmap/",
+                "Heightmap.jpg"));
+    ////---------------------------------------------------
 
 
 

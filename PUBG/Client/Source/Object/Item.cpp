@@ -83,8 +83,15 @@ void Item::OnRender()
             &pEM->m_boundingSphere.center, 
             &GetTransform()->GetTransformationMatrix());
 
-        if(CurrentCamera()()->IsObjectInsideFrustum(center, pEM->m_boundingSphere.radius))
-            pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
+        //frustum culling
+        if (CurrentCamera()()->IsObjectInsideFrustum(center, pEM->m_boundingSphere.radius))
+        {
+            //distance culling
+            D3DXVECTOR3 vLength = (pEM->m_boundingSphere.center + pEM->m_boundingSphere.position) - CurrentCamera()()->GetPosition();
+            if(D3DXVec3Length(&vLength)<10000.0f)
+                pEffectMeshRenderer->Render(bind(&Item::setGlobalVariable, this, _1));
+        }
+            
     }
         
     if (m_isRenderSkinnedMesh)

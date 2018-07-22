@@ -37,29 +37,43 @@ TerrainFeature::~TerrainFeature()
 
 void TerrainFeature::OnUpdate()
 {
-    Shader()()->AddShadowSource(
-        GetTransform()->GetTransformationMatrix(), 
-        pEffectMeshRenderer->GetEffectMesh());
+    //distance culling
+    D3DXVECTOR3 vLength = GetTransform()->GetPosition() - CurrentCamera()()->GetPosition();
+    if (D3DXVec3Length(&vLength) < 5000.0f)
+    {
+        Shader()()->AddShadowSource(
+            GetTransform()->GetTransformationMatrix(),
+            pEffectMeshRenderer->GetEffectMesh());
+    }
+    
 }
 
 void TerrainFeature::OnRender()
 {
+    //frustum culling
     if (CurrentCamera()()->IsObjectInsideFrustum(
         m_boundingSphere.center + m_boundingSphere.position,
         m_boundingSphere.radius))
     {
-        pEffectMeshRenderer->Render(
-            [this](LPD3DXEFFECT pEffect)
+        //distance culling
+        D3DXVECTOR3 vlength = (m_boundingSphere.center + m_boundingSphere.position) - CurrentCamera()()->GetPosition();
+        if (D3DXVec3Length(&vlength) < 10000.0f)
         {
-            pEffect->SetMatrix(
-                Shader::World,
-                &GetTransform()->GetTransformationMatrix());
-        });
+            pEffectMeshRenderer->Render(
+                [this](LPD3DXEFFECT pEffect)
+            {+
+                pEffect->SetMatrix(
+                    Shader::World,
+                    &GetTransform()->GetTransformationMatrix());
+            });
 
-        for (auto& bb : m_boundingBoxes)
-            bb.Render();
+            for (auto& bb : m_boundingBoxes)
+                bb.Render();
 
-        m_boundingSphere.Render();
+            m_boundingSphere.Render();
+        }
+
+
     }
     
 }

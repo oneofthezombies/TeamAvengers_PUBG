@@ -620,7 +620,8 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         
         isIntersected = pCurrentScene->GetHeight(targetPos, &height);
 
-        if (targetPos.y <= height && m_Jump.jumpPower < m_Jump.currGravity)
+        if (targetPos.y <= height && m_Jump.jumpPower < m_Jump.currGravity
+            || m_isCollidedWithBox&& m_Jump.jumpPower < m_Jump.currGravity)
         {            
             //점프 후 착지애니메이션
             //TODO: 높이에 따라서 다른 착지애니메이션
@@ -649,7 +650,12 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
 
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;
-            targetPos.y = height;
+
+            //만약 character발 아래 collider 가 있다면
+            if (m_isCollidedWithBox)
+                targetPos.y = m_adjust_Y_onCollision;
+            else
+                targetPos.y = height;
         }
     }
     else //when no jump
@@ -657,7 +663,7 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
         isIntersected = pCurrentScene->GetHeight(targetPos, &height);
         if (!isIntersected /*|| fabs(height - *pOut.y) > m_Jump.maxStepHeight*/)
         {
-            //Do nothing
+            //do nothing
         }
         else
         {

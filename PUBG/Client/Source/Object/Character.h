@@ -412,11 +412,11 @@ public:
 
     struct IsJumping
     {
-        bool			isJumping;
-        float			jumpPower;
-        float			gravity;
-        float			currGravity;
-        float			maxStepHeight;
+        bool			    isJumping;
+        const float			jumpPower;
+        const float			gravity;
+        float			    currGravity;
+        float			    maxStepHeight;
 
         IsJumping();
     };

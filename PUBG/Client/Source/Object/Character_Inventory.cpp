@@ -1484,10 +1484,16 @@ void Character::updateTotalInventory()
             pHand->UpdateAnimation();
 
         pHand->UpdateModel();
+        
+        //distance culling
+        D3DXVECTOR3 vLength = GetTransform()->GetPosition() - CurrentCamera()()->GetPosition();
+        if (D3DXVec3Length(&vLength) < 5000.0f)
+        {
 
-        Shader()()->AddShadowSource(
-            pHandTr->GetTransformationMatrix(), 
-            pHand->GetSkinnedMesh());
+            Shader()()->AddShadowSource(
+                pHandTr->GetTransformationMatrix(),
+                pHand->GetSkinnedMesh());
+        }
     }
 
     Item* pArmor = m_totalInventory.m_pEquipArmor;
@@ -1546,9 +1552,6 @@ void Character::updateTotalInventory()
 
         pHead->UpdateModel();
 
-        //Shader()()->AddShadowSource(
-        //    pHeadTr->GetTransformationMatrix(),
-        //    pHead->GetSkinnedMesh());
     }
 
     //주무기
@@ -1570,9 +1573,14 @@ void Character::updateTotalInventory()
 
         pWeaponPrimaryTr->Update();
 
-        Shader()()->AddShadowSource(
-            pWeaponPrimaryTr->GetTransformationMatrix(), 
-            pWeaponPrimary->GetSkinnedMesh());
+        //distance culling
+        D3DXVECTOR3 vLength = GetTransform()->GetPosition() - CurrentCamera()()->GetPosition();
+        if (D3DXVec3Length(&vLength) < 5000.0f)
+        {
+            Shader()()->AddShadowSource(
+                pWeaponPrimaryTr->GetTransformationMatrix(),
+                pWeaponPrimary->GetSkinnedMesh());
+        }
     }
     
     //보조무기
@@ -1589,9 +1597,14 @@ void Character::updateTotalInventory()
 
         pWeaponSecondaryTr->Update();
 
-        Shader()()->AddShadowSource(
-            pWeaponSecondaryTr->GetTransformationMatrix(),
-            pWeaponSecondary->GetSkinnedMesh());
+        //distance culling
+        D3DXVECTOR3 vLength = GetTransform()->GetPosition() - CurrentCamera()()->GetPosition();
+        if (D3DXVec3Length(&vLength) < 5000.0f)
+        {
+            Shader()()->AddShadowSource(
+                pWeaponSecondaryTr->GetTransformationMatrix(),
+                pWeaponSecondary->GetSkinnedMesh());
+        }
     }
 }
 
