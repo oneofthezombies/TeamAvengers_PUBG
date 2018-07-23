@@ -846,6 +846,7 @@ void SceneLoading::OnUpdate()
 
         if (Communication()()->GetPlayMode() == Communication::PlayMode::ALONE)
         {
+            Scene()()->SetupCharacters();
             Scene()()->SetCurrentScene(TAG_SCENE::Play);
         }
         else if (Communication()()->GetPlayMode() == Communication::PlayMode::WITH_OTHERS)

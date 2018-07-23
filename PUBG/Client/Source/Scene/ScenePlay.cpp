@@ -18,41 +18,6 @@ void ScenePlay::setAloneMode()
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
 
-    ////old map
-    //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(1900.0f, 200.0f, 1900.0f);
-    //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    //Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(100.0f, 200.0f, 2000.0f);
-    //Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    //Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    //Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(2000.0f, 200.0f, 100.0f);
-    //Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    //Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    //Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(2000.0f, 200.0f, 2000.0f);
-    //Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    //Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    
-    //new map
-    Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f);
-    Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(5000.0f, 5000.0f, 18000.0f);
-    Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(20000.0f, 5000.0f, 6000.0f);
-    Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(19000.0f, 5000.0f, 19000.0f);
-    Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
     //For inventory Test
     Item* item = nullptr;
     D3DXVECTOR3 p(10, 0, 10);
@@ -130,6 +95,11 @@ void ScenePlay::setAloneMode()
     item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
+
+    AddObject(new SkySphere);
+
+    // 빈 총알을 셋팅합니다. 이것은 총을 버릴 때 총에 들어있던 총알을 버리기 위해서 종종 필요합니다.
+    setEmptyBullets();
 }
 
 void ScenePlay::setWithOthersMode()
@@ -216,29 +186,7 @@ void ScenePlay::setWithOthersMode()
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    //Communication()()->m_roomInfo.playerInfos[0].position = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
-    //Communication()()->m_roomInfo.playerInfos[0].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    //Communication()()->m_roomInfo.playerInfos[0].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    //Communication()()->m_roomInfo.playerInfos[1].position = D3DXVECTOR3(200.0f, 200.0f, 4848.0f);
-    //Communication()()->m_roomInfo.playerInfos[1].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    //Communication()()->m_roomInfo.playerInfos[1].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    //Communication()()->m_roomInfo.playerInfos[2].position = D3DXVECTOR3(4848.0f, 200.0f, 200.0f);
-    //Communication()()->m_roomInfo.playerInfos[2].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    //Communication()()->m_roomInfo.playerInfos[2].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
-    //Communication()()->m_roomInfo.playerInfos[3].position = D3DXVECTOR3(4848.0f, 200.0f, 4848.0f);
-    //Communication()()->m_roomInfo.playerInfos[3].upperAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-    //Communication()()->m_roomInfo.playerInfos[3].lowerAnimState = static_cast<int>(TAG_ANIM_CHARACTER::Unarmed_Combat_Stand_Idling_1);
-
     AddObject(new SkySphere);
-
-    //TerrainFeature* tf = new TerrainFeature(TAG_RES_STATIC::Rock_1, D3DXVECTOR3(500.0f, 100.0f, 500.0f), Vector3::ZERO, Vector3::ONE);
-    //D3DXMATRIX m;
-    //D3DXMatrixTransformation(&m, nullptr, nullptr, &(Vector3::ONE * 300.0f), nullptr, &Quaternion::IDENTITY, &D3DXVECTOR3(500.0f, 100.0f, 500.0f));
-    //tf->AddBoundingBox(m);
-    //AddObject(tf);
 
     // 빈 총알을 셋팅합니다. 이것은 총을 버릴 때 총에 들어있던 총알을 버리기 위해서 종종 필요합니다.
     setEmptyBullets();
@@ -356,6 +304,8 @@ void ScenePlay::OnInit()
 
     pSplash = new UIImage("./Resource/", "LoadingScreen.tga", Vector3::ZERO, nullptr, m_layer);
     m_coolDown = m_coolTime;
+
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
 }
 
 void ScenePlay::OnUpdate()

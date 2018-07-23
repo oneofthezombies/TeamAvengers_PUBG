@@ -42,7 +42,6 @@ void IScene::Init()
 
 void IScene::Update()
 {
-
 	for (auto& o : m_objects)
 		if (o) o->Update();
 
