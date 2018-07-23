@@ -13,8 +13,6 @@
 
 void ScenePlay::setAloneMode()
 {
-    Communication()()->m_myInfo.ID = 0;
-    const int myID = Communication()()->m_myInfo.ID;
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
 
@@ -286,17 +284,25 @@ void ScenePlay::OnInit()
         AddObject(pBox);
     }
 
-    AddCharacters();
-
     // No id received
     if (Communication()()->m_myInfo.ID == -1)
     {
+        auto& pis = Communication()()->m_roomInfo.playerInfos;
+        for (std::size_t i = 0; i < pis.size(); i++)
+        {
+            pis[i].ID = i;
+        }
+
+        Communication()()->m_myInfo.ID = 0;
+
+        AddCharacters();
         setAloneMode();
     }
 
     // Yes id received
     else if (Communication()()->m_myInfo.ID > -1)
     {
+        AddCharacters();
         setWithOthersMode();
     }
 
@@ -359,10 +365,10 @@ void ScenePlay::OnUpdate()
         Shader()()->AddShadowSource(Matrix::IDENTITY, pHeightMap->GetMesh(), 0);
     }
 
-    for (auto c : GetCharacters())
-    {
-        Debug << "Character " << c->GetIndex() << " hp : " << c->GetCharacterHealth() << '\n';
-    }
+    //for (auto c : GetCharacters())
+    //{
+    //    Debug << "Character " << c->GetIndex() << " hp : " << c->GetCharacterHealth() << '\n';
+    //}
 }
 
 const std::vector<Character*>& ScenePlay::GetOthers() const
