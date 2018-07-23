@@ -165,7 +165,7 @@ float4  PS(VS_OUTPUT vout) : COLOR
         }
     }
 
-    return float4(rgb, 1);
+    return float4(rgb, albedo.a);
 };
 
 technique DefaultTechnique 
