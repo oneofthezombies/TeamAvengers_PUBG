@@ -189,7 +189,7 @@ void SceneLoading::Load()
     
      ////Exterior
     
-    
+     load(TAG_RES_STATIC::BrokenBus);
      load(TAG_RES_STATIC::BrokenTractorGunnyBag);// (우리_사용함)
 
 
@@ -208,7 +208,12 @@ void SceneLoading::Load()
      load(TAG_RES_STATIC::PicketFence_Short_A   );
      load(TAG_RES_STATIC::PicketFence_Short_B   );
      load(TAG_RES_STATIC::PicketFence_Short_C   );
-    
+
+     load(TAG_RES_STATIC::Powerline_1);
+     load(TAG_RES_STATIC::Powerline_2);
+     
+     load(TAG_RES_STATIC::RadioTower_1);
+     load(TAG_RES_STATIC::RadioTower_2);
     
     
      ////- SandBag (우리_사용함)
@@ -219,10 +224,13 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::Silo_A           );
     load(TAG_RES_STATIC::Silo_B           );
     load(TAG_RES_STATIC::Lighthouse       );
+
+    load(TAG_RES_STATIC::CityStreetSign);
     
      ////////- Etc
     
         load(TAG_RES_STATIC::TableSet);//(우리_사용함)
+        load(TAG_RES_STATIC::Tower);
     
     
      //////Vegetation
@@ -233,6 +241,11 @@ void SceneLoading::Load()
      ////- Grass (우리_사용함)
      load(TAG_RES_STATIC::Grass_1);
      load(TAG_RES_STATIC::Grass_2);
+
+     load(TAG_RES_STATIC::Desert_Cover_Rock_Combine_1);
+     load(TAG_RES_STATIC::Desert_Cover_Rock_Combine_2);
+     load(TAG_RES_STATIC::Rock_1);
+     load(TAG_RES_STATIC::Rock_2);
     
      
      ////- Tree (우리_사용함)
