@@ -16,8 +16,8 @@ void SceneLoading::Load()
     // set play mode
     // alone       -> no network
     // with others -> login to network
-    //setPlayMode(Communication::PlayMode::WITH_OTHERS);
-    setPlayMode(Communication::PlayMode::ALONE);
+    setPlayMode(Communication::PlayMode::WITH_OTHERS);
+    //setPlayMode(Communication::PlayMode::ALONE);
 
     // load textures
     auto p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
@@ -846,6 +846,7 @@ void SceneLoading::OnUpdate()
 
         if (Communication()()->GetPlayMode() == Communication::PlayMode::ALONE)
         {
+            Scene()()->SetupCharacters();
             Scene()()->SetCurrentScene(TAG_SCENE::Play);
         }
         else if (Communication()()->GetPlayMode() == Communication::PlayMode::WITH_OTHERS)
