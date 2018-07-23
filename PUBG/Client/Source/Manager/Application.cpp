@@ -63,7 +63,7 @@ void Application::Render()
         0);
 
     Device            ()()->BeginScene();
-    Shader            ()()->CreateShadowMap();
+    //Shader            ()()->CreateShadowMap();
     Scene             ()()->Render();
     BulletPool        ()()->Render();
     ParticlePool      ()()->Render();
