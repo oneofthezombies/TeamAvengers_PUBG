@@ -161,7 +161,7 @@ float4  PS(VS_OUTPUT vout) : COLOR
 
         float shadowDepth = tex2D(ShadowSampler, uv).r;
 
-        if (currentDepth > shadowDepth + 0.0000125f)
+        if (currentDepth > shadowDepth + 0.0001125f)
         {
             rgb *= 0.5f;
         }
