@@ -255,8 +255,22 @@ void ScenePlay::Render()
     for (auto i : firstGroup)
         if (i) i->Render();
 
-    for (auto i : secondGroup)
-        if (i) i->Render();
+    std::map<float, IObject*> sortedByDistance;
+    const D3DXVECTOR3 cameraPos = CurrentCamera()()->GetPosition();
+    for (auto o : secondGroup)
+    {
+        const D3DXVECTOR3 v = o->GetTransform()->GetPosition() - cameraPos;
+        const float lenSq = D3DXVec3LengthSq(&v);
+        sortedByDistance.emplace(lenSq, o);
+    }
+
+    auto begin = sortedByDistance.rbegin();
+    auto end = sortedByDistance.rend();
+    for (auto it = begin; it != end; ++it)
+    {
+        IObject* pO = it->second;
+        pO->Render();
+    }
 }
 
 void ScenePlay::AddObject(IObject* p)
