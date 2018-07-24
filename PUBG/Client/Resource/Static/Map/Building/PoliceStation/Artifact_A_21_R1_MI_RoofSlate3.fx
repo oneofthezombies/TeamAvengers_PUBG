@@ -55,38 +55,6 @@ sampler2D C__Users_user_Desktop_Buildings_Textures__T_RoofSlateTile02_N_tgaSampl
    AddressU  = Wrap;     
    AddressV  = Wrap;     
 }; 
-// lighting and shadow applying
-
-float4x4 World;
-float4x4 View;
-float4x4 Projection;
-
-bool bEmissiveColor = false;
-bool bLight = true;
-bool bShadow = true;
-
-float4   LightPos;
-float4x4 LightView;
-float4x4 LightProjection;
-
-float4 CameraPos;
-
-float4 DiffuseColor = { 1.000000f, 1.000000f, 1.000000f, 1.000000f };
-float  SpecularPower = 20.000000f;
-float4 SpecularColor = { 0.000000f, 0.000000f, 0.000000f, 1.000000f };
-float4 EmissiveColor = { 0.010000f, 0.010000f, 0.010000f, 1.000000f };
-
-texture ShadowMap_Tex;
-
-sampler2D ShadowSampler = sampler_state
-{
-    Texture = <ShadowMap_Tex>;
-    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
 
 /*** dependency block ***/
 
