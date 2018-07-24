@@ -278,7 +278,6 @@ void ScenePlay::AddObject(IObject* p)
             case TAG_RES_STATIC::Grass_2:
             case TAG_RES_STATIC::DeadGrass:
             case TAG_RES_STATIC::Dogwood:
-            case TAG_RES_STATIC::HayBale_2:
                 {
                     secondGroup.emplace(p);
                 }
