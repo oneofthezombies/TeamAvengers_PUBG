@@ -13,11 +13,17 @@
 
 void ScenePlay::setAloneMode()
 {
-    Communication()()->m_myInfo.ID = 0;
-    const int myID = Communication()()->m_myInfo.ID;
+    // follow light
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
 
+    //DeathDropBox* pLightTarget = new DeathDropBox;
+    //pLightTarget->GetTransform()->SetPosition(D3DXVECTOR3(10000.0f, 0.0f, 10000.0f));
+    //AddObject(pLightTarget);
+    //Light()()->SetTarget(pLightTarget->GetTransform());
+    //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-20000.0f, 50000.0f, -20000.0f));
+        
     //For inventory Test
     Item* item = nullptr;
     D3DXVECTOR3 p(10, 0, 10);
@@ -110,9 +116,9 @@ void ScenePlay::setWithOthersMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
 
     p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
     string name = "Head_Lv1 " + std::to_string(0);
@@ -286,17 +292,25 @@ void ScenePlay::OnInit()
         AddObject(pBox);
     }
 
-    AddCharacters();
-
     // No id received
     if (Communication()()->m_myInfo.ID == -1)
     {
+        auto& pis = Communication()()->m_roomInfo.playerInfos;
+        for (std::size_t i = 0; i < pis.size(); i++)
+        {
+            pis[i].ID = i;
+        }
+
+        Communication()()->m_myInfo.ID = 0;
+
+        AddCharacters();
         setAloneMode();
     }
 
     // Yes id received
     else if (Communication()()->m_myInfo.ID > -1)
     {
+        AddCharacters();
         setWithOthersMode();
     }
 
@@ -304,8 +318,6 @@ void ScenePlay::OnInit()
 
     pSplash = new UIImage("./Resource/", "LoadingScreen.tga", Vector3::ZERO, nullptr, m_layer);
     m_coolDown = m_coolTime;
-
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
 }
 
 void ScenePlay::OnUpdate()
@@ -359,10 +371,10 @@ void ScenePlay::OnUpdate()
         Shader()()->AddShadowSource(Matrix::IDENTITY, pHeightMap->GetMesh(), 0);
     }
 
-    for (auto c : GetCharacters())
-    {
-        Debug << "Character " << c->GetIndex() << " hp : " << c->GetCharacterHealth() << '\n';
-    }
+    //for (auto c : GetCharacters())
+    //{
+    //    Debug << "Character " << c->GetIndex() << " hp : " << c->GetCharacterHealth() << '\n';
+    //}
 }
 
 const std::vector<Character*>& ScenePlay::GetOthers() const
