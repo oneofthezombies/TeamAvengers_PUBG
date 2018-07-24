@@ -38,7 +38,7 @@ HRESULT DeviceManager::Init()
 	d3dpp.Windowed = true;
 	d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
 	d3dpp.EnableAutoDepthStencil = TRUE;
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D24X8;
 	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 	if (FAILED(m_pD3D->CreateDevice(

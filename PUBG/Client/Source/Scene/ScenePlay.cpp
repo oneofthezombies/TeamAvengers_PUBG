@@ -13,9 +13,17 @@
 
 void ScenePlay::setAloneMode()
 {
+    // follow light
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
 
+    //DeathDropBox* pLightTarget = new DeathDropBox;
+    //pLightTarget->GetTransform()->SetPosition(D3DXVECTOR3(10000.0f, 0.0f, 10000.0f));
+    //AddObject(pLightTarget);
+    //Light()()->SetTarget(pLightTarget->GetTransform());
+    //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-20000.0f, 50000.0f, -20000.0f));
+        
     //For inventory Test
     Item* item = nullptr;
     D3DXVECTOR3 p(10, 0, 10);
@@ -108,9 +116,9 @@ void ScenePlay::setWithOthersMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
 
     p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
     string name = "Head_Lv1 " + std::to_string(0);
@@ -310,8 +318,6 @@ void ScenePlay::OnInit()
 
     pSplash = new UIImage("./Resource/", "LoadingScreen.tga", Vector3::ZERO, nullptr, m_layer);
     m_coolDown = m_coolTime;
-
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
 }
 
 void ScenePlay::OnUpdate()

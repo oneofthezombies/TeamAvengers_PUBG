@@ -26,6 +26,9 @@ void SceneLoading::Load()
     p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
     load(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
 
+    load("./Resource/Static/Map/Exterior/HayBale/HayBale_2/", "hey01_D.tga", D3DCOLOR_XRGB(0, 0, 0));
+    load("./Resource/Static/Map/Vegetation/Tree/AmericanElem/", "American_Elm_Hero_BRO_Atlas_Tex.tga", D3DCOLOR_XRGB(88, 112, 85));
+
     load("./Resource/", "dedenne.png");
     load("./Resource/", "RandomLoading01.tga");
     load("./Resource/", "LoadingScreen.tga");
