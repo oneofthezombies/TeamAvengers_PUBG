@@ -19,10 +19,10 @@ void ScenePlay::setAloneMode()
     Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
 
     //DeathDropBox* pLightTarget = new DeathDropBox;
-    //pLightTarget->GetTransform()->SetPosition(D3DXVECTOR3(10000.0f, 0.0f, 10000.0f));
+    //pLightTarget->GetTransform()->SetPosition(D3DXVECTOR3(12800.0f, 0.0f, 12800.0f));
     //AddObject(pLightTarget);
     //Light()()->SetTarget(pLightTarget->GetTransform());
-    //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-20000.0f, 50000.0f, -20000.0f));
+    //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-12800.0f, 36203.0f, -12800.0f));
         
     //For inventory Test
     Item* item = nullptr;
@@ -101,8 +101,6 @@ void ScenePlay::setAloneMode()
     item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
-
-    AddObject(new SkySphere);
 
     // 빈 총알을 셋팅합니다. 이것은 총을 버릴 때 총에 들어있던 총알을 버리기 위해서 종종 필요합니다.
     setEmptyBullets();
@@ -192,8 +190,6 @@ void ScenePlay::setWithOthersMode()
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    AddObject(new SkySphere);
-
     // 빈 총알을 셋팅합니다. 이것은 총을 버릴 때 총에 들어있던 총알을 버리기 위해서 종종 필요합니다.
     setEmptyBullets();
 }
@@ -254,6 +250,68 @@ ScenePlay::~ScenePlay()
     }
 }
 
+void ScenePlay::Render()
+{
+    for (auto i : firstGroup)
+        if (i) i->Render();
+
+    std::map<float, IObject*> sortedByDistance;
+    const D3DXVECTOR3 cameraPos = CurrentCamera()()->GetPosition();
+    for (auto o : secondGroup)
+    {
+        const D3DXVECTOR3 v = o->GetTransform()->GetPosition() - cameraPos;
+        const float lenSq = D3DXVec3LengthSq(&v);
+        sortedByDistance.emplace(lenSq, o);
+    }
+
+    auto begin = sortedByDistance.rbegin();
+    auto end = sortedByDistance.rend();
+    for (auto it = begin; it != end; ++it)
+    {
+        IObject* pO = it->second;
+        pO->Render();
+    }
+}
+
+void ScenePlay::AddObject(IObject* p)
+{
+    IScene::AddObject(p);
+
+    switch (p->GetTagObject())
+    {
+    case TAG_OBJECT::TerrainFeature:
+        {
+            TerrainFeature* pTerrainFeature = static_cast<TerrainFeature*>(p);
+            const TAG_RES_STATIC tagResStatic = pTerrainFeature->GetTagResStatic();
+            switch (tagResStatic)
+            {
+            case TAG_RES_STATIC::AlaskaCedar:
+            case TAG_RES_STATIC::AmericanElem:
+            case TAG_RES_STATIC::LondonPlane:
+            case TAG_RES_STATIC::Grass_1:
+            case TAG_RES_STATIC::Grass_2:
+            case TAG_RES_STATIC::DeadGrass:
+            case TAG_RES_STATIC::Dogwood:
+                {
+                    secondGroup.emplace(p);
+                }
+                break;
+            default:
+                {
+                    firstGroup.emplace(p);
+                }
+                break;
+            }
+        }
+        break;
+    default:
+        {
+            firstGroup.emplace(p);
+        }
+        break;
+    }
+}
+
 void ScenePlay::OnInit()
 {
     m_layer = new UIObject(nullptr);
@@ -271,6 +329,8 @@ void ScenePlay::OnInit()
     ClientToScreen(g_hWnd, &center);
     SetCursorPos(center.x, center.y);
     ShowCursor(false);
+
+    AddObject(new SkySphere);
 
     SetHeightMap(new HeightMap);
 
@@ -290,7 +350,7 @@ void ScenePlay::OnInit()
         DeathDropBox* pBox = new DeathDropBox;
         deathDropBoxes.emplace_back(pBox);
         AddObject(pBox);
-    }
+    }   
 
     // No id received
     if (Communication()()->m_myInfo.ID == -1)
@@ -298,7 +358,7 @@ void ScenePlay::OnInit()
         auto& pis = Communication()()->m_roomInfo.playerInfos;
         for (std::size_t i = 0; i < pis.size(); i++)
         {
-            pis[i].ID = i;
+            pis[i].ID = static_cast<int>(i);
         }
 
         Communication()()->m_myInfo.ID = 0;

@@ -14,6 +14,9 @@ private:
     float m_coolDown;
     UIImage* pSplash;
 
+    std::set<IObject*> firstGroup;
+    std::set<IObject*> secondGroup;
+
 private:
     void setAloneMode();
     void setWithOthersMode();
@@ -22,6 +25,9 @@ private:
 public:
     ScenePlay();
     virtual ~ScenePlay();
+
+    virtual void Render() override;
+    virtual void AddObject(IObject* p) override;
 
     virtual void OnInit() override;
     virtual void OnUpdate() override;

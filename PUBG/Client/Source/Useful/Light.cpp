@@ -30,7 +30,7 @@ void Light::Manager::SetMatrices()
     D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &lookat, &Vector3::UP);
     D3DXMatrixPerspectiveFovLH(
         &m_projectionMatrix, 
-        D3DX_PI * 0.5f, 
+        D3DX_PI * 0.5f,
         1.0f, 
         1.0f, 
         ICamera::VISUAL_RANGE);
