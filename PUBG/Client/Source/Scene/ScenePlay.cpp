@@ -358,7 +358,7 @@ void ScenePlay::OnInit()
         auto& pis = Communication()()->m_roomInfo.playerInfos;
         for (std::size_t i = 0; i < pis.size(); i++)
         {
-            pis[i].ID = i;
+            pis[i].ID = static_cast<int>(i);
         }
 
         Communication()()->m_myInfo.ID = 0;

@@ -62,7 +62,7 @@ void TerrainFeature::OnRender()
         {
             pEffectMeshRenderer->Render(
                 [this](LPD3DXEFFECT pEffect)
-            {+
+            {
                 pEffect->SetMatrix(
                     Shader::World,
                     &GetTransform()->GetTransformationMatrix());
