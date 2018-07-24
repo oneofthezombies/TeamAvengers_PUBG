@@ -9,8 +9,8 @@ class EffectMeshRenderer;
 class TerrainFeature : public IObject
 {
 private:
-    const std::string& m_name;
-
+    const std::string&   m_name;
+    const TAG_RES_STATIC m_tagResStatic;
     EffectMeshRenderer*  pEffectMeshRenderer;
 
 public:
@@ -27,4 +27,6 @@ public:
     virtual void OnRender() override;
 
     void AddBoundingBox(const D3DXMATRIX& transformationMatrix);
+
+    TAG_RES_STATIC GetTagResStatic() const;
 };

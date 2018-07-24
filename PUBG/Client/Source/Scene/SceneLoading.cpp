@@ -26,8 +26,17 @@ void SceneLoading::Load()
     p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
     load(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
 
-    load("./Resource/Static/Map/Exterior/HayBale/HayBale_2/", "hey01_D.tga", D3DCOLOR_XRGB(0, 0, 0));
-    load("./Resource/Static/Map/Vegetation/Tree/AmericanElem/", "American_Elm_Hero_BRO_Atlas_Tex.tga", D3DCOLOR_XRGB(88, 112, 85));
+    loadSync("./Resource/Static/Map/Exterior/HayBale/HayBale_2/", "hey01_D.tga", D3DCOLOR_XRGB(0, 0, 0));
+    loadSync("./Resource/Static/Map/Vegetation/Tree/AmericanElem/", "American_Elm_Hero_BRO_Atlas_Tex.tga", D3DCOLOR_XRGB(88, 112, 85));
+    loadSync("./Resource/Static/Map/Vegetation/Tree/AlaskaCedar/", "AlaskaCedar_A_Hero_BRO_Atlas_Tex.tga", D3DCOLOR_XRGB(71, 69, 51));
+    loadSync("./Resource/Static/Map/Vegetation/Tree/LondonPlane/", "London_Plane_Hero_BRO_Atlas_Tex.tga", D3DCOLOR_XRGB(77, 96, 65));
+    loadSync("./Resource/Static/Map/Vegetation/Bush/DeadGrass/", "Deadgrass_03_D.tga", D3DCOLOR_XRGB(112, 105, 90));
+    loadSync("./Resource/Static/Map/Vegetation/Bush/Dogwood/", "Dogwood_Atlas_Tex.tga", D3DCOLOR_XRGB(87, 92, 55));
+    loadSync("./Resource/Static/Map/Vegetation/Grass/Grass_1/", "T_ReedsGrassFiller_D.tga", D3DCOLOR_XRGB(79, 88, 57));
+    loadSync("./Resource/Static/Map/Vegetation/Grass/Grass_1/", "T_ReedsTall_GrassD.tga", D3DCOLOR_XRGB(96, 119, 76));
+    loadSync("./Resource/Static/Map/Vegetation/Grass/Grass_2/", "Swamp_grass_D.tga", D3DCOLOR_XRGB(118, 130, 82));
+
+    cout << "ended sync\n";
 
     load("./Resource/", "dedenne.png");
     load("./Resource/", "RandomLoading01.tga");
@@ -552,6 +561,15 @@ void SceneLoading::load(
 
         ++m_numTotalTasks;
     }
+}
+
+void SceneLoading::loadSync(
+    const std::string path, 
+    const std::string xFilename, 
+    const D3DCOLOR colorKey)
+{
+    Resource::XContainer* pResource = Resource::Async::OnLoadTexture(path, xFilename, colorKey);
+    Resource()()->AddResource(pResource);
 }
 
 void SceneLoading::setPolicy(const Resource::Policy policy)

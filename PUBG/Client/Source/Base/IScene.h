@@ -73,9 +73,9 @@ public:
 	
 	void Init();
 	void Update();
-	void Render();
+	virtual void Render();
 
-    void AddObject(IObject* p);
+    virtual void AddObject(IObject* p);
     void RemoveObject(IObject* p);
 	void Destroy(IObject* p, const float t = 0.0f);
 

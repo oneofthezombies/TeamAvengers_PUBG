@@ -300,7 +300,7 @@ HRESULT IScene::parseBoxColliderInFile(
 void IScene::SetHeightMap(HeightMap* p)
 {
     assert(p && "IScene::SetHeightMap(), SetHeightMapis null.");
-    m_objects.emplace(p);
+    AddObject(p);
     pHeightMap = p;
 }
 

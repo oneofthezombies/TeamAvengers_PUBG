@@ -100,6 +100,10 @@ private:
         const std::string path,
         const std::string xFilename,
         const D3DCOLOR colorKey = 0);
+    void loadSync(
+        const std::string path, 
+        const std::string xFilename,
+        const D3DCOLOR colorKey = 0);
 
     void load(const TAG_RES_STATIC         tag);
     void load(const TAG_RES_ANIM_WEAPON    tag);
