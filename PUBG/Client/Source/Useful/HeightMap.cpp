@@ -46,9 +46,12 @@ HeightMap::HeightMap()
         "Heightmap.fx")->
         SetTexture(
             "Heightmap_Diffuse_Tex",
+            //Resource()()->GetTexture(
+            //    "./Resource/Heightmap/",
+            //    "Heightmap.jpg"));
             Resource()()->GetTexture(
                 "./Resource/Heightmap/",
-                "Heightmap.jpg"));
+                "ground.png"));
     ////---------------------------------------------------
 
 

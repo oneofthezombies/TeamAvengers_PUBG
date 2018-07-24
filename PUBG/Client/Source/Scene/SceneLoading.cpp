@@ -1214,10 +1214,15 @@ void SceneLoading::addHeightmapResource()
         "./Resource/Heightmap/", 
         "Heightmap.fx", 
         pResourceContainer);
+    //Resource::Async::CreateTexture(
+    //    "./Resource/Heightmap/", 
+    //    "Heightmap.jpg", 
+    //    pResourceContainer);
     Resource::Async::CreateTexture(
         "./Resource/Heightmap/", 
-        "Heightmap.jpg", 
+        "ground.png",
         pResourceContainer);
+
 
     Resource::Async::CreateEffect("./Resource/", "Quad.fx", pResourceContainer);
 
