@@ -175,7 +175,7 @@ void Shader::Manager::CreateShadowMap()
     for (UINT i = 0; i < numPasses; ++i)
     {
         pCreateShadow->BeginPass(i);
-
+        Debug << " shadow Num :" << m_shadowSources.size() << endl;
         for (auto& wmi : m_shadowSources)
         {
             D3DXMATRIX& world    = std::get<0>(wmi);
