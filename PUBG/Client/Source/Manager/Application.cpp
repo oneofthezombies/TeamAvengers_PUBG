@@ -64,11 +64,20 @@ void Application::Render()
 
     Device            ()()->BeginScene();
     Shader            ()()->CreateShadowMap();
+
+    Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+    Device()()->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+    Device()()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+    Device()()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
     Scene             ()()->Render();
     BulletPool        ()()->Render();
     ParticlePool      ()()->Render();
     UI                ()()->Render();
     DebugMgr          ()()->Render();
+
+    Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+
     Device            ()()->EndScene();
     Device            ()()->Present(nullptr, nullptr, nullptr, nullptr);
 }

@@ -12,6 +12,7 @@ TerrainFeature::TerrainFeature(
     const D3DXVECTOR3&   scale)
     : IObject(TAG_OBJECT::TerrainFeature)
     , m_name(name)
+    , m_tagResStatic(tag)
     , pEffectMeshRenderer(nullptr)
 {
     pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
@@ -59,10 +60,6 @@ void TerrainFeature::OnRender()
         D3DXVECTOR3 vlength = (m_boundingSphere.center + m_boundingSphere.position) - CurrentCamera()()->GetPosition();
         if (D3DXVec3Length(&vlength) < 10000.0f)
         {
-            Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-            Device()()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-            Device()()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
             pEffectMeshRenderer->Render(
                 [this](LPD3DXEFFECT pEffect)
             {+
@@ -70,8 +67,6 @@ void TerrainFeature::OnRender()
                     Shader::World,
                     &GetTransform()->GetTransformationMatrix());
             });
-
-            Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 
             for (auto& bb : m_boundingBoxes)
                 bb.Render();
@@ -87,4 +82,9 @@ void TerrainFeature::OnRender()
 void TerrainFeature::AddBoundingBox(const D3DXMATRIX& transformationMatrix)
 {
     m_boundingBoxes.emplace_back(BoundingBox::Create(transformationMatrix));
+}
+
+TAG_RES_STATIC TerrainFeature::GetTagResStatic() const
+{
+    return m_tagResStatic;
 }
