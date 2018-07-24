@@ -182,7 +182,7 @@ void SceneLoading::Load()
     //buildings (사용함)
      load(TAG_RES_STATIC::AbandonedTownHall); 
      load(TAG_RES_STATIC::Church           );
-     //load(TAG_RES_STATIC::Museum           );
+     load(TAG_RES_STATIC::Museum           );
      load(TAG_RES_STATIC::OldWoodenShed_1  );
      load(TAG_RES_STATIC::OldWoodenShed_2  );
      load(TAG_RES_STATIC::OldWoodenShed_3  );
@@ -231,9 +231,8 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::CityStreetSign);
     
      ////////- Etc
-    
-        load(TAG_RES_STATIC::TableSet);//(우리_사용함)
-        load(TAG_RES_STATIC::Tower);
+    load(TAG_RES_STATIC::TableSet);//(우리_사용함)
+    load(TAG_RES_STATIC::Tower);
     
     
      //////Vegetation

@@ -750,7 +750,7 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
         }
         else if (inven.pTempSaveWeaponForX)
         {
-            numReloadBullet = inven.m_pHand->GetNumBullet();
+            numReloadBullet = inven.pTempSaveWeaponForX->GetNumBullet();
         }
 
         //ÃÑ¾Ë °³¼ö
