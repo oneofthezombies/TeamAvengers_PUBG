@@ -805,7 +805,7 @@ D3DXVECTOR3 Collision::GetCollidedNormal2(const D3DXVECTOR3 & mypos, const Bound
     {
         if (HasCollision(ray, sixPointsBox[i], rayDistance))
         {
-            targetIndex = i;
+            targetIndex = static_cast<int>(i);
             break;
         }
             
