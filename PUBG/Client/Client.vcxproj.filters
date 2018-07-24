@@ -139,4 +139,32 @@
     <ClInclude Include="Source\Useful\UsefulClientOnly.h" />
     <ClInclude Include="Source\Object\Quad.h" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_Border_dark.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_Floor_Boards.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_Floor_Boards_.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Boards.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Bordure.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Ceiling_Molding_01.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Ceiling_Molding_01_.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Ceiling_Molding_01__.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Ceiling_Molding_02.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Concrete_02.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Concrete_CT_01.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Concrete_Floor.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Concrete_Floor_.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Concrete_Floor__.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Floor_Tiles_01.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Walls_Interior_Blue.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Walls_White.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Walls_White_.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Walls_White__.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Walls_Yellow.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_M_Wood_7.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_MI_Artifact_ceiling02_VC.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_MI_Artifact_ceiling02_VC_.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_MI_Artifact_Wall06.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_MI_Concrete_02.fx" />
+    <FxCompile Include="Resource\Static\Map\Building\Museum\SM_Building_01_Collapsed_Roof.fx" />
+  </ItemGroup>
 </Project>
