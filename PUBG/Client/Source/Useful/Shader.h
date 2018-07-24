@@ -48,6 +48,8 @@ struct Shader
 
     Manager* operator()();
 
+    static const float SHADOW_CULLING_DISTANCE;
+
     static const char* World;
     static const char* View;
     static const char* Projection;

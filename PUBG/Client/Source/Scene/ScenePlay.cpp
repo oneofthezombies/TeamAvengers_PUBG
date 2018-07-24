@@ -16,7 +16,8 @@ void ScenePlay::setAloneMode()
     // follow light
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
+    //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1000.0f, 2300.0f, -1000.0f));
 
     //DeathDropBox* pLightTarget = new DeathDropBox;
     //pLightTarget->GetTransform()->SetPosition(D3DXVECTOR3(12800.0f, 0.0f, 12800.0f));

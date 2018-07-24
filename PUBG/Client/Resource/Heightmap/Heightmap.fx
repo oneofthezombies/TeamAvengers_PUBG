@@ -96,8 +96,8 @@ float4  PS( VS_OUTPUT vout ) : COLOR
         uv = uv * 0.5 + 0.5;
 
         float shadowDepth = tex2D(ShadowSampler, uv).r;
-   
-        if (currentDepth > shadowDepth + 0.000001f)
+
+        if (currentDepth > shadowDepth + 0.000125f)
         {
             color *= 0.7f;
         }
