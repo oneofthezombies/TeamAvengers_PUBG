@@ -696,14 +696,25 @@ void Character::InGameUI::updateInfoTextUI()
 
 void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
 {
-    if (inven.m_pHand)
+    if (inven.m_pHand || inven.pTempSaveWeaponForX)
     {
         //ÃÑ ±³Ã¼½Ã UI ¹ö±× fix¿ë
         pQBZRedImg->SetIsRender(false);
         pKar98kRedImg->SetIsRender(false);
 
-        TAG_RES_STATIC tag = inven.m_pHand->GetTagResStatic(); //ÃÑ Á¾·ù
-        TAG_RES_STATIC ammoType = ItemInfo::GetAmmoType(tag);  //Åº¾à Á¾·ù
+        TAG_RES_STATIC tag;
+        TAG_RES_STATIC ammoType;
+
+        if (inven.m_pHand)
+        {
+            tag = inven.m_pHand->GetTagResStatic(); //ÃÑ Á¾·ù
+            ammoType = ItemInfo::GetAmmoType(tag);  //Åº¾à Á¾·ù
+        }
+        else if (inven.pTempSaveWeaponForX)
+        {
+            tag = inven.pTempSaveWeaponForX->GetTagResStatic(); //ÃÑ Á¾·ù
+            ammoType = ItemInfo::GetAmmoType(tag);  //Åº¾à Á¾·ù
+        }
 
         int numReloadBullet = 0;
         int numBulletInInventory = 0;
@@ -722,7 +733,14 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
         }
 
         //ÃÑ¿¡ ÀåÀüµÈ ÃÑ¾Ë °³¼ö
-        numReloadBullet = inven.m_pHand->GetNumBullet();
+        if (inven.m_pHand)
+        {
+            numReloadBullet = inven.m_pHand->GetNumBullet();
+        }
+        else if (inven.pTempSaveWeaponForX)
+        {
+            numReloadBullet = inven.m_pHand->GetNumBullet();
+        }
 
         //ÃÑ¾Ë °³¼ö
         auto it = inven.m_mapInventory.find(ammoType);

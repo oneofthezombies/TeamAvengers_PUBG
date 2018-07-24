@@ -186,7 +186,7 @@ void SceneLoading::Load()
      load(TAG_RES_STATIC::OldWoodenShed_1  );
      load(TAG_RES_STATIC::OldWoodenShed_2  );
      load(TAG_RES_STATIC::OldWoodenShed_3  );
-     //load(TAG_RES_STATIC::PoliceStation    );
+     load(TAG_RES_STATIC::PoliceStation    );
      load(TAG_RES_STATIC::WareHouse_A      );
      load(TAG_RES_STATIC::WareHouse_B      );
     
