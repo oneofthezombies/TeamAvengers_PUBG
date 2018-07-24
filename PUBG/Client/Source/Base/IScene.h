@@ -41,7 +41,7 @@ struct CellSpace
     std::set<Item*>           pItems;
     std::set<DeathDropBox*>   pDeathDropBoxes;
 
-    static const int DIMENSION = 12;
+    static const int DIMENSION = 8;
 };
 
 class IScene : public MemoryAllocator
