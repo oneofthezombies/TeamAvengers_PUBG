@@ -726,10 +726,21 @@ void Character::InGameUI::updateOnHandWeaponUI(const TotalInventory& inven)
         }
         else if (tag == TAG_RES_STATIC::QBZ)
         {
-            if (inven.m_pHand->GetAuto())
-                pFireModeText->SetText("연사");
-            else
-                pFireModeText->SetText("단발");
+            if (inven.m_pHand)
+            {
+                if (inven.m_pHand->GetAuto())
+                    pFireModeText->SetText("연사");
+                else
+                    pFireModeText->SetText("단발");
+            }
+            else if (inven.pTempSaveWeaponForX)
+            {
+                if (inven.pTempSaveWeaponForX->GetAuto())
+                    pFireModeText->SetText("연사");
+                else
+                    pFireModeText->SetText("단발");
+            }
+
         }
 
         //총에 장전된 총알 개수

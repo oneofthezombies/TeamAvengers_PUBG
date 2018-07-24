@@ -30,55 +30,55 @@ void ScenePlay::setAloneMode()
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
 
-    p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
+    p = D3DXVECTOR3(7000.0f, 4700.0f, 7000.0f);
     string name = "Head_Lv1 " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::Head_Lv1, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(300.0f, 200.0f, 200.0f);
+    p = D3DXVECTOR3(7000.0f, 4700.0f, 7000.0f);
     name = "Armor_Lv1 " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::Armor_Lv1, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(400.0f, 200.0f, 200.0f);
+    p = D3DXVECTOR3(7000.0f, 4700.0f, 7000.0f);
     name = "Back_Lv1 " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::Back_Lv1, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(500.0f, 200.0f, 200.0f);
+    p = D3DXVECTOR3(7000.0f, 4700.0f, 7000.0f);
     name = "QBZ " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::QBZ, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(600.0f, 200.0f, 200.0f);
+    p = D3DXVECTOR3(7000.0f, 4700.0f, 7000.0f);
     name = "Ammo_5_56mm " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(700.0f, 200.0f, 200.0f);
+    p = D3DXVECTOR3(7000.0f, 4700.0f, 7000.0f);
     name = "QBZ " + std::to_string(1);
     item = new Item(TAG_RES_STATIC::QBZ, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(800.0f, 200.0f, 200.0f);
+    p = D3DXVECTOR3(7000.0f, 4700.0f, 7000.0f);
     name = "Kar98k " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::Kar98k, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(900.0f, 200.0f, 200.0f);
+    p = D3DXVECTOR3(7000.0f, 4700.0f, 7000.0f);
     name = "Kar98k " + std::to_string(1);
     item = new Item(TAG_RES_STATIC::Kar98k, name, p, r, s);
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(1000.0f, 200.0f, 200.0f);
+    p = D3DXVECTOR3(7000.0f, 4700.0f, 7000.0f);
     name = "Ammo_5_56mm " + std::to_string(1);
     item = new Item(TAG_RES_STATIC::Ammo_5_56mm, name, p, r, s);
     AddObject(item);
@@ -90,7 +90,7 @@ void ScenePlay::setAloneMode()
     AddObject(item);
     InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), item);
 
-    p = D3DXVECTOR3(1200.0f, 200.0f, 200.0f);
+    p = D3DXVECTOR3(7000.0f, 4700.0f, 7000.0f);
     name = "Ammo_7_62mm " + std::to_string(0);
     item = new Item(TAG_RES_STATIC::Ammo_7_62mm, name, p, r, s);
     AddObject(item);
@@ -282,7 +282,7 @@ void ScenePlay::OnInit()
         m_TotalCellSpaces[i].pIndex = i;
     }
     
-    LoadObjectsFromFile("./Resource/save.txt");
+    //LoadObjectsFromFile("./Resource/save.txt");
     //LoadObjectsFromFile("./Resource/save1.txt");
 
     for (int i = 0; i < GameInfo::NUM_PLAYERS; ++i)
