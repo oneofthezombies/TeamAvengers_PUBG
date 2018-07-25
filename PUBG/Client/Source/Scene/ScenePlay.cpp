@@ -24,6 +24,7 @@ void ScenePlay::setAloneMode()
 
     // for ui test
     m_pUITest = new UITest;
+    UI()()->RegisterUIObject(m_pUITest);
     
     // follow light
     Character* pPlayer = GetPlayer();
@@ -255,6 +256,8 @@ ScenePlay::~ScenePlay()
             SAFE_DELETE(item);
         }
     }
+
+    UI()()->Destroy(m_pUITest);
 }
 
 void ScenePlay::Render()
@@ -310,9 +313,6 @@ void ScenePlay::Render()
     //        m_verticesChurch.data(),
     //        sizeof m_verticesChurch.front());
     //});
-
-    // for ui test
-    m_pUITest->Render();
 }
 
 void ScenePlay::AddObject(IObject* p)
