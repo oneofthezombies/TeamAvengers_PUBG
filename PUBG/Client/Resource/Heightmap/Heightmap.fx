@@ -23,12 +23,13 @@ texture ShadowMap_Tex;
 
 sampler2D ShadowSampler = sampler_state
 {
-   Texture = <ShadowMap_Tex>; 
-   MinFilter = Linear; 
-   MagFilter = Linear; 
-   MipFilter = Linear; 
-   AddressU  = Wrap;     
-   AddressV  = Wrap;    
+    Texture = <ShadowMap_Tex>; 
+    MinFilter = Linear; 
+    MagFilter = Linear; 
+    MipFilter = Linear; 
+	AddressU = Border;
+	AddressV = Border;
+	BorderColor = float4(1.0f, 1.0f, 1.0f, 1.0f); 
 };
 
 texture Heightmap_Diffuse_Tex; 

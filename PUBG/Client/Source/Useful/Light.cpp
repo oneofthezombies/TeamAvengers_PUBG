@@ -8,7 +8,7 @@ Light::Manager::Manager()
     , m_viewMatrix(Matrix::IDENTITY)
     , m_projectionMatrix(Matrix::IDENTITY)
     , pTarget(nullptr)
-    , m_positionFactor(300.0f, 0.0f, 300.0f)
+    , m_positionFactor(1000.0f, 0.0f, 1000.0f)
 {
     m_projectVertices.resize(8);
     m_projectVertices[0] = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);
@@ -40,7 +40,7 @@ void Light::Manager::SetMatrices()
 
     D3DXMatrixLookAtLH(&m_viewMatrix, &eye, &lookat, &Vector3::UP);
 
-    // for perspective shadow
+    //// for perspective shadow
     //D3DXMatrixPerspectiveFovLH(
     //    &m_projectionMatrix, 
     //    D3DX_PI * 0.5f,
@@ -51,8 +51,8 @@ void Light::Manager::SetMatrices()
     // for directional light  
     D3DXMatrixOrthoLH(
         &m_projectionMatrix, 
-        5000.0f, 
-        5000.0f, 
+        10000.0f, 
+        10000.0f, 
         1.0f,
         ICamera::VISUAL_RANGE);
 }
