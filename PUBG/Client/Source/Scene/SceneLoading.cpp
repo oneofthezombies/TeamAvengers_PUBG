@@ -113,6 +113,15 @@ void SceneLoading::Load()
     load("./Resource/UI/InGame/", "aim_ver.png");
     load("./Resource/UI/InGame/", "aim_hor.png");
 
+    //for Blood ui
+    load("./Resource/UI/InGame/Blood/", "b3.png");
+    load("./Resource/UI/InGame/Blood/", "b5.png");
+    load("./Resource/UI/InGame/Blood/", "br8.png");
+    load("./Resource/UI/InGame/Blood/", "b9.png");
+    load("./Resource/UI/InGame/Blood/", "b13.png");
+    load("./Resource/UI/InGame/Blood/", "br14.png");
+    load("./Resource/UI/InGame/Blood/", "b15.png");
+
     //for compass UI test
     load("./Resource/UI/InGame/", "compass_bg_transparent.png");
 

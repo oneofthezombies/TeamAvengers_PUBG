@@ -248,6 +248,9 @@ public:
         UIImage* pAimUpLine;
         UIImage* pAimDownLine;
 
+        //blood
+        vector<UIImage*> m_vecBlood;
+
         //Text ====================
         //ammo
         UIText* pAmmoReloadText;
@@ -293,6 +296,9 @@ public:
 
         float m_sumUp;
 
+        const float BLOOD_COOL_TIME;
+        float       m_bloodCoolDown;
+
         InGameUI();
         ~InGameUI();
 
@@ -318,6 +324,7 @@ public:
         void updateKillUI(const TotalInventory& inven);
         void updateEquipUI(const TotalInventory& inven);
         void updateWeaponUI(const TotalInventory& inven);
+        void updateBloodUI();
     };
 
     struct GameOverUI : public IUIButtonOnMouseListener

@@ -116,6 +116,9 @@ Character::InGameUI::InGameUI()
     , m_isKill(false)
 
     , m_sumUp(0.0f)
+
+    , BLOOD_COOL_TIME(1.0f)
+    , m_bloodCoolDown(0.0f)
 {
 }
 
@@ -528,6 +531,48 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR3(1085.0f, 530.0f, 0.0f),
         nullptr,
         pBackground);
+
+    //ui 피터지는.
+    m_vecBlood.reserve(7);
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "b3.png",
+        D3DXVECTOR3(416.0f, 347.0f, 0.0f), nullptr, pBackground));
+
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "b5.png",
+        D3DXVECTOR3(0.0f, 425.0f, 0.0f), nullptr, pBackground));
+
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "br8.png",
+        D3DXVECTOR3(984.0f, 396.0f, 0.0f), nullptr, pBackground));
+
+    m_vecBlood.push_back((new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "b9.png",
+        D3DXVECTOR3(30.0f, 20.0f, 0.0f), nullptr, pBackground)));
+
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "b13.png",
+        D3DXVECTOR3(662.0f, 338.0f, 0.0f), nullptr, pBackground));
+
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "br14.png",
+        D3DXVECTOR3(919.0f, 81.0f, 0.0f), nullptr, pBackground));
+
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "b15.png",
+        D3DXVECTOR3(560.0f, 70.0f, 0.0f), nullptr, pBackground));
+
+    for (auto a : m_vecBlood)
+    {
+        a->SetIsRender(false);
+    }
 }
 
 void Character::InGameUI::Update(const TotalInventory& inven)
@@ -545,6 +590,8 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //피 닳기
     updateHpUI();
+    //피 이미지
+    updateBloodUI();
 
     //TODO: 킬로그 (서버랑 연관해서 생각해야함), 동시에 들어왔을 때 변경
     if (pPlayer->GetIsKill())
@@ -825,7 +872,7 @@ void Character::InGameUI::updateHpUI()
         {
             pHpRedImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
             m_hpCoolDown = HP_COOL_TIME;
-            pPlayer->ResetIsDamaged();
+            //pPlayer->ResetIsDamaged();
         }
     }
 }
@@ -1047,6 +1094,34 @@ void Character::InGameUI::updateWeaponUI(const TotalInventory& inven)
                     SECONDARY_WEAPON_POS.x + 28.0f,
                     SECONDARY_WEAPON_POS.y,
                     SECONDARY_WEAPON_POS.z));
+            }
+        }
+    }
+}
+
+void Character::InGameUI::updateBloodUI()
+{
+    //1초 뒤 빨간 hp도 흰색만큼 줄어든다
+    //if (Input()()->IsOnceKeyDown('/'))
+    if(GetAsyncKeyState('Z')& 0x8000)
+    {
+        this->pPlayer->MinusDamage(2);
+        this->pPlayer->m_isDamaged = true;
+    }
+    if (pPlayer->IsDamaged())
+    {
+        m_bloodCoolDown -= Time()()->GetDeltaTime();
+        for (auto a : m_vecBlood)
+        {
+            a->SetIsRender(true);
+        }
+        if (m_bloodCoolDown <= 0.0f)
+        {
+            for (auto a : m_vecBlood)
+            {
+                a->SetIsRender(false);
+                m_bloodCoolDown = BLOOD_COOL_TIME;
+                pPlayer->ResetIsDamaged();
             }
         }
     }
