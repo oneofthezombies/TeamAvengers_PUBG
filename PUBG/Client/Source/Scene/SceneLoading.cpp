@@ -189,7 +189,7 @@ void SceneLoading::Load()
 
     ////Map Buildings load
     //buildings (사용함)
-     load(TAG_RES_STATIC::AbandonedTownHall); 
+     //load(TAG_RES_STATIC::AbandonedTownHall); 
      load(TAG_RES_STATIC::Church           );
      load(TAG_RES_STATIC::Museum           );
      load(TAG_RES_STATIC::OldWoodenShed_1  );
@@ -200,21 +200,35 @@ void SceneLoading::Load()
      load(TAG_RES_STATIC::WareHouse_B      );
     
      ////Exterior
-    
-     load(TAG_RES_STATIC::BrokenBus);
-     load(TAG_RES_STATIC::BrokenTractorGunnyBag);// (우리_사용함)
 
+     //////- BrokenVehicle
+     load(TAG_RES_STATIC::BrokenBus);
+     //load(TAG_RES_STATIC::BrokenCar);
+     //load(TAG_RES_STATIC::BrokenMeshTruck);
+     //load(TAG_RES_STATIC::BrokenPoliceCar);
+     load(TAG_RES_STATIC::BrokenTractorGunnyBag);// (우리_사용함)
+     //load(TAG_RES_STATIC::BrokenUaz3151);
 
      //-Container (사용함)
-    load(TAG_RES_STATIC::ContainerBox_A     );
-    load(TAG_RES_STATIC::ContainerBox_B     );
-    load(TAG_RES_STATIC::ContainerSmall_1   );
-    load(TAG_RES_STATIC::ContainerSmall_2   );
+     load(TAG_RES_STATIC::ContainerBox_A     );
+     load(TAG_RES_STATIC::ContainerBox_B     );
+     load(TAG_RES_STATIC::ContainerSmall_1   );
+     load(TAG_RES_STATIC::ContainerSmall_2   );
 
      //- HayBale (사용함)
      load(TAG_RES_STATIC::HayBale_1  );
      load(TAG_RES_STATIC::HayBale_2  );
+
+     ////////- MetalBarrel
+     load(TAG_RES_STATIC::MetalBarrel_Blue);
+     load(TAG_RES_STATIC::MetalBarrel_Gray);
+     load(TAG_RES_STATIC::MetalBarrel_Green);
+     load(TAG_RES_STATIC::MetalBarrel_Red);
     
+     ////////- metalfence
+     //load(TAG_RES_STATIC::MetalBarrel_Red);
+     //load(TAG_RES_STATIC::MetalBarrel_Red);
+
     
      ////- PicketFence (우리_사용함)
      load(TAG_RES_STATIC::PicketFence_Short_A   );
@@ -238,6 +252,7 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::Lighthouse       );
 
     load(TAG_RES_STATIC::CityStreetSign);
+    load(TAG_RES_STATIC::MetalShelf);
     
      ////////- Etc
     load(TAG_RES_STATIC::TableSet);//(우리_사용함)
@@ -1218,9 +1233,21 @@ void SceneLoading::addHeightmapResource()
     //    "./Resource/Heightmap/", 
     //    "Heightmap.jpg", 
     //    pResourceContainer);
+    //Resource::Async::CreateTexture(
+    //    "./Resource/Heightmap/", 
+    //    "ground.png",
+    //    pResourceContainer);
     Resource::Async::CreateTexture(
-        "./Resource/Heightmap/", 
-        "ground.png",
+        "./Resource/Heightmap/",
+        "groundtest_d_8192.png",
+        pResourceContainer);
+    //Resource::Async::CreateTexture(
+    //    "./Resource/Heightmap/",
+    //    "ground_n.png",
+    //    pResourceContainer);
+    Resource::Async::CreateTexture(
+        "./Resource/Heightmap/",
+        "groundtest_n_8192.png",
         pResourceContainer);
 
 

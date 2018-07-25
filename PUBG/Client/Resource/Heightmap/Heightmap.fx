@@ -43,50 +43,83 @@ sampler2D Heightmap_Diffuse_Sampler = sampler_state
    AddressV  = Wrap;     
 }; 
 
-struct VS_INPUT 
-{ 
-   float4 Position  : POSITION; 
-   float3 Normal    : NORMAL;
-   float2 TexCoord  : TEXCOORD;
-}; 
+texture Heightmap_Normal_Tex;
 
-struct VS_OUTPUT 
-{ 
-   float4 Position  : POSITION; 
-   float3 Normal    : NORMAL;
-   float2 TexCoord  : TEXCOORD;
-   float4 ClipPosition : TEXCOORD1;
-}; 
+sampler2D Heightmap_Normal_Sampler = sampler_state
+{
+    Texture = <Heightmap_Normal_Tex>;
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
 
-VS_OUTPUT VS( VS_INPUT IN ) 
-{ 
-   VS_OUTPUT OUT;	 
+struct VS_INPUT
+{
+    float4 Position : POSITION;
+    float3 Normal   : NORMAL;
+    float2 TexCoord : TEXCOORD0;
+};
 
-  float4 worldPos = mul( IN.Position, World );
-   float4 oPos = mul(worldPos , View ); 
-   OUT.Position = mul( oPos, Projection ); 
-   OUT.Normal = IN.Normal;
-   OUT.TexCoord.xy = IN.TexCoord.xy; 
+struct VS_OUTPUT
+{
+    float4 Position          : POSITION;
+    float2 TexCoord          : TEXCOORD0;
+    float3 LightDirection    : TEXCOORD1;
+    float3 ViewDirection     : TEXCOORD2;
+    float3 Normal            : TEXCOORD5;
+    float4 ClipPosition      : TEXCOORD6;
+    float  Diffuse           : TEXCOORD7;
+};
 
-   OUT.ClipPosition = mul(worldPos, LightView);
-   OUT.ClipPosition = mul(OUT.ClipPosition, LightProjection);
+VS_OUTPUT VS(VS_INPUT vin)
+{
+    VS_OUTPUT vout;
 
-   return OUT;
-}; 
+    float4 worldPos = mul(vin.Position, World);
 
-float4  PS( VS_OUTPUT vout ) : COLOR 
-{ 
-    float4 albedo = tex2D(Heightmap_Diffuse_Sampler, vout.TexCoord); 
+    vout.Position = mul(mul(worldPos, View), Projection);
 
-    float3 color = albedo.rgb;
-    float3 specular = 0;
+    vout.TexCoord = vin.TexCoord;
 
-    if (bEmissiveColor)
-    {
-        color += EmissiveColor.rgb;
-    }
+    vout.LightDirection = normalize(worldPos.xyz - LightPos.xyz);
 
-    color = color + specular;
+    vout.ViewDirection = normalize(worldPos.xyz - CameraPos.xyz);
+
+    vout.Normal = normalize(mul(vin.Normal, (float3x3)World));
+
+    vout.ClipPosition = mul(mul(worldPos, LightView), LightProjection);
+
+    float3 worldNormal = normalize(mul(vin.Normal, (float3x3)World));
+    vout.Diffuse = dot(-vout.LightDirection, worldNormal);
+
+    return vout;
+};
+
+float4  PS(VS_OUTPUT vout) : COLOR
+{
+    float3 tangentNormal = tex2D(Heightmap_Normal_Sampler, vout.TexCoord).xyz;
+    tangentNormal = normalize(tangentNormal * 2 - 1);
+
+    float3 Tangent = float3(0.0f, 0.0f, 1.0f);
+    float3 Binormal = float3(1.0f, 0.0f, 0.0f);
+
+    float3x3 TBN = float3x3(normalize(Tangent),
+        normalize(Binormal),
+        normalize(vout.Normal));
+    TBN = transpose(TBN);
+
+    float3 worldNormal = mul(TBN, tangentNormal);
+
+    float4 albedo = tex2D(Heightmap_Diffuse_Sampler, vout.TexCoord);
+    float3 lightDir = normalize(vout.LightDirection);
+    float3 diffuse = saturate(dot(worldNormal, -lightDir));
+    diffuse = max(float3(0.3f, 0.3f, 0.3f), diffuse);
+    diffuse = albedo.rgb * diffuse;
+
+    float3 ambient = float3(0.1f, 0.1f, 0.1f) * albedo;
+    float3 rgb = ambient + diffuse;
 
     if (bShadow)
     {
@@ -96,15 +129,15 @@ float4  PS( VS_OUTPUT vout ) : COLOR
         uv = uv * 0.5 + 0.5;
 
         float shadowDepth = tex2D(ShadowSampler, uv).r;
-   
-        if (currentDepth > shadowDepth + 0.000001f)
+
+        if (currentDepth > shadowDepth + 0.0000125f)
         {
-            color *= 0.7f;
+            rgb *= 0.7f;
         }
     }
 
-    return  float4(color, 1.0f); 
-}; 
+    return float4(rgb, 1);
+};
 
 technique DefaultTechnique 
 { 
