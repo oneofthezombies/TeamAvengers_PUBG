@@ -451,23 +451,61 @@ pair<string, string> ResourceInfo::GetFileNameWithoutX(const TAG_RES_STATIC tag)
         {
             //-AR
             {
-    case TAG_RES_STATIC::QBZ:
-        filePath = "Weapon/AR/";
-        fileName = "QBZ";
-        break;
+            case TAG_RES_STATIC::QBZ:
+                filePath = "Weapon/AR/";
+                fileName = "QBZ";
+                break;
 
-    case TAG_RES_STATIC::QBZ_Mag:
-        filePath = "Weapon/AR/";
-        fileName = "QBZ_Mag";
-        break;
+            case TAG_RES_STATIC::QBZ_Mag:
+                filePath = "Weapon/AR/";
+                fileName = "QBZ_Mag";
+                break;
             }
 
             //-SR
             {
-    case TAG_RES_STATIC::Kar98k:
-        filePath = "Weapon/SR/";
-        fileName = "Kar98k";
-        break;
+            case TAG_RES_STATIC::Kar98k:
+                filePath = "Weapon/SR/";
+                fileName = "Kar98k";
+                break;
+            }
+        }
+        //Door, Wall ------------------------------------
+        {
+            //Door
+            {
+            case TAG_RES_STATIC::Door_InDoor:
+                filePath = "DoorAndWall/";
+                fileName = "Door_InDoor";
+                break;
+
+            case TAG_RES_STATIC::Door_OutDoor:
+                filePath = "DoorAndWall/";
+                fileName = "Door_OutDoor";
+                break;
+            }
+
+            //Wall
+            {
+            case TAG_RES_STATIC::Wall_1:
+                filePath = "DoorAndWall/";
+                fileName = "Wall_1";
+                break;
+
+            case TAG_RES_STATIC::Wall_2:
+                filePath = "DoorAndWall/";
+                fileName = "Wall_2";
+                break;
+
+            case TAG_RES_STATIC::Wall_End:
+                filePath = "DoorAndWall/";
+                fileName = "Wall_End";
+                break;
+
+            case TAG_RES_STATIC::Wall_End_Long:
+                filePath = "DoorAndWall/";
+                fileName = "Wall_End_Long";
+                break;
             }
         }
 
@@ -951,7 +989,44 @@ pair<string, string> ResourceInfo::GetPathFileName(const TAG_RES_STATIC tag)
                 break;
             }
         }
+        //Door, Wall ------------------------------------
+        {
+            //Door
+            {
+            case TAG_RES_STATIC::Door_InDoor:
+                filePath = "DoorAndWall/";
+                fileName = "Door_InDoor";
+                break;
 
+            case TAG_RES_STATIC::Door_OutDoor:
+                filePath = "DoorAndWall/";
+                fileName = "Door_OutDoor";
+                break;
+            }
+
+            //Wall
+            {
+            case TAG_RES_STATIC::Wall_1:
+                filePath = "DoorAndWall/";
+                fileName = "Wall_1";
+                break;
+
+            case TAG_RES_STATIC::Wall_2:
+                filePath = "DoorAndWall/";
+                fileName = "Wall_2";
+                break;
+
+            case TAG_RES_STATIC::Wall_End:
+                filePath = "DoorAndWall/";
+                fileName = "Wall_End";
+                break;
+
+            case TAG_RES_STATIC::Wall_End_Long:
+                filePath = "DoorAndWall/";
+                fileName = "Wall_End_Long";
+                break;
+            }
+        }
         default:
         {
             assert(false &&

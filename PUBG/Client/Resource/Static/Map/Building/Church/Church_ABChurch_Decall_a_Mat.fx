@@ -138,7 +138,7 @@ float4  PS(VS_OUTPUT vout) : COLOR
 
         if (currentDepth > shadowDepth + 0.0000125f)
         {
-            rgb *= 0.5f;
+            rgb *= 0.7f;
         }
     }
 

@@ -1,31 +1,39 @@
-//TODO: Modify the folowing code: 
+// lighting and shadow applying
 
-int GlobalParameter : SasGlobal 
-< 
-   int3 SasVersion = {1, 1, 0}; 
-   string SasEffectDescription = "This is a sample effect"; 
-   string SasEffectCompany = "cgdev.net"; 
->; 
+float4x4 World;
+float4x4 View;
+float4x4 Projection;
 
-float4x4 World      : WORLD <string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]";>; 
-float4x4 View       : VIEW <string SasBindAddress = "Sas.Camera.WorldToView";>; 
-float4x4 Projection : PROJECTION <string SasBindAddress = "Sas.Camera.Projection";>; 
+bool bEmissiveColor = false;
+bool bLight = true;
+bool bShadow = true;
 
-bool bEmissiveColor = true; 
-bool bLight = true; 
-float3 lightDirection = { 0, 0, -1 }; 
+float4   LightPos;
+float4x4 LightView;
+float4x4 LightProjection;
 
-float4 DiffuseColor  = { 1.000000f, 1.000000f, 1.000000f, 1.000000f }; 
-float  SpecularPower = 10.000000f; 
-float4 SpecularColor = { 0.000000f, 0.000000f, 0.000000f, 1.000000f }; 
-float4 EmissiveColor = { 0.100000f, 0.100000f, 0.100000f, 1.000000f }; 
+float4 CameraPos;
 
-float4x4 gLightViewMatrix;
-float4x4 gLightProjMatrix;
+float4 DiffuseColor = { 1.000000f, 1.000000f, 1.000000f, 1.000000f };
+float  SpecularPower = 20.000000f;
+float4 SpecularColor = { 0.000000f, 0.000000f, 0.000000f, 1.000000f };
+float4 EmissiveColor = { 0.010000f, 0.010000f, 0.010000f, 1.000000f };
 
+texture ShadowMap_Tex;
+
+sampler2D ShadowSampler = sampler_state
+{
+    Texture = <ShadowMap_Tex>;
+    MinFilter = Linear;
+    MagFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+
+/*** dependency block ***/
 texture C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_color_tga; 
 texture C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_normal_tga; 
-texture ShadowMap_Tex;
 
 sampler2D C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_color_tgaSampler = sampler_state  // TexCoord0 
 { 
@@ -47,82 +55,107 @@ sampler2D C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures
    AddressV  = Wrap;     
 }; 
 
-sampler2D ShadowSampler = sampler_state
+/*** dependency block ***/
+
+struct VS_INPUT
 {
-   Texture = <ShadowMap_Tex>; 
-   MinFilter = Linear; 
-   MagFilter = Linear; 
-   MipFilter = Linear; 
-   AddressU  = Wrap;     
-   AddressV  = Wrap;     
+    float4 Position : POSITION;
+    float2 TexCoord : TEXCOORD0;
+    float3 Normal   : NORMAL;
+    float3 Tangent  : TANGENT;
+    float3 Binormal : BINORMAL;
 };
 
-struct VS_INPUT 
-{ 
-   float4 Position  : POSITION; 
-   float2 TexCoord0 : TEXCOORD0;
-   float3 N         : NORMAL;
-   float3 T         : TANGENT;
-   float3 B         : BINORMAL;
-}; 
+struct VS_OUTPUT
+{
+    float4 Position          : POSITION;
+    float2 TexCoord          : TEXCOORD0;
+    float3 LightDirection    : TEXCOORD1;
+    float3 ViewDirection     : TEXCOORD2;
+    float3 Tangent           : TEXCOORD3;
+    float3 Binormal          : TEXCOORD4;
+    float3 Normal            : TEXCOORD5;
+    float4 ClipPosition      : TEXCOORD6;
+    float  Diffuse : TEXCOORD7;
+};
 
-struct VS_OUTPUT 
-{ 
-   float4 Position  : POSITION; 
-   float2 TexCoord0 : TEXCOORD0;
-   float3 LightTangentSpace : COLOR1;
-   float4 ClipPosition : TEXCOORD1;
-}; 
+VS_OUTPUT VS(VS_INPUT vin)
+{
+    VS_OUTPUT vout;
 
-VS_OUTPUT VS( VS_INPUT IN ) 
-{ 
-   //TODO: Modify the folowing code: 
-   VS_OUTPUT OUT;	 
-   float4 WorldPos = mul(IN.Position, World);
-   float4 oPos = mul( WorldPos, View ); 
-   OUT.Position = mul( oPos, Projection ); 
-   
-   OUT.TexCoord0.xy = IN.TexCoord0.xy; 
-   
-   float3x3 TBN = { IN.T, IN.B, IN.N };
-   OUT.LightTangentSpace = mul( mul( TBN, (float3x3)World ), lightDirection );
+    float4 worldPos = mul(vin.Position, World);
 
-  OUT.ClipPosition = mul(WorldPos, gLightViewMatrix);
-  OUT.ClipPosition = mul(OUT.ClipPosition, gLightProjMatrix);
+    vout.Position = mul(mul(worldPos, View), Projection);
 
-   return OUT;
-}; 
+    vout.TexCoord = vin.TexCoord;
 
-float4  PS( VS_OUTPUT vout ) : COLOR 
-{ 
-   //TODO: Modify the folowing code: 
-   float4 color = tex2D( C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_color_tgaSampler, vout.TexCoord0 ); 
-   if(bLight) 
-   { 
-     float3 bumpNormal =  2 * tex2D( C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_normal_tgaSampler, vout.TexCoord0 ) - 1 ;
-     float3 LightVector1 = normalize(vout.LightTangentSpace);
-     float bump = max(0, dot( bumpNormal, LightVector1 ));
-     color.rgb = color.rgb * bump;
-   } 
+    vout.LightDirection = normalize(worldPos.xyz - LightPos.xyz);
 
-   if(bEmissiveColor)
-     color.rgb += EmissiveColor.rgb;
+    vout.ViewDirection = normalize(worldPos.xyz - CameraPos.xyz);
 
-   float currentDepth = vout.ClipPosition.z / vout.ClipPosition.w;
-   float2 uv = vout.ClipPosition.xy / vout.ClipPosition.w;
-   uv.y = -uv.y;
-   uv = uv * 0.5 + 0.5;
+    vout.Normal = normalize(mul(vin.Normal, (float3x3)World));
+    vout.Tangent = normalize(mul(vin.Tangent, (float3x3)World));
+    vout.Binormal = normalize(mul(vin.Binormal, (float3x3)World));
 
-   float shadowDepth = tex2D(ShadowSampler, uv).r;
-   
-   if ( currentDepth > shadowDepth + 0.0000125f )
-   {
-      color.rgb *= 0.5f;
-   }
+    vout.ClipPosition = mul(mul(worldPos, LightView), LightProjection);
 
-   return  color; 
-}; 
+    float3 worldNormal = normalize(mul(vin.Normal, (float3x3)World));
+    vout.Diffuse = dot(-vout.LightDirection, worldNormal);
 
+    return vout;
+};
+
+float4  PS(VS_OUTPUT vout) : COLOR
+{
+    float3 tangentNormal = tex2D(ShadowSampler, vout.TexCoord).xyz;
+    tangentNormal = normalize(tangentNormal * 2 - 1);
+
+    float3x3 TBN = float3x3(normalize(vout.Tangent),
+        normalize(vout.Binormal),
+        normalize(vout.Normal));
+    TBN = transpose(TBN);
+
+    float3 worldNormal = mul(TBN, tangentNormal);
+
+    float4 albedo = tex2D(C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_color_tgaSampler, vout.TexCoord);
+    float3 lightDir = normalize(vout.LightDirection);
+    float3 diffuse = saturate(dot(worldNormal, -lightDir));
+    diffuse = max(float3(0.3f, 0.3f, 0.3f), diffuse);
+    diffuse = albedo.rgb * diffuse;
+
+    float3 specular = 0;
+    if (diffuse.x > 0)
+    {
+        float3 reflection = reflect(lightDir, worldNormal);
+        float3 viewDir = normalize(vout.ViewDirection);
+
+        specular = saturate(dot(reflection, -viewDir));
+        specular = pow(specular, SpecularPower);
+
+        float4 specularIntensity = tex2D(C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_normal_tgaSampler, vout.TexCoord);
+        specular *= specularIntensity.rgb;
+    }
+
+    float3 ambient = float3(0.1f, 0.1f, 0.1f) * albedo.rgb;
+    float3 rgb = ambient + diffuse + specular;
+
+    if (bShadow)
+    {
+        float currentDepth = vout.ClipPosition.z / vout.ClipPosition.w;
+        float2 uv = vout.ClipPosition.xy / vout.ClipPosition.w;
+        uv.y = -uv.y;
+        uv = uv * 0.5 + 0.5;
+
+        float shadowDepth = tex2D(ShadowSampler, uv).r;
+
+        if (currentDepth > shadowDepth + 0.0000125f)
+        {
+            rgb *= 0.5f;
+        }
+    }
+
+    return float4(rgb, 1);
+};
 technique DefaultTechnique 
 { 
    pass p0 

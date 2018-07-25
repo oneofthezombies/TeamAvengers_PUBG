@@ -43,11 +43,11 @@ enum class TAG_RES_STATIC
     WareHouse_B,
 
     //Exterior
-        //-AmmoBox
+    //-AmmoBox
     AmmoBox_1,
     AmmoBox_2,
 
-        //- BrokenVehicle
+    //- BrokenVehicle
     BrokenBus,
     BrokenCar,
     BrokenMeshTruck,
@@ -55,74 +55,74 @@ enum class TAG_RES_STATIC
     BrokenTractorGunnyBag,
     BrokenUaz3151,
 
-        //-Container
+    //-Container
     ContainerBox_A,
     ContainerBox_B,
     ContainerSmall_1,
     ContainerSmall_2,
 
-        //- HayBale
+    //- HayBale
     HayBale_1,
     HayBale_2,
 
-        //- MetalBarrel
+    //- MetalBarrel
     MetalBarrel_Blue,
     MetalBarrel_Gray,
     MetalBarrel_Green,
     MetalBarrel_Red,
 
-        //- MetalFence
+    //- MetalFence
     MetalFence_A,
     MetalFence_Long,
 
-        //- PicketFence
+    //- PicketFence
     PicketFence_Short_A,
     PicketFence_Short_B,
     PicketFence_Short_C,
 
-        //- Powerline
+    //- Powerline
     Powerline_1,
     Powerline_2,
 
-        //- RadioTower
+    //- RadioTower
     RadioTower_1,
     RadioTower_2,
 
-        //- SandBag
+    //- SandBag
     Sandbag_1,
     Sandbag_2,
 
-        //- Silo
+    //- Silo
     Silo_A,
     Silo_B,
 
-        //- Etc
+    //- Etc
     CityStreetSign,
     Lighthouse,
     MetalShelf,
     TableSet,
     Tower,
 
-    //SkySphere
+//SkySphere
     SkySphere,
 
-    //Vegetation
-        //- Bush
+//Vegetation
+    //- Bush
     DeadGrass,
     Dogwood,
 
-        //- Grass
+    //- Grass
     Grass_1,
     Grass_2,
 
-        //- Rock
+    //- Rock
     Desert_Cover_Rock_Combine_1,
     Desert_Cover_Rock_Combine_2,
     Desert_Mashup,
     Rock_1,
     Rock_2,
 
-        //- Tree
+    //- Tree
     AlaskaCedar,
     AmericanElem,
     LondonPlane,
@@ -134,8 +134,19 @@ enum class TAG_RES_STATIC
     // SR
     Kar98k,
 
+//Door, Wall
+    //Door
+    Door_InDoor,
+    Door_OutDoor,
+    //Wall
+    Wall_1,
+    Wall_2,
+    Wall_End,
+    Wall_End_Long,
+
 // Height Map
-    HeightMap,
+HeightMap,
+
 //    
     COUNT
 };
