@@ -46,9 +46,15 @@ HeightMap::HeightMap()
         "Heightmap.fx")->
         SetTexture(
             "Heightmap_Diffuse_Tex",
+            //Resource()()->GetTexture(
+            //    "./Resource/Heightmap/",
+            //    "Heightmap.jpg"));
+            //Resource()()->GetTexture(
+            //    "./Resource/Heightmap/",
+            //    "ground.png"));
             Resource()()->GetTexture(
                 "./Resource/Heightmap/",
-                "Heightmap.jpg"));
+                "groundtest_d_8192.png"));
     ////---------------------------------------------------
 
 
@@ -270,6 +276,13 @@ void HeightMap::OnRender()
             0,
             [this](LPD3DXEFFECT pEffect)
         {
+            //pEffect->SetTexture("Heightmap_Normal_Tex", 
+            //    Resource()()->GetTexture("./Resource/Heightmap/",
+            //    "ground_n.png"));
+            pEffect->SetTexture("Heightmap_Normal_Tex",
+                Resource()()->GetTexture("./Resource/Heightmap/",
+                    "groundtest_n_8192.png"));
+
             pEffect->SetMatrix(
                 Shader::World,
                 &GetTransform()->GetTransformationMatrix());

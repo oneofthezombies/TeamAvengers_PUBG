@@ -359,21 +359,21 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
         }
     }
 
-    // collision with other characters
-    if (!hasCollision)
-    {
-        for (auto o : pCurrentScene->m_NearArea.GetCharacters())
-        {
-            if (hasCollision) break;
+    //// collision with other characters
+    //if (!hasCollision)
+    //{
+    //    for (auto o : pCurrentScene->m_NearArea.GetCharacters())
+    //    {
+    //        if (hasCollision) break;
 
-            if (o->GetIndex() == m_index) continue;
+    //        if (o->GetIndex() == m_index) continue;
 
-            const D3DXVECTOR3 dist = destState->position - o->GetTransform()->GetPosition();
-            const float distLen = D3DXVec3Length(&dist);
-            if (distLen < RADIUS * 2.0f)
-                hasCollision = true;
-        }
-    }
+    //        const D3DXVECTOR3 dist = destState->position - o->GetTransform()->GetPosition();
+    //        const float distLen = D3DXVec3Length(&dist);
+    //        if (distLen < RADIUS * 2.0f)
+    //            hasCollision = true;
+    //    }
+    //}
     // end collision /////////////////////////
     Transform* tm = GetTransform();
     // 셋 커런트
@@ -405,6 +405,100 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
     m_adjust_Y_onCollision = destState->position.y;
     m_isCollidedWithBox = hasCollision;
 
+}
+void Character::terrainFeaturesCollisionInteraction2(OUT State * destState)
+{
+    m_adjust_Y_onCollision = 0.0f;
+    m_isCollidedWithBox = false;
+    IScene* pCurrentScene = CurrentScene()();
+    int hasCollision = 0;
+    auto tfs(pCurrentScene->m_NearArea.GetTerrainFeatures());
+    for (auto tf : tfs)
+    {
+        if (hasCollision>0) break;
+
+        // 바운딩스피어가 충돌되지 않으면 다음 터레인피처와 충돌을 검사한다.
+        if (!Collision::HasCollision(m_boundingSphere, tf->GetBoundingSphere())) continue;
+
+
+        for (auto& others : tf->GetBoundingBoxes())
+        {
+            if (hasCollision>1) break;
+
+            if (Collision::HasCollision(m_bBox, others))
+                hasCollision++;
+            // sliding vector
+            if (hasCollision>0)
+            {
+                //내가 원하는 방향의 단위 normal dir
+                const D3DXVECTOR3 currPos = GetTransform()->GetPosition();
+                D3DXVECTOR3 destDir(destState->position.x - currPos.x, destState->position.y - currPos.y, destState->position.z - currPos.z);
+                D3DXVec3Normalize(&destDir, &destDir);
+
+                //부딛힌 면의 normal 값 구하기
+                D3DXVECTOR3 normal = Collision::GetCollidedNormal2(m_bBox.center + m_bBox.position, others);
+
+                D3DXVECTOR3 towardsBoxDir = (others.position + others.center) - currPos;
+
+                D3DXVec3Normalize(&towardsBoxDir, &towardsBoxDir);
+
+                //box로 걸어가면 sliding vector 적용
+                if (D3DXVec3Dot(&destDir, &-normal) > 0.0f)
+                {
+                    D3DXVECTOR3 slidingVector = destDir - D3DXVec3Dot(&destDir, &normal)*normal;
+                    destState->position = currPos + slidingVector;
+                }
+
+            }
+        }
+    }
+
+    //// collision with other characters
+    //if (!hasCollision)
+    //{
+    //    for (auto o : pCurrentScene->m_NearArea.GetCharacters())
+    //    {
+    //        if (hasCollision) break;
+
+    //        if (o->GetIndex() == m_index) continue;
+
+    //        const D3DXVECTOR3 dist = destState->position - o->GetTransform()->GetPosition();
+    //        const float distLen = D3DXVec3Length(&dist);
+    //        if (distLen < RADIUS * 2.0f)
+    //            hasCollision = true;
+    //    }
+    //}
+    // end collision /////////////////////////
+    Transform* tm = GetTransform();
+    // 셋 커런트
+    if (hasCollision>0)
+    {
+        // 만약 스프린트일 경우에는 쉬프트키 유무에 상관없이 런으로 바꾼다.
+        if (destState->isHeadBump)
+        {
+            // TODO : impl
+        }
+
+        tm->SetPosition(destState->position);
+    }
+    else
+    {
+        // update state
+        tm->SetPosition(destState->position);
+        tm->SetRotation(destState->rotation);
+
+        // 이사하기 //NearArea(cell space)를 다시 구하기!
+        std::size_t destCellIndex = pCurrentScene->GetCellIndex(destState->position);
+        if (destCellIndex != m_cellIndex)
+        {
+            pCurrentScene->m_NearArea.CreateNearArea(destCellIndex);
+            pCurrentScene->MoveCell(&m_cellIndex, destCellIndex, TAG_OBJECT::Character, this);
+            int i = 0;
+        }
+    }
+    m_adjust_Y_onCollision = destState->position.y;
+    if (hasCollision > 0)
+        m_isCollidedWithBox = true;
 }
 void Character::itemSphereCollisionInteraction()
 {

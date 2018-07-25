@@ -187,9 +187,9 @@ void SceneLoading::Load()
 
         
 
-//Map Buildings load
-    ////buildings
-     load(TAG_RES_STATIC::AbandonedTownHall); 
+    ////Map Buildings load
+    //buildings (사용함)
+     //load(TAG_RES_STATIC::AbandonedTownHall); 
      load(TAG_RES_STATIC::Church           );
      load(TAG_RES_STATIC::Museum           ); //지붕없는 집
      load(TAG_RES_STATIC::OldWoodenShed_1  );
@@ -247,6 +247,7 @@ void SceneLoading::Load()
     load(TAG_RES_STATIC::Lighthouse);
 
     load(TAG_RES_STATIC::CityStreetSign);
+    load(TAG_RES_STATIC::MetalShelf);
     
      //- Etc
     load(TAG_RES_STATIC::MetalShelf);
@@ -1216,10 +1217,27 @@ void SceneLoading::addHeightmapResource()
         "./Resource/Heightmap/", 
         "Heightmap.fx", 
         pResourceContainer);
+    //Resource::Async::CreateTexture(
+    //    "./Resource/Heightmap/", 
+    //    "Heightmap.jpg", 
+    //    pResourceContainer);
+    //Resource::Async::CreateTexture(
+    //    "./Resource/Heightmap/", 
+    //    "ground.png",
+    //    pResourceContainer);
     Resource::Async::CreateTexture(
-        "./Resource/Heightmap/", 
-        "Heightmap.jpg", 
+        "./Resource/Heightmap/",
+        "groundtest_d_8192.png",
         pResourceContainer);
+    //Resource::Async::CreateTexture(
+    //    "./Resource/Heightmap/",
+    //    "ground_n.png",
+    //    pResourceContainer);
+    Resource::Async::CreateTexture(
+        "./Resource/Heightmap/",
+        "groundtest_n_8192.png",
+        pResourceContainer);
+
 
     Resource::Async::CreateEffect("./Resource/", "Quad.fx", pResourceContainer);
 
