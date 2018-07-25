@@ -124,7 +124,7 @@ float4  PS(VS_OUTPUT vout) : COLOR
     diffuse = max(float3(0.3f, 0.3f, 0.3f), diffuse);
     diffuse = albedo.rgb * diffuse;
 
-    float3 ambient = float3(0.1f, 0.1f, 0.1f) * albedo;
+    float3 ambient = float3(0.1f, 0.1f, 0.1f) * albedo.rgb;
     float3 rgb = ambient + diffuse;
 
     if (bShadow)
@@ -144,7 +144,6 @@ float4  PS(VS_OUTPUT vout) : COLOR
 
     return float4(rgb, 1);
 };
-
 
 
 technique DefaultTechnique 
