@@ -34,7 +34,6 @@ sampler2D ShadowSampler = sampler_state
 /*** dependency block ***/
 texture C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_color_tga; 
 texture C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_normal_tga; 
-texture ShadowMap_Tex;
 
 sampler2D C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures__tx_Rock02_new_color_tgaSampler = sampler_state  // TexCoord0 
 { 
@@ -56,15 +55,6 @@ sampler2D C__Users_user_Desktop_Resource_Map_Vegetation_Rock_Rock02_new_Textures
    AddressV  = Wrap;     
 }; 
 
-sampler2D ShadowSampler = sampler_state
-{
-   Texture = <ShadowMap_Tex>; 
-   MinFilter = Linear; 
-   MagFilter = Linear; 
-   MipFilter = Linear; 
-   AddressU  = Wrap;     
-   AddressV  = Wrap;     
-};
 /*** dependency block ***/
 
 struct VS_INPUT
@@ -146,7 +136,7 @@ float4  PS(VS_OUTPUT vout) : COLOR
         specular *= specularIntensity.rgb;
     }
 
-    float3 ambient = float3(0.1f, 0.1f, 0.1f) * albedo;
+    float3 ambient = float3(0.1f, 0.1f, 0.1f) * albedo.rgb;
     float3 rgb = ambient + diffuse + specular;
 
     if (bShadow)
