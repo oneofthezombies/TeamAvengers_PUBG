@@ -363,6 +363,7 @@ void SceneLobby::OnUpdate()
 {
     if (m_isStartPlay)
     {
+        Sound()()->Play(TAG_SOUND::Loby_Ready, Vector3::ZERO, 1.0f, FMOD_2D);
         UI()()->Destroy(m_pBackground);
         RemoveCharacters();
         Scene()()->SetCurrentScene(TAG_SCENE::Play);
