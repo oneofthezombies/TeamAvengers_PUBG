@@ -60,13 +60,14 @@ class Water : public IObject
 {
 public:
     OptionWater              m_optionWater;
-    LPDIRECT3DDEVICE9        m_pD3DDevice;
+    LPDIRECT3DDEVICE9        pD3DDevice;
     LPDIRECT3DVERTEXBUFFER9  m_pVertexBuffer;
-    LPDIRECT3DTEXTURE9       m_pWaterBump;     //π∞
+    LPDIRECT3DTEXTURE9       pWaterBump;       //π∞
     LPDIRECT3DCUBETEXTURE9   m_pReflectionMap; //«œ¥√¿« π›ªÁ∏ 
     LPD3DXEFFECT             m_pEffectWater;
 
     Vertex                   m_quadVertices[4];
+    LPD3DXMESH               m_pQuadMesh;
     float                    m_timer;
 
 public:
@@ -77,8 +78,9 @@ public:
     virtual void OnRender() override;
 
 
-    void Init(float width, float height, float high);
+    void Init(const float width, const float height, const float high);
     void InitEffect();
+    void CreateMesh(const float width, const float height, const float high);
 
     void setTechniqueVariables();
 };

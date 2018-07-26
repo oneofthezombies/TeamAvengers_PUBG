@@ -135,7 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="Source\Manager\Particle.cpp" />
     <ClCompile Include="Source\Object\Quad.cpp" />
     <ClCompile Include="Source\Scene\SceneLobby.cpp" />
     <ClCompile Include="Source\Object\Character_OnHand.cpp" />
@@ -207,13 +207,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Water.cpp" />
+    <ClCompile Include="Source\Object\Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod64.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Particle.h" />
+    <ClInclude Include="Source\Manager\Particle.h" />
     <ClInclude Include="Source\Object\DeathDropBox.h" />
     <ClInclude Include="Source\Object\Quad.h" />
     <ClInclude Include="Source\Scene\SceneLobby.h" />
@@ -274,7 +274,7 @@
     <ClInclude Include="Source\Useful\UsefulClientOnly.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Water.h" />
+    <ClInclude Include="Source\Object\Water.h" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

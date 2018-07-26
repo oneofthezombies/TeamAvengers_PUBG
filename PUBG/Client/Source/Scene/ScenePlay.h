@@ -18,6 +18,7 @@ private:
 
     std::set<IObject*> firstGroup;
     std::set<IObject*> secondGroup;
+    std::set<IObject*> thirdGroup;
 
     //// for surface
     //std::vector<D3DXVECTOR3> m_verticesChurch;

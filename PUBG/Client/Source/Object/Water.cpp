@@ -46,13 +46,14 @@ OptionWater::~OptionWater()
 }
 
 Water::Water()
-    :IObject(TAG_OBJECT::Idle)
+    :IObject(TAG_OBJECT::Water)
     , m_pVertexBuffer(nullptr)
-    , m_pWaterBump(nullptr)
+    , pWaterBump(nullptr)
     , m_pReflectionMap(nullptr)
     , m_pEffectWater(nullptr)
     , m_timer(0.0f)
     , m_optionWater()
+    , m_pQuadMesh(nullptr)
 {
 }
 
@@ -60,9 +61,9 @@ Water::Water()
 Water::~Water()
 {
     SAFE_RELEASE(m_pVertexBuffer);
-    SAFE_RELEASE(m_pWaterBump);
     SAFE_RELEASE(m_pReflectionMap);
     SAFE_RELEASE(m_pEffectWater);
+    SAFE_RELEASE(m_pQuadMesh);
 }
 
 void Water::OnUpdate()
@@ -75,18 +76,18 @@ void Water::OnRender()
     {
         // 텍스쳐 사용 준비. 
         DWORD alpha = 175;
-        m_pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, (0x00ffffff) + (alpha << 24));
-        m_pD3DDevice->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
-        m_pD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-        m_pD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+        pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, (0x00ffffff) + (alpha << 24));
+        pD3DDevice->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
+        pD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+        pD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 
         // 알파 채널을 넣어서 반투명하게 하자.
-        m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-        m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-        m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-        m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-        m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-        m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+        pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+        pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+        pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+        pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+        pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+        pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
     }
 
     // Pick one of the techniques in the .fx file to use. For this sample, 
@@ -108,9 +109,11 @@ void Water::OnRender()
         // With each pass, render geometry as you normally would...
         //
 
-        m_pD3DDevice->SetStreamSource(0, m_pVertexBuffer, 0, sizeof(Vertex));
-        m_pD3DDevice->SetFVF(Vertex::FVF_Flags);
-        m_pD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+        // 간헐적으로 렌더링 되지 않아서 메쉬로 변경함
+        //m_pD3DDevice->SetStreamSource(0, m_pVertexBuffer, 0, sizeof(Vertex));
+        //m_pD3DDevice->SetFVF(Vertex::FVF_Flags);
+        //m_pD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+        m_pQuadMesh->DrawSubset(0);
 
         m_pEffectWater->EndPass();
     }
@@ -121,32 +124,11 @@ void Water::OnRender()
     //m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
-void Water::Init(float width, float height, float high)
+void Water::Init(const float width, const float height, const float high)
 {
-    m_pD3DDevice = DeviceMgr()()->GetDevice();
+    pD3DDevice = Device()();
 
-    m_quadVertices[0].Set(0000.0f, high, 0000.0f, 0xffffff00, 0.0f, 0.0f);
-    m_quadVertices[1].Set(width, high, 0000.0f, 0xff00ff00, 1.0f, 0.0f);
-    m_quadVertices[2].Set(0000.0f, high, -height, 0xffff0000, 0.0f, 1.0f);
-    m_quadVertices[3].Set(width, high, -height, 0xff0000ff, 1.0f, 1.0f);
-
-    Device()()->CreateVertexBuffer(
-        4 * sizeof(Vertex),
-        D3DUSAGE_WRITEONLY,
-        Vertex::FVF_Flags,
-        D3DPOOL_DEFAULT,
-        &m_pVertexBuffer,
-        NULL
-    );
-    void* pVertices = NULL;
-
-    m_pVertexBuffer->Lock(
-        0,
-        sizeof(m_quadVertices),
-        (void**)&pVertices,
-        0);
-    memcpy(pVertices, m_quadVertices, sizeof(m_quadVertices));
-    m_pVertexBuffer->Unlock();
+    CreateMesh(width, height, high);
 
     InitEffect();
 
@@ -156,14 +138,15 @@ void Water::Init(float width, float height, float high)
 
 void Water::InitEffect()
 {
-    D3DXCreateTextureFromFile(m_pD3DDevice     , "./Resource/Effect/Texture/wave.jpg", &m_pWaterBump);
-    D3DXCreateCubeTextureFromFile(m_pD3DDevice , "./Resource/Effect/Texture/cubemap.dds", &m_pReflectionMap);
+    pWaterBump = Resource()()->GetTexture("./Resource/Effect/Texture/wave.jpg");
+    assert(pWaterBump && "Water::InitEffect(), water bump is null.");
 
-    HRESULT hr;
+    HRESULT hr = D3DXCreateCubeTextureFromFileA(pD3DDevice, "./Resource/Effect/Texture/cubemap.dds", &m_pReflectionMap);
+    assert(!FAILED(hr) && "Water::InitEffect(), D3DXCreateCubeTextureFromFileA() failed.");
+
     LPD3DXBUFFER pBufferErrors = nullptr;
-
-    hr = D3DXCreateEffectFromFile(
-        m_pD3DDevice,
+    hr = D3DXCreateEffectFromFileA(
+        pD3DDevice,
         "./Resource/Effect/Shader/water.fx",
         NULL,
         NULL,
@@ -183,9 +166,47 @@ void Water::InitEffect()
     }
 }
 
+void Water::CreateMesh(const float width, const float height, const float high)
+{
+    m_quadVertices[0].Set(0000.0f, high, 0000.0f, 0xffffff00, 0.0f, 0.0f);
+    m_quadVertices[1].Set(width, high, 0000.0f, 0xff00ff00, 1.0f, 0.0f);
+    m_quadVertices[2].Set(0000.0f, high, -height, 0xffff0000, 0.0f, 1.0f);
+    m_quadVertices[3].Set(width, high, -height, 0xff0000ff, 1.0f, 1.0f);
+
+    //01
+    //23
+
+    std::vector<WORD> indices{ 2, 0, 1, 2, 1, 3 };
+    const DWORD numVertices = static_cast<DWORD>(sizeof m_quadVertices / sizeof m_quadVertices[0]);
+    HRESULT hr = D3DXCreateMeshFVF(
+        static_cast<DWORD>(indices.size() / 3),
+        numVertices,
+        D3DXMESH_MANAGED,
+        Vertex::FVF_Flags,
+        Device()(),
+        &m_pQuadMesh);
+
+    assert(!FAILED(hr) && "Water::CreateMesh(), D3DXCreateMeshFVF() failed.");
+
+    Vertex* pV = nullptr;
+    m_pQuadMesh->LockVertexBuffer(0, (LPVOID*)&pV);
+    memcpy(pV, &m_quadVertices[0], numVertices * sizeof Vertex);
+    m_pQuadMesh->UnlockVertexBuffer();
+
+    WORD* pI = nullptr;
+    m_pQuadMesh->LockIndexBuffer(0, (LPVOID*)&pI);
+    memcpy(pI, indices.data(), indices.size() * sizeof WORD);
+    m_pQuadMesh->UnlockIndexBuffer();
+
+    DWORD* pA = NULL;
+    m_pQuadMesh->LockAttributeBuffer(0, &pA);
+    ZeroMemory(pA, indices.size() / 3 * sizeof DWORD);
+    m_pQuadMesh->UnlockAttributeBuffer();
+}
+
 void Water::setTechniqueVariables()
 {
-    m_timer += 0.02f;
+    m_timer += Time()()->GetDeltaTime();
 
     D3DXMATRIX				matWorldViewProj;		// WorldViewProjMatrix
     D3DXMATRIX				matWorld;				// World		Matrix
@@ -206,21 +227,21 @@ void Water::setTechniqueVariables()
     //m_pD3DDevice->GetTransform(D3DTS_WORLD,      &matWorld);
     matWorld = GetTransform()->GetTransformationMatrix();
 
-    m_pD3DDevice->GetTransform(D3DTS_VIEW,       &matView);
-    m_pD3DDevice->GetTransform(D3DTS_PROJECTION, &matProj);
+    pD3DDevice->GetTransform(D3DTS_VIEW,       &matView);
+    pD3DDevice->GetTransform(D3DTS_PROJECTION, &matProj);
 
     //Calculate the matrices
     matWorldViewProj = matWorld * matView * matProj;
 
     //set the textures
-    m_pEffectWater->SetTexture("texture0", m_pWaterBump);
+    m_pEffectWater->SetTexture("texture0", pWaterBump);
     m_pEffectWater->SetTexture("texture1", m_pReflectionMap);
 
     //set the matrices
     m_pEffectWater->SetMatrix("WorldViewProj", &matWorldViewProj);
 
     //set eye position
-    D3DXVECTOR4 eye(Camera()()->GetCurrentCamera()->GetPosition(), 1.0f);
+    D3DXVECTOR4 eye(CurrentCamera()()->GetPosition(), 1.0f);
     m_pEffectWater->SetVector("eyePosition", &eye);
 
     //set time
@@ -244,4 +265,6 @@ void Water::setTechniqueVariables()
     m_pEffectWater->SetFloat("fresnelPower"     , m_optionWater.fresnelPower);
     m_pEffectWater->SetFloat("fresnelBias"      , m_optionWater.fresnelBias);
     m_pEffectWater->SetFloat("hdrMultiplier"    , m_optionWater.hdrMultiplier);
+    
+    m_pEffectWater->CommitChanges();
 }

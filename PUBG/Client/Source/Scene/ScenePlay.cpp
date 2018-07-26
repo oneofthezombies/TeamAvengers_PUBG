@@ -270,9 +270,12 @@ void ScenePlay::Render()
     for (auto i : firstGroup)
         if (i) i->Render();
 
+    for (auto i : secondGroup)
+        if (i) i->Render();
+
     std::map<float, IObject*> sortedByDistance;
     const D3DXVECTOR3 cameraPos = CurrentCamera()()->GetPosition();
-    for (auto o : secondGroup)
+    for (auto o : thirdGroup)
     {
         const D3DXVECTOR3 v = o->GetTransform()->GetPosition() - cameraPos;
         const float lenSq = D3DXVec3LengthSq(&v);
@@ -340,7 +343,7 @@ void ScenePlay::AddObject(IObject* p)
             case TAG_RES_STATIC::DeadGrass:
             case TAG_RES_STATIC::Dogwood:
                 {
-                    secondGroup.emplace(p);
+                    thirdGroup.emplace(p);
                 }
                 break;
             default:
@@ -349,6 +352,11 @@ void ScenePlay::AddObject(IObject* p)
                 }
                 break;
             }
+        }
+        break;
+    case TAG_OBJECT::Water:
+        {
+            secondGroup.emplace(p);
         }
         break;
     default:
