@@ -25,6 +25,7 @@ protected:
 
 	
 	vector<D3DXVECTOR3>	m_vecSurfaceVertex;
+    vector<D3DXVECTOR3> m_vecAddSurfaceVertex;
 
 
     D3DXVECTOR3         m_boundary[8];
@@ -54,6 +55,8 @@ public:
 
         return false;
     }
+    void SetMoreHigherFloor();
+    void AddHeightVertex(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, D3DXVECTOR3 pos3, D3DXVECTOR3 pos4 );
 
     // Inherited via IMap
     virtual void OnUpdate() override;

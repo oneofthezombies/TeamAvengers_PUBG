@@ -40,6 +40,10 @@ HeightMap::HeightMap()
 
     SetDimension(256);
     Load(_T("./Resource/Heightmap/testing/HeightMap_128.raw"), &m_matWorld);
+    SetMoreHigherFloor();
+
+
+
 
     Resource()()->GetEffect(
         "./Resource/Heightmap/",
@@ -262,6 +266,38 @@ void HeightMap::SetSurface()
     }
 }
 
+void HeightMap::SetMoreHigherFloor()
+{
+    // Town Houses 
+    //House1 stairs
+    AddHeightVertex(D3DXVECTOR3(7208.211f, 4551.991f, 4935.474f), D3DXVECTOR3(7204.964f, 4649.274f, 4839.107f),
+        D3DXVECTOR3(7059.049f, 4649.274f, 4839.107f), D3DXVECTOR3(7062.781f, 4551.991f, 4935.474f));
+    AddHeightVertex(D3DXVECTOR3(7204.964f, 4649.274f, 4839.107f), D3DXVECTOR3(7217.125f, 4649.274f, 4699.952f),
+        D3DXVECTOR3(7059.049f, 4649.274f, 4698.297f), D3DXVECTOR3(7059.049f, 4649.274f, 4839.107f));
+
+
+
+    //Church stairs 
+    AddHeightVertex(D3DXVECTOR3(12209.882f, 6043.665f, 11399.259f),D3DXVECTOR3(12209.882f, 6043.665f, 11399.259f), D3DXVECTOR3(12568.783f, 6043.665f, 11399.259f), D3DXVECTOR3(12568.783f, 6043.665f, 11399.259f));
+
+    
+
+    //testing
+    //AddHeightVertex(D3DXVECTOR3(5000.0f, 4650.000, 5000.0f), D3DXVECTOR3(5000.0f, 4650.000, 6000.0f), D3DXVECTOR3(6000.0f, 4650.000, 6000.0f), D3DXVECTOR3(6000.0f, 4650.000, 5000.0f));
+
+}
+
+void HeightMap::AddHeightVertex(D3DXVECTOR3 pos1, D3DXVECTOR3 pos2, D3DXVECTOR3 pos3, D3DXVECTOR3 pos4)
+{
+    m_vecAddSurfaceVertex.push_back(pos1);
+    m_vecAddSurfaceVertex.push_back(pos2);
+    m_vecAddSurfaceVertex.push_back(pos3);
+
+    m_vecAddSurfaceVertex.push_back(pos1);
+    m_vecAddSurfaceVertex.push_back(pos3);
+    m_vecAddSurfaceVertex.push_back(pos4);
+}
+
 void HeightMap::OnUpdate()
 {
 }
@@ -324,6 +360,7 @@ void HeightMap::drawIndices(const vector<WORD>& indices, const D3DXCOLOR & color
 
 bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
 {
+
 	if (pos.x < 0 || pos.z < 0 ||
 		pos.x > m_size.x || pos.z > m_size.z)
 	{
@@ -331,6 +368,10 @@ bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
 		return false;
 	}
 	
+    float height1 = 0.0f;
+    float height2 = 0.0f;
+
+    //1. height map 자리를 구해서 height를 주는 부분 
 	// 1--3
 	// |\ |
 	// | \|
@@ -349,7 +390,7 @@ bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
 	{
 		float zY = m_vecVertex[_1].y - m_vecVertex[_0].y;
 		float xY = m_vecVertex[_2].y - m_vecVertex[_0].y;
-        *OutHeight = m_vecVertex[_0].y + zY * fDeltaZ + xY * fDeltaX;
+        height1 = m_vecVertex[_0].y + zY * fDeltaZ + xY * fDeltaX;
 	}
 	else
 	{
@@ -358,8 +399,31 @@ bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
 
 		float xY = m_vecVertex[_1].y - m_vecVertex[_3].y;
 		float zY = m_vecVertex[_2].y - m_vecVertex[_3].y;
-        *OutHeight = m_vecVertex[_3].y + xY * fDeltaX + zY * fDeltaZ;
+        height1 = m_vecVertex[_3].y + xY * fDeltaX + zY * fDeltaZ;
 	}
+
+
+    //2. 추가된 map의 자리와 판결해서 height를 주는 부분
+    D3DXVECTOR3 rayPos(pos.x, pos.y + 10.0f, pos.z);
+    D3DXVECTOR3 rayDir(0, -1, 0);
+    float distance;
+
+    for (size_t i = 0; i < m_vecAddSurfaceVertex.size(); i += 3)
+    {
+        if (D3DXIntersectTri(&m_vecAddSurfaceVertex[i], &m_vecAddSurfaceVertex[i + 1], &m_vecAddSurfaceVertex[i + 2],
+            &rayPos, &rayDir, NULL, NULL, &distance))
+        {
+            height2 = rayPos.y - distance;
+            break;
+        }
+    }
+
+    if (height2 > 0.0f)
+        *OutHeight = height2;
+    else
+        *OutHeight = height1;
+
+
 	return true;
 }
 
