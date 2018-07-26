@@ -69,7 +69,7 @@ VS_OUTPUT VS( VS_INPUT IN )
 
 float4  PS( VS_OUTPUT vout ) : COLOR 
 { 
-    return tex2D(Quad_Diffuse_Sampler, vout.TexCoord);
+    return tex2D(Quad_Diffuse_Sampler, vout.TexCoord).rgba;
 }; 
 
 technique DefaultTechnique 

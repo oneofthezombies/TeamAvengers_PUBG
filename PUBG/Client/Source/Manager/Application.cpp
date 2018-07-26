@@ -44,6 +44,7 @@ void Application::Update()
 {
     DebugMgr     ()()->Clear();
     Time         ()()->Update();
+    DebugMgr     ()()->Update();
     Communication()()->Print();
     Input        ()()->Update();
     Scene        ()()->Update();
@@ -73,6 +74,7 @@ void Application::Render()
     Scene             ()()->Render();
     BulletPool        ()()->Render();
     ParticlePool      ()()->Render();
+    Light             ()()->Render();
     UI                ()()->Render();
     DebugMgr          ()()->Render();
 

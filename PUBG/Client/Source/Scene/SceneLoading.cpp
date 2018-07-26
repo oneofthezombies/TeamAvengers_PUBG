@@ -20,12 +20,6 @@ void SceneLoading::Load()
     setPlayMode(Communication::PlayMode::ALONE);
 
     // load textures
-    auto p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
-    load(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
-
-    p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
-    load(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
-
     loadSync("./Resource/Static/Map/Exterior/HayBale/HayBale_2/", "hey01_D.tga", D3DCOLOR_XRGB(0, 0, 0));
     loadSync("./Resource/Static/Map/Vegetation/Tree/AmericanElem/", "American_Elm_Hero_BRO_Atlas_Tex.tga", D3DCOLOR_XRGB(88, 112, 85));
     loadSync("./Resource/Static/Map/Vegetation/Tree/AlaskaCedar/", "AlaskaCedar_A_Hero_BRO_Atlas_Tex.tga", D3DCOLOR_XRGB(71, 69, 51));
@@ -37,6 +31,12 @@ void SceneLoading::Load()
     loadSync("./Resource/Static/Map/Vegetation/Grass/Grass_2/", "Swamp_grass_D.tga", D3DCOLOR_XRGB(118, 130, 82));
 
     cout << "ended sync\n";
+
+    auto p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
+    load(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
+
+    p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_7_62mm);
+    load(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
 
     load("./Resource/", "dedenne.png");
     load("./Resource/", "RandomLoading01.tga");
@@ -152,6 +152,10 @@ void SceneLoading::Load()
     load("./Resource/UI/Login/", "input_mouseover.png");
     load("./Resource/UI/Login/", "login_btn_idle.png");
     load("./Resource/UI/Login/", "login_btn_mouseover.png");
+
+    // for ui test
+    load("./Resource/", "compass_long.png");
+    load("./Resource/", "compass_long_alpha.png");
 
     //for particles textures
     LoadParticleTexture("T_Blood_01", 8, D3DCOLOR_XRGB(0, 0, 0));     //From PUBG

@@ -102,28 +102,24 @@ void Quad::OnRender()
 
         pEffect->SetTexture("Quad_Diffuse_Tex", pTexture);
     });
-
-    //Shader::Draw(
-    //    Resource()()->GetEffect("./Resource/", "Quad.fx"),
-    //    nullptr, 
-    //    [this](LPD3DXEFFECT pEffect) 
-    //{
-    //    pEffect->SetMatrix(
-    //        Shader::World, 
-    //        &GetTransform()->GetTransformationMatrix());
-
-    //    pEffect->SetTexture("Quad_Diffuse_Tex", pTexture);
-    //}, 
-    //    [this]() 
-    //{
-    //    Device()()->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 
-    //});
 }
 
 void Quad::SetTexture(const std::string& path, const std::string& filename)
 {
     pTexture = Resource()()->GetTexture(path, filename);
-    assert(pTexture && "Quad::SetTexture(), texture is null.");
+
+    assert(
+        pTexture && 
+        "Quad::SetTexture(const std::string&, const std::string&), texture is null.");
+}
+
+void Quad::SetTexture(LPDIRECT3DTEXTURE9 pTexture)
+{
+    this->pTexture = pTexture;
+
+    assert(
+        this->pTexture && 
+        "Quad::SetTexture(LPDIRECT3DTEXTURE9), texture is null.");
 }
 
 void Quad::SetPosition(const D3DXVECTOR3& p)
@@ -142,4 +138,9 @@ void Quad::SetScale(const D3DXVECTOR3& s)
 {
     GetTransform()->SetScale(s);
     GetTransform()->Update();
+}
+
+LPD3DXMESH Quad::GetMesh() const
+{
+    return m_pMesh;
 }

@@ -5,6 +5,7 @@ DebugManager::DebugManager()
     : Singleton<DebugManager>()
     , m_pFont(nullptr)
     , m_isRender(true)
+    , m_hasDebugSpeed(false)
 {
 	D3DXCreateFontA(Device()(), 12, 6, FW_NORMAL, 1, false, HANGEUL_CHARSET,
         OUT_OUTLINE_PRECIS, DEFAULT_QUALITY, FF_DONTCARE, "±¼¸²Ã¼", &m_pFont);
@@ -17,6 +18,19 @@ DebugManager::~DebugManager()
 void DebugManager::Destroy()
 {
     SAFE_RELEASE(m_pFont);
+}
+
+void DebugManager::Update()
+{
+    if (GetAsyncKeyState('0') & 0x0001)
+        m_hasDebugSpeed = !m_hasDebugSpeed;
+    
+    Debug << "Key 0 : ";
+
+    if (m_hasDebugSpeed)
+        Debug << "Debug Moving Speed On\n";
+    else
+        Debug << "Debug Moving Speed Off\n";
 }
 
 void DebugManager::Render()
@@ -82,5 +96,10 @@ void DebugManager::ShowMessageBox()
 stringstream& DebugManager::GetStringStream()
 {
 	return m_stringstream;
+}
+
+bool DebugManager::HasDebugSpeed() const
+{
+    return m_hasDebugSpeed;
 }
 

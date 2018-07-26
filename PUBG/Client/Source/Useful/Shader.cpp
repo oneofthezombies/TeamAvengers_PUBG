@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Shader.h"
 
+const float Shader::SHADOW_CULLING_DISTANCE = 5000.0f;
+
 const char* Shader::World           = "World";
 const char* Shader::View            = "View";
 const char* Shader::Projection      = "Projection";

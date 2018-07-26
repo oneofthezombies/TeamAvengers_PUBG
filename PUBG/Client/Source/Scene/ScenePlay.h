@@ -4,6 +4,7 @@
 
 class DeathDropBox;
 class UIImage;
+class UITest;
 
 class ScenePlay : public IScene
 {
@@ -16,6 +17,12 @@ private:
 
     std::set<IObject*> firstGroup;
     std::set<IObject*> secondGroup;
+
+    //// for surface
+    //std::vector<D3DXVECTOR3> m_verticesChurch;
+
+    // for ui test
+    UITest* m_pUITest;
 
 private:
     void setAloneMode();

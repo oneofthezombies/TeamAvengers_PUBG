@@ -23,12 +23,13 @@ texture ShadowMap_Tex;
 
 sampler2D ShadowSampler = sampler_state
 {
-   Texture = <ShadowMap_Tex>; 
-   MinFilter = Linear; 
-   MagFilter = Linear; 
-   MipFilter = Linear; 
-   AddressU  = Wrap;     
-   AddressV  = Wrap;    
+    Texture = <ShadowMap_Tex>; 
+    MinFilter = Linear; 
+    MagFilter = Linear; 
+    MipFilter = Linear; 
+	AddressU = Border;
+	AddressV = Border;
+	BorderColor = float4(1.0f, 1.0f, 1.0f, 1.0f); 
 };
 
 texture Heightmap_Diffuse_Tex; 
@@ -130,7 +131,7 @@ float4  PS(VS_OUTPUT vout) : COLOR
 
         float shadowDepth = tex2D(ShadowSampler, uv).r;
 
-        if (currentDepth > shadowDepth + 0.0000125f)
+        if (currentDepth > shadowDepth + 0.000125f)
         {
             rgb *= 0.7f;
         }
