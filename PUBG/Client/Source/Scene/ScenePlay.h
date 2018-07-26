@@ -1,6 +1,7 @@
 #pragma once
 #include "IScene.h"
 #include "Character.h"
+#include "Water.h"
 
 class DeathDropBox;
 class UIImage;
@@ -23,6 +24,9 @@ private:
 
     // for ui test
     UITest* m_pUITest;
+
+    //for water
+    Water*  pWater;
 
 private:
     void setAloneMode();
