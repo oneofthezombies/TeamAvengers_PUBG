@@ -262,6 +262,7 @@ void CameraFree::Update()
     D3DXVECTOR3 eye = Vector3::ZERO;
     D3DXVECTOR3 look = eye + Vector3::FORWARD;
     const float factor = 2.f;
+    //const float factor = 20.f;
 
     InputManager* pInput= Input()();
 

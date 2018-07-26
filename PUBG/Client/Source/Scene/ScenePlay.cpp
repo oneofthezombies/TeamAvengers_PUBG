@@ -33,7 +33,7 @@ void ScenePlay::setAloneMode()
     
     //for water
     pWater = new Water;
-    pWater->Init(25600.0f, 25600.0f, 20.0f);
+    pWater->Init(82712.3f * 2.0f, 82712.3f * 2.0f, 20.0f);
     AddObject(pWater);
     
     //For inventory Test

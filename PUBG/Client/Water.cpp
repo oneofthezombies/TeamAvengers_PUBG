@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Water.h"
+#include "ComponentTransform.h"
 
 OptionWater::OptionWater()
 {
@@ -148,6 +149,9 @@ void Water::Init(float width, float height, float high)
     m_pVertexBuffer->Unlock();
 
     InitEffect();
+
+    GetTransform()->SetPosition(D3DXVECTOR3(-82712.3f, 4376, 82712.3f));
+    GetTransform()->Update();
 }
 
 void Water::InitEffect()
@@ -188,7 +192,20 @@ void Water::setTechniqueVariables()
     D3DXMATRIX				matView;				// View			Matrix
     D3DXMATRIX				matProj;				// Projection	Matrix
 
-    m_pD3DDevice->GetTransform(D3DTS_WORLD,      &matWorld);
+    //static D3DXVECTOR3 pos(-82712.3f, 4376, 82712.3f);
+    //const float speed = 2.0f;
+    //if (Input()()->IsStayKeyDown(VK_LEFT))  { pos.x -= speed; };
+    //if (Input()()->IsStayKeyDown(VK_RIGHT)) { pos.x += speed; };
+    //if (Input()()->IsStayKeyDown(VK_UP))    { pos.y += speed; };
+    //if (Input()()->IsStayKeyDown(VK_DOWN))  { pos.y -= speed; };
+    //if (Input()()->IsStayKeyDown('6'))      { pos.z -= speed; };
+    //if (Input()()->IsStayKeyDown('7'))      { pos.z += speed; };
+    //D3DXMatrixTranslation(&matWorld, pos.x, pos.y, pos.z);
+    //Debug << "Water pos : " << pos << endl;
+
+    //m_pD3DDevice->GetTransform(D3DTS_WORLD,      &matWorld);
+    matWorld = GetTransform()->GetTransformationMatrix();
+
     m_pD3DDevice->GetTransform(D3DTS_VIEW,       &matView);
     m_pD3DDevice->GetTransform(D3DTS_PROJECTION, &matProj);
 
