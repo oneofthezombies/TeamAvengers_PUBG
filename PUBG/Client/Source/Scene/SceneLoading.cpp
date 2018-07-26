@@ -270,6 +270,10 @@ void SceneLoading::Load()
      load(TAG_RES_STATIC::AmericanElem);
      load(TAG_RES_STATIC::LondonPlane);
 
+     //Door And Wall
+     load(TAG_RES_STATIC::Wall_1);
+     load(TAG_RES_STATIC::Wall_End_Long);
+     load(TAG_RES_STATIC::Door_OutDoor);
 //Map buildings end
 
 
