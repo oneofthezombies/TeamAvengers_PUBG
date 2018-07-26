@@ -14,7 +14,7 @@
 
 void ScenePlay::setAloneMode()
 {
-    // for surface
+    //// for surface
     //EffectMesh* pChurchMesh = Resource()()->GetEffectMesh(TAG_RES_STATIC::ContainerBox_A);
     //MeshHelper::GetSurfaces(
     //    pChurchMesh->m_pMesh, 
@@ -22,16 +22,15 @@ void ScenePlay::setAloneMode()
     //    D3DX_PI / 6, 
     //    &m_verticesChurch);
 
-    // for ui test
-    m_pUITest = new UITest;
-    UI()()->RegisterUIObject(m_pUITest);
-    
-    // follow light
+    //// for ui test
+    //m_pUITest = new UITest;
+    //UI()()->RegisterUIObject(m_pUITest);
+
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
     //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1000.0f, 2300.0f, -1000.0f));
-
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1000.0f, 4000.0f, -1000.0f));
+    
     //For inventory Test
     Item* item = nullptr;
     D3DXVECTOR3 p(10, 0, 10);
@@ -116,15 +115,16 @@ void ScenePlay::setAloneMode()
 
 void ScenePlay::setWithOthersMode()
 {
+    Character* pPlayer = GetPlayer();
+    Light()()->SetTarget(pPlayer->GetTransform());
+    //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1000.0f, 2300.0f, -1000.0f));
+
     //For inventory Test
     Item* item = nullptr;
     D3DXVECTOR3 p(10, 0, 10);
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
-
-    Character* pPlayer = GetPlayer();
-    Light()()->SetTarget(pPlayer->GetTransform());
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
 
     p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
     string name = "Head_Lv1 " + std::to_string(0);

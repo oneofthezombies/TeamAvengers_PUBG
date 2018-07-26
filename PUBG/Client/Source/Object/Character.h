@@ -71,6 +71,8 @@ public:
 
     struct RootTransform
     {
+        static const float DEBUG_MOVE_SPEED;
+
         const float MOVE_SPEED;
 
         RootTransform(const float moveSpeed);

@@ -298,7 +298,7 @@ void Character::updateMine()
     //m_health 가 0이 되면 죽는 애니메이션, server communication;
     checkDead();
 
-    const float    dt = Time()()->GetDeltaTime();
+    const float dt = Time()()->GetDeltaTime();
     Transform* tm = GetTransform();
 
     //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용

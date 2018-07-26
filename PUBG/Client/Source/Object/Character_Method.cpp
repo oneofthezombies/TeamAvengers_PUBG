@@ -19,6 +19,7 @@ const float MovingFactor::UNARMED_WALK = 120.0f;
 const float MovingFactor::RIFLE_RUN = 120.0f;
 const float MovingFactor::RIFLE_SPRINT = 200.0f;
 const float MovingFactor::RIFLE_WALK = 100.0f;
+const float Character::RootTransform::DEBUG_MOVE_SPEED = 5.0f;
 
 Character::WaistRotation::WaistRotation(const float limit/*, const float factor*/)
     : LIMIT_OF_ANGLE(limit)
@@ -1229,7 +1230,8 @@ void Character::movementControl(OUT State* OutState)
     }
     
     float dt = Time()()->GetDeltaTime();
-    float dist = movingFactor * m_rootTransform.MOVE_SPEED * dt;
+    float debugSpeed = DebugMgr()()->HasDebugSpeed() ? m_rootTransform.DEBUG_MOVE_SPEED : 1.0f;
+    float dist = movingFactor * m_rootTransform.MOVE_SPEED * dt * debugSpeed;
 
     //여기
     //점프 직후 이동 금지

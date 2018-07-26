@@ -44,6 +44,7 @@ void Application::Update()
 {
     DebugMgr     ()()->Clear();
     Time         ()()->Update();
+    DebugMgr     ()()->Update();
     Communication()()->Print();
     Input        ()()->Update();
     Scene        ()()->Update();

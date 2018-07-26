@@ -11,6 +11,8 @@ SkySphere::SkySphere()
 
     const float scale = 20.0f;
     GetTransform()->SetScale(Vector3::ONE * 20.0f);
+    const float mapHalfWidth = 12800.0f;
+    GetTransform()->SetPosition(D3DXVECTOR3(mapHalfWidth, 0.0f, mapHalfWidth));
     GetTransform()->Update();
 }
 
@@ -20,6 +22,18 @@ SkySphere::~SkySphere()
 
 void SkySphere::OnUpdate()
 {
+    //D3DXVECTOR3 pos = GetTransform()->GetPosition();
+
+    //const float factor = 100.0f;
+
+    //if (Input()()->IsStayKeyDown(VK_UP))    { pos.y += factor; };
+    //if (Input()()->IsStayKeyDown(VK_DOWN))  { pos.y -= factor; };
+
+    //Debug << "skysphere pos : " << pos << endl;
+
+    //GetTransform()->SetPosition(pos);
+    //GetTransform()->Update();
+
     //Transform* pTr = GetTransform();
     //D3DXVECTOR3 scale = pTr->GetScale();
 
