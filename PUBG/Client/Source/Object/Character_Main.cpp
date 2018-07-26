@@ -463,7 +463,7 @@ void Character::updateMine()
         m_inGameUI.pInfoText->SetText("발사 모드 변경: " + fireModeStr, m_inGameUI.pInfoTextShadow);
     }
 
-    Sound()()->Listen(pos, getForward());
+    Sound()()->Listen(pos, GetForward());
 
     //if (Input()()->IsOnceKeyDown(VK_UP))
     //{

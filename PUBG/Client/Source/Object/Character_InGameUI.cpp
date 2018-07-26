@@ -3,10 +3,12 @@
 #include "Item.h"
 #include "ItemInfo.h"
 #include "ScenePlay.h"
+#include "ComponentTransform.h"
 
 //for UI
 #include "UIImage.h"
 #include "UIText.h"
+#include "UICompass.h"
 
 const D3DCOLOR Character::InGameUI::RED         = D3DCOLOR_XRGB(216, 0, 0);
 const D3DCOLOR Character::InGameUI::WHITE       = D3DCOLOR_XRGB(255, 255, 255);
@@ -56,6 +58,7 @@ Character::InGameUI::InGameUI()
     , pCompass(nullptr)
     , pCompassArrowBg(nullptr)
     , pCompassArrow(nullptr)
+    , pUICompass(nullptr)
 
     //, pBagImg(nullptr)
     //, pHelmetImg(nullptr)
@@ -205,13 +208,14 @@ void Character::InGameUI::Init(Character* pPlayer)
         pBackground
     );
 
-    pCompass = new UIImage(
-        "./Resource/UI/InGame/",
-        "compass.png",
-        D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
-        nullptr,
-        pCompassBg
-    );
+    // removed 
+    //pCompass = new UIImage(
+    //    "./Resource/UI/InGame/",
+    //    "compass.png",
+    //    D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
+    //    nullptr,
+    //    pCompassBg
+    //);
 
     pCompassArrowBg = new UIImage(
         "./Resource/UI/InGame/",
@@ -228,6 +232,8 @@ void Character::InGameUI::Init(Character* pPlayer)
         nullptr,
         pCompassArrowBg
     );
+
+    pUICompass = new UICompass(pCompassBg);
 
     //for test
     //compassBg->SetIsRender(false);
@@ -562,6 +568,9 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //무기착용 UI
     updateWeaponUI(inven);
+
+    // 컴퍼스 UI
+    updateCompassUI();
 
     //aim
     if (inven.m_pHand && !inven.isOpened)
@@ -1050,4 +1059,9 @@ void Character::InGameUI::updateWeaponUI(const TotalInventory& inven)
             }
         }
     }
+}
+
+void Character::InGameUI::updateCompassUI()
+{
+    pUICompass->SetRotationY(pPlayer->GetForward());
 }
