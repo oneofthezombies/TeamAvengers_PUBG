@@ -10,6 +10,7 @@ class CharacterPart;
 class Item;
 class Area;
 class UiButtonListener;
+class UICompass;
 
 struct FramePtr
 {
@@ -215,6 +216,7 @@ public:
         UIImage* pCompass;
         UIImage* pCompassArrowBg;
         UIImage* pCompassArrow;
+        UICompass* pUICompass;
 
         //equip
         //UIImage* pBagImg;
@@ -327,6 +329,7 @@ public:
         void updateEquipUI(const TotalInventory& inven);
         void updateWeaponUI(const TotalInventory& inven);
         void updateBloodUI();
+        void updateCompassUI();
     };
 
     struct GameOverUI : public IUIButtonOnMouseListener
@@ -599,17 +602,8 @@ private:
 
     void setInfo();
 
-    D3DXVECTOR3 getUp();
     //D3DXVECTOR3 getDown();
-    D3DXVECTOR3 getForward();
-    D3DXVECTOR3 getBackward();
-    D3DXVECTOR3 getLeft();
-    D3DXVECTOR3 getRight();
-    
-    D3DXVECTOR3 getForwardLeft();
-    D3DXVECTOR3 getForwardRight();
-    D3DXVECTOR3 getBackwardLeft();
-    D3DXVECTOR3 getBackwardRight();
+
     
     //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
@@ -809,6 +803,17 @@ public:
     void SetReadyAnimation();
     void SetNotReadyAnimation();
     void InitScenePlay();
+
+    D3DXVECTOR3 GetUp();
+    D3DXVECTOR3 GetForward();
+    D3DXVECTOR3 GetBackward();
+    D3DXVECTOR3 GetLeft();
+    D3DXVECTOR3 GetRight();
+
+    D3DXVECTOR3 GetForwardLeft();
+    D3DXVECTOR3 GetForwardRight();
+    D3DXVECTOR3 GetBackwardLeft();
+    D3DXVECTOR3 GetBackwardRight();
 
 /**************************** end public method ******************************/
 

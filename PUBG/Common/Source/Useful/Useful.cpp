@@ -94,6 +94,27 @@ D3DXVECTOR3 Vector3::Rotate(const D3DXVECTOR3& v, const D3DXQUATERNION& q)
     return D3DXVECTOR3(result.x, result.y, result.z);
 }
 
+float Vector3::DirectionToRotationY(const D3DXVECTOR3& v)
+{
+    const D3DXVECTOR3 vectorPlaneZX(v.x, 0.0f, v.z);
+
+    D3DXVECTOR3 directionPlaneZX;
+    D3DXVec3Normalize(&directionPlaneZX, &vectorPlaneZX);
+
+    const float cosineTheta 
+        = D3DXVec3Dot(&directionPlaneZX, &Vector3::FORWARD);
+
+    const float cosineThetaPlaneZX 
+        = directionPlaneZX.x < 0.0f ? -cosineTheta : cosineTheta;
+
+    const float theta = std::acos(cosineThetaPlaneZX);
+
+    const float thetaPlaneZX 
+        = directionPlaneZX.x < 0.0f ? theta + D3DX_PI : theta;
+
+    return thetaPlaneZX;
+}
+
 void MeshHelper::GetSurfaces(
     LPD3DXMESH pMesh,
     const D3DXVECTOR3 axis,

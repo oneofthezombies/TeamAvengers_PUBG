@@ -72,6 +72,7 @@
     <ClCompile Include="Source\Useful\UsefulClientOnly.cpp" />
     <ClCompile Include="Source\Object\Quad.cpp" />
     <ClCompile Include="MagneticField.cpp" />
+    <ClCompile Include="Source\UI\UICompass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod64.dll" />
@@ -140,5 +141,6 @@
     <ClInclude Include="Source\Useful\UsefulClientOnly.h" />
     <ClInclude Include="Source\Object\Quad.h" />
     <ClInclude Include="MagneticField.h" />
+    <ClInclude Include="Source\UI\UICompass.h" />
   </ItemGroup>
 </Project>
