@@ -1,0 +1,154 @@
+
+	//
+	// Pixel Shader (for DX9 hardware)
+	// Author: Kurt Pelzer
+	//
+	// Function:  Water effect
+	//
+	// v0			= eye vector in eye-space
+	// t0			= tex coords for first bump+normal map layer 
+	// t1			= tex coords for reflection texture
+	// t2			= tex coords for refraction texture
+	// t3			= tex coords for surface detail texture
+	// t4			= tex coords for second bump+normal map layer 
+	// t5			= tex coords for third bump+normal map layer 
+	// t6			= tex coords for forth bump+normal map layer 
+	//
+	// s0			= first bump+normal map
+	// s1			= refraction texture
+	// s2			= reflection texture
+	// s3			= surface detail texture
+	// s4			= second bump+normal map
+	//
+	// c0			= scale first bump+normal map layer (z component must be 2.f)
+	// c1			= scale second bump+normal map layer (z component must be 2.f)
+	// c2			= scale third bump+normal map layer (z component must be 2.f)
+	// c3			= scale forth bump+normal map layer (z component must be 2.f)
+	// c4			= weigthed shift for color to vector trafo (-0.5f*(c0+..+c3))
+	// c5			= shift for color to vector trafo
+	// c10			= r(0) (air&water), 1-r(0) for fresnel, detail bump scaling, const 1
+	// c11			= shift bumped reflection map
+	// c12			= scale bumps in reflection map
+	// c13			= scale bumps in refraction map
+	// c14 + c15		= change y and z components of bump normal
+	//
+
+	//
+	// version instruction
+	//
+	ps_2_0
+
+	//
+	// define the constants
+	//
+	def	c0,		0.65f, 0.65f, 2.0f, 0.0f
+	def	c1,		0.45f, 0.45f, 2.0f, 0.0f
+	def	c2,		0.16f, 0.16f, 2.0f, 0.0f
+	def	c3,		0.14f, 0.14f, 2.0f, 0.0f
+	def	c4,		-0.7f, -0.7f, -4.0f, 0.0f
+	def	c5,		-0.5f, -0.5f, -0.5f, 0.0f
+	def	c10,		0.0204f, 0.9796f, 0.3f, 1.0f
+	def	c11,		0.0f, -0.25f, 0.0f, 0.0f
+	def	c12,		-0.25f, -0.25f, 1.0f, 0.0f
+	def	c13,		0.10f, 0.10f, 1.0f, 0.0f
+	def	c14,		0.0f, 0.0f, 1.0f, 0.0f
+	def	c15,		0.0f, 1.0f, 0.0f, 0.0f
+
+	//
+	// declare the used resources
+	//
+	dcl	t0
+	dcl	t1
+	dcl	t2
+	dcl	t3
+	dcl	t4
+	dcl	t5
+	dcl	t6
+	dcl	v0
+	dcl_2d	s0
+	dcl_2d	s1
+	dcl_2d	s2
+	dcl_2d	s3
+	dcl_2d	s4
+
+	//
+	// load the bump-normal map layers
+	//
+	texld	r0,		t0, s0
+	texld	r4,		t4, s0
+	texld	r5,		t5, s4
+	texld	r6,		t6, s4
+
+	//
+	// scale and add the bump-normal map layers
+	//
+	mul	r6.rgb,		r6, c3
+	mad	r5.rgb,		r5, c2, r6
+	mad	r4.rgb,		r4, c1, r5
+	mad	r5.rgb,		r0, c0, r4
+	add	r5.rgb,		r5, c4
+
+	//
+	// shift the bumped reflection map
+	//
+	add	r7,		r5, c11
+
+	//
+	// scale bumps in reflection and refraction map
+	//
+	mad	r7,		r7, c12, t1
+	mad	r8,		r5, c13, t2
+
+	//
+	// load the bumped refraction and reflection
+	//
+	texldp	r1,		r7, s1
+	texldp	r2,		r8, s2
+
+	//
+	// change y and z components of bump+normal
+	//
+	nrm	r6.rgb,		r5
+	mov	r5.r,		r6.r
+	dp3	r5.g,		r6, c14
+	dp3	r5.b,		r6, c15
+
+	//
+	// load the surface detail (also bumped)
+	//
+	mul	r0.rgb,		r5, c10.b
+	add	r0.rgb,		r0, t3
+	texld	r3,		r0, s3
+
+	//
+	// renormalize eye-vector in v0
+	//
+	add	r7.rgb,		v0, c5
+	nrm	r6.rgb,		r7
+
+	//
+	// dot eye-vector with the normal
+	//
+	dp3_sat	r7.a,		-r6, r5
+
+	//
+	// calculate the fresnel term (air-to-water)
+	//
+	add	r8.a,		c10.a, -r7.a
+	mul	r6.a,		r8.a, r8.a
+	mul	r6.a,		r6.a, r6.a
+	mul	r6.a,		r6.a, r8.a
+	mad	r6.a,		c10.g, r6.a, c10.r
+
+	//
+	// blend refraction and reflection
+	//
+	mul	r6.a,		r6.a, r2.a
+	lrp_sat	r7.rgb,		r6.a, r1, r2
+
+	//
+	// blend in the surface details
+	//
+	mov	r8.a,		r2.a
+	lrp_sat	r8.rgb,		r3.a, r3, r7
+	mov	oC0,		r8

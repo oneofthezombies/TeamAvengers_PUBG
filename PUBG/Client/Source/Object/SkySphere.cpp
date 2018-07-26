@@ -9,6 +9,8 @@ SkySphere::SkySphere()
     pEffectMeshRenderer = AddComponent<EffectMeshRenderer>();
     pEffectMeshRenderer->SetEffectMesh(TAG_RES_STATIC::SkySphere);
 
+    //cout << "SkySphere radius : " << pEffectMeshRenderer->GetBoundingSphere().radius * 20.0f << endl;
+
     const float scale = 20.0f;
     GetTransform()->SetScale(Vector3::ONE * 20.0f);
     const float mapHalfWidth = 12800.0f;

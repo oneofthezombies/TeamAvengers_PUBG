@@ -166,6 +166,9 @@ void SceneLoading::Load()
     load("./Resource/", "compass_long.png");
     load("./Resource/", "compass_long_alpha.png");
 
+    // for water
+    load("./Resource/Effect/Texture/", "wave.jpg");
+
     //for particles textures
     LoadParticleTexture("T_Blood_01", 8, D3DCOLOR_XRGB(0, 0, 0));     //From PUBG
     LoadParticleTexture("T_Blood_02", 32, D3DCOLOR_XRGB(0, 0, 0));

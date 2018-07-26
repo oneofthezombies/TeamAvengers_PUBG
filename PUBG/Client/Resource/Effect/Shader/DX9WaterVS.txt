@@ -1,0 +1,111 @@
+
+	//
+	// Vertex Shader (for DX9 hardware)
+	// Author: Kurt Pelzer
+	//
+	// Function:  Water effect
+	//
+	// v0			= position			(3 floats)
+	// v1			= normal			(3 floats)
+	// v8			= tex coord stage 0		(2 floats - bumpmap)
+	// v9			= tex coord stage 1		(3 floats - reflection)
+	// v10			= tex coord stage 2		(3 floats - refraction)
+	// v11			= tex coord stage 3		(2 floats - surface details)
+	//
+	// c0 - c3		= world/view/proj matrix
+	// c4 - c7		= refraction texture trafo matrix
+	// c8 - c11		= reflection texture trafo matrix
+	// c12			= eye-point in object-space & water height
+	// c13			= time
+	// c14			= first bump map coords translation
+	// c15			= first bump map coords scalar
+	// c16			= second bump map coords translation
+	// c17			= second bump map coords scalar
+	// c18			= third bump map coords translation
+	// c19			= third bump map coords scalar
+	// c20			= forth bump map coords translation
+	// c21			= forth bump map coords scalar
+	//
+
+	//
+	// version instruction
+	//
+	vs_2_0
+
+	//
+	// declare registers
+	//
+	dcl_position		v0
+	dcl_normal		v1
+	dcl_texcoord0		v8
+	dcl_texcoord1		v9
+	dcl_texcoord2		v10
+	dcl_texcoord3		v11
+
+	//
+	// define the constants
+	//
+	def	c14,		0.0f, 0.045f, 0.0f, 0.0f
+	def	c15,		0.15f, 0.15f, 0.0f, 0.0f
+	def	c16,		0.0f, 0.015f, 0.0f, 0.0f
+	def	c17,		0.17f, 0.17f, 0.0f, 0.0f
+	def	c18,		0.0f, 0.090f, 0.0f, 0.0f
+	def	c19,		0.50f, 0.50f, 0.0f, 0.0f
+	def	c20,		0.0f, 0.030f, 0.0f, 0.0f
+	def	c21,		0.55f, 0.55f, 0.0f, 0.0f
+	def	c22,		1, 1, 0.5f, 1
+
+	//
+	// transform position into projection space
+	//
+	mov	r0,		v0
+	add	r0.y,		r0.y, c12.w
+	dp4	oPos.x,		r0, c0
+	dp4	oPos.y,		r0, c1
+	dp4	oPos.z,		r0, c2
+	dp4	oPos.w,		r0, c3
+
+	//
+	// calc projective tex coords
+	//
+	dp4	r9.x,		r0, c4
+	dp4	r9.y,		r0, c5
+	dp4	r9.zw,		r0, c6
+	mov	oT1,		r9
+	dp4	r9.x,		r0, c8
+	dp4	r9.y,		r0, c9
+	dp4	r9.zw,		r0, c10
+	mov	oT2,		r9
+	mov	oT3.xy,		v11
+
+	//
+	// calc the distorted bump map coords
+	//
+	mov	r1,		c13.x
+	mul	r2,		r1, c14
+	frc	r2.xy,		r2
+	mul	r3,		v8, c15
+	add	oT0.xy,		r2, r3
+	mul	r2,		r1, c16
+	frc	r2.xy,		r2
+	mul	r3,		v8, c17
+	add	oT4.xy,		r2, r3
+	mul	r2,		r1, c18
+	frc	r2.xy,		r2
+	mul	r3,		v8, c19	
+	add	oT5.xy,		r2, r3
+	mul	r2,		r1, c20
+	frc	r2.xy,		r2
+	mul	r3,		v8, c21
+	add	oT6.xy,		r2, r3
+
+	//
+	// compute the eye-vector
+	//
+	add	r10,		r0, -c12
+	nrm	r8,		r10
+
+	//
+	// Prepare for per-pixel normalization
+	//
+	mad	oD0.xyz,	r8, c22.z, c22.z

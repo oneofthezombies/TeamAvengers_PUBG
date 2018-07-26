@@ -1,0 +1,55 @@
+
+	//
+	// Pixel Shader (for DX9 hardware)
+	// Author: Kurt Pelzer
+	//
+	// Function:  Modification refraction for water effect
+	//
+	// t0			= object position (in world space)
+	//
+	// c1			= water height (in y component of vector)
+	// c2			= lambdas (scaled with 1/ln(2)) for light absorption, fading scale in alpha
+	// c3			= vector to pick the y component
+	// c4			= Shift vector for clip plane
+	//
+
+	//
+	// version instruction
+	//
+	ps_2_0
+
+	//
+	// define the constants
+	//
+	def	c2,		0.15f, 0.25f, 0.70f, 7.00f
+	def	c3,		0.00f, 1.00f, 0.00f, 0.00f
+	def	c4,		0.00f, 0.25f, 0.00f, 0.00f
+
+	//
+	// declare the used resources
+	//
+	dcl	t0
+
+	//
+	// clip plane (shifted to prevent bump artefacts)
+	//
+	mov	r1,		c3
+	mad	r1,		-t0, r1, c1
+	add	r2,		r1, c4
+	texkill	r2
+	mul_sat	r0.a,		c2.a, r1.g
+	rsq	r0.a,		r0.a
+	rcp_sat	r0.a,		r0.a
+
+	//
+	// calculate the under-water light absorption
+	//
+	mul	r3.rgb,		c2, r1.g
+	exp	r0.r,		-r3.r
+	exp	r0.g,		-r3.g
+	exp	r0.b,		-r3.b
+
+	//
+	// build the output color
+	//
+	mov	oC0,		r0
