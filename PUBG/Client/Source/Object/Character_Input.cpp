@@ -731,6 +731,7 @@ void Character::setInteraction()
                     0.3f,
                     CharacterAnimation::DEFAULT_NEXT_WEIGHT);
             });
+            Sound()()->Play(TAG_SOUND::Fkey_InputItem, Vector3::ZERO, 1.0f, FMOD_2D);
         }
     }
 }

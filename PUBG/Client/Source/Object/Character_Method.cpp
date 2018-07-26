@@ -725,6 +725,7 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
                 tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Fall_Landing_Additive;
             else if (m_attacking == Attacking::Rifle)
                 tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard;
+            Sound()()->Play(TAG_SOUND::FallingGround, Vector3::ZERO, 1.0f, FMOD_2D);
 
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -742,7 +743,6 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
                     false);
             });
             
-
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;
 

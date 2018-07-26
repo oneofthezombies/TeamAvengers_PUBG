@@ -141,7 +141,10 @@ enum class TAG_SOUND
     Female_Hurt,
     ButtonClick,
     UI_InputItem,
-    
+    Fkey_InputItem,
+    Loby_Ready,
+    FallingGround,
+    DoorOpen,
 
 
     Background,
