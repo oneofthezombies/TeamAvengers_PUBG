@@ -18,7 +18,7 @@ OptionWater::OptionWater()
     deepColor.x = 0.0f;
     deepColor.y = 0.3f;
     deepColor.z = 0.5f;
-    deepColor.w = 0.8f;
+    deepColor.w = 1.0f;
 
     shallowColor.x = 0.0f;
     shallowColor.y = 1.0f;
@@ -116,8 +116,8 @@ void Water::OnRender()
 
     m_pEffectWater->End();
 
-    if(m_optionWater.isAlphaLayer)
-        m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+    //if(m_optionWater.isAlphaLayer)
+    //m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
 void Water::Init(float width, float height, float high)
