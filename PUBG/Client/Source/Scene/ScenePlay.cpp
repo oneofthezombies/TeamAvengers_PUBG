@@ -10,20 +10,27 @@
 #include "UITest.h"
 #include "DeathDropBox.h"
 #include "UIImage.h"
+#include "UITest.h"
 
 void ScenePlay::setAloneMode()
 {
-    // follow light
+    //// for surface
+    //EffectMesh* pChurchMesh = Resource()()->GetEffectMesh(TAG_RES_STATIC::ContainerBox_A);
+    //MeshHelper::GetSurfaces(
+    //    pChurchMesh->m_pMesh, 
+    //    Vector3::UP, 
+    //    D3DX_PI / 6, 
+    //    &m_verticesChurch);
+
+    //// for ui test
+    //m_pUITest = new UITest;
+    //UI()()->RegisterUIObject(m_pUITest);
+
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
-
-    //DeathDropBox* pLightTarget = new DeathDropBox;
-    //pLightTarget->GetTransform()->SetPosition(D3DXVECTOR3(12800.0f, 0.0f, 12800.0f));
-    //AddObject(pLightTarget);
-    //Light()()->SetTarget(pLightTarget->GetTransform());
-    //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-12800.0f, 36203.0f, -12800.0f));
-        
+    //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1000.0f, 4000.0f, -1000.0f));
+    
     //For inventory Test
     Item* item = nullptr;
     D3DXVECTOR3 p(10, 0, 10);
@@ -108,15 +115,16 @@ void ScenePlay::setAloneMode()
 
 void ScenePlay::setWithOthersMode()
 {
+    Character* pPlayer = GetPlayer();
+    Light()()->SetTarget(pPlayer->GetTransform());
+    //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
+    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1000.0f, 2300.0f, -1000.0f));
+
     //For inventory Test
     Item* item = nullptr;
     D3DXVECTOR3 p(10, 0, 10);
     D3DXVECTOR3 r(0, 0, 0);
     D3DXVECTOR3 s(1, 1, 1);
-
-    Character* pPlayer = GetPlayer();
-    Light()()->SetTarget(pPlayer->GetTransform());
-    Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
 
     p = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
     string name = "Head_Lv1 " + std::to_string(0);
@@ -248,6 +256,8 @@ ScenePlay::~ScenePlay()
             SAFE_DELETE(item);
         }
     }
+
+    UI()()->Destroy(m_pUITest);
 }
 
 void ScenePlay::Render()
@@ -271,6 +281,38 @@ void ScenePlay::Render()
         IObject* pO = it->second;
         pO->Render();
     }
+
+    //// test for surfaces of church
+    //static D3DXVECTOR3 pos;
+    //if (Input()()->IsStayKeyDown(VK_UP))    { pos.y += 1.0f; };
+    //if (Input()()->IsStayKeyDown(VK_DOWN))  { pos.y -= 1.0f; };
+    //if (Input()()->IsStayKeyDown(VK_LEFT))  { pos.x -= 1.0f; };
+    //if (Input()()->IsStayKeyDown(VK_RIGHT)) { pos.x += 1.0f; };
+    //if (Input()()->IsStayKeyDown('9'))      { pos.z += 1.0f; };
+    //if (Input()()->IsStayKeyDown('0'))      { pos.z -= 1.0f; };
+    //Debug << "church pos : " << pos << endl;
+
+    //D3DXMATRIX t;
+    //D3DXMatrixTranslation(&t, pos.x, pos.y, pos.z);
+
+    //Shader::Draw(
+    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
+    //    nullptr,
+    //    [&t](LPD3DXEFFECT pEffect)
+    //{
+    //    D3DXVECTOR4 black(0.0f, 0.0f, 0.0f, 1.0f);
+    //    pEffect->SetVector("Color", &black);
+
+    //    pEffect->SetMatrix(Shader::World, &t);
+    //},
+    //    [this]()
+    //{
+    //    Device()()->DrawPrimitiveUP(
+    //        D3DPT_TRIANGLELIST,
+    //        static_cast<UINT>(m_verticesChurch.size() / 3),
+    //        m_verticesChurch.data(),
+    //        sizeof m_verticesChurch.front());
+    //});
 }
 
 void ScenePlay::AddObject(IObject* p)

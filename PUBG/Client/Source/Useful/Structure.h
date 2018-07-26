@@ -29,6 +29,17 @@ struct VERTEX_RHWC
     enum { FVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE };
 };
 
+struct VERTEX_PTNTB
+{
+    D3DXVECTOR3 position;
+    D3DXVECTOR2 texCoord;
+    D3DXVECTOR3 normal;
+    D3DXVECTOR3 tangent;
+    D3DXVECTOR3 binormal;
+
+    VERTEX_PTNTB();
+};
+
 struct EffectParam
 {
     std::string  name;

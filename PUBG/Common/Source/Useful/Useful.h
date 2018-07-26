@@ -51,3 +51,12 @@ struct MaterialTemplate
 {
     static D3DMATERIAL9 GetWhite();
 };
+
+struct MeshHelper
+{
+    static void GetSurfaces(
+        LPD3DXMESH pMesh,
+        const D3DXVECTOR3 axis,
+        const float radiansRange,
+        std::vector<D3DXVECTOR3>* OutVertices);
+};

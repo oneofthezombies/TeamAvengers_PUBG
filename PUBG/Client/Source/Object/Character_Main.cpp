@@ -164,7 +164,7 @@ void Character::OnUpdate()
 
     //distance culling
     D3DXVECTOR3 vLength = GetTransform()->GetPosition() - CurrentCamera()()->GetPosition();
-    if (D3DXVec3Length(&vLength) < 2000.0f)
+    if (D3DXVec3Length(&vLength) < Shader::SHADOW_CULLING_DISTANCE)
     {
         Shader()()->AddShadowSource(
             GetTransform()->GetTransformationMatrix(),
@@ -298,7 +298,7 @@ void Character::updateMine()
     //m_health 가 0이 되면 죽는 애니메이션, server communication;
     checkDead();
 
-    const float    dt = Time()()->GetDeltaTime();
+    const float dt = Time()()->GetDeltaTime();
     Transform* tm = GetTransform();
 
     //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용

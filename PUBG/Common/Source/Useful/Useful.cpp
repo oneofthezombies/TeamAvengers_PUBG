@@ -93,3 +93,53 @@ D3DXVECTOR3 Vector3::Rotate(const D3DXVECTOR3& v, const D3DXQUATERNION& q)
     result = q * D3DXQUATERNION(v.x, v.y, v.z, 1.0f) * conjugate;
     return D3DXVECTOR3(result.x, result.y, result.z);
 }
+
+void MeshHelper::GetSurfaces(
+    LPD3DXMESH pMesh,
+    const D3DXVECTOR3 axis,
+    const float radiansRange,
+    std::vector<D3DXVECTOR3>* OutVertices)
+{
+    assert(OutVertices && "MeshHelper::GetVertices(), argument is null.");
+
+    const DWORD numVertices = pMesh->GetNumVertices();
+    const DWORD sizeVertex = pMesh->GetNumBytesPerVertex();
+
+    OutVertices->resize(0);
+
+    D3DXVECTOR3 normalizedAxis = axis;
+    D3DXVec3Normalize(&normalizedAxis, &normalizedAxis);
+
+    BYTE* pVertices = nullptr;
+    pMesh->LockVertexBuffer(D3DLOCK_READONLY, (LPVOID*)&pVertices);
+
+    D3DXVECTOR3 v0, v1, v2, v01, v02, n;
+    std::size_t vi0, vi1, vi2;
+    float cos = 0.0f;
+    const float cosRange = std::cos(radiansRange);
+    for (std::size_t i = 0; i < numVertices; i += 3)
+    {
+        vi0 = sizeVertex * i;
+        vi1 = sizeVertex * (i + 1);
+        vi2 = sizeVertex * (i + 2);
+
+        memcpy_s(&v0, sizeof D3DXVECTOR3, &pVertices[vi0], sizeof D3DXVECTOR3);
+        memcpy_s(&v1, sizeof D3DXVECTOR3, &pVertices[vi1], sizeof D3DXVECTOR3);
+        memcpy_s(&v2, sizeof D3DXVECTOR3, &pVertices[vi2], sizeof D3DXVECTOR3);
+
+        v01 = v1 - v0;
+        v02 = v2 - v0;
+        D3DXVec3Cross(&n, &v01, &v02);
+        D3DXVec3Normalize(&n, &n);
+
+        cos = D3DXVec3Dot(&n, &normalizedAxis);
+        if (cos >= cosRange)
+        {
+            OutVertices->emplace_back(v0);
+            OutVertices->emplace_back(v1);
+            OutVertices->emplace_back(v2);
+        }
+    }
+
+    pMesh->UnlockVertexBuffer();
+}

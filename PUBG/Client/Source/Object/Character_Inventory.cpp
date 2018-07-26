@@ -1487,7 +1487,7 @@ void Character::updateTotalInventory()
         
         //distance culling
         D3DXVECTOR3 vLength = GetTransform()->GetPosition() - CurrentCamera()()->GetPosition();
-        if (D3DXVec3Length(&vLength) < 2000.0f)
+        if (D3DXVec3Length(&vLength) < Shader::SHADOW_CULLING_DISTANCE)
         {
 
             Shader()()->AddShadowSource(
@@ -1575,7 +1575,7 @@ void Character::updateTotalInventory()
 
         //distance culling
         D3DXVECTOR3 vLength = GetTransform()->GetPosition() - CurrentCamera()()->GetPosition();
-        if (D3DXVec3Length(&vLength) < 2000.0f)
+        if (D3DXVec3Length(&vLength) < Shader::SHADOW_CULLING_DISTANCE)
         {
             Shader()()->AddShadowSource(
                 pWeaponPrimaryTr->GetTransformationMatrix(),
@@ -1599,7 +1599,7 @@ void Character::updateTotalInventory()
 
         //distance culling
         D3DXVECTOR3 vLength = GetTransform()->GetPosition() - CurrentCamera()()->GetPosition();
-        if (D3DXVec3Length(&vLength) < 2000.0f)
+        if (D3DXVec3Length(&vLength) < Shader::SHADOW_CULLING_DISTANCE)
         {
             Shader()()->AddShadowSource(
                 pWeaponSecondaryTr->GetTransformationMatrix(),

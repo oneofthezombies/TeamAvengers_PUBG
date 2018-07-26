@@ -17,7 +17,10 @@ public:
     virtual void OnRender() override;
 
     void SetTexture(const std::string& path, const std::string& filename);
+    void SetTexture(LPDIRECT3DTEXTURE9 pTexture);
     void SetPosition(const D3DXVECTOR3& p);
     void SetRotation(const D3DXQUATERNION& r);
     void SetScale(const D3DXVECTOR3& s);
+
+    LPD3DXMESH GetMesh() const;
 };

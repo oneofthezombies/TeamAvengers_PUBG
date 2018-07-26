@@ -525,3 +525,12 @@ void SkinnedMesh::seperate(LPD3DXFRAME pFrame, const string& name)
 //    SAFE_DELETE(pMeshContainer);
 //    return S_OK;
 //}
+
+VERTEX_PTNTB::VERTEX_PTNTB()
+    : position(Vector3::ZERO)
+    , texCoord(D3DXVECTOR2(0.0f, 0.0f))
+    , normal(Vector3::ZERO)
+    , tangent(Vector3::ZERO)
+    , binormal(Vector3::ZERO)
+{
+}
