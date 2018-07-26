@@ -134,6 +134,7 @@ void Character::InGameUI::Init(Character* pPlayer)
     m_hpCoolDown = HP_COOL_TIME;
     m_killCoolDown = KILL_COOL_TIME;
     m_killUpCoolDown = KILL_UP_COOL_TIME;
+    m_bloodCoolDown = BLOOD_COOL_TIME;
 
     ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
     UIObject* layer2 = scenePlay->GetLayer(2);
@@ -1101,19 +1102,34 @@ void Character::InGameUI::updateWeaponUI(const TotalInventory& inven)
 
 void Character::InGameUI::updateBloodUI()
 {
-    //1초 뒤 빨간 hp도 흰색만큼 줄어든다
-    //if (Input()()->IsOnceKeyDown('/'))
-    if(GetAsyncKeyState('Z')& 0x8000)
-    {
-        this->pPlayer->MinusDamage(2);
-        this->pPlayer->m_isDamaged = true;
-    }
+    //디버그용
+    //if(GetAsyncKeyState('Z')& 0x8000)
+    //{
+    //    this->pPlayer->MinusDamage(2);
+    //    this->pPlayer->m_isDamaged = true;
+    //}
     if (pPlayer->IsDamaged())
     {
+        if (m_bloodCoolDown == BLOOD_COOL_TIME)
+        {
+            int randTemp;
+            int countTemp=0;
+            for (auto a : m_vecBlood)
+            {
+                randTemp = (rand() % 3)-1;
+                if (randTemp>0 && countTemp <= 2)
+                {
+                    a->SetIsRender(true);
+                    countTemp++;
+
+                }
+                
+            }
+        }
         m_bloodCoolDown -= Time()()->GetDeltaTime();
         for (auto a : m_vecBlood)
         {
-            a->SetIsRender(true);
+            a->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_bloodCoolDown));
         }
         if (m_bloodCoolDown <= 0.0f)
         {
