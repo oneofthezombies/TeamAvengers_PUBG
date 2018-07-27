@@ -48,8 +48,7 @@ void TerrainFeature::OnUpdate()
         {
             D3DXMATRIX mat = GetTransform()->GetTransformationMatrix();
             EffectMesh* EM = pEffectMeshRenderer->GetEffectMesh();
-            for (int i = 0; i < 0
-                ; i++)
+            for (int i = 0; i < 1; i++)
             {
                 Shader()()->AddShadowSource(mat, EM->m_pMesh, static_cast<DWORD>(i));
             }
@@ -59,7 +58,7 @@ void TerrainFeature::OnUpdate()
         {
             D3DXMATRIX mat = GetTransform()->GetTransformationMatrix();
             EffectMesh* EM = pEffectMeshRenderer->GetEffectMesh();
-            for (int i = 0; i < 0; i++)
+            for (int i = 0; i < 1; i++)
             {
                 Shader()()->AddShadowSource(mat, EM->m_pMesh, static_cast<DWORD>(i));
             }

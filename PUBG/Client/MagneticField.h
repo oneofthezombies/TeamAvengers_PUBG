@@ -4,16 +4,22 @@ class MagneticField :
     public IObject
 {
 private:
-    float m_Radius;
-    float m_ReduceSpeed;
-    float m_DamageMagnitute;
+    float           m_Radius;
+    float           m_ReduceSpeed;
+    float           m_DamageMagnitute;
 
+    LPD3DXMESH      m_MagneticField;
+
+    std::chrono::system_clock::time_point m_start;
+    float m_coolDown;
+    const float m_coolTime;
+    
 private:
+    void setFinalDestination();
+
+public:
     MagneticField();
     ~MagneticField();
-
-    void setFinalDestination();
-public:
 
     void Init();
     // Inherited via IObject

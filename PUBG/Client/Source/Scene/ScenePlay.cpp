@@ -11,6 +11,7 @@
 #include "DeathDropBox.h"
 #include "UIImage.h"
 #include "UITest.h"
+#include "MagneticField.h"
 
 void ScenePlay::setAloneMode()
 {
@@ -30,6 +31,10 @@ void ScenePlay::setAloneMode()
     Light()()->SetTarget(pPlayer->GetTransform());
     //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
     Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1000.0f, 4000.0f, -1000.0f));
+
+    MagneticField* pMF = new MagneticField();
+    pMF->Init();
+    AddObject(pMF);
     
     //For inventory Test
     Item* item = nullptr;
