@@ -143,6 +143,8 @@ enum class TAG_RES_STATIC
     Wall_2,
     Wall_End,
     Wall_End_Long,
+    Wall_3,
+    Wall_4,
 
 // Height Map
 HeightMap,
