@@ -281,6 +281,10 @@ void Character::TotalInventory::SetEquipUI()
     m_pDescriptionBorder->SetIsRender(true);
 
     //디스크립트 이미지 텍스트
+    //이미지
+    m_pDescriptionImage = new UIImage(m_pDescriptionBorder);
+    m_pDescriptionImage->SetSize(D3DXVECTOR2(50.0f, 50.0f));
+    m_pDescriptionImage->SetPosition(D3DXVECTOR3(70.0f, 50.0f, 0.0f));
     //디스크립션
     m_pDescriptionText = new UIText(Resource()()->GetFont(TAG_FONT::Inventory_Ground)
         , D3DXVECTOR2(tDesSize.x-10,tDesSize.y-10), ""

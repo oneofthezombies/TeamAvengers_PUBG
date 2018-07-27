@@ -90,6 +90,7 @@ public:
 
         UIImage* pBorder;
         UIImage* m_pDescriptionBorder;
+        UIImage* m_pDescriptionImage;
         UIText*  m_pDescriptionText;
         UIText*  m_pDescriptionName;
         UIText*  m_pDescriptionNum;

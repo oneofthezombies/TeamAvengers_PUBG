@@ -41,7 +41,7 @@ void Character::onMouse(
                 inven.m_pDescriptionText->SetText(ItemInfo::GetDescription(pItem->GetTagResStatic()));
                 inven.m_pDescriptionName->SetText(ItemInfo::GetName(pItem->GetTagResStatic()));
                 inven.m_pDescriptionNum->SetText("¿ë·® : " + to_string(pItem->GetCount()));
-
+                inven.m_pDescriptionImage->SetTexture(pItem->GetUIImage()->GetTexture());
             }
         }
 
