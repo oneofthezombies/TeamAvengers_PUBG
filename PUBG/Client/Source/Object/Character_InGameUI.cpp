@@ -202,8 +202,15 @@ void Character::InGameUI::Init(Character* pPlayer)
     pAimDownLine->SetIsRender(false);
     //=========================================================
 
-
     //Compass 
+    pCompassArrowBg = new UIImage(
+        "./Resource/UI/InGame/",
+        "compass_arrow_bg.png",
+        D3DXVECTOR3(390.0f, 8.75f, 0.0f),
+        nullptr,
+        pBackground
+    );
+
     pCompassBg = new UIImage(
         "./Resource/UI/InGame/",
         "compass_bg.png",
@@ -212,27 +219,10 @@ void Character::InGameUI::Init(Character* pPlayer)
         pBackground
     );
 
-    // removed 
-    //pCompass = new UIImage(
-    //    "./Resource/UI/InGame/",
-    //    "compass.png",
-    //    D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
-    //    nullptr,
-    //    pCompassBg
-    //);
-
-    pCompassArrowBg = new UIImage(
-        "./Resource/UI/InGame/",
-        "compass_arraw_bg.png",
-        D3DXVECTOR3(420.0f, 8.75f, 0.0f),
-        nullptr,
-        pBackground
-    );
-
     pCompassArrow = new UIImage(
         "./Resource/UI/InGame/",
         "compass_arrow.png",
-        D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
+        D3DXVECTOR3(-149.0f, 0.0f, 0.0f),
         nullptr,
         pCompassArrowBg
     );

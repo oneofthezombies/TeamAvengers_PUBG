@@ -288,6 +288,10 @@ void SceneLoading::Load()
 
      //Door And Wall
      load(TAG_RES_STATIC::Wall_1);
+     load(TAG_RES_STATIC::Wall_2);
+     load(TAG_RES_STATIC::Wall_3);
+     load(TAG_RES_STATIC::Wall_4);
+     load(TAG_RES_STATIC::Wall_End);
      load(TAG_RES_STATIC::Wall_End_Long);
      load(TAG_RES_STATIC::Door_OutDoor);
 //Map buildings end
