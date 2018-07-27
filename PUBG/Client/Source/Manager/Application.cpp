@@ -13,7 +13,10 @@ Application::~Application()
 void Application::Init()
 {
     srand(GetTickCount());
-    DebugMgr ()()->Init(false); //true로 바꾸면 저사양모드
+
+    // true -> terrainFeature is not rendering
+    DebugMgr ()()->Init(false);
+
 	DeviceMgr()()->Init();
     Resource ()()->Init();
     Shader   ()()->Init();
