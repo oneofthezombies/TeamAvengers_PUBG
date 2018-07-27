@@ -51,10 +51,14 @@ void SoundManager::Init()
     AddSound(TAG_SOUND::Medicine_Bandage, "Resource/Sound/medicine/Bandage.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Medicine_Bandage, "Resource/Sound/medicine/Bandage.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::Female_Hurt, "Resource/Sound/Character/hurt_female.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Fkey_InputItem, "Resource/Sound/etc/fKey_put_in.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::DoorOpen, "Resource/Sound/etc/doorOpen_Sound.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::FallingGround, "Resource/Sound/footstep/fallingGround.mp3", FMOD_3D, false);
     
     //UI
     AddSound(TAG_SOUND::ButtonClick, "Resource/Sound/UI/button_click.mp3", FMOD_3D, false);
     AddSound(TAG_SOUND::UI_InputItem, "Resource/Sound/UI/put_in.mp3", FMOD_3D, false);
+    AddSound(TAG_SOUND::Loby_Ready, "Resource/Sound/UI/loby_readyButton.mp3", FMOD_3D, false);
 
     AddSound(TAG_SOUND::Background, "Resource/Sound/Background/battleground_lobby.mp3", FMOD_3D, false);
 }

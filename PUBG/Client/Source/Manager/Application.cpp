@@ -13,6 +13,7 @@ Application::~Application()
 void Application::Init()
 {
     srand(GetTickCount());
+    DebugMgr ()()->Init(true);
 	DeviceMgr()()->Init();
     Resource ()()->Init();
     Shader   ()()->Init();
@@ -63,25 +64,27 @@ void Application::Render()
         1.0f,
         0);
 
-    Device            ()()->BeginScene();
-    Shader            ()()->CreateShadowMap();
+    Device()()->BeginScene();
+
+    if (!DebugMgr()()->IsHoonsComputer())
+        Shader()()->CreateShadowMap();
 
     Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
     Device()()->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
     Device()()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
     Device()()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
-    Scene             ()()->Render();
-    BulletPool        ()()->Render();
-    ParticlePool      ()()->Render();
-    Light             ()()->Render();
-    UI                ()()->Render();
-    DebugMgr          ()()->Render();
+    Scene       ()()->Render();
+    BulletPool  ()()->Render();
+    ParticlePool()()->Render();
+    Light       ()()->Render();
+    UI          ()()->Render();
+    DebugMgr    ()()->Render();
 
     Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 
-    Device            ()()->EndScene();
-    Device            ()()->Present(nullptr, nullptr, nullptr, nullptr);
+    Device()()->EndScene();
+    Device()()->Present(nullptr, nullptr, nullptr, nullptr);
 }
 
 void Application::WndProc(HWND hWnd, UINT message, WPARAM wParam,

@@ -725,6 +725,7 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
                 tagAnim = TAG_ANIM_CHARACTER::Unarmed_Combat_Fall_Landing_Additive;
             else if (m_attacking == Attacking::Rifle)
                 tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Fall_Landing_Hard;
+            Sound()()->Play(TAG_SOUND::FallingGround, Vector3::ZERO, 1.0f, FMOD_2D);
 
             setAnimation(
                 CharacterAnimation::BodyPart::BOTH,
@@ -742,7 +743,6 @@ void Character::applyTarget_Y_Position(OUT D3DXVECTOR3 * pOut)
                     false);
             });
             
-
             m_Jump.isJumping = false;
             m_Jump.currGravity = 0.0f;
 
@@ -1343,35 +1343,35 @@ void Character::movementControl(OUT State* OutState)
     //Direction 8개 -----------------------------------------------------
     if (m_currentStayKey._W&&m_currentStayKey._D)
     {
-        OutState->position += getForwardRight() * dist;
+        OutState->position += GetForwardRight() * dist;
     }
     else if (m_currentStayKey._D&&m_currentStayKey._S)
     {
-        OutState->position += getBackwardRight() * dist;
+        OutState->position += GetBackwardRight() * dist;
     }
     else if (m_currentStayKey._S&&m_currentStayKey._A)
     {
-        OutState->position += getBackwardLeft() * dist;
+        OutState->position += GetBackwardLeft() * dist;
     }
     else if (m_currentStayKey._A&&m_currentStayKey._W)
     {
-        OutState->position += getForwardLeft() * dist;
+        OutState->position += GetForwardLeft() * dist;
     }
     else if (m_currentStayKey._W)
     {
-        OutState->position += getForward() * dist;
+        OutState->position += GetForward() * dist;
     }
     else if (m_currentStayKey._D)
     {
-        OutState->position += getRight() * dist;
+        OutState->position += GetRight() * dist;
     }
     else if (m_currentStayKey._S)
     {
-        OutState->position += getBackward() * dist;
+        OutState->position += GetBackward() * dist;
     }
     else if (m_currentStayKey._A)
     {
-        OutState->position += getLeft() * dist;
+        OutState->position += GetLeft() * dist;
     }
 }
 
@@ -1627,7 +1627,7 @@ void Character::MoveItemHandToSecondary()
     ti.m_pHand = nullptr;
 }
 
-D3DXVECTOR3 Character::getUp()
+D3DXVECTOR3 Character::GetUp()
 {
     auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::UP, rot);
@@ -1636,7 +1636,7 @@ D3DXVECTOR3 Character::getUp()
     return dir;
 }
 
-D3DXVECTOR3 Character::getForward()
+D3DXVECTOR3 Character::GetForward()
 {
     auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::FORWARD, rot);
@@ -1645,7 +1645,7 @@ D3DXVECTOR3 Character::getForward()
     return dir;
 }
 
-D3DXVECTOR3 Character::getBackward()
+D3DXVECTOR3 Character::GetBackward()
 {
     auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::BACKWARD, rot);
@@ -1654,7 +1654,7 @@ D3DXVECTOR3 Character::getBackward()
     return dir;
 }
 
-D3DXVECTOR3 Character::getLeft()
+D3DXVECTOR3 Character::GetLeft()
 {
     auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::LEFT, rot);
@@ -1663,7 +1663,7 @@ D3DXVECTOR3 Character::getLeft()
     return dir;
 }
 
-D3DXVECTOR3 Character::getRight()
+D3DXVECTOR3 Character::GetRight()
 {
     auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::RIGHT, rot);
@@ -1672,7 +1672,7 @@ D3DXVECTOR3 Character::getRight()
     return dir;
 }
 
-D3DXVECTOR3 Character::getForwardLeft()
+D3DXVECTOR3 Character::GetForwardLeft()
 {
     auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::FORWARD_RIGNT, rot);//왜 forward_Right인지..?? 이래야 잘 돌아 가는 이유는?
@@ -1681,7 +1681,7 @@ D3DXVECTOR3 Character::getForwardLeft()
     return dir;
 }
 
-D3DXVECTOR3 Character::getForwardRight()
+D3DXVECTOR3 Character::GetForwardRight()
 {
     auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::FORWARD_LEFT, rot); //왜 forward_left인지..?? 이래야 잘 돌아 가는 이유는?
@@ -1690,7 +1690,7 @@ D3DXVECTOR3 Character::getForwardRight()
     return dir;
 }
 
-D3DXVECTOR3 Character::getBackwardRight()
+D3DXVECTOR3 Character::GetBackwardRight()
 {
     auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::BACKWARD_LEFT, rot);
@@ -1699,7 +1699,7 @@ D3DXVECTOR3 Character::getBackwardRight()
     return dir;
 }
 
-D3DXVECTOR3 Character::getBackwardLeft()
+D3DXVECTOR3 Character::GetBackwardLeft()
 {
     auto rot = GetTransform()->GetRotation();
     auto dir = Vector3::Rotate(Vector3::BACKWARD_RIGHT, rot);

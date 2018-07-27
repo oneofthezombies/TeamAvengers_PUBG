@@ -3,10 +3,12 @@
 #include "Item.h"
 #include "ItemInfo.h"
 #include "ScenePlay.h"
+#include "ComponentTransform.h"
 
 //for UI
 #include "UIImage.h"
 #include "UIText.h"
+#include "UICompass.h"
 
 const D3DCOLOR Character::InGameUI::RED         = D3DCOLOR_XRGB(216, 0, 0);
 const D3DCOLOR Character::InGameUI::WHITE       = D3DCOLOR_XRGB(255, 255, 255);
@@ -56,6 +58,7 @@ Character::InGameUI::InGameUI()
     , pCompass(nullptr)
     , pCompassArrowBg(nullptr)
     , pCompassArrow(nullptr)
+    , pUICompass(nullptr)
 
     //, pBagImg(nullptr)
     //, pHelmetImg(nullptr)
@@ -116,6 +119,9 @@ Character::InGameUI::InGameUI()
     , m_isKill(false)
 
     , m_sumUp(0.0f)
+
+    , BLOOD_COOL_TIME(1.0f)
+    , m_bloodCoolDown(0.0f)
 {
 }
 
@@ -131,6 +137,7 @@ void Character::InGameUI::Init(Character* pPlayer)
     m_hpCoolDown = HP_COOL_TIME;
     m_killCoolDown = KILL_COOL_TIME;
     m_killUpCoolDown = KILL_UP_COOL_TIME;
+    m_bloodCoolDown = BLOOD_COOL_TIME;
 
     ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
     UIObject* layer2 = scenePlay->GetLayer(2);
@@ -205,13 +212,14 @@ void Character::InGameUI::Init(Character* pPlayer)
         pBackground
     );
 
-    pCompass = new UIImage(
-        "./Resource/UI/InGame/",
-        "compass.png",
-        D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
-        nullptr,
-        pCompassBg
-    );
+    // removed 
+    //pCompass = new UIImage(
+    //    "./Resource/UI/InGame/",
+    //    "compass.png",
+    //    D3DXVECTOR3(-178.0f, 0.0f, 0.0f),
+    //    nullptr,
+    //    pCompassBg
+    //);
 
     pCompassArrowBg = new UIImage(
         "./Resource/UI/InGame/",
@@ -228,6 +236,8 @@ void Character::InGameUI::Init(Character* pPlayer)
         nullptr,
         pCompassArrowBg
     );
+
+    pUICompass = new UICompass(pCompassBg);
 
     //for test
     //compassBg->SetIsRender(false);
@@ -528,6 +538,48 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR3(1085.0f, 530.0f, 0.0f),
         nullptr,
         pBackground);
+
+    //ui 피터지는.
+    m_vecBlood.reserve(7);
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "b3.png",
+        D3DXVECTOR3(416.0f, 347.0f, 0.0f), nullptr, pBackground));
+
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "b5.png",
+        D3DXVECTOR3(0.0f, 425.0f, 0.0f), nullptr, pBackground));
+
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "br8.png",
+        D3DXVECTOR3(984.0f, 396.0f, 0.0f), nullptr, pBackground));
+
+    m_vecBlood.push_back((new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "b9.png",
+        D3DXVECTOR3(30.0f, 20.0f, 0.0f), nullptr, pBackground)));
+
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "b13.png",
+        D3DXVECTOR3(662.0f, 338.0f, 0.0f), nullptr, pBackground));
+
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "br14.png",
+        D3DXVECTOR3(919.0f, 81.0f, 0.0f), nullptr, pBackground));
+
+    m_vecBlood.push_back(new UIImage(
+        "./Resource/UI/InGame/Blood/",
+        "b15.png",
+        D3DXVECTOR3(560.0f, 70.0f, 0.0f), nullptr, pBackground));
+
+    for (auto a : m_vecBlood)
+    {
+        a->SetIsRender(false);
+    }
 }
 
 void Character::InGameUI::Update(const TotalInventory& inven)
@@ -545,6 +597,8 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //피 닳기
     updateHpUI();
+    //피 이미지
+    updateBloodUI();
 
     //TODO: 킬로그 (서버랑 연관해서 생각해야함), 동시에 들어왔을 때 변경
     if (pPlayer->GetIsKill())
@@ -562,6 +616,9 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //무기착용 UI
     updateWeaponUI(inven);
+
+    // 컴퍼스 UI
+    updateCompassUI();
 
     //aim
     if (inven.m_pHand && !inven.isOpened)
@@ -825,7 +882,7 @@ void Character::InGameUI::updateHpUI()
         {
             pHpRedImg->SetSize(D3DXVECTOR2(hpWidth, HP_HEIGHT));
             m_hpCoolDown = HP_COOL_TIME;
-            pPlayer->ResetIsDamaged();
+            //pPlayer->ResetIsDamaged();
         }
     }
 }
@@ -1050,4 +1107,52 @@ void Character::InGameUI::updateWeaponUI(const TotalInventory& inven)
             }
         }
     }
+}
+
+void Character::InGameUI::updateBloodUI()
+{
+    //디버그용
+    //if(GetAsyncKeyState('Z')& 0x8000)
+    //{
+    //    this->pPlayer->MinusDamage(2);
+    //    this->pPlayer->m_isDamaged = true;
+    //}
+    if (pPlayer->IsDamaged())
+    {
+        if (m_bloodCoolDown == BLOOD_COOL_TIME)
+        {
+            int randTemp;
+            int countTemp=0;
+            for (auto a : m_vecBlood)
+            {
+                randTemp = (rand() % 3)-1;
+                if (randTemp>0 && countTemp <= 2)
+                {
+                    a->SetIsRender(true);
+                    countTemp++;
+
+                }
+                
+            }
+        }
+        m_bloodCoolDown -= Time()()->GetDeltaTime();
+        for (auto a : m_vecBlood)
+        {
+            a->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, m_bloodCoolDown));
+        }
+        if (m_bloodCoolDown <= 0.0f)
+        {
+            for (auto a : m_vecBlood)
+            {
+                a->SetIsRender(false);
+                m_bloodCoolDown = BLOOD_COOL_TIME;
+                pPlayer->ResetIsDamaged();
+            }
+        }
+    }
+}
+
+void Character::InGameUI::updateCompassUI()
+{
+    pUICompass->SetRotationY(pPlayer->GetForward());
 }

@@ -12,6 +12,7 @@ enum class TAG_OBJECT
     Particle,
     DeathDropBox,
     MagneticField
+    Water,
 };
 
 enum class TAG_COLLISION
@@ -142,7 +143,10 @@ enum class TAG_SOUND
     Female_Hurt,
     ButtonClick,
     UI_InputItem,
-    
+    Fkey_InputItem,
+    Loby_Ready,
+    FallingGround,
+    DoorOpen,
 
 
     Background,

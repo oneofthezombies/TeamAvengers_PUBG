@@ -289,6 +289,14 @@ void HeightMap::SetMoreHigherFloor()
     AddHeightVertex(D3DXVECTOR3(7551.703f, 4948.814f, 4698.931f), D3DXVECTOR3(7551.703f, 4948.814f, 3905.567f),
         D3DXVECTOR3(7034.993f, 4948.814f, 3905.567f), D3DXVECTOR3(7030.984f, 4948.814f, 4698.931f));
 
+    //House2
+    //low stair
+    //AddHeightVertex(D3DXVECTOR3(9064.158f, 4551.790f, 6206.691f), D3DXVECTOR3(, , ),
+    //    D3DXVECTOR3(, , ), D3DXVECTOR3(9064.158f, 4551.790f, 6061.329f));
+
+
+
+
 
 
     //Church stairs 

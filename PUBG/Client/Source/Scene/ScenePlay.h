@@ -1,6 +1,7 @@
 #pragma once
 #include "IScene.h"
 #include "Character.h"
+#include "Water.h"
 
 class DeathDropBox;
 class UIImage;
@@ -17,12 +18,16 @@ private:
 
     std::set<IObject*> firstGroup;
     std::set<IObject*> secondGroup;
+    std::set<IObject*> thirdGroup;
 
     //// for surface
     //std::vector<D3DXVECTOR3> m_verticesChurch;
 
     // for ui test
     UITest* m_pUITest;
+
+    //for water
+    Water*  pWater;
 
 private:
     void setAloneMode();

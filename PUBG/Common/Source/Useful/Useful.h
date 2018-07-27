@@ -30,8 +30,8 @@ struct Vector3
     static const D3DXVECTOR3& BACKWARD_RIGHT;
     static const D3DXVECTOR3& BACKWARD_LEFT;
 
-
     static D3DXVECTOR3 Rotate(const D3DXVECTOR3& v, const D3DXQUATERNION& q);
+    static float DirectionToRotationY(const D3DXVECTOR3& v);
 };
 
 struct Quaternion

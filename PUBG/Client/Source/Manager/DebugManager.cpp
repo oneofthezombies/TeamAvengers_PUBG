@@ -6,13 +6,17 @@ DebugManager::DebugManager()
     , m_pFont(nullptr)
     , m_isRender(true)
     , m_hasDebugSpeed(false)
+    , m_isHoonsComputer(false)
 {
-	D3DXCreateFontA(Device()(), 12, 6, FW_NORMAL, 1, false, HANGEUL_CHARSET,
-        OUT_OUTLINE_PRECIS, DEFAULT_QUALITY, FF_DONTCARE, "±¼¸²Ã¼", &m_pFont);
 }
 
 DebugManager::~DebugManager()
 {
+}
+
+void DebugManager::Init(const bool isHoonsComputer)
+{
+    m_isHoonsComputer = isHoonsComputer;
 }
 
 void DebugManager::Destroy()
@@ -22,6 +26,12 @@ void DebugManager::Destroy()
 
 void DebugManager::Update()
 {
+    if (!m_pFont)
+    {
+        D3DXCreateFontA(Device()(), 12, 6, FW_NORMAL, 1, false, HANGEUL_CHARSET,
+            OUT_OUTLINE_PRECIS, DEFAULT_QUALITY, FF_DONTCARE, "±¼¸²Ã¼", &m_pFont);
+    }
+
     if (GetAsyncKeyState('0') & 0x0001)
         m_hasDebugSpeed = !m_hasDebugSpeed;
     
@@ -73,6 +83,8 @@ void DebugManager::Render()
         const int x = static_cast<int>(i * 630) + 8;
 
         SetRect(&rc, x, 8, x, 8);
+        if (!m_pFont) continue;
+
         m_pFont->DrawTextA(
             nullptr, 
             newLinedStrs[i].c_str(), 
@@ -101,5 +113,10 @@ stringstream& DebugManager::GetStringStream()
 bool DebugManager::HasDebugSpeed() const
 {
     return m_hasDebugSpeed;
+}
+
+bool DebugManager::IsHoonsComputer() const
+{
+    return m_isHoonsComputer;
 }
 
