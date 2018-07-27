@@ -255,6 +255,10 @@ public:
         //blood
         vector<UIImage*> m_vecBlood;
 
+        //F Key
+        UIImage* pInteractionBG;
+        UIImage* pInteractionF;
+
         //Text ====================
         //ammo
         UIText* pAmmoReloadText;
@@ -283,6 +287,9 @@ public:
 
         //Å³·Î±×
         vector<UIText*> vecKillLog;
+
+        //F Key Interaction
+        UIText* pInteractionText;
 
         const float INFO_TEXT_COOL_TIME;
         float m_infoTextCoolDown;
