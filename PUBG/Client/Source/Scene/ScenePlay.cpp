@@ -416,7 +416,7 @@ void ScenePlay::OnInit()
             pis[i].ID = static_cast<int>(i);
         }
 
-        Communication()()->m_myInfo.ID = 0;
+        Communication()()->m_myInfo.ID = 1;
 
         AddCharacters();
         setAloneMode();
