@@ -288,7 +288,9 @@ void ScenePlay::Render()
         sortedByDistance.emplace(lenSq, o);
     }
 
+    //Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
     Render(sortedByDistance);
+    //Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 
     Device()()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
     if (m_pMagneticField) m_pMagneticField->Render();
