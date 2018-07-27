@@ -13,7 +13,7 @@ Application::~Application()
 void Application::Init()
 {
     srand(GetTickCount());
-    DebugMgr ()()->Init(true);
+    DebugMgr ()()->Init(false); //true로 바꾸면 저사양모드
 	DeviceMgr()()->Init();
     Resource ()()->Init();
     Shader   ()()->Init();
