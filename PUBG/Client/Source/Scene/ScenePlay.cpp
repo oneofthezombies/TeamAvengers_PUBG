@@ -251,6 +251,7 @@ ScenePlay::ScenePlay()
     , m_layer(nullptr)
     , m_coolDown(0.0f)
     , m_coolTime(3.0f)
+    , m_pMagneticField(nullptr)
     , pSplash(nullptr)
 {
 }
@@ -287,45 +288,11 @@ void ScenePlay::Render()
         sortedByDistance.emplace(lenSq, o);
     }
 
-    auto begin = sortedByDistance.rbegin();
-    auto end = sortedByDistance.rend();
-    for (auto it = begin; it != end; ++it)
-    {
-        IObject* pO = it->second;
-        pO->Render();
-    }
+    Render(sortedByDistance);
 
-    //// test for surfaces of church
-    //static D3DXVECTOR3 pos;
-    //if (Input()()->IsStayKeyDown(VK_UP))    { pos.y += 1.0f; };
-    //if (Input()()->IsStayKeyDown(VK_DOWN))  { pos.y -= 1.0f; };
-    //if (Input()()->IsStayKeyDown(VK_LEFT))  { pos.x -= 1.0f; };
-    //if (Input()()->IsStayKeyDown(VK_RIGHT)) { pos.x += 1.0f; };
-    //if (Input()()->IsStayKeyDown('9'))      { pos.z += 1.0f; };
-    //if (Input()()->IsStayKeyDown('0'))      { pos.z -= 1.0f; };
-    //Debug << "church pos : " << pos << endl;
-
-    //D3DXMATRIX t;
-    //D3DXMatrixTranslation(&t, pos.x, pos.y, pos.z);
-
-    //Shader::Draw(
-    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
-    //    nullptr,
-    //    [&t](LPD3DXEFFECT pEffect)
-    //{
-    //    D3DXVECTOR4 black(0.0f, 0.0f, 0.0f, 1.0f);
-    //    pEffect->SetVector("Color", &black);
-
-    //    pEffect->SetMatrix(Shader::World, &t);
-    //},
-    //    [this]()
-    //{
-    //    Device()()->DrawPrimitiveUP(
-    //        D3DPT_TRIANGLELIST,
-    //        static_cast<UINT>(m_verticesChurch.size() / 3),
-    //        m_verticesChurch.data(),
-    //        sizeof m_verticesChurch.front());
-    //});
+    Device()()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    if (m_pMagneticField) m_pMagneticField->Render();
+    Device()()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 void ScenePlay::AddObject(IObject* p)
@@ -362,6 +329,12 @@ void ScenePlay::AddObject(IObject* p)
     case TAG_OBJECT::Water:
         {
             secondGroup.emplace(p);
+        }
+        break;
+    case TAG_OBJECT::MagneticField:
+        {
+            SAFE_DELETE(m_pMagneticField);
+            m_pMagneticField = static_cast<MagneticField*>(p);
         }
         break;
     default:
@@ -553,5 +526,36 @@ void ScenePlay::AddCharacters()
     {
         c->InitScenePlay();
         AddObject(c);
+    }
+}
+
+void ScenePlay::SortByDistance(
+    const D3DXVECTOR3& cameraPos,
+    const std::set<IObject*>& objects,
+    std::map<float, IObject*>* OutObjects)
+{
+    assert(OutObjects && "sortByDistance(), argument is null.");
+
+    OutObjects->clear();
+
+    for (auto o : objects)
+    {
+        if (!o) continue;
+
+        const D3DXVECTOR3 v = o->GetTransform()->GetPosition() - cameraPos;
+        const float lenSq = D3DXVec3LengthSq(&v);
+        OutObjects->emplace(lenSq, o);
+    }
+}
+
+void ScenePlay::Render(const std::map<float, IObject*>& sortedObjects)
+{
+    for (
+        auto it = sortedObjects.rbegin();
+        it != sortedObjects.rend();
+        ++it)
+    {
+        IObject* pO = it->second;
+        pO->Render();
     }
 }

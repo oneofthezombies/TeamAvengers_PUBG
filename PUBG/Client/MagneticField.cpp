@@ -6,7 +6,6 @@
 MagneticField::MagneticField()
     :IObject(TAG_OBJECT::MagneticField)
     , m_Radius(100.0f)
-    , m_ReduceSpeed(100.0f)
     , m_DamageMagnitute(10.0f)
     , m_MagneticField(nullptr)
     , m_coolTime(5.0f * 60.0f)
@@ -57,25 +56,17 @@ void MagneticField::Init()
 
 void MagneticField::OnUpdate()
 {
-    std::chrono::duration<float> deltaTime = std::chrono::system_clock::now() - m_start;
-
-    //auto current = std::chrono::system_clock::now();
-    //auto deltaTime = current - m_start;
-    //std::chrono::minutes m(deltaTime.count());
-    //std::chrono::seconds s(deltaTime.count());
-
-
-    std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(deltaTime);
-    std::chrono::minutes min = std::chrono::duration_cast<std::chrono::minutes>(deltaTime);
-    Debug << "sec : " << sec.count() << endl;
-    Debug << "min : " << min.count() << endl;
-
-
-    m_Radius -=/* m_ReduceSpeed **/ Time()()->GetDeltaTime();
     Debug << "final Destination : " << GetTransform()->GetPosition() << endl;
     Debug << "Radius : " << m_Radius << endl;
+    
+
+
 
     const float dt = Time()()->GetDeltaTime();
+    //m_Radius -=dt;
+    if (Input()()->IsStayKeyDown(VK_UP)) { m_Radius += 1.0f; };
+    if (Input()()->IsStayKeyDown(VK_DOWN)) { m_Radius -= 1.0f; };
+    
     m_coolDown -= dt;
     if (m_coolDown <= 0.0f)
     {
@@ -84,6 +75,8 @@ void MagneticField::OnUpdate()
         m_coolDown = m_coolTime;
     }
     
+
+    //text UI
     const int nCoolDown = static_cast<int>(m_coolDown);
     const int minutes = nCoolDown / 60;
     const int seconds = nCoolDown % 60;
@@ -101,19 +94,27 @@ void MagneticField::OnRender()
         nullptr, nullptr,
         &GetTransform()->GetPosition());
 
-    
     Shader::Draw(
         Resource()()->GetEffect("./Resource/", "Color.fx"),
         nullptr,
-        //Resource()()->GetBoundingSphereMesh(),
         m_MagneticField,
         0,
         [&m](LPD3DXEFFECT pEffect)
     {
         pEffect->SetMatrix(Shader::World, &m);
 
-        D3DXCOLOR blue(0.0f, 0.0f, 1.0f, 0.3f);
-        pEffect->SetValue("Color", &blue, sizeof blue);
+        D3DXCOLOR skyBlue(0.0f, 0.0f, 1.0f, 0.5f);
+        pEffect->SetValue("Color", &skyBlue, sizeof skyBlue);
     });
-    
+}
+
+float MagneticField::GetRadius() const
+{
+    return m_Radius;
+}
+
+bool MagneticField::IsInside(const D3DXVECTOR3 pos)
+{
+    D3DXVECTOR3 length = GetTransform()->GetPosition() - pos;
+    return D3DXVec3Length(&length) < m_Radius;
 }

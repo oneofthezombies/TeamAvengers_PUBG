@@ -13,7 +13,7 @@ Application::~Application()
 void Application::Init()
 {
     srand(GetTickCount());
-    DebugMgr ()()->Init(true);
+    DebugMgr ()()->Init(false);
 	DeviceMgr()()->Init();
     Resource ()()->Init();
     Shader   ()()->Init();

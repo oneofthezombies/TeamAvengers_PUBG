@@ -166,6 +166,11 @@ const D3DXVECTOR3& ICamera::GetPosition() const
     return m_eye;
 }
 
+D3DXVECTOR3 ICamera::GetDirection()
+{
+    return m_look - m_eye;
+}
+
 D3DXVECTOR4 ICamera::GetFrustumArea()
 {
     float minX = FLT_MAX; float minZ = FLT_MAX;
