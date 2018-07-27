@@ -11,11 +11,13 @@ private:
 	std::stringstream m_stringstream;
     bool              m_isRender;
     bool              m_hasDebugSpeed;
+    bool              m_isHoonsComputer;
 
              DebugManager();
 	virtual ~DebugManager();
 
 public:
+    void Init(const bool isHoonsComputer);
 	void Destroy();
     void Update();
 	void Render();
@@ -25,6 +27,7 @@ public:
 	stringstream& GetStringStream();
 
     bool HasDebugSpeed() const;
+    bool IsHoonsComputer() const;
 
 	friend Singleton<DebugManager>;
 };

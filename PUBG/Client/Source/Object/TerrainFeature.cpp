@@ -86,13 +86,16 @@ void TerrainFeature::OnRender()
         D3DXVECTOR3 vlength = (m_boundingSphere.center + m_boundingSphere.position) - CurrentCamera()()->GetPosition();
         if (D3DXVec3Length(&vlength) < 10000.0f)
         {
-            pEffectMeshRenderer->Render(
-                [this](LPD3DXEFFECT pEffect)
+            if (!DebugMgr()()->IsHoonsComputer())
             {
-                pEffect->SetMatrix(
-                    Shader::World,
-                    &GetTransform()->GetTransformationMatrix());
-            });
+                pEffectMeshRenderer->Render(
+                    [this](LPD3DXEFFECT pEffect)
+                {
+                    pEffect->SetMatrix(
+                        Shader::World,
+                        &GetTransform()->GetTransformationMatrix());
+                });
+            }
 
             for (auto& bb : m_boundingBoxes)
                 bb.Render();
