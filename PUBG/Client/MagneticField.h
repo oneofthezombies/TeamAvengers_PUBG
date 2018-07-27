@@ -4,14 +4,16 @@ class MagneticField :
     public IObject
 {
 private:
-    float           m_Radius;
-    float           m_DamageMagnitute;
+    float                                   m_Radius;
+    float                                   m_DamageMagnitute;
 
-    LPD3DXMESH      m_MagneticField;
+    LPD3DXMESH                              m_MagneticField;
 
-    std::chrono::system_clock::time_point m_start;
-    float m_coolDown;
-    const float m_coolTime;
+    std::chrono::system_clock::time_point   m_start;
+    
+    float                                   m_coolDown;
+    const float                             m_coolTime;
+    
     
 private:
     void setFinalDestination();
@@ -35,12 +37,3 @@ public:
 
     bool IsInside(const D3DXVECTOR3 pos);
 };
-//std::chrono::duration<float> deltaTime = std::chrono::system_clock::now() - m_start;
-//auto current = std::chrono::system_clock::now();
-//auto deltaTime = current - m_start;
-//std::chrono::minutes m(deltaTime.count());
-//std::chrono::seconds s(deltaTime.count());
-//std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(deltaTime);
-//std::chrono::minutes min = std::chrono::duration_cast<std::chrono::minutes>(deltaTime);
-//Debug << "sec : " << sec.count() << endl;
-//Debug << "min : " << min.count() << endl;

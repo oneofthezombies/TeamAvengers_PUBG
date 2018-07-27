@@ -5,10 +5,11 @@
 
 MagneticField::MagneticField()
     :IObject(TAG_OBJECT::MagneticField)
-    , m_Radius(100.0f)
+    , m_Radius(2000.0f)
     , m_DamageMagnitute(10.0f)
     , m_MagneticField(nullptr)
-    , m_coolTime(5.0f * 60.0f)
+    /*, m_coolTime(5.0f * 60.0f)*/
+    , m_coolTime(10.0f)
     , m_coolDown(0.0f)
 {
 }
@@ -45,7 +46,7 @@ void MagneticField::setFinalDestination()
 
 void MagneticField::Init()
 {
-    D3DXCreateSphere(Device()(), m_Radius,20,20,&m_MagneticField, nullptr);
+    D3DXCreateSphere(Device()(), m_Radius, 20, 20,&m_MagneticField, nullptr);
     
     setFinalDestination();
     m_start = std::chrono::system_clock::now();
@@ -63,17 +64,24 @@ void MagneticField::OnUpdate()
 
 
     const float dt = Time()()->GetDeltaTime();
-    //m_Radius -=dt;
+    
     if (Input()()->IsStayKeyDown(VK_UP)) { m_Radius += 1.0f; };
     if (Input()()->IsStayKeyDown(VK_DOWN)) { m_Radius -= 1.0f; };
     
     m_coolDown -= dt;
+
     if (m_coolDown <= 0.0f)
     {
         // do
-
-        m_coolDown = m_coolTime;
+        m_Radius -= dt;    
     }
+    
+    if(static_cast<int>(m_Radius) == 1000)
+        m_coolDown = m_coolTime;
+    if (static_cast<int>(m_Radius) == 500)
+        m_coolDown = m_coolTime;
+    if (static_cast<int>(m_Radius) == 100)
+        m_coolDown = m_coolTime;
     
 
     //text UI

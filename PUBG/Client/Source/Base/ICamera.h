@@ -79,6 +79,7 @@ class CameraFree : public ICamera
 private:
     D3DXVECTOR3    m_position;
     D3DXVECTOR3    m_rotation;
+    bool           m_isOtho;
 public:
     CameraFree();
     virtual ~CameraFree();

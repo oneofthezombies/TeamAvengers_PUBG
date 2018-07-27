@@ -246,6 +246,9 @@ Ray ICamera::PickedRayDistancePosition(OUT D3DXVECTOR3 * vOut, OUT float* distan
 //-----------------------------------------------------------------------------------------------
 CameraFree::CameraFree()
     : ICamera(TAG_CAMERA::Default)
+    , m_isOtho(false)
+    , m_position(Vector3::ZERO)
+    , m_rotation(Vector3::ZERO)
 {
     //m_position = D3DXVECTOR3(0.0f, 0.0f, -100.0f);
     //D3DXQuaternionRotationYawPitchRoll(&m_quarernion,0.0f,0.0f,0.0f);
@@ -264,18 +267,13 @@ void CameraFree::Reset()
 
 void CameraFree::Update()
 {
-    D3DXVECTOR3 eye = Vector3::ZERO;
-    D3DXVECTOR3 look = eye + Vector3::FORWARD;
-    const float factor = 2.f;
-    //const float factor = 20.f;
-
-    InputManager* pInput= Input()();
-
     Debug << endl;
     Debug << "  ¿ì·ÎR(8)  ÁÂ·ÎR(9)   " << endl;
     Debug << "     ¾Õ(U)»ó(I)µÚ(O)    " << endl;
     Debug << " ÁÂ(J)    ÇÏ(K)    ¿ì(L)" << endl;
-
+    InputManager* pInput = Input()();
+    //const float factor = 2.f;
+    const float factor = 50.f;
     if (pInput->IsStayKeyDown('K')) { m_position.y -= factor; }
     if (pInput->IsStayKeyDown('I')) { m_position.y += factor; }
     if (pInput->IsStayKeyDown('J')) { m_position.x -= factor; }
@@ -284,26 +282,52 @@ void CameraFree::Update()
     if (pInput->IsStayKeyDown('U')) { m_position.z += factor; }
     if (pInput->IsStayKeyDown('9')) { m_rotation.y -= factor * 0.01f; }
     if (pInput->IsStayKeyDown('8')) { m_rotation.y += factor * 0.01f; }
-    
-    D3DXMATRIX matR,matT , world, view, proj;
-    D3DXMatrixRotationY(&matR, m_rotation.y);
-    D3DXMatrixTranslation(&matT, m_position.x, m_position.y, m_position.z);
-    world =  matT * matR ;
-    D3DXVec3TransformCoord(&eye, &eye, &world);
-    D3DXVec3TransformCoord(&look, &look, &world);
+    //if (pInput->IsStayKeyDown('7')) { m_rotation.x -= factor * 0.01f; }
+    //if (pInput->IsStayKeyDown('0')) { m_rotation.x += factor * 0.01f; }
 
-    D3DXMatrixLookAtLH(&view, &eye, &look, &Vector3::UP);
-    SetViewMatrix(&view);
-    auto pD = Device()();
-    pD->SetTransform(D3DTS_VIEW, &GetViewMatrix());
+    if (pInput->IsOnceKeyDown('6')) { m_isOtho = !m_isOtho; }
 
-    RECT rc;
-    GetClientRect(g_hWnd, &rc);
-    D3DXMatrixPerspectiveFovLH(&proj,
-        m_fovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom),
-        1.0f, ICamera::VISUAL_RANGE);
-    SetProjectionMatrix(&proj);
-    pD->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
+    if (!m_isOtho)
+    {
+        D3DXVECTOR3 eye = Vector3::ZERO;
+        D3DXVECTOR3 look = eye + Vector3::FORWARD;
+
+        D3DXMATRIX matR,matT , world, view, proj;
+        D3DXMatrixRotationY(&matR, m_rotation.y);
+        //D3DXMatrixRotationYawPitchRoll(&matR, m_rotation.y, m_rotation.x, 0.0f);
+        D3DXMatrixTranslation(&matT, m_position.x, m_position.y, m_position.z);
+        world =  matT * matR ;
+        D3DXVec3TransformCoord(&eye, &eye, &world);
+        D3DXVec3TransformCoord(&look, &look, &world);
+
+        D3DXMatrixLookAtLH(&view, &eye, &look, &Vector3::UP);
+        SetViewMatrix(&view);
+        auto pD = Device()();
+        pD->SetTransform(D3DTS_VIEW, &GetViewMatrix());
+
+        RECT rc;
+        GetClientRect(g_hWnd, &rc);
+
+        D3DXMatrixPerspectiveFovLH(&proj,
+            m_fovY, static_cast<float>(rc.right) / static_cast<float>(rc.bottom),
+            1.0f, ICamera::VISUAL_RANGE);
+        SetProjectionMatrix(&proj);
+        pD->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
+    }
+    else
+    {
+        D3DXVECTOR3 eye = D3DXVECTOR3(12800.0f, 6000.0f, 12800.0f);
+        D3DXVECTOR3 look = eye + Vector3::DOWN;
+        D3DXMATRIX view, proj;
+        D3DXMatrixLookAtLH(&view, &eye, &look, &Vector3::FORWARD);
+        SetViewMatrix(&view);
+        auto pD = Device()();
+        pD->SetTransform(D3DTS_VIEW, &GetViewMatrix());
+        D3DXMatrixOrthoLH(&proj, 25600.0f, 25600.0f, 1.0f, ICamera::VISUAL_RANGE);
+        SetProjectionMatrix(&proj);
+        pD->SetTransform(D3DTS_PROJECTION, &GetProjectionMatrix());
+    }
+
 }
 //-----------------------------------------------------------------
 
