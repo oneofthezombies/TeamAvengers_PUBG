@@ -32,6 +32,8 @@ UICompass::~UICompass()
 
 void UICompass::Render()
 {
+    Debug << "UICompass Rotation Y : " << m_rotationY << endl;
+
     const float fPoint = BEGIN_X + m_rotationY * RADIUS;
     const LONG  lPoint = static_cast<LONG>(fPoint);
     m_rect.left  = lPoint - RECT_OFFSET_X;

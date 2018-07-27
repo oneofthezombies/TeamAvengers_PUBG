@@ -222,7 +222,7 @@ void Character::InGameUI::Init(Character* pPlayer)
     pCompassArrow = new UIImage(
         "./Resource/UI/InGame/",
         "compass_arrow.png",
-        D3DXVECTOR3(-153.0f, 0.0f, 0.0f),
+        D3DXVECTOR3(-149.0f, 0.0f, 0.0f),
         nullptr,
         pCompassArrowBg
     );
