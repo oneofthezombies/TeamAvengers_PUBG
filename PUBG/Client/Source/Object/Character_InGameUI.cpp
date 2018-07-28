@@ -90,6 +90,9 @@ Character::InGameUI::InGameUI()
     , pInteractionBG(nullptr)
     , pInteractionF(nullptr)
 
+    , pTimeBg(nullptr)
+    , pTimeZeroImg(nullptr)
+
     //Text ====================
     , pAmmoReloadText(nullptr)
     , pAmmoNumText(nullptr)
@@ -109,6 +112,10 @@ Character::InGameUI::InGameUI()
     , pInfoTextShadow(nullptr)
     , pInteractionText(nullptr)
 
+    , pMagneticFieldTimeText(nullptr)
+    , pMagneticFieldInfoText(nullptr)
+    , pMagneticFieldInfoShadowText(nullptr)
+
     //=========================
     , INFO_TEXT_COOL_TIME(4.0f)
     , m_infoTextCoolDown(0.0f)
@@ -121,6 +128,9 @@ Character::InGameUI::InGameUI()
 
     , KILL_UP_COOL_TIME(8.0f)
     , m_killUpCoolDown(0.0f)
+
+    , MAGNETIC_FIELD_COOL_TIME(3.0f)
+    , m_magneticFieldCoolDown(0.0f)
 
     , m_isKill(false)
 
@@ -144,6 +154,7 @@ void Character::InGameUI::Init(Character* pPlayer)
     m_killCoolDown = KILL_COOL_TIME;
     m_killUpCoolDown = KILL_UP_COOL_TIME;
     m_bloodCoolDown = BLOOD_COOL_TIME;
+    m_magneticFieldCoolDown = MAGNETIC_FIELD_COOL_TIME;
 
     ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
     UIObject* layer2 = scenePlay->GetLayer(2);
@@ -439,7 +450,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         string(""),
         WHITE,
         pBackground,
-        D3DXVECTOR3(440.0f, 480.0f, 0.0f));
+        D3DXVECTOR3(400.0f, 480.0f, 0.0f));
 
     //아이템 사용 등 안내문구
     setTextWithShadow(
@@ -451,6 +462,44 @@ void Character::InGameUI::Init(Character* pPlayer)
         WHITE,
         pBackground,
         D3DXVECTOR3(510.0f, 579.0f, 0.0f));
+
+    //자기장 시간 및 시간제한 안내문구
+    pTimeBg = new UIImage(
+        "./Resource/UI/InGame/",
+        "time_bg.png",
+        D3DXVECTOR3(1085.0f, 516.0f, 0.0f),
+        nullptr,
+        pBackground
+    );
+
+    pMagneticFieldTimeText = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameMagneticFieldTime),
+        D3DXVECTOR2(50.0f, 12.0f),
+        "",
+        WHITE_ALPHA,
+        pTimeBg
+    );
+    pMagneticFieldTimeText->SetDrawTextFormat(DT_LEFT);
+    pMagneticFieldTimeText->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+    setTextWithShadow(
+        pMagneticFieldInfoText,
+        pMagneticFieldInfoShadowText,
+        Resource()()->GetFont(TAG_FONT::InGameMagneticFieldInfo),
+        D3DXVECTOR2(800.0f, 40.0f),
+        string(""),
+        D3DCOLOR_XRGB(244, 239, 124),
+        pBackground,
+        D3DXVECTOR3(270.0f, 439.0f, 0.0f));
+     
+    pTimeZeroImg = new UIImage(
+        "./Resource/UI/InGame/",
+        "time_zero.png",
+        D3DXVECTOR3(1085.0f, 514.0f, 0.0f),
+        nullptr,
+        pBackground
+    );
+    pTimeZeroImg->SetIsRender(false);
 
     //킬로그
     //ex) "HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
@@ -660,84 +709,18 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     updateMinimapUI();
 
     //aim
-    if (inven.m_pHand && !inven.isOpened)
+    updateAimUI(inven);
+
+    //경기 제한 문구
+    const float dt = Time()()->GetDeltaTime();
+    if (pMagneticFieldInfoText->GetText() != "")
     {
-        pAimCircle->SetIsRender(true);
-        pAimLeftLine->SetIsRender(true);
-        pAimRightLine->SetIsRender(true);
-        pAimUpLine->SetIsRender(true);
-        pAimDownLine->SetIsRender(true);
-        
-        //여기서부터
-        //에임 벌어지는거 하면댐
-        auto& backAction = pPlayer->GetWaitBackAction();
-        if (backAction.Ing)
+        m_magneticFieldCoolDown -= dt;
+        if (m_magneticFieldCoolDown <= 0.0f)
         {
-            if (backAction.Up)
-            {
-                m_sumUp += backAction.curValX * 0.5f * 1000.0f;
-                //cout << "backAction: true" << endl;
-                //cout << "curValX_sumUp: " << backAction.curValX * 0.5f * 1000.0f << endl;
-                //cout << "sumDown: " << m_sumUp << endl;
-                if (m_sumUp >= 50.0f)
-                    m_sumUp = 50.0f;
-
-                pAimLeftLine->SetPosition(D3DXVECTOR3(
-                    AIM_LEFT_X - m_sumUp,
-                    AIM_LEFT_Y,
-                    0.0f));
-
-                pAimRightLine->SetPosition(D3DXVECTOR3(
-                    AIM_RIGHT_X + m_sumUp,
-                    AIM_RIGHT_Y,
-                    0.0f));
-
-                pAimUpLine->SetPosition(D3DXVECTOR3(
-                    AIM_UP_X,
-                    AIM_UP_Y - m_sumUp,
-                    0.0f));
-
-                pAimDownLine->SetPosition(D3DXVECTOR3(
-                    AIM_DOWN_X,
-                    AIM_DOWN_Y + m_sumUp,
-                    0.0f));
-            }
-            else //backAction.Up == false
-            {
-                pAimLeftLine->SetPosition(D3DXVECTOR3(
-                    AIM_LEFT_X,
-                    AIM_LEFT_Y,
-                    0.0f));
-
-                pAimRightLine->SetPosition(D3DXVECTOR3(
-                    AIM_RIGHT_X,
-                    AIM_RIGHT_Y,
-                    0.0f));
-
-                pAimUpLine->SetPosition(D3DXVECTOR3(
-                    AIM_UP_X,
-                    AIM_UP_Y,
-                    0.0f));
-
-                pAimDownLine->SetPosition(D3DXVECTOR3(
-                    AIM_DOWN_X,
-                    AIM_DOWN_Y,
-                    0.0f));
-
-                m_sumUp = 0.0f;
-            }
+            pMagneticFieldInfoText->SetText("", pMagneticFieldInfoShadowText);
+            m_magneticFieldCoolDown = MAGNETIC_FIELD_COOL_TIME;
         }
-        else //backAction.Ing == false
-        {
-        }
-    }
-    else
-    {
-        pAimCircle->SetIsRender(false);
-        pAimLeftLine->SetIsRender(false);
-        pAimRightLine->SetIsRender(false);
-        pAimUpLine->SetIsRender(false);
-        pAimDownLine->SetIsRender(false);
     }
 }
 
@@ -949,6 +932,8 @@ void Character::InGameUI::updateKillUI(const TotalInventory& inven)
         pQBZRedImg->SetIsRender(false);
         pKar98kRedImg->SetIsRender(false);
 
+        pTimeBg->SetIsRender(false);
+        pTimeZeroImg->SetIsRender(false);
     }
     else
     {
@@ -1236,8 +1221,85 @@ void Character::InGameUI::updateCompassUI()
     pUICompass->SetRotationY(pPlayer->GetForward());
 }
 
-void Character::InGameUI::updateMinimapUI()
+void Character::InGameUI::updateAimUI(const TotalInventory& inven)
 {
-    pUIMinimap->SetPlayerRotationY(pPlayer->GetForward());
-    pUIMinimap->SetPlayerPosition(pPlayer->GetTransform()->GetPosition());
+    if (inven.m_pHand && !inven.isOpened)
+    {
+        pAimCircle->SetIsRender(true);
+        pAimLeftLine->SetIsRender(true);
+        pAimRightLine->SetIsRender(true);
+        pAimUpLine->SetIsRender(true);
+        pAimDownLine->SetIsRender(true);
+
+        //여기서부터
+        //에임 벌어지는거 하면댐
+        auto& backAction = pPlayer->GetWaitBackAction();
+        if (backAction.Ing)
+        {
+            if (backAction.Up)
+            {
+                m_sumUp += backAction.curValX * 0.5f * 1000.0f;
+                //cout << "backAction: true" << endl;
+                //cout << "curValX_sumUp: " << backAction.curValX * 0.5f * 1000.0f << endl;
+                //cout << "sumDown: " << m_sumUp << endl;
+                if (m_sumUp >= 50.0f)
+                    m_sumUp = 50.0f;
+
+                pAimLeftLine->SetPosition(D3DXVECTOR3(
+                    AIM_LEFT_X - m_sumUp,
+                    AIM_LEFT_Y,
+                    0.0f));
+
+                pAimRightLine->SetPosition(D3DXVECTOR3(
+                    AIM_RIGHT_X + m_sumUp,
+                    AIM_RIGHT_Y,
+                    0.0f));
+
+                pAimUpLine->SetPosition(D3DXVECTOR3(
+                    AIM_UP_X,
+                    AIM_UP_Y - m_sumUp,
+                    0.0f));
+
+                pAimDownLine->SetPosition(D3DXVECTOR3(
+                    AIM_DOWN_X,
+                    AIM_DOWN_Y + m_sumUp,
+                    0.0f));
+            }
+            else //backAction.Up == false
+            {
+                pAimLeftLine->SetPosition(D3DXVECTOR3(
+                    AIM_LEFT_X,
+                    AIM_LEFT_Y,
+                    0.0f));
+
+                pAimRightLine->SetPosition(D3DXVECTOR3(
+                    AIM_RIGHT_X,
+                    AIM_RIGHT_Y,
+                    0.0f));
+
+                pAimUpLine->SetPosition(D3DXVECTOR3(
+                    AIM_UP_X,
+                    AIM_UP_Y,
+                    0.0f));
+
+                pAimDownLine->SetPosition(D3DXVECTOR3(
+                    AIM_DOWN_X,
+                    AIM_DOWN_Y,
+                    0.0f));
+
+                m_sumUp = 0.0f;
+            }
+        }
+        else //backAction.Ing == false
+        {
+        }
+    }
+    else
+    {
+        pAimCircle->SetIsRender(false);
+        pAimLeftLine->SetIsRender(false);
+        pAimRightLine->SetIsRender(false);
+        pAimUpLine->SetIsRender(false);
+        pAimDownLine->SetIsRender(false);
+    }
 }

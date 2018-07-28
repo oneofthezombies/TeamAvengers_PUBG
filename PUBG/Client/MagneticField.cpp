@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "MagneticField.h"
 #include "ComponentTransform.h"
-
+#include "Character.h"
+#include "UIText.h"
+#include "UIImage.h"
+#include "ScenePlay.h"
 
 MagneticField::MagneticField()
     :IObject(TAG_OBJECT::MagneticField)
@@ -12,9 +15,10 @@ MagneticField::MagneticField()
     , m_damageCoolTime(2.0f)
     , m_MagneticField(nullptr)
     , m_coolTime(5.0f * 60.0f)
-    /*, m_coolTime(10.0f)*/
+    //, m_coolTime(10.0f)
     , m_coolDown(0.0f)
     , m_isMoving(false)
+    , m_isPrintOnce(false)
 {
 }
 
@@ -58,6 +62,9 @@ void MagneticField::OnUpdate()
     Debug << "Radius : " << m_Radius << endl;
     
     const float dt = Time()()->GetDeltaTime();
+    ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    Character* pPlayer = currentScene->GetPlayer();
+    auto& inGameUI = pPlayer->GetInGameUI();
     
     if (m_coolDown <= 0.0f)
     {
@@ -80,21 +87,31 @@ void MagneticField::OnUpdate()
         m_coolDown = m_coolTime;
         m_DamageMagnitute = 2.0f;
         m_isMoving = false;
+
+        inGameUI.pTimeBg->SetIsRender(true);       //제한시간을 그리고
+        inGameUI.pTimeZeroImg->SetIsRender(false); //삼각형을 가린다
+        m_isPrintOnce = false;
     }
     else if (m_isMoving &&castToInt == /*1200*/5000)
     {
         m_coolDown = m_coolTime;
         m_DamageMagnitute = 3.0f;
         m_isMoving = false;
+
+        inGameUI.pTimeBg->SetIsRender(true);       //제한시간을 그리고
+        inGameUI.pTimeZeroImg->SetIsRender(false); //삼각형을 가린다
+        m_isPrintOnce = false;
     }
  
-    
-
     //text UI
     const int nCoolDown = static_cast<int>(m_coolDown);
     const int minutes = nCoolDown / 60;
     const int seconds = nCoolDown % 60;
     Debug << "remaining time : " << minutes << " : " << seconds << endl;
+
+    //for InGameUI
+    //미니맵 위 제한시간 표시
+    updateTime(minutes, seconds);
 }
 
 void MagneticField::OnRender()
@@ -145,8 +162,77 @@ bool MagneticField::IsDamageTime(const float dt)
 
 bool MagneticField::IsInside(const D3DXVECTOR3 pos)
 {
-    
     D3DXVECTOR3 length = m_Position - pos;
     float test = D3DXVec3Length(&length);
     return test < m_Radius;
+}
+
+void MagneticField::updateTime(const int minutes, const int seconds)
+{
+    ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    Character* pPlayer = currentScene->GetPlayer();
+    auto& inGameUI = pPlayer->GetInGameUI();
+
+    inGameUI.pMagneticFieldTimeText->SetText(to_string(minutes) + ":" + to_string(seconds));
+
+    if (pPlayer->GetTotalInventory().isOpened == false)
+    {
+        //인벤토리가 열려있지않고
+        // - 0:00이 아니면 제한 시간을 보여준다
+        if (minutes != 0 || seconds != 0)
+        {
+            inGameUI.pTimeBg->SetIsRender(true);
+        }
+        // - 0:00이면 !삼각형을 보여준다
+        if (minutes == 0 && seconds == 0)
+        {
+            inGameUI.pTimeZeroImg->SetIsRender(true);
+        }
+    }
+
+    //-경기 제한 문구
+    if (seconds == 0)
+    {
+        if (minutes == 0)
+        {
+            if (!m_isPrintOnce)
+            {
+                string str = "경기 구역이 제한되고 있습니다!";
+                inGameUI.pMagneticFieldInfoText->SetText(str, inGameUI.pMagneticFieldInfoShadowText);
+
+                //!삼각형
+                inGameUI.pTimeBg->SetIsRender(false);     //제한시간을 가리고
+                inGameUI.pTimeZeroImg->SetIsRender(true); //삼각형을 그린다
+                m_isPrintOnce = true;
+            }
+        }
+        else if (minutes == 4 || minutes == 2 || minutes == 1)
+        {
+            string str = "경기 구역이 제한됩니다. " + to_string(minutes) + "분 남았습니다!";
+            inGameUI.pMagneticFieldInfoText->SetText(str, inGameUI.pMagneticFieldInfoShadowText);
+        }
+    }
+    else if (minutes == 1 && seconds == 30)
+    {
+        string str = "경기 구역이 제한됩니다. " + to_string(minutes) + "분 " + to_string(seconds) + "초 남았습니다!";
+        inGameUI.pMagneticFieldInfoText->SetText(str, inGameUI.pMagneticFieldInfoShadowText);
+    }
+    else if (minutes == 0)
+    {
+        if (seconds == 30)
+        {
+            string str = "경기 구역이 제한됩니다. " + to_string(seconds) + "초 남았습니다!";
+            inGameUI.pMagneticFieldInfoText->SetText(str, inGameUI.pMagneticFieldInfoShadowText);
+        }
+        else if (seconds == 10)
+        {
+            string str = "경기 구역이 제한됩니다. " + to_string(seconds) + "초 남았습니다!";
+            inGameUI.pMagneticFieldInfoText->SetText(str, inGameUI.pMagneticFieldInfoShadowText);
+        }
+        else if (seconds == 5)
+        {
+            string str = "경기 구역이 제한됩니다. " + to_string(seconds) + "초 남았습니다!";
+            inGameUI.pMagneticFieldInfoText->SetText(str, inGameUI.pMagneticFieldInfoShadowText);
+        }
+    }
 }

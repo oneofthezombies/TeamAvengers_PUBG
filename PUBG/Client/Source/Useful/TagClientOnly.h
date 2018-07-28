@@ -103,6 +103,8 @@ enum class TAG_FONT
     InGameKillLog,
     InGameInfo,
     InGameFireMode,
+    InGameMagneticFieldInfo,
+    InGameMagneticFieldTime,
 
     GameOverNickName,
     GameOverString,

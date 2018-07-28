@@ -118,6 +118,9 @@ void SceneLoading::Load()
     load("./Resource/UI/InGame/", "mini_map.png");
     load("./Resource/UI/InGame/", "mini_map_me.png");
 
+    load("./Resource/UI/InGame/", "time_bg.png");
+    load("./Resource/UI/InGame/", "time_zero.png");
+
     //for Blood ui
     load("./Resource/UI/InGame/Blood/", "b3.png");
     load("./Resource/UI/InGame/Blood/", "b5.png");

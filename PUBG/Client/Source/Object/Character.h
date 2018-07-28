@@ -258,6 +258,11 @@ public:
         UIImage* pAimUpLine;
         UIImage* pAimDownLine;
 
+        //자기장 시간 배경
+        UIImage* pTimeBg;
+        //자기장 시간이 0일 때 !
+        UIImage* pTimeZeroImg;
+
         //blood
         vector<UIImage*> m_vecBlood;
 
@@ -291,6 +296,11 @@ public:
         UIText* pInfoText;
         UIText* pInfoTextShadow;
 
+        //자기장 시간 및 시간제한 안내문구
+        UIText* pMagneticFieldTimeText;
+        UIText* pMagneticFieldInfoText;
+        UIText* pMagneticFieldInfoShadowText;
+
         //킬로그
         std::vector<UIText*> m_UIKillLogs;
         std::deque<std::pair<std::string, float>> m_killLogs;
@@ -306,8 +316,13 @@ public:
 
         const float KILL_COOL_TIME;
         float m_killCoolDown;
+
         const float KILL_UP_COOL_TIME;
         float m_killUpCoolDown;
+
+        const float MAGNETIC_FIELD_COOL_TIME;
+        float m_magneticFieldCoolDown;
+
         bool m_isKill;
 
         float m_sumUp;
@@ -343,6 +358,7 @@ public:
         void updateWeaponUI(const TotalInventory& inven);
         void updateBloodUI();
         void updateCompassUI();
+        void updateAimUI(const TotalInventory& inven);
         void updateMinimapUI();
     };
 
