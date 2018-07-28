@@ -6,7 +6,7 @@
 MagneticField::MagneticField()
     :IObject(TAG_OBJECT::MagneticField)
     , m_Position(Vector3::ZERO)
-    , m_Radius(10500.0f)/*82712.3*/
+    , m_Radius(25600.0f)/*82712.3*/
     , m_DamageMagnitute(1.0f)
     , m_damageCoolDown(0.0f)
     , m_damageCoolTime(2.0f)
