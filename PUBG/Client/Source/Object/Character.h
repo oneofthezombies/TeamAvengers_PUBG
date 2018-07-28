@@ -12,6 +12,7 @@ class Area;
 class UiButtonListener;
 class UICompass;
 class MagneticField;
+class UIMinimap;
 
 struct FramePtr
 {
@@ -243,8 +244,9 @@ public:
         UIImage* pKillTextUpBg;
         UIImage* pKillNumUpBg;
 
-        //map
+        //minimap
         UIImage* pMapImg;
+        UIMinimap* pUIMinimap;
 
         //aim
         UIImage* pAimCircle;
@@ -331,6 +333,7 @@ public:
         void updateWeaponUI(const TotalInventory& inven);
         void updateBloodUI();
         void updateCompassUI();
+        void updateMinimapUI();
     };
 
     struct GameOverUI : public IUIButtonOnMouseListener

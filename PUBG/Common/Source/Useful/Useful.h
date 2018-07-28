@@ -14,6 +14,11 @@ ostream& operator<<(ostream& os, const D3DXVECTOR3& val);
 ostream& operator<<(ostream& os, const D3DXMATRIX& val);
 ostream& operator<<(ostream& os, const D3DXQUATERNION& val);
 
+struct Vector2
+{
+    static const D3DXVECTOR2& ZERO;
+};
+
 struct Vector3
 {
     static const D3DXVECTOR3& ZERO;

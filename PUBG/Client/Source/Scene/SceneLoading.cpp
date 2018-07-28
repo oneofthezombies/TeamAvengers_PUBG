@@ -82,6 +82,7 @@ void SceneLoading::Load()
     load("./Resource/UI/InGame/", "compass_arrow_bg.png");
     load("./Resource/UI/InGame/", "compass.png");
     load("./Resource/UI/InGame/", "compass_arrow.png", D3DCOLOR_XRGB(0, 0, 0));
+    load("./Resource/UI/InGame/", "compass_long.png");
 
     load("./Resource/UI/InGame/", "equipment_panel.png");
     load("./Resource/UI/InGame/", "equipment_bag01.png");
@@ -111,6 +112,9 @@ void SceneLoading::Load()
     load("./Resource/UI/InGame/", "aim_ver.png");
     load("./Resource/UI/InGame/", "aim_hor.png");
 
+    load("./Resource/UI/InGame/", "mini_map.png");
+    load("./Resource/UI/InGame/", "mini_map_me.png");
+
     //for Blood ui
     load("./Resource/UI/InGame/Blood/", "b3.png");
     load("./Resource/UI/InGame/Blood/", "b5.png");
@@ -119,9 +123,6 @@ void SceneLoading::Load()
     load("./Resource/UI/InGame/Blood/", "b13.png");
     load("./Resource/UI/InGame/Blood/", "br14.png");
     load("./Resource/UI/InGame/Blood/", "b15.png");
-
-    //for compass UI test
-    load("./Resource/UI/InGame/", "compass_bg_transparent.png");
 
     //for GameOverUI
     load("./Resource/UI/GameOver/", "black_1280_720_70.png");
@@ -159,10 +160,6 @@ void SceneLoading::Load()
     load("./Resource/UI/Login/", "input_mouseover.png");
     load("./Resource/UI/Login/", "login_btn_idle.png");
     load("./Resource/UI/Login/", "login_btn_mouseover.png");
-
-    // for ui test
-    load("./Resource/", "compass_long.png");
-    load("./Resource/", "compass_long_alpha.png");
 
     // for water
     load("./Resource/Effect/Texture/", "wave.jpg");

@@ -74,6 +74,7 @@
     <ClCompile Include="Source\UI\UICompass.cpp" />
     <ClCompile Include="Source\Object\Water.cpp" />
     <ClCompile Include="Source\Manager\Particle.cpp" />
+    <ClCompile Include="Source\UI\UIMinimap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod64.dll" />
@@ -144,5 +145,6 @@
     <ClInclude Include="Source\UI\UICompass.h" />
     <ClInclude Include="Source\Object\Water.h" />
     <ClInclude Include="Source\Manager\Particle.h" />
+    <ClInclude Include="Source\UI\UIMinimap.h" />
   </ItemGroup>
 </Project>

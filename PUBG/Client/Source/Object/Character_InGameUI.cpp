@@ -9,6 +9,7 @@
 #include "UIImage.h"
 #include "UIText.h"
 #include "UICompass.h"
+#include "UIMinimap.h"
 
 const D3DCOLOR Character::InGameUI::RED         = D3DCOLOR_XRGB(216, 0, 0);
 const D3DCOLOR Character::InGameUI::WHITE       = D3DCOLOR_XRGB(255, 255, 255);
@@ -521,13 +522,15 @@ void Character::InGameUI::Init(Character* pPlayer)
         pKar98kImg);
     pKar98kRedImg->SetIsRender(false);
 
-    //¸Ê
+    // mini¸Ê
     pMapImg = new UIImage(
         "./Resource/UI/InGame/",
         "map_bg.png",
         D3DXVECTOR3(1085.0f, 530.0f, 0.0f),
         nullptr,
         pBackground);
+
+    pUIMinimap = new UIMinimap(pMapImg);
 
     //ui ÇÇÅÍÁö´Â.
     m_vecBlood.reserve(7);
@@ -609,6 +612,9 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     // ÄÄÆÛ½º UI
     updateCompassUI();
+
+    // minimap UI
+    updateMinimapUI();
 
     //aim
     if (inven.m_pHand && !inven.isOpened)
@@ -1145,4 +1151,10 @@ void Character::InGameUI::updateBloodUI()
 void Character::InGameUI::updateCompassUI()
 {
     pUICompass->SetRotationY(pPlayer->GetForward());
+}
+
+void Character::InGameUI::updateMinimapUI()
+{
+    pUIMinimap->SetPlayerRotationY(pPlayer->GetForward());
+    pUIMinimap->SetPlayerPosition(pPlayer->GetTransform()->GetPosition());
 }

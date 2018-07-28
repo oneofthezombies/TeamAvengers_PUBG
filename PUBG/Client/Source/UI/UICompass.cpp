@@ -11,11 +11,17 @@ UICompass::UICompass(UIObject* pParent)
     : UIObject(pParent)
     , m_rotationY(0.0f)
 {
-    pCompassTexture = Resource()()->GetTexture("./Resource/", "compass_long.png");
+    std::pair<std::string, std::string> pathFilename 
+        = std::make_pair("./Resource/UI/InGame/", "compass_long.png");
+
+    pCompassTexture = Resource()()->GetTexture(pathFilename.first, pathFilename.second);
     assert(pCompassTexture && "UICompass::UICompass(), Resource::Manager::GetTexture() failed.");
 
     D3DXIMAGE_INFO info;
-    D3DXGetImageInfoFromFileA("./Resource/compass_long.png", &info);
+    D3DXGetImageInfoFromFileA(
+        (pathFilename.first + pathFilename.second).c_str(), 
+        &info);
+
     m_size.x = static_cast<float>(info.Width);
     m_size.y = static_cast<float>(info.Height);
 
