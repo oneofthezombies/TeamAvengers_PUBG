@@ -738,7 +738,7 @@ std::vector<D3DXVECTOR3> Collision::GetCollidedNormal(const D3DXVECTOR3& mypos, 
     return normals;
 }
 
-D3DXVECTOR3 Collision::GetCollidedNormal2(const D3DXVECTOR3 & mypos, const BoundingBox & box)
+D3DXVECTOR3 Collision::GetCollidedNormal2(const D3DXVECTOR3& mypos, const BoundingBox& box)
 {
     std::vector<D3DXVECTOR3> m_vecProj;
     m_vecProj.resize(8);
@@ -778,11 +778,8 @@ D3DXVECTOR3 Collision::GetCollidedNormal2(const D3DXVECTOR3 & mypos, const Bound
     //하평면//좌하전//우하전//좌하후
     D3DXPlaneFromPoints(&m_vecPlane[5], &m_vecWorld[6], &m_vecWorld[7], &m_vecWorld[4]);
 
-    
-
     std::vector<BoundingBox> sixPointsBox;
     sixPointsBox.resize(6);
-    
     
     for (size_t i = 0; i < m_vecPlane.size(); ++i)
     {
@@ -812,7 +809,6 @@ D3DXVECTOR3 Collision::GetCollidedNormal2(const D3DXVECTOR3 & mypos, const Bound
     }
 
     auto getV = [&m_vecWorld](int a, int b) { return m_vecWorld[b] - m_vecWorld[a]; };
-
 
     D3DXVECTOR3 normal;
     switch (targetIndex)

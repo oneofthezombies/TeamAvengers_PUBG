@@ -604,7 +604,6 @@ private:
 
     //D3DXVECTOR3 getDown();
 
-    
     //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
     bool createOrMergeItem(std::map<TAG_RES_STATIC, std::vector<Item*>>* map, Item* item);
@@ -733,6 +732,7 @@ public:
     string GetNickName() const;
     float GetCharacterHealth() const;
     bool GetCharacterIsDead() const;
+    const BoundingBox& GetBoundingBox();
     
     void ResetIsDamaged();
     bool IsDamaged() const;
