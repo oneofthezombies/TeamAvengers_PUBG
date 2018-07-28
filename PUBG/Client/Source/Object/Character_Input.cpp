@@ -1388,6 +1388,12 @@ void Character::syncAnimation()
     pAnimation->GetLowerTrackDescription(0, &lowerDesc);
     pAnimation->GetUpperTrackDescription(0, &upperDesc);
  
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->SetTrackPosition(0, static_cast<float>(lowerDesc.Position));
+        m_totalInventory.m_pEquipHead->SetSubTrackPosition(0, static_cast<float>(upperDesc.Position));
+    }
+
     if (m_totalInventory.m_pEquipArmor)
     {
         m_totalInventory.m_pEquipArmor->SetTrackPosition(0, static_cast<float>(lowerDesc.Position));
@@ -1398,13 +1404,7 @@ void Character::syncAnimation()
     {
         m_totalInventory.m_pEquipBack->SetTrackPosition(0, static_cast<float>(lowerDesc.Position));
         m_totalInventory.m_pEquipBack->SetSubTrackPosition(0, static_cast<float>(upperDesc.Position));
-    
-    }
 
-    if (m_totalInventory.m_pEquipHead)
-    {
-        m_totalInventory.m_pEquipHead->SetTrackPosition(0, lowerDesc.Position);
-        m_totalInventory.m_pEquipHead->SetSubTrackPosition(0, upperDesc.Position);
     }
 }
 
@@ -1519,6 +1519,17 @@ void Character::setEquipAnimation(
     const float nextWeight, 
     const float position)
 {
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position);
+    }
+
     if (m_totalInventory.m_pEquipArmor)
     {
         m_totalInventory.m_pEquipArmor->Set(
@@ -1533,17 +1544,6 @@ void Character::setEquipAnimation(
     if (m_totalInventory.m_pEquipBack)
     {
         m_totalInventory.m_pEquipBack->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position);
-    }
-
-    if (m_totalInventory.m_pEquipHead)
-    {
-        m_totalInventory.m_pEquipHead->Set(
             part,
             tag,
             isBlend,
@@ -1563,6 +1563,19 @@ void Character::setEquipAnimation(
     const float finishEventAgoTime, 
     const std::function<void()>& finishEvent)
 {
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            finishEventAgoTime,
+            finishEvent);
+    }
+
     if (m_totalInventory.m_pEquipArmor)
     {
         m_totalInventory.m_pEquipArmor->Set(
@@ -1579,19 +1592,6 @@ void Character::setEquipAnimation(
     if (m_totalInventory.m_pEquipBack)
     {
         m_totalInventory.m_pEquipBack->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position,
-            finishEventAgoTime,
-            finishEvent);
-    }
-
-    if (m_totalInventory.m_pEquipHead)
-    {
-        m_totalInventory.m_pEquipHead->Set(
             part,
             tag,
             isBlend,
@@ -1615,6 +1615,21 @@ void Character::setEquipAnimation(
     const float finishEventAgoTime, 
     const std::function<void()>& finishEvent)
 {
+    if (m_totalInventory.m_pEquipHead)
+    {
+        m_totalInventory.m_pEquipHead->Set(
+            part,
+            tag,
+            isBlend,
+            blendingTime,
+            nextWeight,
+            position,
+            loopEventPeriod,
+            loopEvent,
+            finishEventAgoTime,
+            finishEvent);
+    }
+
     if (m_totalInventory.m_pEquipArmor)
     {
         m_totalInventory.m_pEquipArmor->Set(
@@ -1633,21 +1648,6 @@ void Character::setEquipAnimation(
     if (m_totalInventory.m_pEquipBack)
     {
         m_totalInventory.m_pEquipBack->Set(
-            part,
-            tag,
-            isBlend,
-            blendingTime,
-            nextWeight,
-            position,
-            loopEventPeriod,
-            loopEvent,
-            finishEventAgoTime,
-            finishEvent);
-    }
-
-    if (m_totalInventory.m_pEquipHead)
-    {
-        m_totalInventory.m_pEquipHead->Set(
             part,
             tag,
             isBlend,

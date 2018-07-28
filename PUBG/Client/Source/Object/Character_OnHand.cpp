@@ -68,7 +68,7 @@ void Character::setRifleOnHandCharacter(TAG_RIFLE tagRifle)
             tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot_OnHand;
     }
 
-    assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnHand(), tagAnim is COUNT");
+    assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "setRifleOnHandCharacter(), tagAnim is COUNT");
 
     //애니메이션 적용
     pAnimation->Set(
@@ -108,7 +108,7 @@ void Character::setRifleOnHandEquip(TAG_RIFLE tagRifle)
             tagAnim = TAG_ANIM_CHARACTER::Rifle_Combat_Prone_SecondarySlot_OnHand;
     }
 
-    assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "Character::setRifleOnHand(), tagAnim is COUNT");
+    assert((tagAnim != TAG_ANIM_CHARACTER::COUNT) && "setRifleOnHandEquip(), tagAnim is COUNT");
 
     //애니메이션 적용
     setEquipAnimation(
