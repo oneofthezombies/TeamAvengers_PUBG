@@ -1218,6 +1218,17 @@ void Communication::Manager::ReceiveMessage(
             isReadys[3] ? p3.isReady = true : p3.isReady = false;
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_KILL_LOG:
+        {
+            std::pair<int, std::string> parsedDesc =
+                Message::ParseDescription(description);
+
+            int id = parsedDesc.first;
+            std::string& eventKillLogStr = parsedDesc.second;
+
+            Scene()()->GetPlayer()->GetInGameUI().AddKillLog(eventKillLogStr);
+        }
+        break;
     }
 }
 
@@ -1747,6 +1758,19 @@ void Communication::Manager::SendEventDestroyItemInBox(
     m_pClient->Write(
         Message::Create(
             TAG_REQUEST::SEND_EVENT_DESTROY_ITEM_IN_BOX,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventKillLog(const std::string& killLog)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << killLog;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_KILL_LOG,
             ss.str()));
 }
 

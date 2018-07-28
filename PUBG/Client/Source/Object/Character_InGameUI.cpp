@@ -45,6 +45,8 @@ const float Character::InGameUI::AIM_UP_Y     = 360.0f - 11.9f - 7.0f;
 const float Character::InGameUI::AIM_DOWN_X   = 640.0f - 1.0f;
 const float Character::InGameUI::AIM_DOWN_Y   = 360.0f + 11.9f;
 
+const float Character::InGameUI::KILL_LOG_LIFE_TIME = 15.0f;
+
 Character::InGameUI::InGameUI()
     : pPlayer(nullptr)
     , m_nickName("")
@@ -456,7 +458,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         pBackground);
     pKillLog1->SetDrawTextFormat(DT_RIGHT);
     pKillLog1->SetPosition(D3DXVECTOR3(856.0f, 52.0f, 0.0f));
-    vecKillLog.push_back(pKillLog1);
+    m_UIKillLogs.push_back(pKillLog1);
 
     auto pKillLog2  = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
@@ -466,7 +468,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         pBackground);
     pKillLog2->SetDrawTextFormat(DT_RIGHT);
     pKillLog2->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 20.0f, 0.0f));
-    vecKillLog.push_back(pKillLog2);
+    m_UIKillLogs.push_back(pKillLog2);
 
     auto pKillLog3 = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
@@ -476,7 +478,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         pBackground);
     pKillLog3->SetDrawTextFormat(DT_RIGHT);
     pKillLog3->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 40.0f, 0.0f));
-    vecKillLog.push_back(pKillLog3);
+    m_UIKillLogs.push_back(pKillLog3);
 
     auto pKillLog4 = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameKillLog),
@@ -486,7 +488,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         pBackground);
     pKillLog4->SetDrawTextFormat(DT_RIGHT);
     pKillLog4->SetPosition(D3DXVECTOR3(856.0f, 52.0f + 60.0f, 0.0f));
-    vecKillLog.push_back(pKillLog4);
+    m_UIKillLogs.push_back(pKillLog4);
 
     //총
     pQBZImg = new UIImage(
@@ -590,13 +592,24 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     //피 이미지
     updateBloodUI();
 
-    //TODO: 킬로그 (서버랑 연관해서 생각해야함), 동시에 들어왔을 때 변경
+    //킬로그 서버랑 연관해서 변경
     if (pPlayer->GetIsKill())
     {
         //ex) "HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
-        string str = m_nickName + " 의"+ m_weaponNameForKill + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
-        vecKillLog.at(0)->SetText(str);
+        std::string str = m_nickName + " 의"+ m_weaponNameForKill + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
+
+        AddKillLog(str);
+        Communication()()->SendEventKillLog(str);
     }
+
+    //// for test killLogUI
+    //if (GetAsyncKeyState(VK_UP) & 0x0001)
+    //{
+    //    std::stringstream ss;
+    //    ss << GetTickCount();
+    //    
+    //    AddKillLog(ss.str());
+    //}
 
     //킬 수
     updateKillUI(inven);
@@ -627,9 +640,9 @@ void Character::InGameUI::Update(const TotalInventory& inven)
             if (backAction.Up)
             {
                 m_sumUp += backAction.curValX * 0.5f * 1000.0f;
-                cout << "backAction: true" << endl;
-                cout << "curValX_sumUp: " << backAction.curValX * 0.5f * 1000.0f << endl;
-                cout << "sumDown: " << m_sumUp << endl;
+                //cout << "backAction: true" << endl;
+                //cout << "curValX_sumUp: " << backAction.curValX * 0.5f * 1000.0f << endl;
+                //cout << "sumDown: " << m_sumUp << endl;
                 if (m_sumUp >= 50.0f)
                     m_sumUp = 50.0f;
 
@@ -695,6 +708,11 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 void Character::InGameUI::SetRedToZero()
 {
     pHpRedImg->SetSize(D3DXVECTOR2(0.0f, InGameUI::HP_HEIGHT));
+}
+
+void Character::InGameUI::AddKillLog(const std::string& killLog)
+{
+    m_killLogs.emplace_back(std::make_pair(killLog, KILL_LOG_LIFE_TIME));
 }
 
 void Character::InGameUI::setTextWithShadow(
@@ -936,9 +954,10 @@ void Character::InGameUI::updateKillUI(const TotalInventory& inven)
 
     //일정시간이 지나면 텍스트가 사라진다
     //화면 중앙 킬
+    const float dt = Time()()->GetDeltaTime();
     if (pKillNumText->GetText() != "")
     {
-        m_killCoolDown -= Time()()->GetDeltaTime();
+        m_killCoolDown -= dt;
         if (m_killCoolDown <= 0.0f)
         {
             pKillNumText->SetText("", pKillNumTextShadow);
@@ -963,6 +982,40 @@ void Character::InGameUI::updateKillUI(const TotalInventory& inven)
             pKillNumUpText->SetText("");
 
             m_killUpCoolDown = KILL_UP_COOL_TIME;
+        }
+    }
+
+    // update kill log informations
+    for (auto it = m_killLogs.begin(); it != m_killLogs.end();)
+    {
+        float& lifeTime = it->second;
+        lifeTime -= dt;
+
+        if (lifeTime <= 0.0f)
+        {
+            it = m_killLogs.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    // update kill log UIs
+    for (auto it = m_UIKillLogs.begin(); it != m_UIKillLogs.end(); ++it)
+    {
+        auto index = std::distance(m_UIKillLogs.begin(), it);
+        UIText* pUIText = *it;
+        const bool isAvailableIndex = static_cast<std::size_t>(index) < m_killLogs.size();
+
+        if (isAvailableIndex)
+        {
+            const std::string killLog = m_killLogs[index].first;
+            pUIText->SetText(killLog);
+        }
+        else
+        {
+            pUIText->SetText("");
         }
     }
 }

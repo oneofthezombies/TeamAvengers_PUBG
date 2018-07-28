@@ -204,6 +204,8 @@ public:
         static const float AIM_DOWN_X;
         static const float AIM_DOWN_Y;  //360.0f + 11.9f
 
+        static const float KILL_LOG_LIFE_TIME;
+
         Character* pPlayer;
         string m_nickName;
         string m_killedNickName;
@@ -283,7 +285,8 @@ public:
         UIText* pInfoTextShadow;
 
         //Å³·Î±×
-        vector<UIText*> vecKillLog;
+        std::vector<UIText*> m_UIKillLogs;
+        std::deque<std::pair<std::string, float>> m_killLogs;
 
         const float INFO_TEXT_COOL_TIME;
         float m_infoTextCoolDown;
@@ -293,10 +296,8 @@ public:
 
         const float KILL_COOL_TIME;
         float m_killCoolDown;
-
         const float KILL_UP_COOL_TIME;
         float m_killUpCoolDown;
-
         bool m_isKill;
 
         float m_sumUp;
@@ -311,6 +312,7 @@ public:
         void Update(const TotalInventory& inven);
 
         void SetRedToZero();
+        void AddKillLog(const std::string& killLog);
 
         void setTextWithShadow(
             UIText*& pText,
