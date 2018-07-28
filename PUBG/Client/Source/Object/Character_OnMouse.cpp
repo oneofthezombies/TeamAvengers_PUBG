@@ -243,9 +243,12 @@ void Character::onMouse(
                         {
                             //inven.DropItem(&pUIButtonWithItem->pItem);
                             inven.DropArmor();
+
                             inven.m_pUIArmor->pUIImage = nullptr;
                             inven.m_pUIArmor->pItem = nullptr;
                             inven.m_pUIArmor->SetIsActive(false);
+
+                            m_isEatEquip = true;
                             
                             Communication()()->SendEventMoveItemArmorToField(m_index, itemName);
                             
@@ -255,20 +258,28 @@ void Character::onMouse(
                     case TAG_ITEM_CATEGORY::Back:
                         {
                             inven.DropBack();
-                            Communication()()->SendEventMoveItemBackToField(m_index, itemName);
+
                             inven.m_pUIBack->pUIImage = nullptr;
                             inven.m_pUIBack->pItem = nullptr;
                             inven.m_pUIBack->SetIsActive(false);
+
+                            m_isEatEquip = true;
+
+                            Communication()()->SendEventMoveItemBackToField(m_index, itemName);
                         }
                         break;
 
                     case TAG_ITEM_CATEGORY::Head:
                         {
                             inven.DropHead();
-                            Communication()()->SendEventMoveItemHeadToField(m_index, itemName);
+
                             inven.m_pUIHead->pUIImage = nullptr;
                             inven.m_pUIHead->pItem = nullptr;
                             inven.m_pUIHead->SetIsActive(false);
+
+                            m_isEatEquip = true;
+
+                            Communication()()->SendEventMoveItemHeadToField(m_index, itemName);
                         }
                         break;
 

@@ -1045,6 +1045,9 @@ void Character::InGameUI::updateEquipUI(const TotalInventory& inven)
 {
     if (pPlayer->GetIsEatEquip())
     {
+        for (auto u : vecEquipImg)
+            u->SetIsRender(false);
+
         switch (inven.m_equipOnNum)
         {
         case 0:
