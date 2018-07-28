@@ -91,6 +91,7 @@ public:
 
         UIImage* pBorder;
         UIImage* m_pDescriptionBorder;
+        UIImage* m_pDescriptionImage;
         UIText*  m_pDescriptionText;
         UIText*  m_pDescriptionName;
         UIText*  m_pDescriptionNum;
@@ -258,6 +259,10 @@ public:
         //blood
         vector<UIImage*> m_vecBlood;
 
+        //F Key
+        UIImage* pInteractionBG;
+        UIImage* pInteractionF;
+
         //Text ====================
         //ammo
         UIText* pAmmoReloadText;
@@ -287,6 +292,9 @@ public:
         //Å³·Î±×
         std::vector<UIText*> m_UIKillLogs;
         std::deque<std::pair<std::string, float>> m_killLogs;
+
+        //F Key Interaction
+        UIText* pInteractionText;
 
         const float INFO_TEXT_COOL_TIME;
         float m_infoTextCoolDown;

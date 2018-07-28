@@ -12,6 +12,8 @@
 #include "Ballistics.h"
 #include "TerrainFeature.h"
 #include "DeathDropBox.h"
+#include "UIText.h"
+#include "UIImage.h"
 
 const float MovingFactor::UNARMED_RUN = 180.0f;
 const float MovingFactor::UNARMED_SPRINT = 260.0f;
@@ -501,8 +503,13 @@ void Character::itemSphereCollisionInteraction()
     di.resize(0);
 
     auto itms(pCurrentScene->m_NearArea.GetItems());    //이 auto를 copy가 아닌 reference로 받는 방법은???
+
+    m_inGameUI.pInteractionF->SetIsRender(false);
+
+    // 보이는거 맴앞에
     for (auto itm : itms)
     {
+
         if (!Collision::HasCollision(m_boundingSphere, itm->GetBoundingSphere())) continue;
         //캐릭터와 Item의 spehre 가 충돌이 났다
 
@@ -521,13 +528,20 @@ void Character::itemSphereCollisionInteraction()
                 bs.radius,
                 &ray.m_pos,
                 &ray.m_dir)) continue;
+            string ItemName = ItemInfo::GetName(rayItm->GetTagResStatic());
+            m_inGameUI.pInteractionText->SetText(ItemName);
+            m_inGameUI.pInteractionF->SetIsRender(true);
+            m_inGameUI.pInteractionBG->SetSize(D3DXVECTOR2(50.0f + 6.0f*ItemName.size(), 23.0f));
+            m_inGameUI.pInteractionText->SetSize(D3DXVECTOR2(50.0f + 6.0f*ItemName.size(), 23.0f));
 
             if (m_currentOnceKey._F)
             {
                 PutItemInTotalInventory(rayItm); //inventory에 넣기
-                return;
             }
+            return;
         }
+
+
 
         if (m_currentOnceKey._F)
         {
@@ -536,6 +550,14 @@ void Character::itemSphereCollisionInteraction()
         }
 
         di.emplace_back(itm);
+        if (di.size() >0)
+        {
+            string ItemName = ItemInfo::GetName(di[0]->GetTagResStatic());
+            m_inGameUI.pInteractionText->SetText(ItemName);
+            m_inGameUI.pInteractionF->SetIsRender(true);
+            m_inGameUI.pInteractionBG->SetSize(D3DXVECTOR2(50.0f + 6.0f*ItemName.size(), 23.0f));
+            m_inGameUI.pInteractionText->SetSize(D3DXVECTOR2(50.0f + 6.0f*ItemName.size(), 23.0f));
+        }
     }
 
     auto deathDropboxes(pCurrentScene->m_NearArea.GetDeathDropBoxes());
@@ -552,31 +574,6 @@ void Character::itemSphereCollisionInteraction()
     //캐릭터 spehre안에 아이템이 없으면 모션을 캔슬했다 (앞으로 문열기 등 interaction에서 문제가 많은 코드) (이후에 바뀔것이다)
     if (di.size() == 0)
         m_currentOnceKey._F = false;
-
-    ////Ray를 쏘아서 맞는 물건 먼저 먹기
-    //for (auto& rayItm : di)
-    //{
-    //    Ray ray = Ray::RayAtWorldSpace(1280 / 2, 720 / 2);
-
-    //    // 먼저 terrain features의 바운딩스피어와 충돌을 검사한다.
-    //    BoundingSphere bs = rayItm->GetBoundingSphere();
-
-    //    if (!D3DXSphereBoundProbe(
-    //        &(bs.center + bs.position),
-    //        bs.radius,
-    //        &ray.m_pos,
-    //        &ray.m_dir)) continue;
-
-    //    if (m_currentOnceKey._F)
-    //    {
-    //        PutItemInTotalInventory(rayItm); //inventory에 넣기
-    //                                         //current scene 에서 지우기
-    //        pCurrentScene->ItemIntoInventory(pCurrentScene->GetCellIndex(rayItm->GetTransform()->GetPosition()), rayItm);
-    //    }
-    //}
-
-    //////////////////////////////////////////////////
-
 }
 //cout << virtical_result << "=============" << horizontal_result << endl;
 void Character::characterRotation(MouseInput* mouseInput)

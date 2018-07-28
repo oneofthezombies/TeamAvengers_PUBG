@@ -86,6 +86,8 @@ Character::InGameUI::InGameUI()
     , pAimRightLine(nullptr)
     , pAimUpLine(nullptr)
     , pAimDownLine(nullptr)
+    , pInteractionBG(nullptr)
+    , pInteractionF(nullptr)
 
     //Text ====================
     , pAmmoReloadText(nullptr)
@@ -104,6 +106,7 @@ Character::InGameUI::InGameUI()
 
     , pInfoText(nullptr)
     , pInfoTextShadow(nullptr)
+    , pInteractionText(nullptr)
 
     //=========================
     , INFO_TEXT_COOL_TIME(4.0f)
@@ -572,6 +575,33 @@ void Character::InGameUI::Init(Character* pPlayer)
     {
         a->SetIsRender(false);
     }
+
+    pInteractionF = new UIImage(
+        "./Resource/UI/InGame/",
+        "F.png",
+        D3DXVECTOR3(713.0f, 404.0f, 0.0f),
+        nullptr,
+        pBackground
+    );
+    pInteractionF->SetIsRender(true);
+
+    pInteractionBG = new UIImage(
+        "./Resource/UI/InGame/",
+        "F_name_bg.png",
+        D3DXVECTOR3(27.0f, 0.0f, 0.0f),
+        nullptr,
+        pInteractionF
+    );
+
+    pInteractionText = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameInfo),
+        D3DXVECTOR2(pInteractionBG->GetSize().x, pInteractionBG->GetSize().y),
+        "TEST겸 글자 수 체크",
+        WHITE_ALPHA,
+        pInteractionBG
+    );
+    pInteractionText->SetDrawTextFormat(DT_CENTER);
+    pInteractionText->SetPosition(D3DXVECTOR3(0.0f, 4.0f, 0.0f));
 }
 
 void Character::InGameUI::Update(const TotalInventory& inven)
