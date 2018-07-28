@@ -8,11 +8,11 @@ private:
     float                                   m_DamageMagnitute;
 
     LPD3DXMESH                              m_MagneticField;
-
-    std::chrono::system_clock::time_point   m_start;
-    
+            
     float                                   m_coolDown;
     const float                             m_coolTime;
+    
+    bool                                    m_isMoving;
     
     
 private:

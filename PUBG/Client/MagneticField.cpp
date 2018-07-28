@@ -5,12 +5,13 @@
 
 MagneticField::MagneticField()
     :IObject(TAG_OBJECT::MagneticField)
-    , m_Radius(2000.0f)
+    , m_Radius(30000.0f)/*82712.3*/
     , m_DamageMagnitute(10.0f)
     , m_MagneticField(nullptr)
-    /*, m_coolTime(5.0f * 60.0f)*/
-    , m_coolTime(10.0f)
+    , m_coolTime(5.0f * 60.0f)
+    //, m_coolTime(10.0f)
     , m_coolDown(0.0f)
+    , m_isMoving(false)
 {
 }
 
@@ -30,12 +31,6 @@ void MagneticField::setFinalDestination()
     finalDestination[2] = D3DXVECTOR3(8000.0f, 4501.0f, 4500.0f);
     finalDestination[3] = D3DXVECTOR3(20000.0f, 4802.0f, 6500.0f);
     finalDestination[4] = D3DXVECTOR3(17700.0f, 4600.0f, 17500.0f);
-    
-    //finalDestination[0] = D3DXVECTOR3(12800.0f, 5750.0f, 12800.0f);
-    //finalDestination[1] = D3DXVECTOR3(12800.0f, 5750.0f, 12800.0f);
-    //finalDestination[2] = D3DXVECTOR3(12800.0f, 5750.0f, 12800.0f);
-    //finalDestination[3] = D3DXVECTOR3(12800.0f, 5750.0f, 12800.0f);
-    //finalDestination[4] = D3DXVECTOR3(12800.0f, 5750.0f, 12800.0f);
 
 
     //처음 random으로 position 설정
@@ -46,13 +41,12 @@ void MagneticField::setFinalDestination()
 
 void MagneticField::Init()
 {
-    D3DXCreateSphere(Device()(), m_Radius, 20, 20,&m_MagneticField, nullptr);
+    D3DXCreateSphere(Device()(), 1.0f, 20, 20,&m_MagneticField, nullptr);
     
     setFinalDestination();
-    m_start = std::chrono::system_clock::now();
 
     m_coolDown = m_coolTime;
-
+    m_isMoving = false;
 }
 
 void MagneticField::OnUpdate()
@@ -60,28 +54,35 @@ void MagneticField::OnUpdate()
     Debug << "final Destination : " << GetTransform()->GetPosition() << endl;
     Debug << "Radius : " << m_Radius << endl;
     
-
-
-
     const float dt = Time()()->GetDeltaTime();
     
-    if (Input()()->IsStayKeyDown(VK_UP)) { m_Radius += 1.0f; };
-    if (Input()()->IsStayKeyDown(VK_DOWN)) { m_Radius -= 1.0f; };
-    
-    m_coolDown -= dt;
-
     if (m_coolDown <= 0.0f)
     {
         // do
-        m_Radius -= dt;    
+        if (m_Radius > 1000.0f)//이 이하로는 안 줄어 듬
+        {
+            m_Radius -= dt * 100.0f;
+            m_isMoving = true;
+        }
     }
-    
-    if(static_cast<int>(m_Radius) == 1000)
+    else
+    {
+        m_coolDown -= dt; //초가 줄어드는 부분
+    }
+
+    int castToInt = static_cast<int>(m_Radius);
+
+    if (m_isMoving && castToInt ==/*1500 */10000)
+    {
         m_coolDown = m_coolTime;
-    if (static_cast<int>(m_Radius) == 500)
+        m_isMoving = false;
+    }
+    else if (m_isMoving &&castToInt == /*1200*/5000)
+    {
         m_coolDown = m_coolTime;
-    if (static_cast<int>(m_Radius) == 100)
-        m_coolDown = m_coolTime;
+        m_isMoving = false;
+    }
+ 
     
 
     //text UI
@@ -111,7 +112,7 @@ void MagneticField::OnRender()
     {
         pEffect->SetMatrix(Shader::World, &m);
 
-        D3DXCOLOR skyBlue(0.0f, 0.0f, 1.0f, 0.5f);
+        D3DXCOLOR skyBlue(0.4784f, 0.5686f, 0.9921f, 0.3f);
         pEffect->SetValue("Color", &skyBlue, sizeof skyBlue);
     });
 }

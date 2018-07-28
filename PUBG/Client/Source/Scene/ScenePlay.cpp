@@ -287,14 +287,22 @@ void ScenePlay::Render()
         const float lenSq = D3DXVec3LengthSq(&v);
         sortedByDistance.emplace(lenSq, o);
     }
-
-    //Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+    
     Render(sortedByDistance);
-    //Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-
-    Device()()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    if (m_pMagneticField) m_pMagneticField->Render();
-    Device()()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+    
+    if (m_pMagneticField)
+    {
+        if (m_pMagneticField->IsInside(cameraPos))
+        {
+            Device()()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
+            m_pMagneticField->Render();
+            Device()()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+        }
+        else
+        {
+            m_pMagneticField->Render();
+        }
+    }
 }
 
 void ScenePlay::AddObject(IObject* p)
