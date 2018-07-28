@@ -732,6 +732,7 @@ public:
     string GetNickName() const;
     float GetCharacterHealth() const;
     bool GetCharacterIsDead() const;
+    const BoundingBox& GetBoundingBox();
     
     void ResetIsDamaged();
     bool IsDamaged() const;
