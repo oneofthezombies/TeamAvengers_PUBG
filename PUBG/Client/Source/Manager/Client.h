@@ -99,6 +99,8 @@ struct Communication
         
         void SendEventDestroyItemInBox      (const int characterID, const int boxID, const std::string& itemName);
 
+        void SendEventKillLog(const std::string& killLog);
+
         friend Singleton<Manager>;
     };
 

@@ -92,6 +92,7 @@ public:
 
         UIImage* pBorder;
         UIImage* m_pDescriptionBorder;
+        UIImage* m_pDescriptionImage;
         UIText*  m_pDescriptionText;
         UIText*  m_pDescriptionName;
         UIText*  m_pDescriptionNum;
@@ -205,6 +206,8 @@ public:
         static const float AIM_DOWN_X;
         static const float AIM_DOWN_Y;  //360.0f + 11.9f
 
+        static const float KILL_LOG_LIFE_TIME;
+
         Character* pPlayer;
         string m_nickName;
         string m_killedNickName;
@@ -258,6 +261,10 @@ public:
         //blood
         vector<UIImage*> m_vecBlood;
 
+        //F Key
+        UIImage* pInteractionBG;
+        UIImage* pInteractionF;
+
         //Text ====================
         //ammo
         UIText* pAmmoReloadText;
@@ -285,7 +292,11 @@ public:
         UIText* pInfoTextShadow;
 
         //Å³·Î±×
-        vector<UIText*> vecKillLog;
+        std::vector<UIText*> m_UIKillLogs;
+        std::deque<std::pair<std::string, float>> m_killLogs;
+
+        //F Key Interaction
+        UIText* pInteractionText;
 
         const float INFO_TEXT_COOL_TIME;
         float m_infoTextCoolDown;
@@ -295,10 +306,8 @@ public:
 
         const float KILL_COOL_TIME;
         float m_killCoolDown;
-
         const float KILL_UP_COOL_TIME;
         float m_killUpCoolDown;
-
         bool m_isKill;
 
         float m_sumUp;
@@ -313,6 +322,7 @@ public:
         void Update(const TotalInventory& inven);
 
         void SetRedToZero();
+        void AddKillLog(const std::string& killLog);
 
         void setTextWithShadow(
             UIText*& pText,
@@ -498,6 +508,7 @@ private:
     std::size_t         m_cellIndex;
     float               m_health;
     bool                m_isDead;
+    bool                m_isMagneticField;
 
     CharacterAnimation*    pAnimation;
     vector<CharacterPart*> m_characterParts;

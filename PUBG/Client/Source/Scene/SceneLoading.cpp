@@ -112,6 +112,9 @@ void SceneLoading::Load()
     load("./Resource/UI/InGame/", "aim_ver.png");
     load("./Resource/UI/InGame/", "aim_hor.png");
 
+    load("./Resource/UI/InGame/", "F.png");
+    load("./Resource/UI/InGame/", "F_name_bg.png");
+
     load("./Resource/UI/InGame/", "mini_map.png");
     load("./Resource/UI/InGame/", "mini_map_me.png");
 
@@ -435,7 +438,7 @@ void SceneLoading::OnInit()
     m_start = std::chrono::system_clock::now();
     t = std::thread(std::bind(&SceneLoading::Load, this));
 
-    m_channel = Sound()()->Play(TAG_SOUND::Background, Vector3::ZERO, 1.0f, FMOD_2D | FMOD_LOOP_NORMAL);
+    //m_channel = Sound()()->Play(TAG_SOUND::Background, Vector3::ZERO, 1.0f, FMOD_2D | FMOD_LOOP_NORMAL);
 }
 
 void SceneLoading::load(const TAG_RES_STATIC tag)
