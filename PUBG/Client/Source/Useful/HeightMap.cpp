@@ -296,7 +296,10 @@ void HeightMap::SetMoreHigherFloor()
 
 
 
-
+    //warehouse_A
+    //east stairs
+    AddHeightVertex(D3DXVECTOR3(9430.240f, 4748.771f, 16836.355f), D3DXVECTOR3(9034.330f, 4774.442f, 16836.355f),
+        D3DXVECTOR3(9023.568f, 4774.442f, 17664.314f), D3DXVECTOR3(9426.085f, 4746.271f, 17659.828f));
 
 
     //Church stairs 
@@ -426,7 +429,8 @@ bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
 
 
     //2. 추가된 map의 자리와 판결해서 height를 주는 부분
-    D3DXVECTOR3 rayPos(pos.x, pos.y + 10.0f, pos.z);
+    const float offsetY = 20.0f;
+    D3DXVECTOR3 rayPos(pos.x, pos.y + offsetY, pos.z);
     D3DXVECTOR3 rayDir(0, -1, 0);
     float distance;
 

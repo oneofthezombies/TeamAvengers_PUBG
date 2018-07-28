@@ -223,7 +223,12 @@ void Character::GameOverUI::Update()
         int rank = 0;
         if (survivors == 1)
         {
-            rank = 1;
+            const GameInfo::RoomInfo& roomInfo = Communication()()->m_roomInfo;
+            const GameInfo::MyInfo& myInfo = Communication()()->m_myInfo;
+            if (roomInfo.playerInfos[myInfo.ID].isDead) //내가 죽었으면 2등
+                rank = 2;
+            else
+                rank = 1;
         }
         else
         {
