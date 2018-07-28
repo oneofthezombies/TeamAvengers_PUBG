@@ -11,6 +11,7 @@ enum class TAG_OBJECT
     Item,
     Particle,
     DeathDropBox,
+    MagneticField,
     Water,
 };
 

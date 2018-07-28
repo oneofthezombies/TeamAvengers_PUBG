@@ -30,8 +30,6 @@ void SceneLoading::Load()
     loadSync("./Resource/Static/Map/Vegetation/Grass/Grass_1/", "T_ReedsTall_GrassD.tga", D3DCOLOR_XRGB(96, 119, 76));
     loadSync("./Resource/Static/Map/Vegetation/Grass/Grass_2/", "Swamp_grass_D.tga", D3DCOLOR_XRGB(118, 130, 82));
 
-    cout << "ended sync\n";
-
     auto p = ResourceInfo::GetUIPathFileName(TAG_RES_STATIC::Ammo_5_56mm);
     load(p.first, p.second, D3DCOLOR_XRGB(0, 0, 0));
 

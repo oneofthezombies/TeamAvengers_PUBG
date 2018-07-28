@@ -11,6 +11,7 @@
 #include "DeathDropBox.h"
 #include "UIImage.h"
 #include "UITest.h"
+#include "MagneticField.h"
 
 void ScenePlay::setAloneMode()
 {
@@ -30,6 +31,10 @@ void ScenePlay::setAloneMode()
     Light()()->SetTarget(pPlayer->GetTransform());
     //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
     Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1000.0f, 4000.0f, -1000.0f));
+
+    MagneticField* pMF = new MagneticField();
+    pMF->Init();
+    AddObject(pMF);
     
     //for water
     pWater = new Water;
@@ -246,6 +251,7 @@ ScenePlay::ScenePlay()
     , m_layer(nullptr)
     , m_coolDown(0.0f)
     , m_coolTime(3.0f)
+    , m_pMagneticField(nullptr)
     , pSplash(nullptr)
 {
 }
@@ -281,46 +287,22 @@ void ScenePlay::Render()
         const float lenSq = D3DXVec3LengthSq(&v);
         sortedByDistance.emplace(lenSq, o);
     }
-
-    auto begin = sortedByDistance.rbegin();
-    auto end = sortedByDistance.rend();
-    for (auto it = begin; it != end; ++it)
+    
+    Render(sortedByDistance);
+    
+    if (m_pMagneticField)
     {
-        IObject* pO = it->second;
-        pO->Render();
+        if (m_pMagneticField->IsInside(cameraPos))
+        {
+            Device()()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
+            m_pMagneticField->Render();
+            Device()()->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+        }
+        else
+        {
+            m_pMagneticField->Render();
+        }
     }
-
-    //// test for surfaces of church
-    //static D3DXVECTOR3 pos;
-    //if (Input()()->IsStayKeyDown(VK_UP))    { pos.y += 1.0f; };
-    //if (Input()()->IsStayKeyDown(VK_DOWN))  { pos.y -= 1.0f; };
-    //if (Input()()->IsStayKeyDown(VK_LEFT))  { pos.x -= 1.0f; };
-    //if (Input()()->IsStayKeyDown(VK_RIGHT)) { pos.x += 1.0f; };
-    //if (Input()()->IsStayKeyDown('9'))      { pos.z += 1.0f; };
-    //if (Input()()->IsStayKeyDown('0'))      { pos.z -= 1.0f; };
-    //Debug << "church pos : " << pos << endl;
-
-    //D3DXMATRIX t;
-    //D3DXMatrixTranslation(&t, pos.x, pos.y, pos.z);
-
-    //Shader::Draw(
-    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
-    //    nullptr,
-    //    [&t](LPD3DXEFFECT pEffect)
-    //{
-    //    D3DXVECTOR4 black(0.0f, 0.0f, 0.0f, 1.0f);
-    //    pEffect->SetVector("Color", &black);
-
-    //    pEffect->SetMatrix(Shader::World, &t);
-    //},
-    //    [this]()
-    //{
-    //    Device()()->DrawPrimitiveUP(
-    //        D3DPT_TRIANGLELIST,
-    //        static_cast<UINT>(m_verticesChurch.size() / 3),
-    //        m_verticesChurch.data(),
-    //        sizeof m_verticesChurch.front());
-    //});
 }
 
 void ScenePlay::AddObject(IObject* p)
@@ -357,6 +339,12 @@ void ScenePlay::AddObject(IObject* p)
     case TAG_OBJECT::Water:
         {
             secondGroup.emplace(p);
+        }
+        break;
+    case TAG_OBJECT::MagneticField:
+        {
+            SAFE_DELETE(m_pMagneticField);
+            m_pMagneticField = static_cast<MagneticField*>(p);
         }
         break;
     default:
@@ -416,7 +404,7 @@ void ScenePlay::OnInit()
             pis[i].ID = static_cast<int>(i);
         }
 
-        Communication()()->m_myInfo.ID = 0;
+        Communication()()->m_myInfo.ID = 1;
 
         AddCharacters();
         setAloneMode();
@@ -548,5 +536,36 @@ void ScenePlay::AddCharacters()
     {
         c->InitScenePlay();
         AddObject(c);
+    }
+}
+
+void ScenePlay::SortByDistance(
+    const D3DXVECTOR3& cameraPos,
+    const std::set<IObject*>& objects,
+    std::map<float, IObject*>* OutObjects)
+{
+    assert(OutObjects && "sortByDistance(), argument is null.");
+
+    OutObjects->clear();
+
+    for (auto o : objects)
+    {
+        if (!o) continue;
+
+        const D3DXVECTOR3 v = o->GetTransform()->GetPosition() - cameraPos;
+        const float lenSq = D3DXVec3LengthSq(&v);
+        OutObjects->emplace(lenSq, o);
+    }
+}
+
+void ScenePlay::Render(const std::map<float, IObject*>& sortedObjects)
+{
+    for (
+        auto it = sortedObjects.rbegin();
+        it != sortedObjects.rend();
+        ++it)
+    {
+        IObject* pO = it->second;
+        pO->Render();
     }
 }

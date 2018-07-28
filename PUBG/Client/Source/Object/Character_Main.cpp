@@ -66,6 +66,8 @@ Character::Character(const int index)
 
     , m_otherHitPart(0)
     , m_stepDistance(0.0f)
+
+    , pMagneticField(nullptr)
 {
     pAnimation = new CharacterAnimation(m_index);
     AddChild(pAnimation);
@@ -93,6 +95,9 @@ Character::Character(const int index)
 
     //m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
     
+    pMagneticField = static_cast<ScenePlay*>(CurrentScene()())->GetMagneticField();
+    if (!pMagneticField)
+        assert(false && "no magnetic field");
 }
 
 Character::~Character()
@@ -298,8 +303,14 @@ void Character::updateMine()
     //m_health 가 0이 되면 죽는 애니메이션, server communication;
     checkDead();
 
+
+
     const float dt = Time()()->GetDeltaTime();
     Transform* tm = GetTransform();
+
+    //자기장
+    
+
 
     //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용
     handleInput(&m_currentStayKey);
@@ -322,10 +333,6 @@ void Character::updateMine()
     ////////////충돌 체크 Area/////////////////////
     //Terrain과의 충돌체크
     terrainFeaturesCollisionInteraction(&destState);
-    //terrainFeaturesCollisionInteraction2(&destState);
-    
-
-    //D3DXMatrixOrthoLH()
 
     //Item 과의 충돌체크
     itemSphereCollisionInteraction();   //<<이곳 안에 m_currentOnceKey._F = false 하는 로직을 넣어놓았다(나중에 문제 생길 수 있을 것 같다)

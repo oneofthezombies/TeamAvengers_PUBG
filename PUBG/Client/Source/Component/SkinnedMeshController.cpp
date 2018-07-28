@@ -151,11 +151,11 @@ void SkinnedMeshController::notifyAnimationEvent(
         if (static_cast<Character*>(pParent)->GetIndex() == 
             Communication()()->m_myInfo.ID)
         {
-            Debug << "track 0\n"
-                << "animation name    : " << name << '\n'
-                << "current  position : " << currentPosition << '\n'
-                << "periodic position : " << periodicPosition << '\n'
-                << "period            : " << period << '\n';
+            //Debug << "track 0\n"
+            //    << "animation name    : " << name << '\n'
+            //    << "current  position : " << currentPosition << '\n'
+            //    << "periodic position : " << periodicPosition << '\n'
+            //    << "period            : " << period << '\n';
         }
     }
 
@@ -179,11 +179,11 @@ void SkinnedMeshController::notifyAnimationEvent(
             if (static_cast<Character*>(pParent)->GetIndex() == 
                 Communication()()->m_myInfo.ID)
             {
-                Debug << "track 1\n"
-                    << "animation name    : " << track1Name << '\n'
-                    << "current  position : " << track1CurrentPosition << '\n'
-                    << "periodic position : " << track1PeriodicPosition << '\n'
-                    << "period            : " << track1Period << "\n\n";
+                //Debug << "track 1\n"
+                //    << "animation name    : " << track1Name << '\n'
+                //    << "current  position : " << track1CurrentPosition << '\n'
+                //    << "periodic position : " << track1PeriodicPosition << '\n'
+                //    << "period            : " << track1Period << "\n\n";
             }
         }
 
@@ -196,11 +196,11 @@ void SkinnedMeshController::notifyAnimationEvent(
             if (static_cast<Character*>(pParent)->GetIndex() == 
                 Communication()()->m_myInfo.ID)
             {
-                Debug << "track 1\n"
-                    << "animation name    : " << '\n'
-                    << "current  position : " << '\n'
-                    << "periodic position : " << '\n'
-                    << "period            : " << "\n\n";
+                //Debug << "track 1\n"
+                //    << "animation name    : " << '\n'
+                //    << "current  position : " << '\n'
+                //    << "periodic position : " << '\n'
+                //    << "period            : " << "\n\n";
             }
         }
     }

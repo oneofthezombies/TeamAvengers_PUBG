@@ -11,6 +11,7 @@ class Item;
 class Area;
 class UiButtonListener;
 class UICompass;
+class MagneticField;
 
 struct FramePtr
 {
@@ -558,6 +559,9 @@ private:
     float m_adjust_Y_onCollision;
     float m_stepDistance;
 
+    //Magnetic Field
+    MagneticField* pMagneticField;
+
 /**************************** end member variable ****************************/
 
 
@@ -604,7 +608,6 @@ private:
 
     //D3DXVECTOR3 getDown();
 
-    
     //for inventory
     //이미 인벤토리에 있는 경우, 기존 개수와 합치는 함수
     bool createOrMergeItem(std::map<TAG_RES_STATIC, std::vector<Item*>>* map, Item* item);
@@ -733,6 +736,7 @@ public:
     string GetNickName() const;
     float GetCharacterHealth() const;
     bool GetCharacterIsDead() const;
+    const BoundingBox& GetBoundingBox();
     
     void ResetIsDamaged();
     bool IsDamaged() const;

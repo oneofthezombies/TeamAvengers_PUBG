@@ -6,6 +6,7 @@
 class DeathDropBox;
 class UIImage;
 class UITest;
+class MagneticField;
 
 class ScenePlay : public IScene
 {
@@ -19,6 +20,7 @@ private:
     std::set<IObject*> firstGroup;
     std::set<IObject*> secondGroup;
     std::set<IObject*> thirdGroup;
+    MagneticField*     m_pMagneticField;
 
     //// for surface
     //std::vector<D3DXVECTOR3> m_verticesChurch;
@@ -52,4 +54,17 @@ public:
     
     UIObject* GetLayer(int layerIndex) const;
     void AddCharacters();
+
+    void SortByDistance(
+        const D3DXVECTOR3& cameraPos,
+        const std::set<IObject*>& objects,
+        std::map<float, IObject*>* OutObjects);
+
+    MagneticField* GetMagneticField()
+    {
+        return m_pMagneticField;
+    }
+
+
+    void Render(const std::map<float, IObject*>& sortedObjects);
 };
