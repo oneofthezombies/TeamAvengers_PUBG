@@ -87,6 +87,9 @@ Character::InGameUI::InGameUI()
     , pAimUpLine(nullptr)
     , pAimDownLine(nullptr)
 
+    , pTimeBg(nullptr)
+    , pTimeZeroImg(nullptr)
+
     //Text ====================
     , pAmmoReloadText(nullptr)
     , pAmmoNumText(nullptr)
@@ -122,6 +125,9 @@ Character::InGameUI::InGameUI()
     , KILL_UP_COOL_TIME(8.0f)
     , m_killUpCoolDown(0.0f)
 
+    , MAGNETIC_FIELD_COOL_TIME(3.0f)
+    , m_magneticFieldCoolDown(0.0f)
+
     , m_isKill(false)
 
     , m_sumUp(0.0f)
@@ -144,6 +150,7 @@ void Character::InGameUI::Init(Character* pPlayer)
     m_killCoolDown = KILL_COOL_TIME;
     m_killUpCoolDown = KILL_UP_COOL_TIME;
     m_bloodCoolDown = BLOOD_COOL_TIME;
+    m_magneticFieldCoolDown = MAGNETIC_FIELD_COOL_TIME;
 
     ScenePlay* scenePlay = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
     UIObject* layer2 = scenePlay->GetLayer(2);
@@ -439,7 +446,7 @@ void Character::InGameUI::Init(Character* pPlayer)
         string(""),
         WHITE,
         pBackground,
-        D3DXVECTOR3(440.0f, 480.0f, 0.0f));
+        D3DXVECTOR3(400.0f, 480.0f, 0.0f));
 
     //아이템 사용 등 안내문구
     setTextWithShadow(
@@ -453,25 +460,42 @@ void Character::InGameUI::Init(Character* pPlayer)
         D3DXVECTOR3(510.0f, 579.0f, 0.0f));
 
     //자기장 시간 및 시간제한 안내문구
+    pTimeBg = new UIImage(
+        "./Resource/UI/InGame/",
+        "time_bg.png",
+        D3DXVECTOR3(1085.0f, 516.0f, 0.0f),
+        nullptr,
+        pBackground
+    );
+
     pMagneticFieldTimeText = new UIText(
         Resource()()->GetFont(TAG_FONT::InGameMagneticFieldTime),
         D3DXVECTOR2(50.0f, 12.0f),
         "",
         WHITE_ALPHA,
-        pBackground
+        pTimeBg
     );
     pMagneticFieldTimeText->SetDrawTextFormat(DT_LEFT);
-    pMagneticFieldTimeText->SetPosition(D3DXVECTOR3(1085.0f, 516.0f, 0.0f));
+    pMagneticFieldTimeText->SetPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
     setTextWithShadow(
         pMagneticFieldInfoText,
         pMagneticFieldInfoShadowText,
         Resource()()->GetFont(TAG_FONT::InGameMagneticFieldInfo),
-        D3DXVECTOR2(500.0f, 40.0f),
+        D3DXVECTOR2(800.0f, 40.0f),
         string(""),
         D3DCOLOR_XRGB(244, 239, 124),
         pBackground,
-        D3DXVECTOR3(400.0f, 439.0f, 0.0f));
+        D3DXVECTOR3(270.0f, 439.0f, 0.0f));
+     
+    pTimeZeroImg = new UIImage(
+        "./Resource/UI/InGame/",
+        "time_zero.png",
+        D3DXVECTOR3(1085.0f, 514.0f, 0.0f),
+        nullptr,
+        pBackground
+    );
+    pTimeZeroImg->SetIsRender(false);
 
     //킬로그
     //ex) "HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
@@ -650,6 +674,18 @@ void Character::InGameUI::Update(const TotalInventory& inven)
 
     //aim
     updateAimUI(inven);
+
+    //경기 제한 문구
+    const float dt = Time()()->GetDeltaTime();
+    if (pMagneticFieldInfoText->GetText() != "")
+    {
+        m_magneticFieldCoolDown -= dt;
+        if (m_magneticFieldCoolDown <= 0.0f)
+        {
+            pMagneticFieldInfoText->SetText("", pMagneticFieldInfoShadowText);
+            m_magneticFieldCoolDown = MAGNETIC_FIELD_COOL_TIME;
+        }
+    }
 }
 
 void Character::InGameUI::SetRedToZero()
@@ -860,6 +896,8 @@ void Character::InGameUI::updateKillUI(const TotalInventory& inven)
         pQBZRedImg->SetIsRender(false);
         pKar98kRedImg->SetIsRender(false);
 
+        pTimeBg->SetIsRender(false);
+        pTimeZeroImg->SetIsRender(false);
     }
     else
     {

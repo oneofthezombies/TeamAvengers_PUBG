@@ -255,6 +255,11 @@ public:
         UIImage* pAimUpLine;
         UIImage* pAimDownLine;
 
+        //자기장 시간 배경
+        UIImage* pTimeBg;
+        //자기장 시간이 0일 때 !
+        UIImage* pTimeZeroImg;
+
         //blood
         vector<UIImage*> m_vecBlood;
 
@@ -301,8 +306,13 @@ public:
 
         const float KILL_COOL_TIME;
         float m_killCoolDown;
+
         const float KILL_UP_COOL_TIME;
         float m_killUpCoolDown;
+
+        const float MAGNETIC_FIELD_COOL_TIME;
+        float m_magneticFieldCoolDown;
+
         bool m_isKill;
 
         float m_sumUp;

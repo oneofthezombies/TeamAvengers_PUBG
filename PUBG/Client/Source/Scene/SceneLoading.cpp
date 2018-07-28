@@ -111,6 +111,9 @@ void SceneLoading::Load()
     load("./Resource/UI/InGame/", "aim_ver.png");
     load("./Resource/UI/InGame/", "aim_hor.png");
 
+    load("./Resource/UI/InGame/", "time_bg.png");
+    load("./Resource/UI/InGame/", "time_zero.png");
+
     //for Blood ui
     load("./Resource/UI/InGame/Blood/", "b3.png");
     load("./Resource/UI/InGame/Blood/", "b5.png");

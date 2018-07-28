@@ -16,7 +16,7 @@ private:
     const float                             m_coolTime;
     
     bool                                    m_isMoving;
-    
+    bool                                    m_isPrintOnce;
     
 private:
     void setFinalDestination();
@@ -41,4 +41,6 @@ public:
 
     bool IsDamageTime(const float dt);
     bool IsInside(const D3DXVECTOR3 pos);
+
+    void updateTime(const int minutes, const int seconds);
 };
