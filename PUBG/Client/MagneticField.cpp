@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "MagneticField.h"
 #include "ComponentTransform.h"
-
-
+#include "Character.h"
+#include "UIText.h"
+#include "ScenePlay.h"
 MagneticField::MagneticField()
     :IObject(TAG_OBJECT::MagneticField)
     , m_Position(Vector3::ZERO)
@@ -88,13 +89,16 @@ void MagneticField::OnUpdate()
         m_isMoving = false;
     }
  
-    
-
     //text UI
     const int nCoolDown = static_cast<int>(m_coolDown);
     const int minutes = nCoolDown / 60;
     const int seconds = nCoolDown % 60;
     Debug << "remaining time : " << minutes << " : " << seconds << endl;
+
+    //for InGameUI
+    ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
+    Character* pPlayer = currentScene->GetPlayer();
+    pPlayer->GetInGameUI().pMagneticFieldTimeText->SetText(to_string(minutes) + ":" + to_string(seconds));
 }
 
 void MagneticField::OnRender()

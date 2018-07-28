@@ -105,6 +105,10 @@ Character::InGameUI::InGameUI()
     , pInfoText(nullptr)
     , pInfoTextShadow(nullptr)
 
+    , pMagneticFieldTimeText(nullptr)
+    , pMagneticFieldInfoText(nullptr)
+    , pMagneticFieldInfoShadowText(nullptr)
+
     //=========================
     , INFO_TEXT_COOL_TIME(4.0f)
     , m_infoTextCoolDown(0.0f)
@@ -448,6 +452,27 @@ void Character::InGameUI::Init(Character* pPlayer)
         pBackground,
         D3DXVECTOR3(510.0f, 579.0f, 0.0f));
 
+    //자기장 시간 및 시간제한 안내문구
+    pMagneticFieldTimeText = new UIText(
+        Resource()()->GetFont(TAG_FONT::InGameMagneticFieldTime),
+        D3DXVECTOR2(50.0f, 12.0f),
+        "",
+        WHITE_ALPHA,
+        pBackground
+    );
+    pMagneticFieldTimeText->SetDrawTextFormat(DT_LEFT);
+    pMagneticFieldTimeText->SetPosition(D3DXVECTOR3(1085.0f, 516.0f, 0.0f));
+
+    setTextWithShadow(
+        pMagneticFieldInfoText,
+        pMagneticFieldInfoShadowText,
+        Resource()()->GetFont(TAG_FONT::InGameMagneticFieldInfo),
+        D3DXVECTOR2(500.0f, 40.0f),
+        string(""),
+        D3DCOLOR_XRGB(244, 239, 124),
+        pBackground,
+        D3DXVECTOR3(400.0f, 439.0f, 0.0f));
+
     //킬로그
     //ex) "HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
     auto pKillLog1 = new UIText(
@@ -624,85 +649,7 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     updateCompassUI();
 
     //aim
-    if (inven.m_pHand && !inven.isOpened)
-    {
-        pAimCircle->SetIsRender(true);
-        pAimLeftLine->SetIsRender(true);
-        pAimRightLine->SetIsRender(true);
-        pAimUpLine->SetIsRender(true);
-        pAimDownLine->SetIsRender(true);
-        
-        //여기서부터
-        //에임 벌어지는거 하면댐
-        auto& backAction = pPlayer->GetWaitBackAction();
-        if (backAction.Ing)
-        {
-            if (backAction.Up)
-            {
-                m_sumUp += backAction.curValX * 0.5f * 1000.0f;
-                //cout << "backAction: true" << endl;
-                //cout << "curValX_sumUp: " << backAction.curValX * 0.5f * 1000.0f << endl;
-                //cout << "sumDown: " << m_sumUp << endl;
-                if (m_sumUp >= 50.0f)
-                    m_sumUp = 50.0f;
-
-                pAimLeftLine->SetPosition(D3DXVECTOR3(
-                    AIM_LEFT_X - m_sumUp,
-                    AIM_LEFT_Y,
-                    0.0f));
-
-                pAimRightLine->SetPosition(D3DXVECTOR3(
-                    AIM_RIGHT_X + m_sumUp,
-                    AIM_RIGHT_Y,
-                    0.0f));
-
-                pAimUpLine->SetPosition(D3DXVECTOR3(
-                    AIM_UP_X,
-                    AIM_UP_Y - m_sumUp,
-                    0.0f));
-
-                pAimDownLine->SetPosition(D3DXVECTOR3(
-                    AIM_DOWN_X,
-                    AIM_DOWN_Y + m_sumUp,
-                    0.0f));
-            }
-            else //backAction.Up == false
-            {
-                pAimLeftLine->SetPosition(D3DXVECTOR3(
-                    AIM_LEFT_X,
-                    AIM_LEFT_Y,
-                    0.0f));
-
-                pAimRightLine->SetPosition(D3DXVECTOR3(
-                    AIM_RIGHT_X,
-                    AIM_RIGHT_Y,
-                    0.0f));
-
-                pAimUpLine->SetPosition(D3DXVECTOR3(
-                    AIM_UP_X,
-                    AIM_UP_Y,
-                    0.0f));
-
-                pAimDownLine->SetPosition(D3DXVECTOR3(
-                    AIM_DOWN_X,
-                    AIM_DOWN_Y,
-                    0.0f));
-
-                m_sumUp = 0.0f;
-            }
-        }
-        else //backAction.Ing == false
-        {
-        }
-    }
-    else
-    {
-        pAimCircle->SetIsRender(false);
-        pAimLeftLine->SetIsRender(false);
-        pAimRightLine->SetIsRender(false);
-        pAimUpLine->SetIsRender(false);
-        pAimDownLine->SetIsRender(false);
-    }
+    updateAimUI(inven);
 }
 
 void Character::InGameUI::SetRedToZero()
@@ -1198,4 +1145,87 @@ void Character::InGameUI::updateBloodUI()
 void Character::InGameUI::updateCompassUI()
 {
     pUICompass->SetRotationY(pPlayer->GetForward());
+}
+
+void Character::InGameUI::updateAimUI(const TotalInventory& inven)
+{
+    if (inven.m_pHand && !inven.isOpened)
+    {
+        pAimCircle->SetIsRender(true);
+        pAimLeftLine->SetIsRender(true);
+        pAimRightLine->SetIsRender(true);
+        pAimUpLine->SetIsRender(true);
+        pAimDownLine->SetIsRender(true);
+
+        //여기서부터
+        //에임 벌어지는거 하면댐
+        auto& backAction = pPlayer->GetWaitBackAction();
+        if (backAction.Ing)
+        {
+            if (backAction.Up)
+            {
+                m_sumUp += backAction.curValX * 0.5f * 1000.0f;
+                //cout << "backAction: true" << endl;
+                //cout << "curValX_sumUp: " << backAction.curValX * 0.5f * 1000.0f << endl;
+                //cout << "sumDown: " << m_sumUp << endl;
+                if (m_sumUp >= 50.0f)
+                    m_sumUp = 50.0f;
+
+                pAimLeftLine->SetPosition(D3DXVECTOR3(
+                    AIM_LEFT_X - m_sumUp,
+                    AIM_LEFT_Y,
+                    0.0f));
+
+                pAimRightLine->SetPosition(D3DXVECTOR3(
+                    AIM_RIGHT_X + m_sumUp,
+                    AIM_RIGHT_Y,
+                    0.0f));
+
+                pAimUpLine->SetPosition(D3DXVECTOR3(
+                    AIM_UP_X,
+                    AIM_UP_Y - m_sumUp,
+                    0.0f));
+
+                pAimDownLine->SetPosition(D3DXVECTOR3(
+                    AIM_DOWN_X,
+                    AIM_DOWN_Y + m_sumUp,
+                    0.0f));
+            }
+            else //backAction.Up == false
+            {
+                pAimLeftLine->SetPosition(D3DXVECTOR3(
+                    AIM_LEFT_X,
+                    AIM_LEFT_Y,
+                    0.0f));
+
+                pAimRightLine->SetPosition(D3DXVECTOR3(
+                    AIM_RIGHT_X,
+                    AIM_RIGHT_Y,
+                    0.0f));
+
+                pAimUpLine->SetPosition(D3DXVECTOR3(
+                    AIM_UP_X,
+                    AIM_UP_Y,
+                    0.0f));
+
+                pAimDownLine->SetPosition(D3DXVECTOR3(
+                    AIM_DOWN_X,
+                    AIM_DOWN_Y,
+                    0.0f));
+
+                m_sumUp = 0.0f;
+            }
+        }
+        else //backAction.Ing == false
+        {
+        }
+    }
+    else
+    {
+        pAimCircle->SetIsRender(false);
+        pAimLeftLine->SetIsRender(false);
+        pAimRightLine->SetIsRender(false);
+        pAimUpLine->SetIsRender(false);
+        pAimDownLine->SetIsRender(false);
+    }
 }

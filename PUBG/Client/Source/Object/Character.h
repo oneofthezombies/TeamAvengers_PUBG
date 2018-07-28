@@ -284,6 +284,11 @@ public:
         UIText* pInfoText;
         UIText* pInfoTextShadow;
 
+        //자기장 시간 및 시간제한 안내문구
+        UIText* pMagneticFieldTimeText;
+        UIText* pMagneticFieldInfoText;
+        UIText* pMagneticFieldInfoShadowText;
+
         //킬로그
         std::vector<UIText*> m_UIKillLogs;
         std::deque<std::pair<std::string, float>> m_killLogs;
@@ -333,6 +338,7 @@ public:
         void updateWeaponUI(const TotalInventory& inven);
         void updateBloodUI();
         void updateCompassUI();
+        void updateAimUI(const TotalInventory& inven);
     };
 
     struct GameOverUI : public IUIButtonOnMouseListener
