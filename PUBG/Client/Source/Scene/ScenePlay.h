@@ -60,5 +60,11 @@ public:
         const std::set<IObject*>& objects,
         std::map<float, IObject*>* OutObjects);
 
+    MagneticField* GetMagneticField()
+    {
+        return m_pMagneticField;
+    }
+
+
     void Render(const std::map<float, IObject*>& sortedObjects);
 };

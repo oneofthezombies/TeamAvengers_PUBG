@@ -11,6 +11,7 @@ class Item;
 class Area;
 class UiButtonListener;
 class UICompass;
+class MagneticField;
 
 struct FramePtr
 {
@@ -557,6 +558,9 @@ private:
     bool  m_isCollidedWithBox;
     float m_adjust_Y_onCollision;
     float m_stepDistance;
+
+    //Magnetic Field
+    MagneticField* pMagneticField;
 
 /**************************** end member variable ****************************/
 
