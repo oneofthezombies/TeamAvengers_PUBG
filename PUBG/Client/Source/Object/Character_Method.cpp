@@ -512,9 +512,12 @@ void Character::itemSphereCollisionInteraction()
     di.resize(0);
 
     auto itms(pCurrentScene->m_NearArea.GetItems());    //이 auto를 copy가 아닌 reference로 받는 방법은???
+
+    m_inGameUI.pInteractionF->SetIsRender(false);
+
+    // 보이는거 맴앞에
     for (auto itm : itms)
     {
-        m_inGameUI.pInteractionF->SetIsRender(false);
 
         if (!Collision::HasCollision(m_boundingSphere, itm->GetBoundingSphere())) continue;
         //캐릭터와 Item의 spehre 가 충돌이 났다
@@ -547,11 +550,7 @@ void Character::itemSphereCollisionInteraction()
             return;
         }
 
-        string ItemName = ItemInfo::GetName(itm->GetTagResStatic());
-        m_inGameUI.pInteractionText->SetText(ItemName);
-        m_inGameUI.pInteractionF->SetIsRender(true);
-        m_inGameUI.pInteractionBG->SetSize(D3DXVECTOR2(50.0f + 6.0f*ItemName.size(), 23.0f));
-        m_inGameUI.pInteractionText->SetSize(D3DXVECTOR2(50.0f + 6.0f*ItemName.size(), 23.0f));
+
 
         if (m_currentOnceKey._F)
         {
@@ -560,6 +559,14 @@ void Character::itemSphereCollisionInteraction()
         }
 
         di.emplace_back(itm);
+        if (di.size() >0)
+        {
+            string ItemName = ItemInfo::GetName(di[0]->GetTagResStatic());
+            m_inGameUI.pInteractionText->SetText(ItemName);
+            m_inGameUI.pInteractionF->SetIsRender(true);
+            m_inGameUI.pInteractionBG->SetSize(D3DXVECTOR2(50.0f + 6.0f*ItemName.size(), 23.0f));
+            m_inGameUI.pInteractionText->SetSize(D3DXVECTOR2(50.0f + 6.0f*ItemName.size(), 23.0f));
+        }
     }
 
     auto deathDropboxes(pCurrentScene->m_NearArea.GetDeathDropBoxes());

@@ -439,7 +439,7 @@ void SceneLoading::OnInit()
     m_start = std::chrono::system_clock::now();
     t = std::thread(std::bind(&SceneLoading::Load, this));
 
-    m_channel = Sound()()->Play(TAG_SOUND::Background, Vector3::ZERO, 1.0f, FMOD_2D | FMOD_LOOP_NORMAL);
+    //m_channel = Sound()()->Play(TAG_SOUND::Background, Vector3::ZERO, 1.0f, FMOD_2D | FMOD_LOOP_NORMAL);
 }
 
 void SceneLoading::load(const TAG_RES_STATIC tag)
