@@ -147,6 +147,7 @@ enum class TAG_SOUND
     Loby_Ready,
     FallingGround,
     DoorOpen,
+    MagneticField,
 
 
     Background,

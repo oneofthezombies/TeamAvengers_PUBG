@@ -505,6 +505,7 @@ private:
     std::size_t         m_cellIndex;
     float               m_health;
     bool                m_isDead;
+    bool                m_isMagneticField;
 
     CharacterAnimation*    pAnimation;
     vector<CharacterPart*> m_characterParts;

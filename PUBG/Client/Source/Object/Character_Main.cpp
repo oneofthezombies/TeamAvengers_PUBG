@@ -69,6 +69,7 @@ Character::Character(const int index)
     , m_stepDistance(0.0f)
 
     , pMagneticField(nullptr)
+    , m_isMagneticField(false)
 {
     pAnimation = new CharacterAnimation(m_index);
     AddChild(pAnimation);
@@ -313,12 +314,21 @@ void Character::updateMine()
     {
         if (!pMagneticField->IsInside(tm->GetPosition()))//자기장 안에 있지 않는다면
         {
+            if (m_isMagneticField)
+            {
+                m_isMagneticField = false;
+                Sound()()->Play(TAG_SOUND::MagneticField, Vector3::ZERO, 1.0f, FMOD_2D);
+            }
             if (pMagneticField->IsDamageTime(dt))
             {
                 MinusDamage(pMagneticField->GetDamage());
                 //Communication()()->SendEventMinusDamage(m_index, pMagneticField->GetDamage());
                 m_isDamaged = true;
             }
+        }
+        else
+        {
+            m_isMagneticField = true;
         }
 
     }
