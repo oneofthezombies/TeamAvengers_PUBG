@@ -5,11 +5,14 @@
 
 MagneticField::MagneticField()
     :IObject(TAG_OBJECT::MagneticField)
-    , m_Radius(30000.0f)/*82712.3*/
-    , m_DamageMagnitute(10.0f)
+    , m_Position(Vector3::ZERO)
+    , m_Radius(25600.0f)/*82712.3*/
+    , m_DamageMagnitute(1.0f)
+    , m_damageCoolDown(0.0f)
+    , m_damageCoolTime(2.0f)
     , m_MagneticField(nullptr)
-    , m_coolTime(5.0f * 60.0f)
-    //, m_coolTime(10.0f)
+    //, m_coolTime(5.0f * 60.0f)
+    , m_coolTime(10.0f)
     , m_coolDown(0.0f)
     , m_isMoving(false)
 {
@@ -34,14 +37,14 @@ void MagneticField::setFinalDestination()
 
 
     //처음 random으로 position 설정
-    GetTransform()->SetPosition(finalDestination[rand() % 5]);
+    m_Position = finalDestination[rand() % 5];
     
 }
 
 
 void MagneticField::Init()
 {
-    D3DXCreateSphere(Device()(), 1.0f, 20, 20,&m_MagneticField, nullptr);
+    D3DXCreateSphere(Device()(), 1.0f, 20, 20, &m_MagneticField, nullptr);
     
     setFinalDestination();
 
@@ -51,7 +54,7 @@ void MagneticField::Init()
 
 void MagneticField::OnUpdate()
 {
-    Debug << "final Destination : " << GetTransform()->GetPosition() << endl;
+    Debug << "final Destination : " << m_Position << endl;
     Debug << "Radius : " << m_Radius << endl;
     
     const float dt = Time()()->GetDeltaTime();
@@ -75,11 +78,13 @@ void MagneticField::OnUpdate()
     if (m_isMoving && castToInt ==/*1500 */10000)
     {
         m_coolDown = m_coolTime;
+        m_DamageMagnitute = 2.0f;
         m_isMoving = false;
     }
     else if (m_isMoving &&castToInt == /*1200*/5000)
     {
         m_coolDown = m_coolTime;
+        m_DamageMagnitute = 3.0f;
         m_isMoving = false;
     }
  
@@ -101,7 +106,7 @@ void MagneticField::OnRender()
         nullptr,
         &D3DXVECTOR3(m_Radius, m_Radius, m_Radius),
         nullptr, nullptr,
-        &GetTransform()->GetPosition());
+        &m_Position);
 
     Shader::Draw(
         Resource()()->GetEffect("./Resource/", "Color.fx"),
@@ -122,8 +127,26 @@ float MagneticField::GetRadius() const
     return m_Radius;
 }
 
+float MagneticField::GetDamage() const
+{
+    return m_DamageMagnitute;
+}
+
+bool MagneticField::IsDamageTime(const float dt)
+{
+    m_damageCoolDown -= dt;
+    if (m_damageCoolDown <= 0.0f)
+    {
+        m_damageCoolDown = m_damageCoolTime;
+        return true;
+    }
+    return false;
+}
+
 bool MagneticField::IsInside(const D3DXVECTOR3 pos)
 {
-    D3DXVECTOR3 length = GetTransform()->GetPosition() - pos;
-    return D3DXVec3Length(&length) < m_Radius;
+    
+    D3DXVECTOR3 length = m_Position - pos;
+    float test = D3DXVec3Length(&length);
+    return test < m_Radius;
 }

@@ -4,8 +4,11 @@ class MagneticField :
     public IObject
 {
 private:
+    D3DXVECTOR3                             m_Position;
     float                                   m_Radius;
     float                                   m_DamageMagnitute;
+    float                                   m_damageCoolDown;
+    const float                             m_damageCoolTime;
 
     LPD3DXMESH                              m_MagneticField;
             
@@ -34,6 +37,8 @@ public:
     //reducing speed
 
     float GetRadius() const;
+    float GetDamage() const;
 
+    bool IsDamageTime(const float dt);
     bool IsInside(const D3DXVECTOR3 pos);
 };

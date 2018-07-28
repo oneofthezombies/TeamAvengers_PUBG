@@ -12,6 +12,7 @@
 #include "Interpolation.h"
 #include "ScenePlay.h"
 #include "DeathDropBox.h"
+#include "MagneticField.h"
 
 #include "UIText.h"
 
@@ -95,9 +96,7 @@ Character::Character(const int index)
 
     //m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
     
-    pMagneticField = static_cast<ScenePlay*>(CurrentScene()())->GetMagneticField();
-    if (!pMagneticField)
-        assert(false && "no magnetic field");
+    
 }
 
 Character::~Character()
@@ -309,7 +308,20 @@ void Character::updateMine()
     Transform* tm = GetTransform();
 
     //자기장
-    
+    pMagneticField = static_cast<ScenePlay*>(CurrentScene()())->GetMagneticField();
+    if (pMagneticField)
+    {
+        if (!pMagneticField->IsInside(tm->GetPosition()))//자기장 안에 있지 않는다면
+        {
+            if (pMagneticField->IsDamageTime(dt))
+            {
+                MinusDamage(pMagneticField->GetDamage());
+                //Communication()()->SendEventMinusDamage(m_index, pMagneticField->GetDamage());
+                m_isDamaged = true;
+            }
+        }
+
+    }
 
 
     //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용

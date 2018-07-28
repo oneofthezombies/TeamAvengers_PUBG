@@ -26,15 +26,18 @@ void ScenePlay::setAloneMode()
     //// for ui test
     //m_pUITest = new UITest;
     //UI()()->RegisterUIObject(m_pUITest);
+    
+    //자기장 먼저 create
+    MagneticField* pMF = new MagneticField();
+    pMF->Init();
+    AddObject(pMF);
 
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
     //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
     Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1000.0f, 4000.0f, -1000.0f));
 
-    MagneticField* pMF = new MagneticField();
-    pMF->Init();
-    AddObject(pMF);
+
     
     //for water
     pWater = new Water;
@@ -125,6 +128,12 @@ void ScenePlay::setAloneMode()
 
 void ScenePlay::setWithOthersMode()
 {
+    //자기장 먼저 create
+    MagneticField* pMF = new MagneticField();
+    pMF->Init();
+    AddObject(pMF);
+
+
     Character* pPlayer = GetPlayer();
     Light()()->SetTarget(pPlayer->GetTransform());
     //Light()()->SetPositionInTargetSpace(D3DXVECTOR3(-1500.0f, 2300.0f, -1500.0f));
