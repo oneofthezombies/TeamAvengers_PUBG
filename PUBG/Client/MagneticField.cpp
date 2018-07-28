@@ -11,8 +11,8 @@ MagneticField::MagneticField()
     , m_damageCoolDown(0.0f)
     , m_damageCoolTime(2.0f)
     , m_MagneticField(nullptr)
-    //, m_coolTime(5.0f * 60.0f)
-    , m_coolTime(10.0f)
+    , m_coolTime(5.0f * 60.0f)
+    /*, m_coolTime(10.0f)*/
     , m_coolDown(0.0f)
     , m_isMoving(false)
 {
