@@ -328,7 +328,11 @@ void Character::updateMine()
         }
         else
         {
-            m_isMagneticField = true;
+            if (!m_isMagneticField)
+            {
+                m_isMagneticField = true;
+                Sound()()->Play(TAG_SOUND::MagneticField, Vector3::ZERO, 1.0f, FMOD_2D);
+            }
         }
 
     }
