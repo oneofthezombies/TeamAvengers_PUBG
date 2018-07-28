@@ -1221,6 +1221,12 @@ void Character::InGameUI::updateCompassUI()
     pUICompass->SetRotationY(pPlayer->GetForward());
 }
 
+void Character::InGameUI::updateMinimapUI()
+{
+    pUIMinimap->SetPlayerRotationY(pPlayer->GetForward());
+    pUIMinimap->SetPlayerPosition(pPlayer->GetTransform()->GetPosition());
+}
+
 void Character::InGameUI::updateAimUI(const TotalInventory& inven)
 {
     if (inven.m_pHand && !inven.isOpened)
