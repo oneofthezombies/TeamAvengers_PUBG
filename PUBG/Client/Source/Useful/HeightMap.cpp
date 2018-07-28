@@ -4,6 +4,8 @@
 #include "Light.h"
 #include "Collider.h"
 
+const float HeightMap::RAY_OFFSET_Y = 20.0f;
+
 HeightMap::HeightMap()
 	: IMap()
     , m_pMesh(NULL)
@@ -429,8 +431,7 @@ bool HeightMap::GetHeight(const D3DXVECTOR3 & pos,OUT float * OutHeight)
 
 
     //2. 추가된 map의 자리와 판결해서 height를 주는 부분
-    const float offsetY = 20.0f;
-    D3DXVECTOR3 rayPos(pos.x, pos.y + offsetY, pos.z);
+    D3DXVECTOR3 rayPos(pos.x, pos.y + RAY_OFFSET_Y, pos.z);
     D3DXVECTOR3 rayDir(0, -1, 0);
     float distance;
 

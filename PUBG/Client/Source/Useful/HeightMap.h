@@ -12,8 +12,11 @@ struct VERTEX_PNT
     enum { FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 };
 };
 
-class HeightMap :	public IMap
+class HeightMap : public IMap
 {
+public:
+    static const float RAY_OFFSET_Y;
+
 protected:
     D3DXVECTOR3			m_size;
     D3DXVECTOR3			m_scale;
