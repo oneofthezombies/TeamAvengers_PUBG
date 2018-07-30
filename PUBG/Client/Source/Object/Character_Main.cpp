@@ -337,6 +337,7 @@ void Character::updateMine()
 
     }
 
+    Debug << "My position : " << GetTransform()->GetPosition() << endl;
 
     //INPUT CONTROL // m_currentStayKey , m_currentOnceKey 으로 사용
     handleInput(&m_currentStayKey);
