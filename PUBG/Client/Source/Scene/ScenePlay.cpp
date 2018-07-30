@@ -45,15 +45,15 @@ void ScenePlay::setAloneMode()
         InsertObjIntoTotalCellSpace(TAG_OBJECT::Item, GetCellIndex(p), pItem);
     };
 
-    addItem(TAG_RES_STATIC::Head_Lv1, "Head_Lv1 0", 12954.0f, 5800.0f, 13873.0f);
-    addItem(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1 0", 12564.0f, 5800.0f, 13461.0f);
-    addItem(TAG_RES_STATIC::Back_Lv1, "Back_Lv1 0", 13410.0f, 5800.0f, 13465.0f);
-    addItem(TAG_RES_STATIC::Ammo_7_62mm, "Ammo_7_62mm 0", 12835.0f, 5800.0f, 12258.0f);
-    addItem(TAG_RES_STATIC::Ammo_7_62mm, "Ammo_7_62mm 1", 12779.0f, 5800.0f, 13103.0f);
-    addItem(TAG_RES_STATIC::Kar98k, "Kar98k 0", 12694.0f, 5800.0f, 12901.0f);
-    addItem(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm 0", 13129.0f, 5800.0f, 13312.0f);
-    addItem(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm 1", 13135.0f, 5800.0f, 13079.0f);
-    addItem(TAG_RES_STATIC::QBZ, "QBZ 0", 13318.0f, 5800.0f, 12861.0f);
+    addItem(TAG_RES_STATIC::Head_Lv1, "Head_Lv1 0", 12954.0f, 5810.0f, 13873.0f);
+    addItem(TAG_RES_STATIC::Armor_Lv1, "Armor_Lv1 0", 12564.0f, 5810.0f, 13461.0f);
+    addItem(TAG_RES_STATIC::Back_Lv1, "Back_Lv1 0", 13410.0f, 5810.0f, 13465.0f);
+    addItem(TAG_RES_STATIC::Ammo_7_62mm, "Ammo_7_62mm 0", 12835.0f, 5810.0f, 12258.0f);
+    addItem(TAG_RES_STATIC::Ammo_7_62mm, "Ammo_7_62mm 1", 12779.0f, 5810.0f, 13103.0f);
+    addItem(TAG_RES_STATIC::Kar98k, "Kar98k 0", 12694.0f, 5810.0f, 12901.0f);
+    addItem(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm 0", 13129.0f, 5810.0f, 13312.0f);
+    addItem(TAG_RES_STATIC::Ammo_5_56mm, "Ammo_5_56mm 1", 13135.0f, 5810.0f, 13079.0f);
+    addItem(TAG_RES_STATIC::QBZ, "QBZ 0", 13318.0f, 5810.0f, 12861.0f);
 
     ////For inventory Test
     //Item* item = nullptr;
