@@ -890,12 +890,12 @@ void SceneLoading::OnUpdate()
 
         addHeightmapResource();
 
-        static int count = 0;
-        count++;
-        if (count < 2)
-        {
-            return;
-        }
+        //static int count = 0;
+        //count++;
+        //if (count < 2)
+        //{
+        //    return;
+        //}
 
         UI()()->Destroy(m_pBackground);
 
