@@ -98,7 +98,11 @@ void Item::OnRender()
             this, _1));
     }
 
-    m_boundingSphere.Render();
+    if (m_isRenderEffectMesh || 
+        m_isRenderSkinnedMesh)
+    {
+        m_boundingSphere.Render();
+    }
 }
 
 void Item::setup(const TAG_RES_STATIC tag)

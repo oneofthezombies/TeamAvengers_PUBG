@@ -1406,6 +1406,8 @@ bool Character::createOrMergeItem(std::map<TAG_RES_STATIC, std::vector<Item*>>* 
                 Communication()()->SendEventMoveItemFieldToInventory(m_index, item->GetName());
             }
         }
+
+        item->SetIsRenderEffectMesh(false);
         m_totalInventory.m_capacity -= count * capacity;
     }
     else
