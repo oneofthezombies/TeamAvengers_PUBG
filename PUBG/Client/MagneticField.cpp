@@ -112,7 +112,8 @@ void MagneticField::OnUpdate()
 
     //for InGameUI
     //미니맵 위 제한시간 표시
-    updateTime(minutes, seconds);
+    //updateTime(minutes, seconds);
+    updateTime(0, 0);
 }
 
 void MagneticField::OnRender()
