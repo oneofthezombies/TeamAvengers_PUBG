@@ -1315,6 +1315,8 @@ void Character::movementControl(OUT State* OutState)
     float debugSpeed = DebugMgr()()->HasDebugSpeed() ? m_rootTransform.DEBUG_MOVE_SPEED : 1.0f;
     float dist = movingFactor * m_rootTransform.MOVE_SPEED * dt * debugSpeed;
 
+    dist *= 0.3f;
+
     //여기
     //점프 직후 이동 금지
     const string& animName = pAnimation->GetLowerAnimationName();

@@ -455,9 +455,11 @@ void Character::updateMine()
         D3DXVECTOR3 v3Distance = D3DXVECTOR3(destState.position.x, 0.0f, destState.position.z) - D3DXVECTOR3(backupPos.x, 0.0f, backupPos.z);
         float fDistance = D3DXVec3Length(&v3Distance);
         m_stepDistance += fDistance;
-        if (m_stepDistance >= 78.0f)
+        const float stepDist = 78.0f;
+        //const float stepDist = 52.0f;
+        if (m_stepDistance >= stepDist)
         {
-            m_stepDistance -= 78.0f;
+            m_stepDistance -= stepDist;
             Sound()()->Play(TAG_SOUND::FootStep, pos, 1.0f, FMOD_2D);
             Communication()()->SendEventSound(TAG_SOUND::FootStep, pos);
         }
