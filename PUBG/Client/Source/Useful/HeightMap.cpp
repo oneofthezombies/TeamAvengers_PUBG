@@ -354,7 +354,10 @@ void HeightMap::OnRender()
     }
     
     //Draw Boundary Box
-    drawIndices(BoxCollider::FRUSTUM_INDICES, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+    if (Collision()()->IsRender())
+    {
+        drawIndices(BoxCollider::FRUSTUM_INDICES, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+    }
 }
 
 void HeightMap::drawIndices(const vector<WORD>& indices, const D3DXCOLOR & color)
