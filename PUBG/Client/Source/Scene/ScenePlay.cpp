@@ -39,10 +39,7 @@ void ScenePlay::setAloneMode()
 
 
     
-    //for water
-    pWater = new Water;
-    pWater->Init(82712.3f * 2.0f, 82712.3f * 2.0f, 20.0f);
-    AddObject(pWater);
+
     
     //For inventory Test
     Item* item = nullptr;
@@ -403,6 +400,11 @@ void ScenePlay::OnInit()
         deathDropBoxes.emplace_back(pBox);
         AddObject(pBox);
     }   
+
+    //for water
+    pWater = new Water;
+    pWater->Init(82712.3f * 2.0f, 82712.3f * 2.0f, 20.0f);
+    AddObject(pWater);
 
     // No id received
     if (Communication()()->m_myInfo.ID == -1)
