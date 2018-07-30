@@ -4,7 +4,7 @@
 DebugManager::DebugManager()
     : Singleton<DebugManager>()
     , m_pFont(nullptr)
-    , m_isRender(true)
+    , m_isRender(false)
     , m_hasDebugSpeed(false)
     , m_isHoonsComputer(false)
 {
