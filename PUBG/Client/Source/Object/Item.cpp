@@ -98,8 +98,9 @@ void Item::OnRender()
             this, _1));
     }
 
-    if (m_isRenderEffectMesh || 
-        m_isRenderSkinnedMesh)
+    if ((m_isRenderEffectMesh || 
+        m_isRenderSkinnedMesh) && 
+        !IsInInventory())
     {
         m_boundingSphere.Render();
     }
