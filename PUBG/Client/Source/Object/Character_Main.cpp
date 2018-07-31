@@ -96,8 +96,6 @@ Character::Character(const int index)
     m_bBox = BoundingBox::Create(D3DXVECTOR3(-20.0f, 0.0f, -20.0f), D3DXVECTOR3(20.0f, 170.0f, 20.0f));
 
     //m_bSphereSlidingCollision = BoundingSphere::Create(pTransform->GetPosition(), 50.0f);
-    
-    
 }
 
 Character::~Character()
@@ -115,6 +113,12 @@ Character::~Character()
 
 void Character::OnUpdate()
 {
+    // clear isRender
+    GetBoundingSphere().isRender = false;
+    for (auto& box : GetBoundingBoxes())
+        box.isRender = false;
+    m_bBox.isRender = false;
+
     TAG_SCENE tagScene = CurrentScene()()->GetTagScene();
 
     if (tagScene == TAG_SCENE::Play)

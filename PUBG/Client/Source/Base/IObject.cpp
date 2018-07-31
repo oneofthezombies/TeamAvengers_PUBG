@@ -69,12 +69,12 @@ Transform* IObject::GetTransform()
 	return pTransform;
 }
 
-const BoundingSphere& IObject::GetBoundingSphere()
+BoundingSphere& IObject::GetBoundingSphere()
 {
     return m_boundingSphere;
 }
 
-const std::vector<BoundingBox>& IObject::GetBoundingBoxes()
+std::vector<BoundingBox>& IObject::GetBoundingBoxes()
 {
     return m_boundingBoxes;
 }

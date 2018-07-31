@@ -8,6 +8,7 @@ struct BoundingShape
 {
     D3DXVECTOR3 center;
     D3DXVECTOR3 position;
+    bool        isRender;
 
              BoundingShape();
     virtual ~BoundingShape();

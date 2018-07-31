@@ -47,7 +47,7 @@ struct CellSpace
 class IScene : public MemoryAllocator
 {
 private:
-          std::set<IObject*>        m_objects;
+          std::vector<IObject*>     m_objects;
           std::map<IObject*, float> m_toDeleteObjects;
     const TAG_SCENE                 m_tagScene;
 

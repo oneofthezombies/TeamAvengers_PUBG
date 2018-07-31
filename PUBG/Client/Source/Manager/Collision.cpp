@@ -6,6 +6,7 @@ BoundingShape::BoundingShape()
     : /*MemoryAllocator()
     ,*/ center(Vector3::ZERO)
     , position(Vector3::ZERO)
+    , isRender(false)
 {
 }
 
@@ -27,6 +28,8 @@ BoundingSphere::~BoundingSphere()
 void BoundingSphere::Render()
 {
     if (!Collision()()->IsRender()) return;
+
+    if (!isRender) return; // for recording
 
     D3DXMATRIX m;
     D3DXMatrixTransformation(
@@ -55,6 +58,8 @@ void BoundingSphere::Render()
 void BoundingSphere::RenderRed()
 {
     if (!Collision()()->IsRender()) return;
+
+    if (!isRender) return;
 
     D3DXMATRIX m;
     D3DXMatrixTransformation(
@@ -85,6 +90,8 @@ void BoundingSphere::RenderRed()
 void BoundingBox::RenderRed()
 {
     if (!Collision()()->IsRender()) return;
+
+    if (!isRender) return;
 
     auto& vertices = Resource()()->GetBoundingBoxVertices();
     auto& indices = Resource()()->GetBoundingBoxIndices();
@@ -143,6 +150,8 @@ BoundingBox::~BoundingBox()
 void BoundingBox::Render()
 {
     if (!Collision()()->IsRender()) return;
+
+    if (!isRender) return; // for recording
 
     auto& vertices = Resource()()->GetBoundingBoxVertices();
     auto& indices  = Resource()()->GetBoundingBoxIndices();

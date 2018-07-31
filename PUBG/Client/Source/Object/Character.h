@@ -830,7 +830,7 @@ public:
     WaitBackAction& GetWaitBackAction();
 
     //        const BoundingBox&              GetBoundingBox();
-    virtual const std::vector<BoundingBox>& GetBoundingBoxes() override;
+    virtual std::vector<BoundingBox>& GetBoundingBoxes() override;
 
     void CreateDeathDropBox();
 

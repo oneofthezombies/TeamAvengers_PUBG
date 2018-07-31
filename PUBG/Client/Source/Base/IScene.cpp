@@ -60,14 +60,15 @@ void IScene::AddObject(IObject* p)
 {
     assert(p && "IScene::AddObject(), object is null.");
 
-	m_objects.emplace(p);
+	m_objects.emplace_back(p);
 }
 
 void IScene::RemoveObject(IObject* p)
 {
     assert(p && "IScene::RemoveObject(), object is null.");
 
-	m_objects.erase(p);
+    auto search = std::find(m_objects.begin(), m_objects.end(), p);
+	m_objects.erase(search);
 }
 
 void IScene::Destroy(IObject* p, const float t)

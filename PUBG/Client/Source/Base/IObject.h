@@ -33,9 +33,9 @@ public:
     IObject* GetParent() const;
 	void AddChild(IObject* pChild);
 
-	              Transform*                GetTransform();
-            const BoundingSphere&           GetBoundingSphere();
-    virtual const std::vector<BoundingBox>& GetBoundingBoxes();
+	              Transform*          GetTransform();
+            BoundingSphere&           GetBoundingSphere();
+    virtual std::vector<BoundingBox>& GetBoundingBoxes();
 
     virtual void OnUpdate() = 0;
     virtual void OnRender() = 0;

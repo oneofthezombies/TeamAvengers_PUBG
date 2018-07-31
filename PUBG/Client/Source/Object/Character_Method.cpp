@@ -332,11 +332,17 @@ void Character::terrainFeaturesCollisionInteraction(OUT State* destState)
         // 바운딩스피어가 충돌되지 않으면 다음 터레인피처와 충돌을 검사한다.
         if (!Collision::HasCollision(m_boundingSphere, tf->GetBoundingSphere())) continue;
 
+        GetBoundingSphere().isRender = true;
+        tf->GetBoundingSphere().isRender = true; // for recording
+
         for (auto& others : tf->GetBoundingBoxes())
         {
             // sliding vector
             if (Collision::HasCollision(m_bBox, others))
             {
+                m_bBox.isRender = true;
+                others.isRender = true;
+
                 hasCollision = true;
 
                 //부딛힌 면의 normal 값 구하기
@@ -1064,7 +1070,7 @@ D3DXVECTOR3 Character::FindShootingTargetPos()
 //    return m_bBox;
 //}
 
-const std::vector<BoundingBox>& Character::GetBoundingBoxes()
+std::vector<BoundingBox>& Character::GetBoundingBoxes()
 {
     m_boundingBoxes.resize(m_characterParts.size());
 

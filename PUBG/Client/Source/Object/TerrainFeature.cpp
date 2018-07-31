@@ -71,7 +71,13 @@ void TerrainFeature::OnUpdate()
             break;
         }
     }
-    
+
+    // clear isRender
+    {
+        m_boundingSphere.isRender = false;
+        for (auto& box : m_boundingBoxes)
+            box.isRender = false;
+    }
 }
 
 void TerrainFeature::OnRender()
@@ -101,10 +107,7 @@ void TerrainFeature::OnRender()
 
             m_boundingSphere.Render();
         }
-
-
-    }
-    
+    }    
 }
 
 void TerrainFeature::AddBoundingBox(const D3DXMATRIX& transformationMatrix)
