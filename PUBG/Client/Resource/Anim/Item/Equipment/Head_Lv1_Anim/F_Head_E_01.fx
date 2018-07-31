@@ -145,7 +145,6 @@ float4  PS(VS_OUTPUT vout) : COLOR
         float4 specularIntensity = tex2D(Map__0Sampler, vout.TexCoord);
         specular *= specularIntensity.rgb;
     }
-    specular = 0;
 
     float3 ambient = float3(0.1f, 0.1f, 0.1f) * albedo;
     float3 rgb = ambient + diffuse + specular;
