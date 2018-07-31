@@ -44,26 +44,26 @@ void TerrainFeature::OnUpdate()
     {
         switch (m_tagResStatic)
         {
-        //case TAG_RES_STATIC::Museum:
-        //{
-        //    D3DXMATRIX mat = GetTransform()->GetTransformationMatrix();
-        //    EffectMesh* EM = pEffectMeshRenderer->GetEffectMesh();
-        //    for (int i = 0; i < 1; i++)
-        //    {
-        //        Shader()()->AddShadowSource(mat, EM->m_pMesh, static_cast<DWORD>(i));
-        //    }
-        //}
-        //break;
-        //case TAG_RES_STATIC::PoliceStation:
-        //{
-        //    D3DXMATRIX mat = GetTransform()->GetTransformationMatrix();
-        //    EffectMesh* EM = pEffectMeshRenderer->GetEffectMesh();
-        //    for (int i = 0; i < 1; i++)
-        //    {
-        //        Shader()()->AddShadowSource(mat, EM->m_pMesh, static_cast<DWORD>(i));
-        //    }
-        //}
-        //    break;
+        case TAG_RES_STATIC::Museum:
+        {
+            D3DXMATRIX mat = GetTransform()->GetTransformationMatrix();
+            EffectMesh* EM = pEffectMeshRenderer->GetEffectMesh();
+            for (int i = 0; i < 1; i++)
+            {
+                Shader()()->AddShadowSource(mat, EM->m_pMesh, static_cast<DWORD>(i));
+            }
+        }
+        break;
+        case TAG_RES_STATIC::PoliceStation:
+        {
+            D3DXMATRIX mat = GetTransform()->GetTransformationMatrix();
+            EffectMesh* EM = pEffectMeshRenderer->GetEffectMesh();
+            for (int i = 0; i < 1; i++)
+            {
+                Shader()()->AddShadowSource(mat, EM->m_pMesh, static_cast<DWORD>(i));
+            }
+        }
+            break;
         default:
             Shader()()->AddShadowSource(
                 GetTransform()->GetTransformationMatrix(),
