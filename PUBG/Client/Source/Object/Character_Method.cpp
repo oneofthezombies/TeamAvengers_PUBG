@@ -1362,8 +1362,8 @@ void Character::movementControl(OUT State* OutState)
         OutState->position += GetLeft() * dist;
     }
 
-    // RECORD
-    OutState->position = GetTransform()->GetPosition();
+    //// RECORD
+    //OutState->position = GetTransform()->GetPosition();
 }
 
 void Character::animationControl()
