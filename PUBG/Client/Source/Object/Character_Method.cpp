@@ -1723,8 +1723,8 @@ void Character::updateBone()
     m_framePtr.pWaist->TransformationMatrix *= rWaist;
 
     // RECORD
-    //// for root motion animation
-    //m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
+    // for root motion animation
+    m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
 }
 
 void Character::communicate()
