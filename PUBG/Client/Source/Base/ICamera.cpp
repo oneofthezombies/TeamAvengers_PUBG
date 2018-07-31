@@ -51,10 +51,9 @@ void ICamera::CameraRender()
     //    matWorld = pTarInfo->pTPP->CombinedTransformationMatrix    *    tarR    *      testT;
     //}
 
-    drawIndices(FRUSTUM_INDICES, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+    drawIndices(FRUSTUM_INDICES, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
     
-    //if (temp)
-    //    draw(drawRay, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+    //draw(drawRay, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 }
 void ICamera::draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color)
 {
@@ -107,6 +106,8 @@ void ICamera::drawIndices(const vector<WORD>& indices, const D3DXCOLOR & color)
 
 void ICamera::UpdateFrustumCulling()
 {
+    cout << "Updated frustum\n";
+
     D3DXMATRIX InvVP;
     InvVP = m_viewMatrix * m_projectionMatrix;
     D3DXMatrixInverse(&InvVP, NULL, &InvVP);

@@ -356,10 +356,11 @@ _BulletPool::~_BulletPool()
 
 void _BulletPool::Update()
 {
-    if (GetAsyncKeyState('7') & 0x0001)
-    {
-        m_hitPositions.clear();
-    }
+    // for recording
+    //if (GetAsyncKeyState('7') & 0x0001)
+    //{
+    //    m_hitPositions.clear();
+    //}
 }
 
 void _BulletPool::Destroy()
@@ -450,8 +451,8 @@ LPD3DXMESH _BulletPool::GetCylinder() const
 
 void _BulletPool::SetTargetHitSphere(const D3DXVECTOR3& pos)
 {
-    m_hitPositions.emplace_back(pos);
+    //m_hitPositions.emplace_back(pos); // for recording
 
-    //m_targetHitSphere.position = pos;
+    m_targetHitSphere.position = pos;
 }
 

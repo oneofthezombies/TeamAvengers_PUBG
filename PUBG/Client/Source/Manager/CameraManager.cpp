@@ -74,8 +74,12 @@ void CameraManager::Update()
         if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::Default) //디버그 카메라는 player의 이동에 영향이 없도록
             pCurrentCamera->UpdateViewProjMatrix();
 
-        pCurrentCamera->UpdateFrustumCulling();
-
+        //pCurrentCamera->UpdateFrustumCulling(); // origin
+        // for recording
+        if (GetAsyncKeyState('7') & 0x0001)
+        {
+            pCurrentCamera->UpdateFrustumCulling();
+        }
 
         //for debug
         //m_cameras[TAG_CAMERA::OnGun]->Render();
@@ -86,6 +90,13 @@ void CameraManager::Update()
                 SetCurrentCamera(TAG_CAMERA::Third_Person);
         }
     }
+}
+
+void CameraManager::Render()
+{
+    if (!Collision()()->IsRender()) return;
+
+    if (pCurrentCamera) pCurrentCamera->CameraRender();
 }
 
 void CameraManager::SetTarget(Character::Info* info)

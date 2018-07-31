@@ -82,6 +82,7 @@ void Application::Render()
     BulletPool  ()()->Render();
     ParticlePool()()->Render();
     Light       ()()->Render();
+    Camera      ()()->Render();
     UI          ()()->Render();
     DebugMgr    ()()->Render();
 

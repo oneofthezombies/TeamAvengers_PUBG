@@ -23,6 +23,7 @@ public:
     void Init();
     void Destroy();
     void Update();
+    void Render();
 
     void  SetTarget(Character::Info* info);
     Character::Info* GetTargetInfo();
