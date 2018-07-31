@@ -1361,6 +1361,9 @@ void Character::movementControl(OUT State* OutState)
     {
         OutState->position += GetLeft() * dist;
     }
+
+    //// RECORD
+    //OutState->position = GetTransform()->GetPosition();
 }
 
 void Character::animationControl()
@@ -1714,12 +1717,12 @@ void Character::updateBone()
         m_framePtr.pRightClavicle->TransformationMatrix *= rHead;   //오른쪽 손
     }
     
-
     //허리 rotation 돌리는것
     D3DXMATRIX rWaist;
     D3DXMatrixRotationX(&rWaist, m_waistRotation.m_angle);
     m_framePtr.pWaist->TransformationMatrix *= rWaist;
 
+    // RECORD
     // for root motion animation
     m_framePtr.pRoot->TransformationMatrix = Matrix::IDENTITY;
 }

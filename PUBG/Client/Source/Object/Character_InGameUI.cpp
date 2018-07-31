@@ -934,6 +934,8 @@ void Character::InGameUI::updateKillUI(const TotalInventory& inven)
 
         pTimeBg->SetIsRender(false);
         pTimeZeroImg->SetIsRender(false);
+
+        pInteractionF->SetIsRender(false);
     }
     else
     {

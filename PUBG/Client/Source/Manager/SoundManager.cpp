@@ -170,7 +170,7 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
         fVol = 0.7f;
     }
 
-    fVol = 0.2f;
+    //fVol = 0.2f;
 
     SetPosition(pos);
 
