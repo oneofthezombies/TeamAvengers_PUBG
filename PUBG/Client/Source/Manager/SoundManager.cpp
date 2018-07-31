@@ -161,10 +161,16 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
     if (tag == TAG_SOUND::Background)
     {
     }
+    else if (tag == TAG_SOUND::FootStep)
+    {
+        fVol = 0.7f;
+    }
     else if (static_cast<int>(tag) > 2)
     {
         fVol = 0.7f;
     }
+
+    fVol = 0.2f;
 
     SetPosition(pos);
 
