@@ -54,21 +54,21 @@ void TerrainFeature::OnUpdate()
         //    }
         //}
         //break;
-        case TAG_RES_STATIC::PoliceStation:
-        {
-            D3DXMATRIX mat = GetTransform()->GetTransformationMatrix();
-            EffectMesh* EM = pEffectMeshRenderer->GetEffectMesh();
-            for (int i = 0; i < 1; i++)
-            {
-                Shader()()->AddShadowSource(mat, EM->m_pMesh, static_cast<DWORD>(i));
-            }
-        }
-            break;
-        //default:
-        //    Shader()()->AddShadowSource(
-        //        GetTransform()->GetTransformationMatrix(),
-        //        pEffectMeshRenderer->GetEffectMesh());
+        //case TAG_RES_STATIC::PoliceStation:
+        //{
+        //    D3DXMATRIX mat = GetTransform()->GetTransformationMatrix();
+        //    EffectMesh* EM = pEffectMeshRenderer->GetEffectMesh();
+        //    for (int i = 0; i < 1; i++)
+        //    {
+        //        Shader()()->AddShadowSource(mat, EM->m_pMesh, static_cast<DWORD>(i));
+        //    }
+        //}
         //    break;
+        default:
+            Shader()()->AddShadowSource(
+                GetTransform()->GetTransformationMatrix(),
+                pEffectMeshRenderer->GetEffectMesh());
+            break;
         }
     }
     
