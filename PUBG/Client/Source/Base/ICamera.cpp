@@ -346,8 +346,9 @@ CameraThirdPerson::~CameraThirdPerson()
 void CameraThirdPerson::Reset()
 {
     //m_position = D3DXVECTOR3(TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
-    //m_Position = D3DXVECTOR3(-20.0f, 180.0f, 85.0f);
-    m_Position = D3DXVECTOR3(-20.0f, 180.0f, 250.0f);
+    m_Position = D3DXVECTOR3(-20.0f, 180.0f, 85.0f);
+    //m_Position = D3DXVECTOR3(-20.0f, 180.0f, 250.0f);
+
     //80 Degrees TP sight
     m_fovY = D3DX_PI * (80.0f / 180.0f);
     m_eye = Vector3::ZERO;
