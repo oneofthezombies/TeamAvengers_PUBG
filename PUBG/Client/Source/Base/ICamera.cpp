@@ -360,9 +360,9 @@ void CameraThirdPerson::Reset()
 
 void CameraThirdPerson::Update()
 {
-    //견착하는 부분은 3인칭에서만 있기에
-    if (Input()()->IsStayKeyDown(VK_RBUTTON))
-        Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
+    ////견착하는 부분은 3인칭에서만 있기에
+    //if (Input()()->IsStayKeyDown(VK_RBUTTON))
+    //    Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
 
 
     Character::Info* pTarInfo = GetTargetInfo();
