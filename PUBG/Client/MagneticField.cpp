@@ -10,16 +10,16 @@ MagneticField::MagneticField()
     : IObject(TAG_OBJECT::MagneticField)
     , m_Position(Vector3::ZERO)
 
-    //, m_Radius(30000.0f) // origin
-    , m_Radius(8000.0f) // for recording
+    , m_Radius(30000.0f) // origin
+    //, m_Radius(8000.0f) // for recording
 
     , m_DamageMagnitute(1.0f)
     , m_damageCoolDown(0.0f)
     , m_damageCoolTime(2.0f)
     , m_MagneticField(nullptr)
 
-    //, m_coolTime(5.0f * 60.0f) // origin
-    , m_coolTime(80.0f) // for recording
+    , m_coolTime(5.0f * 60.0f) // origin
+    //, m_coolTime(80.0f) // for recording
 
     , m_coolDown(0.0f)
     , m_isMoving(false)
@@ -46,8 +46,8 @@ void MagneticField::setFinalDestination()
 
 
     //처음 random으로 position 설정
-    //m_Position = finalDestination[rand() % 5]; // origin
-    m_Position = finalDestination[0]; // for record
+    m_Position = finalDestination[rand() % 5]; // origin
+    //m_Position = finalDestination[0]; // for record
 }
 
 
@@ -66,8 +66,8 @@ void MagneticField::OnUpdate()
     Debug << "final Destination : " << m_Position << endl;
     Debug << "Radius : " << m_Radius << endl;
     
-    const float dt = Time()()->GetDeltaTime();
-    //const float dt = 0.0f; // for recording
+    //const float dt = Time()()->GetDeltaTime();
+    const float dt = 0.0f; // for recording
 
     ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
     Character* pPlayer = currentScene->GetPlayer();
@@ -89,8 +89,8 @@ void MagneticField::OnUpdate()
 
     int castToInt = static_cast<int>(m_Radius);
 
-    //if (m_isMoving && castToInt ==/*1500 */10000) // origin
-    if (m_isMoving && castToInt == 5000) // for recording
+    if (m_isMoving && castToInt ==/*1500 */10000) // origin
+    //if (m_isMoving && castToInt == 5000) // for recording
     {
         m_coolDown = m_coolTime;
         m_DamageMagnitute = 2.0f;
@@ -100,8 +100,8 @@ void MagneticField::OnUpdate()
         inGameUI.pTimeZeroImg->SetIsRender(false); //삼각형을 가린다
         m_isPrintOnce = false;
     }
-    //else if (m_isMoving &&castToInt == /*1200*/5000) // origin
-    else if (m_isMoving && castToInt == 2000) // for recording
+    else if (m_isMoving &&castToInt == /*1200*/5000) // origin
+    //else if (m_isMoving && castToInt == 2000) // for recording
     {
         m_coolDown = m_coolTime;
         m_DamageMagnitute = 3.0f;
@@ -120,33 +120,33 @@ void MagneticField::OnUpdate()
 
     //for InGameUI
     //미니맵 위 제한시간 표시
-    updateTime(minutes, seconds); // origin
-    //updateTime(0, 0); // for recording
+    //updateTime(minutes, seconds); // origin
+    updateTime(0, 0); // for recording
 }
 
 void MagneticField::OnRender()
 {
-    D3DXMATRIX m;
-    D3DXMatrixTransformation(
-        &m,
-        nullptr,
-        nullptr,
-        &D3DXVECTOR3(m_Radius, m_Radius, m_Radius),
-        nullptr, nullptr,
-        &m_Position);
+    //D3DXMATRIX m;
+    //D3DXMatrixTransformation(
+    //    &m,
+    //    nullptr,
+    //    nullptr,
+    //    &D3DXVECTOR3(m_Radius, m_Radius, m_Radius),
+    //    nullptr, nullptr,
+    //    &m_Position);
 
-    Shader::Draw(
-        Resource()()->GetEffect("./Resource/", "Color.fx"),
-        nullptr,
-        m_MagneticField,
-        0,
-        [&m](LPD3DXEFFECT pEffect)
-    {
-        pEffect->SetMatrix(Shader::World, &m);
+    //Shader::Draw(
+    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
+    //    nullptr,
+    //    m_MagneticField,
+    //    0,
+    //    [&m](LPD3DXEFFECT pEffect)
+    //{
+    //    pEffect->SetMatrix(Shader::World, &m);
 
-        D3DXCOLOR skyBlue(0.4784f, 0.5686f, 0.9921f, 0.3f);
-        pEffect->SetValue("Color", &skyBlue, sizeof skyBlue);
-    });
+    //    D3DXCOLOR skyBlue(0.4784f, 0.5686f, 0.9921f, 0.3f);
+    //    pEffect->SetValue("Color", &skyBlue, sizeof skyBlue);
+    //});
 }
 
 float MagneticField::GetRadius() const
