@@ -49,6 +49,7 @@ void Application::Update()
     DebugMgr     ()()->Clear();
     Time         ()()->Update();
     DebugMgr     ()()->Update();
+    BulletPool   ()()->Update();
     Communication()()->Print();
     Input        ()()->Update();
     Scene        ()()->Update();

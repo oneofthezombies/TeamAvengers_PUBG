@@ -58,14 +58,17 @@ public:
 class _BulletPool : public Singleton<_BulletPool>
 {
 private:
-    deque<Bullet*> m_Bullets;
-    LPD3DXMESH    m_pCylinder;
-    BoundingSphere m_targetHitSphere;
+    std::deque<Bullet*>      m_Bullets;
+    LPD3DXMESH               m_pCylinder;
+    BoundingSphere           m_targetHitSphere;
+    LPD3DXMESH               m_pSphere;
+    std::vector<D3DXVECTOR3> m_hitPositions;
 
     _BulletPool();
     ~_BulletPool();
 
 public:
+    void Update();
     void Destroy();
     void PrintNumBullet();
     void Render();

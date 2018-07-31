@@ -339,16 +339,27 @@ void Bullet::Set(GameInfo::MyInfo myInfo, const D3DXVECTOR3 & startPos, const D3
 
 _BulletPool::_BulletPool()
     : Singleton<_BulletPool>()
+    , m_pSphere(nullptr)
+    , m_pCylinder(nullptr)
 {
     D3DXCreateCylinder(Device()(), 3.0f, 3.0f, 3.0f, 10, 10, &m_pCylinder, 
         nullptr);
 
+    D3DXCreateSphere(Device()(), 1.0f, 20, 20, &m_pSphere, nullptr);
 
-    m_targetHitSphere.radius = 10.0f;
+    m_targetHitSphere.radius = 5.0f;
 }
 
 _BulletPool::~_BulletPool()
 {
+}
+
+void _BulletPool::Update()
+{
+    if (GetAsyncKeyState('7') & 0x0001)
+    {
+        m_hitPositions.clear();
+    }
 }
 
 void _BulletPool::Destroy()
@@ -357,6 +368,7 @@ void _BulletPool::Destroy()
     //    SAFE_DELETE(b);
 
     SAFE_RELEASE(m_pCylinder);
+    SAFE_RELEASE(m_pSphere);
 }
 
 void _BulletPool::PrintNumBullet()
@@ -374,29 +386,38 @@ void _BulletPool::PrintNumBullet()
 
 void _BulletPool::Render()
 {
-    //hit 된 position에 구체 그리기
     D3DXMATRIX m;
-    D3DXMatrixTransformation(
-        &m,
-        nullptr,
-        nullptr,
-        &D3DXVECTOR3(m_targetHitSphere.radius, m_targetHitSphere.radius, m_targetHitSphere.radius),
-        nullptr, nullptr,
-        &(m_targetHitSphere.center + m_targetHitSphere.position));
+    D3DXVECTOR3 t;
+
+    D3DXVECTOR3  s(Vector3::ONE * m_targetHitSphere.radius);
+    D3DXCOLOR    red(1.0f, 0.f, 0.0f, 1.0f);
+    LPD3DXEFFECT pEffect(Resource()()->GetEffect("./Resource/", "Color.fx"));
 
     Device()()->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-    Shader::Draw(
-        Resource()()->GetEffect("./Resource/", "Color.fx"),
-        nullptr,
-        Resource()()->GetBoundingSphereMesh(),
-        0,
-        [&m](LPD3DXEFFECT pEffect)
+    for (D3DXVECTOR3& p : m_hitPositions)
     {
-        pEffect->SetMatrix(Shader::World, &m);
+        t = m_targetHitSphere.center + p;
 
-        D3DXCOLOR Red(1.0f, 0.f, 0.0f, 1.0f);
-        pEffect->SetValue("Color", &Red, sizeof Red);
-    });
+        D3DXMatrixTransformation(
+            &m,
+            nullptr,
+            nullptr,
+            &s,
+            nullptr, 
+            nullptr,
+            &t);
+
+        Shader::Draw(
+            pEffect,
+            nullptr,
+            m_pSphere,
+            0,
+            [&m, &red](LPD3DXEFFECT pEffect)
+        {
+            pEffect->SetMatrix(Shader::World, &m);
+            pEffect->SetValue("Color", &red, sizeof red);
+        });
+    }
 }
 
 Bullet* _BulletPool::Fire(
@@ -429,6 +450,8 @@ LPD3DXMESH _BulletPool::GetCylinder() const
 
 void _BulletPool::SetTargetHitSphere(const D3DXVECTOR3& pos)
 {
-    m_targetHitSphere.position = pos;
+    m_hitPositions.emplace_back(pos);
+
+    //m_targetHitSphere.position = pos;
 }
 
