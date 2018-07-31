@@ -319,6 +319,8 @@ CharacterPart::CharacterPart(const TAG_COLLIDER_CHARACTER_PART tag,
         assert(f && "CharacterPart::Constructor() failed. frame is null.");
         v = (v + Matrix::GetTranslation(f->TransformationMatrix)) * 0.5f;
     }
+
+    m_boundingBox.isRender = true;
 }
 
 CharacterPart::~CharacterPart()

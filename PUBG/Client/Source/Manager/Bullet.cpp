@@ -419,6 +419,28 @@ void _BulletPool::Render()
             pEffect->SetValue("Color", &red, sizeof red);
         });
     }
+
+    t = m_targetHitSphere.center + m_targetHitSphere.position;
+
+    D3DXMatrixTransformation(
+        &m,
+        nullptr,
+        nullptr,
+        &s,
+        nullptr,
+        nullptr,
+        &t);
+
+    Shader::Draw(
+        pEffect,
+        nullptr,
+        m_pSphere,
+        0,
+        [&m, &red](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &m);
+        pEffect->SetValue("Color", &red, sizeof red);
+    });
 }
 
 Bullet* _BulletPool::Fire(
