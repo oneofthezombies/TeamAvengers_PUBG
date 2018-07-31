@@ -18,7 +18,7 @@ void CameraManager::Init()
     m_cameras.emplace(TAG_CAMERA::First_Person, new CameraFirstPerson);
     m_cameras.emplace(TAG_CAMERA::Third_Person, new CameraThirdPerson);
     m_cameras.emplace(TAG_CAMERA::OnGun, new CameraOnGun);
-    //m_cameras.emplace(TAG_CAMERA::KyunChak, new CameraKyunChak);
+    m_cameras.emplace(TAG_CAMERA::KyunChak, new CameraKyunChak);
     //m_cameras.emplace(TAG_CAMERA::Scope2X, new Camera2xScope);
     m_cameras.emplace(TAG_CAMERA::Lobby, new CameraLobby);
 
@@ -70,16 +70,21 @@ void CameraManager::Update()
         //    m_cameras[TAG_CAMERA::OnGun]->Update();
 
         pCurrentCamera->Update();
-
-        if(pCurrentCamera->GetTagCamera() != TAG_CAMERA::Default) //디버그 카메라는 player의 이동에 영향이 없도록
-          pCurrentCamera->UpdateViewProjMatrix();
-
+        
+        if (pCurrentCamera->GetTagCamera() != TAG_CAMERA::Default) //디버그 카메라는 player의 이동에 영향이 없도록
+            pCurrentCamera->UpdateViewProjMatrix();
 
         pCurrentCamera->UpdateFrustumCulling();
 
 
         //for debug
         //m_cameras[TAG_CAMERA::OnGun]->Render();
+        if (pCurrentCamera->GetTagCamera() == TAG_CAMERA::KyunChak)
+        {
+            CameraKyunChak* pCam = static_cast<CameraKyunChak*>(pCurrentCamera);
+            if (pCam->GetDurTime() < 0.0f)
+                SetCurrentCamera(TAG_CAMERA::Third_Person);
+        }
     }
 }
 

@@ -26,7 +26,7 @@ void CameraFirstPerson::Reset()
 
 void CameraFirstPerson::Update()
 {
-    //RBUTTON Up 하면 다시 TP 로 돌아가기
+    ////RBUTTON Up 하면 다시 TP 로 돌아가기
     //if (Input()()->IsOnceKeyUp(VK_RBUTTON))
     //    Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
 

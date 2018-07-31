@@ -102,6 +102,8 @@ public:
 
 class CameraThirdPerson : public ICamera
 {
+protected:
+    D3DXVECTOR3 m_Position;
 public:
     CameraThirdPerson(const TAG_CAMERA tag = TAG_CAMERA::Third_Person);
     virtual ~CameraThirdPerson();
@@ -116,6 +118,10 @@ class CameraKyunChak : public CameraThirdPerson
 {
 private:
     float           m_vel;
+    float           m_val;
+    float           m_durTime;
+    D3DXVECTOR3     m_KyunChakPos;
+    bool            m_isCloser;
 
 public:
     CameraKyunChak();
@@ -124,6 +130,11 @@ public:
 
     virtual void Reset() override;
     virtual void Update() override;
+
+    const float GetDurTime()
+    {
+        return m_durTime;
+    }
 };
 
 class Camera2xScope : public CameraFirstPerson

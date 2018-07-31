@@ -335,6 +335,7 @@ void CameraFree::Update()
 //-----------------------------------------------------------------
 CameraThirdPerson::CameraThirdPerson(const TAG_CAMERA tag)
     : ICamera(tag)
+    , m_Position(Vector3::ZERO/*D3DXVECTOR3(-20.0f, 180.0f, 85.0f)*/)
 {
 }
 
@@ -345,7 +346,8 @@ CameraThirdPerson::~CameraThirdPerson()
 void CameraThirdPerson::Reset()
 {
     //m_position = D3DXVECTOR3(TP_BASEPOSX, TP_BASEPOSY, TP_DISTANCE);
-
+    //m_Position = D3DXVECTOR3(-20.0f, 180.0f, 85.0f);
+    m_Position = D3DXVECTOR3(-20.0f, 180.0f, 250.0f);
     //80 Degrees TP sight
     m_fovY = D3DX_PI * (80.0f / 180.0f);
     m_eye = Vector3::ZERO;
@@ -357,9 +359,9 @@ void CameraThirdPerson::Reset()
 
 void CameraThirdPerson::Update()
 {
-    ////견착하는 부분은 3인칭에서만 있기에
-    //if (Input()()->IsOnceKeyDown(VK_RBUTTON))
-    //    Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
+    //견착하는 부분은 3인칭에서만 있기에
+    if (Input()()->IsStayKeyDown(VK_RBUTTON))
+        Camera()()->SetCurrentCamera(TAG_CAMERA::KyunChak);
 
 
     Character::Info* pTarInfo = GetTargetInfo();
@@ -375,9 +377,8 @@ void CameraThirdPerson::Update()
         D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, 0.0f);
 
         D3DXMATRIX baseY, baseZ;
-        D3DXMatrixTranslation(&baseY, -20.0f, 180.0f, 0.0f);
-        //D3DXMatrixTranslation(&baseZ, 0.0f, 0.0f, 85.0f);
-        D3DXMatrixTranslation(&baseZ, 0.0f, 0.0f, 250.0f);
+        D3DXMatrixTranslation(&baseY, m_Position.x, m_Position.y, 0.0f);
+        D3DXMatrixTranslation(&baseZ, 0.0f, 0.0f, m_Position.z);
         m_worldMatrix
             = baseZ
             * tarR
@@ -434,6 +435,9 @@ void ICamera::UpdateViewProjMatrix()
 CameraKyunChak::CameraKyunChak()
     : CameraThirdPerson(TAG_CAMERA::KyunChak)
     , m_vel(0.0f)
+    , m_KyunChakPos(Vector3::ZERO)
+    , m_isCloser(false)
+    , m_val(0.0f)
 {
 
 }
@@ -445,25 +449,74 @@ CameraKyunChak::~CameraKyunChak()
 void CameraKyunChak::Reset()
 {
     CameraThirdPerson::Reset();
-
+    m_KyunChakPos = D3DXVECTOR3(-43.0f, 158.0f, 35.0f);
+    m_val = 0.0f;
+    m_durTime = 0.0f;
 }
 
 void CameraKyunChak::Update()
 {
-    CameraThirdPerson::Update();
-
-    //Debug << "m_position.x : " << m_position.x << "\n";
-    //Debug << "m_position.y : " << m_position.y << "\n";
-    //Debug << "m_position.z : " << m_position.z << "\n";
-    //Debug << "m_vel : " << m_vel << "\n";
     InputManager*  pInput = Input()();
-    bool bR_buttonStay = pInput->IsStayKeyDown(VK_RBUTTON);
-    bool bR_buttonUp = pInput->IsOnceKeyUp(VK_RBUTTON);
+
+    //if (pInput->IsStayKeyDown('K')) { m_KyunChakPos.y -= 1.0f; }
+    //if (pInput->IsStayKeyDown('I')) { m_KyunChakPos.y += 1.0f; }
+    //if (pInput->IsStayKeyDown('J')) { m_KyunChakPos.x -= 1.0f; }
+    //if (pInput->IsStayKeyDown('L')) { m_KyunChakPos.x += 1.0f; }
+    //if (pInput->IsStayKeyDown('O')) { m_KyunChakPos.z -= 1.0f; }
+    //if (pInput->IsStayKeyDown('U')) { m_KyunChakPos.z += 1.0f; }
+
+    //Debug << "여기야 : " << m_KyunChakPos << endl;
 
 
-    const auto dt = Time()()->GetDeltaTime();
-    const float factor = 100.0f;
-    const float dtPow = pow(dt, 2); //dt^3
+    m_isCloser = pInput->IsStayKeyDown(VK_RBUTTON);
+
+    const float endTime = 1.0f;
+
+
+    D3DXVECTOR3 now;
+    if (m_isCloser)
+    {
+        m_val += pow(Time()()->GetDeltaTime(), 2.0f);
+        m_durTime += m_val;
+    }
+    else
+    {
+        m_val -= pow(Time()()->GetDeltaTime(), 2.0f);
+        m_durTime -= m_val;
+    }
+    if (m_durTime >= 1.0f)
+        m_durTime = 1.0f;
+
+    D3DXVec3Lerp(&now, &m_Position, &m_KyunChakPos, m_durTime / endTime);
+
+    Character::Info* pTarInfo = GetTargetInfo();
+    if (!pTarInfo)
+    {
+        D3DXMatrixIdentity(&m_worldMatrix);
+    }
+    else
+    {
+        D3DXMATRIX tarR, baseT;
+        D3DXVECTOR3 vRot = *pTarInfo->pRotationForCamera;
+        D3DXMatrixRotationYawPitchRoll(&tarR, vRot.y, vRot.x, 0.0f);
+
+        D3DXMATRIX baseY, baseZ;
+        D3DXMatrixTranslation(&baseY, now.x, now.y, 0.0f);
+        D3DXMatrixTranslation(&baseZ, 0.0f, 0.0f, now.z);
+        m_worldMatrix
+            = baseZ
+            * tarR
+            * baseY
+            * pTarInfo->pTransform->GetTransformationMatrix();
+    }
+
+    m_eye = Vector3::ZERO;
+    m_look = m_eye - Vector3::FORWARD;
+    
+
+    //const auto dt = Time()()->GetDeltaTime();
+    //const float factor = 100.0f;
+    //const float dtPow = pow(dt, 2); //dt^3
 
     //if (bR_buttonStay)//R_button이 눌릴때 까지만
     //{
