@@ -235,7 +235,8 @@ float ItemInfo::GetBaseDamage(const TAG_RES_STATIC tag)
 {
     switch (tag)
     {
-    case TAG_RES_STATIC::QBZ: return 43.0f;
+    //case TAG_RES_STATIC::QBZ: return 43.0f;
+    case TAG_RES_STATIC::QBZ: return 75.0f;
     case TAG_RES_STATIC::Kar98k: return 75.0f;
 
     default: return 0.0f;
