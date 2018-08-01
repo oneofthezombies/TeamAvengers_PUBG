@@ -66,8 +66,8 @@ void MagneticField::OnUpdate()
     Debug << "final Destination : " << m_Position << endl;
     Debug << "Radius : " << m_Radius << endl;
     
-    //const float dt = Time()()->GetDeltaTime();
-    const float dt = 0.0f; // for recording
+    const float dt = Time()()->GetDeltaTime();
+    //const float dt = 0.0f; // for recording
 
     ScenePlay* currentScene = static_cast<ScenePlay*>(Scene()()->GetCurrentScene());
     Character* pPlayer = currentScene->GetPlayer();
@@ -120,33 +120,33 @@ void MagneticField::OnUpdate()
 
     //for InGameUI
     //미니맵 위 제한시간 표시
-    //updateTime(minutes, seconds); // origin
-    updateTime(0, 0); // for recording
+    updateTime(minutes, seconds); // origin
+    //updateTime(0, 0); // for recording
 }
 
 void MagneticField::OnRender()
 {
-    //D3DXMATRIX m;
-    //D3DXMatrixTransformation(
-    //    &m,
-    //    nullptr,
-    //    nullptr,
-    //    &D3DXVECTOR3(m_Radius, m_Radius, m_Radius),
-    //    nullptr, nullptr,
-    //    &m_Position);
+    D3DXMATRIX m;
+    D3DXMatrixTransformation(
+        &m,
+        nullptr,
+        nullptr,
+        &D3DXVECTOR3(m_Radius, m_Radius, m_Radius),
+        nullptr, nullptr,
+        &m_Position);
 
-    //Shader::Draw(
-    //    Resource()()->GetEffect("./Resource/", "Color.fx"),
-    //    nullptr,
-    //    m_MagneticField,
-    //    0,
-    //    [&m](LPD3DXEFFECT pEffect)
-    //{
-    //    pEffect->SetMatrix(Shader::World, &m);
+    Shader::Draw(
+        Resource()()->GetEffect("./Resource/", "Color.fx"),
+        nullptr,
+        m_MagneticField,
+        0,
+        [&m](LPD3DXEFFECT pEffect)
+    {
+        pEffect->SetMatrix(Shader::World, &m);
 
-    //    D3DXCOLOR skyBlue(0.4784f, 0.5686f, 0.9921f, 0.3f);
-    //    pEffect->SetValue("Color", &skyBlue, sizeof skyBlue);
-    //});
+        D3DXCOLOR skyBlue(0.4784f, 0.5686f, 0.9921f, 0.3f);
+        pEffect->SetValue("Color", &skyBlue, sizeof skyBlue);
+    });
 }
 
 float MagneticField::GetRadius() const

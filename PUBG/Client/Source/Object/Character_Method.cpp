@@ -776,7 +776,7 @@ void Character::RifleShooting() //bullet 객체에 대한
     //bullet 갯수 만큼 조정
     int numBullet = inven.m_pHand->GetNumBullet();
     inven.m_pHand->SetNumBullet(--numBullet);
-    cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
+    //cout << "총에 남아있는 총알 개수: " << inven.m_pHand->GetNumBullet() << "\n";
     //bullet이 나가는 포지션 구하기
     D3DXMATRIX mat
         = inven.m_pHand->GetGunBolt()->CombinedTransformationMatrix  //model space combinde matrix
