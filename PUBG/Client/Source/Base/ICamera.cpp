@@ -106,7 +106,7 @@ void ICamera::drawIndices(const vector<WORD>& indices, const D3DXCOLOR & color)
 
 void ICamera::UpdateFrustumCulling()
 {
-    cout << "Updated frustum\n";
+    //cout << "Updated frustum\n";
 
     D3DXMATRIX InvVP;
     InvVP = m_viewMatrix * m_projectionMatrix;
