@@ -100,6 +100,7 @@ struct Communication
         void SendEventDestroyItemInBox      (const int characterID, const int boxID, const std::string& itemName);
 
         void SendEventKillLog(const std::string& killLog);
+        void SendEventBloodParticle(const D3DXVECTOR3& position);
 
         friend Singleton<Manager>;
     };
