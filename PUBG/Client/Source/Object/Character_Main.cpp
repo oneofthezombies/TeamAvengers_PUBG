@@ -87,6 +87,7 @@ Character::Character(const int index)
     const std::vector<BoundingSphere>& bss = pAnimation->GetBoundingSpheres();
     m_boundingSphere = bss.front();
     m_boundingSphere.position = GetTransform()->GetPosition();
+    m_boundingSphere.isRender = true;
     // end boundingShapes
 
     subscribeCollisionEvent();
@@ -114,7 +115,7 @@ Character::~Character()
 void Character::OnUpdate()
 {
     // clear isRender
-    GetBoundingSphere().isRender = false;
+    //GetBoundingSphere().isRender = false;
     //for (auto& box : GetBoundingBoxes())
     //    box.isRender = false;
     m_bBox.isRender = false;
