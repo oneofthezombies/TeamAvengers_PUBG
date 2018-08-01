@@ -104,7 +104,7 @@ void SoundManager::AddSound(const TAG_SOUND tag, const string& path, const FMOD_
     // 총/폭발음 이외에는 디스턴스 조절 감소가 시작하는 시점을 아주 적은 시점부터 시작하여 소리를 작게만듬.
     if (static_cast<int>(tag) > 4)
     {
-        CheckError(m_sounds[tag]->set3DMinMaxDistance(30.0f, 10000.0f));
+        CheckError(m_sounds[tag]->set3DMinMaxDistance(50.0f, 10000.0f));
     }
 }
 
