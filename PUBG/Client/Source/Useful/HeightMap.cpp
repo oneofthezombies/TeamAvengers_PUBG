@@ -325,6 +325,31 @@ void HeightMap::SetMoreHigherFloor()
             D3DXVECTOR3(5690.938f, 4777.353f, 16236.205f));
     }
 
+    //WareHouse_B
+    {
+        //main floor
+        AddHeightVertex(
+            D3DXVECTOR3(9207.505f, 4871.112f, 18599.580f),
+            D3DXVECTOR3(5283.833f, 4871.112f, 18598.084f),
+            D3DXVECTOR3(5283.833f, 4871.112f, 20549.998f),
+            D3DXVECTOR3(9207.505f, 4871.112f, 20549.998f));
+
+        //west stair
+        AddHeightVertex(
+            D3DXVECTOR3(4654.775f, 4741.698f, 19895.855f),
+            D3DXVECTOR3(5283.833f, 4871.112f, 19892.344f),
+            D3DXVECTOR3(5283.833f, 4871.112f, 19260.229f),
+            D3DXVECTOR3(4654.775f, 4741.698f, 19260.229f));
+
+        //east stair
+        AddHeightVertex(
+            D3DXVECTOR3(9874.257f, 4729.721f, 19241.584f),
+            D3DXVECTOR3(9207.505f, 4871.112f, 19247.039f),
+            D3DXVECTOR3(9207.505f, 4871.112f, 19889.291f),
+            D3DXVECTOR3(9874.257f, 4729.721f, 19889.291f));
+
+    }
+
 
     // Church
     {
@@ -383,6 +408,11 @@ void HeightMap::SetMoreHigherFloor()
             D3DXVECTOR3(12972.576f, 6577.479f, 13249.753f),
             D3DXVECTOR3(13792.662f, 6396.372f, 13353.286f),
             D3DXVECTOR3(13792.662f, 6396.372f, 11391.755f));
+
+    }
+
+    //container
+    {
 
     }
 
