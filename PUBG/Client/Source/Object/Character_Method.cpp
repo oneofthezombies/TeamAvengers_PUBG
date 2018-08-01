@@ -16,10 +16,10 @@
 #include "UIImage.h"
 
 const float MovingFactor::UNARMED_RUN = 180.0f;
-const float MovingFactor::UNARMED_SPRINT = 260.0f;
+const float MovingFactor::UNARMED_SPRINT = 280.0f;
 const float MovingFactor::UNARMED_WALK = 120.0f;
 const float MovingFactor::RIFLE_RUN = 120.0f;
-const float MovingFactor::RIFLE_SPRINT = 200.0f;
+const float MovingFactor::RIFLE_SPRINT = 220.0f;
 const float MovingFactor::RIFLE_WALK = 100.0f;
 const float Character::RootTransform::DEBUG_MOVE_SPEED = 5.0f;
 

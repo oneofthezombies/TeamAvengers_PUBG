@@ -135,7 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="MagneticField.cpp" />
+    <ClCompile Include="Source\Object\MagneticField.cpp" />
     <ClCompile Include="Source\Manager\Particle.cpp" />
     <ClCompile Include="Source\UI\UICompass.cpp" />
     <ClCompile Include="Source\Object\Quad.cpp" />
@@ -216,7 +216,7 @@
     <None Include="fmod64.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MagneticField.h" />
+    <ClInclude Include="Source\Object\MagneticField.h" />
     <ClInclude Include="Source\Manager\Particle.h" />
     <ClInclude Include="Source\UI\UICompass.h" />
     <ClInclude Include="Source\Object\DeathDropBox.h" />

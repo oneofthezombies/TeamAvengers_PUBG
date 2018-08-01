@@ -78,7 +78,7 @@ void MagneticField::OnUpdate()
         // do
         if (m_Radius > 1000.0f)//이 이하로는 안 줄어 듬
         {
-            m_Radius -= dt * 100.0f;
+            m_Radius -= dt * 200.0f;
             m_isMoving = true;
         }
     }

@@ -273,6 +273,8 @@ void Character::updateMine()
     {
         if (m_isDead)
         {
+            ShowCursor(true);
+
             m_isGameOver = true;
             m_gameOverUI.Update();
 

@@ -678,7 +678,7 @@ void Character::InGameUI::Update(const TotalInventory& inven)
     if (pPlayer->GetIsKill())
     {
         //ex) "HelloWoori의 Kar98k(으)로 인해 Hoon이(가) 사망했습니다"
-        std::string str = m_nickName + " 의"+ m_weaponNameForKill + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
+        std::string str = m_nickName + " 의 "+ m_weaponNameForKill + "(으)로 인해 " + m_killedNickName + " 이(가) 사망했습니다";
 
         AddKillLog(str);
         Communication()()->SendEventKillLog(str);

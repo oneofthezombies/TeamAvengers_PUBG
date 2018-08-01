@@ -70,11 +70,11 @@
     <ClCompile Include="Source\Object\Character_OnMouse.cpp" />
     <ClCompile Include="Source\Useful\UsefulClientOnly.cpp" />
     <ClCompile Include="Source\Object\Quad.cpp" />
-    <ClCompile Include="MagneticField.cpp" />
     <ClCompile Include="Source\UI\UICompass.cpp" />
     <ClCompile Include="Source\Object\Water.cpp" />
     <ClCompile Include="Source\Manager\Particle.cpp" />
     <ClCompile Include="Source\UI\UIMinimap.cpp" />
+    <ClCompile Include="Source\Object\MagneticField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmod64.dll" />
@@ -141,10 +141,10 @@
     <ClInclude Include="Source\Scene\SceneLobby.h" />
     <ClInclude Include="Source\Useful\UsefulClientOnly.h" />
     <ClInclude Include="Source\Object\Quad.h" />
-    <ClInclude Include="MagneticField.h" />
     <ClInclude Include="Source\UI\UICompass.h" />
     <ClInclude Include="Source\Object\Water.h" />
     <ClInclude Include="Source\Manager\Particle.h" />
     <ClInclude Include="Source\UI\UIMinimap.h" />
+    <ClInclude Include="Source\Object\MagneticField.h" />
   </ItemGroup>
 </Project>
