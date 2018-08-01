@@ -368,7 +368,7 @@ void Communication::Manager::ReceiveMessage(
         D3DXVECTOR3 pl = pScenePlay->GetPlayer()->GetTransform()->GetPosition();
         D3DXVECTOR3 temp = { pl.x - pos.x , pl.y - pos.y , pl.z - pos.z };
         float tempFloat = D3DXVec3Length(&temp);
-        tempFloat *= (0.325f);
+        tempFloat *= (0.000325f);
 
 
         Sound()()->addPlay(static_cast<TAG_SOUND>(tagSound), pos, tempFloat, FMOD_3D);
