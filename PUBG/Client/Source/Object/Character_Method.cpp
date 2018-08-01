@@ -1231,7 +1231,7 @@ void Character::InitScenePlay()
 
     if (m_index == 0)
     {
-        pTransform->SetPosition(D3DXVECTOR3(7000.0f, 5000.0f, 7000.0f));
+        pTransform->SetPosition(D3DXVECTOR3(5000.0f, 5000.0f, 5000.0f));
     }
     else if (m_index == 1)
     {
