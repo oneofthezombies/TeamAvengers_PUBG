@@ -388,6 +388,8 @@ void _BulletPool::PrintNumBullet()
 
 void _BulletPool::Render()
 {
+    if (!Collision()()->IsRender()) return;
+
     D3DXMATRIX m;
     D3DXVECTOR3 t;
 
