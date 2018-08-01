@@ -211,6 +211,7 @@ void BloodParticle::renderBloodHit_Splash(Blood_Hit & blood_hit)
 
     pD3DDevice->SetTransform(D3DTS_WORLD, &GetTransform()->GetTransformationMatrix());
     pD3DDevice->SetTexture(0, blood_hit.m_pTex[blood_hit.m_currentIndex]);
+    pD3DDevice->SetMaterial(nullptr);
     pD3DDevice->SetFVF(VERTEX_PC::FVF);
     pD3DDevice->SetStreamSource(0, blood_hit.m_pVB[blood_hit.m_currentIndex], 0, sizeof(VERTEX_PC));
     pD3DDevice->DrawPrimitive(D3DPT_POINTLIST, 0, 1);
@@ -231,6 +232,7 @@ void BloodParticle::renderBloodHit_Splurt(Blood_Hit & blood_hit)
     
     LPDIRECT3DDEVICE9	pD3DDevice = Device()();
     pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
+    pD3DDevice->SetMaterial(nullptr);
     pD3DDevice->SetTexture(0, blood_hit.m_pTex[blood_hit.m_currentIndex]);
     pD3DDevice->SetFVF(VERTEX_PC::FVF);
     pD3DDevice->SetStreamSource(0, blood_hit.m_pVB[blood_hit.m_currentIndex], 0, sizeof(VERTEX_PC));
