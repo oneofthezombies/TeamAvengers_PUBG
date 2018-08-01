@@ -334,46 +334,48 @@ void Communication::Manager::ReceiveMessage(
     //    break;
 
     // old
-    //case TAG_REQUEST::SEND_EVENT_SOUND:
-    //    {
-    //        auto parsedDesc = Message::ParseDescription(description);
-    //        auto& id = parsedDesc.first;
-    //        auto& eventSoundStr = parsedDesc.second;
-
-    //        std::stringstream ss(eventSoundStr);
-    //        int tagSound;
-    //        D3DXVECTOR3 pos;
-
-    //        ss >> pos.x >> pos.y >> pos.z
-    //           >> tagSound;
-    //        Sound()()->Play(static_cast<TAG_SOUND>(tagSound), pos, 0.3f, FMOD_3D);
-    //    }
-    //    break;
     case TAG_REQUEST::SEND_EVENT_SOUND:
-    {
-        auto parsedDesc = Message::ParseDescription(description);
-        auto& id = parsedDesc.first;
-        auto& eventSoundStr = parsedDesc.second;
+        {
+            auto parsedDesc = Message::ParseDescription(description);
+            auto& id = parsedDesc.first;
+            auto& eventSoundStr = parsedDesc.second;
 
-        std::stringstream ss(eventSoundStr);
-        int tagSound;
-        D3DXVECTOR3 pos;
+            std::stringstream ss(eventSoundStr);
+            int tagSound;
+            D3DXVECTOR3 pos;
 
-        ss >> pos.x >> pos.y >> pos.z
-            >> tagSound;
+            ss >> pos.x >> pos.y >> pos.z
+               >> tagSound;
+            Sound()()->Play(static_cast<TAG_SOUND>(tagSound), pos, 0.3f, FMOD_3D);
+        }
+        break;
 
-        ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
+    // new
+    //case TAG_REQUEST::SEND_EVENT_SOUND:
+    //{
+    //    auto parsedDesc = Message::ParseDescription(description);
+    //    auto& id = parsedDesc.first;
+    //    auto& eventSoundStr = parsedDesc.second;
+
+    //    std::stringstream ss(eventSoundStr);
+    //    int tagSound;
+    //    D3DXVECTOR3 pos;
+
+    //    ss >> pos.x >> pos.y >> pos.z
+    //        >> tagSound;
+
+    //    ScenePlay* pScenePlay = static_cast<ScenePlay*>(CurrentScene()());
 
 
-        D3DXVECTOR3 pl = pScenePlay->GetPlayer()->GetTransform()->GetPosition();
-        D3DXVECTOR3 temp = { pl.x - pos.x , pl.y - pos.y , pl.z - pos.z };
-        float tempFloat = D3DXVec3Length(&temp);
-        tempFloat *= (0.0000325f);
+    //    D3DXVECTOR3 pl = pScenePlay->GetPlayer()->GetTransform()->GetPosition();
+    //    D3DXVECTOR3 temp = { pl.x - pos.x , pl.y - pos.y , pl.z - pos.z };
+    //    float tempFloat = D3DXVec3Length(&temp);
+    //    tempFloat *= (0.0000325f);
 
 
-        Sound()()->addPlay(static_cast<TAG_SOUND>(tagSound), pos, tempFloat, FMOD_3D);
-    }
-    break;
+    //    Sound()()->addPlay(static_cast<TAG_SOUND>(tagSound), pos, tempFloat, FMOD_3D);
+    //}
+    //break;
     case TAG_REQUEST::SEND_EVENT_MINUS_DAMAGE:
         {
             auto parsedDesc = Message::ParseDescription(description);
