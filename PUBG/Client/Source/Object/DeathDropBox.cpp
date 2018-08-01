@@ -63,6 +63,8 @@ void DeathDropBox::setItems(Character* pCharacter)
         {
             (*ppItem)->SetDeathDropBox(this);
             (*ppItem)->SetIsInInventory(false);
+            (*ppItem)->SetIsRenderSkinnedMesh(false);
+            (*ppItem)->SetIsRenderEffectMesh(false);
             m_items.emplace_back(*ppItem);
             *ppItem = nullptr;
         }
