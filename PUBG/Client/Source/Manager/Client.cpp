@@ -1229,6 +1229,19 @@ void Communication::Manager::ReceiveMessage(
             Scene()()->GetPlayer()->GetInGameUI().AddKillLog(eventKillLogStr);
         }
         break;
+    case TAG_REQUEST::SEND_EVENT_PLAY_BLOOD_PARTICLE:
+        {
+            std::pair<int, std::string> parsedDesc =
+                Message::ParseDescription(description);
+
+            int id = parsedDesc.first;
+            std::string& eventPLayBloodParticleStr = parsedDesc.second;
+            std::stringstream ss(eventPLayBloodParticleStr);
+            D3DXVECTOR3 position;
+            ss >> position.x >> position.y >> position.z;
+            ParticlePool()()->Hit_Blood(position, Quaternion::IDENTITY);
+        }
+        break;
     }
 }
 
@@ -1771,6 +1784,19 @@ void Communication::Manager::SendEventKillLog(const std::string& killLog)
     m_pClient->Write(
         Message::Create(
             TAG_REQUEST::SEND_EVENT_KILL_LOG,
+            ss.str()));
+}
+
+void Communication::Manager::SendEventBloodParticle(const D3DXVECTOR3& position)
+{
+    if (m_playMode == PlayMode::ALONE) return;
+
+    std::stringstream ss;
+    ss << m_myInfo.ID << position.x << ' ' << position.y << ' ' << position.z;
+
+    m_pClient->Write(
+        Message::Create(
+            TAG_REQUEST::SEND_EVENT_PLAY_BLOOD_PARTICLE,
             ss.str()));
 }
 
