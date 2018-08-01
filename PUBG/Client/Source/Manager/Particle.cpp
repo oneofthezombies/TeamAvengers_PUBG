@@ -153,11 +153,13 @@ void BloodParticle::Set(const D3DXVECTOR3 & pos, const D3DXQUATERNION& rot)
     for (auto& p : m_blood_hit_splash)
     {
         p.m_currentIndex = 0;
+        p.m_dt = 0.0f;
     }
 
     for (auto& p : m_blood_hit_splurt)
     {
         p.m_currentIndex = 0;
+        p.m_dt = 0.0f;
     }
 
     CurrentScene()()->AddObject(this);
@@ -213,7 +215,9 @@ void BloodParticle::renderBloodHit_Splash(Blood_Hit & blood_hit)
     pD3DDevice->SetStreamSource(0, blood_hit.m_pVB[blood_hit.m_currentIndex], 0, sizeof(VERTEX_PC));
     pD3DDevice->DrawPrimitive(D3DPT_POINTLIST, 0, 1);
 
-    blood_hit.m_currentIndex++;
+    blood_hit.m_dt += Time()()->GetDeltaTime()* 50.0f;
+    blood_hit.m_currentIndex = static_cast<int>(blood_hit.m_dt);
+
 }
 
 void BloodParticle::renderBloodHit_Splurt(Blood_Hit & blood_hit)
@@ -232,7 +236,9 @@ void BloodParticle::renderBloodHit_Splurt(Blood_Hit & blood_hit)
     pD3DDevice->SetStreamSource(0, blood_hit.m_pVB[blood_hit.m_currentIndex], 0, sizeof(VERTEX_PC));
     pD3DDevice->DrawPrimitive(D3DPT_POINTLIST, 0, 1);
 
-    blood_hit.m_currentIndex++;
+    blood_hit.m_dt += Time()()->GetDeltaTime()* 50.0f;
+    blood_hit.m_currentIndex = static_cast<int>(blood_hit.m_dt);
+
 }
 
 _ParticlePool::_ParticlePool()

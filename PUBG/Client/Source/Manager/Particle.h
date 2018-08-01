@@ -18,8 +18,9 @@ class BloodParticle :
 {
     struct Blood_Hit
     {
-        std::vector<LPDIRECT3DTEXTURE9>		    m_pTex;
+        std::vector<LPDIRECT3DTEXTURE9>          m_pTex;
         std::vector<LPDIRECT3DVERTEXBUFFER9>    m_pVB;
+        float                                   m_dt;
         int                                     m_currentIndex;
         const int                               m_maxIndex;
 
@@ -27,10 +28,12 @@ class BloodParticle :
         Blood_Hit(int maxIndex)
             : m_maxIndex(maxIndex)
             , m_currentIndex(0)
+            , m_dt(0.0f)
         {
         }
 
     };
+
 
 private:
     std::vector<Blood_Hit>                      m_blood_hit_splash;
