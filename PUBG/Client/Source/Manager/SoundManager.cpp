@@ -74,6 +74,9 @@ void SoundManager::Destroy()
 
 void SoundManager::Update()
 {
+    m_playInfo.insert(m_playInfo.end(), m_playInfoQueue.begin(), m_playInfoQueue.end());
+    m_playInfoQueue.clear();
+
     const float dt = Time()()->GetDeltaTime();
 
     for (auto it = m_playInfo.begin(); it != m_playInfo.end();)
@@ -185,8 +188,9 @@ int SoundManager::Play(const TAG_SOUND tag, const D3DXVECTOR3& pos, const float 
 
 int SoundManager::addPlay(const TAG_SOUND tag, const D3DXVECTOR3 & pos, float time, const FMOD_MODE & mode)
 {
-    PlayInfo PI = { tag, pos,mode, time };
-    m_playInfo.push_back(PI);
+    //PlayInfo PI = { tag, pos,mode, time };
+    //m_playInfo.push_back(PI);
+    m_playInfoQueue.emplace_back(PlayInfo{ tag, pos, mode, time });
     return 0;
 }
 

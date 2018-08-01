@@ -28,7 +28,8 @@ private:
     FMOD_VECTOR     m_upDir = { 0,1,0 };
     FMOD_VECTOR     m_listenerPos;
 
-    deque<PlayInfo> m_playInfo;
+    std::deque<PlayInfo> m_playInfo;
+    std::deque<PlayInfo> m_playInfoQueue;
 
 private:
     SoundManager();
