@@ -16,8 +16,8 @@ void SceneLoading::Load()
     // set play mode
     // alone       -> no network
     // with others -> login to network
-    //setPlayMode(Communication::PlayMode::WITH_OTHERS);
-    setPlayMode(Communication::PlayMode::ALONE);
+    setPlayMode(Communication::PlayMode::WITH_OTHERS);
+    //setPlayMode(Communication::PlayMode::ALONE);
 
     // load textures
     loadSync("./Resource/Static/Map/Exterior/HayBale/HayBale_2/", "hey01_D.tga", D3DCOLOR_XRGB(0, 0, 0));
