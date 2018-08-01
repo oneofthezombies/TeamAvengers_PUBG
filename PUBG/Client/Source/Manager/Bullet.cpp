@@ -205,6 +205,7 @@ void Bullet::OnUpdate()
          {
              //사람에게 맞는다면 피가 나도록 blood Particel
              ParticlePool()()->Hit_Blood(targetInfo.pos,targetInfo.rot);
+             Communication()()->SendEventBloodParticle(targetInfo.pos);
 
              //데미지
              const float damage
