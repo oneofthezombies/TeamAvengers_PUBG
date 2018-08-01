@@ -17,14 +17,15 @@ void Application::Init()
     // true -> terrainFeature is not rendering
     DebugMgr ()()->Init(false);
 
-	DeviceMgr()()->Init();
-    Resource ()()->Init();
-    Shader   ()()->Init();
-    UI       ()()->Init();
-    Input    ()()->Init();
-    Sound    ()()->Init();
-    Camera   ()()->Init();
-    Scene    ()()->Init();
+	DeviceMgr   ()()->Init();
+    Resource    ()()->Init();
+    Shader      ()()->Init();
+    ParticlePool()()->Init();
+    UI          ()()->Init();
+    Input       ()()->Init();
+    Sound       ()()->Init();
+    Camera      ()()->Init();
+    Scene       ()()->Init();
 }
 
 void Application::Destroy()
@@ -34,6 +35,7 @@ void Application::Destroy()
 	Scene        ()()->Destroy();
     UI           ()()->Destroy();
     BulletPool   ()()->Destroy();
+    ParticlePool ()()->Destroy();
     Input        ()()->Destroy();
     Sound        ()()->Destroy();
     Resource     ()()->Destroy();
