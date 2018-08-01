@@ -1249,29 +1249,23 @@ void SceneLoading::addHeightmapResource()
         "./Resource/Heightmap/", 
         "Heightmap.fx", 
         pResourceContainer);
-    //Resource::Async::CreateTexture(
-    //    "./Resource/Heightmap/", 
-    //    "Heightmap.jpg", 
-    //    pResourceContainer);
-    //Resource::Async::CreateTexture(
-    //    "./Resource/Heightmap/", 
-    //    "ground.png",
-    //    pResourceContainer);
     Resource::Async::CreateTexture(
         "./Resource/Heightmap/",
         "groundtest_d_8192.png",
         pResourceContainer);
-    //Resource::Async::CreateTexture(
-    //    "./Resource/Heightmap/",
-    //    "ground_n.png",
-    //    pResourceContainer);
     Resource::Async::CreateTexture(
         "./Resource/Heightmap/",
         "groundtest_n_8192.png",
         pResourceContainer);
 
-
-    Resource::Async::CreateEffect("./Resource/", "Quad.fx", pResourceContainer);
+    Resource::Async::CreateEffect(
+        "./Resource/", 
+        "Quad.fx", 
+        pResourceContainer);
+    Resource::Async::CreateEffect(
+        "./Resource/", 
+        "Particle.fx", 
+        pResourceContainer);
 
     Resource()()->AddResource(pResourceContainer);
 }

@@ -7,8 +7,8 @@ float Ballistics::GetVarianceY(const TAG_RES_STATIC tag, const float distance)
     {
     case TAG_RES_STATIC::QBZ:
         {
-            //return -1.2f;
-            return 0.0f; // for recording
+            return -1.2f;
+            //return 0.0f; // for recording
         }
         break;
     case TAG_RES_STATIC::Kar98k:

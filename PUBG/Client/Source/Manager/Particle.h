@@ -76,14 +76,22 @@ private:
     deque<BloodParticle*> m_BloodParticle;
     //deque<BulletHoleParticle*> m_BulletHoleParticle;
 
-    _ParticlePool();
-    ~_ParticlePool();
+    LPD3DXEFFECT                 pParticleEffect;
+    LPDIRECT3DVERTEXDECLARATION9 m_pParticleDecl;
+
+private:
+             _ParticlePool();
+    virtual ~_ParticlePool();
 
 public:
+    void Init();
+    void Destroy();
     void Render();
 
     BloodParticle* Hit_Blood(const D3DXVECTOR3& hitPos,const D3DXQUATERNION& hitRot);
     //BulletHoleParticle* Hit_BulletHole(const D3DXVECTOR3& hitPos);
+
+    LPD3DXEFFECT GetEffect() const;
 
     friend Singleton<_ParticlePool>;
 };

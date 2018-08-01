@@ -115,7 +115,7 @@ Character::~Character()
 void Character::OnUpdate()
 {
     // clear isRender
-    //GetBoundingSphere().isRender = false;
+    GetBoundingSphere().isRender = false;
     //for (auto& box : GetBoundingBoxes())
     //    box.isRender = false;
     m_bBox.isRender = false;

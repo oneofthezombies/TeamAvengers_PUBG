@@ -73,72 +73,73 @@ void BloodParticle::OnUpdate()
 
 void BloodParticle::OnRender()
 {
-    if (!m_IsActive)
-        return;
-    LPDIRECT3DDEVICE9	pD3DDevice = Device()();
-    {
+    if (!m_IsActive) return;
 
-        pD3DDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);// 버퍼를 그릴때 z 값을 넣지 않는다//texture의 외각 부분을 잘라낼 수 있다.
-        pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
-        pD3DDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
-        pD3DDevice->SetRenderState(D3DRS_POINTSCALEENABLE, true); //점의 크기를 조절하겠다.
-        pD3DDevice->SetRenderState(D3DRS_POINTSIZE, FtoDw(60.0f));
-        pD3DDevice->SetRenderState(D3DRS_POINTSIZE_MIN, FtoDw(0.0f));
+    //LPDIRECT3DDEVICE9 pD3DDevice = Device()();
+    //{
+    //    pD3DDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);// 버퍼를 그릴때 z 값을 넣지 않는다//texture의 외각 부분을 잘라낼 수 있다.
+    //    pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
+    //    pD3DDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
+    //    pD3DDevice->SetRenderState(D3DRS_POINTSCALEENABLE, true); //점의 크기를 조절하겠다.
+    //    pD3DDevice->SetRenderState(D3DRS_POINTSIZE, FtoDw(60.0f));
+    //    pD3DDevice->SetRenderState(D3DRS_POINTSIZE_MIN, FtoDw(0.0f));
 
-        pD3DDevice->SetRenderState(D3DRS_POINTSCALE_A, FtoDw(0.0f));
-        pD3DDevice->SetRenderState(D3DRS_POINTSCALE_B, FtoDw(0.0f));
-        pD3DDevice->SetRenderState(D3DRS_POINTSCALE_C, FtoDw(1.0f));
+    //    pD3DDevice->SetRenderState(D3DRS_POINTSCALE_A, FtoDw(0.0f));
+    //    pD3DDevice->SetRenderState(D3DRS_POINTSCALE_B, FtoDw(0.0f));
+    //    pD3DDevice->SetRenderState(D3DRS_POINTSCALE_C, FtoDw(1.0f));
 
-        pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-        pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-        pD3DDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
-        //pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-    }
+    //    pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+    //    pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+    //    pD3DDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
+    //    //pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+    //}
 
-
-    
     int donePlayNum = 0;
     for (auto& p : m_blood_hit_splash)
     {
-
         if (p.m_currentIndex < p.m_maxIndex)
+        {
             renderBloodHit_Splash(p);
+        }
         else
+        {
             donePlayNum++;
+        }
     }
     if (donePlayNum >= 1)//시간차를 주기 위해 이렇게 잠시 넣은 코드
     {
-        pD3DDevice->SetRenderState(D3DRS_POINTSIZE, FtoDw(40.0f));
-        pD3DDevice->SetRenderState(D3DRS_POINTSIZE_MIN, FtoDw(0.0f));
-        
-        pD3DDevice->SetRenderState(D3DRS_POINTSCALE_A, FtoDw(0.0f));
-        pD3DDevice->SetRenderState(D3DRS_POINTSCALE_B, FtoDw(0.0f));
-        pD3DDevice->SetRenderState(D3DRS_POINTSCALE_C, FtoDw(1.0f));
-
+        //pDevice->SetRenderState(D3DRS_POINTSIZE, FtoDw(40.0f));
+        //pDevice->SetRenderState(D3DRS_POINTSIZE_MIN, FtoDw(0.0f));
+        //
+        //pDevice->SetRenderState(D3DRS_POINTSCALE_A, FtoDw(0.0f));
+        //pDevice->SetRenderState(D3DRS_POINTSCALE_B, FtoDw(0.0f));
+        //pDevice->SetRenderState(D3DRS_POINTSCALE_C, FtoDw(1.0f));
 
         for (auto& p : m_blood_hit_splurt)
         {
-            if (p.m_currentIndex<p.m_maxIndex)
+            if (p.m_currentIndex < p.m_maxIndex)
+            {
                 renderBloodHit_Splurt(p);
+            }
             else
+            {
                 donePlayNum++;
+            }
         }
     }
     
-
     //여기에 m_IsActive 로직 false 로 하는 로직
-    if (m_blood_hit_splash.size() + m_blood_hit_splurt.size() 
-        == donePlayNum)
-        m_IsActive = false;
-
-
+    if (m_blood_hit_splash.size() + m_blood_hit_splurt.size() == donePlayNum)
     {
-        pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
-        pD3DDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, false);
-        pD3DDevice->SetRenderState(D3DRS_POINTSCALEENABLE, false);
-        pD3DDevice->SetRenderState(D3DRS_ZWRITEENABLE, true);
+        m_IsActive = false;
     }
 
+    //{
+    //    pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+    //    pD3DDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, false);
+    //    pD3DDevice->SetRenderState(D3DRS_POINTSCALEENABLE, false);
+    //    pD3DDevice->SetRenderState(D3DRS_ZWRITEENABLE, true);
+    //}
 }
 
 void BloodParticle::Set(const D3DXVECTOR3 & pos, const D3DXQUATERNION& rot)
@@ -162,7 +163,7 @@ void BloodParticle::Set(const D3DXVECTOR3 & pos, const D3DXQUATERNION& rot)
         p.m_dt = 0.0f;
     }
 
-    CurrentScene()()->AddObject(this);
+    //CurrentScene()()->AddObject(this);
 }
 
 void BloodParticle::SetParticle(string filePath, Blood_Hit * blood_hit)
@@ -188,18 +189,27 @@ void BloodParticle::SetParticle(string filePath, Blood_Hit * blood_hit)
 
     for (int i = 0; i < blood_hit->m_maxIndex; i++)
     {
-        g_pDevice->CreateVertexBuffer(sizeof(VERTEX_PC),
-            D3DUSAGE_POINTS/*포인트전용의 버퍼로 쓰겠다*/
-            | D3DUSAGE_DYNAMIC/*값을 계속 바꾸어 줄것인데, dynamic으로 해 놓으면 속도가 빠르다*/
-            | D3DUSAGE_WRITEONLY/*쓰기 전용으로*/,
-            VERTEX_PC::FVF,
-            D3DPOOL_DEFAULT,/*dynamic을 사용할때에는 Managed를 못쓴다. 빨리 값을 바꾸어 주어야 하는데 GPU에서
-                            변경을 하는 것이 가장 좋으니, 모두 GPU에 옴긴다*/
-            &blood_hit->m_pVB[i], 0);
+        //g_pDevice->CreateVertexBuffer(sizeof(VERTEX_PC),
+        //    D3DUSAGE_POINTS/*포인트전용의 버퍼로 쓰겠다*/
+        //    | D3DUSAGE_DYNAMIC/*값을 계속 바꾸어 줄것인데, dynamic으로 해 놓으면 속도가 빠르다*/
+        //    | D3DUSAGE_WRITEONLY/*쓰기 전용으로*/,
+        //    VERTEX_PC::FVF,
+        //    D3DPOOL_DEFAULT,/*dynamic을 사용할때에는 Managed를 못쓴다. 빨리 값을 바꾸어 주어야 하는데 GPU에서
+        //                    변경을 하는 것이 가장 좋으니, 모두 GPU에 옴긴다*/
+        //    &blood_hit->m_pVB[i], 0);
+
+        Device()()->CreateVertexBuffer(
+            sizeof VERTEX_PC, 
+            D3DUSAGE_POINTS | D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 
+            0, 
+            D3DPOOL_DEFAULT, 
+            &blood_hit->m_pVB[i], 
+            nullptr);
 
         VERTEX_PC* v;
         blood_hit->m_pVB[i]->Lock(0, 0, (LPVOID*)&v, D3DLOCK_DISCARD/*기존에 있었던 값들은 신경쓰지 않는다는 뜻*/);
-        v->p = GetTransform()->GetPosition();
+        //v->p = GetTransform()->GetPosition();
+        v->p = Vector3::ZERO;
         v->c = D3DXCOLOR(1, 1, 1, 1);
         blood_hit->m_pVB[i]->Unlock();
     }
@@ -209,16 +219,23 @@ void BloodParticle::renderBloodHit_Splash(Blood_Hit & blood_hit)
 {
     LPDIRECT3DDEVICE9	pD3DDevice = Device()();
 
-    pD3DDevice->SetTransform(D3DTS_WORLD, &GetTransform()->GetTransformationMatrix());
-    pD3DDevice->SetTexture(0, blood_hit.m_pTex[blood_hit.m_currentIndex]);
-    pD3DDevice->SetMaterial(&MaterialTemplate::GetWhite());
-    pD3DDevice->SetFVF(VERTEX_PC::FVF);
+    //pD3DDevice->SetTransform(D3DTS_WORLD, &GetTransform()->GetTransformationMatrix());
+    //pD3DDevice->SetTexture(0, blood_hit.m_pTex[blood_hit.m_currentIndex]);
+    //pD3DDevice->SetMaterial(&MaterialTemplate::GetWhite());
+    //pD3DDevice->SetFVF(VERTEX_PC::FVF);
+
+    LPD3DXEFFECT pEffect = ParticlePool()()->GetEffect();
+    if (!pEffect) return;
+
+    pEffect->SetMatrix("gWorld", &GetTransform()->GetTransformationMatrix());
+    pEffect->SetTexture("DiffuseMap_Tex", blood_hit.m_pTex[blood_hit.m_currentIndex]);
+    pEffect->CommitChanges();
+
     pD3DDevice->SetStreamSource(0, blood_hit.m_pVB[blood_hit.m_currentIndex], 0, sizeof(VERTEX_PC));
     pD3DDevice->DrawPrimitive(D3DPT_POINTLIST, 0, 1);
 
     blood_hit.m_dt += Time()()->GetDeltaTime()* 50.0f;
     blood_hit.m_currentIndex = static_cast<int>(blood_hit.m_dt);
-
 }
 
 void BloodParticle::renderBloodHit_Splurt(Blood_Hit & blood_hit)
@@ -231,20 +248,29 @@ void BloodParticle::renderBloodHit_Splurt(Blood_Hit & blood_hit)
     mat = t * r*GetTransform()->GetTransformationMatrix();
     
     LPDIRECT3DDEVICE9	pD3DDevice = Device()();
-    pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
-    pD3DDevice->SetMaterial(&MaterialTemplate::GetWhite());
-    pD3DDevice->SetTexture(0, blood_hit.m_pTex[blood_hit.m_currentIndex]);
-    pD3DDevice->SetFVF(VERTEX_PC::FVF);
+    //pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
+    //pD3DDevice->SetMaterial(&MaterialTemplate::GetWhite());
+    //pD3DDevice->SetTexture(0, blood_hit.m_pTex[blood_hit.m_currentIndex]);
+    //pD3DDevice->SetFVF(VERTEX_PC::FVF);
+
+    LPD3DXEFFECT pEffect = ParticlePool()()->GetEffect();
+    if (!pEffect) return;
+
+    pEffect->SetMatrix("gWorld", &mat);
+    pEffect->SetTexture("DiffuseMap_Tex", blood_hit.m_pTex[blood_hit.m_currentIndex]);
+    pEffect->CommitChanges();
+
     pD3DDevice->SetStreamSource(0, blood_hit.m_pVB[blood_hit.m_currentIndex], 0, sizeof(VERTEX_PC));
     pD3DDevice->DrawPrimitive(D3DPT_POINTLIST, 0, 1);
 
     blood_hit.m_dt += Time()()->GetDeltaTime()* 50.0f;
     blood_hit.m_currentIndex = static_cast<int>(blood_hit.m_dt);
-
 }
 
 _ParticlePool::_ParticlePool()
     : Singleton<_ParticlePool>()
+    , pParticleEffect(nullptr)
+    , m_pParticleDecl(nullptr)
 {
 }
 
@@ -252,9 +278,66 @@ _ParticlePool::~_ParticlePool()
 {
 }
 
+void _ParticlePool::Init()
+{
+    D3DVERTEXELEMENT9 particleDecl[] = 
+    {
+        { 0,  0, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+        { 0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,    0 },
+        D3DDECL_END()
+    };
+
+    Device()()->CreateVertexDeclaration(particleDecl, &m_pParticleDecl);
+}
+
+void _ParticlePool::Destroy()
+{
+    SAFE_RELEASE(m_pParticleDecl);
+
+    for (auto p : m_BloodParticle)
+        SAFE_DELETE(p);
+}
+
 void _ParticlePool::Render()
 {
+    auto pDevice = Device()();
 
+    pDevice->SetVertexDeclaration(m_pParticleDecl);
+    
+    if (!pParticleEffect)
+        pParticleEffect = Resource()()->GetEffect("./Resource/Particle.fx");
+
+    if (!pParticleEffect) return;
+
+    pDevice->SetRenderState(D3DRS_LIGHTING, false);
+    pDevice->SetRenderState(D3DRS_ZWRITEENABLE, false);
+    pDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
+
+    ICamera* pCurrentCamera = CurrentCamera()();
+    const D3DXMATRIX mViewProjection
+        = pCurrentCamera->GetViewMatrix() 
+        * pCurrentCamera->GetProjectionMatrix();
+    const D3DXVECTOR3 v3CameraPos = pCurrentCamera->GetPosition();
+
+    UINT numPasses = 0;
+    pParticleEffect->Begin(&numPasses, 0);
+    for (UINT pi = 0; pi < numPasses; ++pi)
+    {
+        pParticleEffect->BeginPass(pi);
+
+        pParticleEffect->SetMatrix("gVPMatrix", &mViewProjection);
+        pParticleEffect->SetValue("gWorldCamPos", &v3CameraPos, sizeof v3CameraPos);
+        
+        for (BloodParticle* p : m_BloodParticle)
+            p->Render();
+
+        pParticleEffect->EndPass();
+    }
+    pParticleEffect->End();
+
+    pDevice->SetRenderState(D3DRS_LIGHTING, true);
+    pDevice->SetRenderState(D3DRS_ZWRITEENABLE, true);
+    pDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, false);
 }
 
 BloodParticle * _ParticlePool::Hit_Blood(
@@ -274,4 +357,9 @@ BloodParticle * _ParticlePool::Hit_Blood(
     m_BloodParticle.emplace_back(b);
     b->Set(hitPos, hitRot);
     return b;
+}
+
+LPD3DXEFFECT _ParticlePool::GetEffect() const
+{
+    return pParticleEffect;
 }
