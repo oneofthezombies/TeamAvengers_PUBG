@@ -353,19 +353,20 @@ void HeightMap::SetMoreHigherFloor()
 
     // Church
     {
-        // first stair (from earth)
+        // Third floor
         AddHeightVertex(
-            D3DXVECTOR3(12393.421f, 5794.864f, 10823.303f),
-            D3DXVECTOR3(12393.421f, 6044.047f, 11246.786f),
-            D3DXVECTOR3(12582.898f, 6044.047f, 11246.786f),
-            D3DXVECTOR3(12573.668f, 5798.094f, 10817.962f));
+            D3DXVECTOR3(12377.020f, 6476.385f, 11228.501f),
+            D3DXVECTOR3(12377.020f, 6476.385f, 11569.791f),
+            D3DXVECTOR3(12572.840f, 6476.385f, 11569.791f),
+            D3DXVECTOR3(12590.355f, 6476.385f, 11228.501f));
 
-        // first floor
+        // Third stair
         AddHeightVertex(
-            D3DXVECTOR3(12208.354f, 6035.410f, 11221.958f),
-            D3DXVECTOR3(12208.354f, 6042.187f, 11400.729f),
-            D3DXVECTOR3(12586.079f, 6042.187f, 11400.729f),
-            D3DXVECTOR3(12586.079f, 6042.187f, 11216.418f));
+            D3DXVECTOR3(12387.938f, 6259.917f, 10871.830f),
+            D3DXVECTOR3(12377.020f, 6476.385f, 11228.501f),
+            D3DXVECTOR3(12590.355f, 6476.385f, 11228.501f),
+            D3DXVECTOR3(12590.355f, 6259.917f, 10871.830f));
+
 
         // second stair
         AddHeightVertex(
@@ -381,19 +382,25 @@ void HeightMap::SetMoreHigherFloor()
             D3DXVECTOR3(12590.355f, 6259.917f, 10871.830f),
             D3DXVECTOR3(12586.525f, 6265.406f, 10686.784f));
 
-        // Third stair
-        AddHeightVertex(
-            D3DXVECTOR3(12383.309, 6259.917f, 10871.830f),
-            D3DXVECTOR3(12377.020f, 6476.385f, 11228.501f),
-            D3DXVECTOR3(12590.355f, 6476.385f, 11228.501f),
-            D3DXVECTOR3(12590.355f, 6259.917f, 10871.830f));
 
-        // Third floor
+        // first stair (from earth)
         AddHeightVertex(
-            D3DXVECTOR3(12377.020f, 6476.385f, 11228.501f),
-            D3DXVECTOR3(12377.020f, 6476.385f, 11569.791f),
-            D3DXVECTOR3(12572.840f, 6476.385f, 11569.791f),
-            D3DXVECTOR3(12590.355f, 6476.385f, 11228.501f));
+            D3DXVECTOR3(12393.421f, 5794.864f, 10823.303f),
+            D3DXVECTOR3(12393.421f, 6044.047f, 11246.786f),
+            D3DXVECTOR3(12582.898f, 6044.047f, 11246.786f),
+            D3DXVECTOR3(12573.668f, 5798.094f, 10817.962f));
+
+        // first floor
+        AddHeightVertex(
+            D3DXVECTOR3(12208.354f, 6035.410f, 11221.958f),
+            D3DXVECTOR3(12208.354f, 6042.187f, 11400.729f),
+            D3DXVECTOR3(12586.079f, 6042.187f, 11400.729f),
+            D3DXVECTOR3(12586.079f, 6042.187f, 11216.418f));
+
+
+
+
+
 
         //roof left
         AddHeightVertex(
