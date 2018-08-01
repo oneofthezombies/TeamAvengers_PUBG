@@ -15,7 +15,7 @@ void Application::Init()
     srand(GetTickCount());
 
     // true -> terrainFeature is not rendering
-    DebugMgr ()()->Init(true);
+    DebugMgr ()()->Init(false);
 
 	DeviceMgr   ()()->Init();
     Resource    ()()->Init();
