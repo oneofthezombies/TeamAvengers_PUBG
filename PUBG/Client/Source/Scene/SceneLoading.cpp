@@ -1266,6 +1266,10 @@ void SceneLoading::addHeightmapResource()
         "./Resource/", 
         "Particle.fx", 
         pResourceContainer);
+    Resource::Async::CreateEffect(
+        "./Resource/", 
+        "VertexPN.fx", 
+        pResourceContainer);
 
     Resource()()->AddResource(pResourceContainer);
 }

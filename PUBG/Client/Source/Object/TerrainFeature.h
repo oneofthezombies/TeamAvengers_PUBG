@@ -8,6 +8,9 @@ class EffectMeshRenderer;
 // e.g. ) tree, rock, church
 class TerrainFeature : public IObject
 {
+public:
+    static const float DISTANCE_FOR_CULLING;
+
 private:
     const std::string&   m_name;
     const TAG_RES_STATIC m_tagResStatic;

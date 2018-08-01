@@ -773,6 +773,7 @@ Resource::Manager::Manager()
     : Singleton<Resource::Manager>()
     , m_pEffectPool(nullptr)
     , m_pBoundingSphereMesh(nullptr)
+    , m_pBoundingBoxMesh(nullptr)
 {
 }
 
@@ -791,6 +792,8 @@ void Resource::Manager::Init()
 
     // create boundingSphere mesh
     D3DXCreateSphere(Device()(), 1.0f, 5, 5, &m_pBoundingSphereMesh, nullptr);
+
+    D3DXCreateBox(Device()(), 2.0f, 2.0f, 2.0f, &m_pBoundingBoxMesh, nullptr);
 
     // create boundingBox vertices
     D3DXVECTOR3 min(-Vector3::ONE);
@@ -1694,6 +1697,11 @@ LPD3DXEFFECT Resource::Manager::GetEffect(
 LPD3DXMESH Resource::Manager::GetBoundingSphereMesh() const
 {
     return m_pBoundingSphereMesh;
+}
+
+LPD3DXMESH Resource::Manager::GetBoundingBoxMesh() const
+{
+    return m_pBoundingBoxMesh;
 }
 
 const std::vector<D3DXVECTOR3>& Resource::Manager::GetBoundingBoxVertices() const

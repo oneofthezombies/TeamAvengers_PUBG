@@ -4,6 +4,8 @@
 #include "EffectMeshRenderer.h"
 #include "Light.h"
 
+const float TerrainFeature::DISTANCE_FOR_CULLING = 10000.0f;
+
 TerrainFeature::TerrainFeature(
     const TAG_RES_STATIC tag,
     const std::string&   name,
@@ -82,6 +84,62 @@ void TerrainFeature::OnUpdate()
 
 void TerrainFeature::OnRender()
 {
+    //if (DebugMgr()()->IsHoonsComputer())
+    //{
+    //    const TAG_RES_STATIC tag = m_tagResStatic;
+    //    if (tag == TAG_RES_STATIC::AlaskaCedar ||
+    //        tag == TAG_RES_STATIC::AmericanElem ||
+    //        tag == TAG_RES_STATIC::LondonPlane ||
+
+    //        tag == TAG_RES_STATIC::DeadGrass ||
+    //        tag == TAG_RES_STATIC::Dogwood ||
+    //        tag == TAG_RES_STATIC::Grass_1 ||
+    //        tag == TAG_RES_STATIC::Grass_2 ||
+
+    //        tag == TAG_RES_STATIC::Rock_1 ||
+    //        tag == TAG_RES_STATIC::Rock_2 ||
+
+    //        tag == TAG_RES_STATIC::Powerline_1 ||
+    //        tag == TAG_RES_STATIC::Powerline_2 ||
+    //        tag == TAG_RES_STATIC::Wall_1 ||
+    //        tag == TAG_RES_STATIC::Wall_2 ||
+    //        tag == TAG_RES_STATIC::Wall_3 ||
+    //        tag == TAG_RES_STATIC::Wall_4 ||
+    //        tag == TAG_RES_STATIC::Wall_End || 
+    //        tag == TAG_RES_STATIC::Wall_End_Long ||
+    //        
+    //        tag == TAG_RES_STATIC::Museum ||
+    //        tag == TAG_RES_STATIC::PoliceStation ||
+    //        
+    //        tag == TAG_RES_STATIC::RadioTower_1 ||
+    //        tag == TAG_RES_STATIC::RadioTower_2 ||
+    //        
+    //        tag == TAG_RES_STATIC::Sandbag_1 ||
+    //        tag == TAG_RES_STATIC::Sandbag_2 ||
+
+    //        tag == TAG_RES_STATIC::Silo_A ||
+    //        tag == TAG_RES_STATIC::Silo_B ||
+    //        
+    //        tag == TAG_RES_STATIC::BrokenTractorGunnyBag ||
+    //        tag == TAG_RES_STATIC::HayBale_1 ||
+    //        
+    //        tag == TAG_RES_STATIC::BrokenBus ||
+    //        tag == TAG_RES_STATIC::BrokenCar ||
+    //        
+    //        tag == TAG_RES_STATIC::OldWoodenShed_1 ||
+    //        tag == TAG_RES_STATIC::PicketFence_Short_A ||
+    //        tag == TAG_RES_STATIC::PicketFence_Short_B)
+    //    {
+    //        for (auto& bb : m_boundingBoxes)
+    //        {
+    //            bb.isRender = true;
+    //            bb.Render();
+    //        }
+
+    //        return;
+    //    }
+    //}
+
     //frustum culling
     if (CurrentCamera()()->IsObjectInsideFrustum(
         m_boundingSphere.center + m_boundingSphere.position,
@@ -89,9 +147,42 @@ void TerrainFeature::OnRender()
     {
         //distance culling
         D3DXVECTOR3 vlength = (m_boundingSphere.center + m_boundingSphere.position) - CurrentCamera()()->GetPosition();
-        if (D3DXVec3Length(&vlength) < 10000.0f)
+
+        float distanceForCulling = DISTANCE_FOR_CULLING;
+        //if (DebugMgr()()->IsHoonsComputer())
+        //    distanceForCulling = 5000.0f;
+        
+        if (D3DXVec3Length(&vlength) < distanceForCulling)
         {
-            if (!DebugMgr()()->IsHoonsComputer())
+            if (DebugMgr()()->IsHoonsComputer())
+            {
+                for (auto& bb : m_boundingBoxes)
+                {
+                    Shader::Draw(
+                        Resource()()->GetEffect("./Resource/VertexPN.fx"),
+                        nullptr,
+                        Resource()()->GetBoundingBoxMesh(),
+                        0,
+                        [&bb](LPD3DXEFFECT pEffect)
+                    {
+                        D3DXMATRIX m;
+                        D3DXVECTOR3 position(bb.center + bb.position);
+                        D3DXMatrixTransformation(
+                            &m,
+                            nullptr,
+                            nullptr,
+                            &D3DXVECTOR3(bb.extent.x, bb.extent.y, bb.extent.z), 
+                            nullptr, 
+                            &bb.rotation, 
+                            &position);
+
+                        pEffect->SetMatrix(
+                            Shader::World,
+                            &m);
+                    });
+                }
+            }
+            else
             {
                 pEffectMeshRenderer->Render(
                     [this](LPD3DXEFFECT pEffect)

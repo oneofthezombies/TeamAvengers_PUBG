@@ -107,6 +107,7 @@ struct Resource
             m_availableIndexForSkinnedMesh;
 
         LPD3DXMESH               m_pBoundingSphereMesh;
+        LPD3DXMESH               m_pBoundingBoxMesh;
         std::vector<D3DXVECTOR3> m_boundingBoxVertices;
         std::vector<WORD>        m_boundingBoxIndices;
 
@@ -162,6 +163,7 @@ struct Resource
             const std::string& filename);
 
               LPD3DXMESH                GetBoundingSphereMesh()  const;
+              LPD3DXMESH                GetBoundingBoxMesh() const;
         const std::vector<D3DXVECTOR3>& GetBoundingBoxVertices() const;
         const std::vector<WORD>&        GetBoundingBoxIndices()  const;
 

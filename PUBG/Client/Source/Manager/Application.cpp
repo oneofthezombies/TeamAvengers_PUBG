@@ -15,7 +15,7 @@ void Application::Init()
     srand(GetTickCount());
 
     // true -> terrainFeature is not rendering
-    DebugMgr ()()->Init(false);
+    DebugMgr ()()->Init(true);
 
 	DeviceMgr   ()()->Init();
     Resource    ()()->Init();
@@ -72,7 +72,7 @@ void Application::Render()
 
     Device()()->BeginScene();
 
-    if (!DebugMgr()()->IsHoonsComputer())
+    //if (!DebugMgr()()->IsHoonsComputer())
         Shader()()->CreateShadowMap();
 
     Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
