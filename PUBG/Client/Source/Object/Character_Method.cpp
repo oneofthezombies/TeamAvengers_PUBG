@@ -604,6 +604,7 @@ void Character::backActionFrame(D3DXQUATERNION* OutRotation)
             return;
         }
         m_rotationForCamera.x += m_backAction.curValX;
+		m_headRotation.m_angle += m_backAction.curValX;
         D3DXQuaternionRotationYawPitchRoll(&q, m_backAction.curValY, 0.0f, 0.0f);
         //*m_backAction.Rot *= q;       //예전코드에서 스트럭트에 저장된 주소에 바로 적용하였음.
         *OutRotation *= q;
@@ -619,6 +620,7 @@ void Character::backActionFrame(D3DXQUATERNION* OutRotation)
             return;
         }
         m_rotationForCamera.x -= m_backAction.curValX;
+		m_headRotation.m_angle -= m_backAction.curValX;
         D3DXQuaternionRotationYawPitchRoll(&q, -m_backAction.curValY, 0.0f, 0.0f);
         //*m_backAction.Rot *= q;
         *OutRotation *= q;
