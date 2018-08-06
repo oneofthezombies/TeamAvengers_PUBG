@@ -1332,7 +1332,7 @@ Frame container_small_01 {
 
      EffectParamString {
       "C__Users_user_Desktop_Resource_Map_Exterior_Container_Container_small_01_3ds_Max__container_sides3_bsm_tga";
-      "container_sides3_bsm.tga";
+      "container_sides0_bsm.tga";
      }
 
      EffectParamString {
@@ -1353,7 +1353,7 @@ Frame container_small_01 {
 
      EffectParamString {
       "C__Users_user_Desktop_Resource_Map_Exterior_Container_Container_small_01_3ds_Max__container_front3_bsm_tga";
-      "container_front3_bsm.tga";
+      "container_front0_bsm.tga";
      }
 
      EffectParamString {

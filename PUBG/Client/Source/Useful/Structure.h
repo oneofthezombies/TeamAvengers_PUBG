@@ -4,17 +4,16 @@
 class UIText;
 #endif
 
-struct ResourceContainer;
+//struct ResourceContainer;
 
-struct VERTEX_PC
+struct VERTEX_PT
 {
     D3DXVECTOR3 p;
-    D3DCOLOR    c;
+    D3DXVECTOR2 t;
 
-    VERTEX_PC();
-    VERTEX_PC(const D3DXVECTOR3& p, const D3DCOLOR c);
+    VERTEX_PT();
 
-    enum { FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE };
+    enum { FVF = D3DFVF_XYZ | D3DFVF_TEX1 };
 };
 
 struct VERTEX_RHWC
@@ -30,9 +29,20 @@ struct VERTEX_RHWC
     enum { FVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE };
 };
 
+struct VERTEX_PTNTB
+{
+    D3DXVECTOR3 position;
+    D3DXVECTOR2 texCoord;
+    D3DXVECTOR3 normal;
+    D3DXVECTOR3 tangent;
+    D3DXVECTOR3 binormal;
+
+    VERTEX_PTNTB();
+};
+
 struct EffectParam
 {
-    string       Name;
+    std::string  name;
     LPD3DXEFFECT pEffect;
     D3DXHANDLE   hParam;
 
@@ -42,23 +52,17 @@ struct EffectParam
 
 struct EffectMesh
 {
-    LPD3DXMESH          pMesh;
-    vector<EffectParam> EffectParams;
+    LPD3DXMESH               m_pMesh;
+    std::vector<EffectParam> m_effectParams;
+    BoundingSphere           m_boundingSphere;
 
     EffectMesh();
     ~EffectMesh();
-
-    void Render(const D3DXMATRIX& world, LPD3DXMESH pMesh);
 };
 
 struct Frame : public D3DXFRAME
 {
     D3DXMATRIX CombinedTransformationMatrix;
-
-//#ifdef OOTZ_DEBUG
-//    string NameAndPosition;
-//    UIText* pUINameAndPosition;
-//#endif
 
     Frame();
 };
@@ -66,10 +70,11 @@ struct Frame : public D3DXFRAME
 struct MeshContainer : public D3DXMESHCONTAINER
 {
     EffectMesh*  pEffectMesh;
-    LPD3DXMESH   pWorkMesh;
-    D3DXMATRIX** ppBoneMatrixPtrs;
-    D3DXMATRIX*  pBoneOffsetMatrices;
-    D3DXMATRIX*  pFinalBoneMatrices;
+    std::string  m_effectMeshKey;
+    LPD3DXMESH   m_pWorkMesh;
+    D3DXMATRIX** m_ppBoneMatrixPtrs;
+    D3DXMATRIX*  m_pBoneOffsetMatrices;
+    D3DXMATRIX*  m_pFinalBoneMatrices;
 
     MeshContainer();
 };
@@ -77,75 +82,86 @@ struct MeshContainer : public D3DXMESHCONTAINER
 struct SkinnedMesh
 {
     LPD3DXFRAME               m_pRootFrame;
+    LPD3DXFRAME               m_pSubRootFrame;
+    LPD3DXFRAME               pConnectFrame;
+
     LPD3DXANIMATIONCONTROLLER m_pAnimController;
+    LPD3DXANIMATIONCONTROLLER m_pSubAnimController;
+
+    std::size_t               m_index;
 
     SkinnedMesh();
     ~SkinnedMesh();
 
-    void Setup();
-
 private:
     void setupBoneMatrixPointers(LPD3DXFRAME pFrame);
     void setupBoneMatrixPointersOnMesh(LPD3DXMESHCONTAINER pMeshContainerBase);
-};
-
-class AllocateHierarchy : public ID3DXAllocateHierarchy
-{
-private:
-    string m_path;
-    string m_xFilename;
+    void seperate(LPD3DXFRAME pFrame, const string& name);
 
 public:
-    AllocateHierarchy();
-    AllocateHierarchy(const string& path, const string& xFilename);
-    ~AllocateHierarchy();
-
-    STDMETHOD(CreateFrame)(THIS_ LPCSTR Name,
-        LPD3DXFRAME *ppNewFrame) override;
-
-    STDMETHOD(CreateMeshContainer)(THIS_
-        LPCSTR Name,
-        CONST D3DXMESHDATA *pMeshData,
-        CONST D3DXMATERIAL *pMaterials,
-        CONST D3DXEFFECTINSTANCE *pEffectInstances,
-        DWORD NumMaterials,
-        CONST DWORD *pAdjacency,
-        LPD3DXSKININFO pSkinInfo,
-        LPD3DXMESHCONTAINER *ppNewMeshContainer) override;
-
-    STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree) override;
-
-    STDMETHOD(DestroyMeshContainer)(
-        THIS_ LPD3DXMESHCONTAINER pMeshContainerBase) override;
+    void Setup();
+    bool Seperate(const string& name);
 };
 
-class AllocateHierarchyAsync : public ID3DXAllocateHierarchy
-{
-private:
-    std::string        m_path;
-    std::string        m_xFilename;
-    ResourceContainer* pResourceContainer;
+///* do NOT use! this will be deleted soon.*/
+//class AllocateHierarchy : public ID3DXAllocateHierarchy
+//{
+//private:
+//    string m_path;
+//    string m_xFilename;
+//
+//public:
+//    AllocateHierarchy();
+//    AllocateHierarchy(const string& path, const string& xFilename);
+//    ~AllocateHierarchy();
+//
+//    STDMETHOD(CreateFrame)(THIS_ LPCSTR Name,
+//        LPD3DXFRAME *ppNewFrame) override;
+//
+//    STDMETHOD(CreateMeshContainer)(THIS_
+//        LPCSTR Name,
+//        CONST D3DXMESHDATA *pMeshData,
+//        CONST D3DXMATERIAL *pMaterials,
+//        CONST D3DXEFFECTINSTANCE *pEffectInstances,
+//        DWORD NumMaterials,
+//        CONST DWORD *pAdjacency,
+//        LPD3DXSKININFO pSkinInfo,
+//        LPD3DXMESHCONTAINER *ppNewMeshContainer) override;
+//
+//    STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree) override;
+//
+//    STDMETHOD(DestroyMeshContainer)(
+//        THIS_ LPD3DXMESHCONTAINER pMeshContainerBase) override;
+//};
 
-public:
-    AllocateHierarchyAsync(const string& path, const string& xFilename, 
-        ResourceContainer* pResourceContainer);
-    ~AllocateHierarchyAsync();
-
-    STDMETHOD(CreateFrame)(THIS_ LPCSTR Name,
-        LPD3DXFRAME *ppNewFrame) override;
-
-    STDMETHOD(CreateMeshContainer)(THIS_
-        LPCSTR Name,
-        CONST D3DXMESHDATA *pMeshData,
-        CONST D3DXMATERIAL *pMaterials,
-        CONST D3DXEFFECTINSTANCE *pEffectInstances,
-        DWORD NumMaterials,
-        CONST DWORD *pAdjacency,
-        LPD3DXSKININFO pSkinInfo,
-        LPD3DXMESHCONTAINER *ppNewMeshContainer) override;
-
-    STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameBase) override;
-
-    STDMETHOD(DestroyMeshContainer)(
-        THIS_ LPD3DXMESHCONTAINER pMeshContainerBase) override;
-};
+//class AllocateHierarchyAsync : public ID3DXAllocateHierarchy
+//{
+//private:
+//    std::string        m_path;
+//    std::string        m_xFilename;
+//    ResourceContainer* pResourceContainer;
+//
+//public:
+//    AllocateHierarchyAsync();
+//    AllocateHierarchyAsync(const string& path, const string& xFilename, 
+//        ResourceContainer* pResourceContainer);
+//    ~AllocateHierarchyAsync();
+//
+//    STDMETHOD(CreateFrame)(THIS_ LPCSTR Name,
+//        LPD3DXFRAME *ppNewFrame) override;
+//
+//    STDMETHOD(CreateMeshContainer)(THIS_
+//        LPCSTR Name,
+//        CONST D3DXMESHDATA *pMeshData,
+//        CONST D3DXMATERIAL *pMaterials,
+//        CONST D3DXEFFECTINSTANCE *pEffectInstances,
+//        DWORD NumMaterials,
+//        CONST DWORD *pAdjacency,
+//        LPD3DXSKININFO pSkinInfo,
+//        LPD3DXMESHCONTAINER *ppNewMeshContainer) override;
+//
+//    STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameBase) override;
+//
+//    STDMETHOD(DestroyMeshContainer)(
+//        THIS_ LPD3DXMESHCONTAINER pMeshContainerBase) override;
+//};

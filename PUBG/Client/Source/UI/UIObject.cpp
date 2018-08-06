@@ -12,13 +12,11 @@ UIObject::UIObject(UIObject* pParent)
     , m_size()
     , m_pAttachedObject(nullptr)
 {
+    D3DXMatrixIdentity(&m_transform);
+
     if (pParent)
     {
         pParent->AddChild(this);
-    }
-    else
-    {
-        UI()()->RegisterUIObject(this);
     }
 }
 
@@ -44,7 +42,11 @@ void UIObject::DrawBorder()
     
     const auto d = Device()();
     d->SetFVF(VERTEX_RHWC::FVF);
-    d->DrawPrimitiveUP(D3DPT_LINESTRIP, vertices.size() - 1, vertices.data(), sizeof VERTEX_RHWC);
+    d->DrawPrimitiveUP(
+        D3DPT_LINESTRIP, 
+        static_cast<UINT>(vertices.size() - 1), 
+        vertices.data(), 
+        sizeof VERTEX_RHWC);
 }
 
 void UIObject::SetViewportPosition(const D3DXVECTOR3& parentViewportPos, const D3DXVECTOR3& pos)
@@ -83,6 +85,8 @@ void UIObject::Update(const D3DXVECTOR3& parentViewportPos, const D3DXMATRIX& tr
 
 void UIObject::Render()
 {
+    Sprite()()->SetTransform(&m_transform);
+
     DrawBorder();
     RenderChildren();
 }
@@ -169,4 +173,9 @@ void UIObject::AttachToObject(IObject* p)
 IObject* UIObject::GetAttachedObject() const
 {
     return m_pAttachedObject;
+}
+
+void UIObject::SetTransform(const D3DXMATRIX& transform)
+{
+    m_transform = transform;
 }

@@ -1,6 +1,9 @@
 #pragma once
 #include "Singleton.h"
 
+#define g_pDeviceMgr DeviceMgr()()
+#define g_pDevice    Device()()
+
 class DeviceManager : public Singleton<DeviceManager>
 {
 private:

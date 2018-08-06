@@ -65,14 +65,18 @@ public:
 	         Transform(IObject* pOwner);
 	virtual ~Transform();
 
+    void Update();
+
     void               SetPosition(const D3DXVECTOR3& p);
     const D3DXVECTOR3& GetPosition() const;
 
     void                  SetRotation(const D3DXQUATERNION& r);
+    void                  SetRotation(const D3DXVECTOR3& r);
     const D3DXQUATERNION& GetRotation() const;
 
     void               SetScale(const D3DXVECTOR3& s);
     const D3DXVECTOR3& GetScale() const;
 
+    void              SetTransformationMatrix(const D3DXMATRIX& m);
     const D3DXMATRIX& GetTransformationMatrix();
 };

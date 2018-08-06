@@ -12,12 +12,20 @@ Application::~Application()
 
 void Application::Init()
 {
-	DeviceMgr()()->Init();
-    UI       ()()->Init();
-    Input    ()()->Init();
-    Sound    ()()->Init();
-    Camera   ()()->Init();
-    Scene    ()()->Init();
+    srand(GetTickCount());
+
+    // true -> terrainFeature is not rendering
+    DebugMgr ()()->Init(false);
+
+	DeviceMgr   ()()->Init();
+    Resource    ()()->Init();
+    Shader      ()()->Init();
+    ParticlePool()()->Init();
+    UI          ()()->Init();
+    Input       ()()->Init();
+    Sound       ()()->Init();
+    Camera      ()()->Init();
+    Scene       ()()->Init();
 }
 
 void Application::Destroy()
@@ -27,10 +35,12 @@ void Application::Destroy()
 	Scene        ()()->Destroy();
     UI           ()()->Destroy();
     BulletPool   ()()->Destroy();
+    ParticlePool ()()->Destroy();
     Input        ()()->Destroy();
     Sound        ()()->Destroy();
     Resource     ()()->Destroy();
     DebugMgr     ()()->Destroy();
+    Shader       ()()->Destroy();
     DeviceMgr    ()()->Destroy();
 
     MemoryAllocator::CheckMemoryAllocators();
@@ -38,34 +48,50 @@ void Application::Destroy()
 
 void Application::Update()
 {
-	DebugMgr()()->Clear();
-    Debug << "FPS : " << Time()()->GetFps() << '\n';
+    DebugMgr     ()()->Clear();
+    Time         ()()->Update();
+    DebugMgr     ()()->Update();
+    BulletPool   ()()->Update();
     Communication()()->Print();
-    BulletPool()()->PrintNumBullet();
-
-	Time     ()()->Update();
-    Input    ()()->Update();
-    Scene    ()()->Update();
-    Sound    ()()->Update();
-    Camera   ()()->Update();
-    Collision()()->Update();
-    UI       ()()->Update();
+    Input        ()()->Update();
+    Scene        ()()->Update();
+    Sound        ()()->Update();
+    Camera       ()()->Update();
+    UI           ()()->Update();
 }
 
 void Application::Render()
 {
-    auto d = Device()();
-    d->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-		D3DCOLOR_XRGB(50, 50, 50), 1.0f, 0);
+    Device()()->Clear(
+        0,
+        nullptr,
+        D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+        D3DCOLOR_XRGB(50, 50, 50),
+        1.0f,
+        0);
 
-    d->BeginScene();
+    Device()()->BeginScene();
 
-	Scene   ()()->Render();
-    UI      ()()->Render();
-	DebugMgr()()->Print();
+    //if (!DebugMgr()()->IsHoonsComputer())
+        Shader()()->CreateShadowMap();
 
-    d->EndScene();
-    d->Present(nullptr, nullptr, nullptr, nullptr);
+    Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+    Device()()->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+    Device()()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+    Device()()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+    Scene       ()()->Render();
+    BulletPool  ()()->Render();
+    ParticlePool()()->Render();
+    Light       ()()->Render();
+    Camera      ()()->Render();
+    UI          ()()->Render();
+    DebugMgr    ()()->Render();
+
+    Device()()->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+
+    Device()()->EndScene();
+    Device()()->Present(nullptr, nullptr, nullptr, nullptr);
 }
 
 void Application::WndProc(HWND hWnd, UINT message, WPARAM wParam,

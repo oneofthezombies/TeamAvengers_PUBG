@@ -3,20 +3,25 @@
 
 EffectMeshRenderer::EffectMeshRenderer(IObject* pOwner)
     : Component(pOwner)
+    , m_pSphere(nullptr)
 {
 }
 
 EffectMeshRenderer::~EffectMeshRenderer()
 {
+    SAFE_RELEASE(m_pSphere);
 }
 
-void EffectMeshRenderer::Render()
+void EffectMeshRenderer::Render(
+    const std::function<void(LPD3DXEFFECT)>& setGlobalVariable)
 {
-    assert(pEffectMesh && 
-        "EffectMeshController::Render(), effect mesh is null.");
+    assert(pEffectMesh && setGlobalVariable &&
+        "EffectMeshController::Render(), argument is null.");
 
-    pEffectMesh->Render(
-        GetTransform()->GetTransformationMatrix(), pEffectMesh->pMesh);
+    Shader::Draw(
+        pEffectMesh->m_effectParams, 
+        pEffectMesh->m_pMesh, 
+        setGlobalVariable);
 }
 
 void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)
@@ -27,7 +32,15 @@ void EffectMeshRenderer::SetEffectMesh(EffectMesh* pEffectMesh)
     this->pEffectMesh = pEffectMesh;
 }
 
-void EffectMeshRenderer::SetEffectMesh(const string& path, const string& xFilename)
+void EffectMeshRenderer::SetEffectMesh(const TAG_RES_STATIC tag)
 {
-    pEffectMesh = Resource()()->GetEffectMesh(path, xFilename);
+    SetEffectMesh(Resource()()->GetEffectMesh(tag));
+}
+
+BoundingSphere EffectMeshRenderer::GetBoundingSphere()
+{
+    BoundingSphere bs;
+    bs.center = pEffectMesh->m_boundingSphere.center;
+    bs.radius = pEffectMesh->m_boundingSphere.radius;
+    return bs;
 }

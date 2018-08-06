@@ -28,16 +28,17 @@ Transform* Component::GetTransform() const
 Transform::Transform(IObject* pOwner)
 	: Component(pOwner)
 	, m_position(Vector3::ZERO)
-	, m_rotation(Quaternion::ZERO)
 	, m_scale(Vector3::ONE)
 {
+    D3DXQuaternionIdentity(&m_rotation);
+    D3DXMatrixIdentity(&m_transformationMatrix);
 }
 
 Transform::~Transform()
 {
 }
 
-const D3DXMATRIX& Transform::GetTransformationMatrix()
+void Transform::Update()
 {
     D3DXMATRIX s, r, t;
     D3DXMatrixScaling(&s, m_scale.x, m_scale.y, m_scale.z);
@@ -45,6 +46,10 @@ const D3DXMATRIX& Transform::GetTransformationMatrix()
     D3DXMatrixTranslation(&t, m_position.x, m_position.y, m_position.z);
 
     m_transformationMatrix = s * r * t;
+}
+
+const D3DXMATRIX& Transform::GetTransformationMatrix()
+{
     return m_transformationMatrix;
 }
 
@@ -63,6 +68,13 @@ void Transform::SetRotation(const D3DXQUATERNION& rot)
     m_rotation = rot;
 }
 
+void Transform::SetRotation(const D3DXVECTOR3& r)
+{
+    D3DXMATRIX m;
+    D3DXMatrixRotationYawPitchRoll(&m, r.y, r.x, r.z);
+    D3DXQuaternionRotationMatrix(&m_rotation, &m);
+}
+
 const D3DXQUATERNION& Transform::GetRotation() const
 {
     return m_rotation;
@@ -76,4 +88,11 @@ void Transform::SetScale(const D3DXVECTOR3& s)
 const D3DXVECTOR3& Transform::GetScale() const
 {
     return m_scale;
+}
+
+void Transform::SetTransformationMatrix(const D3DXMATRIX& m)
+{
+    m_transformationMatrix = m;
+    m_position = Matrix::GetTranslation(m);
+    Matrix::GetScaleAndRotation(m, &m_scale, &m_rotation);
 }

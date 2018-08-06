@@ -31,14 +31,6 @@ void SceneLogin::OnInit()
     UI()()->RegisterUIObject(root);
 
     UITextInputField* inputField = new UITextInputField(
-<<<<<<< HEAD:PUBG/Client/Source/SceneLogin.cpp
-        D3DXVECTOR3(100.0f, 100.0f, 0.0f), 
-        "./Resource_Temp/", "input_field.png", "input_field.png", "input_field.png", 
-        TAG_FONT::DEFAULT, D3DCOLOR_XRGB(0, 0, 0), root);
-
-    UIButton* button = new UIButton(D3DXVECTOR3(100.0f, 200.0f, 0.0f), 
-        "./Resource_Temp/", "input_field.png", "input_field.png", "input_field.png", 
-=======
         D3DXVECTOR3(386.0f, 325.5f, 0.0f), 
         "./Resource/UI/Login/", "input_idle.png", "input_mouseover.png", "input_mouseover.png", 
         TAG_FONT::LoginInput, D3DCOLOR_XRGB(255, 255, 255), root);
@@ -46,7 +38,6 @@ void SceneLogin::OnInit()
 
     UIButton* button = new UIButton(D3DXVECTOR3(580.13f, 419.42f, 0.0f), 
         "./Resource/UI/Login/", "login_btn_idle.png", "login_btn_mouseover.png", "login_btn_mouseover.png", 
->>>>>>> for_recording:PUBG/Client/Source/Scene/SceneLogin.cpp
         &m_buttonListener, 
         root, 
         Resource()()->GetFont(TAG_FONT::LoginButton), "CONNECT",

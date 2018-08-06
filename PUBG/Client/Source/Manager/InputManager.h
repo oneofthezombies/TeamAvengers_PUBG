@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Singleton.h"
 
+#define g_pInput Input()()
+
 class InputManager : public Singleton<InputManager>
 {
 private:

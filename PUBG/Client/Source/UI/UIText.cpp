@@ -39,11 +39,23 @@ void UIText::Render()
 
     if (m_pText)
     {
-        m_pFont->DrawTextA(Sprite()(), m_pText->c_str(), m_pText->size(), &m_rect, m_drawTextFormat, m_color);
+        m_pFont->DrawTextA(
+            Sprite()(), 
+            m_pText->c_str(), 
+            static_cast<INT>(m_pText->size()), 
+            &m_rect, 
+            m_drawTextFormat, 
+            m_color);
     }
     else
     {
-        m_pFont->DrawTextA(Sprite()(), m_text.c_str(), m_text.size(), &m_rect, m_drawTextFormat, m_color);
+        m_pFont->DrawTextA(
+            Sprite()(), 
+            m_text.c_str(), 
+            static_cast<INT>(m_text.size()),
+            &m_rect, 
+            m_drawTextFormat, 
+            m_color);
     }
     
     UIObject::Render();
@@ -59,6 +71,12 @@ void UIText::SetText(const string& val)
     m_text = val;
 }
 
+void UIText::SetText(const string& val, UIText*& shadow)
+{
+    m_text = val;
+    shadow->SetText(val);
+}
+
 void UIText::SetText(string* p)
 {
     if (!p) return;
@@ -66,7 +84,17 @@ void UIText::SetText(string* p)
     m_pText = p;
 }
 
+string UIText::GetText()
+{
+    return m_text;
+}
+
 void UIText::SetDrawTextFormat(const DWORD val)
 {
     m_drawTextFormat = val;
+}
+
+void UIText::ChangeColor(D3DCOLOR color)
+{
+    SetColor(color);
 }

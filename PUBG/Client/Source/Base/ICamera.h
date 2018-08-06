@@ -1,126 +1,182 @@
 #pragma once
 #include "TagClientOnly.h"
+#include "Character.h" //훈회형! struct 가 안먹혀서 이렇게 넣었는데 괜찮나요?
+
+#define TP_DISTANCE -30.0f
+#define TP_BASEPOSX -50.0f
+#define TP_BASEPOSY 45.0f
+
 
 class ICamera : public MemoryAllocator
 {
+public:
+    static const float VISUAL_RANGE;
+
 private:
-    const TAG_CAMERA m_tagCamera;
+    const TAG_CAMERA    m_tagCamera;
+          D3DXMATRIX    m_viewMatrix;
+          D3DXMATRIX    m_projectionMatrix;
+
+private:    //fustum Culling
+    D3DXPLANE	        m_vecPlane[6];
+    D3DXVECTOR3         m_vecWorld[8];
+    D3DXVECTOR3	        m_vecProj[8];
+    std::vector<WORD>   FRUSTUM_INDICES =
+    {
+        6, 2, 2, 3, 3, 7, 7, 6,
+        2, 0, 0, 1, 1, 3,
+        1, 5, 5, 7,
+        0, 4, 4, 6,
+        5, 4
+    };
+
+protected:  //Camera Position Rotation Fov
+
+    D3DXMATRIX          m_worldMatrix;
+    float               m_fovY;
+    D3DXVECTOR3         m_eye;
+    D3DXVECTOR3         m_look;
 
 protected:
-    D3DXVECTOR3 m_offsetFromTarget;
-    float       m_fovY;
-    float       m_zeroPointDistance;
-    bool        m_isUpdated;
-
-    D3DXMATRIX  m_viewMatrix;
-    D3DXMATRIX  m_projectionMatrix;
+    //D3DXVECTOR3         m_vBulletDestination;
+    vector<D3DXVECTOR3> drawRay;
+    //bool                temp = false;  //총쏘면 나오는 빨간색 ray를 위해
+protected:
+    Character::Info*    GetTargetInfo();
 
 public:
-             ICamera(const TAG_CAMERA tag);
+    ICamera(const TAG_CAMERA tag);
     virtual ~ICamera();
 
     virtual void Reset() = 0;
     virtual void Update() = 0;
+    virtual void Render() {}    //for debug
+    void CameraRender();
+    void draw(const vector<D3DXVECTOR3>& vertices, const D3DXCOLOR& color);
+    void drawIndices(const vector<WORD>& indices, const D3DXCOLOR& color);
 
-    void ResetIsUpdated();
     void UpdateViewProjMatrix();
+    void UpdateFrustumCulling();
+    bool IsObjectInsideFrustum(const D3DXVECTOR3 center,const float radius);
 
-    const D3DXMATRIX& GetViewMatrix();
-    const D3DXMATRIX& GetProjectionMatrix();
+    void SetViewMatrix(D3DXMATRIX* viewMatrix) { m_viewMatrix = *viewMatrix; }
+    void SetProjectionMatrix(D3DXMATRIX* projectionMatrix) { m_projectionMatrix = *projectionMatrix; }
+    
+    const D3DXMATRIX&  GetViewMatrix()       const;
+    const D3DXMATRIX&  GetProjectionMatrix() const;
+          TAG_CAMERA   GetTagCamera()        const;
+    const D3DXVECTOR3& GetPosition()         const;
+    D3DXVECTOR3 GetDirection();
+
+    D3DXVECTOR4 GetFrustumArea();
+    bool CalcPickedPosition(OUT D3DXVECTOR3 * vOut, WORD screenX, WORD screenY);
+    Ray PickedRayDistancePosition(OUT D3DXVECTOR3* vOut, OUT float* distance, WORD screenX, WORD screenY);
 };
+ 
 
 class CameraFree : public ICamera
 {
+private:
+    D3DXVECTOR3    m_position;
+    D3DXVECTOR3    m_rotation;
+    bool           m_isOtho;
 public:
-             CameraFree();
+    CameraFree();
     virtual ~CameraFree();
 
     virtual void Reset() override;
     virtual void Update() override;
 };
 
-//#include "BaseObject.h"
-//
-//#define FP_DISTANCE 0.0f
-//#define FP_BASEPOSX 0.0f
-//#define FP_BASEPOSY 5.0f
-//
-//#define TP_DISTANCE 10.0f
-//#define TP_BASEPOSX 2.0f
-//#define TP_BASEPOSY 8.0f
-//
-//namespace CameraState
-//{
-//    enum CameraState
-//    {
-//        FIRSTPERSON = 1,
-//        THIRDPERSON = 3,
-//        TP2FP,
-//        FP2TP,
-//        KYUNCHAK,
-//        SCOPE2X,
-//        SCOPE4X
-//    };
-//}
-//
-//class ICamera : public BaseObject
-//{
-//public:
-//    CameraState::CameraState     m_cameraState;
-//protected:
-//    D3DXVECTOR3		m_eye;
-//    D3DXVECTOR3		m_lookAt;
-//    D3DXVECTOR3		m_up;
-//    D3DXMATRIX	    m_matView;
-//    D3DXMATRIX	    m_matProj;
-//    D3DXVECTOR3		m_eyeBackRay;   //뒤로쏘는 ray의 시작점
-//    D3DXVECTOR3		m_eyeDir;       //카메라가 보는 방향
-//
-//
-//    float           m_basePosX;
-//    float			m_basePosY;
-//    float			m_distance;
-//
-//    float			m_rotX;
-//    float			m_rotY;
-//
-//    float           m_fovY;
-//    float           m_aspect;
-//
-//    POINT			m_ptPrevMouse;
-//
-//    bool            m_isALTbuttonStay;
-//
-//    D3DXVECTOR3*    m_pTargetPos;//캐릭터 Position을 갖고오기 위함
-//    D3DXVECTOR3*    m_pTargetRot;//캐릭터 Rotation을 갖고오기 위함
-//
-//    //vector<D3DXVECTOR3> m_vecProjVert;
-//    //vector<D3DXVECTOR3> m_vecWorldVert;
-//    //vector<D3DXPLANE>	m_vecSixPlane;
-//
-//    ICamera();
-//public:
-//    virtual ~ICamera() {}
-//    virtual void Init();
-//    virtual void Update();
-//
-//    //virtual void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-//    //void SetTarget(D3DXVECTOR3* pTarget) { m_pTarget = pTarget; }
-//    
-//    //functions needed for backspace currling
-//    //void SetProjVert();
-//    //void ChangeToWorldVert();
-//    //void SetSixPlane();
-//    //bool CheckSphere(BoundingSphere* sphere);
-//
-//    CameraState::CameraState GetState() const;
-//    D3DXVECTOR3 GetEyeDir()
-//    {
-//        return m_eyeDir;
-//    }
-//    D3DXVECTOR3 GetEyePos()
-//    {
-//        return m_eye;
-//    }
-//};
-//
+class CameraFirstPerson : public ICamera
+{
+public:
+    CameraFirstPerson(const TAG_CAMERA tag = TAG_CAMERA::First_Person);
+    virtual ~CameraFirstPerson();
+
+    // Inherited via ICamera
+    virtual void Reset() override;
+    virtual void Update() override;
+
+};
+
+class CameraThirdPerson : public ICamera
+{
+protected:
+    D3DXVECTOR3 m_Position;
+public:
+    CameraThirdPerson(const TAG_CAMERA tag = TAG_CAMERA::Third_Person);
+    virtual ~CameraThirdPerson();
+    // Inherited via ICamera
+    virtual void Reset() override;
+    virtual void Update() override;
+    virtual void Render() override;
+};
+
+
+class CameraKyunChak : public CameraThirdPerson
+{
+private:
+    float           m_vel;
+    float           m_val;
+    float           m_durTime;
+    D3DXVECTOR3     m_KyunChakPos;
+    bool            m_isCloser;
+
+public:
+    CameraKyunChak();
+    virtual ~CameraKyunChak();
+
+
+    virtual void Reset() override;
+    virtual void Update() override;
+
+    const float GetDurTime()
+    {
+        return m_durTime;
+    }
+};
+
+class Camera2xScope : public CameraFirstPerson
+{
+private:
+    float           m_fovY_2x;
+    float           m_deltaFovY;
+
+    float           m_currTime;
+    const float     m_totalTime;
+public:
+    Camera2xScope();
+    virtual ~Camera2xScope();
+
+    // Inherited via ThirdPersonCamera
+    virtual void Reset() override;
+    virtual void Update() override;
+
+};
+
+class CameraOnGun : public ICamera
+{
+
+public:
+    CameraOnGun();
+    virtual ~CameraOnGun();
+    // Inherited via ICamera
+    virtual void Reset() override;
+    virtual void Update() override;
+    virtual void Render() override;
+};
+
+class CameraLobby : public ICamera
+{
+private:
+    D3DXVECTOR3 m_rotation;
+    D3DXVECTOR3 m_position;
+
+public:
+             CameraLobby();
+    virtual ~CameraLobby();
+
+    virtual void Reset() override;
+    virtual void Update() override;
+};

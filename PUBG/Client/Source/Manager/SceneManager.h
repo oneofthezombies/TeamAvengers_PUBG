@@ -2,13 +2,20 @@
 #include "Singleton.h"
 #include "TagClientOnly.h"
 
+#define g_pScene        Scene       ()()
+#define g_pCurrentScene CurrentScene()()
+
 class IScene;
+class Character;
 
 class SceneManager : public Singleton<SceneManager>
 {
 private:
 	unordered_map<TAG_SCENE, IScene*> m_scenes;
 	IScene*                           pCurrentScene;
+    std::vector<Character*>           m_characters;
+    Character*                        pPlayer;
+    std::vector<Character*>           others;
 
              SceneManager();
 	virtual ~SceneManager();
@@ -21,6 +28,11 @@ public:
 
 	void    SetCurrentScene(const TAG_SCENE tag);
 	IScene* GetCurrentScene() const;
+
+    void SetupCharacters();
+    Character* GetPlayer();
+    const std::vector<Character*>& GetOthers();
+    const std::vector<Character*>& GetCharacters() const;
 
 	friend Singleton<SceneManager>;
 };

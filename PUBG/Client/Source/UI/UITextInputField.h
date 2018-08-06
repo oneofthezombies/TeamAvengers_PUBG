@@ -39,6 +39,8 @@ public:
 
     void SetIsSelected(const bool val);
     bool IsSelected() const;
-    string GetText() const;
+
+    void        SetText(const std::string& text);
+    std::string GetText() const;
 };
 

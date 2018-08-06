@@ -14,20 +14,34 @@ ostream& operator<<(ostream& os, const D3DXVECTOR3& val);
 ostream& operator<<(ostream& os, const D3DXMATRIX& val);
 ostream& operator<<(ostream& os, const D3DXQUATERNION& val);
 
+struct Vector2
+{
+    static const D3DXVECTOR2& ZERO;
+};
+
 struct Vector3
 {
     static const D3DXVECTOR3& ZERO;
     static const D3DXVECTOR3& ONE;
-    static const D3DXVECTOR3& RIGHT;
     static const D3DXVECTOR3& UP;
+    static const D3DXVECTOR3& DOWN;
+    static const D3DXVECTOR3& RIGHT;
+    static const D3DXVECTOR3& LEFT;
     static const D3DXVECTOR3& FORWARD;
+    static const D3DXVECTOR3& BACKWARD;
+
+    static const D3DXVECTOR3& FORWARD_RIGNT;
+    static const D3DXVECTOR3& FORWARD_LEFT;
+    static const D3DXVECTOR3& BACKWARD_RIGHT;
+    static const D3DXVECTOR3& BACKWARD_LEFT;
 
     static D3DXVECTOR3 Rotate(const D3DXVECTOR3& v, const D3DXQUATERNION& q);
+    static float DirectionToRotationY(const D3DXVECTOR3& v);
 };
 
 struct Quaternion
 {
-    static const D3DXQUATERNION& ZERO;
+    static const D3DXQUATERNION& IDENTITY;
 };
 
 struct Matrix
@@ -35,9 +49,19 @@ struct Matrix
     static const D3DXMATRIX& IDENTITY;
 
     static D3DXVECTOR3 GetTranslation(const D3DXMATRIX& val);
+    static void GetScaleAndRotation(const D3DXMATRIX& val, D3DXVECTOR3* OutScale, D3DXQUATERNION* OutRotation);
 };
 
 struct MaterialTemplate
 {
     static D3DMATERIAL9 GetWhite();
+};
+
+struct MeshHelper
+{
+    static void GetSurfaces(
+        LPD3DXMESH pMesh,
+        const D3DXVECTOR3 axis,
+        const float radiansRange,
+        std::vector<D3DXVECTOR3>* OutVertices);
 };

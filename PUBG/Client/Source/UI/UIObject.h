@@ -21,6 +21,7 @@ protected:
     RECT             m_rect;
     D3DCOLOR         m_color;
     deque<UIObject*> m_children;
+    D3DXMATRIX       m_transform;
 
     void SetViewportPosRect(const D3DXVECTOR3& parentViewportPos, const D3DXVECTOR3& pos, const D3DXVECTOR2& size, const D3DXMATRIX& transform);
 
@@ -51,4 +52,6 @@ public:
 
     void     AttachToObject(IObject* p);
     IObject* GetAttachedObject() const;
+
+    void SetTransform(const D3DXMATRIX& transform);
 };

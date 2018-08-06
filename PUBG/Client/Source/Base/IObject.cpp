@@ -2,8 +2,11 @@
 #include "IObject.h"
 #include "ComponentTransform.h"
 
-IObject::IObject()
+IObject::IObject(const TAG_OBJECT tagObject)
     : MemoryAllocator()
+    , m_tagObject(tagObject)
+    , pTransform(nullptr)
+    , pParent(nullptr)
 {
 	pTransform = AddComponent<Transform>();
 }
@@ -27,10 +30,10 @@ void IObject::Update()
 
 void IObject::Render()
 {
-	OnRender();
+    OnRender();
 
-	for (auto& c : m_children)
-		if (c) c->Render();
+    for (auto& c : m_children)
+        if (c) c->Render();
 }
 
 void IObject::SetTagObject(const TAG_OBJECT tag)
@@ -49,9 +52,14 @@ void IObject::SetParent(IObject* pParent)
 	this->pParent = pParent;
 }
 
-void IObject::AddChildren(IObject* pChild)
+IObject* IObject::GetParent() const
 {
-    assert(pChild && "IObject::SetParent(), pointer is null.");
+    return pParent;
+}
+
+void IObject::AddChild(IObject* pChild)
+{
+    assert(pChild && "IObject::AddChild(), pointer is null.");
 	pChild->SetParent(this);
 	m_children.emplace_back(pChild);
 }
@@ -59,4 +67,14 @@ void IObject::AddChildren(IObject* pChild)
 Transform* IObject::GetTransform()
 {
 	return pTransform;
+}
+
+BoundingSphere& IObject::GetBoundingSphere()
+{
+    return m_boundingSphere;
+}
+
+std::vector<BoundingBox>& IObject::GetBoundingBoxes()
+{
+    return m_boundingBoxes;
 }

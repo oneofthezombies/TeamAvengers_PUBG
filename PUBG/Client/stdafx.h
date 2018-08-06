@@ -7,6 +7,7 @@
 #include <fmod.hpp>
 #include <fmod_errors.h>
 #pragma comment(lib, "fmod_vc.lib")
+#pragma comment(lib, "fmod64_vc.lib")
 // end FMOD
 
 // debug
@@ -20,19 +21,22 @@
 // end debug
 
 // math and usefuls
+#include "UsefulClientOnly.h"
+#include "Ray.h"
+#include "Collision.h"        // has Collision    ()()
+#include "Light.h"
 #include "Structure.h"
-#include "CollisionCore.h"
+#include "Shader.h"
 // end math and usefuls
 
 // managers and interfaces for global access
 // accessable method "ManagerName"::GetInstance() or ... below access instance.
 #include "Application.h"      // has App          ()()
 #include "DeviceManager.h"    // has Device       ()()
-#include "ResourceManager.h"  // has Resource     ()()
+#include "Resource.h"         // has Resource     ()()
 #include "UIManager.h"        // has UI           ()()
 #include "SoundManager.h"     // has Sound        ()()
 #include "TimeManager.h"      // has Time         ()()
-#include "CollisionManager.h" // has Collision    ()()
 #include "InputManager.h"     // has Input        ()()       
 #include "SceneManager.h"     // has Scene        ()()
                               //     CurrentScene ()()
@@ -42,6 +46,7 @@
 #include "Bullet.h"           // has BulletPool   ()()
 #include "DebugManager.h"     // has DebugMgr     ()()
                               //     macro Debug
+#include "Particle.h"         // has ParticlePool ()()
 
 #include "IScene.h"
 #include "ICamera.h"           

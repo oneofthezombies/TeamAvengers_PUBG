@@ -1,40 +1,33 @@
 #pragma once
 
-// TagCommon.h 
-// including tag list
-//
-// TAG_REQUEST
-
-// TagClientOnly.h
-// including tag list
-// 
-// TAG_OBJECT
-// TAG_COLLISION
-// TAG_COLLIDER_CHARACTER_PART
-// TAG_ANIM_CHARACTER
-// TAG_RENDERER
-// TAG_SCENE
-// TAG_FONT
-// TAG_SOUND
-// TAG_CAMERA
-
 enum class TAG_OBJECT
 {
-    IDLE,
+    Idle,
+    TerrainFeature,
+    Bullet,
+    Character,
+    Door,
+    Window,
+    Item,
+    Particle,
+    DeathDropBox,
+    MagneticField,
+    Water,
 };
 
 enum class TAG_COLLISION
 {
-    IDLE,
-    OBSTACLE,
-    BODY_OF_PLAYER_1,
-    BODY_OF_PLAYER_2,
-    BODY_OF_PLAYER_3,
-    BODY_OF_PLAYER_4,
-    DAMAGE_OF_PLAYER_1,
-    DAMAGE_OF_PLAYER_2,
-    DAMAGE_OF_PLAYER_3,
-    DAMAGE_OF_PLAYER_4,
+    Idle,
+    Impassable,
+    Interactable,
+    Player_0_Body,
+    Player_1_Body,
+    Player_2_Body,
+    Player_3_Body,
+    Player_0_Damage,
+    Player_1_Damage,
+    Player_2_Damage,
+    Player_3_Damage,
 };
 
 /*
@@ -48,103 +41,181 @@ https://docs.google.com/spreadsheets/d/1khCjEWCtUUwS7lJogOEOQPfJHVnhsOMDu277mzoV
 
 enum class TAG_COLLIDER_CHARACTER_PART
 {
-    HEAD,            // ¸Ó¸®
-    NECK,            // ¸ñ
-    BREAST,          // °¡½¿
-    STOMACH_UPPER,   // ¹è_»ó
-    STOMACH_LOWER,   // ¹è_ÇÏ
-    WAIST,           // Çã¸®
-    CLAVICLE_LEFT,   // ¼â°ñ_ÁÂ
-    CLAVICLE_RIGHT,  // ¼â°ñ_¿ì
-    ARM_LEFT_UPPER,  // ÆÈ_ÁÂ»ó
-    ARM_LEFT_LOWER,  // ÆÈ_ÁÂÇÏ
-    ARM_RIGHT_UPPER, // ÆÈ_¿ì»ó
-    ARM_RIGHT_LOWER, // ÆÈ_¿ìÇÏ
-    HAND_LEFT,       // ¼Õ_ÁÂ
-    HAND_RIGHT,      // ¼Õ_¿ì
-    LEG_LEFT_UPPER,  // ´Ù¸®_ÁÂ»ó
-    LEG_LEFT_LOWER,  // ´Ù¸®_ÁÂÇÏ
-    LEG_RIGHT_UPPER, // ´Ù¸®_¿ì»ó
-    LEG_RIGHT_LOWER, // ´Ù¸®_¿ìÇÏ
-    FOOT_LEFT,       // ¹ß_ÁÂ
-    FOOT_RIGHT,      // ¹ß_¿ì
-};
-
-enum class TAG_ANIM_CHARACTER
-{
-    Melee_Combat_Stand_Idle_Still = 11,
-    Melee_Combat_Stand_Walk_F = 10,
-};
-
-enum class TAG_RENDERER
-{
-    DEFAULT,
-    EFFECT_MESH,
-    SKINNED_MESH,
-    COLLIDER,
-    BOX_COLLIDER,
-    SPHERE_COLLIDER,
+    Head,            // ¸Ó¸®
+    Neck,            // ¸ñ
+    Breast,          // °¡½¿
+    Stomach_Upper,   // ¹è_»ó
+    Stomach_Lower,   // ¹è_ÇÏ
+    Waist,           // Çã¸®
+    Clavicle_Left,   // ¼â°ñ_ÁÂ
+    Clavicle_Right,  // ¼â°ñ_¿ì
+    Arm_Left_Upper,  // ÆÈ_ÁÂ»ó
+    Arm_Left_Lower,  // ÆÈ_ÁÂÇÏ
+    Arm_Right_Upper, // ÆÈ_¿ì»ó
+    Arm_Right_Lower, // ÆÈ_¿ìÇÏ
+    Hand_Left,       // ¼Õ_ÁÂ
+    Hand_Right,      // ¼Õ_¿ì
+    Leg_Left_Upper,  // ´Ù¸®_ÁÂ»ó
+    Leg_Left_Lower,  // ´Ù¸®_ÁÂÇÏ
+    Leg_Right_Upper, // ´Ù¸®_¿ì»ó
+    Leg_Right_Lower, // ´Ù¸®_¿ìÇÏ
+    Foot_Left,       // ¹ß_ÁÂ
+    Foot_Right,      // ¹ß_¿ì
+    COUNT
 };
 
 enum class TAG_SCENE
 {
-    LOADING,
-    LOGIN,
-    PLAY,
+    Loading,
+    Login,
+    Lobby,
+    Play,
+    CollisionTest,
 };
 
 enum class TAG_FONT
 {
-    DEFAULT,
+    Default,
+    Inventory_Ground,
+    Inventory_28,
+    Inventory_NickName,
+
+    LoadingDesc,
+    LoadingPercentage,
+    LoadingText,
+
+    LoginInput,
+    LoginButton,
+
+    LobbyMenu,
+    LobbyMenuSmall,
+    LobbyLeftSmall,
+    LobbyReady,
+    LobbyNickName,
+    LobbyReadyNickName,
+
+    InGameAmmoReload,
+    InGameAmmoTotalNum,
+    InGameSurvival,
+    InGameSurvivalNum,
+    InGameID,
+    InGameKillNum,
+    InGameKillLog,
+    InGameInfo,
+    InGameFireMode,
+    InGameMagneticFieldInfo,
+    InGameMagneticFieldTime,
+
+    GameOverNickName,
+    GameOverString,
+    GameOverRankingAndKillText,
+    GameOverRankingAndKillNum,
+    GameOverPlayerText,
+    GameOverUpRanking,
+    GameOverUpPlayersNum,
+    GameOverLobby,
 };
 
 enum class TAG_SOUND
 {
-    IDLE,
+    Idle,
+
+    Kar98_NormalShoot,
+    Qbz_NormalShoot,
+
+    Kar98_SilenceShoot,
+    Qbz_SilenceShoot,
+
+
+    Kar98_BoltMove0,
+    Kar98_BoltMove1,
+    Kar98_BoltMove2,
+    Kar98_Reload0,
+    Kar98_Reload1,
+    Kar98_Reload2,
+    Kar98_Reload3,
+    Qbz_BoltMove76,
+    Qbz_FakeShoot,
+    Qbz_Reload,
+    Bullet_Miss,
+    Bullet_HitTerrain,
+    FootStep,
+    Medicine_Bandage,
+    Hand_Punch,
+    Female_Hurt,
+    ButtonClick,
+    UI_InputItem,
+    Fkey_InputItem,
+    Loby_Ready,
+    FallingGround,
+    DoorOpen,
+    MagneticField,
+
+
+    Background,
+};
+
+enum class TAG_CHANNEL
+{
+    My_Ch,
+    Other_Ch1,      //´Ù¸¥ À¯Àú ÇÏ³ª´ç.
+    Other_Ch2,
+    Other_Ch3,
+    Environment_Ch
 };
 
 enum class TAG_CAMERA
 {
-    FREE,
+    Default,
+    First_Person,
+    Third_Person,
+    KyunChak,
+    Scope2X,
+    OnGun,
+    Lobby
 };
 
-enum class TAG_RESOURCE
+enum class TAG_ITEM_CATEGORY
 {
-    Character_Female_Animation_DBNO,
-    Character_Female_Animation_Healing,
-    Character_Female_Animation_Healing_FPP,
-    Character_Female_Animation_Lobby,
-    Character_Female_Animation_Rifle_DoorOpen_And_Pickup,
-    Character_Female_Animation_Rifle_Idling,
-    Character_Female_Animation_Rifle_Jump,
-    Character_Female_Animation_Rifle_Landing,
-    Character_Female_Animation_Rifle_Locomotion_Crouch,
-    Character_Female_Animation_Rifle_Locomotion_FPP,
-    Character_Female_Animation_Rifle_Locomotion_Prone,
-    Character_Female_Animation_Rifle_Locomotion_Stand,
-    Character_Female_Animation_Rifle_OnBody,
-    Character_Female_Animation_Rifle_Pickup_FPP,
-    Character_Female_Animation_Rifle_Prone_PrimarySlot_OnHand,
-    Character_Female_Animation_Rifle_Prone_SecondarySlot_OnHand,
-    Character_Female_Animation_Rifle_Stand_PrimarySlot_OnHand,
-    Character_Female_Animation_Rifle_Stand_SecondarySlot_OnHand,
-    Character_Female_Animation_Rifle_Transition,
-    Character_Female_Animation_Unarmed_Attack,
-    Character_Female_Animation_Unarmed_Attack_FPP,
-    Character_Female_Animation_Unarmed_DoorOpen_And_Pickup,
-    Character_Female_Animation_Unarmed_Idling,
-    Character_Female_Animation_Unarmed_Jump,
-    Character_Female_Animation_Unarmed_Jump_FPP,
-    Character_Female_Animation_Unarmed_Landing,
-    Character_Female_Animation_Unarmed_Locomotion_Crouch,
-    Character_Female_Animation_Unarmed_Locomotion_FPP,
-    Character_Female_Animation_Unarmed_Locomotion_Prone,
-    Character_Female_Animation_Unarmed_Locomotion_Stand,
-    Character_Female_Animation_Unarmed_Pickup_FPP,
-    Character_Female_Animation_Unarmed_Transition,
-    Character_Female_Animation_Weapon_Kar98k_Character,
-    Character_Female_Animation_Weapon_Kar98k_Character_FPP,
-    Character_Female_Animation_Weapon_QBZ_Character,
-    Character_Female_Animation_Weapon_QBZ_Character_FPP,
-    Character_Female_Model_Character_F
+    Idle,
+
+    Armor,           //¹æÅºÁ¶³¢
+    Back,            //¹éÆÑ
+    Head,            //Çï¸ä
+
+    Consumable,      //¼Ò¸ðÇ°
+    Ammo,            //Åº¾à
+
+    Rifle,           //ÁÖ¹«±â/º¸Á¶¹«±â
+    Melee,           //±ÙÁ¢¹«±â
+    Throwable,       //¼ö·ùÅº·ù
+    
+    Attach           //¹«±â ºÎÂø¹°
 };
+
+enum class TAG_RIFLE
+{
+    Primary,
+    Secondary,
+    None
+};
+
+enum class TAG_ATTACH_POINT
+{
+    Primary_Muzzle,     //¼ÒÀ½±â, ¼Ò¿°±â µî
+    Primary_LowerRail,  //¼öÁ÷¼ÕÀâÀÌ µî
+    Primary_UpperRail,  //½ºÄÚÇÁ·ù
+    Primary_Mag,        //ÅºÃ¢
+     
+    Secondary_Muzzle,
+    Secondary_LowerRail,
+    Secondary_UpperRail,
+    Secondary_Mag,
+};
+
+enum class TAG_CHARACTER_PART
+{
+    UpperBody,
+    LowerBody
+};
+

@@ -2,18 +2,121 @@
 #include "Singleton.h"
 #include "Protocol.h"
 
-class CommunicationManager;
+#define g_pCommunication Communication()()
+
 class Bullet;
+class Client;
+
+struct Communication
+{
+    enum class PlayMode
+    {
+        // for local test
+        ALONE,
+
+        WITH_OTHERS
+    };
+
+    class Manager : public Singleton<Manager>
+    {
+    public:
+        GameInfo::RoomInfo m_roomInfo;
+        GameInfo::MyInfo   m_myInfo;
+
+    private:
+        boost::asio::io_context m_IOContext;
+        tcp::resolver           m_resolver;
+        Client*                 m_pClient;
+        std::thread*            m_pThread;
+        PlayMode                m_playMode;
+
+    private:
+        Manager();
+        virtual ~Manager();
+
+        void CheckConnection();
+
+    public:
+        void Destroy();
+        void Print();
+
+        void     SetPlayMode(const PlayMode playMode);
+        PlayMode GetPlayMode() const;
+
+        void Connect(
+            const std::string& host,
+            const std::string& port,
+            const std::string& nickname);
+
+        void ReceiveMessage(const TAG_REQUEST tag, const std::string& description);
+
+        void ReceiveID(const int id);
+        void SendID(const int id);
+        void SendNickname(const std::string& nickname);
+
+        void SendPositionAndRotation(
+            const D3DXVECTOR3& p,
+            const D3DXQUATERNION& r);
+        void SendHeadAngle(const float angle);
+        void SendUpperAnimationIndex(const TAG_ANIM_CHARACTER tag);
+        void SendLowerAnimationIndex(const TAG_ANIM_CHARACTER tag);
+        void SendIsDead(const int id, bool isDead);
+
+        void SendIsReady   (const int characterID);
+        void SendIsNotReady(const int characterID);
+
+        //void SendEventFireBullet(Bullet* pBullet);
+        void SendEventSound(const TAG_SOUND tag, const D3DXVECTOR3& p);
+        void SendEventMinusDamage(const int id, const float damage);
+        void SendEventDestroyItem(const std::string& itemName);
+
+        void SendEventMoveItemFieldToPrimary  (const int id, const std::string& itemName);
+        void SendEventMoveItemFieldToSecondary(const int id, const std::string& itemName);
+        void SendEventMoveItemFieldToHead     (const int id, const std::string& itemName);
+        void SendEventMoveItemFieldToArmor    (const int id, const std::string& itemName);
+        void SendEventMoveItemFieldToBack     (const int id, const std::string& itemName);
+        void SendEventMoveItemFieldToInventory(const int id, const std::string& itemName);
+
+        void SendEventMoveItemPrimaryToField  (const int id, const std::string& itemName);
+        void SendEventMoveItemSecondaryToField(const int id, const std::string& itemName);
+        void SendEventMoveItemHeadToField     (const int id, const std::string& itemName);
+        void SendEventMoveItemArmorToField    (const int id, const std::string& itemName);
+        void SendEventMoveItemBackToField     (const int id, const std::string& itemName);
+        void SendEventMoveItemBulletsToField  (const int id, const std::string& itemName, const int count);
+
+        void SendEventMoveItemPrimaryToHand  (const int id);
+        void SendEventMoveItemSecondaryToHand(const int id);
+        void SendEventMoveItemHandToPrimary  (const int id);
+        void SendEventMoveItemHandToSecondary(const int id);
+
+        void SendEventCreateDeathDropBox    (const int id, const std::vector<std::pair<std::string, int>>& consumes);
+        void SendEventMoveItemBoxToInventory(const int characterID, const int boxID, const std::string& itemName);
+        void SendEventMoveItemBoxToPrimary  (const int characterID, const int boxID, const std::string& itemName);
+        void SendEventMoveItemBoxToSecondary(const int characterID, const int boxID, const std::string& itemName);
+        void SendEventMoveItemBoxToHead     (const int characterID, const int boxID, const std::string& itemName);
+        void SendEventMoveItemBoxToArmor    (const int characterID, const int boxID, const std::string& itemName);
+        void SendEventMoveItemBoxToBack     (const int characterID, const int boxID, const std::string& itemName);
+        
+        void SendEventDestroyItemInBox      (const int characterID, const int boxID, const std::string& itemName);
+
+        void SendEventKillLog(const std::string& killLog);
+        void SendEventBloodParticle(const D3DXVECTOR3& position);
+
+        friend Singleton<Manager>;
+    };
+
+    Manager* operator()();
+};
 
 class Client
 {
 private:
-    tcp::socket m_Socket;
-    Message m_ReadMsg;
-    Message m_WriteMsg;
+    tcp::socket m_socket;
+    Message     m_readMsg;
+    Message     m_writeMsg;
 
     boost::asio::io_context* pIOContext;
-    CommunicationManager*    pCommunicationManager;
+    Communication::Manager*  pCommunicationManager;
 
     void Connect(const tcp::resolver::results_type& endpoints);
     void ReadHeader();
@@ -21,55 +124,11 @@ private:
     void Write();
 
 public:
-    Client(boost::asio::io_context* ioContext, 
-        const tcp::resolver::results_type& endpoints, 
-        CommunicationManager* pCommunicationManager);
+    Client(
+        boost::asio::io_context* pIOContext,
+        const tcp::resolver::results_type& endpoints,
+        Communication::Manager* pCommunicationManager);
 
     void Write(const Message& msg);
     void Close();
-};
-
-class CommunicationManager : public Singleton<CommunicationManager>
-{
-public:
-    GameInfo::RoomInfo m_RoomInfo;
-    GameInfo::MyInfo   m_MyInfo;
-
-private:
-    boost::asio::io_context m_IOContext;
-    tcp::resolver           m_Resolver;
-    Client*                 m_pClient;
-    std::thread*            m_pThread;
-
-    CommunicationManager();
-    virtual ~CommunicationManager();
-
-    void CheckConnection();
-
-public:
-    void Destroy();
-    void Print();
-
-    void Connect(const string& host, const string& port, 
-        const string& nickname);
-
-    void ReceiveMessage(const TAG_REQUEST tag, const string& description);
-    
-    void ReceiveID(const int id);
-    void SendID(const int id);
-    void SendNickname(const string& nickname);
-    void SendPosition(const D3DXVECTOR3& pos);
-    void SendAnimationIndex(const int index);
-    void SendAnimationTime(const float time);
-    void SendEventFireBullet(Bullet* pBullet);
-
-    friend Singleton<CommunicationManager>;
-};
-
-struct Communication
-{
-    CommunicationManager* operator()()
-    {
-        return CommunicationManager::GetInstance();
-    }
 };

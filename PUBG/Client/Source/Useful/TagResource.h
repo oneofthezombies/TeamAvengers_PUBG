@@ -1,7 +1,7 @@
 #pragma once
 /* 리소스 관련 enum들 */
 
-//1. 정적인 리소스 enum
+//정적인 리소스 -------------------------------------
 //TODO: 아직 UI랑 이팩트는 안했음
 enum class TAG_RES_STATIC
 {
@@ -9,8 +9,8 @@ enum class TAG_RES_STATIC
     DeathDropBox,
 
     //Ammunition
-    Ammu_5_56mm,
-    Ammu_7_62mm,
+    Ammo_5_56mm,
+    Ammo_7_62mm,
 
     //Attachment
     ACOG,
@@ -43,11 +43,11 @@ enum class TAG_RES_STATIC
     WareHouse_B,
 
     //Exterior
-        //-AmmoBox
+    //-AmmoBox
     AmmoBox_1,
     AmmoBox_2,
 
-        //- BrokenVehicle
+    //- BrokenVehicle
     BrokenBus,
     BrokenCar,
     BrokenMeshTruck,
@@ -55,74 +55,74 @@ enum class TAG_RES_STATIC
     BrokenTractorGunnyBag,
     BrokenUaz3151,
 
-        //-Container
+    //-Container
     ContainerBox_A,
     ContainerBox_B,
     ContainerSmall_1,
     ContainerSmall_2,
 
-        //- HayBale
-    HeyBale_1,
-    HeyBale_2,
+    //- HayBale
+    HayBale_1,
+    HayBale_2,
 
-        //- MetalBarrel
+    //- MetalBarrel
     MetalBarrel_Blue,
     MetalBarrel_Gray,
     MetalBarrel_Green,
     MetalBarrel_Red,
 
-        //- MetalFence
+    //- MetalFence
     MetalFence_A,
     MetalFence_Long,
 
-        //- PicketFence
+    //- PicketFence
     PicketFence_Short_A,
     PicketFence_Short_B,
     PicketFence_Short_C,
 
-        //- Powerline
+    //- Powerline
     Powerline_1,
     Powerline_2,
 
-        //- RadioTower
+    //- RadioTower
     RadioTower_1,
     RadioTower_2,
 
-        //- SandBag
+    //- SandBag
     Sandbag_1,
     Sandbag_2,
 
-        //- Silo
+    //- Silo
     Silo_A,
     Silo_B,
 
-        //- Etc
+    //- Etc
     CityStreetSign,
     Lighthouse,
     MetalShelf,
     TableSet,
     Tower,
 
-    //SkySphere
+//SkySphere
     SkySphere,
 
-    //Vegetation
-        //- Bush
+//Vegetation
+    //- Bush
     DeadGrass,
     Dogwood,
 
-        //- Grass
+    //- Grass
     Grass_1,
     Grass_2,
 
-        //- Rock
+    //- Rock
     Desert_Cover_Rock_Combine_1,
     Desert_Cover_Rock_Combine_2,
     Desert_Mashup,
     Rock_1,
     Rock_2,
 
-        //- Tree
+    //- Tree
     AlaskaCedar,
     AmericanElem,
     LondonPlane,
@@ -130,15 +130,77 @@ enum class TAG_RES_STATIC
 //Weapon
     // AR
     QBZ,
+    QBZ_Mag,
     // SR
     Kar98k,
+
+//Door, Wall
+    //Door
+    Door_InDoor,
+    Door_OutDoor,
+    //Wall
+    Wall_1,
+    Wall_2,
+    Wall_End,
+    Wall_End_Long,
+    Wall_3,
+    Wall_4,
+
+// Height Map
+HeightMap,
 
 //    
     COUNT
 };
 
-//2. 애니메이션이 있는 리소스 enum
-enum class TAG_RES_ANIM
-{
 
+//애니메이션이 있는 리소스 -------------------------------------
+enum class TAG_RES_ANIM_WEAPON
+{
+    Idle,
+//Weapon - 총 자체의 애니메이션
+    QBZ_Anim,
+    Kar98k_Anim
+};
+
+enum class TAG_RES_ANIM_CHARACTER
+{
+//FPP
+    Unarmed_Combined_FPP,
+    Rifle_Combined_FPP,
+    Weapon_Combined_FPP,
+    Healing_FPP,
+
+//Character
+//1. 해당 무기를 들고있을 때 캐릭터의 애니메이션
+    Weapon_QBZ_Character,
+    Weapon_Kar98k_Character,
+
+//2. 무기를 들고있지 않을 때 애니메이션
+    Unarmed_Combined,
+    Unarmed_Locomotion,
+    Unarmed_Jump, //스킨드매쉬 로드용
+
+//3. 무기를 들고있을 때 애니메이션
+    Rifle_Locomotion,
+    Rifle_Combined,
+
+//4. 힐템을 사용할 때 애니메이션
+    Healing,
+
+//5. 기절과 관련한 애니메이션
+    DBNO,
+
+//6. 로비
+    Lobby,
+
+//COUNT
+    COUNT
+};
+
+enum class TAG_RES_ANIM_EQUIPMENT
+{
+    Armor_Lv1_Anim,
+    Back_Lv1_Anim,
+    Head_Lv1_Anim
 };

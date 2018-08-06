@@ -3,6 +3,9 @@
 #include "UIObject.h"
 #include "UIButton.h"
 
+#define g_pUI     UI    ()()
+#define g_pSprite Sprite()()
+
 class UIText;
 class UIImage;
 

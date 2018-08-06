@@ -1,6 +1,8 @@
 #pragma once
 #include "Singleton.h"
 
+#define g_pApp App()()
+
 class Application : public Singleton<Application>
 {
 private:
@@ -11,7 +13,7 @@ public:
 	void Init();
 	void Destroy();
 	void Update();
-	void Render();
+    void Render();
 	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	friend Singleton<Application>;

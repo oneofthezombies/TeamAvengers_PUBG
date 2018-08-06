@@ -1,6 +1,8 @@
 #pragma once
 #include "Singleton.h"
 
+#define g_pTime Time()()
+
 class TimeManager : public Singleton<TimeManager>
 {
 private:
