@@ -14,5 +14,3 @@ TeamAvengers_PUBG
 - FMOD Studio
 - ImGui
 - ImGuizmo
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Anu5nLHhWZY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
