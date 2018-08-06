@@ -1,5 +1,5 @@
-# TeamAvengers_PUBG_Prototype
-TeamAvengers_PUBG_Prototype
+# TeamAvengers_PUBG
+TeamAvengers_PUBG
 
 # Team Member
 - Woori Ahn
@@ -9,5 +9,8 @@ TeamAvengers_PUBG_Prototype
 
 # Tools used for programming
 - C/C++
+- Boost
 - DirectX 9
-- FMOD Studio API
+- FMOD Studio
+- ImGui
+- ImGuizmo
