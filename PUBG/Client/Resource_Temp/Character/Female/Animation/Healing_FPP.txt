@@ -1,7 +1,0 @@
-/// Healing_FPP.X (힐링템 사용 애니메이션 FPP버전)
-0. (0     ~ 720)[721] - Healing_Combat_Prone_Aidkit_FPP
-1. (721  ~ 1201)[481] - Healing_Combat_Prone_Bandage_FPP
-2. (1202 ~ 2162)[961] - Healing_Combat_Prone_Medkit_FPP
-3. (2163 ~ 2523)[361] - Healing_Combat_Stand_Aidkit_FPP
-4. (2524 ~ 3004)[481] - Healing_Combat_Stand_Bandage_FPP
-5. (3005 ~ 3965)[961] - Healing_Combat_Stand_Medkit_FPP
