@@ -1,0 +1,7 @@
+/// QBZ_Anim.X (OBZ 애니메이션)
+0. (0    ~ 60)[61] - Weapon_QBZ_Fire
+1. (61   ~ 91)[31] - Weapon_QBZ_Firemode_Auto
+2. (92  ~ 122)[31] - Weapon_QBZ_Firemode_Semi
+3. (123 ~ 313)[191] - Weapon_QBZ_Reload_Charge_FPP
+4. (314 ~ 404)[91] - Weapon_QBZ_Reload_FPP
++ Weapon_QBZ_Idle

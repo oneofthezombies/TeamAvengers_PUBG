@@ -1,0 +1,8 @@
+/// Kar98k_Anim.X (Kar98k의 애니메이션)
+- Weapon_Kar98k_Idle
+- Weapon_Kar98k_Reload_Start
+- Weapon_Kar98k_Reload_Loop
+- Weapon_Kar98k_Reload_End
+- Weapon_Kar98k_BoltAction_1
+- Weapon_Kar98k_Reload_Fast
+- Weapon_Kar98k_Reload_Fast_FPP

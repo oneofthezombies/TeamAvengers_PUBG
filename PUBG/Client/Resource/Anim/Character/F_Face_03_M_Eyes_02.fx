@@ -1,0 +1,130 @@
+// lighting and shadow applying
+
+float4x4 World; 
+float4x4 View; 
+float4x4 Projection; 
+
+bool bEmissiveColor = false; 
+bool bLight         = true; 
+bool bShadow        = false;
+
+float4   LightPos; 
+float4x4 LightView;
+float4x4 LightProjection;
+
+float4 CameraPos;
+
+float4 DiffuseColor  = { 1.000000f, 1.000000f, 1.000000f, 1.000000f }; 
+float  SpecularPower = 20.000000f; 
+float4 SpecularColor = { 0.000000f, 0.000000f, 0.000000f, 1.000000f }; 
+float4 EmissiveColor = { 0.010000f, 0.010000f, 0.010000f, 1.000000f }; 
+
+texture ShadowMap_Tex;
+
+sampler2D ShadowSampler = sampler_state
+{
+   Texture = <ShadowMap_Tex>; 
+   MinFilter = Linear; 
+   MagFilter = Linear; 
+   MipFilter = Linear; 
+   AddressU  = Wrap;     
+   AddressV  = Wrap;    
+};
+
+/*** dependency block ***/
+texture Map__12; 
+
+sampler2D Map__12Sampler = sampler_state  // DiffuseMap
+{ 
+   Texture = <Map__12>; 
+   MinFilter = Linear; 
+   MagFilter = Linear; 
+   MipFilter = Linear; 
+   AddressU  = Wrap;     
+   AddressV  = Wrap;     
+}; 
+/*** dependency block ***/
+
+struct VS_INPUT 
+{ 
+    float4 Position : POSITION; 
+    float2 TexCoord : TEXCOORD0;
+    float3 Normal   : NORMAL;
+    float3 Tangent  : TANGENT;
+    float3 Binormal : BINORMAL;
+}; 
+
+struct VS_OUTPUT 
+{ 
+    float4 Position          : POSITION; 
+    float2 TexCoord          : TEXCOORD0;
+    float3 LightDirection    : TEXCOORD1;
+    float3 ViewDirection     : TEXCOORD2;
+    float3 Tangent           : TEXCOORD3;
+    float3 Binormal          : TEXCOORD4;
+    float3 Normal            : TEXCOORD5;
+    float4 ClipPosition      : TEXCOORD6;
+    float  Diffuse           : TEXCOORD7;
+}; 
+
+VS_OUTPUT VS(VS_INPUT vin) 
+{
+    VS_OUTPUT vout;
+
+    float4 worldPos = mul(vin.Position, World);
+
+    vout.Position = mul(mul(worldPos, View), Projection);
+
+    vout.TexCoord = vin.TexCoord;
+
+    vout.LightDirection = normalize(worldPos.xyz - LightPos.xyz);
+    
+    vout.ViewDirection = normalize(worldPos.xyz - CameraPos.xyz);
+
+    vout.Normal   = normalize(mul(vin.Normal,   (float3x3)World));
+    vout.Tangent  = normalize(mul(vin.Tangent,  (float3x3)World));
+    vout.Binormal = normalize(mul(vin.Binormal, (float3x3)World));
+
+    vout.ClipPosition = mul(mul(worldPos, LightView), LightProjection);
+
+    float3 worldNormal = normalize(mul(vin.Normal, (float3x3)World));
+    vout.Diffuse = dot(-vout.LightDirection, worldNormal);
+
+    return vout;
+}; 
+
+float4  PS( VS_OUTPUT vout ) : COLOR 
+{ 
+    float4 albedo = tex2D(Map__12Sampler, vout.TexCoord);
+    float3 diffuse = max(float3(0.3f, 0.3f, 0.3f), vout.Diffuse);
+    diffuse = albedo.rgb * diffuse;
+
+    float3 ambient = float3(0.1f, 0.1f, 0.1f) * albedo;
+    float3 rgb = ambient + diffuse;
+
+    if (bShadow)
+    {
+        float currentDepth = vout.ClipPosition.z / vout.ClipPosition.w;
+        float2 uv = vout.ClipPosition.xy / vout.ClipPosition.w;
+        uv.y = -uv.y;
+        uv = uv * 0.5 + 0.5;
+
+        float shadowDepth = tex2D(ShadowSampler, uv).r;
+
+        if (currentDepth > shadowDepth + 0.0000125f)
+        {
+            rgb *= 0.5f;
+        }
+    }
+
+    return float4(rgb, 1);
+}; 
+
+technique DefaultTechnique 
+{ 
+   pass p0 
+   { 
+      VertexShader = compile vs_3_0  VS(); 
+      PixelShader  = compile ps_3_0  PS(); 
+   } 
+} 

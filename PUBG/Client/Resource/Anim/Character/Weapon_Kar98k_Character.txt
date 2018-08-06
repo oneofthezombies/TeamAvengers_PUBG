@@ -1,0 +1,28 @@
+<Weapon_Kar98k_Character.X>(Kar98k를 들고있을 때 캐릭터 애니메이션)
+//서서 재장전하는 애니메이션
+Weapon_Kar98k_Reload_Start_Base
+Weapon_Kar98k_Reload_Loop_Base
+Weapon_Kar98k_Reload_End_Base
+
+//엎드려서 재장전 하는 애니메이션
+Weapon_Kar98k_Reload_Start_Prone
+Weapon_Kar98k_Reload_Loop_Prone
+Weapon_Kar98k_Reload_End_Prone
+
+# BoltAction 1, 2, 3은 손모양이 조금씩 다름
+Weapon_Kar98k_BoltAction_1_Base
+Weapon_Kar98k_BoltAction_1_Prone
+
+Weapon_Kar98k_BoltAction_2_Base
+Weapon_Kar98k_BoltAction_2_Prone
+
+Weapon_Kar98k_BoltAction_3_Base
+Weapon_Kar98k_BoltAction_3_Prone
+
+Weapon_Kar98k_Grip_Carry
+Weapon_Kar98k_Grip_Ready
+Weapon_Kar98k_Grip_Short
+
+//5발 장전할 때는, 5발을 한번에 장전함
+Weapon_Kar98k_ReloadFast_Base
+Weapon_Kar98k_ReloadFast_Prone

@@ -1,0 +1,11 @@
+/// Unarmed_Attack.X (무기없이 주먹질하는 애니메이션)
+
+0. (0    ~ 116)[117] - Unarmed_Combat_Crouch_Attack_1  : 수그린채 오른주먹
+1. (117 ~ 237)[121] -  Unarmed_Combat_Crouch_Attack_2 : 수그린채 힘찬 왼손주먹
+2. (238 ~ 326)[89] -  Unarmed_Combat_Crouch_Attack_3  : 수그린채 가벼운 왼손주먹
+
+3. (327 ~ 539)[213] -  Unarmed_Combat_Fullbody_PowerAttack_1 : 점프펀치
+
+4. (540 ~ 656)[117] -  Unarmed_Combat_Upperbody_Attack_1 : 서서 오른주먹
+5. (657 ~ 717)[61] -  Unarmed_Combat_Upperbody_Attack_2  : 서서 힘찬 왼손주먹
+6. (718 ~ 806)[89] -  Unarmed_Combat_Upperbody_Attack_3  : 서서 가벼운 왼손주먹

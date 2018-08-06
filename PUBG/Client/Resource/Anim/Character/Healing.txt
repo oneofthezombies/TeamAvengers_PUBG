@@ -1,0 +1,7 @@
+/// Healing.X (힐링템 사용 애니메이션)
+0. (0     ~ 360)[361] - Healing_Combat_Prone_Aidkit
+1. (361  ~ 601)[241] - Healing_Combat_Prone_Bandage
+2. (602  ~ 1082)[481] - Healing_Combat_Prone_Medkit
+3. (1083 ~ 1803 )[721] - Healing_Combat_Stand_Aidkit
+4. (1804 ~ 2044)[241] - Healing_Combat_Stand_Bandage
+5. (2045 ~ 2525)[481] - Healing_Combat_Stand_Medkit

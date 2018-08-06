@@ -1,0 +1,4 @@
+Rifle_Locomotion.X (하단의 3개 X파일을 합친 것) (총 애니메이션 set: 65 개)
+- Rifle_Locomotion_Stand.X (29)
+- Rifle_Locomotion_Crouch.X (21)
+- Rifle_Locomotion_Prone.X (15)

@@ -1,0 +1,7 @@
+/// Rifle_DoorOpen_And_Pickup.X (총들고 문열기, 아이템 줍기)
+0. (0    ~ 52)[53] - Rifle_Combat_Crouch_DoorOpen
+1. (53  ~ 105)[53] - Rifle_Combat_Prone_DoorOpen
+2. (106 ~ 158)[53] - Rifle_Combat_Stand_DoorOpen
+3. (159 ~ 239)[81] - Rifle_Combat_Crouch_Pickup_Low
+4. (240 ~ 320)[81] - Rifle_Combat_Prone_Pickup_Low
+5. (321 ~ 401)[81] - Rifle_Combat_Stand_Pickup_Low

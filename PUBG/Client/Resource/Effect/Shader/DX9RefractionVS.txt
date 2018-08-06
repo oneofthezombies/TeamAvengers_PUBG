@@ -1,0 +1,41 @@
+
+	//
+	// Vertex Shader (for DX9 hardware)
+	// Author: Kurt Pelzer
+	//
+	// Function:  Modification refraction for water effect
+	//
+	// v0			= position			(3 floats)
+	//
+	// c0 - c3		= world/view/proj matrix
+	// c4			= shift for z component to prevent z-fights with "fixed-function pre-rendered depth buffer"
+	//
+
+	//
+	// version instruction
+	//
+	vs_2_0
+
+	//
+	// declare registers
+	//
+	dcl_position		v0
+
+	//
+	// define the constants
+	//
+	def	c4,		0.0f, 0.0f, -0.01f, 0.0f
+
+	//
+	// transfer position to pixel shader
+	//
+	mov	oT0,		v0
+
+	//
+	// transform position into projection space
+	//
+	dp4	oPos.x,		v0, c0
+	dp4	oPos.y,		v0, c1
+	dp4	r0.z,		v0, c2
+	add	oPos.z,		r0, c4
+	dp4	oPos.w,		v0, c3

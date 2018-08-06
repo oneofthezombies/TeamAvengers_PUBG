@@ -1,0 +1,20 @@
+Lobby.X
+(0     ~ 1095)[1096] Lobby_P1_NotReady
+(1096 ~ 1325)[230] Lobby_P1_NotReady_Ready
+(1326 ~ 2070)[745] Lobby_P1_Ready
+(2071 ~ 2197)[127] Lobby_P1_Ready_NotReady
+
+(2198 ~ 3131)[934] Lobby_P2_NotReady
+(3132 ~ 3279)[148] Lobby_P2_NotReady_Ready
+(3280 ~ 4265)[986] Lobby_P2_Ready
+(4266 ~ 4422)[157] Lobby_P2_Ready_NotReady
+
+(4423 ~ 5356)[934] Lobby_P3_NotReady
+(5357 ~ 5570)[214] Lobby_P3_NotReady_Ready
+(5571 ~ 6466)[896] Lobby_P3_Ready
+(6467 ~ 6652)[186] Lobby_P3_Ready_NotReady
+
+(6653 ~ 7535)[883] Lobby_P4_NotReady
+(7536 ~ 7668)[133] Lobby_P4_NotReady_Ready
+(7669 ~ 8186)[518] Lobby_P4_Ready
+(8187 ~ 8362)[176] Lobby_P4_Ready_NotReady

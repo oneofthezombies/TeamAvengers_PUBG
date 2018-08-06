@@ -1,0 +1,5 @@
+/// Weapon_QBZ_Character_FPP.X (QBZ를 들고있을 때 캐릭터의 애니메이션 FPP용)
+0. (0    ~ 180)[181] - Weapon_QBZ_Reload_Charge_FPP
+1. (181 ~ 360)[181] -  Weapon_QBZ_Reload_Charge_Prone_FPP
+2. (361 ~ 582)[221] -  Weapon_QBZ_Reload_FPP
+3. (583 ~ 803)[221] -  Weapon_QBZ_Reload_Prone_FPP
