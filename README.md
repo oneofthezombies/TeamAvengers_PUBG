@@ -2,10 +2,11 @@
 TeamAvengers_PUBG
 
 # Team Member
-- Woori Ahn
-- SeungHoon Han
-- HunHoe Kim
-- John Han
+- Woori Ahn (안우리) HelloWorri
+- John Han (한찬응) JohnGameCoder
+- SeungHoon Han (한승훈) Hoons
+- HunHoe Kim (김훈회) OneOfTheZombies
+
 
 # Tools used for programming
 - C/C++
