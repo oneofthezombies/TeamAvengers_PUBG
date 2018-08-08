@@ -12,8 +12,8 @@ TeamAvengers_PUBG
 - Boost
 - DirectX 9
 - FMOD Studio
-- ImGui
-- ImGuizmo
+- ImGui https://github.com/ocornut/imgui
+- ImGuizmo https://github.com/CedricGuillemet/ImGuizmo
 
 # Screen Shot
 ![Screenshot1](https://github.com/oneofthezombies/TeamAvengers_PUBG/blob/master/PUBG%ED%8F%AC%ED%8F%B4.png)
