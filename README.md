@@ -1,5 +1,6 @@
 # TeamAvengers_PUBG
-TeamAvengers_PUBG
+Team Portforlio
+PUBG[Player Unknown Battle Ground] game imitation
 
 # Team Member
 - HelloWoori      (안우리)[Woori Ahn] 
