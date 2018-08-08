@@ -19,6 +19,7 @@
 
 # Screen Shot
 ![Screenshot1](https://github.com/oneofthezombies/TeamAvengers_PUBG/blob/master/PUBG%ED%8F%AC%ED%8F%B4.png)
+![Screenshot2](https://github.com/oneofthezombies/TeamAvengers_PUBG/blob/master/PUBG.png)
 
 # Game Playing Video
 - Play Video (4min22sec)
