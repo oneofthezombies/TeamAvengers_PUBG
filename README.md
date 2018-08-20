@@ -6,7 +6,7 @@
 - HelloWoori      (안우리)[Woori Ahn] https://github.com/HelloWoori
 - JohnGameCoder   (한찬응)[John Han] https://github.com/johngamecoder
 - Hoons           (한승훈)[SeungHoon Han] https://github.com/SeungHoons
-- OneOfTheZombies (김훈회)[HunHoe Kim] https://github.com/oneofthezombies
+- oneofthezombies (김훈회)[HunHoe Kim] https://github.com/oneofthezombies
 
 
 # Tools used for programming
