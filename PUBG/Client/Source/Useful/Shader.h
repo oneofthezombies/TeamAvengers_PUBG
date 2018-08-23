@@ -19,24 +19,15 @@ struct Shader
         virtual ~Manager();
 
         void addShadowSource(const D3DXMATRIX& world, LPD3DXFRAME pFrame);
-        void addShadowSource(
-            const D3DXMATRIX& world,
-            LPD3DXMESHCONTAINER pMeshContainer);
+        void addShadowSource(const D3DXMATRIX& world, LPD3DXMESHCONTAINER pMeshContainer);
 
     public:
         void Init();
         void Destroy();
 
-        void AddShadowSource(
-            const D3DXMATRIX& world,
-            LPD3DXMESH pMesh,
-            const DWORD attribID);
-        void AddShadowSource(
-            const D3DXMATRIX& world, 
-            SkinnedMesh* pSkinnedMesh);
-        void AddShadowSource(
-            const D3DXMATRIX& world, 
-            EffectMesh* pEffectMesh);
+        void AddShadowSource(const D3DXMATRIX& world, LPD3DXMESH pMesh, const DWORD attribID);
+        void AddShadowSource(const D3DXMATRIX& world, SkinnedMesh* pSkinnedMesh);
+        void AddShadowSource(const D3DXMATRIX& world, EffectMesh* pEffectMesh);
 
         void ClearShadowSources();
         void CreateShadowMap();
@@ -71,26 +62,8 @@ struct Shader
 
     static const char* ShadowMap_Tex;
 
-    static void Draw(
-        LPD3DXEFFECT pEffect,
-        D3DXHANDLE hParam,
-        LPD3DXMESH pMesh,
-        const DWORD attribID,
-        const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
-
-    static void Draw(
-        const std::vector<EffectParam>& effectParams,
-        LPD3DXMESH pMesh,
-        const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
-
-    static void Draw(
-        LPD3DXEFFECT pEffect,
-        D3DXHANDLE hParam,
-        const std::function<void(LPD3DXEFFECT)>& setGlobalVariable,
-        const std::function<void()>& drawVertices);
-
-    static void Draw(
-        const std::vector<EffectParam>& effectParams,
-        const std::function<void(LPD3DXEFFECT)>& setGlobalVariable,
-        const std::function<void()>& drawVertices);
+    static void Draw(LPD3DXEFFECT pEffect, D3DXHANDLE hParam, LPD3DXMESH pMesh, const DWORD attribID, const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
+	static void Draw(const std::vector<EffectParam>& effectParams, LPD3DXMESH pMesh, const std::function<void(LPD3DXEFFECT)>& setGlobalVariable);
+	static void Draw(LPD3DXEFFECT pEffect, D3DXHANDLE hParam, const std::function<void(LPD3DXEFFECT)>& setGlobalVariable, const std::function<void()>& drawVertices);
+    static void Draw(const std::vector<EffectParam>& effectParams, const std::function<void(LPD3DXEFFECT)>& setGlobalVariable, const std::function<void()>& drawVertices);
 };

@@ -7,11 +7,13 @@
 
 struct Resource
 {
+	// loading policy
     enum class Policy
     {
         SYNC,
         ASYNC,
     };
+
 
     struct XContainer
     {
