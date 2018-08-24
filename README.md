@@ -1,5 +1,5 @@
 # TeamAvengers_PUBG
-- Team Portforlio
+- Team Portfolio
 - PLAYERUNKNOWN'S BATTLEGROUNDS(a.k.a. PUBG) Imitation Game 
 
 # Team Member
