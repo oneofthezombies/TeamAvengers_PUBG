@@ -22,17 +22,17 @@
 ![Screenshot2](https://github.com/oneofthezombies/TeamAvengers_PUBG/blob/master/PUBG.png)
 
 # Game Playing Video
-- Play Video (4min22sec)
+- Play Video (4m 22s)
 
 [![Video Label](http://img.youtube.com/vi/Anu5nLHhWZY/0.jpg)](https://youtu.be/Anu5nLHhWZY)
 
 
-- Demonstration Video (18min32sec)
+- Demonstration Video (18m 32s)
 
 [![Video Label](http://img.youtube.com/vi/Nr4cj6VqXCM/0.jpg)](https://youtu.be/Nr4cj6VqXCM)
 
 
-- Map Tool Video (6min35sec)
+- Map Tool Video (6m 35s)
 
 [![Video Label](http://img.youtube.com/vi/G8EO_M4ph68/0.jpg)](https://youtu.be/G8EO_M4ph68)
 
